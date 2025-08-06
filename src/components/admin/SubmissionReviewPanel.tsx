@@ -7,14 +7,14 @@ interface Submission {
   id: string
   author_name: string
   author_email: string
-  author_credentials: string
+  author_credentials?: string
   author_bio: string
   article_title: string
   article_excerpt: string
   article_content: string
   article_category: string
-  article_tags: string
-  contact_method: string
+  article_tags?: string
+  contact_method?: string
   status: 'pending' | 'approved' | 'rejected'
   submitted_at: string
   reviewed_at?: string
@@ -202,7 +202,7 @@ export default function SubmissionReviewPanel() {
               <p className="text-subtle mb-4">{submission.article_excerpt}</p>
               
               <div className="flex flex-wrap gap-2">
-                {submission.article_tags.split(',').map((tag, index) => (
+                {submission.article_tags && submission.article_tags.split(',').map((tag, index) => (
                   <span key={index} className="px-2 py-1 bg-gray-800 text-gray-300 text-xs rounded">
                     {tag.trim()}
                   </span>
@@ -248,8 +248,9 @@ export default function SubmissionReviewPanel() {
                     <div className="space-y-2 text-sm">
                       <p><strong className="text-white">Name:</strong> {selectedSubmission.author_name}</p>
                       <p><strong className="text-white">Email:</strong> {selectedSubmission.author_email}</p>
-                      <p><strong className="text-white">Credentials:</strong> {selectedSubmission.author_credentials}</p>
+                      <p><strong className="text-white">Credentials:</strong> {selectedSubmission.author_credentials || 'Not provided'}</p>
                       <p><strong className="text-white">Bio:</strong> {selectedSubmission.author_bio}</p>
+                      <p><strong className="text-white">Contact Method:</strong> {selectedSubmission.contact_method || 'Not specified'}</p>
                     </div>
                   </div>
 
