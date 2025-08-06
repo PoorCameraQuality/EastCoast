@@ -1,0 +1,20 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://eastcoastkinkevents.com/sitemap.xml
+
+# Disallow admin pages
+Disallow: /admin/
+Disallow: /api/
+
+# Allow all other pages
+Allow: /events/
+Allow: /dungeons/
+Allow: /calendar/
+Allow: /education/
+Allow: /about/
+Allow: /contact/
+Allow: /guidelines/
+Allow: /privacy/
+Allow: /terms/

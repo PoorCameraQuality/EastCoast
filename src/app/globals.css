@@ -1,0 +1,94 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply text-gray-100 bg-black font-sans;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-serif;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-primary-600 hover:bg-primary-700 text-white font-medium py-3 px-6 rounded-none transition-all duration-300 border-2 border-primary-600 hover:border-primary-700;
+  }
+  
+  .btn-secondary {
+    @apply bg-dark-800 hover:bg-dark-700 text-white font-medium py-3 px-6 rounded-none transition-all duration-300 border-2 border-dark-600 hover:border-dark-500;
+  }
+  
+  .btn-outline {
+    @apply bg-transparent hover:bg-primary-600 text-primary-600 hover:text-white font-medium py-3 px-6 rounded-none transition-all duration-300 border-2 border-primary-600;
+  }
+  
+  .card {
+    @apply bg-dark-900 border border-dark-700 shadow-dark hover:shadow-elegant-lg transition-all duration-300;
+  }
+  
+  .card-elegant {
+    @apply bg-dark-900 border-0 shadow-dark hover:shadow-elegant-lg transition-all duration-300 p-8;
+  }
+  
+  .container-custom {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+  
+  .section-padding {
+    @apply py-16 lg:py-24;
+  }
+  
+  .text-elegant {
+    @apply font-serif text-white;
+  }
+  
+  .text-subtle {
+    @apply text-gray-400 font-light;
+  }
+  
+  .border-elegant {
+    @apply border-dark-700;
+  }
+  
+  .hover-lift {
+    @apply hover:-translate-y-1 transition-transform duration-300;
+  }
+  
+  .bg-gradient-dark {
+    @apply bg-gradient-to-br from-black via-dark-900 to-dark-800;
+  }
+  
+  /* Animation classes for popups */
+  .animate-in {
+    animation: fadeIn 0.3s ease-out;
+  }
+  
+  .slide-in-from-right {
+    animation: slideInFromRight 0.3s ease-out;
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  
+  @keyframes slideInFromRight {
+    from {
+      opacity: 0;
+      transform: translateX(100%);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+}
+
