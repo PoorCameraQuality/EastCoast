@@ -9,6 +9,15 @@ export async function POST(
     const body = await request.json()
     const submissionId = params.id
     
+    // Check if admin client is available
+    if (!supabaseAdmin) {
+      console.error('Supabase admin client not available - missing service role key')
+      return NextResponse.json(
+        { error: 'Admin functionality not available - missing service role key' },
+        { status: 500 }
+      )
+    }
+    
     // Update submission status to approved
     const { error: updateError } = await supabaseAdmin
       .from('submissions')
