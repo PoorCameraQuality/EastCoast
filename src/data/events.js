@@ -1,6 +1,75 @@
 // Events data with SEO optimization
 export const events = [
   {
+    "name": "SMIRC 2024 - Past Event",
+    "slug": "smirc-2024-past",
+    "date": {
+      "start": "2024-08-02",
+      "end": "2024-08-04",
+      "display": "Aug 2-4, 2024"
+    },
+    "location": {
+      "city": "Troy",
+      "state": "MI",
+      "region": "Southeast, Michigan"
+    },
+    "category": "Indoor Event",
+    "excerpt": "The Summer Michigan Rope Conference (SMIRC) took place from August 2-4, 2024, at the Wingate Hotel in Troy, MI. This event featured top presenters from the US and Canada, offering a weekend of intensive rope education.",
+    "website": "https://www.smirc.net/",
+    "logo": "/images/smirc.jpg",
+    "seo": {
+      "title": "SMIRC 2024 - Past Michigan Rope Conference | East Coast Kink Events",
+      "description": "SMIRC 2024 was an intensive rope education event with top presenters from the US and Canada at the Wingate Hotel in Troy, MI.",
+      "keywords": "SMIRC 2024, Michigan rope conference, rope education, BDSM, Troy Michigan, rope bondage"
+    }
+  },
+  {
+    "name": "Dark Odyssey Summer Camp 2024",
+    "slug": "dark-odyssey-summer-camp-2024",
+    "date": {
+      "start": "2024-08-27",
+      "end": "2024-09-02",
+      "display": "Aug 27-Sep 2, 2024"
+    },
+    "location": {
+      "city": "Northern Maryland",
+      "state": "MD",
+      "region": "NorthEastern, Maryland"
+    },
+    "category": "Outdoor Event",
+    "excerpt": "Dark Odyssey's Summer Camp took place from August 27 to September 2, 2024, in Northern Maryland. This seven-day event blended kink and BDSM with spiritual exploration.",
+    "website": "https://darkodyssey.com/",
+    "logo": "/images/darkodyssey.png",
+    "seo": {
+      "title": "Dark Odyssey Summer Camp 2024 - Past Maryland BDSM Camp | East Coast Kink Events",
+      "description": "Dark Odyssey's Summer Camp 2024 was a seven-day event blending kink and BDSM with spiritual exploration in Northern Maryland.",
+      "keywords": "Dark Odyssey 2024, summer camp, Maryland, BDSM, spiritual exploration, outdoor event"
+    }
+  },
+  {
+    "name": "The Master/slave Conference MsC 2024",
+    "slug": "master-slave-conference-msc-2024",
+    "date": {
+      "start": "2024-08-29",
+      "end": "2024-09-02",
+      "display": "Aug 29-Sep 2, 2024"
+    },
+    "location": {
+      "city": "Washington DC",
+      "state": "DC",
+      "region": "Central, District of Columbia"
+    },
+    "category": "Indoor Event",
+    "excerpt": "The Master/slave Conference 2024, created in 2004, was a highly educational annual event over Labor Day Weekend in the Washington DC Metropolitan area.",
+    "website": "https://masterslaveconference.org/",
+    "logo": "/images/masterslaveconference.jpg",
+    "seo": {
+      "title": "The Master/slave Conference MsC 2024 - Past Washington DC BDSM Education | East Coast Kink Events",
+      "description": "The Master/slave Conference 2024 was a highly educational annual event over Labor Day Weekend in the Washington DC Metropolitan area.",
+      "keywords": "Master slave conference 2024, MsC, Washington DC, BDSM education, authority-based relationships"
+    }
+  },
+  {
     "name": "The Summer Michigan Rope Conference SMIRC",
     "slug": "summer-michigan-rope-conference-smirc",
     "date": {
