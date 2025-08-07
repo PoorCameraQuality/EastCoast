@@ -85,7 +85,7 @@ export const events = [
     "category": "Indoor Event",
     "excerpt": "Join Us for a 3-Day Amazing Hotel Conference. Experience a weekend with some of the most respected names in the industry.",
     "website": "https://www.cruciblecon.com/",
-    "logo": "/images/crucible.PNG",
+    "logo": "/images/campcrucible.png",
     "seo": {
       "title": "CrucibleCon - New Jersey BDSM Conference | East Coast Kink Events",
       "description": "Join CrucibleCon for a 3-day amazing hotel conference with some of the most respected names in the BDSM industry.",
@@ -614,7 +614,7 @@ export const events = [
     "category": "Indoor Event",
     "excerpt": "Rendezvous is a BDSM and kink event featuring education, play, and social activities.",
     "website": "https://fetlife.com/events/1439077",
-    "logo": "/images/rendezvous.png",
+    "logo": "/images/rende.PNG",
     "seo": {
       "title": "Rendezvous - BDSM Event | East Coast Kink Events",
       "description": "Rendezvous is a BDSM and kink event featuring education, play, and social activities.",

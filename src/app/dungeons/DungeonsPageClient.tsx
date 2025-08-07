@@ -27,10 +27,10 @@ export default function DungeonsPageClient() {
           <p className="text-lg text-subtle max-w-3xl mx-auto mb-8">
             Discover BDSM dungeons and kink spaces across the East Coast. Find private sessions, workshops, and community events.
           </p>
-          
+
           {/* Search Component */}
           <div className="max-w-md mx-auto mb-8">
-            <Search 
+            <Search
               events={allEvents}
               dungeons={allDungeons}
               placeholder="Search dungeons..."
@@ -42,8 +42,8 @@ export default function DungeonsPageClient() {
         <div className="md:hidden space-y-6 mb-8">
           {allDungeons.map((dungeon) => (
             <Link key={dungeon.id} href={`/dungeons/${dungeon.slug}`} className="block">
-              <div className="card-elegant hover-lift group cursor-pointer p-6">
-                <div className="flex items-start space-x-4">
+              <div className="card-elegant hover-lift group cursor-pointer p-6 h-48">
+                <div className="flex items-start space-x-4 h-full">
                   {/* Dungeon Logo */}
                   {dungeon.logo && (
                     <div className="flex-shrink-0">
@@ -56,29 +56,33 @@ export default function DungeonsPageClient() {
                   )}
                   
                   {/* Dungeon Details */}
-                  <div className="flex-1 min-w-0">
-                    <h3 className="text-lg font-serif font-semibold text-white mb-2 group-hover:text-primary-400 transition-colors duration-300 line-clamp-2">
-                      {dungeon.name}
-                    </h3>
+                  <div className="flex-1 min-w-0 flex flex-col justify-between h-full">
+                    <div>
+                      <h3 className="text-lg font-serif font-semibold text-white mb-2 group-hover:text-primary-400 transition-colors duration-300 line-clamp-2">
+                        {dungeon.name}
+                      </h3>
+                      
+                      <p className="text-sm text-subtle mb-3">
+                        📍 {dungeon.location.city}, {dungeon.location.state}
+                      </p>
+                    </div>
                     
-                    <p className="text-sm text-subtle mb-3">
-                      📍 {dungeon.location.city}, {dungeon.location.state}
-                    </p>
-                    
-                    <p className="text-sm text-subtle leading-relaxed line-clamp-3 mb-3">
-                      {dungeon.excerpt}
-                    </p>
-                    
-                    <div className="flex gap-3">
-                      <a 
-                        href={dungeon.website}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-primary-400 hover:text-primary-300 font-medium text-sm border-b border-primary-600 hover:border-primary-500 transition-all duration-300 inline-block"
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        Visit Website →
-                      </a>
+                    <div>
+                      <p className="text-sm text-subtle leading-relaxed line-clamp-2 mb-3">
+                        {dungeon.excerpt}
+                      </p>
+                      
+                      <div className="flex gap-3">
+                        <a 
+                          href={dungeon.website}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-primary-400 hover:text-primary-300 font-medium text-sm border-b border-primary-600 hover:border-primary-500 transition-all duration-300 inline-block"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          Visit Website →
+                        </a>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -87,14 +91,14 @@ export default function DungeonsPageClient() {
           ))}
         </div>
         
-        {/* Desktop: Grid layout */}
+        {/* Desktop: Grid layout with fixed height */}
         <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {allDungeons.map((dungeon) => (
             <Link key={dungeon.id} href={`/dungeons/${dungeon.slug}`} className="block">
-              <div className="card-elegant hover-lift group cursor-pointer">
+              <div className="card-elegant hover-lift group cursor-pointer p-6 h-80 flex flex-col">
                 {/* Dungeon Logo */}
                 {dungeon.logo && (
-                  <div className="mb-6">
+                  <div className="mb-4 flex-shrink-0">
                     <DungeonLogo 
                       src={dungeon.logo} 
                       alt={`${dungeon.name} logo`}
@@ -103,28 +107,30 @@ export default function DungeonsPageClient() {
                   </div>
                 )}
                 
-                <h3 className="text-xl font-serif font-semibold text-white mb-4 group-hover:text-primary-400 transition-colors duration-300">
-                  {dungeon.name}
-                </h3>
-                
-                <p className="text-sm text-subtle mb-4">
-                  📍 {dungeon.location.city}, {dungeon.location.state}
-                </p>
-                
-                <p className="text-sm text-subtle mb-6 leading-relaxed">
-                  {dungeon.excerpt}
-                </p>
-                
-                <div className="flex gap-3">
-                  <a 
-                    href={dungeon.website}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-primary-400 hover:text-primary-300 font-medium text-sm border-b border-primary-600 hover:border-primary-500 transition-all duration-300 inline-block"
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    Visit Website →
-                  </a>
+                <div className="flex-1 flex flex-col">
+                  <h3 className="text-lg font-serif font-semibold text-white mb-3 group-hover:text-primary-400 transition-colors duration-300 line-clamp-2 flex-shrink-0">
+                    {dungeon.name}
+                  </h3>
+                  
+                  <p className="text-sm text-subtle mb-4 flex-shrink-0">
+                    📍 {dungeon.location.city}, {dungeon.location.state}
+                  </p>
+                  
+                  <p className="text-sm text-subtle leading-relaxed line-clamp-3 flex-1 mb-4">
+                    {dungeon.excerpt}
+                  </p>
+                  
+                  <div className="flex gap-3 flex-shrink-0">
+                    <a 
+                      href={dungeon.website}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-primary-400 hover:text-primary-300 font-medium text-sm border-b border-primary-600 hover:border-primary-500 transition-all duration-300 inline-block"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      Visit Website →
+                    </a>
+                  </div>
                 </div>
               </div>
             </Link>
