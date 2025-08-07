@@ -146,16 +146,16 @@ export default function CalendarClient({ allEvents }: CalendarClientProps) {
       </div>
 
       {/* Calendar Navigation */}
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex flex-col sm:flex-row items-center justify-between mb-8 gap-4">
         <button
           onClick={goToPreviousMonth}
-          className="btn-outline px-6 py-3 text-white hover:bg-primary-600 hover:border-primary-600 transition-colors"
+          className="btn-outline px-4 sm:px-6 py-2 sm:py-3 text-white hover:bg-primary-600 hover:border-primary-600 transition-colors text-sm sm:text-base"
         >
           ← Previous Month
         </button>
         
         <div className="text-center">
-          <h2 className="text-3xl font-serif font-semibold text-white mb-2">
+          <h2 className="text-2xl sm:text-3xl font-serif font-semibold text-white mb-2">
             {monthNames[currentMonth]} {currentYear}
           </h2>
           <button
@@ -168,75 +168,141 @@ export default function CalendarClient({ allEvents }: CalendarClientProps) {
         
         <button
           onClick={goToNextMonth}
-          className="btn-outline px-6 py-3 text-white hover:bg-primary-600 hover:border-primary-600 transition-colors"
+          className="btn-outline px-4 sm:px-6 py-2 sm:py-3 text-white hover:bg-primary-600 hover:border-primary-600 transition-colors text-sm sm:text-base"
         >
           Next Month →
         </button>
       </div>
 
-      {/* Calendar Grid */}
+      {/* Calendar Container - Mobile: Contained view, Desktop: Full width */}
       <div className="card-elegant">
-        {/* Day Headers */}
-        <div className="grid grid-cols-7 gap-1 mb-2">
-          {dayNames.map(day => (
-            <div key={day} className="p-3 text-center">
-              <span className="text-white font-medium text-sm">{day}</span>
-            </div>
-          ))}
-        </div>
+        <div className="w-full max-w-full mx-auto">
+          {/* Mobile: Contained calendar that fits screen */}
+          <div className="md:hidden">
+            <div className="w-full max-w-full overflow-hidden">
+              <div className="grid grid-cols-7 gap-0.5 text-xs">
+                {/* Day Headers */}
+                {dayNames.map(day => (
+                  <div key={day} className="p-1 text-center bg-dark-700">
+                    <span className="text-white font-medium text-xs">{day}</span>
+                  </div>
+                ))}
+                
+                {/* Calendar Days */}
+                {calendarData.map((date, index) => {
+                  const events = getEventsForDate(date)
+                  const isCurrentMonth = date.getMonth() === currentMonth
+                  const isPast = isPastDate(date)
+                  const isTodayDate = isToday(date)
 
-        {/* Calendar Days */}
-        <div className="grid grid-cols-7 gap-1">
-          {calendarData.map((date, index) => {
-            const events = getEventsForDate(date)
-            const isCurrentMonth = date.getMonth() === currentMonth
-            const isPast = isPastDate(date)
-            const isTodayDate = isToday(date)
+                  return (
+                    <div
+                      key={index}
+                      className={`min-h-20 p-1 border border-dark-600 ${
+                        isCurrentMonth ? 'bg-dark-800' : 'bg-dark-900'
+                      } ${isPast ? 'opacity-50' : ''}`}
+                    >
+                      {/* Date Number */}
+                      <div className="flex justify-between items-start mb-1">
+                        <span
+                          className={`text-xs font-medium ${
+                            isCurrentMonth ? 'text-white' : 'text-gray-500'
+                          } ${isTodayDate ? 'bg-primary-600 text-white px-1 py-0.5 rounded text-xs' : ''}`}
+                        >
+                          {date.getDate()}
+                        </span>
+                      </div>
 
-            return (
-              <div
-                key={index}
-                className={`min-h-32 p-2 border border-dark-600 ${
-                  isCurrentMonth ? 'bg-dark-800' : 'bg-dark-900'
-                } ${isPast ? 'opacity-50' : ''}`}
-              >
-                {/* Date Number */}
-                <div className="flex justify-between items-start mb-2">
-                  <span
-                    className={`text-sm font-medium ${
-                      isCurrentMonth ? 'text-white' : 'text-gray-500'
-                    } ${isTodayDate ? 'bg-primary-600 text-white px-2 py-1 rounded' : ''}`}
-                  >
-                    {date.getDate()}
-                  </span>
-                </div>
-
-                {/* Events */}
-                <div className="space-y-1">
-                  {events.map((event, eventIndex) => {
-                    const isPastEventItem = isPastEvent(event)
-                    return (
-                      <Link
-                        key={`${event.slug}-${eventIndex}`}
-                        href={`/events/${event.slug}`}
-                        className={`block p-1 rounded text-xs text-white hover:opacity-80 transition-opacity ${
-                          getCategoryColor(event.category, isPastEventItem)
-                        } ${isPastEventItem ? 'opacity-60' : ''}`}
-                        title={`${event.name} - ${event.date.display}`}
-                      >
-                        <div className="font-medium truncate">
-                          {event.name}
-                        </div>
-                        <div className="text-xs opacity-90">
-                          {event.location.city}, {event.location.state}
-                        </div>
-                      </Link>
-                    )
-                  })}
-                </div>
+                      {/* Events - Show all events */}
+                      <div className="space-y-0.5">
+                        {events.map((event, eventIndex) => {
+                          const isPastEventItem = isPastEvent(event)
+                          return (
+                            <Link
+                              key={`${event.slug}-${eventIndex}`}
+                              href={`/events/${event.slug}`}
+                              className={`block p-0.5 rounded text-xs text-white hover:opacity-80 transition-opacity ${
+                                getCategoryColor(event.category, isPastEventItem)
+                              } ${isPastEventItem ? 'opacity-60' : ''}`}
+                              title={`${event.name} - ${event.date.display}`}
+                            >
+                              <div className="font-medium truncate text-xs">
+                                {event.name}
+                              </div>
+                            </Link>
+                          )
+                        })}
+                      </div>
+                    </div>
+                  )
+                })}
               </div>
-            )
-          })}
+            </div>
+          </div>
+
+          {/* Desktop: Full calendar layout */}
+          <div className="hidden md:block">
+            <div className="grid grid-cols-7 gap-1 mb-2">
+              {dayNames.map(day => (
+                <div key={day} className="p-3 text-center">
+                  <span className="text-white font-medium text-sm">{day}</span>
+                </div>
+              ))}
+            </div>
+
+            <div className="grid grid-cols-7 gap-1">
+              {calendarData.map((date, index) => {
+                const events = getEventsForDate(date)
+                const isCurrentMonth = date.getMonth() === currentMonth
+                const isPast = isPastDate(date)
+                const isTodayDate = isToday(date)
+
+                return (
+                  <div
+                    key={index}
+                    className={`min-h-32 p-2 border border-dark-600 ${
+                      isCurrentMonth ? 'bg-dark-800' : 'bg-dark-900'
+                    } ${isPast ? 'opacity-50' : ''}`}
+                  >
+                    {/* Date Number */}
+                    <div className="flex justify-between items-start mb-2">
+                      <span
+                        className={`text-sm font-medium ${
+                          isCurrentMonth ? 'text-white' : 'text-gray-500'
+                        } ${isTodayDate ? 'bg-primary-600 text-white px-2 py-1 rounded' : ''}`}
+                      >
+                        {date.getDate()}
+                      </span>
+                    </div>
+
+                    {/* Events */}
+                    <div className="space-y-1">
+                      {events.map((event, eventIndex) => {
+                        const isPastEventItem = isPastEvent(event)
+                        return (
+                          <Link
+                            key={`${event.slug}-${eventIndex}`}
+                            href={`/events/${event.slug}`}
+                            className={`block p-1 rounded text-xs text-white hover:opacity-80 transition-opacity ${
+                              getCategoryColor(event.category, isPastEventItem)
+                            } ${isPastEventItem ? 'opacity-60' : ''}`}
+                            title={`${event.name} - ${event.date.display}`}
+                          >
+                            <div className="font-medium truncate">
+                              {event.name}
+                            </div>
+                            <div className="text-xs opacity-90">
+                              {event.location.city}, {event.location.state}
+                            </div>
+                          </Link>
+                        )
+                      })}
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          </div>
         </div>
       </div>
 
@@ -248,19 +314,19 @@ export default function CalendarClient({ allEvents }: CalendarClientProps) {
         <div className="flex flex-wrap gap-4">
           <div className="flex items-center space-x-2">
             <div className="w-4 h-4 bg-green-600 rounded"></div>
-            <span className="text-white">Outdoor Events</span>
+            <span className="text-white text-sm sm:text-base">Outdoor Events</span>
           </div>
           <div className="flex items-center space-x-2">
             <div className="w-4 h-4 bg-blue-600 rounded"></div>
-            <span className="text-white">Indoor Events</span>
+            <span className="text-white text-sm sm:text-base">Indoor Events</span>
           </div>
           <div className="flex items-center space-x-2">
             <div className="w-4 h-4 bg-gray-500 rounded"></div>
-            <span className="text-white">Past Events</span>
+            <span className="text-white text-sm sm:text-base">Past Events</span>
           </div>
           <div className="flex items-center space-x-2">
             <div className="w-4 h-4 bg-primary-600 rounded"></div>
-            <span className="text-white">Today's Date</span>
+            <span className="text-white text-sm sm:text-base">Today's Date</span>
           </div>
         </div>
       </div>
