@@ -80,8 +80,6 @@ export const metadata: Metadata = {
 export const viewport = {
   width: 'device-width',
   initialScale: 1,
-  maximumScale: 1,
-  userScalable: false,
 }
 
 export default function RootLayout({
@@ -98,6 +96,13 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.googleapis.com"/>
       </head>
       <body className={inter.className}>
+        {/* Skip to content link for keyboard users */}
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:bg-primary-600 focus:text-white focus:px-4 focus:py-2"
+        >
+          Skip to main content
+        </a>
         {process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID && (
           <GoogleAnalytics GA_MEASUREMENT_ID={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID} />
         )}
@@ -105,7 +110,7 @@ export default function RootLayout({
         <OrganizationStructuredData />
         <AgeVerification />
         <Header />
-        <main>
+        <main id="main-content" role="main" tabIndex={-1}>
           {children}
         </main>
         <Footer />
