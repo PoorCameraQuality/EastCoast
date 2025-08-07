@@ -1,4 +1,6 @@
-import React from 'react'
+'use client'
+
+import React, { useState } from 'react'
 import Link from 'next/link'
 
 interface EventLogoProps {
@@ -9,6 +11,8 @@ interface EventLogoProps {
 }
 
 export default function EventLogo({ src, alt, size = 'medium', className = '' }: EventLogoProps) {
+  const [imageError, setImageError] = useState(false)
+  
   const sizeClasses = {
     small: {
       container: 'h-16 bg-transparent rounded p-2',
@@ -26,6 +30,26 @@ export default function EventLogo({ src, alt, size = 'medium', className = '' }:
 
   const { container, image } = sizeClasses[size]
 
+  // Handle image load error
+  const handleImageError = () => {
+    setImageError(true)
+  }
+
+  // If image failed to load, show a placeholder
+  if (imageError) {
+    return (
+      <div className={`flex justify-center items-center ${container} ${className}`}>
+        <div className={`flex items-center justify-center bg-gray-700 rounded-xl ${image} w-full`}>
+          <img 
+            src="/images/placeholder-logo.svg" 
+            alt="Event placeholder"
+            className="max-w-full object-contain"
+          />
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className={`flex justify-center items-center ${container} ${className}`}>
       <img 
@@ -36,6 +60,7 @@ export default function EventLogo({ src, alt, size = 'medium', className = '' }:
           width: 'auto',
           height: 'auto'
         }}
+        onError={handleImageError}
       />
     </div>
   )
