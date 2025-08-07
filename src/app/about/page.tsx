@@ -11,11 +11,20 @@ export const metadata: Metadata = {
     description: 'Learn about East Coast Kink Events, our mission to connect the kink community with vetted events and foster transparency in the BDSM community.',
     type: 'website',
     url: 'https://eastcoastkinkevents.com/about',
+    images: [
+      {
+        url: 'https://eastcoastkinkevents.com/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'About East Coast Kink Events',
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'About - East Coast Kink Events',
     description: 'Learn about East Coast Kink Events and our mission.',
+    images: ['https://eastcoastkinkevents.com/og-image.png'],
   },
 }
 

@@ -707,7 +707,7 @@ export const generateEventSEO = (event) => {
     openGraph: {
       title: event.seo.title,
       description: event.seo.description,
-      images: [event.logo],
+      images: event.logo ? [`https://eastcoastkinkevents.com${event.logo}`] : ['https://eastcoastkinkevents.com/og-image.png'],
       type: 'website'
     }
   };

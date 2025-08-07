@@ -47,7 +47,7 @@ export const metadata: Metadata = {
     description: 'Discover and connect with kink events, BDSM dungeons, and educational resources across the East Coast. Find workshops, conferences, and community events in a safe, inclusive environment.',
     images: [
       {
-        url: 'https://eastcoastkinkevents.com/og-image.jpg',
+        url: 'https://eastcoastkinkevents.com/og-image.png',
         width: 1200,
         height: 630,
         alt: 'East Coast Kink Events - BDSM Community Platform',
@@ -58,7 +58,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'East Coast Kink Events - Discover BDSM Events & Dungeons',
     description: 'Discover and connect with kink events, BDSM dungeons, and educational resources across the East Coast.',
-    images: ['https://eastcoastkinkevents.com/og-image.jpg'],
+    images: ['https://eastcoastkinkevents.com/og-image.png'],
     creator: '@eastcoastkinkevents',
   },
   robots: {
@@ -82,6 +82,12 @@ export const viewport = {
   initialScale: 1,
   maximumScale: 1,
   userScalable: false,
+}
+
+export const icons = {
+  icon: '/favicon.svg',
+  shortcut: '/favicon.svg',
+  apple: '/favicon.svg',
 }
 
 export default function RootLayout({

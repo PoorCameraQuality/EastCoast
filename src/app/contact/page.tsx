@@ -13,11 +13,20 @@ export const metadata: Metadata = {
     description: 'Get in touch with East Coast Kink Events. Add your event or dungeon, provide feedback, or contact site administration.',
     type: 'website',
     url: 'https://eastcoastkinkevents.com/contact',
+    images: [
+      {
+        url: 'https://eastcoastkinkevents.com/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'Contact East Coast Kink Events',
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Contact Us - East Coast Kink Events',
     description: 'Get in touch with East Coast Kink Events.',
+    images: ['https://eastcoastkinkevents.com/og-image.png'],
   },
 }
 

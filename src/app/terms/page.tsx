@@ -1,3 +1,31 @@
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'Terms of Service - East Coast Kink Events',
+  description: 'Read our terms of service for using East Coast Kink Events website and services.',
+  keywords: 'terms of service, website terms, user agreement, kink events, BDSM terms',
+  openGraph: {
+    title: 'Terms of Service - East Coast Kink Events',
+    description: 'Read our terms of service for using East Coast Kink Events website and services.',
+    type: 'website',
+    url: 'https://eastcoastkinkevents.com/terms',
+    images: [
+      {
+        url: 'https://eastcoastkinkevents.com/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'Terms of Service - East Coast Kink Events',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Terms of Service - East Coast Kink Events',
+    description: 'Read our terms of service for using East Coast Kink Events.',
+    images: ['https://eastcoastkinkevents.com/og-image.png'],
+  },
+}
+
 export default function TermsPage() {
   return (
     <div className="min-h-screen bg-black">

@@ -1,3 +1,31 @@
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'Community Guidelines - East Coast Kink Events',
+  description: 'Learn about our community guidelines for creating a safe, inclusive, and respectful environment for all kink enthusiasts.',
+  keywords: 'community guidelines, safety, inclusivity, consent, kink community, BDSM guidelines',
+  openGraph: {
+    title: 'Community Guidelines - East Coast Kink Events',
+    description: 'Learn about our community guidelines for creating a safe, inclusive, and respectful environment for all kink enthusiasts.',
+    type: 'website',
+    url: 'https://eastcoastkinkevents.com/guidelines',
+    images: [
+      {
+        url: 'https://eastcoastkinkevents.com/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'Community Guidelines - East Coast Kink Events',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Community Guidelines - East Coast Kink Events',
+    description: 'Learn about our community guidelines for creating a safe, inclusive environment.',
+    images: ['https://eastcoastkinkevents.com/og-image.png'],
+  },
+}
+
 export default function GuidelinesPage() {
   return (
     <div className="min-h-screen bg-black">

@@ -268,7 +268,7 @@ export const generateDungeonSEO = (dungeon) => {
     openGraph: {
       title: dungeon.seo.title,
       description: dungeon.seo.description,
-      images: dungeon.images.length > 0 ? dungeon.images : [dungeon.logo],
+      images: dungeon.logo ? [`https://eastcoastkinkevents.com${dungeon.logo}`] : ['https://eastcoastkinkevents.com/og-image.png'],
       type: 'website'
     }
   };

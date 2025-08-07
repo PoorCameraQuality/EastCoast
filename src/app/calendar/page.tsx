@@ -15,11 +15,20 @@ export const metadata: Metadata = {
     description: 'Browse upcoming kink events by month with our interactive calendar. Find BDSM events, conferences, and workshops across the East Coast.',
     type: 'website',
     url: 'https://eastcoastkinkevents.com/calendar',
+    images: [
+      {
+        url: 'https://eastcoastkinkevents.com/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'East Coast Kink Events Calendar',
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Event Calendar - East Coast Kink Events',
     description: 'Browse upcoming kink events by month with our interactive calendar.',
+    images: ['https://eastcoastkinkevents.com/og-image.png'],
   },
 }
 
