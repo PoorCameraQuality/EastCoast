@@ -83,13 +83,27 @@ export const events = [
       "region": "Southeast, Michigan"
     },
     "category": "Indoor Event",
-    "excerpt": "The Summer Michigan Rope Conference (SMIRC) takes place from August 2-4, 2024, at the Wingate Hotel in Troy, MI. This event features top presenters from the US and Canada, offering a weekend of intensive rope education.",
+    "excerpt": "The Summer Michigan Rope Conference (SMIRC) takes place from August 15-17, 2025, at the Wingate Hotel in Troy, MI. This event features top presenters from the US and Canada, offering a weekend of intensive rope education. Attendees can benefit from a group hotel rate of $75/night. Early bird tickets are $200, with prices increasing closer to the event. Limited tickets ensure a personal experience, so early registration is advised. Join for a weekend of learning, laughter, and engagement.",
+    "longDescription": "Join Us for 2 Days of Classes and Fun at the Summer Michigan Rope Conference! Pack your rope, a snazzy outfit for the Saturday night play party, and an open mind for an unforgettable weekend in the Great Lakes state.\n\nWhat to Expect:\n\nClasses and Workshops: Attend a variety of classes designed to enhance your rope skills and knowledge.\n\nHands-On Practice: Try out new techniques on your own and refine your craft.\n\nCommunity Connection: Meet new people and explore together in a welcoming and supportive environment.\n\nDon't Miss Out: Tickets will sell out fast, so secure yours before it's too late!\n\nEmbrace the adventure and join us for an exciting weekend of learning and play at the Summer Michigan Rope Conference.",
     "website": "https://www.smirc.net/",
     "logo": "/images/smirc.jpg",
+    "pricing": {
+      "earlyBird": "$200",
+      "regular": "TBD",
+      "atDoor": "TBD",
+      "hotelRate": "$75/night"
+    },
+    "features": [
+      "Classes and Workshops",
+      "Hands-On Practice", 
+      "Community Connection",
+      "Saturday Night Play Party",
+      "Group Hotel Rate"
+    ],
     "seo": {
       "title": "The Summer Michigan Rope Conference SMIRC - Michigan Rope Education | East Coast Kink Events",
-      "description": "Join SMIRC for intensive rope education with top presenters from the US and Canada at the Wingate Hotel in Troy, MI.",
-      "keywords": "SMIRC, Michigan rope conference, rope education, BDSM, Troy Michigan, rope bondage"
+      "description": "Join SMIRC for intensive rope education with top presenters from the US and Canada at the Wingate Hotel in Troy, MI. Early bird tickets $200, group hotel rate $75/night.",
+      "keywords": "SMIRC, Michigan rope conference, rope education, BDSM, Troy Michigan, rope bondage, early bird tickets, hotel rate"
     }
   },
   {
@@ -106,7 +120,7 @@ export const events = [
       "region": "NorthEastern, Maryland"
     },
     "category": "Outdoor Event",
-    "excerpt": "Join Dark Odyssey's Summer Camp from August 27 to September 2, 2024, in Northern Maryland. This seven-day event blends kink and BDSM with spiritual exploration.",
+    "excerpt": "Join Dark Odyssey's Summer Camp from August 26 to September 1, 2025, in Northern Maryland. This seven-day event blends kink and BDSM with spiritual exploration.",
     "website": "https://darkodyssey.com/",
     "logo": "/images/darkodyssey.png",
     "seo": {
