@@ -345,7 +345,7 @@ export const events = [
     "category": "Indoor Event",
     "excerpt": "CCFF - Chicago Fetish Film Festival showcases the best in fetish and BDSM cinema, featuring screenings, workshops, and networking.",
     "website": "https://ccff.com/",
-    "logo": "/images/ccff.png",
+    "logo": "/images/placeholder-logo.svg",
     "seo": {
       "title": "CCFF - Chicago Fetish Film Festival | East Coast Kink Events",
       "description": "CCFF - Chicago Fetish Film Festival showcases the best in fetish and BDSM cinema, featuring screenings, workshops, and networking.",
