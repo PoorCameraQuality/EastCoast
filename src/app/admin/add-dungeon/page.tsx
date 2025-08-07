@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Image from 'next/image'
 
 export default function AddDungeonPage() {
   const [formData, setFormData] = useState({
@@ -268,9 +269,11 @@ export default function AddDungeonPage() {
                         </button>
                       </div>
                       <div className="flex items-center justify-center p-4 bg-white rounded">
-                        <img
+                        <Image
                           src={logoPreview}
                           alt="Logo preview"
+                          width={128}
+                          height={128}
                           className="max-h-32 max-w-full object-contain"
                         />
                       </div>

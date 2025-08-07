@@ -9,6 +9,8 @@ export interface User {
 
 // Check if user is logged in and has admin role
 export async function isAdmin(): Promise<boolean> {
+  if (!supabase) return false
+  
   try {
     const { data: { user }, error } = await supabase.auth.getUser()
     
@@ -36,6 +38,8 @@ export async function isAdmin(): Promise<boolean> {
 
 // Get current user info
 export async function getCurrentUser(): Promise<User | null> {
+  if (!supabase) return null
+  
   try {
     const { data: { user }, error } = await supabase.auth.getUser()
     
@@ -68,6 +72,8 @@ export async function getCurrentUser(): Promise<User | null> {
 
 // Check if user is logged in (any role)
 export async function isAuthenticated(): Promise<boolean> {
+  if (!supabase) return false
+  
   try {
     const { data: { user }, error } = await supabase.auth.getUser()
     return !error && !!user

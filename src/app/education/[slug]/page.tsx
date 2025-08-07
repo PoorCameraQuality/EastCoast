@@ -10,6 +10,12 @@ interface ArticlePageProps {
 
 async function getArticleBySlug(slug: string) {
   try {
+    // Check if Supabase is configured
+    if (!supabase) {
+      console.error('Supabase is not configured')
+      return null
+    }
+
     const { data: article, error } = await supabase
       .from('articles')
       .select('*')

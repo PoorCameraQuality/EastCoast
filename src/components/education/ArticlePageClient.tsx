@@ -83,6 +83,12 @@ export default function ArticlePageClient({ article, breadcrumbItems }: ArticleP
       return
     }
 
+    // Check if Supabase is configured
+    if (!supabase) {
+      alert('Database is not configured')
+      return
+    }
+
     setIsDeleting(true)
 
     try {
@@ -124,6 +130,17 @@ export default function ArticlePageClient({ article, breadcrumbItems }: ArticleP
   }
 
   const handleSaveEdit = async () => {
+    // Check if Supabase is configured
+    if (!supabase) {
+      setSaveStatus('error')
+      setSaveMessage('Database is not configured')
+      setTimeout(() => {
+        setSaveStatus('idle')
+        setSaveMessage('')
+      }, 3000)
+      return
+    }
+
     // Set saving state
     setIsSaving(true)
     setSaveStatus('saving')

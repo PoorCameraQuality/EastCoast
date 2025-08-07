@@ -12,16 +12,16 @@ interface DungeonLogoProps {
 export default function DungeonLogo({ src, alt, size = 'medium', className = '' }: DungeonLogoProps) {
   const sizeClasses = {
     small: {
-      container: 'h-24 w-24 bg-transparent rounded-xl p-2',
-      image: 'max-h-20 max-w-16 md:max-w-none' // More restrictive width for mobile
+      container: 'h-24 bg-transparent rounded-xl p-2',
+      image: 'max-h-20 max-w-14 md:max-w-24' // More generous desktop width
     },
     medium: {
-      container: 'h-40 w-40 bg-transparent rounded-xl p-3',
-      image: 'max-h-36 max-w-20 md:max-w-none' // More restrictive width for mobile
+      container: 'h-40 bg-transparent rounded-xl p-3',
+      image: 'max-h-36 max-w-18 md:max-w-32' // More generous desktop width
     },
     large: {
-      container: 'h-48 w-48 bg-transparent rounded-xl p-4',
-      image: 'max-h-44 max-w-24 md:max-w-none' // More restrictive width for mobile
+      container: 'h-48 bg-transparent rounded-xl p-4',
+      image: 'max-h-44 max-w-22 md:max-w-36' // More generous desktop width
     }
   }
 
@@ -29,14 +29,15 @@ export default function DungeonLogo({ src, alt, size = 'medium', className = '' 
 
   return (
     <div className={`flex justify-center items-center ${container} ${className}`}>
-      <div className="relative w-full h-full">
-        <Image 
-          src={src} 
-          alt={alt}
-          fill
-          className={`object-contain rounded-xl ${image}`}
-        />
-      </div>
+      <Image 
+        src={src} 
+        alt={alt}
+        width={0}
+        height={0}
+        sizes="100vw"
+        className={`object-contain rounded-xl ${image}`}
+        style={{ width: 'auto', height: 'auto' }}
+      />
     </div>
   )
 }

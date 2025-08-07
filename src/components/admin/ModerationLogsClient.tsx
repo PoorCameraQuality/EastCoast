@@ -23,6 +23,13 @@ export default function ModerationLogsClient() {
 
   const fetchModerationLogs = useCallback(async () => {
     try {
+      // Check if Supabase is configured
+      if (!supabase) {
+        console.error('Supabase is not configured')
+        setLoading(false)
+        return
+      }
+
       let query = supabase
         .from('moderation_logs')
         .select('*')

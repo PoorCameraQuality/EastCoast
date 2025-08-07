@@ -17,6 +17,12 @@ export default function LoginPageClient() {
     setLoading(true)
     setError('')
 
+    if (!supabase) {
+      setError('Authentication is not configured. Please contact the administrator.')
+      setLoading(false)
+      return
+    }
+
     try {
       const { data, error } = await supabase.auth.signInWithPassword({
         email,

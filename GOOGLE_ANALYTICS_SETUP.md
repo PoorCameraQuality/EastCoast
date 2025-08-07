@@ -1,9 +1,26 @@
 # Google Analytics Setup Guide
 
-## 🎯 **Current Status**
-Your website has Google Analytics integration ready, but the Measurement ID needs to be configured.
+## 🎯 **QUICK SETUP (5 MINUTES)**
 
-## 📋 **Step 1: Create Google Analytics Account**
+### **Step 1: Get Your Measurement ID**
+1. Go to [Google Analytics](https://analytics.google.com/)
+2. Create a new property or use existing one
+3. Copy your Measurement ID (format: G-XXXXXXXXXX)
+
+### **Step 2: Add to Environment Variables**
+Add this to your `.env.local` file:
+```env
+NEXT_PUBLIC_GA_MEASUREMENT_ID=G-XXXXXXXXXX
+```
+
+### **Step 3: Verify Setup**
+1. Restart your development server: `npm run dev`
+2. Open browser console and look for "gtag" requests
+3. Check Google Analytics Real-Time reports
+
+## 📋 **DETAILED SETUP GUIDE**
+
+### **Step 1: Create Google Analytics Account**
 
 1. **Go to [Google Analytics](https://analytics.google.com/)**
 2. **Click "Start measuring"**
@@ -17,9 +34,9 @@ Your website has Google Analytics integration ready, but the Measurement ID need
 6. **Give your data stream a name:** "East Coast Kink Events"
 7. **Copy your Measurement ID** (format: G-XXXXXXXXXX)
 
-## 🔧 **Step 2: Configure Environment Variables**
+### **Step 2: Configure Environment Variables**
 
-### **For Development:**
+#### **For Development:**
 1. **Open your `.env.local` file**
 2. **Add your Measurement ID:**
 
@@ -29,10 +46,10 @@ NEXT_PUBLIC_GA_MEASUREMENT_ID=G-XXXXXXXXXX
 
 Replace `G-XXXXXXXXXX` with your actual Measurement ID.
 
-### **For Production Deployment:**
+#### **For Production Deployment:**
 When you deploy to your hosting platform (Vercel, Netlify, etc.), add this environment variable in your hosting dashboard.
 
-## ✅ **Step 3: Verify Installation**
+### **Step 3: Verify Installation**
 
 1. **Start your development server:** `npm run dev`
 2. **Open your website in a browser**

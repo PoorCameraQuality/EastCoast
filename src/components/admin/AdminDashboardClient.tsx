@@ -24,6 +24,13 @@ export default function AdminDashboardClient() {
 
   const fetchDashboardStats = async () => {
     try {
+      // Check if Supabase is configured
+      if (!supabase) {
+        console.error('Supabase is not configured')
+        setLoading(false)
+        return
+      }
+
       // Get pending submissions count
       const { count: pendingCount } = await supabase
         .from('submissions')

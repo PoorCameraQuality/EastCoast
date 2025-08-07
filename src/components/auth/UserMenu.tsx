@@ -13,6 +13,12 @@ export default function UserMenu() {
   const [logoutLoading, setLogoutLoading] = useState(false)
 
   useEffect(() => {
+    // If Supabase is not configured, skip auth functionality
+    if (!supabase) {
+      setLoading(false)
+      return
+    }
+
     // Get initial user
     const getUser = async () => {
       const currentUser = await getCurrentUser()
@@ -51,7 +57,7 @@ export default function UserMenu() {
   }, [])
 
   const handleLogout = async () => {
-    if (logoutLoading) return // Prevent multiple clicks
+    if (logoutLoading || !supabase) return // Prevent multiple clicks or if no Supabase
     
     try {
       setLogoutLoading(true)
@@ -84,6 +90,20 @@ export default function UserMenu() {
     }
   }
 
+  // If Supabase is not configured, show a simple login link
+  if (!supabase) {
+    return (
+      <div className="flex items-center space-x-4">
+        <Link 
+          href="/login" 
+          className="text-primary-500 hover:text-primary-400 transition-colors"
+        >
+          Login
+        </Link>
+      </div>
+    )
+  }
+
   if (loading) {
     return (
       <div className="flex items-center">
@@ -98,9 +118,9 @@ export default function UserMenu() {
         <div className="login-modal-content">
           <button
             onClick={() => setShowLogin(false)}
-            className="absolute -top-4 -right-4 w-8 h-8 bg-dark-800 rounded-full flex items-center justify-center text-white hover:bg-dark-700 transition-colors z-10"
+            className="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
           >
-            ×
+            ✕
           </button>
           <LoginForm />
         </div>
@@ -108,41 +128,16 @@ export default function UserMenu() {
     )
   }
 
-  // Show admin tool button for administrators
-  if (user && user.role === 'admin') {
-    return (
-      <div className="flex items-center space-x-4">
-        <Link
-          href="/admin/review-submissions"
-          className="admin-mode-button text-white px-6 py-3 rounded-md transition-all duration-300 text-sm font-bold hover:scale-105 transform whitespace-nowrap"
-        >
-          🔥 ADMIN TOOL 🔥
-        </Link>
-        <button
-          onClick={handleLogout}
-          disabled={logoutLoading}
-          className="text-gray-300 hover:text-white transition-colors text-sm disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          {logoutLoading ? 'Logging out...' : 'Logout'}
-        </button>
-      </div>
-    )
-  }
-
-  // Show regular user menu for non-admin users
   if (user) {
     return (
       <div className="flex items-center space-x-4">
         <div className="text-sm text-gray-300">
-          <span className="font-medium">{user.name || user.email}</span>
+          Welcome, {user.email}
         </div>
-        <span className="px-2 py-1 bg-gray-600 text-white text-xs rounded-full">
-          User
-        </span>
         <button
           onClick={handleLogout}
           disabled={logoutLoading}
-          className="text-gray-300 hover:text-white transition-colors text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+          className="text-primary-500 hover:text-primary-400 transition-colors disabled:opacity-50"
         >
           {logoutLoading ? 'Logging out...' : 'Logout'}
         </button>
@@ -150,13 +145,14 @@ export default function UserMenu() {
     )
   }
 
-  // Show sign in button for non-authenticated users
   return (
-    <button
-      onClick={() => setShowLogin(true)}
-      className="bg-primary-500 text-white px-4 py-2 rounded-md hover:bg-primary-600 transition-colors text-sm"
-    >
-      Sign In
-    </button>
+    <div className="flex items-center space-x-4">
+      <button
+        onClick={() => setShowLogin(true)}
+        className="text-primary-500 hover:text-primary-400 transition-colors"
+      >
+        Login
+      </button>
+    </div>
   )
 }

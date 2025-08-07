@@ -4,6 +4,14 @@ import { supabase } from '@/lib/supabase'
 
 export async function POST(request: NextRequest) {
   try {
+    // Check if Supabase is configured
+    if (!supabase) {
+      return NextResponse.json(
+        { success: false, message: 'Authentication is not configured' },
+        { status: 503 }
+      )
+    }
+
     // Apply rate limiting for authentication attempts
     const rateLimitResponse = await withRateLimit(request, rateLimiters.auth)
     if (rateLimitResponse) {

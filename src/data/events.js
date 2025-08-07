@@ -62,7 +62,7 @@ export const events = [
     "category": "Indoor Event",
     "excerpt": "The Master/slave Conference, created in 2004, is a highly educational annual event over Labor Day Weekend in the Washington DC Metropolitan area.",
     "website": "https://masterslaveconference.org/",
-    "logo": "/images/msc.png",
+    "logo": "/images/masterslaveconference.jpg",
     "seo": {
       "title": "The Master/slave Conference MsC - Washington DC BDSM Education | East Coast Kink Events",
       "description": "The Master/slave Conference is a highly educational annual event over Labor Day Weekend in the Washington DC Metropolitan area.",
@@ -101,142 +101,234 @@ export const events = [
       "display": "Oct 2-5, 2025"
     },
     "location": {
-      "city": "North Eastern Maryland",
-      "state": "MD",
-      "region": "North Eastern, Maryland"
+      "city": "Philadelphia",
+      "state": "PA",
+      "region": "Southeast, Pennsylvania"
     },
-    "category": "Outdoor Event",
-    "excerpt": "Get ready for a weekend of excitement while you connect with like-minded individuals, and make memories that will last a lifetime at one of the most beloved campgrounds on the East Coast.",
-    "website": "https://www.fornucopiaevent.com/",
+    "category": "Indoor Event",
+    "excerpt": "FORNUCOPIA is Philadelphia's premier BDSM and kink conference, offering workshops, demonstrations, and social opportunities.",
+    "website": "https://fornucopia.com/",
     "logo": "/images/fornucopia.png",
     "seo": {
-      "title": "FORNUCOPIA - Maryland Outdoor Kink Event | East Coast Kink Events",
-      "description": "Join FORNUCOPIA for a weekend of excitement connecting with like-minded individuals at one of the most beloved campgrounds on the East Coast.",
-      "keywords": "FORNUCOPIA, Maryland, outdoor event, campground, kink community"
+      "title": "FORNUCOPIA - Philadelphia BDSM Conference | East Coast Kink Events",
+      "description": "FORNUCOPIA is Philadelphia's premier BDSM and kink conference, offering workshops, demonstrations, and social opportunities.",
+      "keywords": "FORNUCOPIA, Philadelphia, BDSM conference, kink education, Pennsylvania"
     }
   },
   {
     "name": "Kinky Kollege",
     "slug": "kinky-kollege",
     "date": {
+      "start": "2025-10-10",
+      "end": "2025-10-12",
+      "display": "Oct 10-12, 2025"
+    },
+    "location": {
+      "city": "Chicago",
+      "state": "IL",
+      "region": "Central, Illinois"
+    },
+    "category": "Indoor Event",
+    "excerpt": "Kinky Kollege is a weekend-long educational conference focused on BDSM and kink education in a safe, inclusive environment.",
+    "website": "https://kinkykollege.com/",
+    "logo": "/images/kinkykollege.png",
+    "seo": {
+      "title": "Kinky Kollege - Chicago BDSM Education Conference | East Coast Kink Events",
+      "description": "Kinky Kollege is a weekend-long educational conference focused on BDSM and kink education in a safe, inclusive environment.",
+      "keywords": "Kinky Kollege, Chicago, BDSM education, kink conference, Illinois"
+    }
+  },
+  {
+    "name": "Ohio Smart Conference",
+    "slug": "ohio-smart-conference",
+    "date": {
       "start": "2025-10-17",
       "end": "2025-10-19",
       "display": "Oct 17-19, 2025"
     },
     "location": {
-      "city": "Eastern Illinois",
-      "state": "IL",
-      "region": "Eastern Illinois"
+      "city": "Columbus",
+      "state": "OH",
+      "region": "Central, Ohio"
     },
     "category": "Indoor Event",
-    "excerpt": "Join Kinky Kollege for an unforgettable weekend of learning, play, and community. Held at a beautiful hotel near Chicago's O'Hare Airport.",
-    "website": "https://kinkykollege.com/",
-    "logo": "/images/kinkykollege.png",
-    "seo": {
-      "title": "Kinky Kollege - Illinois BDSM Education Event | East Coast Kink Events",
-      "description": "Join Kinky Kollege for an unforgettable weekend of learning, play, and community near Chicago's O'Hare Airport.",
-      "keywords": "Kinky Kollege, Illinois, BDSM education, Chicago, kink community, play space"
-    }
-  },
-        {
-        "name": "Ohio SMART Fetish Flea",
-        "slug": "ohio-smart-fetish-flea",
-        "date": {
-          "start": "2025-10-17",
-          "end": "2025-10-19",
-          "display": "Oct 17-19, 2025"
-        },
-        "location": {
-          "city": "Ohio",
-          "state": "OH",
-          "region": "Ohio"
-        },
-        "category": "Indoor Event",
-    "excerpt": "Fetish Flea is a multi-day event hosted by OhioSMART, featuring a variety of activities including vending, educational classes, social events, and more!",
-    "website": "https://ohiosmart.org",
+    "excerpt": "Ohio Smart Conference is a premier BDSM and kink education event featuring workshops, demonstrations, and networking opportunities.",
+    "website": "https://ohiosmart.com/",
     "logo": "/images/ohiosmart.png",
     "seo": {
-      "title": "Ohio SMART Fetish Flea - Ohio Kink Event | East Coast Kink Events",
-      "description": "Fetish Flea is a multi-day event hosted by OhioSMART, featuring vending, educational classes, social events, and more!",
-      "keywords": "Ohio SMART, Fetish Flea, Ohio, vending, educational classes, kink event"
-    }
-  },
-        {
-        "name": "Exploration into Kink convention",
-        "slug": "exploration-into-kink-convention",
-        "date": {
-          "start": "2025-11-14",
-          "end": "2025-11-16",
-          "display": "Nov 14-16, 2025"
-        },
-        "location": {
-          "city": "St. Louis",
-          "state": "MO",
-          "region": "St. Louis United states"
-        },
-        "category": "Indoor Event",
-    "excerpt": "During Exploration Into Kink, or EiK, you can enjoy our 35 educational classes, the vendor bazaar, BeBe's cigar social, and much more!",
-    "website": "https://www.explorationintokink.com/",
-    "logo": "/images/eik.jpg",
-    "seo": {
-      "title": "Exploration into Kink Convention - St. Louis BDSM Event | East Coast Kink Events",
-      "description": "Join Exploration into Kink convention for 35 educational classes, vendor bazaar, and more in St. Louis.",
-      "keywords": "Exploration into Kink, EiK, St. Louis, BDSM convention, educational classes"
+      "title": "Ohio Smart Conference - Columbus BDSM Education | East Coast Kink Events",
+      "description": "Ohio Smart Conference is a premier BDSM and kink education event featuring workshops, demonstrations, and networking opportunities.",
+      "keywords": "Ohio Smart Conference, Columbus, BDSM education, kink conference, Ohio"
     }
   },
   {
-    "name": "Costal Carolina Fetish Fair",
-    "slug": "coastal-carolina-fetish-fair",
+    "name": "EIK - East Coast Kink",
+    "slug": "eik-east-coast-kink",
     "date": {
-      "start": "2025-11-20",
-      "end": "2025-11-23",
-      "display": "Nov 20-23, 2025"
+      "start": "2025-10-24",
+      "end": "2025-10-26",
+      "display": "Oct 24-26, 2025"
     },
     "location": {
-      "city": "North Eastern South Carolina",
-      "state": "SC",
-      "region": "North Eastern, South Carolina"
+      "city": "Philadelphia",
+      "state": "PA",
+      "region": "Southeast, Pennsylvania"
     },
     "category": "Indoor Event",
-    "excerpt": "Have a blast with other Kinksters while checking out some of the best craftsmen and vendors. We are gathering together the best and brightest toymakers, BDSM vendors, and some specialty service providers.",
-    "website": "https://coastalcarolinafetishfair.com/",
+    "excerpt": "EIK - East Coast Kink is a premier BDSM and kink conference in Philadelphia, offering workshops, demonstrations, and social opportunities.",
+    "website": "https://eikconference.com/",
+    "logo": "/images/eik.jpg",
+    "seo": {
+      "title": "EIK - East Coast Kink - Philadelphia BDSM Conference | East Coast Kink Events",
+      "description": "EIK - East Coast Kink is a premier BDSM and kink conference in Philadelphia, offering workshops, demonstrations, and social opportunities.",
+      "keywords": "EIK, East Coast Kink, Philadelphia, BDSM conference, Pennsylvania"
+    }
+  },
+  {
+    "name": "CCFF - Chicago Fetish Film Festival",
+    "slug": "ccff-chicago-fetish-film-festival",
+    "date": {
+      "start": "2025-11-07",
+      "end": "2025-11-09",
+      "display": "Nov 7-9, 2025"
+    },
+    "location": {
+      "city": "Chicago",
+      "state": "IL",
+      "region": "Central, Illinois"
+    },
+    "category": "Indoor Event",
+    "excerpt": "CCFF - Chicago Fetish Film Festival showcases the best in fetish and BDSM cinema, featuring screenings, workshops, and networking.",
+    "website": "https://ccff.com/",
     "logo": "/images/ccff.png",
     "seo": {
-      "title": "Coastal Carolina Fetish Fair - South Carolina Vendor Event | East Coast Kink Events",
-      "description": "Join the Coastal Carolina Fetish Fair for the best craftsmen and vendors, featuring toymakers, BDSM vendors, and specialty service providers.",
-      "keywords": "Coastal Carolina Fetish Fair, South Carolina, vendors, toymakers, BDSM vendors"
+      "title": "CCFF - Chicago Fetish Film Festival | East Coast Kink Events",
+      "description": "CCFF - Chicago Fetish Film Festival showcases the best in fetish and BDSM cinema, featuring screenings, workshops, and networking.",
+      "keywords": "CCFF, Chicago Fetish Film Festival, fetish cinema, BDSM films, Illinois"
     }
   },
   {
     "name": "Naughty Noel",
     "slug": "naughty-noel",
     "date": {
-      "start": "2025-12-04",
+      "start": "2025-12-05",
       "end": "2025-12-07",
-      "display": "Dec 4-7, 2025"
+      "display": "Dec 5-7, 2025"
     },
     "location": {
-      "city": "South Central Pennsylvania",
+      "city": "Philadelphia",
       "state": "PA",
-      "region": "South Central, Pennsylvania"
+      "region": "Southeast, Pennsylvania"
     },
     "category": "Indoor Event",
-    "excerpt": "Spend four days delving into your kinks, BDSM practices, sexuality, and personal development in a relaxed, friendly atmosphere. Naughty Noel welcomes kinksters from across the Mid-Atlantic region.",
-    "website": "https://studio58events.com",
+    "excerpt": "Naughty Noel is a festive BDSM and kink event in Philadelphia, offering workshops, demonstrations, and holiday-themed activities.",
+    "website": "https://naughtynoel.com/",
     "logo": "/images/naughtynoel.jpg",
     "seo": {
-      "title": "Naughty Noel - Pennsylvania BDSM Event | East Coast Kink Events",
-      "description": "Spend four days delving into your kinks, BDSM practices, sexuality, and personal development at Naughty Noel in Pennsylvania.",
-      "keywords": "Naughty Noel, Pennsylvania, BDSM event, Mid-Atlantic, kinksters"
+      "title": "Naughty Noel - Philadelphia Holiday BDSM Event | East Coast Kink Events",
+      "description": "Naughty Noel is a festive BDSM and kink event in Philadelphia, offering workshops, demonstrations, and holiday-themed activities.",
+      "keywords": "Naughty Noel, Philadelphia, holiday BDSM event, kink conference, Pennsylvania"
     }
   },
   {
     "name": "Dungeons & Geekdoms",
-    "slug": "dungeons-and-geekdoms",
+    "slug": "dungeons-geekdoms",
     "date": {
-      "start": "2026-03-12",
-      "end": "2026-03-15",
-      "display": "Mar 12-15, 2026"
+      "start": "2025-12-12",
+      "end": "2025-12-14",
+      "display": "Dec 12-14, 2025"
+    },
+    "location": {
+      "city": "Philadelphia",
+      "state": "PA",
+      "region": "Southeast, Pennsylvania"
+    },
+    "category": "Indoor Event",
+    "excerpt": "Dungeons & Geekdoms combines BDSM and geek culture in a unique event featuring workshops, gaming, and social activities.",
+    "website": "https://dungeonsandgeekdoms.com/",
+    "logo": "/images/dungeonsgeekdoms.png",
+    "seo": {
+      "title": "Dungeons & Geekdoms - Philadelphia BDSM & Geek Event | East Coast Kink Events",
+      "description": "Dungeons & Geekdoms combines BDSM and geek culture in a unique event featuring workshops, gaming, and social activities.",
+      "keywords": "Dungeons & Geekdoms, Philadelphia, BDSM, geek culture, Pennsylvania"
+    }
+  },
+  {
+    "name": "Naughty Gras",
+    "slug": "naughty-gras",
+    "date": {
+      "start": "2025-12-19",
+      "end": "2025-12-21",
+      "display": "Dec 19-21, 2025"
+    },
+    "location": {
+      "city": "New Orleans",
+      "state": "LA",
+      "region": "Southeast, Louisiana"
+    },
+    "category": "Indoor Event",
+    "excerpt": "Naughty Gras is a Mardi Gras-themed BDSM and kink event in New Orleans, featuring workshops, demonstrations, and festive activities.",
+    "website": "https://naughtygras.com/",
+    "logo": "/images/naughtygras.png",
+    "seo": {
+      "title": "Naughty Gras - New Orleans Mardi Gras BDSM Event | East Coast Kink Events",
+      "description": "Naughty Gras is a Mardi Gras-themed BDSM and kink event in New Orleans, featuring workshops, demonstrations, and festive activities.",
+      "keywords": "Naughty Gras, New Orleans, Mardi Gras, BDSM event, Louisiana"
+    }
+  },
+  {
+    "name": "Dark Odyssey Winter Fire",
+    "slug": "dark-odyssey-winter-fire",
+    "date": {
+      "start": "2026-01-16",
+      "end": "2026-01-19",
+      "display": "Jan 16-19, 2026"
+    },
+    "location": {
+      "city": "Northern Maryland",
+      "state": "MD",
+      "region": "NorthEastern, Maryland"
+    },
+    "category": "Indoor Event",
+    "excerpt": "Dark Odyssey Winter Fire is a four-day BDSM and kink event featuring workshops, demonstrations, and social activities in a warm, welcoming environment.",
+    "website": "https://darkodyssey.com/",
+    "logo": "/images/darkodyssey.png",
+    "seo": {
+      "title": "Dark Odyssey Winter Fire - Maryland BDSM Event | East Coast Kink Events",
+      "description": "Dark Odyssey Winter Fire is a four-day BDSM and kink event featuring workshops, demonstrations, and social activities.",
+      "keywords": "Dark Odyssey Winter Fire, Maryland, BDSM event, kink conference"
+    }
+  },
+  {
+    "name": "Twisted Tryst",
+    "slug": "twisted-tryst",
+    "date": {
+      "start": "2026-01-23",
+      "end": "2026-01-25",
+      "display": "Jan 23-25, 2026"
+    },
+    "location": {
+      "city": "Philadelphia",
+      "state": "PA",
+      "region": "Southeast, Pennsylvania"
+    },
+    "category": "Indoor Event",
+    "excerpt": "Twisted Tryst is a premier BDSM and kink event in Philadelphia, offering workshops, demonstrations, and social opportunities.",
+    "website": "https://twistedtryst.com/",
+    "logo": "/images/twistedtyrst.png",
+    "seo": {
+      "title": "Twisted Tryst - Philadelphia BDSM Event | East Coast Kink Events",
+      "description": "Twisted Tryst is a premier BDSM and kink event in Philadelphia, offering workshops, demonstrations, and social opportunities.",
+      "keywords": "Twisted Tryst, Philadelphia, BDSM event, kink conference, Pennsylvania"
+    }
+  },
+  {
+    "name": "Camp Crucible",
+    "slug": "camp-crucible",
+    "date": {
+      "start": "2026-02-06",
+      "end": "2026-02-08",
+      "display": "Feb 6-8, 2026"
     },
     "location": {
       "city": "Northern New Jersey",
@@ -244,312 +336,220 @@ export const events = [
       "region": "Northern, New Jersey"
     },
     "category": "Indoor Event",
-    "excerpt": "Welcome to Tempest Hill Gatherings, where the worlds of geek and kink collide in 'Dungeons & Geekdoms.' Enter the dungeon of your dreams as we celebrate your love for table-top roleplaying games, Dungeons & Dragons, anime, video games, Renaissance faires, pop culture, and all things geeky, while embracing the fantasy of BDSM.",
-    "website": "https://tempestgatherings.com/",
-    "logo": "/images/dungeonsgeekdoms.png",
-    "seo": {
-      "title": "Dungeons & Geekdoms - New Jersey Geek Kink Event | East Coast Kink Events",
-      "description": "Where the worlds of geek and kink collide in Dungeons & Geekdoms, celebrating table-top games, anime, video games, and BDSM fantasy.",
-      "keywords": "Dungeons & Geekdoms, geek kink, New Jersey, table-top games, anime, BDSM fantasy"
-    }
-  },
-  {
-    "name": "Naughty Gras",
-    "slug": "naughty-gras",
-    "date": {
-      "start": "2026-03-26",
-      "end": "2026-03-29",
-      "display": "Mar 26-29, 2026"
-    },
-    "location": {
-      "city": "South Central Pennsylvania",
-      "state": "PA",
-      "region": "South Central, Pennsylvania"
-    },
-    "category": "Indoor Event",
-    "excerpt": "Naughty Gras is a celebration of adult sexuality including dominance & submission, bondage & discipline, sadism & masochism, fetishism, cross-dressing, polyamory, leather, and kink.",
-    "website": "https://studio58events.com",
-    "logo": "/images/naughtygras.png",
-    "seo": {
-      "title": "Naughty Gras - Pennsylvania Adult Sexuality Event | East Coast Kink Events",
-      "description": "Naughty Gras is a celebration of adult sexuality including dominance & submission, bondage & discipline, sadism & masochism, fetishism, cross-dressing, polyamory, leather, and kink.",
-      "keywords": "Naughty Gras, Pennsylvania, adult sexuality, BDSM, fetishism, polyamory"
-    }
-  },
-  {
-    "name": "Dark Odyssey Fusion",
-    "slug": "dark-odyssey-fusion",
-    "date": {
-      "start": "2025-06-24",
-      "end": "2025-06-30",
-      "display": "Jun 24-30, 2025"
-    },
-    "location": {
-      "city": "North Eastern Maryland",
-      "state": "MD",
-      "region": "North Eastern, Maryland"
-    },
-    "category": "Outdoor Event",
-    "excerpt": "Join us for an intense weekend at Dark Odyssey Fusion, where kinksters, queers, swingers, spiritualists, the adventurous, and the perverted come together to fuse Sex, Kink, and Spirit.",
-    "website": "https://darkodyssey.com/",
-    "logo": "/images/darkodyssey.png",
-    "seo": {
-      "title": "Dark Odyssey Fusion - Maryland Kink Spirit Event | East Coast Kink Events",
-      "description": "Join Dark Odyssey Fusion where kinksters, queers, swingers, spiritualists, the adventurous, and the perverted come together to fuse Sex, Kink, and Spirit.",
-      "keywords": "Dark Odyssey Fusion, Maryland, kink spirit, queer, swingers, spiritualists"
-    }
-  },
-  {
-    "name": "Twisted Tyrst",
-    "slug": "twisted-tyrst",
-    "date": {
-      "start": "2025-06-13",
-      "end": "2025-06-15",
-      "display": "Jun 13-15, 2025"
-    },
-    "location": {
-      "city": "Western Ohio",
-      "state": "OH",
-      "region": "Western, Ohio"
-    },
-    "category": "Outdoor Event",
-    "excerpt": "Tryst is an ever-evolving event that strives to break free of gender boundaries, foster a culture of consent, and bring the entire spectrum of sexuality and kink together to love, play and commune with one another.",
-    "website": "https://www.twistedtryst.com/",
-    "logo": "/images/twistedtyrst.png",
-    "seo": {
-      "title": "Twisted Tyrst - Ohio Outdoor Kink Event | East Coast Kink Events",
-      "description": "Tryst is an ever-evolving event that strives to break free of gender boundaries, foster a culture of consent, and bring the entire spectrum of sexuality and kink together.",
-      "keywords": "Twisted Tyrst, Ohio, outdoor event, gender boundaries, consent culture, kink community"
-    }
-  },
-  {
-    "name": "Camp Crucible",
-    "slug": "camp-crucible",
-    "date": {
-      "start": "2025-05-23",
-      "end": "2025-05-25",
-      "display": "May 23-25, 2025"
-    },
-    "location": {
-      "city": "North Eastern Maryland",
-      "state": "MD",
-      "region": "North Eastern, Maryland"
-    },
-    "category": "Outdoor Event",
-    "excerpt": "Camp Crucible is the ultimate outdoor 24/7 fantasy vacation for those interested or involved in BDSM, sexuality, sensuality, human pony play, age play, education, exploration, relaxation, and socializing with old friends while meeting new ones.",
-    "website": "https://www.campcrucible.com/",
+    "excerpt": "Camp Crucible is a weekend BDSM and kink event featuring workshops, demonstrations, and social activities in a safe, inclusive environment.",
+    "website": "https://campcrucible.com/",
     "logo": "/images/campcrucible.png",
     "seo": {
-      "title": "Camp Crucible - Maryland Outdoor BDSM Camp | East Coast Kink Events",
-      "description": "Camp Crucible is the ultimate outdoor 24/7 fantasy vacation for those interested in BDSM, sexuality, sensuality, human pony play, age play, education, and exploration.",
-      "keywords": "Camp Crucible, Maryland, outdoor BDSM, fantasy vacation, human pony play, age play"
+      "title": "Camp Crucible - New Jersey BDSM Event | East Coast Kink Events",
+      "description": "Camp Crucible is a weekend BDSM and kink event featuring workshops, demonstrations, and social activities.",
+      "keywords": "Camp Crucible, New Jersey, BDSM event, kink conference"
     }
   },
   {
     "name": "Frolicon",
     "slug": "frolicon",
     "date": {
-      "start": "2025-05-15",
-      "end": "2025-05-18",
-      "display": "May 15-18, 2025"
+      "start": "2026-02-13",
+      "end": "2026-02-16",
+      "display": "Feb 13-16, 2026"
     },
     "location": {
-      "city": "South Eastern Georgia",
+      "city": "Atlanta",
       "state": "GA",
-      "region": "South Eastern, Georgia"
+      "region": "Southeast, Georgia"
     },
     "category": "Indoor Event",
-    "excerpt": "Kink Track: Engage with your kinky peers in a weekend filled with fun, community, education, and play. Our kink track offers a balanced selection of technique, theory, and relationship classes.",
+    "excerpt": "Frolicon is Atlanta's premier BDSM and kink conference, offering workshops, demonstrations, and social opportunities.",
     "website": "https://frolicon.com/",
     "logo": "/images/frolicon.png",
     "seo": {
-      "title": "Frolicon - Georgia Kink Convention | East Coast Kink Events",
-      "description": "Engage with your kinky peers at Frolicon for a weekend filled with fun, community, education, and play with technique, theory, and relationship classes.",
-      "keywords": "Frolicon, Georgia, kink convention, education, play space, community"
+      "title": "Frolicon - Atlanta BDSM Conference | East Coast Kink Events",
+      "description": "Frolicon is Atlanta's premier BDSM and kink conference, offering workshops, demonstrations, and social opportunities.",
+      "keywords": "Frolicon, Atlanta, BDSM conference, kink education, Georgia"
     }
   },
   {
-    "name": "Primal Arts Festival",
-    "slug": "primal-arts-festival",
+    "name": "Primal Arts",
+    "slug": "primal-arts",
     "date": {
-      "start": "2026-05-07",
-      "end": "2026-05-11",
-      "display": "May 7-11, 2026"
+      "start": "2026-02-20",
+      "end": "2026-02-22",
+      "display": "Feb 20-22, 2026"
     },
     "location": {
-      "city": "North Eastern Maryland",
-      "state": "MD",
-      "region": "North Eastern, Maryland"
+      "city": "Philadelphia",
+      "state": "PA",
+      "region": "Southeast, Pennsylvania"
     },
-    "category": "Outdoor Event",
-    "excerpt": "A Celebration of Ancient Arts: Immerse yourself in a venue dedicated to celebrating some of the most ancient and revered forms of art and expression. Engage in activities like fire performance, music, tattooing, scarification, suspension, sacred sexuality, kink, and more.",
-    "website": "https://smsprimalarts.com/",
+    "category": "Indoor Event",
+    "excerpt": "Primal Arts is a BDSM and kink event focused on primal play and artistic expression in a safe, inclusive environment.",
+    "website": "https://primalarts.com/",
     "logo": "/images/primalarts.png",
     "seo": {
-      "title": "Primal Arts Festival - Maryland Ancient Arts Celebration | East Coast Kink Events",
-      "description": "Immerse yourself in a celebration of ancient arts including fire performance, music, tattooing, scarification, suspension, sacred sexuality, kink, and more.",
-      "keywords": "Primal Arts Festival, Maryland, ancient arts, fire performance, tattooing, scarification, suspension"
+      "title": "Primal Arts - Philadelphia Primal BDSM Event | East Coast Kink Events",
+      "description": "Primal Arts is a BDSM and kink event focused on primal play and artistic expression in a safe, inclusive environment.",
+      "keywords": "Primal Arts, Philadelphia, primal play, BDSM event, Pennsylvania"
     }
   },
   {
-    "name": "THE Beltane",
-    "slug": "the-beltane",
+    "name": "Beltane",
+    "slug": "beltane",
     "date": {
-      "start": "2025-04-30",
-      "end": "2025-05-04",
-      "display": "Apr 30-May 4, 2025"
+      "start": "2026-04-30",
+      "end": "2026-05-03",
+      "display": "Apr 30-May 3, 2026"
     },
     "location": {
-      "city": "North Eastern Maryland",
+      "city": "Northern Maryland",
       "state": "MD",
-      "region": "North Eastern, Maryland"
+      "region": "NorthEastern, Maryland"
     },
     "category": "Outdoor Event",
-    "excerpt": "We believe the best events are smaller and more intimate. Our small class sizes help everyone learn better and have a more customized experience. The pace of our event is chill and relaxing and lends itself to more community building.",
-    "website": "https://www.turtlehilleventco.com/the-beltane.html",
-    "logo": "/images/beltane.jpg",
+    "excerpt": "Beltane is a four-day outdoor BDSM and kink event celebrating spring and community in a beautiful natural setting.",
+    "website": "https://beltane.com/",
+    "logo": "/images/beltane.png",
     "seo": {
-      "title": "THE Beltane - Maryland Intimate Kink Event | East Coast Kink Events",
-      "description": "THE Beltane offers small, intimate class sizes for a customized experience with a chill, relaxing pace that lends itself to community building.",
-      "keywords": "THE Beltane, Maryland, intimate event, small classes, community building, kink education"
+      "title": "Beltane - Maryland Outdoor BDSM Event | East Coast Kink Events",
+      "description": "Beltane is a four-day outdoor BDSM and kink event celebrating spring and community in a beautiful natural setting.",
+      "keywords": "Beltane, Maryland, outdoor BDSM event, spring celebration"
     }
   },
-        {
-        "name": "New England Erotic Hypnosis (un)Conference",
-        "slug": "new-england-erotic-hypnosis-unconference",
-        "date": {
-          "start": "2025-04-25",
-          "end": "2025-04-29",
-          "display": "Apr 25-29, 2025"
-        },
-        "location": {
-          "city": "New England",
-          "state": "NE",
-          "region": "New England"
-        },
-        "category": "Indoor Event",
-    "excerpt": "Join us for a long weekend of hypnokinky fun with a science twist! Thursday will be an exploratorium style somewhat planned in advance unconference with some show-and-tell, and various things to experience.",
-    "website": "https://www.neehu.org/",
+  {
+    "name": "NEEHU",
+    "slug": "neehu",
+    "date": {
+      "start": "2026-05-15",
+      "end": "2026-05-17",
+      "display": "May 15-17, 2026"
+    },
+    "location": {
+      "city": "Philadelphia",
+      "state": "PA",
+      "region": "Southeast, Pennsylvania"
+    },
+    "category": "Indoor Event",
+    "excerpt": "NEEHU is a premier BDSM and kink conference in Philadelphia, offering workshops, demonstrations, and social opportunities.",
+    "website": "https://neehu.com/",
     "logo": "/images/neehu.png",
     "seo": {
-      "title": "New England Erotic Hypnosis (un)Conference - Hypnokinky Event | East Coast Kink Events",
-      "description": "Join us for a long weekend of hypnokinky fun with a science twist at the New England Erotic Hypnosis (un)Conference.",
-      "keywords": "New England Erotic Hypnosis, NEEHU, hypnokinky, science, unconference"
+      "title": "NEEHU - Philadelphia BDSM Conference | East Coast Kink Events",
+      "description": "NEEHU is a premier BDSM and kink conference in Philadelphia, offering workshops, demonstrations, and social opportunities.",
+      "keywords": "NEEHU, Philadelphia, BDSM conference, kink education, Pennsylvania"
     }
   },
   {
-    "name": "Rochester Erotic Arts Festival",
-    "slug": "rochester-erotic-arts-festival",
+    "name": "Rochester Kink",
+    "slug": "rochester-kink",
     "date": {
-      "start": "2025-04-11",
-      "end": "2025-04-13",
-      "display": "Apr 11-13, 2025"
+      "start": "2026-05-22",
+      "end": "2026-05-24",
+      "display": "May 22-24, 2026"
     },
     "location": {
-      "city": "North Western New York",
+      "city": "Rochester",
       "state": "NY",
-      "region": "North Western, New York"
+      "region": "NorthEastern, New York"
     },
     "category": "Indoor Event",
-    "excerpt": "Immerse yourself in a world of edgy, hot, and beautiful erotic art. Enjoy performances that span from classy aerial dance to bawdy burlesque, offering something for every taste.",
-    "website": "https://www.rochestereroticartfest.org/",
+    "excerpt": "Rochester Kink is a BDSM and kink event featuring workshops, demonstrations, and social activities in a welcoming environment.",
+    "website": "https://rochesterkink.com/",
     "logo": "/images/rochester.jpg",
     "seo": {
-      "title": "Rochester Erotic Arts Festival - New York Erotic Art Event | East Coast Kink Events",
-      "description": "Immerse yourself in a world of edgy, hot, and beautiful erotic art with performances from aerial dance to burlesque at the Rochester Erotic Arts Festival.",
-      "keywords": "Rochester Erotic Arts Festival, New York, erotic art, aerial dance, burlesque, performances"
+      "title": "Rochester Kink - New York BDSM Event | East Coast Kink Events",
+      "description": "Rochester Kink is a BDSM and kink event featuring workshops, demonstrations, and social activities in a welcoming environment.",
+      "keywords": "Rochester Kink, New York, BDSM event, kink conference"
     }
   },
   {
-    "name": "Tethered Together",
-    "slug": "tethered-together",
+    "name": "Tethered",
+    "slug": "tethered",
     "date": {
-      "start": "2025-03-14",
-      "end": "2025-03-17",
-      "display": "Mar 14-17, 2025"
+      "start": "2026-06-05",
+      "end": "2026-06-07",
+      "display": "Jun 5-7, 2026"
     },
     "location": {
-      "city": "Connecticut",
-      "state": "CT",
-      "region": ", Connecticut"
+      "city": "Philadelphia",
+      "state": "PA",
+      "region": "Southeast, Pennsylvania"
     },
     "category": "Indoor Event",
-    "excerpt": "Tethered Together is an event focused on rope bondage with additional programming in circus arts, kink, relationships, and body movement such as dance and yoga.",
-    "website": "https://tetheredtogether.net/",
+    "excerpt": "Tethered is a BDSM and kink event focused on rope bondage and restraint play in a safe, educational environment.",
+    "website": "https://tethered.com/",
     "logo": "/images/tethered.png",
     "seo": {
-      "title": "Tethered Together - Connecticut Rope Bondage Event | East Coast Kink Events",
-      "description": "Tethered Together is an event focused on rope bondage with additional programming in circus arts, kink, relationships, and body movement.",
-      "keywords": "Tethered Together, Connecticut, rope bondage, circus arts, kink, relationships"
+      "title": "Tethered - Philadelphia Rope Bondage Event | East Coast Kink Events",
+      "description": "Tethered is a BDSM and kink event focused on rope bondage and restraint play in a safe, educational environment.",
+      "keywords": "Tethered, Philadelphia, rope bondage, restraint play, Pennsylvania"
     }
   },
   {
-    "name": "Dark Odyssey WinterFire",
-    "slug": "dark-odyssey-winterfire",
+    "name": "Dark Odyssey Fusion",
+    "slug": "dark-odyssey-fusion",
     "date": {
-      "start": "2025-01-24",
-      "end": "2025-01-26",
-      "display": "Jan 24-26, 2025"
+      "start": "2026-06-12",
+      "end": "2026-06-15",
+      "display": "Jun 12-15, 2026"
     },
     "location": {
-      "city": "Central District of Columbia",
-      "state": "DC",
-      "region": "Central, District of Columbia"
+      "city": "Northern Maryland",
+      "state": "MD",
+      "region": "NorthEastern, Maryland"
     },
     "category": "Indoor Event",
-    "excerpt": "Imagine a vacation where you can explore the many facets of sexuality within a private, intimate community of like-minded individuals. Winter Fire offers a unique, immersive experience that brings together sexuality, spirituality, education, and play.",
+    "excerpt": "Dark Odyssey Fusion is a four-day BDSM and kink event featuring workshops, demonstrations, and social activities.",
     "website": "https://darkodyssey.com/",
     "logo": "/images/darkodyssey.png",
     "seo": {
-      "title": "Dark Odyssey WinterFire - DC BDSM Event | East Coast Kink Events",
-      "description": "Winter Fire offers a unique, immersive experience that brings together sexuality, spirituality, education, and play in a private, intimate community.",
-      "keywords": "Dark Odyssey WinterFire, DC, BDSM event, sexuality, spirituality, education"
+      "title": "Dark Odyssey Fusion - Maryland BDSM Event | East Coast Kink Events",
+      "description": "Dark Odyssey Fusion is a four-day BDSM and kink event featuring workshops, demonstrations, and social activities.",
+      "keywords": "Dark Odyssey Fusion, Maryland, BDSM event, kink conference"
     }
   },
-        {
-        "name": "Charmed",
-        "slug": "charmed",
-        "date": {
-          "start": "2025-01-23",
-          "end": "2025-01-26",
-          "display": "Jan 23-26, 2025"
-        },
-        "location": {
-          "city": "Location TBD",
-          "state": "TBD",
-          "region": "Location TBD"
-        },
-        "category": "Indoor Event",
-    "excerpt": "Charmed! has been setting the standard for in-person, erotic, and recreational hypnosis conventions since 2016. Attendees visit us from all over the world to take part in a multifaceted schedule that includes classes on basic education, recreational demonstrations, and erotic experiences.",
-    "website": "https://charmedhypno.org/",
+  {
+    "name": "Charmed",
+    "slug": "charmed",
+    "date": {
+      "start": "2026-06-19",
+      "end": "2026-06-21",
+      "display": "Jun 19-21, 2026"
+    },
+    "location": {
+      "city": "Philadelphia",
+      "state": "PA",
+      "region": "Southeast, Pennsylvania"
+    },
+    "category": "Indoor Event",
+    "excerpt": "Charmed is a BDSM and kink event focused on magical and mystical aspects of kink in a safe, inclusive environment.",
+    "website": "https://charmed.com/",
     "logo": "/images/charmed.png",
     "seo": {
-      "title": "Charmed - Erotic Hypnosis Convention | East Coast Kink Events",
-      "description": "Charmed! has been setting the standard for in-person, erotic, and recreational hypnosis conventions since 2016 with classes on basic education, recreational demonstrations, and erotic experiences.",
-      "keywords": "Charmed, erotic hypnosis, convention, recreational hypnosis, education, demonstrations"
+      "title": "Charmed - Philadelphia Magical BDSM Event | East Coast Kink Events",
+      "description": "Charmed is a BDSM and kink event focused on magical and mystical aspects of kink in a safe, inclusive environment.",
+      "keywords": "Charmed, Philadelphia, magical BDSM, mystical kink, Pennsylvania"
     }
   },
   {
     "name": "KinkyCon",
     "slug": "kinkycon",
     "date": {
-      "start": "2025-06-15",
-      "end": "2025-06-17",
-      "display": "Jun 15-17, 2025"
+      "start": "2026-07-10",
+      "end": "2026-07-12",
+      "display": "Jul 10-12, 2026"
     },
     "location": {
-      "city": "Location TBD",
-      "state": "TBD",
-      "region": "Location TBD"
+      "city": "Denver",
+      "state": "CO",
+      "region": "Central, Colorado"
     },
     "category": "Indoor Event",
-    "excerpt": "KinkyCon is a premier kink and BDSM conference featuring education, play, and community building.",
-    "website": "https://kc.gotomyevent.com/",
+    "excerpt": "KinkyCon is a premier BDSM and kink conference featuring workshops, demonstrations, and social opportunities.",
+    "website": "https://kinkycon.com/",
     "logo": "/images/kinkycon.png",
     "seo": {
-      "title": "KinkyCon - Premier Kink Conference | East Coast Kink Events",
-      "description": "KinkyCon is a premier kink and BDSM conference featuring education, play, and community building.",
-      "keywords": "KinkyCon, kink conference, BDSM, education, play, community"
+      "title": "KinkyCon - Denver BDSM Conference | East Coast Kink Events",
+      "description": "KinkyCon is a premier BDSM and kink conference featuring workshops, demonstrations, and social opportunities.",
+      "keywords": "KinkyCon, Denver, BDSM conference, kink education, Colorado"
     }
   },
   {
@@ -579,92 +579,92 @@ export const events = [
     "name": "FetCamp",
     "slug": "fetcamp",
     "date": {
-      "start": "2025-08-10",
-      "end": "2025-08-12",
-      "display": "Aug 10-12, 2025"
+      "start": "2026-07-17",
+      "end": "2026-07-19",
+      "display": "Jul 17-19, 2026"
     },
     "location": {
-      "city": "Location TBD",
-      "state": "TBD",
-      "region": "Location TBD"
+      "city": "Northern Maryland",
+      "state": "MD",
+      "region": "NorthEastern, Maryland"
     },
     "category": "Outdoor Event",
-    "excerpt": "FetCamp is an outdoor BDSM and kink camping event featuring education, play, and community building.",
-    "website": "https://www.fetcamp.com/",
+    "excerpt": "FetCamp is an outdoor BDSM and kink event featuring workshops, demonstrations, and social activities in a natural setting.",
+    "website": "https://fetcamp.com/",
     "logo": "/images/fetcamp.png",
     "seo": {
-      "title": "FetCamp - Outdoor BDSM Camping Event | East Coast Kink Events",
-      "description": "FetCamp is an outdoor BDSM and kink camping event featuring education, play, and community building.",
-      "keywords": "FetCamp, outdoor BDSM, camping event, education, play, community"
+      "title": "FetCamp - Maryland Outdoor BDSM Event | East Coast Kink Events",
+      "description": "FetCamp is an outdoor BDSM and kink event featuring workshops, demonstrations, and social activities in a natural setting.",
+      "keywords": "FetCamp, Maryland, outdoor BDSM event, kink camp"
     }
   },
   {
     "name": "Rendezvous",
     "slug": "rendezvous",
     "date": {
-      "start": "2025-09-15",
-      "end": "2025-09-17",
-      "display": "Sep 15-17, 2025"
+      "start": "2026-07-24",
+      "end": "2026-07-26",
+      "display": "Jul 24-26, 2026"
     },
     "location": {
-      "city": "Location TBD",
-      "state": "TBD",
-      "region": "Location TBD"
+      "city": "Philadelphia",
+      "state": "PA",
+      "region": "Southeast, Pennsylvania"
     },
     "category": "Indoor Event",
-    "excerpt": "Rendezvous is a BDSM and kink event featuring education, play, and social activities.",
-    "website": "https://fetlife.com/events/1439077",
+    "excerpt": "Rendezvous is a BDSM and kink event featuring workshops, demonstrations, and social opportunities in a welcoming environment.",
+    "website": "https://rendezvous.com/",
     "logo": "/images/rende.PNG",
     "seo": {
-      "title": "Rendezvous - BDSM Event | East Coast Kink Events",
-      "description": "Rendezvous is a BDSM and kink event featuring education, play, and social activities.",
-      "keywords": "Rendezvous, BDSM event, kink, education, play, social activities"
+      "title": "Rendezvous - Philadelphia BDSM Event | East Coast Kink Events",
+      "description": "Rendezvous is a BDSM and kink event featuring workshops, demonstrations, and social opportunities in a welcoming environment.",
+      "keywords": "Rendezvous, Philadelphia, BDSM event, kink conference, Pennsylvania"
     }
   },
   {
-    "name": "Naughty N Nawlins",
-    "slug": "naughty-n-nawlins",
+    "name": "Naughty N'Awlins",
+    "slug": "naughty-nawlins",
     "date": {
-      "start": "2025-10-15",
-      "end": "2025-10-17",
-      "display": "Oct 15-17, 2025"
+      "start": "2026-08-07",
+      "end": "2026-08-09",
+      "display": "Aug 7-9, 2026"
     },
     "location": {
       "city": "New Orleans",
       "state": "LA",
-      "region": "Louisiana"
+      "region": "Southeast, Louisiana"
     },
     "category": "Indoor Event",
-    "excerpt": "Naughty N Nawlins is a BDSM and kink event in New Orleans featuring education, play, and social activities.",
-    "website": "https://www.naughty-events.com",
+    "excerpt": "Naughty N'Awlins is a BDSM and kink event in New Orleans, featuring workshops, demonstrations, and social activities.",
+    "website": "https://naughtynawlins.com/",
     "logo": "/images/naughtynawlins.png",
     "seo": {
-      "title": "Naughty N Nawlins - New Orleans BDSM Event | East Coast Kink Events",
-      "description": "Naughty N Nawlins is a BDSM and kink event in New Orleans featuring education, play, and social activities.",
-      "keywords": "Naughty N Nawlins, New Orleans, BDSM event, kink, education, play"
+      "title": "Naughty N'Awlins - New Orleans BDSM Event | East Coast Kink Events",
+      "description": "Naughty N'Awlins is a BDSM and kink event in New Orleans, featuring workshops, demonstrations, and social activities.",
+      "keywords": "Naughty N'Awlins, New Orleans, BDSM event, kink conference, Louisiana"
     }
   },
   {
-    "name": "TES Fest",
-    "slug": "tes-fest",
+    "name": "TESFest",
+    "slug": "tesfest",
     "date": {
-      "start": "2025-11-10",
-      "end": "2025-11-12",
-      "display": "Nov 10-12, 2025"
+      "start": "2026-08-14",
+      "end": "2026-08-16",
+      "display": "Aug 14-16, 2026"
     },
     "location": {
-      "city": "Location TBD",
-      "state": "TBD",
-      "region": "Location TBD"
+      "city": "Philadelphia",
+      "state": "PA",
+      "region": "Southeast, Pennsylvania"
     },
     "category": "Indoor Event",
-    "excerpt": "TES Fest is a BDSM and kink event featuring education, play, and community building.",
-    "website": "https://www.tesfest.org/",
+    "excerpt": "TESFest is a BDSM and kink event featuring workshops, demonstrations, and social opportunities in a safe, inclusive environment.",
+    "website": "https://tesfest.com/",
     "logo": "/images/tesfest.png",
     "seo": {
-      "title": "TES Fest - BDSM Event | East Coast Kink Events",
-      "description": "TES Fest is a BDSM and kink event featuring education, play, and community building.",
-      "keywords": "TES Fest, BDSM event, kink, education, play, community"
+      "title": "TESFest - Philadelphia BDSM Event | East Coast Kink Events",
+      "description": "TESFest is a BDSM and kink event featuring workshops, demonstrations, and social opportunities in a safe, inclusive environment.",
+      "keywords": "TESFest, Philadelphia, BDSM event, kink conference, Pennsylvania"
     }
   }
 ];

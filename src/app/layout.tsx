@@ -84,12 +84,6 @@ export const viewport = {
   userScalable: false,
 }
 
-export const icons = {
-  icon: '/favicon.svg',
-  shortcut: '/favicon.svg',
-  apple: '/favicon.svg',
-}
-
 export default function RootLayout({
   children,
 }: {
@@ -98,20 +92,18 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <div className="min-h-screen bg-black">
-          <WebsiteStructuredData />
-          <OrganizationStructuredData />
-          {process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID && (
-            <GoogleAnalytics GA_MEASUREMENT_ID={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID} />
-          )}
-          <Header />
-          <main>
-            {children}
-          </main>
-          <Footer />
-          <AgeVerification />
-          <BackToTop />
-        </div>
+        {process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID && (
+          <GoogleAnalytics GA_MEASUREMENT_ID={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID} />
+        )}
+        <WebsiteStructuredData />
+        <OrganizationStructuredData />
+        <AgeVerification />
+        <Header />
+        <main>
+          {children}
+        </main>
+        <Footer />
+        <BackToTop />
       </body>
     </html>
   )

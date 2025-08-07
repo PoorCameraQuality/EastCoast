@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Image from 'next/image'
 
 export default function AddContentPage() {
   const [contentType, setContentType] = useState<'event' | 'dungeon'>('event')
@@ -514,9 +515,11 @@ export default function AddContentPage() {
                           </button>
                         </div>
                         <div className="flex items-center justify-center p-4 bg-white rounded">
-                          <img
+                          <Image
                             src={logoPreview}
                             alt="Logo preview"
+                            width={128}
+                            height={128}
                             className="max-h-32 max-w-full object-contain"
                           />
                         </div>
@@ -893,9 +896,11 @@ export default function AddContentPage() {
                           </button>
                         </div>
                         <div className="flex items-center justify-center p-4 bg-white rounded">
-                          <img
+                          <Image
                             src={logoPreview}
                             alt="Logo preview"
+                            width={128}
+                            height={128}
                             className="max-h-32 max-w-full object-contain"
                           />
                         </div>

@@ -73,6 +73,13 @@ export default function SubmissionReviewPanel() {
 
   const fetchSubmissions = async () => {
     try {
+      // Check if Supabase is configured
+      if (!supabase) {
+        console.error('Supabase is not configured')
+        setLoading(false)
+        return
+      }
+
       const { data, error } = await supabase
         .from('submissions')
         .select('*')
@@ -93,6 +100,12 @@ export default function SubmissionReviewPanel() {
 
   const fetchModerationLogs = async () => {
     try {
+      // Check if Supabase is configured
+      if (!supabase) {
+        console.error('Supabase is not configured')
+        return
+      }
+
       const { data, error } = await supabase
         .from('moderation_logs')
         .select('*')
@@ -130,6 +143,12 @@ export default function SubmissionReviewPanel() {
       }
     } else {
       // Handle contact form approval (mark as responded)
+      // Check if Supabase is configured
+      if (!supabase) {
+        alert('Database is not configured')
+        return
+      }
+
       try {
         const { error } = await supabase
           .from('submissions')

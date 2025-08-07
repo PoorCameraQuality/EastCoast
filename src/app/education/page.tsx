@@ -40,6 +40,12 @@ export const metadata: Metadata = {
 
 async function getArticlesFromDatabase() {
   try {
+    // Check if Supabase is configured
+    if (!supabase) {
+      console.error('Supabase is not configured')
+      return []
+    }
+
     const { data: articles, error } = await supabase
       .from('articles')
       .select('*')

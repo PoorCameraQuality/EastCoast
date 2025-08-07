@@ -12,6 +12,12 @@ export default function LoginForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    
+    if (!supabase) {
+      setMessage('Authentication is not configured. Please contact the administrator.')
+      return
+    }
+    
     setLoading(true)
     setMessage('')
 
@@ -41,6 +47,20 @@ export default function LoginForm() {
     } finally {
       setLoading(false)
     }
+  }
+
+  // If Supabase is not configured, show a message
+  if (!supabase) {
+    return (
+      <div className="w-full bg-dark-800 p-8 rounded-lg shadow-lg border border-dark-600">
+        <h2 className="text-2xl font-bold text-white mb-6 text-center">
+          Authentication Unavailable
+        </h2>
+        <p className="text-gray-300 text-center">
+          Authentication is not configured for this site.
+        </p>
+      </div>
+    )
   }
 
   return (
@@ -99,8 +119,9 @@ export default function LoginForm() {
         </div>
       )}
       
-      <div className="mt-6 text-center">
+      <div className="mt-4 text-center">
         <button
+          type="button"
           onClick={() => setIsSignUp(!isSignUp)}
           className="text-primary-400 hover:text-primary-300 text-sm transition-colors"
         >

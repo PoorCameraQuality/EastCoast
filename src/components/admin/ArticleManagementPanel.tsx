@@ -71,6 +71,13 @@ export default function ArticleManagementPanel() {
 
   const fetchArticles = async () => {
     try {
+      // Check if Supabase is configured
+      if (!supabase) {
+        console.error('Supabase is not configured')
+        setLoading(false)
+        return
+      }
+
       const { data: articles, error } = await supabase
         .from('articles')
         .select('*')
@@ -92,6 +99,12 @@ export default function ArticleManagementPanel() {
 
   const fetchModerationLogs = async () => {
     try {
+      // Check if Supabase is configured
+      if (!supabase) {
+        console.error('Supabase is not configured')
+        return
+      }
+
       const { data: logs, error } = await supabase
         .from('moderation_logs')
         .select('*')
@@ -127,6 +140,12 @@ export default function ArticleManagementPanel() {
 
   const handleDelete = async (article: Article) => {
     if (!confirm(`Are you sure you want to delete "${article.title}"? This action cannot be undone.`)) {
+      return
+    }
+
+    // Check if Supabase is configured
+    if (!supabase) {
+      alert('Database is not configured')
       return
     }
 
@@ -170,6 +189,17 @@ export default function ArticleManagementPanel() {
 
   const handleSaveEdit = async () => {
     if (!selectedArticle) return
+
+    // Check if Supabase is configured
+    if (!supabase) {
+      setSaveStatus('error')
+      setSaveMessage('Database is not configured')
+      setTimeout(() => {
+        setSaveStatus('idle')
+        setSaveMessage('')
+      }, 3000)
+      return
+    }
 
     // Set saving state
     setIsSaving(true)

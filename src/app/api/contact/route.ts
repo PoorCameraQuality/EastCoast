@@ -3,6 +3,14 @@ import { supabase } from '@/lib/supabase'
 
 export async function POST(request: NextRequest) {
   try {
+    // Check if Supabase is configured
+    if (!supabase) {
+      return NextResponse.json(
+        { error: 'Contact form is not available' },
+        { status: 503 }
+      )
+    }
+
     const body = await request.json()
     const { 
       contactType, 

@@ -22,42 +22,40 @@ export default function EventsSection() {
           {upcomingEvents.slice(0, 3).map((event) => (
             <Link key={event.slug} href={`/events/${event.slug}`} className="block">
               <div className="card-elegant hover-lift group cursor-pointer p-6">
-                <div className="flex items-start space-x-3">
-                  {/* Event Logo */}
-                  {event.logo && (
-                    <div className="flex-shrink-0">
-                      <EventLogo 
-                        src={event.logo} 
-                        alt={`${event.name} logo`}
-                        size="small"
-                      />
-                    </div>
-                  )}
-                  
-                  {/* Event Details */}
-                  <div className="flex-1 min-w-0">
-                    <div className="mb-3">
-                      <span className="inline-block bg-primary-900 text-primary-300 text-xs font-medium px-3 py-1 rounded-none border border-primary-700">
-                        {event.category}
-                      </span>
-                    </div>
-                    
-                    <h3 className="text-lg font-serif font-semibold text-white mb-2 group-hover:text-primary-400 transition-colors duration-300 line-clamp-2">
-                      {event.name}
-                    </h3>
-                    
-                    <p className="text-sm text-subtle mb-2">
-                      {event.date.display}
-                    </p>
-                    
-                    <p className="text-sm text-subtle mb-3">
-                      📍 {event.location.city}, {event.location.state}
-                    </p>
-                    
-                    <p className="text-sm text-subtle leading-relaxed line-clamp-3">
-                      {event.excerpt}
-                    </p>
+                {/* Event Logo - Large and centered on top */}
+                {event.logo && (
+                  <div className="flex justify-center mb-4">
+                    <EventLogo 
+                      src={event.logo} 
+                      alt={`${event.name} logo`}
+                      size="large"
+                    />
                   </div>
+                )}
+                
+                {/* Event Details - Below logo */}
+                <div className="text-center">
+                  <div className="mb-3">
+                    <span className="inline-block bg-primary-900 text-primary-300 text-xs font-medium px-3 py-1 rounded-none border border-primary-700">
+                      {event.category}
+                    </span>
+                  </div>
+                  
+                  <h3 className="text-lg font-serif font-semibold text-white mb-2 group-hover:text-primary-400 transition-colors duration-300 line-clamp-2">
+                    {event.name}
+                  </h3>
+                  
+                  <p className="text-sm text-subtle mb-2">
+                    {event.date.display}
+                  </p>
+                  
+                  <p className="text-sm text-subtle mb-3">
+                    📍 {event.location.city}, {event.location.state}
+                  </p>
+                  
+                  <p className="text-sm text-subtle leading-relaxed line-clamp-3">
+                    {event.excerpt}
+                  </p>
                 </div>
               </div>
             </Link>
