@@ -1,4 +1,5 @@
 import React from 'react'
+import Image from 'next/image'
 import Link from 'next/link'
 
 interface DungeonLogoProps {
@@ -28,14 +29,12 @@ export default function DungeonLogo({ src, alt, size = 'medium', className = '' 
 
   return (
     <div className={`flex justify-center items-center ${container} ${className}`}>
-      <img 
+      <Image 
         src={src} 
         alt={alt}
+        width={120}
+        height={120}
         className={`object-contain rounded-xl ${image}`}
-        style={{
-          width: 'auto',
-          height: 'auto'
-        }}
       />
     </div>
   )

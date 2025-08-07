@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useState } from 'react'
+import Image from 'next/image'
 import Link from 'next/link'
 
 interface EventLogoProps {
@@ -40,9 +41,11 @@ export default function EventLogo({ src, alt, size = 'medium', className = '' }:
     return (
       <div className={`flex justify-center items-center ${container} ${className}`}>
         <div className={`flex items-center justify-center bg-gray-700 rounded-xl ${image} w-full`}>
-          <img 
+          <Image 
             src="/images/placeholder-logo.svg" 
             alt="Event placeholder"
+            width={48}
+            height={48}
             className="max-w-full object-contain"
           />
         </div>
@@ -52,14 +55,12 @@ export default function EventLogo({ src, alt, size = 'medium', className = '' }:
 
   return (
     <div className={`flex justify-center items-center ${container} ${className}`}>
-      <img 
+      <Image 
         src={src} 
         alt={alt}
+        width={80}
+        height={80}
         className={`object-contain rounded-xl ${image}`}
-        style={{
-          width: 'auto',
-          height: 'auto'
-        }}
         onError={handleImageError}
       />
     </div>
