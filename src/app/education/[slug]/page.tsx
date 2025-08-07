@@ -45,7 +45,7 @@ export async function generateMetadata({ params }: ArticlePageProps): Promise<Me
   return {
     title: `${article.title} | East Coast Kink Events`,
     description: article.excerpt,
-    keywords: article.tags ? article.tags.split(',').map((tag: string) => tag.trim()) : [],
+    keywords: article.tags ? (Array.isArray(article.tags) ? article.tags : article.tags.split(',').map((tag: string) => tag.trim())) : [],
     openGraph: {
       title: article.title,
       description: article.excerpt,
@@ -169,7 +169,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
                   <div className="mt-2">
                     <p><strong>Tags:</strong></p>
                     <div className="flex flex-wrap gap-1 mt-1">
-                      {article.tags.split(',').map((tag: string, index: number) => (
+                      {(Array.isArray(article.tags) ? article.tags : article.tags.split(',').map((tag: string) => tag.trim())).map((tag: string, index: number) => (
                         <span
                           key={index}
                           className="px-2 py-1 rounded text-xs bg-dark-700 text-gray-300"

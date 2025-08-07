@@ -5,6 +5,9 @@ import Breadcrumb from '@/components/Breadcrumb'
 import BackToTop from '@/components/BackToTop'
 import { EducationStructuredData } from '@/components/StructuredData'
 
+// Force dynamic rendering to prevent caching
+export const dynamic = 'force-dynamic'
+
 export const metadata: Metadata = {
   title: 'Kink Education - Articles, Guides & Resources | East Coast Kink Events',
   description: 'Comprehensive kink education resources including safety guides, negotiation techniques, aftercare essentials, and community guidelines for responsible BDSM practice.',
@@ -28,6 +31,7 @@ export const metadata: Metadata = {
 
 async function getArticlesFromDatabase() {
   try {
+    console.log('🔍 Fetching articles from database...')
     const { data: articles, error } = await supabase
       .from('articles')
       .select('*')
@@ -39,6 +43,8 @@ async function getArticlesFromDatabase() {
       return []
     }
 
+    console.log(`Found ${articles?.length || 0} published articles`)
+
     // Filter out any null or invalid articles
     const validArticles = (articles || []).filter(article => 
       article && 
@@ -48,6 +54,7 @@ async function getArticlesFromDatabase() {
       article.status === 'published'
     )
 
+    console.log(`Valid articles: ${validArticles.length}`)
     return validArticles
   } catch (error) {
     console.error('Error fetching articles:', error)
@@ -106,7 +113,7 @@ export default async function EducationPage() {
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {featuredArticles.map((article) => (
-                <ArticleCard key={article.id} article={article} featured={true} />
+                <ArticleCard key={article.id} article={article} />
               ))}
             </div>
           </div>

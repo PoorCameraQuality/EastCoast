@@ -1,5 +1,6 @@
 import { Metadata } from 'next'
 import Breadcrumb from '@/components/Breadcrumb'
+import AdminNavigation from '@/components/admin/AdminNavigation'
 import SubmissionReviewPanel from '@/components/admin/SubmissionReviewPanel'
 
 export const metadata: Metadata = {
@@ -17,6 +18,7 @@ export default function ReviewSubmissionsPage() {
 
   return (
     <div className="min-h-screen bg-black">
+      <AdminNavigation />
       <div className="py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <Breadcrumb items={breadcrumbItems} />
