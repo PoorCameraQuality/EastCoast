@@ -57,6 +57,73 @@
   .hover-lift {
     @apply hover:-translate-y-1 transition-transform duration-300;
   }
+
+  /* Discord/community CTA: soft purple-tinted glow (always visible, becomes very bright on hover) */
+  .discord-glow {
+    position: relative;
+    /* purple hue base */
+    box-shadow:
+      0 0 16px rgba(124, 58, 237, 0.50),
+      0 0 36px rgba(124, 58, 237, 0.30),
+      0 0 56px rgba(124, 58, 237, 0.20);
+    transition: box-shadow 200ms ease, transform 200ms ease;
+  }
+  .discord-glow:hover,
+  .discord-glow:focus-visible {
+    /* very bright on hover */
+    box-shadow:
+      0 0 36px rgba(124, 58, 237, 0.95),
+      0 0 90px rgba(124, 58, 237, 0.70),
+      0 0 140px rgba(124, 58, 237, 0.50);
+    transform: translateY(-1px);
+    /* vibrant appearance */
+    filter: saturate(1.25) brightness(1.05);
+  }
+
+  /* On hover: convert button-style Discord CTAs to purple */
+  .discord-glow.btn-primary:hover,
+  .discord-glow.btn-primary:focus-visible,
+  .discord-glow.btn-secondary:hover,
+  .discord-glow.btn-secondary:focus-visible,
+  .discord-glow.btn-outline:hover,
+  .discord-glow.btn-outline:focus-visible {
+    background-color: #7C3AED !important; /* violet-600 */
+    border-color: #7C3AED !important;
+    color: #ffffff !important;
+  }
+
+  /* On hover: text-style Discord links turn purple if not buttons */
+  .discord-glow:hover:not(.btn-primary):not(.btn-secondary):not(.btn-outline),
+  .discord-glow:focus-visible:not(.btn-primary):not(.btn-secondary):not(.btn-outline) {
+    color: #C084FC !important; /* violet-400 */
+  }
+  .discord-glow::after {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: 2px;
+    background: radial-gradient(120px 10px at 8% -18%, rgba(124, 58, 237, 0.30), transparent 70%),
+                radial-gradient(90px 8px at 92% 118%, rgba(124, 58, 237, 0.24), transparent 70%);
+    pointer-events: none;
+  }
+
+  /* Subtle glow on hover/focus for all primary buttons */
+  .btn-primary:hover,
+  .btn-primary:focus-visible,
+  .btn-secondary:hover,
+  .btn-secondary:focus-visible,
+  .btn-outline:hover,
+  .btn-outline:focus-visible {
+    box-shadow: 0 0 12px rgba(74, 123, 183, 0.35), 0 0 24px rgba(54, 75, 154, 0.25);
+  }
+
+  /* Card blue glow on hover/focus (non-destructive: uses filter so it doesn't override existing shadows) */
+  .card:hover,
+  .card:focus-within,
+  .card-elegant:hover,
+  .card-elegant:focus-within {
+    filter: drop-shadow(0 0 12px rgba(74, 123, 183, 0.35)) drop-shadow(0 0 24px rgba(54, 75, 154, 0.25));
+  }
   
   .bg-gradient-dark {
     @apply bg-gradient-to-br from-black via-dark-900 to-dark-800;

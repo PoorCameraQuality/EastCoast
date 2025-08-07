@@ -8,18 +8,21 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        // Color-blind friendly "Sunset" palette (blue core → warm accents)
+        // Using only provided colors; primary-600 is the main action color (blue),
+        // hover uses a darker blue at primary-700
         primary: {
-          50: '#fef2f2',
-          100: '#fee2e2',
-          200: '#fecaca',
-          300: '#fca5a5',
-          400: '#f87171',
-          500: '#ef4444',
-          600: '#dc2626',
-          700: '#b91c1c',
-          800: '#991b1b',
-          900: '#7f1d1d',
-          950: '#450a0a',
+          50: '#FFFFFF',    // white
+          100: '#EAECCC',   // very light neutral from palette
+          200: '#C2E4EF',   // light blue
+          300: '#98CAE1',   // light/mid blue
+          400: '#6EA6CD',   // mid blue
+          500: '#4A7BB7',   // strong blue
+          600: '#4A7BB7',   // action color (buttons, links)
+          700: '#364B9A',   // hover/darker state
+          800: '#364B9A',   // deepest blue available in set
+          900: '#364B9A',
+          950: '#364B9A',
         },
         dark: {
           50: '#f8fafc',

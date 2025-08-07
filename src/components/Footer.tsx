@@ -21,7 +21,7 @@ export default function Footer() {
                 href="https://discord.gg/xcnGGyGsmT" 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="text-gray-400 hover:text-primary-400 transition-colors duration-300"
+                className="text-gray-400 hover:text-primary-400 transition-colors duration-300 discord-glow"
                 title="Join our Discord community"
               >
                 <span className="sr-only">Discord</span>

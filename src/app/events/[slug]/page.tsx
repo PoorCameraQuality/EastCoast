@@ -237,7 +237,7 @@ export default function EventPage({ params }: { params: { slug: string } }) {
               href="https://discord.gg/xcnGGyGsmT" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="btn-primary inline-flex items-center gap-2"
+              className="btn-primary inline-flex items-center gap-2 discord-glow"
             >
               Join Discord Community
             </Link>

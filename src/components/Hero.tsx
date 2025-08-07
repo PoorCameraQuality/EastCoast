@@ -28,7 +28,7 @@ export default function Hero() {
               href="https://discord.gg/xcnGGyGsmT" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="btn-secondary min-w-[200px]"
+              className="btn-secondary min-w-[200px] discord-glow"
               onClick={() => trackEvent('click', 'social', 'discord', 1)}
             >
               Join Discord Community

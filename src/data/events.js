@@ -322,7 +322,7 @@ export const events = [
     "excerpt": "A vendor-focused weekend featuring top toymakers, BDSM vendors, specialty service providers, and educational opportunities — shop, learn, and connect with fellow kinksters.",
     "longDescription": "Have a blast with other kinksters while exploring a curated vendor fair with the best toymakers, BDSM vendors, and specialty service providers. Enjoy education, friends, and fun across a weekend designed for discovering lifestyle products and meeting favorite craftsmen and presenters.",
     "website": "https://coastalcarolinafetishfair.com/",
-    "logo": "/images/placeholder-logo.svg",
+    "logo": "/images/CoastalCarolina.PNG",
     "seo": {
       "title": "Coastal Carolina Fetish Fair - South Carolina BDSM Vendor Weekend | East Coast Kink Events",
       "description": "A multi-day vendor fair with education and community in Northeastern South Carolina. Shop, learn, and connect.",
