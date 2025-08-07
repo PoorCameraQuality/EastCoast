@@ -1,20 +1,34 @@
 User-agent: *
 Allow: /
 
-# Sitemap
-Sitemap: https://eastcoastkinkevents.com/sitemap.xml
-
-# Disallow admin pages
+# Disallow admin sections from being crawled
 Disallow: /admin/
-Disallow: /api/
+Disallow: /admin/review-submissions
+Disallow: /admin/manage-articles
+Disallow: /admin/moderation-logs
+Disallow: /admin/dashboard
 
-# Allow all other pages
-Allow: /events/
-Allow: /dungeons/
-Allow: /calendar/
-Allow: /education/
-Allow: /about/
-Allow: /contact/
-Allow: /guidelines/
-Allow: /privacy/
-Allow: /terms/
+# Disallow authentication pages
+Disallow: /auth/
+Disallow: /login
+Disallow: /signin
+Disallow: /signup
+
+# Disallow API routes that contain sensitive data
+Disallow: /api/admin/
+Disallow: /api/auth/
+
+# Allow important pages
+Allow: /
+Allow: /events
+Allow: /dungeons
+Allow: /education
+Allow: /calendar
+Allow: /about
+Allow: /contact
+Allow: /guidelines
+Allow: /privacy
+Allow: /terms
+
+# Sitemap location
+Sitemap: https://eastcoastkinkevents.com/sitemap.xml

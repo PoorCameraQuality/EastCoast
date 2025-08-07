@@ -1,6 +1,13 @@
 import { redirect } from 'next/navigation'
+import { Metadata } from 'next'
 import { getCurrentUser } from '@/lib/auth'
 import ModerationLogsClient from '@/components/admin/ModerationLogsClient'
+
+export const metadata: Metadata = {
+  title: 'Moderation Logs - Admin | East Coast Kink Events',
+  description: 'Admin panel for viewing moderation logs and admin actions.',
+  robots: 'noindex, nofollow'
+}
 
 export default async function ModerationLogs() {
   const user = await getCurrentUser()

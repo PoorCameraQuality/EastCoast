@@ -6,6 +6,7 @@ import ArticleManagementPanel from '@/components/admin/ArticleManagementPanel'
 export const metadata: Metadata = {
   title: 'Manage Articles - Admin | East Coast Kink Events',
   description: 'Admin panel for managing published articles, including editing and deletion with moderation logging.',
+  robots: 'noindex, nofollow'
 }
 
 export default function ManageArticlesPage() {

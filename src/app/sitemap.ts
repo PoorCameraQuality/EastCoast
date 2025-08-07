@@ -1,12 +1,14 @@
 import { getAllEvents } from '@/data/events'
 import { getAllDungeons } from '@/data/dungeons'
+import { getAllArticles } from '@/data/education'
 
 export default async function sitemap() {
   const baseUrl = 'https://eastcoastkinkevents.com'
   
-  // Get all events and dungeons
+  // Get all events, dungeons, and articles
   const events = getAllEvents()
   const dungeons = getAllDungeons()
+  const articles = getAllArticles()
   
   // Generate event URLs with enhanced metadata
   const eventUrls = events.map((event) => ({
@@ -14,7 +16,6 @@ export default async function sitemap() {
     lastModified: new Date(),
     changeFrequency: 'weekly' as const,
     priority: 0.9,
-    // Add additional metadata for better SEO
     alternates: {
       canonical: `${baseUrl}/events/${event.slug}`,
     },
@@ -30,6 +31,19 @@ export default async function sitemap() {
       canonical: `${baseUrl}/dungeons/${dungeon.slug}`,
     },
   }))
+
+  // Generate education article URLs (only published articles)
+  const articleUrls = articles
+    .filter((article) => article.status === 'published')
+    .map((article) => ({
+      url: `${baseUrl}/education/${article.slug}`,
+      lastModified: new Date(article.lastUpdated || article.publishDate),
+      changeFrequency: 'monthly' as const,
+      priority: 0.7,
+      alternates: {
+        canonical: `${baseUrl}/education/${article.slug}`,
+      },
+    }))
 
   return [
     {
@@ -94,5 +108,6 @@ export default async function sitemap() {
     },
     ...eventUrls,
     ...dungeonUrls,
+    ...articleUrls,
   ]
 } 

@@ -1,6 +1,13 @@
 import { redirect } from 'next/navigation'
+import { Metadata } from 'next'
 import { getCurrentUser } from '@/lib/auth'
 import AdminDashboardClient from '@/components/admin/AdminDashboardClient'
+
+export const metadata: Metadata = {
+  title: 'Admin Dashboard | East Coast Kink Events',
+  description: 'Admin dashboard for managing East Coast Kink Events website.',
+  robots: 'noindex, nofollow'
+}
 
 export default async function AdminDashboard() {
   const user = await getCurrentUser()
