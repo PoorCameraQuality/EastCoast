@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { supabase } from '@/lib/supabase'
 import Link from 'next/link'
 
@@ -21,11 +21,7 @@ export default function ModerationLogsClient() {
   const [filter, setFilter] = useState('all')
   const [sortBy, setSortBy] = useState('timestamp')
 
-  useEffect(() => {
-    fetchModerationLogs()
-  }, [filter, sortBy])
-
-  const fetchModerationLogs = async () => {
+  const fetchModerationLogs = useCallback(async () => {
     try {
       let query = supabase
         .from('moderation_logs')
@@ -49,7 +45,11 @@ export default function ModerationLogsClient() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [filter, sortBy])
+
+  useEffect(() => {
+    fetchModerationLogs()
+  }, [fetchModerationLogs])
 
   const getActionColor = (action: string) => {
     switch (action.toLowerCase()) {
@@ -145,17 +145,12 @@ export default function ModerationLogsClient() {
               {logs.map((log) => (
                 <tr key={log.id} className="hover:bg-dark-700 transition-colors">
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full text-white ${getActionColor(log.action)}`}>
+                    <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getActionColor(log.action)}`}>
                       {log.action}
                     </span>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-white font-medium">
-                      {log.article_title}
-                    </div>
-                    <div className="text-xs text-gray-400">
-                      ID: {log.article_id}
-                    </div>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
+                    {log.article_title}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
                     {log.admin_name}
@@ -164,9 +159,7 @@ export default function ModerationLogsClient() {
                     {formatDate(log.timestamp)}
                   </td>
                   <td className="px-6 py-4 text-sm text-gray-300">
-                    <div className="max-w-xs truncate" title={log.notes}>
-                      {log.notes || 'No notes'}
-                    </div>
+                    {log.notes || '-'}
                   </td>
                 </tr>
               ))}
@@ -175,11 +168,8 @@ export default function ModerationLogsClient() {
         </div>
         
         {logs.length === 0 && (
-          <div className="text-center py-12">
-            <div className="text-gray-400 text-lg">No moderation logs found</div>
-            <div className="text-gray-500 text-sm mt-2">
-              {filter !== 'all' ? `No logs for action: ${filter}` : 'No logs have been created yet'}
-            </div>
+          <div className="text-center py-8">
+            <p className="text-gray-400">No moderation logs found.</p>
           </div>
         )}
       </div>

@@ -41,7 +41,7 @@ export default function DungeonsPageClient() {
         {/* Mobile: Vertical card layout */}
         <div className="md:hidden space-y-6 mb-8">
           {allDungeons.map((dungeon) => (
-            <Link key={dungeon.id} href={`/dungeons/${dungeon.slug}`} className="block">
+            <Link key={dungeon.slug} href={`/dungeons/${dungeon.slug}`} className="block">
               <div className="card-elegant hover-lift group cursor-pointer p-6">
                 <div className="flex items-start space-x-4">
                   {/* Dungeon Logo */}
@@ -90,7 +90,7 @@ export default function DungeonsPageClient() {
         {/* Desktop: Grid layout with consistent columns and proper height management */}
         <div className="hidden md:grid md:grid-cols-2 xl:grid-cols-3 gap-8">
           {allDungeons.map((dungeon) => (
-            <Link key={dungeon.id} href={`/dungeons/${dungeon.slug}`} className="block">
+            <Link key={dungeon.slug} href={`/dungeons/${dungeon.slug}`} className="block">
               <div className="card-elegant hover-lift group cursor-pointer p-6 h-96 flex flex-col">
                 {/* Dungeon Logo */}
                 {dungeon.logo && (
