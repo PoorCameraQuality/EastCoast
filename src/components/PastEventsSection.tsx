@@ -68,11 +68,11 @@ export default function PastEventsSection() {
           ))}
         </div>
         
-        {/* Desktop: Grid layout with uniform height */}
+        {/* Desktop: Grid layout with proper height management */}
         <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
           {pastEvents.slice(0, 4).map((event) => (
             <Link key={event.slug} href={`/events/${event.slug}`} className="block">
-              <div className="card-elegant hover-lift group opacity-75 cursor-pointer p-6 h-80 flex flex-col">
+              <div className="card-elegant hover-lift group opacity-75 cursor-pointer p-6 h-96 flex flex-col">
                 {/* Event Logo */}
                 {event.logo && (
                   <div className="mb-4 flex-shrink-0">
@@ -84,8 +84,8 @@ export default function PastEventsSection() {
                   </div>
                 )}
                 
-                <div className="flex-1 flex flex-col">
-                  <div className="mb-4">
+                <div className="flex-1 flex flex-col min-h-0">
+                  <div className="mb-4 flex-shrink-0">
                     <span className="inline-block bg-gray-700 text-gray-300 text-xs font-medium px-3 py-1 rounded-none border border-gray-600">
                       {event.category}
                     </span>
@@ -103,11 +103,10 @@ export default function PastEventsSection() {
                     📍 {event.location.city}, {event.location.state}
                   </p>
                   
-                  <div className="flex-1 relative overflow-hidden">
-                    <p className="text-sm text-subtle leading-relaxed line-clamp-3">
+                  <div className="flex-1 min-h-0 overflow-hidden">
+                    <p className="text-sm text-subtle leading-relaxed line-clamp-4">
                       {event.excerpt}
                     </p>
-                    <div className="absolute bottom-0 left-0 right-0 h-4 bg-gradient-to-t from-dark-900 to-transparent"></div>
                   </div>
                 </div>
               </div>

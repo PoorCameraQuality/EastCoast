@@ -161,7 +161,7 @@ export default function EventsPageClient() {
             <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
               {upcomingEvents.map((event: any) => (
                 <Link key={event.slug} href={`/events/${event.slug}`} className="block">
-                  <div className="card-elegant hover-lift group cursor-pointer p-6 h-80 flex flex-col">
+                  <div className="card-elegant hover-lift group cursor-pointer p-6 h-96 flex flex-col">
                     {/* Event Logo - Enhanced for uniformity */}
                     {event.logo && (
                       <div className="mb-4 flex-shrink-0">
@@ -173,7 +173,7 @@ export default function EventsPageClient() {
                       </div>
                     )}
                     
-                    <div className="flex-1 flex flex-col">
+                    <div className="flex-1 flex flex-col min-h-0">
                       <div className="mb-4">
                         <span className="inline-block bg-primary-900 text-primary-300 text-xs font-medium px-3 py-1 rounded-none border border-primary-700">
                           {event.category}
@@ -192,11 +192,10 @@ export default function EventsPageClient() {
                         📍 {event.location.city}, {event.location.state}
                       </p>
                       
-                      <div className="flex-1 relative overflow-hidden">
-                        <p className="text-sm text-subtle leading-relaxed line-clamp-3">
+                      <div className="flex-1 min-h-0 overflow-hidden">
+                        <p className="text-sm text-subtle leading-relaxed line-clamp-4">
                           {event.excerpt}
                         </p>
-                        <div className="absolute bottom-0 left-0 right-0 h-4 bg-gradient-to-t from-dark-900 to-transparent"></div>
                       </div>
                     </div>
                   </div>
@@ -266,7 +265,7 @@ export default function EventsPageClient() {
             <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-3 gap-8">
               {pastEvents.map((event: any) => (
                 <Link key={event.slug} href={`/events/${event.slug}`} className="block">
-                  <div className="card-elegant hover-lift group opacity-75 cursor-pointer p-6 h-80 flex flex-col">
+                  <div className="card-elegant hover-lift group opacity-75 cursor-pointer p-6 h-96 flex flex-col">
                     {/* Event Logo - Enhanced for uniformity */}
                     {event.logo && (
                       <div className="mb-4 flex-shrink-0">
@@ -278,7 +277,7 @@ export default function EventsPageClient() {
                       </div>
                     )}
                     
-                    <div className="flex-1 flex flex-col">
+                    <div className="flex-1 flex flex-col min-h-0">
                       <div className="mb-4">
                         <span className="inline-block bg-gray-700 text-gray-300 text-xs font-medium px-3 py-1 rounded-none border border-gray-600">
                           {event.category}
@@ -297,11 +296,10 @@ export default function EventsPageClient() {
                         📍 {event.location.city}, {event.location.state}
                       </p>
                       
-                      <div className="flex-1 relative overflow-hidden">
-                        <p className="text-sm text-subtle leading-relaxed line-clamp-3">
+                      <div className="flex-1 min-h-0 overflow-hidden">
+                        <p className="text-sm text-subtle leading-relaxed line-clamp-4">
                           {event.excerpt}
                         </p>
-                        <div className="absolute bottom-0 left-0 right-0 h-4 bg-gradient-to-t from-dark-900 to-transparent"></div>
                       </div>
                     </div>
                   </div>

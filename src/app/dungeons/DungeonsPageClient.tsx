@@ -87,11 +87,11 @@ export default function DungeonsPageClient() {
           ))}
         </div>
         
-        {/* Desktop: Grid layout with uniform height */}
+        {/* Desktop: Grid layout with proper height management */}
         <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {allDungeons.map((dungeon) => (
             <Link key={dungeon.id} href={`/dungeons/${dungeon.slug}`} className="block">
-              <div className="card-elegant hover-lift group cursor-pointer p-6 h-80 flex flex-col">
+              <div className="card-elegant hover-lift group cursor-pointer p-6 h-96 flex flex-col">
                 {/* Dungeon Logo */}
                 {dungeon.logo && (
                   <div className="mb-4 flex-shrink-0">
@@ -103,7 +103,7 @@ export default function DungeonsPageClient() {
                   </div>
                 )}
                 
-                <div className="flex-1 flex flex-col">
+                <div className="flex-1 flex flex-col min-h-0">
                   <h3 className="text-lg font-serif font-semibold text-white mb-3 group-hover:text-primary-400 transition-colors duration-300 line-clamp-2 flex-shrink-0">
                     {dungeon.name}
                   </h3>
@@ -112,11 +112,10 @@ export default function DungeonsPageClient() {
                     📍 {dungeon.location.city}, {dungeon.location.state}
                   </p>
                   
-                  <div className="flex-1 relative overflow-hidden mb-4">
-                    <p className="text-sm text-subtle leading-relaxed line-clamp-3">
+                  <div className="flex-1 min-h-0 overflow-hidden mb-4">
+                    <p className="text-sm text-subtle leading-relaxed line-clamp-4">
                       {dungeon.excerpt}
                     </p>
-                    <div className="absolute bottom-0 left-0 right-0 h-4 bg-gradient-to-t from-dark-900 to-transparent"></div>
                   </div>
                   
                   <div className="flex gap-3 flex-shrink-0">
