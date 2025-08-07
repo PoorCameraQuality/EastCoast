@@ -56,7 +56,7 @@ export const dungeons = [
       "phone": ""
     },
     "website": "https://www.eastcoastkinkevents.com/dungeons/thecrubible",
-    "logo": "/images/crucible.png",
+    "logo": "/images/crucible.PNG",
     "images": [],
     "seo": {
       "title": "The Crucible - Washington DC BDSM Private Club | East Coast Kink Events",
@@ -82,7 +82,7 @@ export const dungeons = [
       "phone": ""
     },
     "website": "https://www.eastcoastkinkevents.com/dungeons/theowlsnest",
-    "logo": "/images/owlsnest.png",
+    "logo": "/images/owlsnest.PNG",
     "images": [],
     "seo": {
       "title": "The Owl's Nest - Poconos & Philadelphia Creative Arts Collective | East Coast Kink Events",
@@ -134,12 +134,12 @@ export const dungeons = [
       "phone": ""
     },
     "website": "https://www.eastcoastkinkevents.com/dungeons/thewoodshed",
-    "logo": "/images/woodshed.png",
+    "logo": "/images/woodshed.PNG",
     "images": [],
     "seo": {
-      "title": "The Woodshed - Orlando Private Kink Dungeon | East Coast Kink Events",
-      "description": "The Woodshed is Orlando's premier private kink dungeon and social club, offering exclusive membership access to state-of-the-art facilities and varied events.",
-      "keywords": "The Woodshed, Orlando, private kink dungeon, BDSM club, Florida, exclusive membership, Orlando dungeon"
+      "title": "The Woodshed - Orlando Florida Private Kink Dungeon | East Coast Kink Events",
+      "description": "The Woodshed is Orlando's premier private kink dungeon and social club, offering exclusive membership access to state-of-the-art facilities.",
+      "keywords": "The Woodshed, Orlando, Florida, private kink dungeon, social club, BDSM, exclusive membership"
     }
   },
   {

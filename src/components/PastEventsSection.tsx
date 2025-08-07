@@ -26,7 +26,7 @@ export default function PastEventsSection() {
           {pastEvents.slice(0, 3).map((event) => (
             <Link key={event.slug} href={`/events/${event.slug}`} className="block">
               <div className="card-elegant hover-lift group opacity-75 cursor-pointer p-6">
-                <div className="flex items-start space-x-4">
+                <div className="flex items-start space-x-3">
                   {/* Event Logo */}
                   {event.logo && (
                     <div className="flex-shrink-0">

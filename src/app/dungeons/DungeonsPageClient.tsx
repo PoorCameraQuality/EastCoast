@@ -43,7 +43,7 @@ export default function DungeonsPageClient() {
           {allDungeons.map((dungeon) => (
             <Link key={dungeon.slug} href={`/dungeons/${dungeon.slug}`} className="block">
               <div className="card-elegant hover-lift group cursor-pointer p-6">
-                <div className="flex items-start space-x-4">
+                <div className="flex items-start space-x-3">
                   {/* Dungeon Logo */}
                   {dungeon.logo && (
                     <div className="flex-shrink-0">

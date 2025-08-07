@@ -556,23 +556,23 @@ export const events = [
     "name": "Whips and Wine",
     "slug": "whips-and-wine",
     "date": {
-      "start": "2025-07-20",
-      "end": "2025-07-22",
-      "display": "Jul 20-22, 2025"
+      "start": "2025-12-06",
+      "end": "2025-12-07",
+      "display": "Dec 6-7, 2025"
     },
     "location": {
-      "city": "Allentown",
+      "city": "Philadelphia",
       "state": "PA",
-      "region": "Pennsylvania"
+      "region": "Southeast, Pennsylvania"
     },
     "category": "Indoor Event",
-    "excerpt": "Whips and Wine is a BDSM event featuring education, play, and social activities.",
-    "website": "https://fetlife.com/AllentownDomsPUD",
-    "logo": "/images/whipsandwine.png",
+    "excerpt": "Whips and Wine is a premier BDSM event in Philadelphia, offering workshops, demonstrations, and social opportunities in an elegant setting.",
+    "website": "https://www.whipsandwine.com/",
+    "logo": "/images/whiipsandwine.PNG",
     "seo": {
-      "title": "Whips and Wine - Allentown BDSM Event | East Coast Kink Events",
-      "description": "Whips and Wine is a BDSM event featuring education, play, and social activities in Allentown, PA.",
-      "keywords": "Whips and Wine, Allentown, BDSM event, education, play, social activities"
+      "title": "Whips and Wine - Philadelphia BDSM Event | East Coast Kink Events",
+      "description": "Whips and Wine is a premier BDSM event in Philadelphia, offering workshops, demonstrations, and social opportunities.",
+      "keywords": "Whips and Wine, Philadelphia, BDSM event, workshops, demonstrations, Pennsylvania"
     }
   },
   {
