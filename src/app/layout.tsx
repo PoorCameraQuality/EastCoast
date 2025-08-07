@@ -12,28 +12,76 @@ import GoogleAnalytics from '@/components/GoogleAnalytics'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'East Coast Kink Events',
-  description: 'Discover and connect with kink events across the East Coast',
-  keywords: 'kink events, east coast, BDSM, fetish, lifestyle events',
+  title: {
+    default: 'East Coast Kink Events - Discover BDSM Events & Dungeons',
+    template: '%s | East Coast Kink Events'
+  },
+  description: 'Discover and connect with kink events, BDSM dungeons, and educational resources across the East Coast. Find workshops, conferences, and community events in a safe, inclusive environment.',
+  keywords: [
+    'kink events',
+    'BDSM events', 
+    'east coast',
+    'fetish events',
+    'lifestyle events',
+    'BDSM dungeons',
+    'kink community',
+    'workshops',
+    'conferences',
+    'educational resources',
+    'safe space',
+    'inclusive community'
+  ],
   authors: [{ name: 'East Coast Kink Events' }],
+  creator: 'East Coast Kink Events',
+  publisher: 'East Coast Kink Events',
   metadataBase: new URL('https://eastcoastkinkevents.com'),
+  alternates: {
+    canonical: 'https://eastcoastkinkevents.com',
+  },
   openGraph: {
-    title: 'East Coast Kink Events',
-    description: 'Discover and connect with kink events across the East Coast',
+    type: 'website',
+    locale: 'en_US',
     url: 'https://eastcoastkinkevents.com',
     siteName: 'East Coast Kink Events',
-    type: 'website',
+    title: 'East Coast Kink Events - Discover BDSM Events & Dungeons',
+    description: 'Discover and connect with kink events, BDSM dungeons, and educational resources across the East Coast. Find workshops, conferences, and community events in a safe, inclusive environment.',
+    images: [
+      {
+        url: 'https://eastcoastkinkevents.com/og-image.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'East Coast Kink Events - BDSM Community Platform',
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'East Coast Kink Events',
-    description: 'Discover and connect with kink events across the East Coast',
+    title: 'East Coast Kink Events - Discover BDSM Events & Dungeons',
+    description: 'Discover and connect with kink events, BDSM dungeons, and educational resources across the East Coast.',
+    images: ['https://eastcoastkinkevents.com/og-image.jpg'],
+    creator: '@eastcoastkinkevents',
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+  verification: {
+    google: 'your-google-verification-code',
   },
 }
 
 export const viewport = {
   width: 'device-width',
   initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
 }
 
 export default function RootLayout({

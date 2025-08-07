@@ -7,22 +7,36 @@ Disallow: /admin/review-submissions
 Disallow: /admin/manage-articles
 Disallow: /admin/moderation-logs
 Disallow: /admin/dashboard
+Disallow: /admin/add-content
+Disallow: /admin/add-dungeon
+Disallow: /admin/add-event
 
 # Disallow authentication pages
 Disallow: /auth/
 Disallow: /login
 Disallow: /signin
 Disallow: /signup
+Disallow: /unauthorized
 
 # Disallow API routes that contain sensitive data
 Disallow: /api/admin/
 Disallow: /api/auth/
+Disallow: /api/contact
+Disallow: /api/education/submit
+
+# Disallow debug and development pages
+Disallow: /debug
+Disallow: /_next/
+Disallow: /api/
 
 # Allow important pages
 Allow: /
 Allow: /events
+Allow: /events/
 Allow: /dungeons
+Allow: /dungeons/
 Allow: /education
+Allow: /education/
 Allow: /calendar
 Allow: /about
 Allow: /contact
@@ -30,5 +44,13 @@ Allow: /guidelines
 Allow: /privacy
 Allow: /terms
 
+# Crawl delay for respectful crawling
+Crawl-delay: 1
+
 # Sitemap location
 Sitemap: https://eastcoastkinkevents.com/sitemap.xml
+
+# Additional sitemaps for better organization
+Sitemap: https://eastcoastkinkevents.com/sitemap-events.xml
+Sitemap: https://eastcoastkinkevents.com/sitemap-dungeons.xml
+Sitemap: https://eastcoastkinkevents.com/sitemap-education.xml
