@@ -21,8 +21,8 @@ export default function EventsSection() {
         <div className="md:hidden space-y-6 mb-8">
           {upcomingEvents.slice(0, 3).map((event) => (
             <Link key={event.slug} href={`/events/${event.slug}`} className="block">
-              <div className="card-elegant hover-lift group cursor-pointer p-6 h-48">
-                <div className="flex items-start space-x-4 h-full">
+              <div className="card-elegant hover-lift group cursor-pointer p-6">
+                <div className="flex items-start space-x-4">
                   {/* Event Logo */}
                   {event.logo && (
                     <div className="flex-shrink-0">
@@ -35,28 +35,26 @@ export default function EventsSection() {
                   )}
                   
                   {/* Event Details */}
-                  <div className="flex-1 min-w-0 flex flex-col justify-between h-full">
-                    <div>
-                      <div className="mb-3">
-                        <span className="inline-block bg-primary-900 text-primary-300 text-xs font-medium px-3 py-1 rounded-none border border-primary-700">
-                          {event.category}
-                        </span>
-                      </div>
-                      
-                      <h3 className="text-lg font-serif font-semibold text-white mb-2 group-hover:text-primary-400 transition-colors duration-300 line-clamp-2">
-                        {event.name}
-                      </h3>
-                      
-                      <p className="text-sm text-subtle mb-2">
-                        {event.date.display}
-                      </p>
-                      
-                      <p className="text-sm text-subtle mb-3">
-                        📍 {event.location.city}, {event.location.state}
-                      </p>
+                  <div className="flex-1 min-w-0">
+                    <div className="mb-3">
+                      <span className="inline-block bg-primary-900 text-primary-300 text-xs font-medium px-3 py-1 rounded-none border border-primary-700">
+                        {event.category}
+                      </span>
                     </div>
                     
-                    <p className="text-sm text-subtle leading-relaxed line-clamp-2">
+                    <h3 className="text-lg font-serif font-semibold text-white mb-2 group-hover:text-primary-400 transition-colors duration-300 line-clamp-2">
+                      {event.name}
+                    </h3>
+                    
+                    <p className="text-sm text-subtle mb-2">
+                      {event.date.display}
+                    </p>
+                    
+                    <p className="text-sm text-subtle mb-3">
+                      📍 {event.location.city}, {event.location.state}
+                    </p>
+                    
+                    <p className="text-sm text-subtle leading-relaxed line-clamp-3">
                       {event.excerpt}
                     </p>
                   </div>
@@ -66,7 +64,7 @@ export default function EventsSection() {
           ))}
         </div>
         
-        {/* Desktop: Grid layout with fixed height */}
+        {/* Desktop: Grid layout with uniform height */}
         <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
           {upcomingEvents.map((event) => (
             <Link key={event.slug} href={`/events/${event.slug}`} className="block">
@@ -101,9 +99,12 @@ export default function EventsSection() {
                     📍 {event.location.city}, {event.location.state}
                   </p>
                   
-                  <p className="text-sm text-subtle leading-relaxed line-clamp-3 flex-1">
-                    {event.excerpt}
-                  </p>
+                  <div className="flex-1 relative overflow-hidden">
+                    <p className="text-sm text-subtle leading-relaxed line-clamp-3">
+                      {event.excerpt}
+                    </p>
+                    <div className="absolute bottom-0 left-0 right-0 h-4 bg-gradient-to-t from-dark-900 to-transparent"></div>
+                  </div>
                 </div>
               </div>
             </Link>

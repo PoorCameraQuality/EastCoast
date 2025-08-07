@@ -114,8 +114,8 @@ export default function EventsPageClient() {
             <div className="md:hidden space-y-6 mb-8">
               {upcomingEvents.map((event: any) => (
                 <Link key={event.slug} href={`/events/${event.slug}`} className="block">
-                  <div className="card-elegant hover-lift group cursor-pointer p-6 h-48">
-                    <div className="flex items-start space-x-4 h-full">
+                  <div className="card-elegant hover-lift group cursor-pointer p-6">
+                    <div className="flex items-start space-x-4">
                       {/* Event Logo */}
                       {event.logo && (
                         <div className="flex-shrink-0">
@@ -128,28 +128,26 @@ export default function EventsPageClient() {
                       )}
                       
                       {/* Event Details */}
-                      <div className="flex-1 min-w-0 flex flex-col justify-between h-full">
-                        <div>
-                          <div className="mb-3">
-                            <span className="inline-block bg-primary-900 text-primary-300 text-xs font-medium px-3 py-1 rounded-none border border-primary-700">
-                              {event.category}
-                            </span>
-                          </div>
-                          
-                          <h3 className="text-lg font-serif font-semibold text-white mb-2 group-hover:text-primary-400 transition-colors duration-300 line-clamp-2">
-                            {event.name}
-                          </h3>
-                          
-                          <p className="text-sm text-subtle mb-2">
-                            {event.date.display}
-                          </p>
-                          
-                          <p className="text-sm text-subtle mb-3">
-                            📍 {event.location.city}, {event.location.state}
-                          </p>
+                      <div className="flex-1 min-w-0">
+                        <div className="mb-3">
+                          <span className="inline-block bg-primary-900 text-primary-300 text-xs font-medium px-3 py-1 rounded-none border border-primary-700">
+                            {event.category}
+                          </span>
                         </div>
                         
-                        <p className="text-sm text-subtle leading-relaxed line-clamp-2">
+                        <h3 className="text-lg font-serif font-semibold text-white mb-2 group-hover:text-primary-400 transition-colors duration-300 line-clamp-2">
+                          {event.name}
+                        </h3>
+                        
+                        <p className="text-sm text-subtle mb-2">
+                          {event.date.display}
+                        </p>
+                        
+                        <p className="text-sm text-subtle mb-3">
+                          📍 {event.location.city}, {event.location.state}
+                        </p>
+                        
+                        <p className="text-sm text-subtle leading-relaxed line-clamp-3">
                           {event.excerpt}
                         </p>
                       </div>
@@ -194,9 +192,12 @@ export default function EventsPageClient() {
                         📍 {event.location.city}, {event.location.state}
                       </p>
                       
-                      <p className="text-sm text-subtle leading-relaxed line-clamp-3 flex-1">
-                        {event.excerpt}
-                      </p>
+                      <div className="flex-1 relative overflow-hidden">
+                        <p className="text-sm text-subtle leading-relaxed line-clamp-3">
+                          {event.excerpt}
+                        </p>
+                        <div className="absolute bottom-0 left-0 right-0 h-4 bg-gradient-to-t from-dark-900 to-transparent"></div>
+                      </div>
                     </div>
                   </div>
                 </Link>
@@ -218,8 +219,8 @@ export default function EventsPageClient() {
             <div className="md:hidden space-y-6 mb-8">
               {pastEvents.map((event: any) => (
                 <Link key={event.slug} href={`/events/${event.slug}`} className="block">
-                  <div className="card-elegant hover-lift group opacity-75 cursor-pointer p-6 h-48">
-                    <div className="flex items-start space-x-4 h-full">
+                  <div className="card-elegant hover-lift group opacity-75 cursor-pointer p-6">
+                    <div className="flex items-start space-x-4">
                       {/* Event Logo */}
                       {event.logo && (
                         <div className="flex-shrink-0">
@@ -232,28 +233,26 @@ export default function EventsPageClient() {
                       )}
                       
                       {/* Event Details */}
-                      <div className="flex-1 min-w-0 flex flex-col justify-between h-full">
-                        <div>
-                          <div className="mb-3">
-                            <span className="inline-block bg-gray-700 text-gray-300 text-xs font-medium px-3 py-1 rounded-none border border-gray-600">
-                              {event.category}
-                            </span>
-                          </div>
-                          
-                          <h3 className="text-lg font-serif font-semibold text-white mb-2 group-hover:text-primary-400 transition-colors duration-300 line-clamp-2">
-                            {event.name}
-                          </h3>
-                          
-                          <p className="text-sm text-subtle mb-2">
-                            {event.date.display}
-                          </p>
-                          
-                          <p className="text-sm text-subtle mb-3">
-                            📍 {event.location.city}, {event.location.state}
-                          </p>
+                      <div className="flex-1 min-w-0">
+                        <div className="mb-3">
+                          <span className="inline-block bg-gray-700 text-gray-300 text-xs font-medium px-3 py-1 rounded-none border border-gray-600">
+                            {event.category}
+                          </span>
                         </div>
                         
-                        <p className="text-sm text-subtle leading-relaxed line-clamp-2">
+                        <h3 className="text-lg font-serif font-semibold text-white mb-2 group-hover:text-primary-400 transition-colors duration-300 line-clamp-2">
+                          {event.name}
+                        </h3>
+                        
+                        <p className="text-sm text-subtle mb-2">
+                          {event.date.display}
+                        </p>
+                        
+                        <p className="text-sm text-subtle mb-3">
+                          📍 {event.location.city}, {event.location.state}
+                        </p>
+                        
+                        <p className="text-sm text-subtle leading-relaxed line-clamp-3">
                           {event.excerpt}
                         </p>
                       </div>
@@ -298,9 +297,12 @@ export default function EventsPageClient() {
                         📍 {event.location.city}, {event.location.state}
                       </p>
                       
-                      <p className="text-sm text-subtle leading-relaxed line-clamp-3 flex-1">
-                        {event.excerpt}
-                      </p>
+                      <div className="flex-1 relative overflow-hidden">
+                        <p className="text-sm text-subtle leading-relaxed line-clamp-3">
+                          {event.excerpt}
+                        </p>
+                        <div className="absolute bottom-0 left-0 right-0 h-4 bg-gradient-to-t from-dark-900 to-transparent"></div>
+                      </div>
                     </div>
                   </div>
                 </Link>
