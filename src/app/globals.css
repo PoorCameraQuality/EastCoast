@@ -98,6 +98,65 @@
   min-height: 400px;
 }
 
+/* Admin mode button styles */
+  .admin-mode-button {
+    background: linear-gradient(45deg, #00ff00, #00cc00, #00ff00);
+    background-size: 200% 200%;
+    animation: neonGlow 2s ease-in-out infinite alternate;
+    box-shadow: 0 0 20px rgba(0, 255, 0, 0.5), 0 0 40px rgba(0, 255, 0, 0.3);
+  }
+
+  /* Login modal positioning */
+  .login-modal-overlay {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    z-index: 9999 !important;
+    min-height: 100vh !important;
+    padding: 1rem !important;
+    background-color: rgba(0, 0, 0, 0.5) !important;
+  }
+
+  .login-modal-content {
+    position: relative !important;
+    max-width: 28rem !important;
+    width: 100% !important;
+    max-height: 90vh !important;
+    overflow: auto !important;
+    background: transparent !important;
+    margin: auto !important;
+    transform: translateY(-10px) !important; /* Slight upward adjustment */
+  }
+
+  /* Ensure modal is visible on all screen sizes */
+  @media (max-height: 600px) {
+    .login-modal-overlay {
+      align-items: flex-start !important;
+      padding-top: 2rem !important;
+    }
+    
+    .login-modal-content {
+      transform: none !important;
+      margin-top: 0 !important;
+    }
+  }
+
+@keyframes neonGlow {
+  0% {
+    background-position: 0% 50%;
+    box-shadow: 0 0 20px rgba(0, 255, 0, 0.5), 0 0 40px rgba(0, 255, 0, 0.3);
+  }
+  100% {
+    background-position: 100% 50%;
+    box-shadow: 0 0 30px rgba(0, 255, 0, 0.7), 0 0 60px rgba(0, 255, 0, 0.5);
+  }
+}
+
 .rich-text-editor .ProseMirror p {
   margin-bottom: 1rem;
 }

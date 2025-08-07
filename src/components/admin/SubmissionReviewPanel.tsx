@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
+import { isAdmin, getCurrentUser } from '@/lib/auth'
 
 interface Submission {
   id: string
@@ -54,8 +55,18 @@ export default function SubmissionReviewPanel() {
   const [filter, setFilter] = useState<FilterType>('pending')
   const [activeTab, setActiveTab] = useState<TabType>('submissions')
   const [selectedSubmission, setSelectedSubmission] = useState<Submission | null>(null)
+  const [isAdminUser, setIsAdminUser] = useState(false)
+  const [currentUser, setCurrentUser] = useState<any>(null)
 
   useEffect(() => {
+    const checkAdminStatus = async () => {
+      const adminStatus = await isAdmin()
+      const user = await getCurrentUser()
+      setIsAdminUser(adminStatus)
+      setCurrentUser(user)
+    }
+    
+    checkAdminStatus()
     fetchSubmissions()
     fetchModerationLogs()
   }, [])
@@ -72,7 +83,6 @@ export default function SubmissionReviewPanel() {
         return
       }
 
-      console.log('Fetched submissions:', data) // Debug log
       setSubmissions(data || [])
     } catch (error) {
       console.error('Error:', error)
@@ -220,6 +230,18 @@ export default function SubmissionReviewPanel() {
   }
 
   const counts = getSubmissionCounts()
+
+  // Check if user is admin
+  if (!isAdminUser) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <div className="text-center">
+          <div className="text-white text-xl mb-4">🔒 Access Denied</div>
+          <div className="text-gray-400">You must be logged in as an administrator to access this page.</div>
+        </div>
+      </div>
+    )
+  }
 
   if (loading) {
     return (

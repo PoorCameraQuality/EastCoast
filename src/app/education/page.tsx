@@ -31,7 +31,6 @@ export const metadata: Metadata = {
 
 async function getArticlesFromDatabase() {
   try {
-    console.log('🔍 Fetching articles from database...')
     const { data: articles, error } = await supabase
       .from('articles')
       .select('*')
@@ -43,8 +42,6 @@ async function getArticlesFromDatabase() {
       return []
     }
 
-    console.log(`Found ${articles?.length || 0} published articles`)
-
     // Filter out any null or invalid articles
     const validArticles = (articles || []).filter(article => 
       article && 
@@ -54,7 +51,6 @@ async function getArticlesFromDatabase() {
       article.status === 'published'
     )
 
-    console.log(`Valid articles: ${validArticles.length}`)
     return validArticles
   } catch (error) {
     console.error('Error fetching articles:', error)

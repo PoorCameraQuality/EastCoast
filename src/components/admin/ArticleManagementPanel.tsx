@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
+import { isAdmin, getCurrentUser } from '@/lib/auth'
 import RichTextEditor from '@/components/education/RichTextEditor'
 
 interface Article {
@@ -37,6 +38,8 @@ export default function ArticleManagementPanel() {
   const [activeTab, setActiveTab] = useState<'articles' | 'moderation'>('articles')
   const [selectedArticle, setSelectedArticle] = useState<Article | null>(null)
   const [isEditing, setIsEditing] = useState(false)
+  const [isAdminUser, setIsAdminUser] = useState(false)
+  const [currentUser, setCurrentUser] = useState<any>(null)
   const [editForm, setEditForm] = useState({
     title: '',
     excerpt: '',
@@ -49,8 +52,19 @@ export default function ArticleManagementPanel() {
     featured: false,
     notes: ''
   })
+  const [isSaving, setIsSaving] = useState(false)
+  const [saveMessage, setSaveMessage] = useState('')
+  const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'success' | 'error'>('idle')
 
   useEffect(() => {
+    const checkAdminStatus = async () => {
+      const adminStatus = await isAdmin()
+      const user = await getCurrentUser()
+      setIsAdminUser(adminStatus)
+      setCurrentUser(user)
+    }
+    
+    checkAdminStatus()
     fetchArticles()
     fetchModerationLogs()
   }, [])
@@ -136,7 +150,7 @@ export default function ArticleManagementPanel() {
           action: 'delete',
           article_title: article.title,
           article_id: article.id,
-          admin_name: 'Admin', // In a real app, this would be the logged-in admin
+          admin_name: currentUser?.name || currentUser?.email || 'Admin',
           notes: 'Article deleted by admin'
         }])
 
@@ -157,6 +171,11 @@ export default function ArticleManagementPanel() {
   const handleSaveEdit = async () => {
     if (!selectedArticle) return
 
+    // Set saving state
+    setIsSaving(true)
+    setSaveStatus('saving')
+    setSaveMessage('Saving changes...')
+
     try {
       // Update the article
       const { error: updateError } = await supabase
@@ -176,7 +195,12 @@ export default function ArticleManagementPanel() {
 
       if (updateError) {
         console.error('Error updating article:', updateError)
-        alert('Error updating article')
+        setSaveStatus('error')
+        setSaveMessage('Error updating article')
+        setTimeout(() => {
+          setSaveStatus('idle')
+          setSaveMessage('')
+        }, 3000)
         return
       }
 
@@ -187,7 +211,7 @@ export default function ArticleManagementPanel() {
           action: 'edit',
           article_title: editForm.title,
           article_id: selectedArticle.id,
-          admin_name: 'Admin', // In a real app, this would be the logged-in admin
+          admin_name: currentUser?.name || currentUser?.email || 'Admin',
           notes: editForm.notes || 'Article edited by admin'
         }])
 
@@ -196,20 +220,47 @@ export default function ArticleManagementPanel() {
       }
 
       // Refresh data
-      fetchArticles()
-      fetchModerationLogs()
-      setIsEditing(false)
-      setSelectedArticle(null)
-      alert('Article updated successfully')
+      await fetchArticles()
+      await fetchModerationLogs()
+      
+      // Show success message
+      setSaveStatus('success')
+      setSaveMessage('Article updated successfully!')
+      
+      // Reset form after a delay
+      setTimeout(() => {
+        setIsEditing(false)
+        setSelectedArticle(null)
+        setSaveStatus('idle')
+        setSaveMessage('')
+      }, 2000)
+      
     } catch (error) {
       console.error('Error:', error)
-      alert('Error updating article')
+      setSaveStatus('error')
+      setSaveMessage('Error updating article')
+      setTimeout(() => {
+        setSaveStatus('idle')
+        setSaveMessage('')
+      }, 3000)
+    } finally {
+      setIsSaving(false)
     }
   }
 
   const handleCancelEdit = () => {
     setIsEditing(false)
     setSelectedArticle(null)
+  }
+
+  // Check if user is admin
+  if (!isAdminUser) {
+    return (
+      <div className="text-center py-12">
+        <div className="text-white text-xl mb-4">🔒 Access Denied</div>
+        <div className="text-gray-400">You must be logged in as an administrator to access this page.</div>
+      </div>
+    )
   }
 
   if (loading) {
@@ -456,18 +507,64 @@ export default function ArticleManagementPanel() {
               />
             </div>
 
+            {/* Status Message */}
+            {saveMessage && (
+              <div className={`mb-4 p-3 rounded-lg ${
+                saveStatus === 'saving' ? 'bg-blue-600 text-white' :
+                saveStatus === 'success' ? 'bg-green-600 text-white' :
+                saveStatus === 'error' ? 'bg-red-600 text-white' :
+                'bg-gray-600 text-white'
+              }`}>
+                <div className="flex items-center">
+                  {saveStatus === 'saving' && (
+                    <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                  )}
+                  {saveStatus === 'success' && (
+                    <svg className="mr-3 h-5 w-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                    </svg>
+                  )}
+                  {saveStatus === 'error' && (
+                    <svg className="mr-3 h-5 w-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                    </svg>
+                  )}
+                  <span>{saveMessage}</span>
+                </div>
+              </div>
+            )}
+
             <div className="flex justify-end gap-4">
               <button
                 onClick={handleCancelEdit}
-                className="px-6 py-2 bg-gray-600 text-white rounded hover:bg-gray-700 transition-colors"
+                disabled={isSaving}
+                className="px-6 py-2 bg-gray-600 text-white rounded hover:bg-gray-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Cancel
               </button>
               <button
                 onClick={handleSaveEdit}
-                className="px-6 py-2 bg-primary-500 text-white rounded hover:bg-primary-600 transition-colors"
+                disabled={isSaving}
+                className={`px-6 py-2 rounded transition-colors flex items-center ${
+                  isSaving 
+                    ? 'bg-gray-500 text-white cursor-not-allowed' 
+                    : 'bg-primary-500 text-white hover:bg-primary-600'
+                }`}
               >
-                Save Changes
+                {isSaving ? (
+                  <>
+                    <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Saving...
+                  </>
+                ) : (
+                  'Save Changes'
+                )}
               </button>
             </div>
           </div>

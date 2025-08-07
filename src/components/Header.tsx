@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import UserMenu from './auth/UserMenu'
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -41,6 +42,7 @@ export default function Header() {
             <Link href="/contact" className="btn-outline">
               Submit
             </Link>
+            <UserMenu />
           </nav>
 
           {/* Mobile menu button */}
@@ -79,6 +81,9 @@ export default function Header() {
               <Link href="/contact" className="btn-outline inline-block text-center">
                 Submit
               </Link>
+              <div className="pt-4 border-t border-dark-700">
+                <UserMenu />
+              </div>
             </nav>
           </div>
         )}
