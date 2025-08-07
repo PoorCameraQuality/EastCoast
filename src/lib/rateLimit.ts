@@ -21,6 +21,16 @@ export class RateLimiter {
     this.config = config
   }
 
+  // Public method to get the error message
+  getMessage(): string {
+    return this.config.message || 'Rate limit exceeded'
+  }
+
+  // Public method to get max requests
+  getMaxRequests(): number {
+    return this.config.maxRequests
+  }
+
   async checkLimit(identifier: string): Promise<{
     allowed: boolean
     remaining: number
@@ -134,14 +144,14 @@ export async function withRateLimit(
     return new Response(
       JSON.stringify({
         success: false,
-        message: limiter.config.message || 'Rate limit exceeded',
+        message: limiter.getMessage(),
         retryAfter: result.retryAfter
       }),
       {
         status: 429, // Too Many Requests
         headers: {
           'Content-Type': 'application/json',
-          'X-RateLimit-Limit': limiter.config.maxRequests.toString(),
+          'X-RateLimit-Limit': limiter.getMaxRequests().toString(),
           'X-RateLimit-Remaining': result.remaining.toString(),
           'X-RateLimit-Reset': result.resetTime.toString(),
           'Retry-After': result.retryAfter?.toString() || '60'
