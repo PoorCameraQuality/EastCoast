@@ -1,6 +1,13 @@
 'use client'
 
 import { useState } from 'react'
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'Add Content - Admin | East Coast Kink Events',
+  description: 'Add new event or dungeon content to East Coast Kink Events',
+  robots: 'noindex, nofollow'
+}
 import Image from 'next/image'
 
 export default function AddContentPage() {

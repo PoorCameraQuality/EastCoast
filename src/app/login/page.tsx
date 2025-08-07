@@ -4,6 +4,7 @@ import LoginPageClient from './LoginPageClient'
 export const metadata: Metadata = {
   title: 'Admin Login - East Coast Kink Events',
   description: 'Admin login portal for East Coast Kink Events management.',
+  robots: { index: false, follow: false },
   keywords: 'admin login, website management, kink events admin',
   openGraph: {
     title: 'Admin Login - East Coast Kink Events',

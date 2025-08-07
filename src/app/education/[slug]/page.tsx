@@ -3,6 +3,7 @@ import { supabase } from '@/lib/supabase'
 import { notFound } from 'next/navigation'
 import Breadcrumb from '@/components/Breadcrumb'
 import ArticlePageClient from '@/components/education/ArticlePageClient'
+import Script from 'next/script'
 
 interface ArticlePageProps {
   params: { slug: string }
@@ -93,6 +94,22 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
 
   return (
     <div className="min-h-screen bg-black">
+      {/* Breadcrumb JSON-LD */}
+      <Script
+        id={`breadcrumb-structured-data-article-${article.slug || article.id}`}
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+              {"@type": "ListItem", position: 1, name: 'Home', item: 'https://eastcoastkinkevents.com/'},
+              {"@type": "ListItem", position: 2, name: 'Education', item: 'https://eastcoastkinkevents.com/education'},
+              {"@type": "ListItem", position: 3, name: article.title, item: `https://eastcoastkinkevents.com/education/${article.slug || article.id}`}
+            ]
+          })
+        }}
+      />
       <div className="container-custom py-16">
         <Breadcrumb items={breadcrumbItems} />
         <ArticlePageClient article={article} breadcrumbItems={breadcrumbItems} />

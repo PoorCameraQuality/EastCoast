@@ -4,6 +4,7 @@ import Link from 'next/link'
 import EventLogo from '@/components/EventLogo'
 import { EventStructuredData } from '@/components/StructuredData'
 import Breadcrumb from '@/components/Breadcrumb'
+import Script from 'next/script'
 
 // Generate metadata for SEO
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
@@ -79,6 +80,22 @@ export default function EventPage({ params }: { params: { slug: string } }) {
 
   return (
     <div className="min-h-screen bg-black">
+      {/* Breadcrumb JSON-LD */}
+      <Script
+        id={`breadcrumb-structured-data-${event.slug}`}
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+              {"@type": "ListItem", position: 1, name: 'Home', item: 'https://eastcoastkinkevents.com/'},
+              {"@type": "ListItem", position: 2, name: 'Events', item: 'https://eastcoastkinkevents.com/events'},
+              {"@type": "ListItem", position: 3, name: event.name, item: `https://eastcoastkinkevents.com/events/${event.slug}`}
+            ]
+          })
+        }}
+      />
       <EventStructuredData event={event} />
       <div className="container-custom py-16">
         <Breadcrumb items={breadcrumbItems} />

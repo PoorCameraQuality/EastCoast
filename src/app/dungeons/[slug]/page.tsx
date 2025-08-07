@@ -4,6 +4,7 @@ import Link from 'next/link'
 import DungeonLogo from '@/components/DungeonLogo'
 import { DungeonStructuredData } from '@/components/StructuredData'
 import Breadcrumb from '@/components/Breadcrumb'
+import Script from 'next/script'
 import Image from 'next/image'
 
 // Generate metadata for SEO
@@ -78,6 +79,22 @@ export default function DungeonPage({ params }: { params: { slug: string } }) {
 
   return (
     <div className="min-h-screen bg-black">
+      {/* Breadcrumb JSON-LD */}
+      <Script
+        id={`breadcrumb-structured-data-dungeon-${dungeon.slug}`}
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+              {"@type": "ListItem", position: 1, name: 'Home', item: 'https://eastcoastkinkevents.com/'},
+              {"@type": "ListItem", position: 2, name: 'Dungeons', item: 'https://eastcoastkinkevents.com/dungeons'},
+              {"@type": "ListItem", position: 3, name: dungeon.name, item: `https://eastcoastkinkevents.com/dungeons/${dungeon.slug}`}
+            ]
+          })
+        }}
+      />
       <DungeonStructuredData dungeon={dungeon} />
       <div className="container-custom py-16">
         <Breadcrumb items={breadcrumbItems} />

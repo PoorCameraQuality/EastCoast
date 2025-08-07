@@ -1,4 +1,5 @@
 import Script from 'next/script'
+import { getAllEvents } from '@/data/events'
 
 interface EventStructuredDataProps {
   event: {
@@ -27,12 +28,20 @@ interface EventStructuredDataProps {
 }
 
 export function EventStructuredData({ event }: EventStructuredDataProps) {
-  // Enhanced structured data for Google Rich Results
-  const structuredData = {
+  // Determine country code (support US/CA based on state/region hints)
+  const addressCountry = ((): string => {
+    const state = (event.location.state || '').toUpperCase()
+    const region = (event.location.region || '').toLowerCase()
+    if (state === 'ON' || region.includes('canada')) return 'CA'
+    return 'US'
+  })()
+
+  // Enhanced structured data for Google Rich Results (kept minimal to avoid warnings)
+  const structuredData: any = {
     "@context": "https://schema.org",
     "@type": "Event",
     "name": event.name,
-    "description": event.excerpt,
+    "description": (event as any).longDescription || event.excerpt,
     "startDate": event.date.start,
     "endDate": event.date.end,
     "eventStatus": "https://schema.org/EventScheduled",
@@ -44,7 +53,7 @@ export function EventStructuredData({ event }: EventStructuredDataProps) {
         "@type": "PostalAddress",
         "addressLocality": event.location.city,
         "addressRegion": event.location.state,
-        "addressCountry": "US"
+        "addressCountry": addressCountry
       }
     },
     "organizer": {
@@ -52,55 +61,18 @@ export function EventStructuredData({ event }: EventStructuredDataProps) {
       "name": "East Coast Kink Events",
       "url": "https://eastcoastkinkevents.com"
     },
-    "performer": {
-      "@type": "Organization",
-      "name": "East Coast Kink Events"
-    },
     "url": `https://eastcoastkinkevents.com/events/${event.slug}`,
-    "image": event.logo ? `https://eastcoastkinkevents.com${event.logo}` : undefined,
+    "image": event.logo ? [`https://eastcoastkinkevents.com${event.logo}`] : undefined,
     "mainEntityOfPage": {
       "@type": "WebPage",
       "@id": `https://eastcoastkinkevents.com/events/${event.slug}`
     },
-    "offers": {
-      "@type": "Offer",
-      "url": event.website,
-      "availability": "https://schema.org/InStock",
-      "validFrom": event.date.start,
-      "priceCurrency": "USD",
-      "price": "0",
-      "priceValidUntil": event.date.end
-    },
-    "audience": {
-      "@type": "Audience",
-      "audienceType": "Adults 18+"
-    },
     "inLanguage": "en-US",
     "isAccessibleForFree": false,
-    "maximumAttendeeCapacity": 100,
-    "remainingAttendeeCapacity": 50,
-    "typicalAgeRange": "18-99",
     "keywords": event.seo?.keywords || `${event.category}, ${event.location.city}, ${event.location.state}`,
     "genre": event.category,
-    "additionalProperty": [
-      {
-        "@type": "PropertyValue",
-        "name": "Event Type",
-        "value": event.category
-      },
-      {
-        "@type": "PropertyValue", 
-        "name": "Region",
-        "value": event.location.region
-      },
-      {
-        "@type": "PropertyValue",
-        "name": "Event Category",
-        "value": event.category
-      }
-    ],
     "potentialAction": {
-      "@type": "ReserveAction",
+      "@type": "ViewAction",
       "target": {
         "@type": "EntryPoint",
         "urlTemplate": event.website
@@ -169,11 +141,7 @@ export function WebsiteStructuredData() {
     "name": "East Coast Kink Events",
     "description": "Discover and connect with kink events across the East Coast",
     "url": "https://eastcoastkinkevents.com",
-    "potentialAction": {
-      "@type": "SearchAction",
-      "target": "https://eastcoastkinkevents.com/events?search={search_term_string}",
-      "query-input": "required name=search_term_string"
-    },
+    // SearchAction removed until a public search query param route is provided
     "publisher": {
       "@type": "Organization",
       "name": "East Coast Kink Events",
@@ -192,24 +160,29 @@ export function WebsiteStructuredData() {
 
 // New component for enhanced event listing page
 export function EventListStructuredData() {
+  const events = getAllEvents()
+    .filter(e => new Date(e.date.end) >= new Date())
+    .sort((a, b) => new Date(a.date.start).getTime() - new Date(b.date.start).getTime())
+    .slice(0, 10)
+
+  const itemListElement = events.map((e, idx) => ({
+    "@type": "ListItem",
+    position: idx + 1,
+    item: {
+      "@type": "Event",
+      name: e.name,
+      url: `https://eastcoastkinkevents.com/events/${e.slug}`
+    }
+  }))
+
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "ItemList",
     "name": "East Coast Kink Events",
     "description": "Browse all upcoming kink events across the East Coast",
     "url": "https://eastcoastkinkevents.com/events",
-    "numberOfItems": 10,
-    "itemListElement": [
-      {
-        "@type": "ListItem",
-        "position": 1,
-        "item": {
-          "@type": "Event",
-          "name": "The Summer Michigan Rope Conference SMIRC",
-          "url": "https://eastcoastkinkevents.com/events/summer-michigan-rope-conference-smirc"
-        }
-      }
-    ]
+    "numberOfItems": itemListElement.length,
+    "itemListElement": itemListElement
   }
 
   return (
@@ -229,14 +202,15 @@ export function OrganizationStructuredData() {
     "name": "East Coast Kink Events",
     "description": "Discover and connect with kink events across the East Coast",
     "url": "https://eastcoastkinkevents.com",
-    "logo": "https://eastcoastkinkevents.com/logo.png",
+    "logo": "https://eastcoastkinkevents.com/og-image.png",
     "sameAs": [
       "https://discord.gg/xcnGGyGsmT"
     ],
     "contactPoint": {
       "@type": "ContactPoint",
       "contactType": "customer service",
-      "email": "sh.kinney@hotmail.com"
+      "url": "https://eastcoastkinkevents.com/contact",
+      "availableLanguage": "English"
     },
     "areaServed": {
       "@type": "Place",
@@ -270,6 +244,21 @@ export function OrganizationStructuredData() {
 
 // New component for calendar page structured data
 export function CalendarStructuredData() {
+  const events = getAllEvents()
+    .filter(e => new Date(e.date.end) >= new Date())
+    .sort((a, b) => new Date(a.date.start).getTime() - new Date(b.date.start).getTime())
+    .slice(0, 10)
+
+  const itemListElement = events.map((e, idx) => ({
+    "@type": "ListItem",
+    position: idx + 1,
+    item: {
+      "@type": "Event",
+      name: e.name,
+      url: `https://eastcoastkinkevents.com/events/${e.slug}`
+    }
+  }))
+
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "WebPage",
@@ -280,23 +269,8 @@ export function CalendarStructuredData() {
       "@type": "ItemList",
       "name": "East Coast Kink Events Calendar",
       "description": "Monthly calendar of kink events across the East Coast",
-      "numberOfItems": 10,
-      "itemListElement": [
-        {
-          "@type": "ListItem",
-          "position": 1,
-          "item": {
-            "@type": "Event",
-            "name": "The Summer Michigan Rope Conference SMIRC",
-            "url": "https://eastcoastkinkevents.com/events/summer-michigan-rope-conference-smirc"
-          }
-        }
-      ]
-    },
-    "potentialAction": {
-      "@type": "SearchAction",
-      "target": "https://eastcoastkinkevents.com/calendar?month={month}",
-      "query-input": "required name=month"
+      "numberOfItems": itemListElement.length,
+      "itemListElement": itemListElement
     }
   }
 
@@ -411,11 +385,6 @@ export function EducationStructuredData() {
           }
         }
       ]
-    },
-    "potentialAction": {
-      "@type": "SearchAction",
-      "target": "https://eastcoastkinkevents.com/education?category={category}",
-      "query-input": "required name=category"
     }
   }
 
@@ -448,7 +417,7 @@ export function ArticleStructuredData({ article }: { article: any }) {
     "@type": "Article",
     "headline": article.title,
     "description": article.excerpt,
-    "articleBody": article.content,
+    ...(article?.content ? { "articleBody": article.content } : {}),
     "author": {
       "@type": "Person",
       "name": article.author_name,
@@ -463,7 +432,7 @@ export function ArticleStructuredData({ article }: { article: any }) {
     "dateModified": article.created_at || new Date().toISOString(),
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": `https://eastcoastkinkevents.com/education/${article.id}`
+      "@id": `https://eastcoastkinkevents.com/education/${article.slug}`
     },
     "image": {
       "@type": "ImageObject",

@@ -50,7 +50,3 @@ Crawl-delay: 1
 # Sitemap location
 Sitemap: https://eastcoastkinkevents.com/sitemap.xml
 
-# Additional sitemaps for better organization
-Sitemap: https://eastcoastkinkevents.com/sitemap-events.xml
-Sitemap: https://eastcoastkinkevents.com/sitemap-dungeons.xml
-Sitemap: https://eastcoastkinkevents.com/sitemap-education.xml

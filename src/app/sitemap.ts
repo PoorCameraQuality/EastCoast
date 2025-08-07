@@ -13,8 +13,8 @@ export default async function sitemap() {
   // Generate event URLs with enhanced metadata
   const eventUrls = events.map((event) => ({
     url: `${baseUrl}/events/${event.slug}`,
-    lastModified: new Date(),
-    changeFrequency: 'weekly' as const,
+    lastModified: new Date(event.date.start),
+    changeFrequency: 'monthly' as const,
     priority: 0.9,
     alternates: {
       canonical: `${baseUrl}/events/${event.slug}`,
