@@ -11,11 +11,20 @@ export const metadata: Metadata = {
     description: 'Submit your educational article for review and potential publication on our kink education platform.',
     type: 'website',
     url: 'https://eastcoastkinkevents.com/education/submit',
+    images: [
+      {
+        url: 'https://eastcoastkinkevents.com/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'Submit Article - East Coast Kink Events',
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Submit Article - Kink Education | East Coast Kink Events',
     description: 'Submit your educational article for review and potential publication.',
+    images: ['https://eastcoastkinkevents.com/og-image.png'],
   },
 }
 

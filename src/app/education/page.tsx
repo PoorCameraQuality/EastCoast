@@ -18,11 +18,20 @@ export const metadata: Metadata = {
     type: 'website',
     url: 'https://eastcoastkinkevents.com/education',
     siteName: 'East Coast Kink Events',
+    images: [
+      {
+        url: 'https://eastcoastkinkevents.com/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'East Coast Kink Events - Kink Education',
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Kink Education - Articles, Guides & Resources | East Coast Kink Events',
     description: 'Comprehensive kink education resources including safety guides, negotiation techniques, aftercare essentials, and community guidelines for responsible BDSM practice.',
+    images: ['https://eastcoastkinkevents.com/og-image.png'],
   },
   alternates: {
     canonical: 'https://eastcoastkinkevents.com/education',

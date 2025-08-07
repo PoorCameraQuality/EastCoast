@@ -49,11 +49,20 @@ export async function generateMetadata({ params }: ArticlePageProps): Promise<Me
       type: 'article',
       url: `https://eastcoastkinkevents.com/education/${article.id}`,
       siteName: 'East Coast Kink Events',
+      images: [
+        {
+          url: 'https://eastcoastkinkevents.com/og-image.png',
+          width: 1200,
+          height: 630,
+          alt: `${article.title} - East Coast Kink Events`,
+        },
+      ],
     },
     twitter: {
       card: 'summary_large_image',
       title: article.title,
       description: article.excerpt,
+      images: ['https://eastcoastkinkevents.com/og-image.png'],
     },
     alternates: {
       canonical: `https://eastcoastkinkevents.com/education/${article.id}`,
