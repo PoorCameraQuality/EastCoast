@@ -24,88 +24,84 @@ export default function PastEventsSection() {
         {/* Mobile: Horizontal scroll */}
         <div className="flex md:hidden gap-4 overflow-x-auto pb-4 -mx-4 px-4 snap-x snap-mandatory mb-8">
           {pastEvents.slice(0, 4).map((event) => (
-            <div key={event.slug} className="card-elegant hover-lift group opacity-75 flex-shrink-0 w-80 snap-start">
-              {/* Event Logo */}
-              {event.logo && (
+            <Link key={event.slug} href={`/events/${event.slug}`} className="block">
+              <div className="card-elegant hover-lift group opacity-75 flex-shrink-0 w-80 snap-start cursor-pointer">
+                {/* Event Logo */}
+                {event.logo && (
+                  <div className="mb-6">
+                    <EventLogo 
+                      src={event.logo} 
+                      alt={`${event.name} logo`}
+                      size="medium"
+                    />
+                  </div>
+                )}
+                
                 <div className="mb-6">
-                  <EventLogo 
-                    src={event.logo} 
-                    alt={`${event.name} logo`}
-                    size="medium"
-                  />
+                  <span className="inline-block bg-gray-700 text-gray-300 text-xs font-medium px-3 py-1 rounded-none border border-gray-600">
+                    {event.category}
+                  </span>
                 </div>
-              )}
-              
-              <div className="mb-6">
-                <span className="inline-block bg-gray-700 text-gray-300 text-xs font-medium px-3 py-1 rounded-none border border-gray-600">
-                  {event.category}
-                </span>
+                
+                <h3 className="text-xl font-serif font-semibold text-white mb-4 group-hover:text-primary-400 transition-colors duration-300">
+                  {event.name}
+                </h3>
+                
+                <p className="text-sm text-subtle mb-4">
+                  <span className="text-primary-400 font-medium">TBD</span>
+                </p>
+                
+                <p className="text-sm text-subtle mb-6">
+                  📍 {event.location.city}, {event.location.state}
+                </p>
+                
+                <p className="text-sm text-subtle mb-6 leading-relaxed">
+                  {event.excerpt}
+                </p>
               </div>
-              
-              <h3 className="text-xl font-serif font-semibold text-white mb-4 group-hover:text-primary-400 transition-colors duration-300">
-                {event.name}
-              </h3>
-              
-              <p className="text-sm text-subtle mb-4">
-                <span className="text-primary-400 font-medium">TBD</span>
-              </p>
-              
-              <p className="text-sm text-subtle mb-6">
-                📍 {event.location.city}, {event.location.state}
-              </p>
-              
-              <p className="text-sm text-subtle mb-6 leading-relaxed">
-                {event.excerpt}
-              </p>
-              
-              <Link href={`/events/${event.slug}`} className="text-primary-400 hover:text-primary-300 font-medium text-sm border-b border-primary-600 hover:border-primary-500 transition-all duration-300 inline-block">
-                View Details →
-              </Link>
-            </div>
+            </Link>
           ))}
         </div>
         
         {/* Desktop: Grid layout */}
         <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
           {pastEvents.slice(0, 4).map((event) => (
-            <div key={event.slug} className="card-elegant hover-lift group opacity-75">
-              {/* Event Logo */}
-              {event.logo && (
+            <Link key={event.slug} href={`/events/${event.slug}`} className="block">
+              <div className="card-elegant hover-lift group opacity-75 cursor-pointer">
+                {/* Event Logo */}
+                {event.logo && (
+                  <div className="mb-6">
+                    <EventLogo 
+                      src={event.logo} 
+                      alt={`${event.name} logo`}
+                      size="medium"
+                    />
+                  </div>
+                )}
+                
                 <div className="mb-6">
-                  <EventLogo 
-                    src={event.logo} 
-                    alt={`${event.name} logo`}
-                    size="medium"
-                  />
+                  <span className="inline-block bg-gray-700 text-gray-300 text-xs font-medium px-3 py-1 rounded-none border border-gray-600">
+                    {event.category}
+                  </span>
                 </div>
-              )}
-              
-              <div className="mb-6">
-                <span className="inline-block bg-gray-700 text-gray-300 text-xs font-medium px-3 py-1 rounded-none border border-gray-600">
-                  {event.category}
-                </span>
+                
+                <h3 className="text-xl font-serif font-semibold text-white mb-4 group-hover:text-primary-400 transition-colors duration-300">
+                  {event.name}
+                </h3>
+                
+                <p className="text-sm text-subtle mb-4">
+                  <span className="text-primary-400 font-medium">TBD</span>
+                </p>
+                
+                <p className="text-sm text-subtle mb-6">
+                  📍 {event.location.city}, {event.location.state}
+                </p>
+                
+                <p className="text-sm text-subtle mb-6 leading-relaxed">
+                  {event.excerpt}
+                </p>
               </div>
-              
-              <h3 className="text-xl font-serif font-semibold text-white mb-4 group-hover:text-primary-400 transition-colors duration-300">
-                {event.name}
-              </h3>
-              
-              <p className="text-sm text-subtle mb-4">
-                <span className="text-primary-400 font-medium">TBD</span>
-              </p>
-              
-              <p className="text-sm text-subtle mb-6">
-                📍 {event.location.city}, {event.location.state}
-              </p>
-              
-              <p className="text-sm text-subtle mb-6 leading-relaxed">
-                {event.excerpt}
-              </p>
-              
-              <Link href={`/events/${event.slug}`} className="text-primary-400 hover:text-primary-300 font-medium text-sm border-b border-primary-600 hover:border-primary-500 transition-all duration-300 inline-block">
-                View Details →
-              </Link>
-            </div>
+            </Link>
           ))}
         </div>
 

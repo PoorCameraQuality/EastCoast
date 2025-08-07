@@ -3,92 +3,69 @@ import Link from 'next/link'
 interface ArticleCardProps {
   article: {
     id: string
-    slug: string
     title: string
     excerpt: string
     author_name: string
     author_credentials?: string
     category: string
-    tags?: string[]
-    read_time: string
+    tags?: string
+    featured: boolean
+    read_time?: string
     created_at?: string
-    featured?: boolean
   }
-  featured?: boolean
 }
 
-export default function ArticleCard({ article, featured = false }: ArticleCardProps) {
+export default function ArticleCard({ article }: ArticleCardProps) {
   const formatDate = (dateString?: string) => {
     if (!dateString) return 'Recently published'
-    const date = new Date(dateString)
-    return date.toLocaleDateString('en-US', {
+    return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
-      month: 'long',
+      month: 'short',
       day: 'numeric'
     })
   }
 
   return (
-    <div className={`card-elegant hover-lift group ${featured ? 'ring-2 ring-primary-500' : ''}`}>
-      {/* Author Info */}
-      <div className="flex items-center justify-between mb-4">
-        <div>
-          <p className="text-sm font-medium text-white">{article.author_name}</p>
-          {article.author_credentials && (
-            <p className="text-xs text-subtle">{article.author_credentials}</p>
-          )}
-        </div>
-        <div>
-          <span className="inline-block bg-primary-900 text-primary-300 text-xs font-medium px-2 py-1 rounded-none border border-primary-700">
-            {article.category}
-          </span>
-        </div>
-      </div>
-
-      {/* Article Content */}
-      <div className="mb-4">
-        <Link href={`/education/${article.slug}`}>
-          <h3 className="text-xl font-serif font-semibold text-white mb-3 group-hover:text-primary-400 transition-colors duration-300 cursor-pointer hover:text-primary-400">
-            {article.title}
-          </h3>
-        </Link>
-        <p className="text-sm text-subtle leading-relaxed mb-4">
-          {article.excerpt}
-        </p>
-      </div>
-
-      {/* Meta Information */}
-      <div className="flex items-center justify-between text-xs text-subtle mb-4">
-        <span>{formatDate(article.created_at)}</span>
-        <span>{article.read_time}</span>
-      </div>
-
-      {/* Tags */}
-      {article.tags && article.tags.length > 0 && (
-        <div className="mb-4">
-          <div className="flex flex-wrap gap-1">
-            {article.tags.slice(0, 3).map((tag) => (
-              <span
-                key={tag}
-                className="inline-block bg-gray-800 text-gray-300 text-xs px-2 py-1 rounded-none border border-gray-700"
-              >
-                {tag}
+    <Link href={`/education/${article.id}`} className="block">
+      <div className="bg-dark-800 rounded-lg p-6 border border-dark-600 hover:border-primary-500 transition-colors cursor-pointer group">
+        <div className="flex items-start justify-between mb-4">
+          <div className="flex-1">
+            <div className="flex items-center gap-3 mb-2">
+              <span className="px-2 py-1 rounded text-xs font-medium bg-primary-500 text-white">
+                {article.category}
               </span>
-            ))}
-            {article.tags.length > 3 && (
-              <span className="text-xs text-subtle">+{article.tags.length - 3} more</span>
-            )}
+              {article.featured && (
+                <span className="px-2 py-1 rounded text-xs font-medium bg-yellow-500 text-black">
+                  Featured
+                </span>
+              )}
+            </div>
+            
+            <h3 className="text-xl font-semibold text-white mb-2 group-hover:text-primary-400 transition-colors">
+              {article.title}
+            </h3>
+            
+            <p className="text-gray-300 text-sm mb-4 line-clamp-3">
+              {article.excerpt}
+            </p>
+            
+            <div className="flex items-center justify-between text-sm text-gray-400">
+              <div className="flex items-center gap-4">
+                <span>{article.author_name}</span>
+                {article.author_credentials && (
+                  <span className="text-xs">• {article.author_credentials}</span>
+                )}
+              </div>
+              <div className="flex items-center gap-4">
+                {article.read_time && (
+                  <span>{article.read_time}</span>
+                )}
+                <span>{formatDate(article.created_at)}</span>
+              </div>
+            </div>
           </div>
         </div>
-      )}
-
-      {/* Read More Link */}
-      <Link 
-        href={`/education/${article.slug}`}
-        className="text-primary-400 hover:text-primary-300 font-medium text-sm border-b border-primary-600 hover:border-primary-500 transition-all duration-300 inline-block"
-      >
-        Read Article →
-      </Link>
-    </div>
+      </div>
+    </Link>
   )
 }

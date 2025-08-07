@@ -39,7 +39,16 @@ async function getArticlesFromDatabase() {
       return []
     }
 
-    return articles || []
+    // Filter out any null or invalid articles
+    const validArticles = (articles || []).filter(article => 
+      article && 
+      article.id && 
+      article.title && 
+      article.content &&
+      article.status === 'published'
+    )
+
+    return validArticles
   } catch (error) {
     console.error('Error fetching articles:', error)
     return []

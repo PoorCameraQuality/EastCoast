@@ -6,7 +6,6 @@ export async function POST(
   { params }: { params: { id: string } }
 ) {
   try {
-    const body = await request.json()
     const submissionId = params.id
     
     // Check if admin client is available
@@ -18,13 +17,23 @@ export async function POST(
       )
     }
     
+    // Try to parse body if it exists, otherwise use default values
+    let reviewerNotes = 'Approved for publication'
+    try {
+      const body = await request.json()
+      reviewerNotes = body.reviewerNotes || reviewerNotes
+    } catch (error) {
+      // No body provided, use default values
+      console.log('No request body provided, using default values')
+    }
+    
     // Update submission status to approved
     const { error: updateError } = await supabaseAdmin
       .from('submissions')
       .update({ 
         status: 'approved',
         reviewed_at: new Date().toISOString(),
-        reviewer_notes: body.reviewerNotes || 'Approved for publication'
+        reviewer_notes: reviewerNotes
       })
       .eq('id', submissionId)
     
@@ -85,7 +94,7 @@ export async function POST(
     
     console.log('Submission approved and article created:', {
       submissionId,
-      reviewerNotes: body.reviewerNotes,
+      reviewerNotes,
       timestamp: new Date().toISOString()
     })
     

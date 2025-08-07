@@ -442,12 +442,13 @@ interface ArticleStructuredDataProps {
   }
 }
 
-export function ArticleStructuredData({ article }: ArticleStructuredDataProps) {
+export function ArticleStructuredData({ article }: { article: any }) {
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "Article",
     "headline": article.title,
     "description": article.excerpt,
+    "articleBody": article.content,
     "author": {
       "@type": "Person",
       "name": article.author_name,
@@ -462,20 +463,16 @@ export function ArticleStructuredData({ article }: ArticleStructuredDataProps) {
     "dateModified": article.created_at || new Date().toISOString(),
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": `https://eastcoastkinkevents.com/education/${article.slug}`
+      "@id": `https://eastcoastkinkevents.com/education/${article.id}`
     },
-    "articleSection": article.category,
-    "keywords": article.tags ? article.tags.join(', ') : '',
-    "url": `https://eastcoastkinkevents.com/education/${article.slug}`,
-    "potentialAction": {
-      "@type": "ReadAction",
-      "target": `https://eastcoastkinkevents.com/education/${article.slug}`
+    "image": {
+      "@type": "ImageObject",
+      "url": "https://eastcoastkinkevents.com/images/education-default.jpg"
     }
   }
 
   return (
-    <Script
-      id="article-structured-data"
+    <script
       type="application/ld+json"
       dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
     />

@@ -19,7 +19,8 @@ export default function ContactForm() {
     dungeonName: '',
     dungeonLocation: '',
     dungeonWebsite: '',
-    contactMethod: ''
+    contactMethod: '',
+    contactMethodDetails: ''
   })
 
   const handleContactTypeChange = (type: string) => {
@@ -54,7 +55,7 @@ export default function ContactForm() {
       })
 
       if (response.ok) {
-        alert('Thank you for your submission! We&apos;ll get back to you soon.')
+        alert('Thank you for your submission! We\'ll get back to you soon.')
         setFormData({
           name: '',
           email: '',
@@ -67,7 +68,8 @@ export default function ContactForm() {
           dungeonName: '',
           dungeonLocation: '',
           dungeonWebsite: '',
-          contactMethod: ''
+          contactMethod: '',
+          contactMethodDetails: ''
         })
         setContactType('')
       } else {
@@ -78,6 +80,9 @@ export default function ContactForm() {
       alert('There was an error submitting your form. Please try again.')
     }
   }
+
+  // Check if contact method details should be shown
+  const showContactMethodDetails = formData.contactMethod && formData.contactMethod !== 'email'
 
   return (
     <div className="max-w-4xl mx-auto">
@@ -324,6 +329,24 @@ export default function ContactForm() {
               <option value="phone">Phone</option>
             </select>
           </div>
+
+          {/* Conditional Contact Method Details */}
+          {showContactMethodDetails && (
+            <div>
+              <label className="block text-white text-sm font-medium mb-2">
+                {formData.contactMethod === 'discord' ? 'Discord Username' : 'Phone Number'} *
+              </label>
+              <input
+                type="text"
+                name="contactMethodDetails"
+                value={formData.contactMethodDetails}
+                onChange={handleInputChange}
+                className="w-full px-4 py-2 bg-dark-700 text-white border border-dark-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                placeholder={formData.contactMethod === 'discord' ? 'Your Discord username' : 'Your phone number'}
+                required
+              />
+            </div>
+          )}
 
           <button
             type="submit"

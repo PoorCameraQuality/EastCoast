@@ -17,41 +17,9 @@ export default function ReviewSubmissionsPage() {
 
   return (
     <div className="min-h-screen bg-black">
-      <div className="container-custom py-16">
-        <Breadcrumb items={breadcrumbItems} />
-        
-        <div className="max-w-6xl mx-auto">
-          {/* Header */}
-          <div className="text-center mb-12">
-            <h1 className="text-4xl md:text-5xl font-serif font-bold text-white mb-6">
-              Review Submissions
-            </h1>
-            <p className="text-lg text-subtle max-w-3xl mx-auto">
-              Review and manage article submissions from the community.
-            </p>
-          </div>
-
-          {/* Admin Stats */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
-            <div className="card-elegant text-center">
-              <div className="text-3xl font-bold text-primary-400 mb-2">0</div>
-              <div className="text-sm text-subtle">Pending Review</div>
-            </div>
-            <div className="card-elegant text-center">
-              <div className="text-3xl font-bold text-green-400 mb-2">0</div>
-              <div className="text-sm text-subtle">Approved</div>
-            </div>
-            <div className="card-elegant text-center">
-              <div className="text-3xl font-bold text-red-400 mb-2">0</div>
-              <div className="text-sm text-subtle">Rejected</div>
-            </div>
-            <div className="card-elegant text-center">
-              <div className="text-3xl font-bold text-blue-400 mb-2">0</div>
-              <div className="text-sm text-subtle">Total Submissions</div>
-            </div>
-          </div>
-
-          {/* Review Panel */}
+      <div className="py-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <Breadcrumb items={breadcrumbItems} />
           <SubmissionReviewPanel />
         </div>
       </div>
