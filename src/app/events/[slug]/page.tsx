@@ -153,6 +153,11 @@ export default function EventPage({ params }: { params: { slug: string } }) {
                   <p className="text-lg text-subtle mb-6">
                     {event.excerpt}
                   </p>
+                  {event.longDescription && (
+                    <div className="text-subtle whitespace-pre-line">
+                      {event.longDescription}
+                    </div>
+                  )}
                 </div>
                 
                 {/* Event Information */}
