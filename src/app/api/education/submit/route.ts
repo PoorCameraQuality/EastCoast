@@ -26,11 +26,11 @@ export async function POST(request: NextRequest) {
       }
     }
     
-    // Validate word count
+    // Validate word count (minimum 500 words, no maximum)
     const wordCount = body.articleContent.split(/\s+/).filter((word: string) => word.length > 0).length
-    if (wordCount < 500 || wordCount > 3000) {
+    if (wordCount < 500) {
       return NextResponse.json(
-        { error: 'Article must be between 500 and 3000 words' },
+        { error: 'Article must be at least 500 words' },
         { status: 400 }
       )
     }

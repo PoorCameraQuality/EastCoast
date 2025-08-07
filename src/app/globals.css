@@ -92,3 +92,225 @@
   }
 }
 
+/* Custom styles for rich text editor */
+.rich-text-editor .ProseMirror {
+  outline: none;
+  min-height: 400px;
+}
+
+.rich-text-editor .ProseMirror p {
+  margin-bottom: 1rem;
+}
+
+.rich-text-editor .ProseMirror h1 {
+  font-size: 2rem;
+  font-weight: bold;
+  color: white;
+  margin-bottom: 1rem;
+  margin-top: 1.5rem;
+}
+
+.rich-text-editor .ProseMirror h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: white;
+  margin-bottom: 0.75rem;
+  margin-top: 1.25rem;
+}
+
+.rich-text-editor .ProseMirror h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: white;
+  margin-bottom: 0.5rem;
+  margin-top: 1rem;
+}
+
+.rich-text-editor .ProseMirror ul,
+.rich-text-editor .ProseMirror ol {
+  margin-bottom: 1rem;
+  padding-left: 1.5rem;
+}
+
+.rich-text-editor .ProseMirror li {
+  margin-bottom: 0.25rem;
+}
+
+.rich-text-editor .ProseMirror blockquote {
+  border-left: 4px solid #6366f1;
+  padding-left: 1rem;
+  margin: 1rem 0;
+  font-style: italic;
+  color: #9ca3af;
+}
+
+.rich-text-editor .ProseMirror code {
+  background-color: #374151;
+  padding: 0.125rem 0.25rem;
+  border-radius: 0.25rem;
+  font-family: monospace;
+  font-size: 0.875rem;
+}
+
+.rich-text-editor .ProseMirror pre {
+  background-color: #1f2937;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  overflow-x: auto;
+  margin: 1rem 0;
+}
+
+.rich-text-editor .ProseMirror pre code {
+  background: none;
+  padding: 0;
+}
+
+.rich-text-editor .ProseMirror table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1rem 0;
+}
+
+.rich-text-editor .ProseMirror th,
+.rich-text-editor .ProseMirror td {
+  border: 1px solid #4b5563;
+  padding: 0.5rem;
+  text-align: left;
+}
+
+.rich-text-editor .ProseMirror th {
+  background-color: #374151;
+  font-weight: 600;
+  color: white;
+}
+
+.rich-text-editor .ProseMirror td {
+  color: #d1d5db;
+}
+
+.rich-text-editor .ProseMirror a {
+  color: #6366f1;
+  text-decoration: underline;
+}
+
+.rich-text-editor .ProseMirror a:hover {
+  color: #4f46e5;
+}
+
+.rich-text-editor .ProseMirror img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.5rem;
+  margin: 1rem 0;
+}
+
+/* Article content styles */
+.prose h1 {
+  font-size: 2rem;
+  font-weight: bold;
+  color: white;
+  margin-bottom: 1rem;
+  margin-top: 1.5rem;
+}
+
+.prose h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: white;
+  margin-bottom: 0.75rem;
+  margin-top: 1.25rem;
+}
+
+.prose h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: white;
+  margin-bottom: 0.5rem;
+  margin-top: 1rem;
+}
+
+.prose p {
+  margin-bottom: 1rem;
+  color: #d1d5db;
+}
+
+.prose ul,
+.prose ol {
+  margin-bottom: 1rem;
+  padding-left: 1.5rem;
+  color: #d1d5db;
+}
+
+.prose li {
+  margin-bottom: 0.25rem;
+}
+
+.prose blockquote {
+  border-left: 4px solid #6366f1;
+  padding-left: 1rem;
+  margin: 1rem 0;
+  font-style: italic;
+  color: #9ca3af;
+}
+
+.prose code {
+  background-color: #374151;
+  padding: 0.125rem 0.25rem;
+  border-radius: 0.25rem;
+  font-family: monospace;
+  font-size: 0.875rem;
+  color: #e5e7eb;
+}
+
+.prose pre {
+  background-color: #1f2937;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  overflow-x: auto;
+  margin: 1rem 0;
+}
+
+.prose pre code {
+  background: none;
+  padding: 0;
+}
+
+.prose table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1rem 0;
+}
+
+.prose th,
+.prose td {
+  border: 1px solid #4b5563;
+  padding: 0.5rem;
+  text-align: left;
+}
+
+.prose th {
+  background-color: #374151;
+  font-weight: 600;
+  color: white;
+}
+
+.prose td {
+  color: #d1d5db;
+}
+
+.prose a {
+  color: #6366f1;
+  text-decoration: underline;
+}
+
+.prose a:hover {
+  color: #4f46e5;
+}
+
+.prose img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.5rem;
+  margin: 1rem 0;
+}
+

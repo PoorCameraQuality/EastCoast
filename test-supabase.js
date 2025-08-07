@@ -1,5 +1,37 @@
 const { createClient } = require('@supabase/supabase-js');
-require('dotenv').config({ path: '.env.local' });
+const fs = require('fs');
+const path = require('path');
+
+// Load environment variables manually
+function loadEnvFile() {
+  const envPath = path.join(__dirname, '.env.local');
+  console.log('Looking for .env.local at:', envPath);
+  console.log('File exists:', fs.existsSync(envPath));
+  
+  if (fs.existsSync(envPath)) {
+    const envContent = fs.readFileSync(envPath, 'utf8');
+    console.log('File content:');
+    console.log(envContent);
+    
+    const lines = envContent.split('\n');
+    
+    lines.forEach(line => {
+      const trimmed = line.trim();
+      if (trimmed && !trimmed.startsWith('#')) {
+        // Remove BOM if present
+        const cleanLine = trimmed.replace(/^\uFEFF/, '');
+        const [key, ...valueParts] = cleanLine.split('=');
+        if (key && valueParts.length > 0) {
+          const value = valueParts.join('=');
+          process.env[key] = value;
+          console.log(`Set ${key} = ${value.substring(0, 20)}...`);
+        }
+      }
+    });
+  }
+}
+
+loadEnvFile();
 
 async function testSupabaseConnection() {
   console.log('\n🧪 TESTING SUPABASE CONNECTION\n');
@@ -8,6 +40,11 @@ async function testSupabaseConnection() {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
   const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+  console.log('Debug - Environment variables:');
+  console.log('URL:', supabaseUrl ? 'Found' : 'Missing');
+  console.log('Anon Key:', supabaseAnonKey ? 'Found' : 'Missing');
+  console.log('Service Key:', supabaseServiceKey ? 'Found' : 'Missing');
 
   if (!supabaseUrl || !supabaseAnonKey || !supabaseServiceKey) {
     console.log('❌ Missing environment variables!');

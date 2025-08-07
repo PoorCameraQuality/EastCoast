@@ -4,6 +4,7 @@ import './globals.css'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import AgeVerification from '@/components/AgeVerification'
+import BackToTop from '@/components/BackToTop'
 import { WebsiteStructuredData, OrganizationStructuredData } from '@/components/StructuredData'
 import GoogleAnalytics from '@/components/GoogleAnalytics'
 
@@ -54,6 +55,7 @@ export default function RootLayout({
           </main>
           <Footer />
           <AgeVerification />
+          <BackToTop />
         </div>
       </body>
     </html>

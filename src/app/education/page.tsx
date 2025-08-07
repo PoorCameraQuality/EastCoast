@@ -1,7 +1,8 @@
 import { Metadata } from 'next'
-import { getAllArticles, getFeaturedArticles } from '@/data/education'
+import { supabase } from '@/lib/supabase'
 import ArticleCard from '@/components/education/ArticleCard'
 import Breadcrumb from '@/components/Breadcrumb'
+import BackToTop from '@/components/BackToTop'
 import { EducationStructuredData } from '@/components/StructuredData'
 
 export const metadata: Metadata = {
@@ -25,9 +26,30 @@ export const metadata: Metadata = {
   },
 }
 
-export default function EducationPage() {
-  const allArticles = getAllArticles()
-  const featuredArticles = getFeaturedArticles()
+async function getArticlesFromDatabase() {
+  try {
+    const { data: articles, error } = await supabase
+      .from('articles')
+      .select('*')
+      .eq('status', 'published')
+      .order('id', { ascending: false })
+
+    if (error) {
+      console.error('Error fetching articles:', error)
+      return []
+    }
+
+    return articles || []
+  } catch (error) {
+    console.error('Error fetching articles:', error)
+    return []
+  }
+}
+
+export default async function EducationPage() {
+  const articles = await getArticlesFromDatabase()
+  const featuredArticles = articles.filter(article => article.featured).slice(0, 3)
+  const allArticles = articles
 
   const breadcrumbItems = [
     { label: 'Home', href: '/' },
@@ -86,11 +108,18 @@ export default function EducationPage() {
           <h2 className="text-3xl font-serif font-semibold text-white mb-8 text-center">
             All Articles
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {allArticles.map((article) => (
-              <ArticleCard key={article.id} article={article} />
-            ))}
-          </div>
+          {allArticles.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {allArticles.map((article) => (
+                <ArticleCard key={article.id} article={article} />
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-12">
+              <p className="text-lg text-subtle mb-4">No articles published yet.</p>
+              <p className="text-subtle">Check back soon for educational content!</p>
+            </div>
+          )}
         </div>
 
         {/* Community Guidelines Section */}
@@ -156,6 +185,7 @@ export default function EducationPage() {
           </div>
         </div>
       </div>
+      <BackToTop />
     </div>
   )
 }

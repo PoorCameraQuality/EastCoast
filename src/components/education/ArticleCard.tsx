@@ -2,24 +2,24 @@ import Link from 'next/link'
 
 interface ArticleCardProps {
   article: {
+    id: string
     slug: string
     title: string
     excerpt: string
-    author: {
-      name: string
-      credentials?: string
-    }
+    author_name: string
+    author_credentials?: string
     category: string
-    tags: string[]
-    readTime: string
-    publishDate: string
+    tags?: string[]
+    read_time: string
+    created_at?: string
     featured?: boolean
   }
   featured?: boolean
 }
 
 export default function ArticleCard({ article, featured = false }: ArticleCardProps) {
-  const formatDate = (dateString: string) => {
+  const formatDate = (dateString?: string) => {
+    if (!dateString) return 'Recently published'
     const date = new Date(dateString)
     return date.toLocaleDateString('en-US', {
       year: 'numeric',
@@ -33,9 +33,9 @@ export default function ArticleCard({ article, featured = false }: ArticleCardPr
       {/* Author Info */}
       <div className="flex items-center justify-between mb-4">
         <div>
-          <p className="text-sm font-medium text-white">{article.author.name}</p>
-          {article.author.credentials && (
-            <p className="text-xs text-subtle">{article.author.credentials}</p>
+          <p className="text-sm font-medium text-white">{article.author_name}</p>
+          {article.author_credentials && (
+            <p className="text-xs text-subtle">{article.author_credentials}</p>
           )}
         </div>
         <div>
@@ -47,9 +47,11 @@ export default function ArticleCard({ article, featured = false }: ArticleCardPr
 
       {/* Article Content */}
       <div className="mb-4">
-        <h3 className="text-xl font-serif font-semibold text-white mb-3 group-hover:text-primary-400 transition-colors duration-300">
-          {article.title}
-        </h3>
+        <Link href={`/education/${article.slug}`}>
+          <h3 className="text-xl font-serif font-semibold text-white mb-3 group-hover:text-primary-400 transition-colors duration-300 cursor-pointer hover:text-primary-400">
+            {article.title}
+          </h3>
+        </Link>
         <p className="text-sm text-subtle leading-relaxed mb-4">
           {article.excerpt}
         </p>
@@ -57,12 +59,12 @@ export default function ArticleCard({ article, featured = false }: ArticleCardPr
 
       {/* Meta Information */}
       <div className="flex items-center justify-between text-xs text-subtle mb-4">
-        <span>{formatDate(article.publishDate)}</span>
-        <span>{article.readTime}</span>
+        <span>{formatDate(article.created_at)}</span>
+        <span>{article.read_time}</span>
       </div>
 
       {/* Tags */}
-      {article.tags.length > 0 && (
+      {article.tags && article.tags.length > 0 && (
         <div className="mb-4">
           <div className="flex flex-wrap gap-1">
             {article.tags.slice(0, 3).map((tag) => (

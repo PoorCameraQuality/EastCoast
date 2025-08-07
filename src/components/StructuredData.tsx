@@ -434,19 +434,11 @@ interface ArticleStructuredDataProps {
     title: string
     slug: string
     excerpt: string
-    author: {
-      name: string
-      credentials?: string
-    }
-    publishDate: string
-    lastUpdated: string
+    author_name: string
+    author_credentials?: string
+    created_at?: string
     category: string
-    tags: string[]
-    seo: {
-      title: string
-      description: string
-      keywords: string
-    }
+    tags?: string[]
   }
 }
 
@@ -458,22 +450,22 @@ export function ArticleStructuredData({ article }: ArticleStructuredDataProps) {
     "description": article.excerpt,
     "author": {
       "@type": "Person",
-      "name": article.author.name,
-      "jobTitle": article.author.credentials
+      "name": article.author_name,
+      "jobTitle": article.author_credentials
     },
     "publisher": {
       "@type": "Organization",
       "name": "East Coast Kink Events",
       "url": "https://eastcoastkinkevents.com"
     },
-    "datePublished": article.publishDate,
-    "dateModified": article.lastUpdated,
+    "datePublished": article.created_at || new Date().toISOString(),
+    "dateModified": article.created_at || new Date().toISOString(),
     "mainEntityOfPage": {
       "@type": "WebPage",
       "@id": `https://eastcoastkinkevents.com/education/${article.slug}`
     },
     "articleSection": article.category,
-    "keywords": article.tags.join(', '),
+    "keywords": article.tags ? article.tags.join(', ') : '',
     "url": `https://eastcoastkinkevents.com/education/${article.slug}`,
     "potentialAction": {
       "@type": "ReadAction",
