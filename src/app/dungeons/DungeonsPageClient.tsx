@@ -87,8 +87,8 @@ export default function DungeonsPageClient() {
           ))}
         </div>
         
-        {/* Desktop: Grid layout with proper height management */}
-        <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {/* Desktop: Grid layout with consistent columns and proper height management */}
+        <div className="hidden md:grid md:grid-cols-2 xl:grid-cols-3 gap-8">
           {allDungeons.map((dungeon) => (
             <Link key={dungeon.id} href={`/dungeons/${dungeon.slug}`} className="block">
               <div className="card-elegant hover-lift group cursor-pointer p-6 h-96 flex flex-col">
