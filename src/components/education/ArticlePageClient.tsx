@@ -495,11 +495,11 @@ export default function ArticlePageClient({ article, breadcrumbItems }: ArticleP
               </div>
               <div className="text-right">
                 <p><strong>Published:</strong> {formatDate(article.created_at)}</p>
-                {article.tags && (
+                {article.tags && article.tags.length > 0 && (
                   <div className="mt-2">
                     <p><strong>Tags:</strong></p>
                     <div className="flex flex-wrap gap-1 mt-1">
-                      {(Array.isArray(article.tags) ? article.tags : article.tags.split(',').map((tag: string) => tag.trim())).map((tag: string, index: number) => (
+                      {article.tags.map((tag: string, index: number) => (
                         <span
                           key={index}
                           className="px-2 py-1 rounded text-xs bg-dark-700 text-gray-300"
