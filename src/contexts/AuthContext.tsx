@@ -89,21 +89,39 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   useEffect(() => {
-    // Only initialize once
-    if (initialized) return
+    // Prevent multiple initializations
+    if (initialized) {
+      console.log('🔄 AUTH CONTEXT: Already initialized, skipping...')
+      return
+    }
 
     console.log('🚀 AUTH CONTEXT: Initializing...')
     
-    // Initial auth check
-    refreshAuth().then(() => {
-      setInitialized(true)
-    })
+    let mounted = true
+
+    const initializeAuth = async () => {
+      try {
+        await refreshAuth()
+        if (mounted) {
+          setInitialized(true)
+        }
+      } catch (error) {
+        console.error('❌ AUTH CONTEXT: Initialization error:', error)
+        if (mounted) {
+          setInitialized(true)
+        }
+      }
+    }
+
+    initializeAuth()
 
     // Listen for auth state changes
     const authStateChange = supabase?.auth.onAuthStateChange(
       async (event, session) => {
         console.log('🔄 AUTH CONTEXT: Auth state changed:', event, session?.user?.email)
         
+        if (!mounted) return
+
         if (event === 'SIGNED_IN' && session?.user) {
           await refreshAuth()
         } else if (event === 'SIGNED_OUT') {
@@ -114,11 +132,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         } else if (event === 'TOKEN_REFRESHED') {
           console.log('🔄 AUTH CONTEXT: Token refreshed')
           // Don't refresh auth on token refresh to avoid loops
+        } else if (event === 'INITIAL_SESSION') {
+          console.log('🔄 AUTH CONTEXT: Initial session detected')
+          // This is important for persistence - handle initial session
+          if (session?.user) {
+            await refreshAuth()
+          }
         }
       }
     )
 
     return () => {
+      mounted = false
       authStateChange?.data?.subscription?.unsubscribe()
     }
   }, [initialized])
