@@ -1,7 +1,7 @@
 'use client'
 
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react'
-import { supabase } from '@/lib/supabase'
+import { supabase, getSession, getUser } from '@/lib/supabase'
 import { User } from '@/lib/auth'
 
 interface AuthContextType {
@@ -31,8 +31,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         return
       }
 
-      // Get current session
-      const { data: { session }, error: sessionError } = await supabase.auth.getSession()
+      // Get current session with better error handling
+      const { session, error: sessionError } = await getSession()
       
       if (sessionError) {
         console.log('❌ AUTH CONTEXT: Session error:', sessionError)
@@ -123,6 +123,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         if (!mounted) return
 
         if (event === 'SIGNED_IN' && session?.user) {
+          console.log('✅ AUTH CONTEXT: User signed in, refreshing auth...')
           await refreshAuth()
         } else if (event === 'SIGNED_OUT') {
           console.log('🚪 AUTH CONTEXT: User signed out')
@@ -131,7 +132,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           setLoading(false)
         } else if (event === 'TOKEN_REFRESHED') {
           console.log('🔄 AUTH CONTEXT: Token refreshed')
-          // Don't refresh auth on token refresh to avoid loops
+          // Refresh auth on token refresh to ensure consistency
+          await refreshAuth()
         } else if (event === 'INITIAL_SESSION') {
           console.log('🔄 AUTH CONTEXT: Initial session detected')
           // This is important for persistence - handle initial session

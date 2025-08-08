@@ -1,4 +1,4 @@
-import { supabase } from './supabase'
+import { supabase, getSession, getUser } from './supabase'
 
 export interface User {
   id: string
@@ -12,9 +12,10 @@ export async function isAdmin(): Promise<boolean> {
   if (!supabase) return false
   
   try {
-    const { data: { user }, error } = await supabase.auth.getUser()
+    const { user, error } = await getUser()
     
     if (error || !user) {
+      console.log('❌ AUTH: No user found or error:', error)
       return false
     }
 
@@ -26,12 +27,15 @@ export async function isAdmin(): Promise<boolean> {
       .single()
 
     if (profileError || !profile) {
+      console.log('❌ AUTH: Profile error:', profileError)
       return false
     }
 
-    return profile.role === 'admin'
+    const isAdminUser = profile.role === 'admin'
+    console.log('✅ AUTH: Admin check for', user.email, 'Role:', profile.role, 'IsAdmin:', isAdminUser)
+    return isAdminUser
   } catch (error) {
-    console.error('Error checking admin status:', error)
+    console.error('❌ AUTH: Error checking admin status:', error)
     return false
   }
 }
@@ -41,9 +45,10 @@ export async function getCurrentUser(): Promise<User | null> {
   if (!supabase) return null
   
   try {
-    const { data: { user }, error } = await supabase.auth.getUser()
+    const { user, error } = await getUser()
     
     if (error || !user) {
+      console.log('❌ AUTH: No user found or error:', error)
       return null
     }
 
@@ -55,17 +60,21 @@ export async function getCurrentUser(): Promise<User | null> {
       .single()
 
     if (profileError || !profile) {
+      console.log('❌ AUTH: Profile error:', profileError)
       return null
     }
 
-    return {
+    const userData = {
       id: user.id,
       email: user.email || '',
       role: profile.role || 'user',
       name: profile.name
     }
+
+    console.log('✅ AUTH: Current user:', userData.email, 'Role:', userData.role)
+    return userData
   } catch (error) {
-    console.error('Error getting current user:', error)
+    console.error('❌ AUTH: Error getting current user:', error)
     return null
   }
 }
@@ -75,10 +84,12 @@ export async function isAuthenticated(): Promise<boolean> {
   if (!supabase) return false
   
   try {
-    const { data: { user }, error } = await supabase.auth.getUser()
-    return !error && !!user
+    const { user, error } = await getUser()
+    const isAuth = !error && !!user
+    console.log('✅ AUTH: Authentication check:', isAuth, user?.email || 'no user')
+    return isAuth
   } catch (error) {
-    console.error('Error checking authentication:', error)
+    console.error('❌ AUTH: Error checking authentication:', error)
     return false
   }
 }

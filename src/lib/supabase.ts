@@ -17,7 +17,14 @@ export const supabase = supabaseUrl && supabaseAnonKey
       auth: {
         autoRefreshToken: true,
         persistSession: true,
-        detectSessionInUrl: true
+        detectSessionInUrl: false, // Changed to false to prevent conflicts
+        storage: typeof window !== 'undefined' ? window.localStorage : undefined,
+        storageKey: 'supabase.auth.token'
+      },
+      global: {
+        headers: {
+          'X-Client-Info': 'eastcoastkinkevents'
+        }
       }
     })
   : null
@@ -31,4 +38,36 @@ export const supabaseAdmin = supabaseUrl && supabaseServiceKey
 // Helper function to check if Supabase is properly configured
 export function isSupabaseConfigured(): boolean {
   return !!supabase
+}
+
+// Helper function to get session with better error handling
+export async function getSession() {
+  if (!supabase) {
+    console.error('Supabase not configured')
+    return { session: null, error: new Error('Supabase not configured') }
+  }
+  
+  try {
+    const { data: { session }, error } = await supabase.auth.getSession()
+    return { session, error }
+  } catch (error) {
+    console.error('Error getting session:', error)
+    return { session: null, error }
+  }
+}
+
+// Helper function to get user with better error handling
+export async function getUser() {
+  if (!supabase) {
+    console.error('Supabase not configured')
+    return { user: null, error: new Error('Supabase not configured') }
+  }
+  
+  try {
+    const { data: { user }, error } = await supabase.auth.getUser()
+    return { user, error }
+  } catch (error) {
+    console.error('Error getting user:', error)
+    return { user: null, error }
+  }
 }
