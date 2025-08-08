@@ -36,6 +36,9 @@ export default function AdminProtected({ children, fallback }: AdminProtectedPro
           <p className="text-gray-400 mb-4">
             This feature is only available to administrators.
           </p>
+          <div className="text-yellow-400 text-sm mb-4">
+            ⚠️ Note: Middleware temporarily bypassed due to security update
+          </div>
           <button 
             onClick={() => window.location.href = '/login'}
             className="btn-primary"
@@ -47,5 +50,12 @@ export default function AdminProtected({ children, fallback }: AdminProtectedPro
     )
   }
 
-  return <>{children}</>
+  return (
+    <>
+      <div className="text-green-400 text-sm p-2 bg-green-900/20 border border-green-600 rounded mb-4">
+        ✅ Admin access confirmed (Client-side protection active)
+      </div>
+      {children}
+    </>
+  )
 }
