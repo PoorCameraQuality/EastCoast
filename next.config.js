@@ -4,6 +4,16 @@ const nextConfig = {
   images: {
     unoptimized: true
   },
+  webpack: (config, { isServer }) => {
+    // Ignore critical dependency warnings for @supabase/realtime-js
+    config.ignoreWarnings = [
+      {
+        module: /node_modules\/@supabase\/realtime-js\/dist\/module\/lib\/websocket-factory\.js/,
+        message: /Critical dependency: the request of a dependency is an expression/,
+      },
+    ];
+    return config;
+  },
   async headers() {
     return [
       {
