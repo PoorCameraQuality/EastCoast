@@ -11,6 +11,11 @@ export default function AdminTestPage() {
   useEffect(() => {
     const checkAuth = async () => {
       try {
+        if (!supabase) {
+          setStatus('Supabase not configured')
+          return
+        }
+
         // Get current user
         const { data: { user }, error } = await supabase.auth.getUser()
         

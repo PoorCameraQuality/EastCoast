@@ -18,6 +18,12 @@ export default function DebugPage() {
         setLoading(true)
         setTimestamp(new Date().toISOString())
         
+        if (!supabase) {
+          setError('Supabase not configured')
+          setLoading(false)
+          return
+        }
+        
         // Check current user
         const currentUser = await getCurrentUser()
         setUser(currentUser)
