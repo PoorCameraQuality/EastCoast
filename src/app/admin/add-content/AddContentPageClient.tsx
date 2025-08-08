@@ -75,7 +75,16 @@ export default function AddContentPageClient() {
     <div className="min-h-screen bg-black">
       <div className="container-custom py-16">
         <div className="max-w-4xl mx-auto">
-          <h1 className="text-4xl font-serif font-bold text-white mb-8">Add New Content</h1>
+          {/* Navigation Header */}
+          <div className="mb-8">
+            <button 
+              onClick={() => window.location.href = '/admin/dashboard'}
+              className="btn-outline mb-4"
+            >
+              ← Back to Dashboard
+            </button>
+            <h1 className="text-4xl font-serif font-bold text-white mb-8">Add New Content</h1>
+          </div>
 
           <div className="mb-8">
             <div className="flex bg-dark-800 p-1 rounded-none">
