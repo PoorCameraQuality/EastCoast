@@ -26,6 +26,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
+  const [initialized, setInitialized] = useState<boolean>(false);
 
   // Fetch profile to determine admin flag
   const fetchIsAdmin = async (u: User | null) => {
@@ -41,7 +42,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         .single();
 
       if (error && (error as any).code !== 'PGRST116') {
-        // ignore "No rows" style errors if that's your schema; otherwise log
         console.warn('Error fetching profile for admin check:', error);
         setIsAdmin(false);
         return;
@@ -54,54 +54,100 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  // Self-healing check: if session is null but loading is false, restore it
+  useEffect(() => {
+    if (!loading && !session && initialized) {
+      console.log('🔄 AUTH: Self-healing - session is null but loading is false, restoring...');
+      supabase.auth.getSession().then(({ data, error }) => {
+        if (error) {
+          console.warn('Self-healing getSession error:', error);
+          return;
+        }
+        if (data?.session) {
+          console.log('✅ AUTH: Self-healing restored session');
+          setSession(data.session);
+          setUser(data.session.user);
+          fetchIsAdmin(data.session.user);
+        }
+      });
+    }
+  }, [loading, session, initialized]);
+
   useEffect(() => {
     let isMounted = true;
 
     // Initial session fetch — important to restore session on refresh
-    (async () => {
+    const initializeAuth = async () => {
       try {
+        console.log('🚀 AUTH: Initializing authentication...');
         const { data, error } = await supabase.auth.getSession();
         if (error) {
           console.warn('getSession error', error);
         }
         if (!isMounted) return;
 
+        console.log('📊 AUTH: Initial session:', data?.session ? 'Found' : 'None');
         setSession(data?.session ?? null);
         setUser(data?.session?.user ?? null);
-        await fetchIsAdmin(data?.session?.user ?? null);
+        if (data?.session?.user) {
+          await fetchIsAdmin(data.session.user);
+        }
       } finally {
-        if (isMounted) setLoading(false);
+        if (isMounted) {
+          setLoading(false);
+          setInitialized(true);
+          console.log('✅ AUTH: Initialization complete');
+        }
       }
-    })();
+    };
+
+    initializeAuth();
 
     // Subscribe to auth changes
     const { data: sub } = supabase.auth.onAuthStateChange(
       async (event, session) => {
-        // IMPORTANT: handle INITIAL_SESSION, SIGNED_IN, SIGNED_OUT, TOKEN_REFRESHED, etc.
-        // For INITIAL_SESSION, re-query session to ensure stable state.
+        console.log('🔄 AUTH: Event received:', event, session ? 'with session' : 'no session');
+        
         if (event === 'INITIAL_SESSION') {
+          // For INITIAL_SESSION, re-query session to ensure stable state
           const { data } = await supabase.auth.getSession();
+          if (!isMounted) return;
+          
           setSession(data?.session ?? null);
           setUser(data?.session?.user ?? null);
-          await fetchIsAdmin(data?.session?.user ?? null);
+          if (data?.session?.user) {
+            await fetchIsAdmin(data.session.user);
+          }
           setLoading(false);
+          setInitialized(true);
+          console.log('✅ AUTH: INITIAL_SESSION processed');
           return;
         }
 
         if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED' || event === 'USER_UPDATED') {
+          if (!isMounted) return;
           setSession(session);
           setUser(session?.user ?? null);
-          await fetchIsAdmin(session?.user ?? null);
+          if (session?.user) {
+            await fetchIsAdmin(session.user);
+          }
+          console.log('✅ AUTH: User signed in/updated');
         } else if (event === 'SIGNED_OUT') {
+          if (!isMounted) return;
           setSession(null);
           setUser(null);
           setIsAdmin(false);
+          console.log('✅ AUTH: User signed out');
         } else {
-          // fallback: always re-check session
+          // fallback: always re-check session for other events
           const { data } = await supabase.auth.getSession();
+          if (!isMounted) return;
           setSession(data?.session ?? null);
           setUser(data?.session?.user ?? null);
-          await fetchIsAdmin(data?.session?.user ?? null);
+          if (data?.session?.user) {
+            await fetchIsAdmin(data.session.user);
+          }
+          console.log('🔄 AUTH: Fallback session check completed');
         }
       }
     );
