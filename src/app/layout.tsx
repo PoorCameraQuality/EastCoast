@@ -5,7 +5,7 @@ import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import AgeVerification from '@/components/AgeVerification'
 import BackToTop from '@/components/BackToTop'
-import { AuthProvider } from '@/contexts/AuthContext'
+import { AuthProvider } from '@/contexts/AuthProvider'
 
 import { WebsiteStructuredData, OrganizationStructuredData } from '@/components/StructuredData'
 import GoogleAnalytics from '@/components/GoogleAnalytics'

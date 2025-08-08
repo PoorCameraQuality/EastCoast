@@ -1,61 +1,43 @@
-'use client'
+'use client';
 
-import { useAuth } from '@/contexts/AuthContext'
-import { ReactNode } from 'react'
+import React, { ReactNode, useEffect } from 'react';
+import { useAuth } from '@/contexts/AuthProvider';
+import { useRouter } from 'next/navigation';
 
-interface AdminProtectedProps {
-  children: ReactNode
-  fallback?: ReactNode
-}
+export default function AdminProtected({
+  children,
+  fallbackPath = '/login',
+}: {
+  children: ReactNode;
+  fallbackPath?: string;
+}) {
+  const { user, loading, isAdmin } = useAuth();
+  const router = useRouter();
 
-export default function AdminProtected({ children, fallback }: AdminProtectedProps) {
-  const { user, loading, isAdmin } = useAuth()
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-dark-900 flex items-center justify-center">
-        <div className="text-center">
-          <div className="text-white mb-4">Loading...</div>
-          <div className="text-blue-400 text-sm">Checking admin permissions...</div>
-        </div>
-      </div>
-    )
-  }
-
-  if (!user || !isAdmin) {
-    if (fallback) {
-      return <>{fallback}</>
+  useEffect(() => {
+    // If finished loading and no user or not admin -> redirect.
+    if (!loading) {
+      if (!user) {
+        router.replace(fallbackPath);
+      } else if (!isAdmin) {
+        router.replace('/unauthorized'); // you can create a 403 page or change path
+      }
     }
-    
-    return (
-      <div className="min-h-screen bg-dark-900 flex items-center justify-center">
-        <div className="text-center">
-          <div className="text-red-400 text-xl mb-4">
-            {!user ? 'Not authenticated' : 'Admin access required'}
-          </div>
-          <p className="text-gray-400 mb-4">
-            This feature is only available to administrators.
-          </p>
-          <div className="text-yellow-400 text-sm mb-4">
-            ⚠️ Note: Middleware temporarily bypassed due to security update
-          </div>
-          <button 
-            onClick={() => window.location.href = '/login'}
-            className="btn-primary"
-          >
-            Go to Login
-          </button>
-        </div>
-      </div>
-    )
-  }
+  }, [loading, user, isAdmin, router, fallbackPath]);
 
-  return (
-    <>
-      <div className="text-green-400 text-sm p-2 bg-green-900/20 border border-green-600 rounded mb-4">
-        ✅ Admin access confirmed (Client-side protection active)
+  // While loading, show nothing or a loader
+  if (loading) return (
+    <div className="min-h-screen bg-dark-900 flex items-center justify-center">
+      <div className="text-center">
+        <div className="text-white mb-4">Loading...</div>
+        <div className="text-blue-400 text-sm">Checking admin permissions...</div>
       </div>
-      {children}
-    </>
-  )
+    </div>
+  );
+
+  // If user exists & isAdmin is true render children; otherwise redirect will happen
+  if (user && isAdmin) return <>{children}</>;
+
+  // fallback UI while redirecting
+  return null;
 }

@@ -1,12 +1,11 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useAuth } from '@/contexts/AuthContext'
-import { supabase, getSession, getUser } from '@/lib/supabase'
-import { isAdmin, getCurrentUser, isAuthenticated } from '@/lib/auth'
+import { useAuth } from '@/contexts/AuthProvider'
+import { supabase } from '@/lib/supabaseClient'
 
 export default function TestAuthPage() {
-  const { user, loading, isAdmin: contextIsAdmin } = useAuth()
+  const { user, session, loading, isAdmin } = useAuth()
   const [sessionInfo, setSessionInfo] = useState<any>(null)
   const [authInfo, setAuthInfo] = useState<any>(null)
   const [profileInfo, setProfileInfo] = useState<any>(null)
@@ -17,7 +16,7 @@ export default function TestAuthPage() {
       
       // Test 1: Get session
       try {
-        const { session, error } = await getSession()
+        const { data: { session }, error } = await supabase.auth.getSession()
         setSessionInfo({ session, error })
         console.log('🧪 TEST AUTH: Session test:', { session: !!session, error })
       } catch (error) {
@@ -27,12 +26,28 @@ export default function TestAuthPage() {
 
       // Test 2: Get user
       try {
-        const { user, error } = await getUser()
+        const { data: { user }, error } = await supabase.auth.getUser()
         setAuthInfo({ user, error })
         console.log('🧪 TEST AUTH: User test:', { user: user?.email, error })
       } catch (error) {
         console.error('🧪 TEST AUTH: User test error:', error)
         setAuthInfo({ user: null, error })
+      }
+
+      // Test 3: Get profile
+      if (authInfo?.user) {
+        try {
+          const { data: profile, error } = await supabase
+            .from('profiles')
+            .select('*')
+            .eq('id', authInfo.user.id)
+            .single()
+          setProfileInfo({ profile, error })
+          console.log('🧪 TEST AUTH: Profile test:', { profile, error })
+        } catch (error) {
+          console.error('🧪 TEST AUTH: Profile test error:', error)
+          setProfileInfo({ profile: null, error })
+        }
       }
     }
 
@@ -63,22 +78,6 @@ export default function TestAuthPage() {
     runProfileTest()
   }, [authInfo?.user])
 
-  // Separate useEffect for auth functions test
-  useEffect(() => {
-    const runAuthFunctionsTest = async () => {
-      try {
-        const isAuth = await isAuthenticated()
-        const currentUser = await getCurrentUser()
-        const adminStatus = await isAdmin()
-        console.log('🧪 TEST AUTH: Auth functions:', { isAuth, currentUser: currentUser?.email, adminStatus })
-      } catch (error) {
-        console.error('🧪 TEST AUTH: Auth functions error:', error)
-      }
-    }
-
-    runAuthFunctionsTest()
-  }, [])
-
   return (
     <div className="min-h-screen bg-dark-900 p-8">
       <div className="max-w-4xl mx-auto">
@@ -91,8 +90,9 @@ export default function TestAuthPage() {
             <div className="text-gray-300 space-y-2">
               <p><strong>Loading:</strong> {loading ? 'Yes' : 'No'}</p>
               <p><strong>User:</strong> {user?.email || 'None'}</p>
-              <p><strong>Role:</strong> {user?.role || 'None'}</p>
-              <p><strong>Is Admin (Context):</strong> {contextIsAdmin ? 'Yes' : 'No'}</p>
+              <p><strong>Role:</strong> {isAdmin ? 'admin' : 'user'}</p>
+              <p><strong>Is Admin (Context):</strong> {isAdmin ? 'Yes' : 'No'}</p>
+              <p><strong>Session:</strong> {session ? 'Active' : 'None'}</p>
             </div>
           </div>
 
@@ -133,7 +133,6 @@ export default function TestAuthPage() {
             <div className="text-gray-300 space-y-2">
               <p><strong>Supabase URL:</strong> {process.env.NEXT_PUBLIC_SUPABASE_URL ? 'Set' : 'Not Set'}</p>
               <p><strong>Supabase Anon Key:</strong> {process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ? 'Set' : 'Not Set'}</p>
-              <p><strong>Service Role Key:</strong> {process.env.SUPABASE_SERVICE_ROLE_KEY ? 'Set' : 'Not Set'}</p>
             </div>
           </div>
 
