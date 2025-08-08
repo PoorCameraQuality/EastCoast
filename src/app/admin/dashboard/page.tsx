@@ -10,7 +10,7 @@ export default function AdminDashboard() {
     return (
       <div className="min-h-screen bg-dark-900 flex items-center justify-center">
         <div className="text-center">
-          <div className="text-white mb-4">Loading admin dashboard...</div>
+          <div className="text-white mb-4">Loading user data...</div>
           <div className="text-blue-400 text-sm">Checking authentication...</div>
         </div>
       </div>
@@ -33,10 +33,14 @@ export default function AdminDashboard() {
           
           <div className="mb-8">
             <h1 className="text-4xl font-bold text-white mb-2">Admin Dashboard</h1>
-            <p className="text-gray-400">Welcome back, {user?.email}</p>
-            <div className="text-green-400 text-sm mt-2">
-              ✅ Using persistent auth context
-            </div>
+            <p className="text-gray-400">
+              Welcome back, {user?.name || user?.email || 'Guest'}
+            </p>
+            {isAdmin ? (
+              <div className="text-green-400 text-sm mt-2">✅ You have admin access</div>
+            ) : (
+              <div className="text-red-400 text-sm mt-2">⚠️ Admin access required</div>
+            )}
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -67,9 +71,9 @@ export default function AdminDashboard() {
             <div className="bg-dark-800 p-6 rounded">
               <h2 className="text-xl font-semibold text-white mb-4">User Info</h2>
               <div className="text-gray-300">
-                <p><strong>Email:</strong> {user?.email}</p>
+                <p><strong>Email:</strong> {user?.email || 'Not available'}</p>
                 <p><strong>Role:</strong> <span className="text-green-400">{isAdmin ? 'admin' : 'user'}</span></p>
-                <p><strong>ID:</strong> {user?.id}</p>
+                <p><strong>ID:</strong> {user?.id || 'Not available'}</p>
               </div>
             </div>
             

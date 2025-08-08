@@ -1,66 +1,10 @@
 'use client'
 
-import { useState, useEffect } from 'react'
 import { useAuth } from '@/contexts/AuthProvider'
-import { supabase } from '@/lib/supabaseClient'
+import { supabase } from '@/lib/supabase'
 
-export default function TestAuthPage() {
-  const { user, session, loading, isAdmin } = useAuth()
-  const [sessionInfo, setSessionInfo] = useState<any>(null)
-  const [authInfo, setAuthInfo] = useState<any>(null)
-  const [profileInfo, setProfileInfo] = useState<any>(null)
-
-  useEffect(() => {
-    const runTests = async () => {
-      console.log('🧪 TEST AUTH: Starting authentication tests...')
-      
-      // Test 1: Get session
-      try {
-        const { data: { session }, error } = await supabase.auth.getSession()
-        setSessionInfo({ session, error })
-        console.log('🧪 TEST AUTH: Session test:', { session: !!session, error })
-      } catch (error) {
-        console.error('🧪 TEST AUTH: Session test error:', error)
-        setSessionInfo({ session: null, error })
-      }
-
-      // Test 2: Get user
-      try {
-        const { data: { user }, error } = await supabase.auth.getUser()
-        setAuthInfo({ user, error })
-        console.log('🧪 TEST AUTH: User test:', { user: user?.email, error })
-      } catch (error) {
-        console.error('🧪 TEST AUTH: User test error:', error)
-        setAuthInfo({ user: null, error })
-      }
-    }
-
-    runTests()
-  }, [])
-
-  // Separate useEffect for profile test to avoid dependency issues
-  useEffect(() => {
-    const runProfileTest = async () => {
-      if (!authInfo?.user || !supabase) {
-        return
-      }
-
-      try {
-        const { data: profile, error } = await supabase
-          .from('profiles')
-          .select('*')
-          .eq('id', authInfo.user.id)
-          .single()
-        setProfileInfo({ profile, error })
-        console.log('🧪 TEST AUTH: Profile test:', { profile, error })
-      } catch (error) {
-        console.error('🧪 TEST AUTH: Profile test error:', error)
-        setProfileInfo({ profile: null, error })
-      }
-    }
-
-    runProfileTest()
-  }, [authInfo?.user])
+export default function AuthTestPage() {
+  const { user, loading, isAdmin } = useAuth()
 
   return (
     <div className="min-h-screen bg-dark-900 p-8">
@@ -73,41 +17,31 @@ export default function TestAuthPage() {
             <h2 className="text-xl font-semibold text-white mb-4">Auth Context State</h2>
             <div className="text-gray-300 space-y-2">
               <p><strong>Loading:</strong> {loading ? 'Yes' : 'No'}</p>
-              <p><strong>User:</strong> {user?.email || 'None'}</p>
+              <p><strong>User:</strong> {user?.email ?? 'None'}</p>
               <p><strong>Role:</strong> {isAdmin ? 'admin' : 'user'}</p>
-              <p><strong>Is Admin (Context):</strong> {isAdmin ? 'Yes' : 'No'}</p>
-              <p><strong>Session:</strong> {session ? 'Active' : 'None'}</p>
+              <p><strong>Session:</strong> {user ? 'Active' : 'None'}</p>
             </div>
           </div>
 
-          {/* Session Test */}
+          {/* User Details */}
           <div className="bg-dark-800 p-6 rounded-lg">
-            <h2 className="text-xl font-semibold text-white mb-4">Session Test</h2>
+            <h2 className="text-xl font-semibold text-white mb-4">User Details</h2>
             <div className="text-gray-300 space-y-2">
-              <p><strong>Session:</strong> {sessionInfo?.session ? 'Found' : 'None'}</p>
-              <p><strong>Session User:</strong> {sessionInfo?.session?.user?.email || 'None'}</p>
-              <p><strong>Error:</strong> {sessionInfo?.error?.message || 'None'}</p>
+              <p><strong>Email:</strong> {user?.email || 'Not available'}</p>
+              <p><strong>ID:</strong> {user?.id || 'Not available'}</p>
+              <p><strong>Full Name:</strong> {user?.name || 'Not available'}</p>
+              <p><strong>User ID:</strong> {user?.id || 'Not available'}</p>
             </div>
           </div>
 
-          {/* User Test */}
+          {/* User Role Details */}
           <div className="bg-dark-800 p-6 rounded-lg">
-            <h2 className="text-xl font-semibold text-white mb-4">User Test</h2>
+            <h2 className="text-xl font-semibold text-white mb-4">User Role Details</h2>
             <div className="text-gray-300 space-y-2">
-              <p><strong>User:</strong> {authInfo?.user?.email || 'None'}</p>
-              <p><strong>User ID:</strong> {authInfo?.user?.id || 'None'}</p>
-              <p><strong>Error:</strong> {authInfo?.error?.message || 'None'}</p>
-            </div>
-          </div>
-
-          {/* Profile Test */}
-          <div className="bg-dark-800 p-6 rounded-lg">
-            <h2 className="text-xl font-semibold text-white mb-4">Profile Test</h2>
-            <div className="text-gray-300 space-y-2">
-              <p><strong>Profile:</strong> {profileInfo?.profile ? 'Found' : 'None'}</p>
-              <p><strong>Role:</strong> {profileInfo?.profile?.role || 'None'}</p>
-              <p><strong>Name:</strong> {profileInfo?.profile?.name || 'None'}</p>
-              <p><strong>Error:</strong> {profileInfo?.error?.message || 'None'}</p>
+              <p><strong>User Active:</strong> {user ? 'Yes' : 'No'}</p>
+              <p><strong>User Role:</strong> {user?.role || 'Not available'}</p>
+              <p><strong>Is Admin:</strong> {isAdmin ? 'Yes' : 'No'}</p>
+              <p><strong>User Name:</strong> {user?.name || 'Not available'}</p>
             </div>
           </div>
 

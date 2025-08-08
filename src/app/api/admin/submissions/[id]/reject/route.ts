@@ -6,53 +6,38 @@ export async function POST(
   { params }: { params: { id: string } }
 ) {
   try {
-    const body = await request.json()
-    const submissionId = params.id
-    
-    // Check if admin client is available
-    if (!supabaseAdmin) {
-      console.error('Supabase admin client not available - missing service role key')
+    const { id } = params
+
+    // Get the admin client
+    const client = supabaseAdmin.value
+    if (!client) {
       return NextResponse.json(
-        { error: 'Admin functionality not available - missing service role key' },
+        { error: 'Supabase admin client not configured' },
         { status: 500 }
       )
     }
-    
+
     // Update submission status to rejected
-    const { error: updateError } = await supabaseAdmin
+    const { error: updateError } = await client
       .from('submissions')
-      .update({ 
+      .update({
         status: 'rejected',
         reviewed_at: new Date().toISOString(),
-        reviewer_notes: body.reviewerNotes || 'Content does not meet our guidelines'
+        reviewed_by: 'admin' // You might want to get this from the session
       })
-      .eq('id', submissionId)
-    
+      .eq('id', id)
+
     if (updateError) {
       console.error('Error updating submission:', updateError)
       return NextResponse.json(
-        { error: 'Failed to update submission' },
+        { error: 'Failed to reject submission' },
         { status: 500 }
       )
     }
-    
-    console.log('Submission rejected:', {
-      submissionId,
-      reviewerNotes: body.reviewerNotes,
-      timestamp: new Date().toISOString()
-    })
-    
-    return NextResponse.json(
-      { 
-        success: true, 
-        message: 'Submission rejected successfully',
-        submissionId
-      },
-      { status: 200 }
-    )
-    
+
+    return NextResponse.json({ success: true })
   } catch (error) {
-    console.error('Error rejecting submission:', error)
+    console.error('Error in reject submission:', error)
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

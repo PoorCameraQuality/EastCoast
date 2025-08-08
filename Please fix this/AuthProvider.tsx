@@ -1,15 +1,9 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState, ReactNode } from "react";
-import { supabase, restoreSession } from "@/lib/supabase";
-import type { Session, PostgrestError } from '@supabase/supabase-js';
+import { supabase } from "@/lib/supabase";
 
-interface Profile {
-  id: string;
-  role: 'admin' | 'user' | 'moderator';
-  name?: string;
-}
-
+// Custom User interface for better type safety
 export interface User {
   id: string;
   email: string;
@@ -35,7 +29,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     try {
       console.log('🔄 AUTH PROVIDER: Refreshing authentication...');
       
-      if (!supabase) {
+      if (!supabase.value) {
         console.log('❌ AUTH PROVIDER: Supabase not configured');
         setUser(null);
         setIsAdmin(false);
@@ -43,26 +37,19 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         return;
       }
 
-      // Attempt to restore session from storage first
-      const { session: restoredSession, error: restoreError } = await restoreSession();
-      if (restoreError || !restoredSession) {
-        console.log('❌ AUTH PROVIDER: Failed to restore session:', restoreError);
-        // Fallback to getSession
-        const { data: { session }, error: sessionError } = await supabase.auth.getSession();
-        if (sessionError || !session?.user) {
-          console.log('❌ AUTH PROVIDER: No session found:', sessionError);
-          setUser(null);
-          setIsAdmin(false);
-          setLoading(false);
-          return;
-        }
-      } else {
-        console.log('✅ AUTH PROVIDER: Session restored from storage');
+      // Get current session
+      const { data: { session }, error: sessionError } = await supabase.value.auth.getSession();
+      
+      if (sessionError) {
+        console.log('❌ AUTH PROVIDER: Session error:', sessionError);
+        setUser(null);
+        setIsAdmin(false);
+        setLoading(false);
+        return;
       }
 
-      const session = restoredSession || (await supabase.auth.getSession()).data.session;
       if (!session?.user) {
-        console.log('❌ AUTH PROVIDER: No user in session');
+        console.log('❌ AUTH PROVIDER: No session found');
         setUser(null);
         setIsAdmin(false);
         setLoading(false);
@@ -72,11 +59,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       console.log('✅ AUTH PROVIDER: Session found for:', session.user.email);
 
       // Get user profile with role
-      const { data: profile, error: profileError } = await supabase
+      const { data: profile, error: profileError } = await supabase.value
         .from('profiles')
-        .select('id, role, name')
+        .select('*')
         .eq('id', session.user.id)
-        .single() as { data: Profile | null, error: PostgrestError | null };
+        .single();
 
       if (profileError || !profile) {
         console.log('❌ AUTH PROVIDER: Profile error:', profileError);
@@ -113,8 +100,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     
     let mounted = true;
 
-    // Listen for auth state changes
-    const authStateChange = supabase?.auth.onAuthStateChange(
+    // Listen for auth state changes FIRST
+    const authStateChange = supabase.value?.auth.onAuthStateChange(
       async (event, session) => {
         console.log('🔄 AUTH PROVIDER: Auth state changed:', event, session?.user?.email);
         
@@ -146,16 +133,34 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       }
     );
 
-    // Initialize auth
+    // Then initialize auth
     const initializeAuth = async () => {
       try {
-        // Wait for auth state listener to be set up
+        // Wait a bit for the auth state change listener to be set up
         await new Promise(resolve => setTimeout(resolve, 50));
         
-        if (!mounted || !supabase) return;
+        if (!mounted || !supabase.value) return;
+        
+        // Try to get initial session
+        const { data: { session }, error } = await supabase.value.auth.getSession();
+        
+        if (error) {
+          console.log('❌ AUTH PROVIDER: Initial session error:', error);
+          setUser(null);
+          setIsAdmin(false);
+          setLoading(false);
+          return;
+        }
 
-        // Explicitly restore session first
-        await refreshAuth();
+        if (session?.user) {
+          console.log('✅ AUTH PROVIDER: Initial session found, refreshing auth...');
+          await refreshAuth();
+        } else {
+          console.log('❌ AUTH PROVIDER: No initial session found');
+          setUser(null);
+          setIsAdmin(false);
+          setLoading(false);
+        }
       } catch (error) {
         console.error('❌ AUTH PROVIDER: Initialization error:', error);
         setUser(null);
@@ -166,18 +171,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     initializeAuth();
 
-    // Periodic session check (every 5 minutes)
-    const interval = setInterval(async () => {
-      if (mounted && supabase) {
-        console.log('🔄 AUTH PROVIDER: Periodic session check');
-        await refreshAuth();
-      }
-    }, 5 * 60 * 1000);
-
     return () => {
       mounted = false;
       authStateChange?.data?.subscription?.unsubscribe();
-      clearInterval(interval);
     };
   }, []);
 

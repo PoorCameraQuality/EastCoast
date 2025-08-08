@@ -1,27 +1,7 @@
-import { createClient, SupabaseClient, Session, PostgrestError } from '@supabase/supabase-js'
+import { createClient, SupabaseClient } from '@supabase/supabase-js'
 
 let supabaseClient: SupabaseClient | null = null
 let supabaseAdminClient: SupabaseClient | null = null
-
-// Custom storage adapter for debugging
-const customStorage = {
-  getItem: (key: string) => {
-    if (typeof window === 'undefined') return null
-    const value = window.localStorage.getItem(key)
-    console.log(`🔍 STORAGE: Getting ${key}:`, value ? 'Found' : 'Not found')
-    return value
-  },
-  setItem: (key: string, value: string) => {
-    if (typeof window === 'undefined') return
-    console.log(`🔍 STORAGE: Setting ${key}`)
-    window.localStorage.setItem(key, value)
-  },
-  removeItem: (key: string) => {
-    if (typeof window === 'undefined') return
-    console.log(`🔍 STORAGE: Removing ${key}`)
-    window.localStorage.removeItem(key)
-  }
-}
 
 // Lazy initialization function for the main client
 export const getSupabaseClient = (): SupabaseClient | null => {
@@ -39,8 +19,7 @@ export const getSupabaseClient = (): SupabaseClient | null => {
         autoRefreshToken: true,
         persistSession: true,
         detectSessionInUrl: false,
-        storage: customStorage,
-        storageKey: 'supabase.auth.token'
+        storage: typeof window !== 'undefined' ? window.localStorage : undefined
       }
     })
   }
@@ -65,11 +44,8 @@ export const getSupabaseAdminClient = (): SupabaseClient | null => {
   return supabaseAdminClient
 }
 
-// Export the Supabase client directly for easier access
-export const supabase = getSupabaseClient()
-
-// Export getter functions for backward compatibility
-export const supabaseClientGetter = {
+// Export getter functions instead of calling them immediately
+export const supabase = {
   get value() {
     return getSupabaseClient()
   }
@@ -121,7 +97,7 @@ export async function getUser() {
 }
 
 // Helper function to restore session from storage
-export async function restoreSession(): Promise<{ session: Session | null, error: PostgrestError | Error | null }> {
+export async function restoreSession() {
   const client = getSupabaseClient()
   if (!client || typeof window === 'undefined') {
     return { session: null, error: new Error('Cannot restore session') }
@@ -138,6 +114,6 @@ export async function restoreSession(): Promise<{ session: Session | null, error
     return { session: null, error: null }
   } catch (error) {
     console.error('Error restoring session:', error)
-    return { session: null, error: error as Error }
+    return { session: null, error }
   }
 }

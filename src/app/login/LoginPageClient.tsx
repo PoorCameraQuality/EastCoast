@@ -1,187 +1,168 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
-import Link from 'next/link'
 
 export default function LoginPageClient() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
-  const [success, setSuccess] = useState('')
-  const [debug, setDebug] = useState('')
+  const [message, setMessage] = useState('')
+  const router = useRouter()
 
-  // Check if user is already logged in
   useEffect(() => {
-    const checkAuth = async () => {
-      console.log('Checking auth on page load...')
-      setDebug('Checking auth...')
-      
-      if (!supabase) {
-        console.log('No Supabase client')
-        setDebug('No Supabase client')
-        return
-      }
-      
-      const { data: { user }, error } = await supabase.auth.getUser()
-      console.log('Auth check result:', { user: user?.email, error })
-      
-      if (error) {
-        console.log('Auth error:', error)
-        setDebug(`Auth error: ${error.message}`)
-        return
-      }
-      
-      if (user) {
-        console.log('User found:', user.email)
-        setDebug(`User found: ${user.email}`)
-        
-        // Check if user has admin role
-        const { data: profile, error: profileError } = await supabase
-          .from('profiles')
-          .select('role')
-          .eq('id', user.id)
-          .single()
-
-        console.log('Profile check result:', { profile, profileError })
-        
-        if (profileError) {
-          console.log('Profile error:', profileError)
-          setDebug(`Profile error: ${profileError.message}`)
-          setError('Error checking user permissions. Please try again.')
-          await supabase.auth.signOut()
-        } else if (profile?.role === 'admin') {
-          console.log('Admin access confirmed, redirecting...')
-          setDebug('Admin access confirmed, redirecting...')
-          setSuccess('Login successful! Redirecting to admin panel...')
-          
-          // Force redirect after a short delay
-          setTimeout(() => {
-            console.log('Executing redirect to /admin/dashboard')
-            window.location.href = '/admin/dashboard'
-          }, 1000)
-        } else {
-          console.log('User does not have admin role:', profile?.role)
-          setDebug(`User role: ${profile?.role || 'none'}`)
-          setError('Access denied. Admin privileges required.')
-          await supabase.auth.signOut()
+    // Check if user is already logged in
+    const checkUser = async () => {
+      try {
+        if (!supabase) {
+          console.error('Supabase not configured')
+          return
         }
-      } else {
-        console.log('No user found')
-        setDebug('No user found')
+        
+        const { data: { user }, error } = await supabase.auth.getUser()
+        
+        if (user && !error) {
+          // Check if user is admin
+          const { data: profile, error: profileError } = await supabase
+            .from('profiles')
+            .select('role')
+            .eq('id', user.id)
+            .single()
+
+          if (profile?.role === 'admin') {
+            router.push('/admin/dashboard')
+          } else {
+            await supabase.auth.signOut()
+            setError('Access denied. Admin privileges required.')
+          }
+        }
+      } catch (error) {
+        console.error('Error checking user:', error)
       }
     }
 
-    checkAuth()
-  }, [])
+    checkUser()
+  }, [router])
+
+  const handleSignOut = async () => {
+    try {
+      if (!supabase) {
+        setError('Supabase not configured')
+        return
+      }
+      await supabase.auth.signOut()
+      setMessage('Signed out successfully')
+      setError('')
+    } catch (error) {
+      console.error('Error signing out:', error)
+      setError('Error signing out')
+    }
+  }
+
+  const handleSignOutAndRedirect = async () => {
+    try {
+      if (!supabase) {
+        setError('Supabase not configured')
+        return
+      }
+      await supabase.auth.signOut()
+      router.push('/')
+    } catch (error) {
+      console.error('Error signing out:', error)
+      setError('Error signing out')
+    }
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
     setError('')
-    setSuccess('')
-    setDebug('')
-
-    if (!supabase) {
-      setError('Authentication is not configured. Please contact the administrator.')
-      setLoading(false)
-      return
-    }
+    setMessage('')
 
     try {
-      console.log('Attempting login...')
-      setDebug('Attempting login...')
+      if (!supabase) {
+        setError('Supabase not configured')
+        return
+      }
       
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
-        password
+        password,
       })
 
       if (error) {
-        console.error('Login error:', error)
         setError(error.message)
-        setDebug(`Login error: ${error.message}`)
-      } else if (data.user) {
-        console.log('✅ LOGIN: User signed in:', data.user.email)
-        setDebug(`✅ LOGIN: User signed in: ${data.user.email}`)
-        
-        // Check if user has admin role
+        return
+      }
+
+      if (data.user) {
+        // Check if user is admin
         const { data: profile, error: profileError } = await supabase
           .from('profiles')
           .select('role')
           .eq('id', data.user.id)
           .single()
 
-        if (profileError) {
-          console.error('❌ LOGIN: Profile error:', profileError)
-          setError('Error checking user permissions. Please try again.')
-          setDebug(`❌ LOGIN: Profile error: ${profileError.message}`)
-          await supabase.auth.signOut()
-        } else if (profile?.role === 'admin') {
-          console.log('🎉 LOGIN: Admin access confirmed, redirecting...')
-          setDebug('🎉 LOGIN: Admin access confirmed, redirecting...')
-          setSuccess('Login successful! Redirecting to admin panel...')
-          
-          // Force redirect after a short delay
-          setTimeout(() => {
-            console.log('🔄 LOGIN: Executing redirect to /admin/dashboard')
-            window.location.href = '/admin/dashboard'
-          }, 1000)
-        } else {
-          console.log('❌ LOGIN: User does not have admin role:', profile?.role)
-          setDebug(`❌ LOGIN: User role: ${profile?.role || 'none'}`)
+        if (profileError || profile?.role !== 'admin') {
+          if (supabase) {
+            await supabase.auth.signOut()
+          }
           setError('Access denied. Admin privileges required.')
-          await supabase.auth.signOut()
+          return
         }
+
+        setMessage('Login successful! Redirecting...')
+        router.push('/admin/dashboard')
       }
-    } catch (err) {
-      console.error('Unexpected error:', err)
-      setError('An unexpected error occurred. Please try again.')
-      setDebug(`Unexpected error: ${err}`)
+    } catch (error) {
+      console.error('Login error:', error)
+      setError('An unexpected error occurred')
     } finally {
       setLoading(false)
     }
   }
 
+  const handleSignOutAndRedirect2 = async () => {
+    try {
+      if (!supabase) {
+        setError('Supabase not configured')
+        return
+      }
+      await supabase.auth.signOut()
+      router.push('/')
+    } catch (error) {
+      console.error('Error signing out:', error)
+      setError('Error signing out')
+    }
+  }
+
   return (
-    <div className="min-h-screen bg-black flex items-center justify-center">
-      <div className="container-custom">
-        <div className="max-w-md mx-auto">
+    <div className="min-h-screen bg-dark-900 flex items-center justify-center">
+      <div className="max-w-md w-full mx-4">
+        <div className="bg-dark-800 p-8 rounded-lg shadow-lg">
           <div className="text-center mb-8">
-            <div className="w-16 h-16 bg-primary-600 rounded-none flex items-center justify-center mx-auto mb-4">
-              <span className="text-white font-serif font-bold text-lg">EC</span>
-            </div>
-            <h1 className="text-3xl font-serif font-bold text-white mb-2">
-              Admin Login
-            </h1>
-            <p className="text-subtle">
-              Sign in to access the admin panel
-            </p>
+            <h1 className="text-3xl font-bold text-white mb-2">Admin Login</h1>
+            <p className="text-gray-400">Sign in to access the admin panel</p>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
-            {error && (
-              <div className="bg-red-900/20 border border-red-600 text-red-300 px-4 py-3 rounded-none">
-                {error}
-              </div>
-            )}
+          {error && (
+            <div className="bg-red-500/10 border border-red-500/20 text-red-400 px-4 py-3 rounded mb-4">
+              {error}
+            </div>
+          )}
 
-            {success && (
-              <div className="bg-green-900/20 border border-green-600 text-green-300 px-4 py-3 rounded-none">
-                {success}
-              </div>
-            )}
+          {message && (
+            <div className="bg-green-500/10 border border-green-500/20 text-green-400 px-4 py-3 rounded mb-4">
+              {message}
+            </div>
+          )}
 
-            {debug && (
-              <div className="bg-blue-900/20 border border-blue-600 text-blue-300 px-4 py-3 rounded-none text-sm">
-                Debug: {debug}
-              </div>
-            )}
-
+          <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label htmlFor="email" className="block text-white font-medium mb-2">
-                Email Address
+              <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-2">
+                Email
               </label>
               <input
                 id="email"
@@ -189,14 +170,13 @@ export default function LoginPageClient() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="w-full px-4 py-3 border border-dark-600 rounded-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-dark-800 text-white"
+                className="w-full px-3 py-2 bg-dark-700 border border-gray-600 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                 placeholder="admin@example.com"
-                autoComplete="email"
               />
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-white font-medium mb-2">
+              <label htmlFor="password" className="block text-sm font-medium text-gray-300 mb-2">
                 Password
               </label>
               <input
@@ -205,25 +185,27 @@ export default function LoginPageClient() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className="w-full px-4 py-3 border border-dark-600 rounded-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-dark-800 text-white"
+                className="w-full px-3 py-2 bg-dark-700 border border-gray-600 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                 placeholder="••••••••"
-                autoComplete="current-password"
               />
             </div>
 
             <button
               type="submit"
               disabled={loading}
-              className="btn-primary w-full disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full bg-primary-600 hover:bg-primary-700 disabled:opacity-50 text-white font-medium py-2 px-4 rounded-md transition-colors duration-200"
             >
               {loading ? 'Signing in...' : 'Sign In'}
             </button>
           </form>
 
-          <div className="mt-8 text-center">
-            <Link href="/" className="text-subtle hover:text-primary-400 transition-colors">
+          <div className="mt-6 text-center">
+            <button
+              onClick={handleSignOutAndRedirect}
+              className="text-gray-400 hover:text-white text-sm transition-colors duration-200"
+            >
               ← Back to Home
-            </Link>
+            </button>
           </div>
         </div>
       </div>
