@@ -33,22 +33,6 @@ export default function TestAuthPage() {
         console.error('🧪 TEST AUTH: User test error:', error)
         setAuthInfo({ user: null, error })
       }
-
-      // Test 3: Get profile
-      if (authInfo?.user) {
-        try {
-          const { data: profile, error } = await supabase
-            .from('profiles')
-            .select('*')
-            .eq('id', authInfo.user.id)
-            .single()
-          setProfileInfo({ profile, error })
-          console.log('🧪 TEST AUTH: Profile test:', { profile, error })
-        } catch (error) {
-          console.error('🧪 TEST AUTH: Profile test error:', error)
-          setProfileInfo({ profile: null, error })
-        }
-      }
     }
 
     runTests()

@@ -76,6 +76,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     // Subscribe to auth changes
     const { data: sub } = supabase.auth.onAuthStateChange(async (event, payload) => {
+      const session = payload?.session ?? null;
+
       // IMPORTANT: handle INITIAL_SESSION, SIGNED_IN, SIGNED_OUT, TOKEN_REFRESHED, etc.
       // For INITIAL_SESSION, re-query session to ensure stable state.
       if (event === 'INITIAL_SESSION') {
@@ -88,9 +90,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
 
       if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED' || event === 'USER_UPDATED') {
-        setSession(payload.session ?? null);
-        setUser(payload.session?.user ?? null);
-        await fetchIsAdmin(payload.session?.user ?? null);
+        setSession(session);
+        setUser(session?.user ?? null);
+        await fetchIsAdmin(session?.user ?? null);
       } else if (event === 'SIGNED_OUT' || event === 'USER_DELETED') {
         setSession(null);
         setUser(null);
