@@ -146,6 +146,24 @@ export default async function sitemap() {
         canonical: `${baseUrl}/education/submit`,
       },
     },
+    {
+      url: `${baseUrl}/login`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly' as const,
+      priority: 0.3,
+      alternates: {
+        canonical: `${baseUrl}/login`,
+      },
+    },
+    {
+      url: `${baseUrl}/unauthorized`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly' as const,
+      priority: 0.2,
+      alternates: {
+        canonical: `${baseUrl}/unauthorized`,
+      },
+    },
     // Dynamic content pages
     ...eventUrls,
     ...dungeonUrls,
