@@ -100,6 +100,7 @@ export default function RootLayout({
         <meta name="format-detection" content="telephone=no" />
         <meta name="theme-color" content="#1f2937" />
         <meta name="color-scheme" content="dark light" />
+        <meta name="yandex-verification" content="f10419646ef86ab3" />
         <link rel="preconnect" href="https://www.google-analytics.com"/>
         <link rel="preconnect" href="https://www.googletagmanager.com"/>
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous"/>
