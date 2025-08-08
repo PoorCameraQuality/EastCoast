@@ -10,9 +10,8 @@
     "export": "next build && next export"
   },
   "dependencies": {
-    "@supabase/auth-helpers-nextjs": "^0.10.0",
-    "@supabase/ssr": "^0.7.0",
-    "@supabase/supabase-js": "^2.55.0",
+    "@supabase/ssr": "^0.6.1",
+    "@supabase/supabase-js": "^2.53.0",
     "@tiptap/extension-code-block": "^3.0.9",
     "@tiptap/extension-image": "^3.0.9",
     "@tiptap/extension-link": "^3.0.9",
