@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Link from 'next/link'
 import Breadcrumb from '@/components/Breadcrumb'
 import FAQ from '@/components/FAQ'
 
@@ -172,9 +173,14 @@ export default function AboutPage() {
             <p className="text-lg text-gray-300 mb-8 max-w-2xl mx-auto">
               Connect with fellow kinksters in our Discord community—a neutral space for honest discussions, event reviews, and building trust within the community.
             </p>
-            <button className="btn-primary px-8 py-4 text-lg discord-glow">
+            <Link 
+              href="https://discord.gg/xcnGGyGsmT" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="btn-primary px-8 py-4 text-lg discord-glow"
+            >
               Join Our Discord
-            </button>
+            </Link>
           </div>
 
           {/* FAQ Section */}

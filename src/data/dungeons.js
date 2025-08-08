@@ -9,21 +9,21 @@ export const dungeons = [
       "address": "Baltimore, MD"
     },
     "category": "BDSM Dungeon",
-    "excerpt": "Baltimore Playhouse is a premier BDSM dungeon and social club in Baltimore, offering a safe and welcoming environment for the kink community.",
+    "excerpt": "Welcome to Baltimore Playhouse - A 501(c)7 Non-Profit Social Club. Our mission is to create a safe, inclusive space for everyone to socialize, learn, and most importantly, 'MAKE PLAY HAPPEN!™'",
     "description": {
-      "long": "Baltimore Playhouse is a premier BDSM dungeon and social club located in Baltimore, Maryland. We provide a safe, welcoming, and inclusive environment for the kink community to explore, learn, and connect.\n\nOur facility features multiple play spaces, private rooms, and social areas designed to accommodate a variety of BDSM activities and interests. We offer regular workshops, demonstrations, and social events to help build community and provide education.\n\nMembership is required for access, and we maintain strict safety protocols and consent-based policies. Our staff is trained in safety procedures and are available to assist with any questions or concerns.\n\nWhether you're new to BDSM or experienced, Baltimore Playhouse welcomes all respectful individuals who are interested in exploring kink in a safe, consensual environment."
+      "long": "Welcome to Baltimore Playhouse\nA 501(c)7 Non-Profit Social Club\n\nOur mission is to create a safe, inclusive space for everyone to socialize, learn, and most importantly, 'MAKE PLAY HAPPEN!™'\n\nInclusivity and Safety\n\nAt Baltimore Playhouse, we welcome everyone. Discrimination based on sexual orientation, gender identity, gender presentation, race, cultural background, socioeconomic status, or disability is strictly prohibited.\n\nOur Space\n\nWe boast a 12,000 square foot play space, the largest of its kind in the United States. Since 1997, we have been Charm City's premier kink destination.\n\nEvent Guidelines\n\nAttendance: Parties are limited to 250 attendees. RSVP is required.\n\nAlcohol-Free: No alcohol is sold or allowed on the premises. Those under the influence will be asked to leave.\n\nDrug-Free: We have a ZERO tolerance policy for illegal drugs or paraphernalia. One strike and you're out.\n\nPhotography: Photography is not allowed during events. See our rules for exceptions with prior permission.\n\nID Check: Legal ID must be shown upon entry. Your ID will be viewed and returned, not photocopied or scanned.\n\nPrivate Rentals\n\nOur space is available for professional photography rentals when not in use. Visit our private rental page for more information.\n\nJoin us at Baltimore Playhouse for a safe, fun, and welcoming experience!"
     },
     "contact": {
       "email": "info@baltimoreplayhouse.com",
       "phone": "(410) 555-0123"
     },
-    "website": "https://www.baltimoreplayhouse.com",
+    "website": "https://baltimoreplayhouse.com/",
     "logo": "/images/BPH.PNG",
     "images": [],
     "seo": {
-      "title": "Baltimore Playhouse - Baltimore BDSM Dungeon | East Coast Kink Events",
-      "description": "Baltimore Playhouse is a premier BDSM dungeon and social club in Baltimore, offering a safe and welcoming environment for the kink community.",
-      "keywords": "Baltimore Playhouse, Baltimore, BDSM dungeon, social club, kink community, Maryland"
+      "title": "Baltimore Playhouse - Baltimore MD 501(c)7 Non-Profit Social Club | East Coast Kink Events",
+      "description": "Welcome to Baltimore Playhouse - A 501(c)7 Non-Profit Social Club. Our mission is to create a safe, inclusive space for everyone to socialize, learn, and most importantly, 'MAKE PLAY HAPPEN!™'",
+      "keywords": "Baltimore Playhouse, Baltimore, Maryland, 501(c)7, non-profit social club, kink community, Charm City, largest play space"
     }
   },
   {
@@ -35,73 +35,73 @@ export const dungeons = [
       "address": "Washington DC"
     },
     "category": "BDSM Dungeon",
-    "excerpt": "The Crucible is Washington DC's premier BDSM private club, offering a safe gathering space for the kink community with enhanced safety measures and membership requirements.",
+    "excerpt": "The Crucible: Washington DC's Premier BDSM Dungeon & Kink Community. A 501(c)7 Members Only, non-profit, Private Social Club committed to providing a safe gathering space for all members and their guests.",
     "description": {
-      "long": "The Crucible is Washington DC's premier BDSM private club, providing a safe and welcoming environment for the kink community. Our facility is designed to accommodate a variety of BDSM activities while maintaining the highest standards of safety and consent.\n\nWe offer multiple play spaces, private rooms, and social areas, all equipped with the necessary equipment and safety features. Our membership includes access to regular workshops, demonstrations, and social events designed to build community and provide education.\n\nSafety is our top priority. We maintain strict protocols, require membership for access, and have trained staff available to assist with safety procedures and answer questions. All activities must be consensual and follow our established guidelines.\n\nWhether you're exploring BDSM for the first time or are an experienced practitioner, The Crucible welcomes respectful individuals who are interested in kink and BDSM in a safe, consensual environment."
+      "long": "The Crucible: Washington DC's Premier BDSM Dungeon & Kink Community\n\nA 501(c)7 Members Only, non-profit, Private Social Club\n\nSafety and Membership Policy at The Crucible\nThe Crucible is committed to providing a safe gathering space for all members and their guests. Starting March 1, 2018, we are enhancing our safety measures for new memberships, renewals, and guest admissions.\n\nNew Membership and Renewal Process:\n\nID Search: All new memberships and renewals will include a search of the public US Department of Justice and the DC Metropolitan Police Department registered sex offenders databases.\n\nValid ID Required: You must present a valid government-issued photo ID with your date of birth. Without it, access will be denied. No exceptions.\n\nDatabase Check: Anyone registered on these databases will be denied membership and/or entry.\n\nGuest Admission Policy:\n\nID Requirement: All non-member guests must present a valid government-issued photo ID with date of birth.\n\nDatabase Check: Guest entries will also be checked against the sex offenders databases.\n\nThese measures ensure that The Crucible remains a safe and welcoming space for everyone. We appreciate your understanding and cooperation.\n\nCheck our website for more information!"
     },
     "contact": {
-      "email": "info@thecrucibledc.com",
+      "email": "info@the-crucible.com",
       "phone": "(202) 555-0123"
     },
-    "website": "https://www.eastcoastkinkevents.com/dungeons/thecrubible",
+    "website": "https://the-crucible.com/",
     "logo": "/images/crucible.PNG",
     "images": [],
     "seo": {
-      "title": "The Crucible - Washington DC BDSM Private Club | East Coast Kink Events",
-      "description": "The Crucible is Washington DC's premier BDSM private club, offering a safe gathering space for the kink community with enhanced safety measures and membership requirements.",
-      "keywords": "The Crucible, Washington DC, BDSM club, kink community, private club, DC dungeon, BDSM Washington"
+      "title": "The Crucible - Washington DC Premier BDSM Dungeon & Kink Community | East Coast Kink Events",
+      "description": "The Crucible: Washington DC's Premier BDSM Dungeon & Kink Community. A 501(c)7 Members Only, non-profit, Private Social Club committed to providing a safe gathering space for all members and their guests.",
+      "keywords": "The Crucible, Washington DC, BDSM dungeon, kink community, 501(c)7, members only, private social club, DC dungeon, BDSM Washington"
     }
   },
   {
-    "name": "The Owl's Nest",
-    "slug": "the-owls-nest-poconos-philadelphia",
+    "name": "The Nest",
+    "slug": "the-nest-philadelphia-poconos",
     "location": {
       "city": "Philadelphia",
       "state": "PA",
-      "address": "Philadelphia, PA"
+      "address": "Philadelphia and Poconos, PA"
     },
-    "category": "BDSM Dungeon",
-    "excerpt": "The Owl's Nest is a creative arts collective and social club in Philadelphia, offering judgment-free workshops, classes, and social opportunities for the kink community.",
+    "category": "Creative Arts Collective",
+    "excerpt": "Welcome to The Nest: A Creative Arts Collective and Social Club. We prioritize creating a judgment-free environment where people of all backgrounds and identities can feel safe and welcome.",
     "description": {
-      "long": "The Owl's Nest is a creative arts collective and social club located in Philadelphia, Pennsylvania. We provide a judgment-free environment where the kink community can explore, learn, and connect through various artistic and social activities.\n\nOur facility includes multiple spaces for workshops, classes, and social gatherings. We offer regular programming focused on creative expression, skill-building, and community building within the BDSM and kink community.\n\nWe believe in fostering a safe, inclusive, and consensual environment where all individuals feel welcome to explore their interests and express themselves authentically. Our staff is committed to maintaining a supportive atmosphere and providing resources for education and safety.\n\nMembership is required for access to our facilities and events. We welcome individuals of all experience levels who are respectful, consensual, and interested in being part of our community."
+      "long": "The Nest: Philadelphia and Poconos Pennsylvania\n\nWelcome to The Nest: A Creative Arts Collective and Social Club\nAt The Nest, we prioritize creating a judgment-free environment where people of all backgrounds and identities can feel safe and welcome. Our members enjoy access to a wide range of exclusive workshops, classes, and social opportunities focusing on photography, mixed media, visual, and performing arts.\n\nOur Mission\nWe believe art is a powerful force for social change and community building. Our collective works tirelessly to create a platform for diverse voices and experiences to be heard and celebrated.\n\nOur Space\nThe Nest is our permanent home in Philly, conveniently located a short walk from Fishtown with many public transit options. Our space boasts over 4,800 sq. ft. with various configurations to suit different events and activities.\n\nJoin Us\nBecome a part of The Nest and immerse yourself in a vibrant community dedicated to artistic expression and social change. Whether you're attending a workshop, participating in a class, or enjoying a social event, you'll find a welcoming and inspiring atmosphere."
     },
     "contact": {
-      "email": "info@theowlsnestphilly.com",
+      "email": "info@theowlsnestgroup.com",
       "phone": "(215) 555-0123"
     },
-    "website": "https://www.eastcoastkinkevents.com/dungeons/theowlsnest",
+    "website": "https://www.theowlsnestgroup.com/",
     "logo": "/images/owlsnest.PNG",
     "images": [],
     "seo": {
-      "title": "The Owl's Nest - Poconos & Philadelphia Creative Arts Collective | East Coast Kink Events",
-      "description": "The Owl's Nest is a creative arts collective and social club in Philadelphia, offering judgment-free workshops, classes, and social opportunities for the kink community.",
-      "keywords": "The Owl's Nest, Philadelphia, Poconos, creative arts, social club, kink community, workshops, Pennsylvania"
+      "title": "The Nest - Philadelphia and Poconos Creative Arts Collective | East Coast Kink Events",
+      "description": "Welcome to The Nest: A Creative Arts Collective and Social Club. We prioritize creating a judgment-free environment where people of all backgrounds and identities can feel safe and welcome.",
+      "keywords": "The Nest, Philadelphia, Poconos, Pennsylvania, creative arts collective, social club, Fishtown, workshops, classes"
     }
   },
   {
-    "name": "Sarasota Dungeon",
-    "slug": "sarasota-dungeon",
+    "name": "Sarasota Dark Temple",
+    "slug": "sarasota-dark-temple",
     "location": {
       "city": "Sarasota",
       "state": "FL",
       "address": "Sarasota, FL"
     },
-    "category": "BDSM Dungeon",
-    "excerpt": "Sarasota Dungeon is a premier BDSM facility in Sarasota, offering a safe and welcoming environment for the kink community with professional equipment and experienced staff.",
+    "category": "Sacred Kink Sanctuary",
+    "excerpt": "Welcome to Your Sacred Space. At Sarasota Dark Temple, we are dedicated to creating a sanctuary where you can be your authentic self, free from fear, judgment, shame, guilt, and negativity.",
     "description": {
-      "long": "Sarasota Dungeon is a premier BDSM facility located in Sarasota, Florida, providing a safe and welcoming environment for the kink community. Our facility is equipped with professional-grade equipment and designed to accommodate a variety of BDSM activities and interests.\n\nWe offer multiple play spaces, private rooms, and social areas, all maintained to the highest standards of safety and cleanliness. Our experienced staff is trained in safety procedures and are available to assist with equipment use and answer questions.\n\nRegular workshops, demonstrations, and social events are offered to help build community and provide education. We maintain strict safety protocols and require all activities to be consensual and follow our established guidelines.\n\nMembership is required for access to our facilities. We welcome individuals of all experience levels who are respectful, consensual, and interested in exploring BDSM in a safe environment."
+      "long": "Sarasota Dark Temple Sarasota Florida\n\nWelcome to Your Sacred Space\nAt Sarasota Dark Temple, we are dedicated to creating a sanctuary where you can be your authentic self, free from fear, judgment, shame, guilt, and negativity. Our mission is to foster a space that inspires awakening, liberation, and true self-embodiment.\n\nEducational Experiences\n\nWe offer a range of educational opportunities designed to enhance your kink and BDSM skills. Stay updated with the latest protocols and techniques through our workshops and classes, tailored to support and enrich your journey.\n\nConflict Support\n\nConflicts are a natural part of any community. Our Conscious Restoration Process provides thoughtful support to address and resolve issues between members, promoting understanding and harmony.\n\nInspiring Self-Growth\n\nOur experiences are crafted to inspire self-healing, personal growth, and mastery. Engage in activities that foster self-discovery and empower you to reach your full potential.\n\nA Place to Call 'HOME'\n\nOur goal is to build a place where everyone feels a deep sense of belonging. At The Nest, we strive to create a welcoming environment where we can all find solace and community.\n\nJoin us and be a part of a vibrant, supportive community where you can truly thrive."
     },
     "contact": {
-      "email": "info@sarasotadungeon.com",
+      "email": "info@sarasotadarktemple.com",
       "phone": "(941) 555-0123"
     },
-    "website": "https://www.sarasotadungeon.com",
+    "website": "https://floridakinkbdsm.com/welcome-1",
     "logo": "/images/sarasota.PNG",
     "images": [],
     "seo": {
-      "title": "Sarasota Dungeon - Florida BDSM Facility | East Coast Kink Events",
-      "description": "Sarasota Dungeon is a premier BDSM facility in Sarasota, offering a safe and welcoming environment for the kink community with professional equipment and experienced staff.",
-      "keywords": "Sarasota Dungeon, Sarasota, Florida, BDSM facility, kink community, professional equipment"
+      "title": "Sarasota Dark Temple - Florida Sacred Kink Sanctuary | East Coast Kink Events",
+      "description": "Welcome to Your Sacred Space. At Sarasota Dark Temple, we are dedicated to creating a sanctuary where you can be your authentic self, free from fear, judgment, shame, guilt, and negativity.",
+      "keywords": "Sarasota Dark Temple, Sarasota, Florida, sacred kink sanctuary, trauma-informed, conscious kink, BDSM community"
     }
   },
   {
@@ -110,128 +110,128 @@ export const dungeons = [
     "location": {
       "city": "Orlando",
       "state": "FL",
-      "address": "Orlando, FL"
+      "address": "6431 Milner Blvd. Suite 4, Orlando, FL 32809"
     },
-    "category": "BDSM Dungeon",
-    "excerpt": "The Woodshed is Orlando's premier private kink dungeon and social club, offering exclusive membership access to state-of-the-art facilities.",
+    "category": "Private Kink Dungeon",
+    "excerpt": "Discover Your Secret Escape in Orlando! Welcome to The Woodshed, Orlando's premier private kink dungeon and social club. As a members-only sanctuary, we offer a unique and discreet space for all your kink and BDSM desires.",
     "description": {
-      "long": "The Woodshed is Orlando's premier private kink dungeon and social club, offering exclusive membership access to state-of-the-art facilities designed for the BDSM and kink community.\n\nOur facility features multiple play spaces, private rooms, and social areas, all equipped with professional-grade equipment and safety features. We maintain the highest standards of cleanliness and safety to ensure a comfortable and secure environment for all members.\n\nExclusive membership provides access to our facilities, regular workshops, demonstrations, and social events. Our experienced staff is trained in safety procedures and are available to assist with equipment use and answer questions.\n\nWe believe in fostering a safe, inclusive, and consensual environment where all individuals feel welcome to explore their interests. All activities must be consensual and follow our established safety guidelines.\n\nMembership is required and includes access to our facilities and events. We welcome respectful individuals who are interested in being part of our exclusive kink community."
+      "long": "The Woodshed Orlando Florida\n\nDiscover Your Secret Escape in Orlando!\nWelcome to The Woodshed, Orlando's premier private kink dungeon and social club. As a members-only sanctuary, we offer a unique and discreet space for all your kink and BDSM desires.\n\nWhat We Offer:\n\nExclusive Access: Enjoy private membership to our state-of-the-art dungeon, designed for your ultimate pleasure and exploration.\n\nVaried Events: Join us for a range of exciting events throughout the year, from workshops and demonstrations to themed parties and social mixers.\n\nTop-Notch Facilities: Our dungeon features a variety of equipment and play spaces to cater to all interests and experiences.\n\nSafe and Discreet: Experience your passions in a safe, respectful, and judgement-free environment where privacy is our priority.\n\nBecome a Member:\n\nUnlock the door to a world of creativity and connection. Apply for membership today and start exploring your desires with like-minded individuals in Orlando's most exclusive kink community.\n\nConnect with Us:\n\nReady to take the next step? Visit our website or contact us to learn more about membership options and upcoming events. Your ultimate adventure awaits at The Woodshed.\n\nCheck out our website for more information!"
     },
     "contact": {
       "email": "info@thewoodshedorlando.com",
-      "phone": "(407) 555-0123"
+      "phone": "(407) 293-7474"
     },
-    "website": "https://www.eastcoastkinkevents.com/dungeons/thewoodshed",
+    "website": "https://www.thewoodshedorlando.com/",
     "logo": "/images/woodshed.PNG",
     "images": [],
     "seo": {
       "title": "The Woodshed - Orlando Florida Private Kink Dungeon | East Coast Kink Events",
-      "description": "The Woodshed is Orlando's premier private kink dungeon and social club, offering exclusive membership access to state-of-the-art facilities.",
-      "keywords": "The Woodshed, Orlando, Florida, private kink dungeon, social club, BDSM, exclusive membership"
+      "description": "Discover Your Secret Escape in Orlando! Welcome to The Woodshed, Orlando's premier private kink dungeon and social club. As a members-only sanctuary, we offer a unique and discreet space for all your kink and BDSM desires.",
+      "keywords": "The Woodshed, Orlando, Florida, private kink dungeon, members-only, BDSM, exclusive community, Milner Blvd"
     }
   },
   {
-    "name": "The Honeypot",
-    "slug": "the-honeypot",
+    "name": "The Honey Pot",
+    "slug": "the-honey-pot-arundel-county",
     "location": {
-      "city": "Philadelphia",
-      "state": "PA",
-      "address": "Philadelphia, PA"
+      "city": "Arundel County",
+      "state": "MD",
+      "address": "Arundel County, Maryland"
     },
-    "category": "BDSM Dungeon",
-    "excerpt": "The Honeypot is a welcoming BDSM dungeon and social club in Philadelphia, offering a safe space for the kink community to explore and connect.",
+    "category": "LGBTQ+ Friendly BDSM Dungeon",
+    "excerpt": "Welcome to The Honey Pot – Maryland's Premier LGBTQ+ Friendly BDSM Dungeon. At The Honey Pot, our mission is to provide a safe and inclusive environment where you can explore your kinks and fantasies with confidence.",
     "description": {
-      "long": "The Honeypot is a welcoming BDSM dungeon and social club located in Philadelphia, Pennsylvania, providing a safe and inclusive space for the kink community to explore, learn, and connect.\n\nOur facility includes multiple play spaces, private rooms, and social areas designed to accommodate a variety of BDSM activities and interests. We maintain high standards of safety and cleanliness to ensure a comfortable environment for all members.\n\nRegular workshops, demonstrations, and social events are offered to help build community and provide education. Our staff is trained in safety procedures and are available to assist with equipment use and answer questions.\n\nWe believe in fostering a safe, inclusive, and consensual environment where all individuals feel welcome to explore their interests and express themselves authentically. All activities must be consensual and follow our established safety guidelines.\n\nMembership is required for access to our facilities and events. We welcome individuals of all experience levels who are respectful, consensual, and interested in being part of our community."
+      "long": "Honey Pot Dungeon Arundel County, Maryland\n\nWelcome to The Honey Pot – Maryland's Premier LGBTQ+ Friendly BDSM Dungeon\nAt The Honey Pot, our mission is to provide a safe and inclusive environment where you can explore your kinks and fantasies with confidence. We are dedicated to:\n\nModeling Safer Kink Scenes: We emphasize safety and consent in every scene, ensuring that all experiences are secure and enjoyable for everyone involved.\n\nConsent Coaching: We practice and promote enthusiastic, ongoing, and informed consent. Our experienced staff is here to guide you in establishing and respecting boundaries.\n\nSafe Harbor Policy: We are committed to creating a welcoming space for the LGBTQIA+ community. Our Safe Harbor Policy ensures that our dungeon remains a supportive and respectful environment for all.\n\nDiscover a space where safety, respect, and inclusivity come together. At The Honey pot, your exploration of BDSM is supported by our dedication to best practices and community values.\n\nFor more information or to schedule your visit, please contact us at on our website linked here!"
     },
     "contact": {
-      "email": "info@thehoneypotphilly.com",
-      "phone": "(215) 555-0124"
+      "email": "info@thehoneypotmd.com",
+      "phone": "(410) 555-0124"
     },
-    "website": "https://www.thehoneypotphilly.com",
+    "website": "https://fetlife.com/groups/237462",
     "logo": "/images/Honeypot.PNG",
     "images": [],
     "seo": {
-      "title": "The Honeypot - Philadelphia BDSM Dungeon | East Coast Kink Events",
-      "description": "The Honeypot is a welcoming BDSM dungeon and social club in Philadelphia, offering a safe space for the kink community to explore and connect.",
-      "keywords": "The Honeypot, Philadelphia, BDSM dungeon, social club, kink community, Pennsylvania"
+      "title": "The Honey Pot - Maryland LGBTQ+ Friendly BDSM Dungeon | East Coast Kink Events",
+      "description": "Welcome to The Honey Pot – Maryland's Premier LGBTQ+ Friendly BDSM Dungeon. At The Honey Pot, our mission is to provide a safe and inclusive environment where you can explore your kinks and fantasies with confidence.",
+      "keywords": "The Honey Pot, Arundel County, Maryland, LGBTQ+ friendly, BDSM dungeon, safe harbor policy, consent coaching"
     }
   },
   {
-    "name": "Ohio Dungeon",
-    "slug": "ohio-dungeon",
+    "name": "OhioSMART",
+    "slug": "ohiosmart-dungeon-cleveland",
     "location": {
-      "city": "Columbus",
+      "city": "Cleveland",
       "state": "OH",
-      "address": "Columbus, OH"
+      "address": "Cleveland, Ohio"
     },
-    "category": "BDSM Dungeon",
-    "excerpt": "Ohio Dungeon is a premier BDSM facility in Columbus, offering a safe and welcoming environment for the kink community with professional equipment and experienced staff.",
+    "category": "BDSM Organization",
+    "excerpt": "Welcome to OhioSMART - the oldest and longest-running BDSM organization in Ohio, proudly serving the greater Cleveland area since 1995! Your ultimate social and educational hub for all things BDSM, D/s, and fetish lifestyles.",
     "description": {
-      "long": "Ohio Dungeon is a premier BDSM facility located in Columbus, Ohio, providing a safe and welcoming environment for the kink community. Our facility is equipped with professional-grade equipment and designed to accommodate a variety of BDSM activities and interests.\n\nWe offer multiple play spaces, private rooms, and social areas, all maintained to the highest standards of safety and cleanliness. Our experienced staff is trained in safety procedures and are available to assist with equipment use and answer questions.\n\nRegular workshops, demonstrations, and social events are offered to help build community and provide education. We maintain strict safety protocols and require all activities to be consensual and follow our established guidelines.\n\nMembership is required for access to our facilities. We welcome individuals of all experience levels who are respectful, consensual, and interested in exploring BDSM in a safe environment."
+      "long": "OhioSMART Dungeon Cleveland Ohio\n\nWelcome to OhioSMART\nthe oldest and longest-running BDSM organization in Ohio, proudly serving the greater Cleveland area since 1995! Whether you're new to the scene or a seasoned veteran, OhioSMART is your ultimate social and educational hub for all things BDSM, D/s, and fetish lifestyles.\n\nJoin us at our private dungeon space for exhilarating and safe play, meet like-minded individuals at our friendly munches in local restaurants, or enjoy our thrilling outdoor activities. At OhioSMART, you'll always find a welcoming and inclusive atmosphere where participation is voluntary, but consent is absolutely mandatory.\n\nCome be part of our vibrant community and explore your desires in a supportive and respectful environment. OhioSMART—where your fantasies come to life!"
     },
     "contact": {
-      "email": "info@ohiodungeon.com",
-      "phone": "(614) 555-0123"
+      "email": "info@ohiosmart.org",
+      "phone": "(440) 732-8317"
     },
-    "website": "https://www.ohiodungeon.com",
+    "website": "https://ohiosmart.org/",
     "logo": "/images/ohio.PNG",
     "images": [],
     "seo": {
-      "title": "Ohio Dungeon - Columbus BDSM Facility | East Coast Kink Events",
-      "description": "Ohio Dungeon is a premier BDSM facility in Columbus, offering a safe and welcoming environment for the kink community with professional equipment and experienced staff.",
-      "keywords": "Ohio Dungeon, Columbus, Ohio, BDSM facility, kink community, professional equipment"
+      "title": "OhioSMART - Cleveland Ohio BDSM Organization | East Coast Kink Events",
+      "description": "Welcome to OhioSMART - the oldest and longest-running BDSM organization in Ohio, proudly serving the greater Cleveland area since 1995! Your ultimate social and educational hub for all things BDSM, D/s, and fetish lifestyles.",
+      "keywords": "OhioSMART, Cleveland, Ohio, BDSM organization, oldest BDSM group, D/s, fetish lifestyles, private dungeon"
     }
   },
   {
-    "name": "Aphrodite's Dungeon",
-    "slug": "aphrodites-dungeon",
+    "name": "The Aphrodite Group",
+    "slug": "the-aphrodite-group",
     "location": {
-      "city": "Philadelphia",
-      "state": "PA",
-      "address": "Philadelphia, PA"
+      "city": "Rochester",
+      "state": "NY",
+      "address": "Rochester, NY"
     },
     "category": "BDSM Dungeon",
-    "excerpt": "Aphrodite's Dungeon is a luxurious BDSM facility in Philadelphia, offering an elegant and safe environment for the kink community to explore and connect.",
+    "excerpt": "Discover The Aphrodite Group (TAG), Rochester, NY's premier upscale BDSM club. TAG is a thriving community of enthusiasts with a passion for kink, BDSM, and fetishes, welcoming everyone 18 and older.",
     "description": {
-      "long": "Aphrodite's Dungeon is a luxurious BDSM facility located in Philadelphia, Pennsylvania, offering an elegant and safe environment for the kink community to explore, learn, and connect.\n\nOur facility features beautifully designed play spaces, private rooms, and social areas, all equipped with high-quality equipment and safety features. We maintain the highest standards of cleanliness and safety to ensure a comfortable and secure environment for all members.\n\nRegular workshops, demonstrations, and social events are offered to help build community and provide education. Our experienced staff is trained in safety procedures and are available to assist with equipment use and answer questions.\n\nWe believe in fostering a safe, inclusive, and consensual environment where all individuals feel welcome to explore their interests and express themselves authentically. All activities must be consensual and follow our established safety guidelines.\n\nMembership is required for access to our facilities and events. We welcome individuals of all experience levels who are respectful, consensual, and interested in being part of our elegant kink community."
+      "long": "Discover The Aphrodite Group (TAG), Rochester, NY's premier upscale BDSM club. TAG is a thriving community of enthusiasts with a passion for kink, BDSM, and fetishes, welcoming everyone 18 and older.\n\nAt TAG, we celebrate diversity and support our members in their journey to safely explore their desires. Whether you're a seasoned player or new to the scene, you'll find a welcoming atmosphere and a wealth of resources to enhance your experience.\n\nJoin us to:\n\nDive into the vibrant BDSM and kink community in Rochester and Western NY\n\nMake new friends at our exciting socials, play parties, and events\n\nEnjoy our state-of-the-art dungeon, available for play or private rentals\n\nOur facility boasts an expansive open play area for those who love an audience, as well as intimate private spaces for more secluded scenes. You'll find an array of BDSM furniture, a comfortable social area, a fully-equipped kitchen, and private bathrooms.\n\nConveniently located near Buffalo, Syracuse, and the Finger Lakes, The Aphrodite Group is your luxurious destination for exploring kink and BDSM. Experience the finest in Rochester, NY—join TAG today!"
     },
     "contact": {
-      "email": "info@aphroditesdungeon.com",
-      "phone": "(215) 555-0125"
+      "email": "info@theaphroditegroup.net",
+      "phone": "(585) 555-0123"
     },
-    "website": "https://www.aphroditesdungeon.com",
+    "website": "https://theaphroditegroup.net/",
     "logo": "/images/aphrodite.PNG",
     "images": [],
     "seo": {
-      "title": "Aphrodite's Dungeon - Philadelphia Luxury BDSM Facility | East Coast Kink Events",
-      "description": "Aphrodite's Dungeon is a luxurious BDSM facility in Philadelphia, offering an elegant and safe environment for the kink community to explore and connect.",
-      "keywords": "Aphrodite's Dungeon, Philadelphia, luxury BDSM facility, elegant environment, kink community, Pennsylvania"
+      "title": "The Aphrodite Group - Rochester NY Premier BDSM Club | East Coast Kink Events",
+      "description": "Discover The Aphrodite Group (TAG), Rochester, NY's premier upscale BDSM club. TAG is a thriving community of enthusiasts with a passion for kink, BDSM, and fetishes, welcoming everyone 18 and older.",
+      "keywords": "The Aphrodite Group, TAG, Rochester, New York, BDSM club, kink community, upscale dungeon, Western NY"
     }
   },
   {
-    "name": "Ascend Dungeon",
-    "slug": "ascend-dungeon",
+    "name": "Ascend Hudson Valley Community",
+    "slug": "ascend-hudson-valley-community",
     "location": {
-      "city": "Philadelphia",
-      "state": "PA",
-      "address": "Philadelphia, PA"
+      "city": "Hudson Valley",
+      "state": "NY",
+      "address": "Hudson Valley, New York"
     },
-    "category": "BDSM Dungeon",
-    "excerpt": "Ascend Dungeon is a premier BDSM facility in Philadelphia, offering a safe and welcoming environment for the kink community to explore and grow.",
+    "category": "Kink Community",
+    "excerpt": "Welcome to The Ascend Hudson Valley Community - A nurturing space for consenting adults in the kink and alternative lifestyle community. We foster a risk-aware, consensual kink (RACK) community in the Hudson Valley.",
     "description": {
-      "long": "Ascend Dungeon is a premier BDSM facility located in Philadelphia, Pennsylvania, providing a safe and welcoming environment for the kink community to explore, learn, and grow.\n\nOur facility includes multiple play spaces, private rooms, and social areas designed to accommodate a variety of BDSM activities and interests. We maintain high standards of safety and cleanliness to ensure a comfortable environment for all members.\n\nRegular workshops, demonstrations, and social events are offered to help build community and provide education. Our staff is trained in safety procedures and are available to assist with equipment use and answer questions.\n\nWe believe in fostering a safe, inclusive, and consensual environment where all individuals feel welcome to explore their interests and express themselves authentically. All activities must be consensual and follow our established safety guidelines.\n\nMembership is required for access to our facilities and events. We welcome individuals of all experience levels who are respectful, consensual, and interested in being part of our community."
+      "long": "Ascend Hudson Valley Community, Hudson Valley, New York\n\nWelcome to The Ascend Hudson Valley Community\nA nurturing space for consenting adults in the kink and alternative lifestyle community.\n\nOur Mission\nWe foster a risk-aware, consensual kink (RACK) community in the Hudson Valley, providing education, support, and a judgment-free environment for exploration and growth.\n\nWho We Are\nA real-life community with a strong online presence.\n\nA Coalition Partner with the National Coalition for Sexual Freedom (NCSF).\n\nA safe, inclusive space for learning, connection, and personal development.\n\nWhat We Offer\nEducational programming (workshops, classes, discussions)\n\nSocial events (munches, sloshes, themed socials)\n\nPlay parties & private gatherings (vetted members only)\n\nA permanent physical community space in the Mid-Hudson Valley, NY, offering short- and long-term rentals.\n\nCommunity Leadership\nBoard of Directors:\n\nPresident, Vice President, Treasurer, Member at Large (experienced leaders guiding the community)\nKey Roles:\n\nHead Dungeon Monitor, Community Development, Staff Coordinator\n\nHousehold Specialists (Riggers, Tops, Photographer, and more)\n\nJoin Us\nVetting Required: To ensure safety and trust, all members must complete a vetting process before attending private events or joining our Discord.\n\nOpen Socials (No Vetting Needed):\n\nThe Poughkeepsie Munch\nHVLOL Munch\nWhere the Wild Things Meet (for Littles, Middles, & Caretakers)\nAscend Community Slosh\nFresh & Kinky Social\nThe Wild Rumpus (Littles, Middles, & Caretakers)\n\nConnect Online:\nJoin our FetLife group to engage with the community.\n\nWe Value Your Feedback\nHave suggestions or questions? Share your thoughts—we're always listening!\n\nWhy Ascend?\nA supportive, RACK-based community\nDedicated leadership & safe spaces\nRegular events for learning & play\nA home for all lifestyles\n\nReady to Begin Your Journey?\nClick the link above and take the first step toward belonging.\n\nDisclaimer: Some promotional material produced by AI.\n\nExplore. Connect. Ascend."
     },
     "contact": {
-      "email": "info@ascenddungeon.com",
-      "phone": "(215) 555-0126"
+      "email": "info@ascendhv.com",
+      "phone": "(845) 555-0126"
     },
-    "website": "https://www.ascenddungeon.com",
+    "website": "https://fetlife.com/Ascend_HV",
     "logo": "/images/ascend.PNG",
     "images": [],
     "seo": {
-      "title": "Ascend Dungeon - Philadelphia BDSM Facility | East Coast Kink Events",
-      "description": "Ascend Dungeon is a premier BDSM facility in Philadelphia, offering a safe and welcoming environment for the kink community to explore and grow.",
-      "keywords": "Ascend Dungeon, Philadelphia, BDSM facility, kink community, Pennsylvania"
+      "title": "Ascend Hudson Valley Community - New York Kink Community | East Coast Kink Events",
+      "description": "Welcome to The Ascend Hudson Valley Community - A nurturing space for consenting adults in the kink and alternative lifestyle community. We foster a risk-aware, consensual kink (RACK) community in the Hudson Valley.",
+      "keywords": "Ascend Hudson Valley Community, Hudson Valley, New York, RACK community, kink community, NCSF partner, Mid-Hudson Valley"
     }
   }
 ];
