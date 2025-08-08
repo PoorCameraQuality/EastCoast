@@ -1,75 +1,60 @@
-// Simple authentication test script
-// Run this in the browser console to test auth functionality
+// Test script for debugging authentication issues
+const { createClient } = require('@supabase/supabase-js');
 
-console.log('🧪 Testing Authentication System...');
+// Check environment variables
+console.log('🔍 TEST: Checking environment variables...');
+console.log('NEXT_PUBLIC_SUPABASE_URL:', process.env.NEXT_PUBLIC_SUPABASE_URL ? 'Present' : 'Missing');
+console.log('NEXT_PUBLIC_SUPABASE_ANON_KEY:', process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ? 'Present' : 'Missing');
 
-// Test 1: Check if AuthProvider is loaded
-if (typeof window !== 'undefined') {
-  console.log('✅ Browser environment detected');
-  
-  // Test 2: Check localStorage functionality
-  console.log('🔍 Testing localStorage...');
-  try {
-    const testKey = 'test-storage';
-    localStorage.setItem(testKey, 'test');
-    const value = localStorage.getItem(testKey);
-    localStorage.removeItem(testKey);
-    if (value === 'test') {
-      console.log('✅ localStorage is working');
-    } else {
-      console.log('❌ localStorage test failed');
-    }
-  } catch (error) {
-    console.log('❌ localStorage error:', error);
-  }
-
-  // Test 3: Check Supabase session storage
-  console.log('🔍 Checking Supabase session storage...');
-  const session = localStorage.getItem('supabase.auth.token');
-  if (session) {
-    console.log('✅ Supabase session found in localStorage');
-    try {
-      const sessionData = JSON.parse(session);
-      console.log('📊 Session data:', {
-        access_token: sessionData.access_token ? 'Present' : 'Missing',
-        refresh_token: sessionData.refresh_token ? 'Present' : 'Missing',
-        expires_at: sessionData.expires_at ? new Date(sessionData.expires_at * 1000).toLocaleString() : 'Missing'
-      });
-    } catch (e) {
-      console.log('❌ Failed to parse session data');
-    }
-  } else {
-    console.log('❌ No Supabase session found in localStorage');
-  }
-
-  // Test 4: Check for auth context
-  setTimeout(() => {
-    console.log('🔍 Checking auth context...');
-    
-    const originalLog = console.log;
-    let authLogs = [];
-    
-    console.log = function(...args) {
-      if (args[0] && typeof args[0] === 'string' && args[0].includes('AUTH')) {
-        authLogs.push(args.join(' '));
-      }
-      originalLog.apply(console, args);
-    };
-    
-    setTimeout(() => {
-      console.log = originalLog;
-      console.log('📊 Auth Logs Found:', authLogs.length);
-      authLogs.forEach(log => console.log('  ', log));
-      
-      if (authLogs.length > 0) {
-        console.log('✅ Authentication system is active');
-      } else {
-        console.log('❌ No auth logs found - check AuthProvider');
-      }
-    }, 2000);
-  }, 1000);
-} else {
-  console.log('❌ Not in browser environment');
+if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+  console.error('❌ TEST: Missing required environment variables');
+  process.exit(1);
 }
 
-console.log('🧪 Auth test script loaded. Check console for results.');
+// Create Supabase client
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+  {
+    auth: {
+      autoRefreshToken: true,
+      persistSession: true,
+      detectSessionInUrl: false,
+    }
+  }
+);
+
+async function testAuth() {
+  console.log('🔍 TEST: Testing authentication...');
+  
+  try {
+    // Test session retrieval
+    const { data: { session }, error } = await supabase.auth.getSession();
+    
+    if (error) {
+      console.error('❌ TEST: Session error:', error.message);
+    } else if (session) {
+      console.log('✅ TEST: Session found for user:', session.user.email);
+      console.log('✅ TEST: Session expires at:', session.expires_at);
+      
+      // Test profile retrieval
+      const { data: profile, error: profileError } = await supabase
+        .from('profiles')
+        .select('id, role')
+        .eq('id', session.user.id)
+        .single();
+        
+      if (profileError) {
+        console.error('❌ TEST: Profile error:', profileError.message);
+      } else {
+        console.log('✅ TEST: Profile found:', profile);
+      }
+    } else {
+      console.log('❌ TEST: No session found');
+    }
+  } catch (error) {
+    console.error('❌ TEST: Unexpected error:', error);
+  }
+}
+
+testAuth();

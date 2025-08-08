@@ -3,7 +3,7 @@ import { createClient, SupabaseClient, Session, PostgrestError } from '@supabase
 let supabaseClient: SupabaseClient | null = null
 let supabaseAdminClient: SupabaseClient | null = null
 
-// Custom storage adapter for debugging
+// Custom storage adapter for debugging and cookie sync
 const customStorage = {
   getItem: (key: string) => {
     if (typeof window === 'undefined') return null
@@ -15,11 +15,29 @@ const customStorage = {
     if (typeof window === 'undefined') return
     console.log(`🔍 STORAGE: Setting ${key}`)
     window.localStorage.setItem(key, value)
+    
+    // Also set a cookie for server-side access
+    try {
+      const cookieName = `sb-${process.env.NEXT_PUBLIC_SUPABASE_URL?.split('//')[1]?.split('.')[0]}-auth-token`
+      document.cookie = `${cookieName}=${encodeURIComponent(value)}; path=/; max-age=31536000; SameSite=Lax`
+      console.log(`🍪 STORAGE: Set cookie ${cookieName} for server sync`)
+    } catch (error) {
+      console.error('Error setting auth cookie:', error)
+    }
   },
   removeItem: (key: string) => {
     if (typeof window === 'undefined') return
     console.log(`🔍 STORAGE: Removing ${key}`)
     window.localStorage.removeItem(key)
+    
+    // Also remove the cookie
+    try {
+      const cookieName = `sb-${process.env.NEXT_PUBLIC_SUPABASE_URL?.split('//')[1]?.split('.')[0]}-auth-token`
+      document.cookie = `${cookieName}=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT`
+      console.log(`🍪 STORAGE: Removed cookie ${cookieName}`)
+    } catch (error) {
+      console.error('Error removing auth cookie:', error)
+    }
   }
 }
 
@@ -40,7 +58,10 @@ export const getSupabaseClient = (): SupabaseClient | null => {
         persistSession: true,
         detectSessionInUrl: false,
         storage: customStorage,
-        storageKey: 'supabase.auth.token'
+        storageKey: 'supabase.auth.token',
+        // Ensure cookies are properly handled
+        flowType: 'pkce',
+        debug: process.env.NODE_ENV === 'development',
       }
     })
   }
@@ -139,5 +160,68 @@ export async function restoreSession(): Promise<{ session: Session | null, error
   } catch (error) {
     console.error('Error restoring session:', error)
     return { session: null, error: error as Error }
+  }
+}
+
+// Helper function to sync session with cookies (for SSR compatibility)
+export async function syncSessionWithCookies(): Promise<void> {
+  if (typeof window === 'undefined') return
+  
+  const client = getSupabaseClient()
+  if (!client) return
+  
+  try {
+    // Check if we have a session in localStorage
+    const storedSession = localStorage.getItem('supabase.auth.token')
+    if (storedSession) {
+      console.log('🔄 SUPABASE: Syncing session with cookies...')
+      
+      // Parse the stored session to get the token
+      try {
+        const sessionData = JSON.parse(storedSession)
+        if (sessionData.access_token) {
+          // Set the cookie manually for server-side access
+          const cookieName = `sb-${process.env.NEXT_PUBLIC_SUPABASE_URL?.split('//')[1]?.split('.')[0]}-auth-token`
+          document.cookie = `${cookieName}=${encodeURIComponent(storedSession)}; path=/; max-age=31536000; SameSite=Lax`
+          console.log(`🍪 SUPABASE: Set auth cookie ${cookieName} for server sync`)
+        }
+      } catch (parseError) {
+        console.error('Error parsing stored session:', parseError)
+      }
+      
+      // This will trigger the auth state change and update cookies
+      await client.auth.getSession()
+    }
+  } catch (error) {
+    console.error('Error syncing session with cookies:', error)
+  }
+}
+
+// Helper function to force session refresh and cookie sync
+export async function forceSessionRefresh(): Promise<void> {
+  if (typeof window === 'undefined') return
+  
+  const client = getSupabaseClient()
+  if (!client) return
+  
+  try {
+    console.log('🔄 SUPABASE: Force refreshing session...')
+    
+    // Get current session
+    const { data: { session }, error } = await client.auth.getSession()
+    
+    if (session && !error) {
+      // Force a token refresh
+      const { data: { session: refreshedSession }, error: refreshError } = await client.auth.refreshSession()
+      
+      if (refreshedSession && !refreshError) {
+        console.log('✅ SUPABASE: Session refreshed successfully')
+        // The custom storage adapter will automatically sync the cookie
+      } else {
+        console.error('❌ SUPABASE: Failed to refresh session:', refreshError)
+      }
+    }
+  } catch (error) {
+    console.error('Error force refreshing session:', error)
   }
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState, ReactNode } from "react";
-import { supabase, restoreSession } from "@/lib/supabase";
+import { supabase, restoreSession, syncSessionWithCookies, forceSessionRefresh } from "@/lib/supabase";
 import type { Session, PostgrestError } from '@supabase/supabase-js';
 
 interface Profile {
@@ -22,6 +22,7 @@ type AuthContextType = {
   loading: boolean;
   isAdmin: boolean;
   refreshAuth: () => Promise<void>;
+  forceRefresh: () => Promise<void>;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -42,6 +43,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setLoading(false);
         return;
       }
+
+      // Sync session with cookies first
+      await syncSessionWithCookies();
 
       // Attempt to restore session from storage first
       const { session: restoredSession, error: restoreError } = await restoreSession();
@@ -107,6 +111,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  const forceRefresh = async () => {
+    try {
+      console.log('🔄 AUTH PROVIDER: Force refreshing session...');
+      await forceSessionRefresh();
+      await refreshAuth();
+    } catch (error) {
+      console.error('❌ AUTH PROVIDER: Error force refreshing:', error);
+    }
+  };
+
   // Initial hydration from Supabase local storage
   useEffect(() => {
     console.log('🚀 AUTH PROVIDER: Initializing...');
@@ -154,6 +168,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         
         if (!mounted || !supabase) return;
 
+        // Sync session with cookies first
+        await syncSessionWithCookies();
+        
+        // Force session refresh to ensure cookies are set
+        await forceSessionRefresh();
+        
         // Explicitly restore session first
         await refreshAuth();
       } catch (error) {
@@ -183,7 +203,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   return (
     <AuthContext.Provider
-      value={{ user, loading, isAdmin, refreshAuth }}
+      value={{ user, loading, isAdmin, refreshAuth, forceRefresh }}
     >
       {children}
     </AuthContext.Provider>

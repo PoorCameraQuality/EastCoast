@@ -8,6 +8,7 @@ import BackToTop from '@/components/BackToTop'
 import { AuthProvider } from "@/contexts/AuthProvider";
 import { WebsiteStructuredData, OrganizationStructuredData } from '@/components/StructuredData'
 import GoogleAnalytics from '@/components/GoogleAnalytics'
+import VercelFeedbackBlocker from '@/components/VercelFeedbackBlocker'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -108,6 +109,8 @@ export default function RootLayout({
         )}
         <WebsiteStructuredData />
         <OrganizationStructuredData />
+        {/* Vercel Feedback Blocker - prevents interference with authentication */}
+        <VercelFeedbackBlocker />
         {/* AuthProvider at root so it never unmounts */}
         <AuthProvider>
           <AgeVerification />
