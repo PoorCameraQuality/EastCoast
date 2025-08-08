@@ -15,38 +15,71 @@ export default function DebugPage() {
   useEffect(() => {
     const checkAuth = async () => {
       try {
+        console.log('🔍 DEBUG: Starting auth check...')
         setLoading(true)
         setTimestamp(new Date().toISOString())
         
         if (!supabase) {
+          console.log('❌ DEBUG: Supabase not configured')
           setError('Supabase not configured')
           setLoading(false)
           return
         }
         
-        // Check current user
-        const currentUser = await getCurrentUser()
-        setUser(currentUser)
+        console.log('🔍 DEBUG: Checking current user...')
+        // Direct Supabase call instead of wrapper
+        const { data: { user }, error } = await supabase.auth.getUser()
         
-        // Check if admin
-        const adminStatus = await isAdmin()
-        setIsAdminUser(adminStatus)
+        if (error || !user) {
+          console.log('❌ DEBUG: No user found')
+          setUser(null)
+          setIsAdminUser(false)
+          return
+        }
+        
+        console.log('✅ DEBUG: Current user:', user)
+        setUser(user)
+        
+        console.log('🔍 DEBUG: Checking admin status...')
+        // Direct profile check
+        const { data: profileData, error: profileError } = await supabase
+          .from('profiles')
+          .select('role')
+          .eq('id', user.id)
+          .single()
+        
+        if (profileError || !profileData) {
+          console.log('❌ DEBUG: Profile error:', profileError)
+          setIsAdminUser(false)
+        } else {
+          const isAdmin = profileData.role === 'admin'
+          console.log('✅ DEBUG: Admin status:', isAdmin, 'Role:', profileData.role)
+          setIsAdminUser(isAdmin)
+        }
         
         // Get raw profile data
-        if (currentUser) {
+        if (user) {
+          console.log('🔍 DEBUG: Getting profile data...')
           const { data: profileData, error: profileError } = await supabase
             .from('profiles')
             .select('*')
-            .eq('id', currentUser.id)
+            .eq('id', user.id)
             .single()
           
           if (!profileError) {
+            console.log('✅ DEBUG: Profile data:', profileData)
             setProfile(profileData)
+          } else {
+            console.log('❌ DEBUG: Profile error:', profileError)
           }
         }
+        
+        console.log('🎉 DEBUG: Auth check completed')
       } catch (err) {
+        console.log('❌ DEBUG: Error in auth check:', err)
         setError(err instanceof Error ? err.message : 'Unknown error')
       } finally {
+        console.log('🏁 DEBUG: Setting loading to false')
         setLoading(false)
       }
     }
