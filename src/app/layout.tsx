@@ -5,6 +5,7 @@ import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import AgeVerification from '@/components/AgeVerification'
 import BackToTop from '@/components/BackToTop'
+import { AuthProvider } from '@/contexts/AuthContext'
 
 import { WebsiteStructuredData, OrganizationStructuredData } from '@/components/StructuredData'
 import GoogleAnalytics from '@/components/GoogleAnalytics'
@@ -108,13 +109,15 @@ export default function RootLayout({
         )}
         <WebsiteStructuredData />
         <OrganizationStructuredData />
-        <AgeVerification />
-        <Header />
-        <main id="main-content" role="main" tabIndex={-1}>
-          {children}
-        </main>
-        <Footer />
-        <BackToTop />
+        <AuthProvider>
+          <AgeVerification />
+          <Header />
+          <main id="main-content" role="main" tabIndex={-1}>
+            {children}
+          </main>
+          <Footer />
+          <BackToTop />
+        </AuthProvider>
       </body>
     </html>
   )

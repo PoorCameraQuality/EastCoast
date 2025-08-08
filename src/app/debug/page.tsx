@@ -1,91 +1,9 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { supabase } from '@/lib/supabase'
-import { getCurrentUser, isAdmin } from '@/lib/auth'
+import { useAuth } from '@/contexts/AuthContext'
 
 export default function DebugPage() {
-  const [user, setUser] = useState<any>(null)
-  const [profile, setProfile] = useState<any>(null)
-  const [isAdminUser, setIsAdminUser] = useState<boolean | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState('')
-  const [timestamp, setTimestamp] = useState('')
-
-  useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        console.log('🔍 DEBUG: Starting auth check...')
-        setLoading(true)
-        setTimestamp(new Date().toISOString())
-        
-        if (!supabase) {
-          console.log('❌ DEBUG: Supabase not configured')
-          setError('Supabase not configured')
-          setLoading(false)
-          return
-        }
-        
-        console.log('🔍 DEBUG: Checking current user...')
-        // Direct Supabase call instead of wrapper
-        const { data: { user }, error } = await supabase.auth.getUser()
-        
-        if (error || !user) {
-          console.log('❌ DEBUG: No user found')
-          setUser(null)
-          setIsAdminUser(false)
-          return
-        }
-        
-        console.log('✅ DEBUG: Current user:', user)
-        setUser(user)
-        
-        console.log('🔍 DEBUG: Checking admin status...')
-        // Direct profile check
-        const { data: profileData, error: profileError } = await supabase
-          .from('profiles')
-          .select('role')
-          .eq('id', user.id)
-          .single()
-        
-        if (profileError || !profileData) {
-          console.log('❌ DEBUG: Profile error:', profileError)
-          setIsAdminUser(false)
-        } else {
-          const isAdmin = profileData.role === 'admin'
-          console.log('✅ DEBUG: Admin status:', isAdmin, 'Role:', profileData.role)
-          setIsAdminUser(isAdmin)
-        }
-        
-        // Get raw profile data
-        if (user) {
-          console.log('🔍 DEBUG: Getting profile data...')
-          const { data: profileData, error: profileError } = await supabase
-            .from('profiles')
-            .select('*')
-            .eq('id', user.id)
-            .single()
-          
-          if (!profileError) {
-            console.log('✅ DEBUG: Profile data:', profileData)
-            setProfile(profileData)
-          } else {
-            console.log('❌ DEBUG: Profile error:', profileError)
-          }
-        }
-        
-        console.log('🎉 DEBUG: Auth check completed')
-      } catch (err) {
-        console.log('❌ DEBUG: Error in auth check:', err)
-        setError(err instanceof Error ? err.message : 'Unknown error')
-      } finally {
-        console.log('🏁 DEBUG: Setting loading to false')
-        setLoading(false)
-      }
-    }
-
-    checkAuth()
-  }, [])
+  const { user, loading, isAdmin, refreshAuth } = useAuth()
 
   if (loading) {
     return (
@@ -99,13 +17,7 @@ export default function DebugPage() {
     <div className="min-h-screen bg-black p-8">
       <div className="max-w-4xl mx-auto">
         <h1 className="text-3xl font-bold text-white mb-8">Authentication Debug</h1>
-        <p className="text-gray-400 mb-6">Last updated: {timestamp}</p>
-        
-        {error && (
-          <div className="bg-red-900 border border-red-700 text-white p-4 mb-6 rounded">
-            Error: {error}
-          </div>
-        )}
+        <p className="text-gray-400 mb-6">Last updated: {new Date().toISOString()}</p>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="bg-dark-800 p-6 rounded">
@@ -116,17 +28,28 @@ export default function DebugPage() {
           </div>
           
           <div className="bg-dark-800 p-6 rounded">
-            <h2 className="text-xl font-semibold text-white mb-4">Profile Information</h2>
-            <pre className="text-blue-400 text-sm overflow-auto">
-              {JSON.stringify(profile, null, 2)}
-            </pre>
+            <h2 className="text-xl font-semibold text-white mb-4">Auth Context Status</h2>
+            <div className="text-white">
+              <p>Loading: <span className={loading ? 'text-yellow-400' : 'text-green-400'}>
+                {loading ? 'Yes' : 'No'}
+              </span></p>
+              <p>User Found: <span className={user ? 'text-green-400' : 'text-red-400'}>
+                {user ? 'Yes' : 'No'}
+              </span></p>
+              <p>Is Admin: <span className={isAdmin ? 'text-green-400' : 'text-red-400'}>
+                {isAdmin ? 'Yes' : 'No'}
+              </span></p>
+              <p className="text-sm text-gray-400 mt-2">
+                Using persistent AuthContext
+              </p>
+            </div>
           </div>
           
           <div className="bg-dark-800 p-6 rounded">
             <h2 className="text-xl font-semibold text-white mb-4">Admin Status</h2>
             <div className="text-white">
-              <p>Is Admin: <span className={isAdminUser ? 'text-green-400' : 'text-red-400'}>
-                {isAdminUser === null ? 'Checking...' : isAdminUser ? 'Yes' : 'No'}
+              <p>Is Admin: <span className={isAdmin ? 'text-green-400' : 'text-red-400'}>
+                {isAdmin ? 'Yes' : 'No'}
               </span></p>
               <p className="text-sm text-gray-400 mt-2">
                 Database shows: ADMIN ACCESS GRANTED
@@ -138,14 +61,20 @@ export default function DebugPage() {
             <h2 className="text-xl font-semibold text-white mb-4">Actions</h2>
             <div className="space-y-2">
               <button 
-                onClick={() => window.location.href = '/admin/dashboard'}
+                onClick={refreshAuth}
                 className="btn-primary w-full"
+              >
+                Refresh Auth State
+              </button>
+              <button 
+                onClick={() => window.location.href = '/admin/dashboard'}
+                className="btn-secondary w-full"
               >
                 Go to Admin Dashboard
               </button>
               <button 
                 onClick={() => window.location.href = '/login'}
-                className="btn-secondary w-full"
+                className="btn-outline w-full"
               >
                 Go to Login
               </button>
