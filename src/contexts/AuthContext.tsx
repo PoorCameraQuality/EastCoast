@@ -92,20 +92,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     
     let mounted = true
 
-    const initializeAuth = async () => {
-      try {
-        await refreshAuth()
-        if (mounted) {
-          console.log('✅ AUTH CONTEXT: Initialization complete')
-        }
-      } catch (error) {
-        console.error('❌ AUTH CONTEXT: Initialization error:', error)
-      }
-    }
-
-    initializeAuth()
-
-    // Listen for auth state changes
+    // Listen for auth state changes FIRST
     const authStateChange = supabase?.auth.onAuthStateChange(
       async (event, session) => {
         console.log('🔄 AUTH CONTEXT: Auth state changed:', event, session?.user?.email)
@@ -126,11 +113,55 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         } else if (event === 'INITIAL_SESSION') {
           console.log('🔄 AUTH CONTEXT: Initial session detected')
           if (session?.user) {
+            console.log('✅ AUTH CONTEXT: Initial session has user, refreshing auth...')
             await refreshAuth()
+          } else {
+            console.log('❌ AUTH CONTEXT: Initial session has no user')
+            setUser(null)
+            setIsAdmin(false)
+            setLoading(false)
           }
         }
       }
     )
+
+    // Then initialize auth
+    const initializeAuth = async () => {
+      try {
+        // Wait a bit for the auth state change listener to be set up
+        await new Promise(resolve => setTimeout(resolve, 50))
+        
+        if (!mounted || !supabase) return
+        
+        // Try to get initial session
+        const { data: { session }, error } = await supabase.auth.getSession()
+        
+        if (error) {
+          console.log('❌ AUTH CONTEXT: Initial session error:', error)
+          setUser(null)
+          setIsAdmin(false)
+          setLoading(false)
+          return
+        }
+
+        if (session?.user) {
+          console.log('✅ AUTH CONTEXT: Initial session found, refreshing auth...')
+          await refreshAuth()
+        } else {
+          console.log('❌ AUTH CONTEXT: No initial session found')
+          setUser(null)
+          setIsAdmin(false)
+          setLoading(false)
+        }
+      } catch (error) {
+        console.error('❌ AUTH CONTEXT: Initialization error:', error)
+        setUser(null)
+        setIsAdmin(false)
+        setLoading(false)
+      }
+    }
+
+    initializeAuth()
 
     return () => {
       mounted = false
