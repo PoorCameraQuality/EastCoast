@@ -11,12 +11,6 @@ export async function middleware(request: NextRequest) {
     return res
   }
   
-  // TEMPORARY: Skip middleware for testing
-  if (request.nextUrl.pathname.startsWith('/admin')) {
-    console.log('🔒 MIDDLEWARE: TEMPORARILY BYPASSING for testing')
-    return res
-  }
-  
   try {
     const supabase = createServerClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
