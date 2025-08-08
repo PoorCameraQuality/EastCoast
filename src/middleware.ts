@@ -5,6 +5,11 @@ import { createServerClient } from '@supabase/ssr'
 export async function middleware(request: NextRequest) {
   const res = NextResponse.next()
   
+  // Skip middleware for login page to avoid redirect loops
+  if (request.nextUrl.pathname === '/login') {
+    return res
+  }
+  
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -36,20 +41,31 @@ export async function middleware(request: NextRequest) {
 
   // Protect admin routes
   if (request.nextUrl.pathname.startsWith('/admin')) {
+    console.log('Middleware: Checking admin access for', request.nextUrl.pathname)
+    
     if (!user) {
+      console.log('Middleware: No user found, redirecting to login')
       return NextResponse.redirect(new URL('/login', request.url))
     }
 
     // Check if user has admin role
-    const { data: profile } = await supabase
+    const { data: profile, error: profileError } = await supabase
       .from('profiles')
       .select('role')
       .eq('id', user.id)
       .single()
 
+    if (profileError) {
+      console.log('Middleware: Profile error:', profileError)
+      return NextResponse.redirect(new URL('/login', request.url))
+    }
+
     if (!profile || profile.role !== 'admin') {
+      console.log('Middleware: User not admin, redirecting to unauthorized')
       return NextResponse.redirect(new URL('/unauthorized', request.url))
     }
+
+    console.log('Middleware: Admin access granted')
   }
 
   return res

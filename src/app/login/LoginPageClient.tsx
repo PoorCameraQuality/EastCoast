@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
-import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 
 export default function LoginPageClient() {
@@ -11,7 +10,6 @@ export default function LoginPageClient() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
-  const router = useRouter()
 
   // Check if user is already logged in
   useEffect(() => {
@@ -28,7 +26,7 @@ export default function LoginPageClient() {
           .single()
 
         if (profile?.role === 'admin') {
-          router.push('/admin/dashboard')
+          window.location.href = '/admin/dashboard'
         } else {
           setError('Access denied. Admin privileges required.')
           await supabase.auth.signOut()
@@ -37,7 +35,7 @@ export default function LoginPageClient() {
     }
 
     checkAuth()
-  }, [router])
+  }, [])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -78,7 +76,7 @@ export default function LoginPageClient() {
           console.log('Admin access confirmed, redirecting...')
           setSuccess('Login successful! Redirecting to admin panel...')
           setTimeout(() => {
-            router.push('/admin/dashboard')
+            window.location.href = '/admin/dashboard'
           }, 1000)
         } else {
           console.log('User does not have admin role')
