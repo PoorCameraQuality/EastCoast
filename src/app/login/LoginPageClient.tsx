@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
@@ -10,12 +10,40 @@ export default function LoginPageClient() {
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [success, setSuccess] = useState('')
   const router = useRouter()
+
+  // Check if user is already logged in
+  useEffect(() => {
+    const checkAuth = async () => {
+      if (!supabase) return
+      
+      const { data: { user } } = await supabase.auth.getUser()
+      if (user) {
+        // Check if user has admin role
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('role')
+          .eq('id', user.id)
+          .single()
+
+        if (profile?.role === 'admin') {
+          router.push('/admin/dashboard')
+        } else {
+          setError('Access denied. Admin privileges required.')
+          await supabase.auth.signOut()
+        }
+      }
+    }
+
+    checkAuth()
+  }, [router])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
     setError('')
+    setSuccess('')
 
     if (!supabase) {
       setError('Authentication is not configured. Please contact the administrator.')
@@ -30,24 +58,37 @@ export default function LoginPageClient() {
       })
 
       if (error) {
+        console.error('Login error:', error)
         setError(error.message)
       } else if (data.user) {
+        console.log('User signed in:', data.user.email)
+        
         // Check if user has admin role
-        const { data: profile } = await supabase
+        const { data: profile, error: profileError } = await supabase
           .from('profiles')
           .select('role')
           .eq('id', data.user.id)
           .single()
 
-        if (profile?.role === 'admin') {
-          router.push('/admin/dashboard')
+        if (profileError) {
+          console.error('Profile error:', profileError)
+          setError('Error checking user permissions. Please try again.')
+          await supabase.auth.signOut()
+        } else if (profile?.role === 'admin') {
+          console.log('Admin access confirmed, redirecting...')
+          setSuccess('Login successful! Redirecting to admin panel...')
+          setTimeout(() => {
+            router.push('/admin/dashboard')
+          }, 1000)
         } else {
+          console.log('User does not have admin role')
           setError('Access denied. Admin privileges required.')
           await supabase.auth.signOut()
         }
       }
     } catch (err) {
-      setError('An unexpected error occurred')
+      console.error('Unexpected error:', err)
+      setError('An unexpected error occurred. Please try again.')
     } finally {
       setLoading(false)
     }
@@ -76,6 +117,12 @@ export default function LoginPageClient() {
               </div>
             )}
 
+            {success && (
+              <div className="bg-green-900/20 border border-green-600 text-green-300 px-4 py-3 rounded-none">
+                {success}
+              </div>
+            )}
+
             <div>
               <label htmlFor="email" className="block text-white font-medium mb-2">
                 Email Address
@@ -88,6 +135,7 @@ export default function LoginPageClient() {
                 required
                 className="w-full px-4 py-3 border border-dark-600 rounded-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-dark-800 text-white"
                 placeholder="admin@example.com"
+                autoComplete="email"
               />
             </div>
 
@@ -103,6 +151,7 @@ export default function LoginPageClient() {
                 required
                 className="w-full px-4 py-3 border border-dark-600 rounded-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-dark-800 text-white"
                 placeholder="••••••••"
+                autoComplete="current-password"
               />
             </div>
 

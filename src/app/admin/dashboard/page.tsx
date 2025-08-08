@@ -10,23 +10,29 @@ export const metadata: Metadata = {
 }
 
 export default async function AdminDashboard() {
-  const user = await getCurrentUser()
-  
-  // Redirect if not admin
-  if (!user || user.role !== 'admin') {
-    redirect('/')
-  }
+  try {
+    const user = await getCurrentUser()
+    
+    // Redirect if not admin
+    if (!user || user.role !== 'admin') {
+      console.log('User not admin, redirecting to login')
+      redirect('/login')
+    }
 
-  return (
-    <div className="min-h-screen bg-dark-900">
-      <div className="container mx-auto px-4 py-8">
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold text-white mb-2">Admin Dashboard</h1>
-          <p className="text-gray-400">Welcome back, {user.name || user.email}</p>
+    return (
+      <div className="min-h-screen bg-dark-900">
+        <div className="container mx-auto px-4 py-8">
+          <div className="mb-8">
+            <h1 className="text-4xl font-bold text-white mb-2">Admin Dashboard</h1>
+            <p className="text-gray-400">Welcome back, {user.name || user.email}</p>
+          </div>
+          
+          <AdminDashboardClient />
         </div>
-        
-        <AdminDashboardClient />
       </div>
-    </div>
-  )
+    )
+  } catch (error) {
+    console.error('Error in admin dashboard:', error)
+    redirect('/login')
+  }
 }
