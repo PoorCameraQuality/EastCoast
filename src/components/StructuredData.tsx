@@ -397,6 +397,83 @@ export function EducationStructuredData() {
   )
 }
 
+// New component for homepage structured data
+export function HomepageStructuredData() {
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "East Coast Kink Events - Discover BDSM Events & Dungeons",
+    "description": "Find kink events, BDSM dungeons, and educational resources across the East Coast. Connect with workshops, conferences, and community events in a safe, inclusive environment.",
+    "url": "https://eastcoastkinkevents.com",
+    "mainEntity": {
+      "@type": "ItemList",
+      "name": "Featured Kink Events",
+      "description": "Upcoming kink events across the East Coast",
+      "numberOfItems": 5,
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "item": {
+            "@type": "Service",
+            "name": "Event Discovery",
+            "description": "Browse and discover kink events across the East Coast"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "item": {
+            "@type": "Service",
+            "name": "Dungeon Directory",
+            "description": "Find BDSM dungeons and play spaces"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "item": {
+            "@type": "Service",
+            "name": "Educational Resources",
+            "description": "Learn about kink safety and community guidelines"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 4,
+          "item": {
+            "@type": "Service",
+            "name": "Community Connection",
+            "description": "Connect with the kink community through Discord"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 5,
+          "item": {
+            "@type": "Service",
+            "name": "Event Submission",
+            "description": "Submit your event or dungeon for listing"
+          }
+        }
+      ]
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "East Coast Kink Events",
+      "url": "https://eastcoastkinkevents.com"
+    }
+  }
+
+  return (
+    <Script
+      id="homepage-structured-data"
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+    />
+  )
+}
+
 // New component for individual article structured data
 interface ArticleStructuredDataProps {
   article: {

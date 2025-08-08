@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     default: 'East Coast Kink Events - Discover BDSM Events & Dungeons',
     template: '%s | East Coast Kink Events'
   },
-  description: 'Discover and connect with kink events, BDSM dungeons, and educational resources across the East Coast. Find workshops, conferences, and community events in a safe, inclusive environment.',
+  description: 'Find kink events, BDSM dungeons, and educational resources across the East Coast. Connect with workshops, conferences, and community events in a safe, inclusive environment.',
   keywords: [
     'kink events',
     'BDSM events', 
@@ -45,7 +45,7 @@ export const metadata: Metadata = {
     url: 'https://eastcoastkinkevents.com',
     siteName: 'East Coast Kink Events',
     title: 'East Coast Kink Events - Discover BDSM Events & Dungeons',
-    description: 'Discover and connect with kink events, BDSM dungeons, and educational resources across the East Coast. Find workshops, conferences, and community events in a safe, inclusive environment.',
+    description: 'Find kink events, BDSM dungeons, and educational resources across the East Coast. Connect with workshops, conferences, and community events in a safe, inclusive environment.',
     images: [
       {
         url: 'https://eastcoastkinkevents.com/og-image.png',
@@ -58,13 +58,14 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'East Coast Kink Events - Discover BDSM Events & Dungeons',
-    description: 'Discover and connect with kink events, BDSM dungeons, and educational resources across the East Coast.',
+    description: 'Find kink events, BDSM dungeons, and educational resources across the East Coast.',
     images: ['https://eastcoastkinkevents.com/og-image.png'],
     creator: '@eastcoastkinkevents',
   },
   robots: {
     index: true,
     follow: true,
+    nocache: false,
     googleBot: {
       index: true,
       follow: true,
@@ -81,6 +82,8 @@ export const metadata: Metadata = {
 export const viewport = {
   width: 'device-width',
   initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
 };
 
 export default function RootLayout({
@@ -89,8 +92,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" dir="ltr">
       <head>
+        <meta charSet="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="format-detection" content="telephone=no" />
+        <meta name="theme-color" content="#1f2937" />
+        <meta name="color-scheme" content="dark light" />
         <link rel="preconnect" href="https://www.google-analytics.com"/>
         <link rel="preconnect" href="https://www.googletagmanager.com"/>
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous"/>

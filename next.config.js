@@ -4,6 +4,7 @@ const nextConfig = {
   images: {
     unoptimized: true
   },
+
   env: {
     DISABLE_VERCEL_FEEDBACK: 'true'
   },

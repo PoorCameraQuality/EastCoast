@@ -6,7 +6,7 @@ import { useGoogleAnalytics } from '@/components/GoogleAnalytics'
 export default function Hero() {
   const { trackEvent } = useGoogleAnalytics()
   return (
-    <section className="bg-gradient-dark border-b border-dark-700">
+    <section className="bg-gradient-dark border-b border-dark-700" role="banner" aria-label="Hero section">
       <div className="container-custom section-padding">
         <div className="max-w-5xl mx-auto text-center">
           <h1 className="text-5xl md:text-7xl font-serif font-bold text-white mb-8 leading-tight">
