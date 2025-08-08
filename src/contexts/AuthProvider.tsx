@@ -75,36 +75,36 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     })();
 
     // Subscribe to auth changes
-    const { data: sub } = supabase.auth.onAuthStateChange(async (event, payload) => {
-      const session = payload?.session ?? null;
+    const { data: sub } = supabase.auth.onAuthStateChange(
+      async (event, session) => {
+        // IMPORTANT: handle INITIAL_SESSION, SIGNED_IN, SIGNED_OUT, TOKEN_REFRESHED, etc.
+        // For INITIAL_SESSION, re-query session to ensure stable state.
+        if (event === 'INITIAL_SESSION') {
+          const { data } = await supabase.auth.getSession();
+          setSession(data?.session ?? null);
+          setUser(data?.session?.user ?? null);
+          await fetchIsAdmin(data?.session?.user ?? null);
+          setLoading(false);
+          return;
+        }
 
-      // IMPORTANT: handle INITIAL_SESSION, SIGNED_IN, SIGNED_OUT, TOKEN_REFRESHED, etc.
-      // For INITIAL_SESSION, re-query session to ensure stable state.
-      if (event === 'INITIAL_SESSION') {
-        const { data } = await supabase.auth.getSession();
-        setSession(data?.session ?? null);
-        setUser(data?.session?.user ?? null);
-        await fetchIsAdmin(data?.session?.user ?? null);
-        setLoading(false);
-        return;
+        if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED' || event === 'USER_UPDATED') {
+          setSession(session);
+          setUser(session?.user ?? null);
+          await fetchIsAdmin(session?.user ?? null);
+        } else if (event === 'SIGNED_OUT' || event === 'USER_DELETED') {
+          setSession(null);
+          setUser(null);
+          setIsAdmin(false);
+        } else {
+          // fallback: always re-check session
+          const { data } = await supabase.auth.getSession();
+          setSession(data?.session ?? null);
+          setUser(data?.session?.user ?? null);
+          await fetchIsAdmin(data?.session?.user ?? null);
+        }
       }
-
-      if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED' || event === 'USER_UPDATED') {
-        setSession(session);
-        setUser(session?.user ?? null);
-        await fetchIsAdmin(session?.user ?? null);
-      } else if (event === 'SIGNED_OUT' || event === 'USER_DELETED') {
-        setSession(null);
-        setUser(null);
-        setIsAdmin(false);
-      } else {
-        // fallback: always re-check session
-        const { data } = await supabase.auth.getSession();
-        setSession(data?.session ?? null);
-        setUser(data?.session?.user ?? null);
-        await fetchIsAdmin(data?.session?.user ?? null);
-      }
-    });
+    );
 
     return () => {
       isMounted = false;
