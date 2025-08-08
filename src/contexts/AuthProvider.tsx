@@ -92,7 +92,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           setSession(session);
           setUser(session?.user ?? null);
           await fetchIsAdmin(session?.user ?? null);
-        } else if (event === 'SIGNED_OUT' || event === 'USER_DELETED') {
+        } else if (event === 'SIGNED_OUT') {
           setSession(null);
           setUser(null);
           setIsAdmin(false);
