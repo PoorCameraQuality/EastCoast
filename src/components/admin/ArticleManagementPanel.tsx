@@ -38,6 +38,7 @@ export default function ArticleManagementPanel() {
   const [activeTab, setActiveTab] = useState<'articles' | 'moderation'>('articles')
   const [selectedArticle, setSelectedArticle] = useState<Article | null>(null)
   const [isEditing, setIsEditing] = useState(false)
+  const [isCreating, setIsCreating] = useState(false)
   const [isAdminUser, setIsAdminUser] = useState(false)
   const [currentUser, setCurrentUser] = useState<any>(null)
   const [editForm, setEditForm] = useState({
@@ -51,6 +52,17 @@ export default function ArticleManagementPanel() {
     tags: '',
     featured: false,
     notes: ''
+  })
+  const [createForm, setCreateForm] = useState({
+    title: '',
+    excerpt: '',
+    content: '',
+    author_name: '',
+    author_credentials: '',
+    author_bio: '',
+    category: '',
+    tags: '',
+    featured: false
   })
   const [isSaving, setIsSaving] = useState(false)
   const [saveMessage, setSaveMessage] = useState('')
@@ -119,6 +131,136 @@ export default function ArticleManagementPanel() {
     } catch (error) {
       console.error('Error:', error)
     }
+  }
+
+  const handleCreateNew = () => {
+    setCreateForm({
+      title: '',
+      excerpt: '',
+      content: '',
+      author_name: '',
+      author_credentials: '',
+      author_bio: '',
+      category: '',
+      tags: '',
+      featured: false
+    })
+    setIsCreating(true)
+  }
+
+  const handleSaveCreate = async () => {
+    // Check if Supabase is configured
+    if (!supabase) {
+      setSaveStatus('error')
+      setSaveMessage('Database is not configured')
+      setTimeout(() => {
+        setSaveStatus('idle')
+        setSaveMessage('')
+      }, 3000)
+      return
+    }
+
+    // Validate required fields
+    if (!createForm.title || !createForm.excerpt || !createForm.content || !createForm.author_name || !createForm.category) {
+      setSaveStatus('error')
+      setSaveMessage('Please fill in all required fields')
+      setTimeout(() => {
+        setSaveStatus('idle')
+        setSaveMessage('')
+      }, 3000)
+      return
+    }
+
+    // Set saving state
+    setIsSaving(true)
+    setSaveStatus('saving')
+    setSaveMessage('Creating article...')
+
+    try {
+      // Generate a unique ID for the article
+      const articleId = createForm.title.toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/(^-|-$)/g, '')
+        .substring(0, 50)
+
+      // Calculate read time (rough estimate: 200 words per minute)
+      const wordCount = createForm.content.split(/\s+/).filter(word => word.length > 0).length
+      const readTime = Math.ceil(wordCount / 200)
+
+      // Create the article
+      const { error: createError } = await supabase
+        .from('articles')
+        .insert([{
+          id: articleId,
+          title: createForm.title,
+          excerpt: createForm.excerpt,
+          content: createForm.content,
+          author_name: createForm.author_name,
+          author_credentials: createForm.author_credentials,
+          author_bio: createForm.author_bio,
+          category: createForm.category,
+          tags: createForm.tags.split(',').map(tag => tag.trim()).filter(tag => tag),
+          featured: createForm.featured,
+          status: 'published',
+          read_time: `${readTime} min read`
+        }])
+
+      if (createError) {
+        console.error('Error creating article:', createError)
+        setSaveStatus('error')
+        setSaveMessage('Error creating article')
+        setTimeout(() => {
+          setSaveStatus('idle')
+          setSaveMessage('')
+        }, 3000)
+        return
+      }
+
+      // Log the creation
+      const { error: logError } = await supabase
+        .from('moderation_logs')
+        .insert([{
+          action: 'create',
+          article_title: createForm.title,
+          article_id: articleId,
+          admin_name: currentUser?.name || currentUser?.email || 'Admin',
+          notes: 'Article created by admin'
+        }])
+
+      if (logError) {
+        console.error('Error logging creation:', logError)
+      }
+
+      // Refresh data
+      await fetchArticles()
+      await fetchModerationLogs()
+      
+      // Show success message
+      setSaveStatus('success')
+      setSaveMessage('Article created successfully!')
+      
+      // Reset form after a delay
+      setTimeout(() => {
+        setIsCreating(false)
+        setSaveStatus('idle')
+        setSaveMessage('')
+      }, 2000)
+      
+    } catch (error) {
+      console.error('Error:', error)
+      setSaveStatus('error')
+      setSaveMessage('Error creating article')
+      setTimeout(() => {
+        setSaveStatus('idle')
+        setSaveMessage('')
+      }, 3000)
+    } finally {
+      setIsSaving(false)
+    }
+  }
+
+  const handleCancelCreate = () => {
+    setIsCreating(false)
   }
 
   const handleEdit = (article: Article) => {
@@ -305,7 +447,7 @@ export default function ArticleManagementPanel() {
     <div className="w-full">
       <div className="mb-8">
         <h1 className="text-4xl md:text-5xl font-serif font-bold text-white mb-6 text-center">Manage Articles</h1>
-        <p className="text-lg text-subtle max-w-3xl mb-8 text-center mx-auto">Edit and delete published articles with full moderation logging.</p>
+        <p className="text-lg text-subtle max-w-3xl mb-8 text-center mx-auto">Create, edit and delete published articles with full moderation logging.</p>
         
         {/* Tab Navigation */}
         <div className="flex justify-center mb-8">
@@ -337,9 +479,20 @@ export default function ArticleManagementPanel() {
       {/* Articles Tab */}
       {activeTab === 'articles' && (
         <div>
+          {/* Create New Article Button */}
+          <div className="mb-6 text-center">
+            <button
+              onClick={handleCreateNew}
+              className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium"
+            >
+              ✨ Create New Article
+            </button>
+          </div>
+
           {articles.length === 0 ? (
             <div className="text-center py-12">
               <p className="text-lg text-subtle">No published articles found.</p>
+              <p className="text-sm text-gray-500 mt-2">Click "Create New Article" to add your first article.</p>
             </div>
           ) : (
             <div className="grid gap-6">
@@ -395,7 +548,9 @@ export default function ArticleManagementPanel() {
                     <div>
                       <div className="flex items-center gap-2 mb-2">
                         <span className={`px-2 py-1 rounded text-xs font-medium ${
-                          log.action === 'delete' ? 'bg-red-500 text-white' : 'bg-blue-500 text-white'
+                          log.action === 'delete' ? 'bg-red-500 text-white' : 
+                          log.action === 'create' ? 'bg-green-500 text-white' :
+                          'bg-blue-500 text-white'
                         }`}>
                           {log.action.toUpperCase()}
                         </span>
@@ -412,6 +567,181 @@ export default function ArticleManagementPanel() {
               ))}
             </div>
           )}
+        </div>
+      )}
+
+      {/* Create New Article Modal */}
+      {isCreating && (
+        <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4">
+          <div className="bg-dark-800 border border-dark-600 rounded-lg p-6 max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+            <h2 className="text-2xl font-bold text-white mb-6">Create New Article</h2>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+              <div>
+                <label className="block text-white text-sm font-medium mb-2">Title *</label>
+                <input
+                  type="text"
+                  value={createForm.title}
+                  onChange={(e) => setCreateForm({ ...createForm, title: e.target.value })}
+                  className="w-full px-4 py-2 bg-dark-700 text-white border border-dark-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                  required
+                />
+              </div>
+              
+              <div>
+                <label className="block text-white text-sm font-medium mb-2">Category *</label>
+                <select
+                  value={createForm.category}
+                  onChange={(e) => setCreateForm({ ...createForm, category: e.target.value })}
+                  className="w-full px-4 py-2 bg-dark-700 text-white border border-dark-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                  required
+                >
+                  <option value="">Select Category</option>
+                  <option value="Safety">Safety</option>
+                  <option value="Techniques">Techniques</option>
+                  <option value="Community">Community</option>
+                  <option value="Resources">Resources</option>
+                </select>
+              </div>
+            </div>
+
+            <div className="mb-4">
+              <label className="block text-white text-sm font-medium mb-2">Excerpt *</label>
+              <textarea
+                value={createForm.excerpt}
+                onChange={(e) => setCreateForm({ ...createForm, excerpt: e.target.value })}
+                className="w-full px-4 py-2 bg-dark-700 text-white border border-dark-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                rows={3}
+                required
+              />
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+              <div>
+                <label className="block text-white text-sm font-medium mb-2">Author Name *</label>
+                <input
+                  type="text"
+                  value={createForm.author_name}
+                  onChange={(e) => setCreateForm({ ...createForm, author_name: e.target.value })}
+                  className="w-full px-4 py-2 bg-dark-700 text-white border border-dark-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                  required
+                />
+              </div>
+              
+              <div>
+                <label className="block text-white text-sm font-medium mb-2">Author Credentials</label>
+                <input
+                  type="text"
+                  value={createForm.author_credentials}
+                  onChange={(e) => setCreateForm({ ...createForm, author_credentials: e.target.value })}
+                  className="w-full px-4 py-2 bg-dark-700 text-white border border-dark-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                />
+              </div>
+            </div>
+
+            <div className="mb-4">
+              <label className="block text-white text-sm font-medium mb-2">Author Bio</label>
+              <textarea
+                value={createForm.author_bio}
+                onChange={(e) => setCreateForm({ ...createForm, author_bio: e.target.value })}
+                className="w-full px-4 py-2 bg-dark-700 text-white border border-dark-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                rows={2}
+              />
+            </div>
+
+            <div className="mb-4">
+              <label className="block text-white text-sm font-medium mb-2">Tags (comma-separated)</label>
+              <input
+                type="text"
+                value={createForm.tags}
+                onChange={(e) => setCreateForm({ ...createForm, tags: e.target.value })}
+                className="w-full px-4 py-2 bg-dark-700 text-white border border-dark-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                placeholder="safety, consent, negotiation"
+              />
+            </div>
+
+            <div className="mb-4">
+              <label className="flex items-center">
+                <input
+                  type="checkbox"
+                  checked={createForm.featured}
+                  onChange={(e) => setCreateForm({ ...createForm, featured: e.target.checked })}
+                  className="mr-2"
+                />
+                <span className="text-white text-sm">Featured Article</span>
+              </label>
+            </div>
+
+            <div className="mb-6">
+              <label className="block text-white text-sm font-medium mb-2">Content *</label>
+              <RichTextEditor
+                content={createForm.content}
+                onChange={(content) => setCreateForm({ ...createForm, content })}
+                placeholder="Write your article content..."
+              />
+            </div>
+
+            {/* Status Message */}
+            {saveMessage && (
+              <div className={`mb-4 p-3 rounded-lg ${
+                saveStatus === 'saving' ? 'bg-blue-600 text-white' :
+                saveStatus === 'success' ? 'bg-green-600 text-white' :
+                saveStatus === 'error' ? 'bg-red-600 text-white' :
+                'bg-gray-600 text-white'
+              }`}>
+                <div className="flex items-center">
+                  {saveStatus === 'saving' && (
+                    <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                  )}
+                  {saveStatus === 'success' && (
+                    <svg className="mr-3 h-5 w-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                    </svg>
+                  )}
+                  {saveStatus === 'error' && (
+                    <svg className="mr-3 h-5 w-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                    </svg>
+                  )}
+                  <span>{saveMessage}</span>
+                </div>
+              </div>
+            )}
+
+            <div className="flex justify-end gap-4">
+              <button
+                onClick={handleCancelCreate}
+                disabled={isSaving}
+                className="px-6 py-2 bg-gray-600 text-white rounded hover:bg-gray-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleSaveCreate}
+                disabled={isSaving}
+                className={`px-6 py-2 rounded transition-colors flex items-center ${
+                  isSaving 
+                    ? 'bg-gray-500 text-white cursor-not-allowed' 
+                    : 'bg-green-600 text-white hover:bg-green-700'
+                }`}
+              >
+                {isSaving ? (
+                  <>
+                    <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Creating...
+                  </>
+                ) : (
+                  'Create Article'
+                )}
+              </button>
+            </div>
+          </div>
         </div>
       )}
 
