@@ -34,24 +34,38 @@ export default function TestAuthPage() {
         console.error('🧪 TEST AUTH: User test error:', error)
         setAuthInfo({ user: null, error })
       }
+    }
 
-      // Test 3: Get profile
-      if (authInfo?.user) {
-        try {
-          const { data: profile, error } = await supabase
-            .from('profiles')
-            .select('*')
-            .eq('id', authInfo.user.id)
-            .single()
-          setProfileInfo({ profile, error })
-          console.log('🧪 TEST AUTH: Profile test:', { profile, error })
-        } catch (error) {
-          console.error('🧪 TEST AUTH: Profile test error:', error)
-          setProfileInfo({ profile: null, error })
-        }
+    runTests()
+  }, [])
+
+  // Separate useEffect for profile test to avoid dependency issues
+  useEffect(() => {
+    const runProfileTest = async () => {
+      if (!authInfo?.user || !supabase) {
+        return
       }
 
-      // Test 4: Auth functions
+      try {
+        const { data: profile, error } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('id', authInfo.user.id)
+          .single()
+        setProfileInfo({ profile, error })
+        console.log('🧪 TEST AUTH: Profile test:', { profile, error })
+      } catch (error) {
+        console.error('🧪 TEST AUTH: Profile test error:', error)
+        setProfileInfo({ profile: null, error })
+      }
+    }
+
+    runProfileTest()
+  }, [authInfo?.user])
+
+  // Separate useEffect for auth functions test
+  useEffect(() => {
+    const runAuthFunctionsTest = async () => {
       try {
         const isAuth = await isAuthenticated()
         const currentUser = await getCurrentUser()
@@ -62,7 +76,7 @@ export default function TestAuthPage() {
       }
     }
 
-    runTests()
+    runAuthFunctionsTest()
   }, [])
 
   return (
