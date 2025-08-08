@@ -127,7 +127,7 @@ export default function LoginPageClient() {
           setTimeout(() => {
             console.log('Executing redirect to /admin/dashboard')
             window.location.href = '/admin/dashboard'
-          }, 1500)
+          }, 1000)
         } else {
           console.log('User does not have admin role:', profile?.role)
           setDebug(`User role: ${profile?.role || 'none'}`)

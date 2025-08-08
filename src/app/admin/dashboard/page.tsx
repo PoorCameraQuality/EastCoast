@@ -8,36 +8,46 @@ export default function AdminDashboard() {
   const [user, setUser] = useState<any>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+  const [debug, setDebug] = useState('')
 
   useEffect(() => {
     const checkAuth = async () => {
       try {
         setLoading(true)
+        setDebug('Starting auth check...')
         
         if (!supabase) {
           setError('Supabase not configured')
+          setDebug('Supabase not configured')
           return
         }
 
+        setDebug('Checking current user...')
         // Check current user
         const currentUser = await getCurrentUser()
         
         if (!currentUser) {
           setError('Not authenticated')
+          setDebug('No current user found')
           return
         }
 
+        setDebug(`User found: ${currentUser.email}, checking admin status...`)
         // Check if admin
         const adminStatus = await isAdmin()
         
         if (!adminStatus) {
           setError('Admin access required')
+          setDebug(`User is not admin. Role: ${currentUser.role}`)
           return
         }
 
+        setDebug('Admin access confirmed!')
         setUser(currentUser)
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Unknown error')
+        const errorMsg = err instanceof Error ? err.message : 'Unknown error'
+        setError(errorMsg)
+        setDebug(`Error: ${errorMsg}`)
       } finally {
         setLoading(false)
       }
@@ -49,7 +59,12 @@ export default function AdminDashboard() {
   if (loading) {
     return (
       <div className="min-h-screen bg-dark-900 flex items-center justify-center">
-        <div className="text-white">Loading admin dashboard...</div>
+        <div className="text-center">
+          <div className="text-white mb-4">Loading admin dashboard...</div>
+          {debug && (
+            <div className="text-blue-400 text-sm">{debug}</div>
+          )}
+        </div>
       </div>
     )
   }
@@ -59,6 +74,9 @@ export default function AdminDashboard() {
       <div className="min-h-screen bg-dark-900 flex items-center justify-center">
         <div className="text-center">
           <div className="text-red-400 text-xl mb-4">{error}</div>
+          {debug && (
+            <div className="text-blue-400 text-sm mb-4">{debug}</div>
+          )}
           <button 
             onClick={() => window.location.href = '/login'}
             className="btn-primary"
@@ -76,6 +94,9 @@ export default function AdminDashboard() {
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-white mb-2">Admin Dashboard</h1>
           <p className="text-gray-400">Welcome back, {user?.name || user?.email}</p>
+          {debug && (
+            <div className="text-blue-400 text-sm mt-2">{debug}</div>
+          )}
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

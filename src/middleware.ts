@@ -65,7 +65,7 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(new URL('/unauthorized', request.url))
     }
 
-    console.log('Middleware: Admin access granted')
+    console.log('Middleware: Admin access granted for user:', user.email, 'role:', profile.role)
   }
 
   return res
