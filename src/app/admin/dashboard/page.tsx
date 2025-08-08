@@ -1,6 +1,6 @@
 'use client'
 
-import { useAuth } from '@/contexts/AuthContext'
+import { useAuth } from '@/contexts/AuthProvider'
 import AdminProtected from '@/components/AdminProtected'
 
 export default function AdminDashboard() {
@@ -68,7 +68,7 @@ export default function AdminDashboard() {
               <h2 className="text-xl font-semibold text-white mb-4">User Info</h2>
               <div className="text-gray-300">
                 <p><strong>Email:</strong> {user?.email}</p>
-                <p><strong>Role:</strong> <span className="text-green-400">{user?.role}</span></p>
+                <p><strong>Role:</strong> <span className="text-green-400">{isAdmin ? 'admin' : 'user'}</span></p>
                 <p><strong>ID:</strong> {user?.id}</p>
               </div>
             </div>
