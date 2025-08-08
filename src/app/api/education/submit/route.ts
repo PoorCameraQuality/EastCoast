@@ -1,6 +1,52 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { supabase } from '@/lib/supabase'
 
+// Simple email function using fetch to a webhook or email service
+async function sendEmailNotification(subject: string, content: string) {
+  try {
+    // Option 1: Use a webhook service like Zapier or Make.com
+    const webhookUrl = process.env.EMAIL_WEBHOOK_URL
+    
+    if (webhookUrl) {
+      await fetch(webhookUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          to: 'admin@eastcoastkinkevents.com', // This forwards to sheldonkinneymmo.tm@gmail.com
+          subject: subject,
+          content: content,
+          type: 'article_submission'
+        })
+      })
+    }
+    
+    // Option 2: Use Resend (if configured)
+    const resendApiKey = process.env.RESEND_API_KEY
+    if (resendApiKey) {
+      await fetch('https://api.resend.com/emails', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${resendApiKey}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          from: 'noreply@eastcoastkinkevents.com',
+          to: 'admin@eastcoastkinkevents.com', // This forwards to sheldonkinneymmo.tm@gmail.com
+          subject: subject,
+          html: content
+        })
+      })
+    }
+    
+    console.log('Email notification sent for article submission')
+  } catch (error) {
+    console.error('Failed to send email notification:', error)
+    // Don't fail the request if email fails
+  }
+}
+
 export async function POST(request: NextRequest) {
   try {
     // Check if Supabase is configured
@@ -88,6 +134,44 @@ export async function POST(request: NextRequest) {
       wordCount,
       timestamp: new Date().toISOString()
     })
+    
+    // Send email notification
+    const emailSubject = `New Article Submission: ${body.articleTitle}`
+    const emailContent = `
+      <h2>New Article Submission</h2>
+      <p><strong>Title:</strong> ${body.articleTitle}</p>
+      <p><strong>Author:</strong> ${body.authorName}</p>
+      <p><strong>Author Email:</strong> ${body.authorEmail}</p>
+      <p><strong>Category:</strong> ${body.articleCategory}</p>
+      <p><strong>Word Count:</strong> ${wordCount}</p>
+      
+      <h3>Author Bio:</h3>
+      <div style="white-space: pre-wrap; background: #f5f5f5; padding: 15px; border-radius: 5px; margin: 10px 0;">
+        ${body.authorBio}
+      </div>
+      
+      <h3>Article Excerpt:</h3>
+      <div style="white-space: pre-wrap; background: #f5f5f5; padding: 15px; border-radius: 5px; margin: 10px 0;">
+        ${body.articleExcerpt}
+      </div>
+      
+      <h3>Article Content:</h3>
+      <div style="white-space: pre-wrap; background: #f5f5f5; padding: 15px; border-radius: 5px; margin: 10px 0; max-height: 400px; overflow-y: auto;">
+        ${body.articleContent}
+      </div>
+      
+      ${body.authorCredentials ? `<p><strong>Author Credentials:</strong> ${body.authorCredentials}</p>` : ''}
+      ${body.articleTags ? `<p><strong>Tags:</strong> ${body.articleTags}</p>` : ''}
+      ${body.contactMethod ? `<p><strong>Preferred Contact Method:</strong> ${body.contactMethod}</p>` : ''}
+      
+      <p><strong>Submission ID:</strong> ${data[0].id}</p>
+      <p><strong>Timestamp:</strong> ${new Date().toLocaleString()}</p>
+      
+      <hr>
+      <p><em>This is an automated notification from the East Coast Kink Events article submission form.</em></p>
+    `
+
+    await sendEmailNotification(emailSubject, emailContent)
     
     return NextResponse.json(
       { 
