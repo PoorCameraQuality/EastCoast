@@ -10,27 +10,66 @@ export default function LoginPageClient() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
+  const [debug, setDebug] = useState('')
 
   // Check if user is already logged in
   useEffect(() => {
     const checkAuth = async () => {
-      if (!supabase) return
+      console.log('Checking auth on page load...')
+      setDebug('Checking auth...')
       
-      const { data: { user } } = await supabase.auth.getUser()
+      if (!supabase) {
+        console.log('No Supabase client')
+        setDebug('No Supabase client')
+        return
+      }
+      
+      const { data: { user }, error } = await supabase.auth.getUser()
+      console.log('Auth check result:', { user: user?.email, error })
+      
+      if (error) {
+        console.log('Auth error:', error)
+        setDebug(`Auth error: ${error.message}`)
+        return
+      }
+      
       if (user) {
+        console.log('User found:', user.email)
+        setDebug(`User found: ${user.email}`)
+        
         // Check if user has admin role
-        const { data: profile } = await supabase
+        const { data: profile, error: profileError } = await supabase
           .from('profiles')
           .select('role')
           .eq('id', user.id)
           .single()
 
-        if (profile?.role === 'admin') {
-          window.location.href = '/admin/dashboard'
+        console.log('Profile check result:', { profile, profileError })
+        
+        if (profileError) {
+          console.log('Profile error:', profileError)
+          setDebug(`Profile error: ${profileError.message}`)
+          setError('Error checking user permissions. Please try again.')
+          await supabase.auth.signOut()
+        } else if (profile?.role === 'admin') {
+          console.log('Admin access confirmed, redirecting...')
+          setDebug('Admin access confirmed, redirecting...')
+          setSuccess('Login successful! Redirecting to admin panel...')
+          
+          // Force redirect after a short delay
+          setTimeout(() => {
+            console.log('Executing redirect to /admin/dashboard')
+            window.location.href = '/admin/dashboard'
+          }, 1500)
         } else {
+          console.log('User does not have admin role:', profile?.role)
+          setDebug(`User role: ${profile?.role || 'none'}`)
           setError('Access denied. Admin privileges required.')
           await supabase.auth.signOut()
         }
+      } else {
+        console.log('No user found')
+        setDebug('No user found')
       }
     }
 
@@ -42,6 +81,7 @@ export default function LoginPageClient() {
     setLoading(true)
     setError('')
     setSuccess('')
+    setDebug('')
 
     if (!supabase) {
       setError('Authentication is not configured. Please contact the administrator.')
@@ -50,6 +90,9 @@ export default function LoginPageClient() {
     }
 
     try {
+      console.log('Attempting login...')
+      setDebug('Attempting login...')
+      
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password
@@ -58,8 +101,10 @@ export default function LoginPageClient() {
       if (error) {
         console.error('Login error:', error)
         setError(error.message)
+        setDebug(`Login error: ${error.message}`)
       } else if (data.user) {
         console.log('User signed in:', data.user.email)
+        setDebug(`User signed in: ${data.user.email}`)
         
         // Check if user has admin role
         const { data: profile, error: profileError } = await supabase
@@ -71,15 +116,21 @@ export default function LoginPageClient() {
         if (profileError) {
           console.error('Profile error:', profileError)
           setError('Error checking user permissions. Please try again.')
+          setDebug(`Profile error: ${profileError.message}`)
           await supabase.auth.signOut()
         } else if (profile?.role === 'admin') {
           console.log('Admin access confirmed, redirecting...')
+          setDebug('Admin access confirmed, redirecting...')
           setSuccess('Login successful! Redirecting to admin panel...')
+          
+          // Force redirect after a short delay
           setTimeout(() => {
+            console.log('Executing redirect to /admin/dashboard')
             window.location.href = '/admin/dashboard'
-          }, 1000)
+          }, 1500)
         } else {
-          console.log('User does not have admin role')
+          console.log('User does not have admin role:', profile?.role)
+          setDebug(`User role: ${profile?.role || 'none'}`)
           setError('Access denied. Admin privileges required.')
           await supabase.auth.signOut()
         }
@@ -87,6 +138,7 @@ export default function LoginPageClient() {
     } catch (err) {
       console.error('Unexpected error:', err)
       setError('An unexpected error occurred. Please try again.')
+      setDebug(`Unexpected error: ${err}`)
     } finally {
       setLoading(false)
     }
@@ -118,6 +170,12 @@ export default function LoginPageClient() {
             {success && (
               <div className="bg-green-900/20 border border-green-600 text-green-300 px-4 py-3 rounded-none">
                 {success}
+              </div>
+            )}
+
+            {debug && (
+              <div className="bg-blue-900/20 border border-blue-600 text-blue-300 px-4 py-3 rounded-none text-sm">
+                Debug: {debug}
               </div>
             )}
 
