@@ -1,7 +1,7 @@
 'use client'
 
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react'
-import { supabase, getSession, getUser } from '@/lib/supabase'
+import { supabase } from '@/lib/supabase'
 import { User } from '@/lib/auth'
 
 interface AuthContextType {
@@ -17,7 +17,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
   const [loading, setLoading] = useState(true)
   const [isAdmin, setIsAdmin] = useState(false)
-  const [initialized, setInitialized] = useState(false)
 
   const refreshAuth = async () => {
     try {
@@ -31,8 +30,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         return
       }
 
-      // Get current session with better error handling
-      const { session, error: sessionError } = await getSession()
+      // Get current session
+      const { data: { session }, error: sessionError } = await supabase.auth.getSession()
       
       if (sessionError) {
         console.log('❌ AUTH CONTEXT: Session error:', sessionError)
@@ -89,12 +88,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   useEffect(() => {
-    // Prevent multiple initializations
-    if (initialized) {
-      console.log('🔄 AUTH CONTEXT: Already initialized, skipping...')
-      return
-    }
-
     console.log('🚀 AUTH CONTEXT: Initializing...')
     
     let mounted = true
@@ -103,13 +96,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       try {
         await refreshAuth()
         if (mounted) {
-          setInitialized(true)
+          console.log('✅ AUTH CONTEXT: Initialization complete')
         }
       } catch (error) {
         console.error('❌ AUTH CONTEXT: Initialization error:', error)
-        if (mounted) {
-          setInitialized(true)
-        }
       }
     }
 
@@ -132,11 +122,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           setLoading(false)
         } else if (event === 'TOKEN_REFRESHED') {
           console.log('🔄 AUTH CONTEXT: Token refreshed')
-          // Refresh auth on token refresh to ensure consistency
           await refreshAuth()
         } else if (event === 'INITIAL_SESSION') {
           console.log('🔄 AUTH CONTEXT: Initial session detected')
-          // This is important for persistence - handle initial session
           if (session?.user) {
             await refreshAuth()
           }
@@ -148,7 +136,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       mounted = false
       authStateChange?.data?.subscription?.unsubscribe()
     }
-  }, [initialized])
+  }, [])
 
   const value = {
     user,

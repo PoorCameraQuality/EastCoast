@@ -17,15 +17,8 @@ export const supabase = supabaseUrl && supabaseAnonKey
       auth: {
         autoRefreshToken: true,
         persistSession: true,
-        detectSessionInUrl: false, // Changed to false to prevent conflicts
-        storage: typeof window !== 'undefined' ? window.localStorage : undefined,
-        storageKey: 'supabase.auth.token',
-        flowType: 'pkce'
-      },
-      global: {
-        headers: {
-          'X-Client-Info': 'eastcoastkinkevents'
-        }
+        detectSessionInUrl: false,
+        storage: typeof window !== 'undefined' ? window.localStorage : undefined
       }
     })
   : null
