@@ -41,10 +41,11 @@ export async function middleware(request: NextRequest) {
 
   // Protect admin routes
   if (request.nextUrl.pathname.startsWith('/admin')) {
-    console.log('Middleware: Checking admin access for', request.nextUrl.pathname)
+    console.log('🔒 MIDDLEWARE: Checking admin access for', request.nextUrl.pathname)
+    console.log('🔒 MIDDLEWARE: User authenticated:', !!user, user?.email || 'none')
     
     if (!user) {
-      console.log('Middleware: No user found, redirecting to login')
+      console.log('❌ MIDDLEWARE: No user found, redirecting to login')
       return NextResponse.redirect(new URL('/login', request.url))
     }
 
@@ -56,16 +57,16 @@ export async function middleware(request: NextRequest) {
       .single()
 
     if (profileError) {
-      console.log('Middleware: Profile error:', profileError)
+      console.log('❌ MIDDLEWARE: Profile error:', profileError.message)
       return NextResponse.redirect(new URL('/login', request.url))
     }
 
     if (!profile || profile.role !== 'admin') {
-      console.log('Middleware: User not admin, redirecting to unauthorized')
+      console.log('❌ MIDDLEWARE: User not admin, role:', profile?.role || 'none')
       return NextResponse.redirect(new URL('/unauthorized', request.url))
     }
 
-    console.log('Middleware: Admin access granted for user:', user.email, 'role:', profile.role)
+    console.log('✅ MIDDLEWARE: Admin access granted for user:', user.email, 'role:', profile.role)
   }
 
   return res

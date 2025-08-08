@@ -14,35 +14,35 @@ export default function AdminDashboard() {
     const checkAuth = async () => {
       try {
         setLoading(true)
-        setDebug('Starting auth check...')
+        setDebug('🚀 CLIENT: Starting auth check...')
         
         if (!supabase) {
           setError('Supabase not configured')
-          setDebug('Supabase not configured')
+          setDebug('❌ CLIENT: Supabase not configured')
           return
         }
 
-        setDebug('Checking current user...')
+        setDebug('🔍 CLIENT: Checking current user...')
         // Check current user
         const currentUser = await getCurrentUser()
         
         if (!currentUser) {
           setError('Not authenticated')
-          setDebug('No current user found')
+          setDebug('❌ CLIENT: No current user found')
           return
         }
 
-        setDebug(`User found: ${currentUser.email}, checking admin status...`)
+        setDebug(`✅ CLIENT: User found: ${currentUser.email}, checking admin status...`)
         // Check if admin
         const adminStatus = await isAdmin()
         
         if (!adminStatus) {
           setError('Admin access required')
-          setDebug(`User is not admin. Role: ${currentUser.role}`)
+          setDebug(`❌ CLIENT: User is not admin. Role: ${currentUser.role}`)
           return
         }
 
-        setDebug('Admin access confirmed!')
+        setDebug('🎉 CLIENT: Admin access confirmed!')
         setUser(currentUser)
       } catch (err) {
         const errorMsg = err instanceof Error ? err.message : 'Unknown error'

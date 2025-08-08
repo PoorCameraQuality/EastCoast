@@ -103,8 +103,8 @@ export default function LoginPageClient() {
         setError(error.message)
         setDebug(`Login error: ${error.message}`)
       } else if (data.user) {
-        console.log('User signed in:', data.user.email)
-        setDebug(`User signed in: ${data.user.email}`)
+        console.log('✅ LOGIN: User signed in:', data.user.email)
+        setDebug(`✅ LOGIN: User signed in: ${data.user.email}`)
         
         // Check if user has admin role
         const { data: profile, error: profileError } = await supabase
@@ -114,23 +114,23 @@ export default function LoginPageClient() {
           .single()
 
         if (profileError) {
-          console.error('Profile error:', profileError)
+          console.error('❌ LOGIN: Profile error:', profileError)
           setError('Error checking user permissions. Please try again.')
-          setDebug(`Profile error: ${profileError.message}`)
+          setDebug(`❌ LOGIN: Profile error: ${profileError.message}`)
           await supabase.auth.signOut()
         } else if (profile?.role === 'admin') {
-          console.log('Admin access confirmed, redirecting...')
-          setDebug('Admin access confirmed, redirecting...')
+          console.log('🎉 LOGIN: Admin access confirmed, redirecting...')
+          setDebug('🎉 LOGIN: Admin access confirmed, redirecting...')
           setSuccess('Login successful! Redirecting to admin panel...')
           
           // Force redirect after a short delay
           setTimeout(() => {
-            console.log('Executing redirect to /admin/dashboard')
+            console.log('🔄 LOGIN: Executing redirect to /admin/dashboard')
             window.location.href = '/admin/dashboard'
           }, 1000)
         } else {
-          console.log('User does not have admin role:', profile?.role)
-          setDebug(`User role: ${profile?.role || 'none'}`)
+          console.log('❌ LOGIN: User does not have admin role:', profile?.role)
+          setDebug(`❌ LOGIN: User role: ${profile?.role || 'none'}`)
           setError('Access denied. Admin privileges required.')
           await supabase.auth.signOut()
         }
