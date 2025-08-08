@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation'
 import { Metadata } from 'next'
-import { getCurrentUser } from '@/lib/auth'
+import { getCurrentUserServer } from '@/lib/auth-server'
 import AdminDashboardClient from '@/components/admin/AdminDashboardClient'
 
 export const metadata: Metadata = {
@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 
 export default async function AdminDashboard() {
   try {
-    const user = await getCurrentUser()
+    const user = await getCurrentUserServer()
     
     // Redirect if not admin
     if (!user || user.role !== 'admin') {
