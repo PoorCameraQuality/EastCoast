@@ -74,8 +74,7 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    // Temporarily disabled to test
-    // '/admin/:path*',
-    // '/api/admin/:path*'
+    '/admin/:path*',
+    '/api/admin/:path*'
   ]
 }

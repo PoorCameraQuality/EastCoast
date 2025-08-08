@@ -17,6 +17,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
   const [loading, setLoading] = useState(true)
   const [isAdmin, setIsAdmin] = useState(false)
+  const [initialized, setInitialized] = useState(false)
 
   const refreshAuth = async () => {
     try {
@@ -88,8 +89,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   useEffect(() => {
+    // Only initialize once
+    if (initialized) return
+
+    console.log('🚀 AUTH CONTEXT: Initializing...')
+    
     // Initial auth check
-    refreshAuth()
+    refreshAuth().then(() => {
+      setInitialized(true)
+    })
 
     // Listen for auth state changes
     const { data: { subscription } } = supabase?.auth.onAuthStateChange(
@@ -103,6 +111,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           setUser(null)
           setIsAdmin(false)
           setLoading(false)
+        } else if (event === 'TOKEN_REFRESHED') {
+          console.log('🔄 AUTH CONTEXT: Token refreshed')
+          // Don't refresh auth on token refresh to avoid loops
         }
       }
     ) || { subscription: null }
@@ -110,7 +121,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return () => {
       subscription?.unsubscribe()
     }
-  }, [])
+  }, [initialized])
 
   const value = {
     user,
