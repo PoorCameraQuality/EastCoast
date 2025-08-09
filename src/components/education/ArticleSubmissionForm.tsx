@@ -123,12 +123,14 @@ export default function ArticleSubmissionForm() {
         Article Submission Form
       </h2>
       
-      <form onSubmit={handleSubmit} className="space-y-6">
+      <form onSubmit={handleSubmit} className="space-y-8">
         {/* Author Information */}
-        <div className="space-y-4">
-          <h3 className="text-lg font-semibold text-white mb-4">Author Information</h3>
+        <div className="space-y-6">
+          <h3 className="text-xl font-serif font-semibold text-white mb-4 border-b border-dark-600 pb-2">
+            Author Information
+          </h3>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label className="block text-white text-sm font-medium mb-2">
                 Author Name *
@@ -138,7 +140,8 @@ export default function ArticleSubmissionForm() {
                 name="authorName"
                 value={formData.authorName}
                 onChange={handleInputChange}
-                className="w-full px-4 py-2 bg-dark-700 text-white border border-dark-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                className="w-full px-4 py-3 bg-dark-700 text-white border border-dark-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors"
+                placeholder="Enter your full name"
                 required
               />
             </div>
@@ -152,7 +155,8 @@ export default function ArticleSubmissionForm() {
                 name="authorEmail"
                 value={formData.authorEmail}
                 onChange={handleInputChange}
-                className="w-full px-4 py-2 bg-dark-700 text-white border border-dark-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                className="w-full px-4 py-3 bg-dark-700 text-white border border-dark-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors"
+                placeholder="your.email@example.com"
                 required
               />
             </div>
@@ -167,8 +171,8 @@ export default function ArticleSubmissionForm() {
               name="authorCredentials"
               value={formData.authorCredentials}
               onChange={handleInputChange}
-              className="w-full px-4 py-2 bg-dark-700 text-white border border-dark-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-              placeholder="e.g., BDSM Educator, Therapist, Community Leader"
+              className="w-full px-4 py-3 bg-dark-700 text-white border border-dark-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors"
+              placeholder="e.g., BDSM Educator, Therapist, Community Leader, etc."
             />
           </div>
           
@@ -181,16 +185,18 @@ export default function ArticleSubmissionForm() {
               value={formData.authorBio}
               onChange={handleInputChange}
               rows={3}
-              className="w-full px-4 py-2 bg-dark-700 text-white border border-dark-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-              placeholder="Brief description of your experience and expertise..."
+              className="w-full px-4 py-3 bg-dark-700 text-white border border-dark-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors"
+              placeholder="Brief description of your experience and expertise in the kink community..."
               required
             />
           </div>
         </div>
 
         {/* Article Information */}
-        <div className="space-y-4">
-          <h3 className="text-lg font-semibold text-white mb-4">Article Information</h3>
+        <div className="space-y-6">
+          <h3 className="text-xl font-serif font-semibold text-white mb-4 border-b border-dark-600 pb-2">
+            Article Information
+          </h3>
           
           <div>
             <label className="block text-white text-sm font-medium mb-2">
@@ -201,7 +207,7 @@ export default function ArticleSubmissionForm() {
               name="articleTitle"
               value={formData.articleTitle}
               onChange={handleInputChange}
-              className="w-full px-4 py-2 bg-dark-700 text-white border border-dark-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+              className="w-full px-4 py-3 bg-dark-700 text-white border border-dark-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors"
               placeholder="Enter a compelling title for your article..."
               required
             />
@@ -216,59 +222,61 @@ export default function ArticleSubmissionForm() {
               value={formData.articleExcerpt}
               onChange={handleInputChange}
               rows={3}
-              className="w-full px-4 py-2 bg-dark-700 text-white border border-dark-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+              className="w-full px-4 py-3 bg-dark-700 text-white border border-dark-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors"
               placeholder="Brief summary of your article (will appear in article previews)..."
               required
             />
           </div>
           
-          <div>
-            <label className="block text-white text-sm font-medium mb-2">
-              Article Category *
-            </label>
-            <select
-              name="articleCategory"
-              value={formData.articleCategory}
-              onChange={handleInputChange}
-              className="w-full px-4 py-2 bg-dark-700 text-white border border-dark-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-              required
-            >
-              <option value="">Select a category</option>
-              <option value="Safety">Safety</option>
-              <option value="Techniques">Techniques</option>
-              <option value="Community">Community</option>
-              <option value="Resources">Resources</option>
-            </select>
-          </div>
-          
-          <div>
-            <label className="block text-white text-sm font-medium mb-2">
-              Article Tags
-            </label>
-            <input
-              type="text"
-              name="articleTags"
-              value={formData.articleTags}
-              onChange={handleInputChange}
-              className="w-full px-4 py-2 bg-dark-700 text-white border border-dark-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-              placeholder="Enter tags separated by commas (e.g., consent, negotiation, safety)"
-            />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label className="block text-white text-sm font-medium mb-2">
+                Article Category *
+              </label>
+              <select
+                name="articleCategory"
+                value={formData.articleCategory}
+                onChange={handleInputChange}
+                className="w-full px-4 py-3 bg-dark-700 text-white border border-dark-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors"
+                required
+              >
+                <option value="">Select a category</option>
+                <option value="Safety">Safety</option>
+                <option value="Techniques">Techniques</option>
+                <option value="Community">Community</option>
+                <option value="Resources">Resources</option>
+                <option value="Consent">Consent</option>
+              </select>
+            </div>
+            
+            <div>
+              <label className="block text-white text-sm font-medium mb-2">
+                Article Tags
+              </label>
+              <input
+                type="text"
+                name="articleTags"
+                value={formData.articleTags}
+                onChange={handleInputChange}
+                className="w-full px-4 py-3 bg-dark-700 text-white border border-dark-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors"
+                placeholder="Enter tags separated by commas (e.g., consent, negotiation, safety)"
+              />
+            </div>
           </div>
         </div>
 
         {/* Article Content */}
         <div className="space-y-4">
-          <h3 className="text-lg font-semibold text-white mb-4">Article Content *</h3>
+          <h3 className="text-xl font-serif font-semibold text-white mb-4 border-b border-dark-600 pb-2">
+            Article Content *
+          </h3>
           
           <div>
-            <label className="block text-white text-sm font-medium mb-2">
-              Article Content
-            </label>
-            <div className="mb-2">
-              <div className="flex justify-between items-center text-sm text-subtle">
-                <span>Use the toolbar above to format your content. You can add images, links, tables, and more.</span>
-                <span>Word count: {wordCount} (Minimum: 500)</span>
-              </div>
+            <div className="flex justify-between items-center text-sm text-subtle mb-2">
+              <span>Use the toolbar above to format your content. You can add images, links, tables, and more.</span>
+              <span className={`font-medium ${wordCount < 500 ? 'text-red-400' : 'text-green-400'}`}>
+                Word count: {wordCount} (Minimum: 500)
+              </span>
             </div>
             <RichTextEditor
               content={formData.articleContent}
@@ -287,7 +295,7 @@ export default function ArticleSubmissionForm() {
             name="contactMethod"
             value={formData.contactMethod}
             onChange={handleInputChange}
-            className="w-full px-4 py-2 bg-dark-700 text-white border border-dark-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+            className="w-full px-4 py-3 bg-dark-700 text-white border border-dark-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors"
           >
             <option value="">Select contact method</option>
             <option value="email">Email</option>
@@ -320,7 +328,7 @@ export default function ArticleSubmissionForm() {
 
         {/* Error Display */}
         {error && (
-          <div className="bg-red-900 border border-red-700 text-red-200 px-4 py-3 rounded-lg">
+          <div className="bg-red-900/50 border border-red-700 text-red-200 px-4 py-3 rounded-lg">
             {error}
           </div>
         )}
@@ -329,9 +337,9 @@ export default function ArticleSubmissionForm() {
         <div className="flex justify-end">
           <button
             type="submit"
-            disabled={isSubmitting || wordCount < 500}
+            disabled={isSubmitting || wordCount < 500 || !formData.agreeToTerms}
             className={`px-8 py-3 rounded-lg font-medium transition-all duration-300 ${
-              isSubmitting || wordCount < 500
+              isSubmitting || wordCount < 500 || !formData.agreeToTerms
                 ? 'bg-gray-600 text-gray-400 cursor-not-allowed'
                 : 'bg-primary-600 hover:bg-primary-500 text-white hover:shadow-lg transform hover:scale-105'
             }`}

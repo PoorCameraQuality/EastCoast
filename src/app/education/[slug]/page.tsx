@@ -1,6 +1,9 @@
 import { Metadata } from 'next'
 import { supabase } from '@/lib/supabase'
 import { notFound } from 'next/navigation'
+import Link from 'next/link'
+import Breadcrumb from '@/components/Breadcrumb'
+import Script from 'next/script'
 
 interface ArticlePageProps {
   params: { slug: string }
@@ -108,49 +111,179 @@ export default async function ArticlePage({ params }: { params: { slug: string }
 
     const articleTags = formatTags(article.tags)
 
+    // Get category color
+    const getCategoryColor = (category: string) => {
+      switch (category) {
+        case 'Safety':
+          return 'bg-gradient-to-r from-red-600 to-red-700'
+        case 'Techniques':
+          return 'bg-gradient-to-r from-blue-600 to-blue-700'
+        case 'Community':
+          return 'bg-gradient-to-r from-green-600 to-green-700'
+        case 'Resources':
+          return 'bg-gradient-to-r from-purple-600 to-purple-700'
+        case 'Consent':
+          return 'bg-gradient-to-r from-yellow-600 to-yellow-700'
+        default:
+          return 'bg-gradient-to-r from-gray-600 to-gray-700'
+      }
+    }
+
+    const breadcrumbItems = [
+      { label: 'Home', href: '/' },
+      { label: 'Education', href: '/education' },
+      { label: article.title, current: true }
+    ]
+
     return (
-      <div className="min-h-screen bg-dark-900">
-        <div className="container mx-auto px-4 py-8">
-          <article className="max-w-4xl mx-auto">
-            <header className="mb-8">
-              <h1 className="text-4xl font-bold text-white mb-4">{article.title}</h1>
-              <div className="text-gray-400 mb-4">
-                <p>By {article.author_name}</p>
-                <p>{article.read_time}</p>
-              </div>
-              <p className="text-lg text-gray-300">{article.excerpt}</p>
-              
-              {/* Tags Section */}
-              {articleTags.length > 0 && (
-                <div className="flex flex-wrap gap-2 mt-4">
-                  {articleTags.map((tag, index) => (
-                    <span
-                      key={index}
-                      className="px-3 py-1 rounded-full text-sm bg-dark-700 text-gray-300 border border-dark-600"
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              )}
-            </header>
-
-            <div className="prose prose-invert max-w-none">
-              <div dangerouslySetInnerHTML={{ __html: article.content }} />
+      <div className="min-h-screen bg-black">
+        {/* Breadcrumb JSON-LD */}
+        <Script
+          id={`breadcrumb-structured-data-${article.id}`}
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "BreadcrumbList",
+              "itemListElement": [
+                {"@type": "ListItem", position: 1, name: 'Home', item: 'https://eastcoastkinkevents.com/'},
+                {"@type": "ListItem", position: 2, name: 'Education', item: 'https://eastcoastkinkevents.com/education'},
+                {"@type": "ListItem", position: 3, name: article.title, item: `https://eastcoastkinkevents.com/education/${article.id}`}
+              ]
+            })
+          }}
+        />
+        
+        <div className="container-custom py-16">
+          <Breadcrumb items={breadcrumbItems} />
+          
+          <div className="mb-12">
+            <div className="flex items-center justify-between mb-6">
+              <Link href="/education" className="text-primary-400 hover:text-primary-300 transition-colors">
+                ← Back to Education
+              </Link>
+              <span className={`inline-block text-white text-sm font-medium px-4 py-2 rounded-full ${getCategoryColor(article.category)} shadow-lg`}>
+                {article.category}
+              </span>
             </div>
-
-            <footer className="mt-8 pt-8 border-t border-gray-700">
-              <div className="text-gray-400">
-                <p>Author: {article.author_name}</p>
-                {article.author_credentials && (
-                  <p>Credentials: {article.author_credentials}</p>
-                )}
-                {article.author_bio && (
-                  <p>Bio: {article.author_bio}</p>
-                )}
+            
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              {/* Article Info Sidebar */}
+              <div className="lg:col-span-1">
+                <div className="card-elegant sticky top-8">
+                  {/* Author Info */}
+                  <div className="mb-6">
+                    <h3 className="text-lg font-serif font-semibold text-white mb-4">About the Author</h3>
+                    <div className="flex items-center gap-4 mb-4">
+                      <div className="w-12 h-12 bg-gradient-to-br from-primary-500 to-primary-600 rounded-full flex items-center justify-center">
+                        <span className="text-white font-bold text-lg">
+                          {article.author_name.charAt(0).toUpperCase()}
+                        </span>
+                      </div>
+                      <div>
+                        <div className="font-medium text-white">{article.author_name}</div>
+                        {article.author_credentials && (
+                          <div className="text-sm text-gray-400">{article.author_credentials}</div>
+                        )}
+                      </div>
+                    </div>
+                    {article.author_bio && (
+                      <p className="text-subtle text-sm leading-relaxed">{article.author_bio}</p>
+                    )}
+                  </div>
+                  
+                  {/* Article Meta */}
+                  <div className="space-y-4 text-subtle border-t border-dark-600 pt-6">
+                    <div>
+                      <span className="font-medium text-white">Category:</span>
+                      <p>{article.category}</p>
+                    </div>
+                    {article.read_time && (
+                      <div>
+                        <span className="font-medium text-white">Read Time:</span>
+                        <p>{article.read_time}</p>
+                      </div>
+                    )}
+                    <div>
+                      <span className="font-medium text-white">Published:</span>
+                      <p>{new Date(article.created_at).toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
+                      })}</p>
+                    </div>
+                  </div>
+                </div>
               </div>
-            </footer>
-          </article>
+              
+              {/* Article Content */}
+              <div className="lg:col-span-2">
+                <div className="card-elegant">
+                  {/* Article Header */}
+                  <header className="mb-8">
+                    <div className="flex items-center gap-3 mb-4">
+                      {article.featured && (
+                        <span className="px-3 py-1 rounded-full text-xs font-medium bg-gradient-to-r from-yellow-500 to-yellow-600 text-black shadow-lg animate-pulse">
+                          ⭐ Featured Article
+                        </span>
+                      )}
+                    </div>
+                    
+                    <h1 className="text-4xl md:text-5xl font-serif font-bold text-white mb-6 leading-tight">
+                      {article.title}
+                    </h1>
+                    
+                    <p className="text-xl text-subtle leading-relaxed mb-6">
+                      {article.excerpt}
+                    </p>
+                    
+                    {/* Tags Section */}
+                    {articleTags.length > 0 && (
+                      <div className="flex flex-wrap gap-2">
+                        {articleTags.map((tag, index) => (
+                          <span
+                            key={index}
+                            className="px-3 py-1 rounded-full text-sm bg-dark-700 text-gray-300 border border-dark-600 hover:border-primary-500 transition-colors"
+                          >
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                  </header>
+
+                  {/* Article Content */}
+                  <div className="prose prose-invert max-w-none">
+                    <div 
+                      className="text-subtle leading-relaxed text-lg"
+                      dangerouslySetInnerHTML={{ __html: article.content }} 
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          {/* Related Articles CTA */}
+          <div className="mt-16">
+            <div className="card-elegant text-center">
+              <h2 className="text-2xl font-serif font-semibold text-white mb-4">
+                Explore More Articles
+              </h2>
+              <p className="text-lg text-subtle mb-6 max-w-2xl mx-auto">
+                Discover more educational content, safety guidelines, and community resources. 
+                Learn from experts and share your knowledge with the community.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Link href="/education" className="btn-primary">
+                  Browse All Articles
+                </Link>
+                <Link href="/education/submit" className="btn-outline">
+                  Submit Your Article
+                </Link>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     )
