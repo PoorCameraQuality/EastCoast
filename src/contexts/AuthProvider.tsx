@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState, ReactNode } from "react";
+import { createContext, useContext, useEffect, useState, useRef, ReactNode } from "react";
 import { supabase, restoreSession } from "@/lib/supabase";
 import type { Session, PostgrestError } from '@supabase/supabase-js';
 
@@ -32,6 +32,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isAdmin, setIsAdmin] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [isHydrated, setIsHydrated] = useState(false);
+  const hasInitializedRef = useRef(false);
 
   const refreshAuth = async () => {
     // Prevent multiple simultaneous refresh calls
@@ -182,28 +183,31 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             setIsAdmin(false);
             setLoading(false);
           }
+          hasInitializedRef.current = true;
         }
       }
     );
 
-    // Initialize auth - let the auth state listener handle it
+    // Initialize auth - only if not already handled by auth state listener
     const initializeAuth = async () => {
       try {
         // Wait for auth state listener to be set up
-        await new Promise(resolve => setTimeout(resolve, 100));
+        await new Promise(resolve => setTimeout(resolve, 200));
         
         if (!mounted || !supabase) return;
 
         // Only call refreshAuth if no auth state change has been triggered yet
-        if (loading) {
+        if (!hasInitializedRef.current) {
           console.log('🔄 AUTH PROVIDER: Initial auth check...');
           await refreshAuth();
+          hasInitializedRef.current = true;
         }
       } catch (error) {
         console.error('❌ AUTH PROVIDER: Initialization error:', error);
         setUser(null);
         setIsAdmin(false);
         setLoading(false);
+        hasInitializedRef.current = true;
       }
     };
 
