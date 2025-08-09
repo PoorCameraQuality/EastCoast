@@ -1,5 +1,6 @@
 import { Metadata } from 'next'
 import { supabase } from '@/lib/supabase'
+import ArticleCard from '@/components/education/ArticleCard'
 
 export const metadata: Metadata = {
   title: 'Education | East Coast Kink Events',
@@ -66,18 +67,7 @@ export default async function EducationPage() {
           {articles && articles.length > 0 ? (
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               {articles.map((article) => (
-                <div key={article.id} className="bg-dark-800 p-6 rounded-lg">
-                  <h2 className="text-xl font-semibold text-white mb-2">
-                    <a href={`/education/${article.id}`} className="hover:text-blue-400">
-                      {article.title}
-                    </a>
-                  </h2>
-                  <p className="text-gray-400 mb-4">{article.excerpt}</p>
-                  <div className="text-sm text-gray-500">
-                    <p>By {article.author_name}</p>
-                    <p>{article.read_time}</p>
-                  </div>
-                </div>
+                <ArticleCard key={article.id} article={article} />
               ))}
             </div>
           ) : (

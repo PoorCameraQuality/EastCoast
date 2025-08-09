@@ -8,7 +8,7 @@ interface ArticleCardProps {
     author_name: string
     author_credentials?: string
     category: string
-    tags?: string
+    tags?: string | string[]
     featured: boolean
     read_time?: string
     created_at?: string
@@ -24,6 +24,18 @@ export default function ArticleCard({ article }: ArticleCardProps) {
       day: 'numeric'
     })
   }
+
+  // Handle tags formatting
+  const formatTags = (tags?: string | string[]) => {
+    if (!tags) return []
+    if (Array.isArray(tags)) return tags
+    if (typeof tags === 'string') {
+      return tags.split(',').map(tag => tag.trim()).filter(tag => tag)
+    }
+    return []
+  }
+
+  const articleTags = formatTags(article.tags)
 
   return (
     <Link href={`/education/${article.id}`} className="block">
@@ -48,6 +60,20 @@ export default function ArticleCard({ article }: ArticleCardProps) {
             <p className="text-gray-300 text-sm mb-4 line-clamp-3">
               {article.excerpt}
             </p>
+
+            {/* Tags Section */}
+            {articleTags.length > 0 && (
+              <div className="flex flex-wrap gap-2 mb-4">
+                {articleTags.map((tag, index) => (
+                  <span
+                    key={index}
+                    className="px-2 py-1 rounded text-xs bg-dark-700 text-gray-300 border border-dark-600"
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            )}
             
             <div className="flex items-center justify-between text-sm text-gray-400">
               <div className="flex items-center gap-4">

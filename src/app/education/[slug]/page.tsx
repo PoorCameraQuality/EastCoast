@@ -96,6 +96,18 @@ export default async function ArticlePage({ params }: { params: { slug: string }
       notFound()
     }
 
+    // Handle tags formatting
+    const formatTags = (tags?: string | string[]) => {
+      if (!tags) return []
+      if (Array.isArray(tags)) return tags
+      if (typeof tags === 'string') {
+        return tags.split(',').map(tag => tag.trim()).filter(tag => tag)
+      }
+      return []
+    }
+
+    const articleTags = formatTags(article.tags)
+
     return (
       <div className="min-h-screen bg-dark-900">
         <div className="container mx-auto px-4 py-8">
@@ -107,6 +119,20 @@ export default async function ArticlePage({ params }: { params: { slug: string }
                 <p>{article.read_time}</p>
               </div>
               <p className="text-lg text-gray-300">{article.excerpt}</p>
+              
+              {/* Tags Section */}
+              {articleTags.length > 0 && (
+                <div className="flex flex-wrap gap-2 mt-4">
+                  {articleTags.map((tag, index) => (
+                    <span
+                      key={index}
+                      className="px-3 py-1 rounded-full text-sm bg-dark-700 text-gray-300 border border-dark-600"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              )}
             </header>
 
             <div className="prose prose-invert max-w-none">
