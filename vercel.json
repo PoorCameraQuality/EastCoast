@@ -43,15 +43,6 @@
       ]
     }
   ],
-
-  "redirects": [
-    {
-      "source": "/",
-      "destination": "/",
-      "permanent": false,
-      "status": 200
-    }
-  ],
   "build": {
     "env": {
       "DISABLE_VERCEL_FEEDBACK": "true"
