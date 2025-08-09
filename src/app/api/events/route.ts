@@ -68,14 +68,75 @@ export async function POST(request: NextRequest) {
     // Check if user is admin (for admin submissions)
     const isAdminUser = await isAdmin()
     
-    // For now, just return success without modifying files
-    // This avoids the critical dependency warnings
-    return NextResponse.json({ 
-      success: true, 
-      message: 'Event submission received. We will review and add it to the site.',
-      eventSlug: eventData.slug,
-      requiresApproval: !isAdminUser
-    })
+    // Save to database
+    const client = supabase
+    if (!client) {
+      return NextResponse.json(
+        { error: 'Database not configured' },
+        { status: 500 }
+      )
+    }
+
+    try {
+      const { data, error } = await client
+        .from('events')
+        .insert([{
+          title: eventData.title,
+          short_title: eventData.shortTitle,
+          slug: eventData.slug,
+          start_date: eventData.startDate,
+          end_date: eventData.endDate,
+          display_date: eventData.displayDate,
+          city: eventData.city,
+          state: eventData.state,
+          venue: eventData.venue,
+          short_description: eventData.shortDescription,
+          long_description: eventData.longDescription,
+          seo_description: eventData.seoDescription,
+          category: eventData.category,
+          tags: eventData.tags.split(',').map(tag => tag.trim()).filter(tag => tag),
+          logo: eventData.logo,
+          images: eventData.images.split(',').map(img => img.trim()).filter(img => img),
+          website: eventData.website,
+          organizer: eventData.organizer,
+          email: eventData.email,
+          phone: eventData.phone,
+          organizer_website: eventData.organizerWebsite,
+          early_bird_price: eventData.earlyBirdPrice,
+          regular_price: eventData.regularPrice,
+          at_door_price: eventData.atDoorPrice,
+          includes: eventData.includes,
+          features: eventData.features,
+          seo_title: eventData.seoTitle,
+          seo_keywords: eventData.seoKeywords.split(',').map(keyword => keyword.trim()).filter(keyword => keyword),
+          status: isAdminUser ? 'published' : 'pending',
+          created_at: new Date().toISOString(),
+          created_by: 'admin' // You might want to get this from the session
+        }])
+        .select()
+
+      if (error) {
+        console.error('Database error:', error)
+        return NextResponse.json(
+          { error: 'Failed to save event to database' },
+          { status: 500 }
+        )
+      }
+
+      return NextResponse.json({ 
+        success: true, 
+        message: isAdminUser ? 'Event created and published successfully!' : 'Event submission received. We will review and add it to the site.',
+        eventSlug: eventData.slug,
+        requiresApproval: !isAdminUser,
+        eventId: data[0]?.id
+      })
+    } catch (dbError) {
+      console.error('Database operation failed:', dbError)
+      return NextResponse.json(
+        { error: 'Database operation failed' },
+        { status: 500 }
+      )
+    }
     
   } catch (error) {
     console.error('Error processing event submission:', error)

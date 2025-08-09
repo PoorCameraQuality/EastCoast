@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { supabase } from '@/lib/supabase'
 
 export async function POST(request: NextRequest) {
   try {
@@ -29,13 +30,59 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // For now, just return success without modifying files
-    // This avoids the critical dependency warnings
-    return NextResponse.json({ 
-      success: true, 
-      message: 'Dungeon submission received. We will review and add it to the site.',
-      dungeonId: dungeonData.id 
-    })
+    // Save to database
+    const client = supabase
+    if (!client) {
+      return NextResponse.json(
+        { error: 'Database not configured' },
+        { status: 500 }
+      )
+    }
+
+    try {
+      const { data, error } = await client
+        .from('dungeons')
+        .insert([{
+          slug: dungeonData.slug,
+          name: dungeonData.name,
+          city: dungeonData.location.city,
+          state: dungeonData.location.state,
+          address: dungeonData.location.address,
+          excerpt: dungeonData.excerpt,
+          logo: dungeonData.logo,
+          images: dungeonData.images,
+          website: dungeonData.website,
+          email: dungeonData.contact.email,
+          phone: dungeonData.contact.phone,
+          seo_title: dungeonData.seo.title,
+          seo_description: dungeonData.seo.description,
+          seo_keywords: dungeonData.seo.keywords,
+          status: 'published',
+          created_at: new Date().toISOString(),
+          created_by: 'admin'
+        }])
+        .select()
+
+      if (error) {
+        console.error('Database error:', error)
+        return NextResponse.json(
+          { error: 'Failed to save dungeon to database' },
+          { status: 500 }
+        )
+      }
+
+      return NextResponse.json({ 
+        success: true, 
+        message: 'Dungeon created and published successfully!',
+        dungeonId: data[0]?.id 
+      })
+    } catch (dbError) {
+      console.error('Database operation failed:', dbError)
+      return NextResponse.json(
+        { error: 'Database operation failed' },
+        { status: 500 }
+      )
+    }
     
   } catch (error) {
     console.error('Error processing dungeon submission:', error)

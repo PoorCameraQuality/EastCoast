@@ -1,29 +1,21 @@
-import { Metadata } from 'next'
-import Breadcrumb from '@/components/Breadcrumb'
-import AdminNavigation from '@/components/admin/AdminNavigation'
-import SubmissionReviewPanel from '@/components/admin/SubmissionReviewPanel'
+'use client'
 
-export const metadata: Metadata = {
-  title: 'Review Submissions - Admin | East Coast Kink Events',
-  description: 'Admin panel for reviewing and managing article submissions.',
-  robots: 'noindex, nofollow'
-}
+import { useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 
 export default function ReviewSubmissionsPage() {
-  const breadcrumbItems = [
-    { label: 'Home', href: '/' },
-    { label: 'Admin', href: '/admin' },
-    { label: 'Review Submissions', current: true }
-  ]
+  const router = useRouter()
+
+  useEffect(() => {
+    // Redirect to unified admin dashboard
+    router.replace('/admin/dashboard')
+  }, [router])
 
   return (
-    <div className="min-h-screen bg-black">
-      <AdminNavigation />
-      <div className="py-8">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <Breadcrumb items={breadcrumbItems} />
-          <SubmissionReviewPanel />
-        </div>
+    <div className="min-h-screen bg-dark-900 flex items-center justify-center">
+      <div className="text-center">
+        <div className="text-white mb-4">Redirecting to Admin Dashboard...</div>
+        <div className="text-blue-400 text-sm">The submission review functionality is now part of the main admin dashboard.</div>
       </div>
     </div>
   )

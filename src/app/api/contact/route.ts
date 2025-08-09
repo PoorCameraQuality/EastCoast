@@ -26,12 +26,22 @@ export async function POST(request: NextRequest) {
     // Prepare submission data
     const submissionData = {
       submission_type: 'contact',
+      author_name: name,
+      author_email: email,
+      author_bio: '',
+      article_title: subject,
+      article_excerpt: message.substring(0, 200) + (message.length > 200 ? '...' : ''),
+      article_content: message,
+      article_category: 'Contact',
+      article_tags: '',
       contact_name: name,
       contact_email: email,
-      contact_subject: subject,
-      contact_message: message,
+      contact_type: subject,
+      contact_method: 'Website Contact Form',
+      contact_method_details: 'Submitted via website contact form',
+      word_count: message.split(' ').length,
       status: 'pending',
-      created_at: new Date().toISOString()
+      submitted_at: new Date().toISOString()
     }
 
     // Get Supabase client
