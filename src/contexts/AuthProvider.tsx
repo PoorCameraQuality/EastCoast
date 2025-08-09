@@ -30,8 +30,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   const refreshAuth = async () => {
+    // Prevent multiple simultaneous refresh calls
+    if (isRefreshing) {
+      console.log('🔄 AUTH PROVIDER: Already refreshing, skipping...');
+      return;
+    }
+    
+    setIsRefreshing(true);
     try {
       console.log('🔄 AUTH PROVIDER: Refreshing authentication...');
       
@@ -40,6 +48,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setUser(null);
         setIsAdmin(false);
         setLoading(false);
+        setIsRefreshing(false);
         return;
       }
 
@@ -54,6 +63,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           setUser(null);
           setIsAdmin(false);
           setLoading(false);
+          setIsRefreshing(false);
           return;
         }
       } else {
@@ -66,6 +76,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setUser(null);
         setIsAdmin(false);
         setLoading(false);
+        setIsRefreshing(false);
         return;
       }
 
@@ -83,6 +94,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setUser(null);
         setIsAdmin(false);
         setLoading(false);
+        setIsRefreshing(false);
         return;
       }
 
@@ -98,6 +110,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setUser(null);
         setIsAdmin(false);
         setLoading(false);
+        setIsRefreshing(false);
         return;
       }
 
@@ -119,6 +132,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setUser(null);
       setIsAdmin(false);
       setLoading(false);
+    } finally {
+      setIsRefreshing(false);
     }
   };
 
@@ -161,16 +176,19 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       }
     );
 
-    // Initialize auth
+    // Initialize auth - let the auth state listener handle it
     const initializeAuth = async () => {
       try {
         // Wait for auth state listener to be set up
-        await new Promise(resolve => setTimeout(resolve, 50));
+        await new Promise(resolve => setTimeout(resolve, 100));
         
         if (!mounted || !supabase) return;
 
-        // Explicitly restore session first
-        await refreshAuth();
+        // Only call refreshAuth if no auth state change has been triggered yet
+        if (loading) {
+          console.log('🔄 AUTH PROVIDER: Initial auth check...');
+          await refreshAuth();
+        }
       } catch (error) {
         console.error('❌ AUTH PROVIDER: Initialization error:', error);
         setUser(null);
