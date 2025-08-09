@@ -31,6 +31,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [isHydrated, setIsHydrated] = useState(false);
 
   const refreshAuth = async () => {
     // Prevent multiple simultaneous refresh calls
@@ -137,8 +138,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  // Hydration effect - runs only on client
+  useEffect(() => {
+    console.log('🚀 AUTH PROVIDER: Client hydration...');
+    setIsHydrated(true);
+  }, []);
+
   // Initial hydration from Supabase local storage
   useEffect(() => {
+    // Don't run auth logic until hydrated
+    if (!isHydrated) return;
+    
     console.log('🚀 AUTH PROVIDER: Initializing...');
     
     let mounted = true;
@@ -212,7 +222,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       authStateChange?.data?.subscription?.unsubscribe();
       clearInterval(interval);
     };
-  }, []);
+  }, [isHydrated]);
 
   return (
     <AuthContext.Provider

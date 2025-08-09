@@ -2,11 +2,18 @@
 
 import { useAuth } from '@/contexts/AuthProvider'
 import AdminProtected from '@/components/AdminProtected'
+import { useEffect, useState } from 'react'
 
 export default function AdminDashboard() {
   const { user, loading, isAdmin } = useAuth()
+  const [isClient, setIsClient] = useState(false)
 
-  if (loading) {
+  useEffect(() => {
+    setIsClient(true)
+  }, [])
+
+  // Show loading during SSR hydration or auth loading
+  if (!isClient || loading) {
     return (
       <div className="min-h-screen bg-dark-900 flex items-center justify-center">
         <div className="text-center">
