@@ -196,26 +196,19 @@ export default function UnifiedAdminDashboard({ user, isAdmin: isAdminProp }: Un
         alert('Error approving submission')
       }
     } else {
-      // Handle contact form approval
-      if (!supabase) {
-        alert('Database is not configured')
-        return
-      }
-
+      // Handle contact form approval (mark as responded)
       try {
-        const { error } = await supabase
-          .from('submissions')
-          .update({ 
-            status: 'responded',
-            reviewed_at: new Date().toISOString(),
-            reviewer_notes: 'Contact form responded to via email'
+        const response = await fetch(`/api/admin/submissions/${submission.id}/respond`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            reviewerNotes: 'Contact form responded to via email'
           })
-          .eq('id', submission.id)
+        })
 
-        if (error) {
-          console.error('Error updating submission:', error)
-          alert('Error updating submission')
-        } else {
+        if (response.ok) {
           alert('Contact submission marked as responded!')
           // Update the submission status locally
           setSubmissions(prev => prev.map(s => 
@@ -224,10 +217,14 @@ export default function UnifiedAdminDashboard({ user, isAdmin: isAdminProp }: Un
               : s
           ))
           setSelectedSubmission(null)
+        } else {
+          const errorData = await response.json()
+          console.error('Respond error:', errorData)
+          alert('Error responding to submission: ' + (errorData.error || 'Unknown error'))
         }
       } catch (error) {
         console.error('Error:', error)
-        alert('Error updating submission')
+        alert('Error responding to submission')
       }
     }
   }
