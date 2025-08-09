@@ -212,9 +212,9 @@ export const events = [
       "state": "MD",
       "region": "North Eastern, Maryland"
     },
-    "category": "Indoor Event",
+    "category": "Outdoor Event",
     "excerpt": "Fornucopia is a beloved East Coast campground event focused on community, connection, education, and entertainment — a welcoming weekend open to all skill levels.",
-    "longDescription": "Get ready for a weekend of excitement while you connect with like-minded individuals at one of the most beloved campgrounds on the East Coast. Open to all skill levels, Fornucopia blends education, entertainment, and the freedom to have fun. More than an event, it’s a community gathering designed to help you make memories that last a lifetime.",
+    "longDescription": "Get ready for a weekend of excitement while you connect with like-minded individuals at one of the most beloved campgrounds on the East Coast. Open to all skill levels, Fornucopia blends education, entertainment, and the freedom to have fun. More than an event, it's a community gathering designed to help you make memories that last a lifetime.",
     "website": "https://www.fornucopiaevent.com/",
     "logo": "/images/fornucopia.png",
     "seo": {
@@ -237,13 +237,13 @@ export const events = [
       "region": "Eastern, Illinois"
     },
     "category": "Indoor Event",
-    "excerpt": "Kinky Kollege is a premier weekend-long education event near Chicago’s O’Hare Airport featuring top alternative lifestyle educators, a massive 15,000 sq ft play space, and a robust vendor market.",
+    "excerpt": "Kinky Kollege is a premier weekend-long education event near Chicago's O'Hare Airport featuring top alternative lifestyle educators, a massive 15,000 sq ft play space, and a robust vendor market.",
     "longDescription": "Join Kinky Kollege for an unforgettable weekend of learning, play, and community. Enjoy accredited classes for all experience levels, from beginner to advanced edge players, with some sessions offering hands-on lab time and professional coaching. Explore a massive 15,000 sq ft playspace, shop the vendor market, and connect with like-minded attendees in a welcoming atmosphere.",
     "website": "https://kinkykollege.com/",
     "logo": "/images/kinkykollege.png",
     "seo": {
       "title": "Kinky Kollege - Chicago BDSM Education Conference | East Coast Kink Events",
-      "description": "A premier weekend near O’Hare with top educators, a 15,000 sq ft playspace, and a welcoming community for all experience levels.",
+      "description": "A premier weekend near O'Hare with top educators, a 15,000 sq ft playspace, and a welcoming community for all experience levels.",
       "keywords": "Kinky Kollege, Chicago, BDSM education, playspace, vendor market"
     }
   },
@@ -295,7 +295,7 @@ export const events = [
     },
     "category": "Indoor Event",
     "excerpt": "Exploration Into Kink (EiK) offers a full hotel takeover weekend with 35+ classes, vendor bazaar, cigar social, mentoring emporium, clothing-optional indoor pool, play parties, and midnight buffets.",
-    "longDescription": "Immerse yourself in a welcoming, inclusive weekend of exploration and education. Enjoy 35+ educational classes, a vendor bazaar, BeBe’s cigar social, the Exploration Emporium (mentoring show-and-feel), a clothing-optional indoor pool, Friday and Saturday night play parties, and midnight buffets. EiK builds community through consent, diversity, and inclusivity.",
+    "longDescription": "Immerse yourself in a welcoming, inclusive weekend of exploration and education. Enjoy 35+ educational classes, a vendor bazaar, BeBe's cigar social, the Exploration Emporium (mentoring show-and-feel), a clothing-optional indoor pool, Friday and Saturday night play parties, and midnight buffets. EiK builds community through consent, diversity, and inclusivity.",
     "website": "https://www.explorationintokink.com/",
     "logo": "/images/eik.jpg",
     "seo": {
@@ -392,7 +392,7 @@ export const events = [
     },
     "category": "Indoor Event",
     "excerpt": "A high-energy, festive 3.5-day hotel takeover celebrating kinky Mardi Gras with 24-hour playspaces, education, vending, indoor/outdoor activities, entertainment, games, and more.",
-    "longDescription": "Recreate New Orleans’ French Quarter across a host hotel where the sights and sounds of kinky Mardi Gras echo all weekend. Enjoy Studio 58’s programming, special events, 24-hour playspaces, vendor market, indoor/outdoor activities, entertainment, games, naked swimming, a Saturday bead & throws drop, and outstanding play equipment.",
+    "longDescription": "Recreate New Orleans' French Quarter across a host hotel where the sights and sounds of kinky Mardi Gras echo all weekend. Enjoy Studio 58's programming, special events, 24-hour playspaces, vendor market, indoor/outdoor activities, entertainment, games, naked swimming, a Saturday bead & throws drop, and outstanding play equipment.",
     "website": "https://studio58events.com/naughty-gras-2025/",
     "logo": "/images/naughtynawlins.png",
     "seo": {
@@ -405,23 +405,40 @@ export const events = [
     "name": "Dark Odyssey Winter Fire",
     "slug": "dark-odyssey-winter-fire",
     "date": {
-      "start": "2026-01-16",
-      "end": "2026-01-19",
-      "display": "Jan 16-19, 2026"
+      "start": "2025-01-24",
+      "end": "2025-01-26",
+      "display": "Jan 24-26, 2025"
     },
     "location": {
-      "city": "Northern Maryland",
-      "state": "MD",
-      "region": "NorthEastern, Maryland"
+      "city": "Washington DC",
+      "state": "DC",
+      "region": "Central, District of Columbia"
     },
     "category": "Indoor Event",
-    "excerpt": "Dark Odyssey Winter Fire is a four-day BDSM and kink event featuring workshops, demonstrations, and social activities in a warm, welcoming environment.",
-    "website": "https://darkodyssey.com/",
+    "excerpt": "Imagine a vacation where you can explore the many facets of sexuality within a private, intimate community of like-minded individuals. Winter Fire offers a unique, immersive experience that brings together sexuality, spirituality, education, and play in a fun, supportive, non-judgmental, and diverse environment where fantasies become reality.",
+    "longDescription": "Discover Winter Fire: An Unforgettable Journey\n\nImagine a vacation where you can explore the many facets of sexuality within a private, intimate community of like-minded individuals. Winter Fire offers a unique, immersive experience that brings together sexuality, spirituality, education, and play in a fun, supportive, non-judgmental, and diverse environment where fantasies become reality.\n\nBy day, enhance your relationship with expert-led workshops on sexual tips and techniques. Learn how to create, maintain, or reignite the erotic spark. Explore various partnering possibilities, including swinging, open relationships, threesomes, and polyamory. Whether you're brushing up on the basics or seeking hands-on experience in new BDSM skills like bondage, flogging, sensory deprivation, and Dominant/submissive dynamics, Winter Fire has you covered. Delve into spiritual journeys with teachings on Earth-based spirituality, Tantra, and paganism, all presented by top sex educators, relationship experts, BDSM masters, and spiritual teachers.\n\nAt night, be transported to a world where you can freely explore your inner desires in luxuriously equipped dungeons and sensual play spaces. These areas, transformed by our renowned ambiance team, provide the perfect setting for your erotic dreams. Enjoy performances by some of the most talented artists on the East Coast, engage in powerful rituals or Tantric journeys, or simply relax and socialize with old and new friends.\n\nWinter Fire is a weekend-long kinky takeover of a luxury hotel in downtown Washington, DC, right in the heart of the nation's capital. We're thrilled to return to the hotel complex that has hosted us for many years. Join us this January for an adventure of play, discovery, and learning, where we will achieve ecstatic states of love, awareness, and personal sexuality.",
+    "website": "https://darkodyssey.com/winterfire/",
     "logo": "/images/darkodyssey.png",
+    "features": [
+      "Immersive Experience",
+      "Sexuality & Spirituality",
+      "Education & Play",
+      "Expert-Led Workshops",
+      "Sexual Tips & Techniques",
+      "BDSM Skills Training",
+      "Spiritual Journeys",
+      "Luxuriously Equipped Dungeons",
+      "Sensual Play Spaces",
+      "East Coast Performances",
+      "Powerful Rituals",
+      "Tantric Journeys",
+      "Luxury Hotel Takeover",
+      "Downtown Washington DC"
+    ],
     "seo": {
-      "title": "Dark Odyssey Winter Fire - Maryland BDSM Event | East Coast Kink Events",
-      "description": "Dark Odyssey Winter Fire is a four-day BDSM and kink event featuring workshops, demonstrations, and social activities.",
-      "keywords": "Dark Odyssey Winter Fire, Maryland, BDSM event, kink conference"
+      "title": "Dark Odyssey Winter Fire - Washington DC Immersive Sexuality & Spirituality Event | East Coast Kink Events",
+      "description": "Winter Fire offers a unique, immersive experience bringing together sexuality, spirituality, education, and play in downtown Washington, DC with expert-led workshops and luxury play spaces.",
+      "keywords": "Dark Odyssey Winter Fire, Washington DC, immersive experience, sexuality, spirituality, education, play, BDSM skills, luxury hotel takeover"
     }
   },
   {
@@ -704,7 +721,7 @@ export const events = [
     },
     "category": "Indoor Event",
     "excerpt": "Tethered Together is an event focused on rope bondage with additional programming in circus arts, kink, relationships, and body movement such as dance and yoga. Along with educational workshops, we host an assortment of quirky, magical, and fun attendee-led programming, art installations, and entertainment.",
-    "longDescription": "Tethered Together is an event focused on rope bondage with additional programming in circus arts, kink, relationships, and body movement such as dance and yoga. Along with educational workshops, we host an assortment of quirky, magical, and fun attendee-led programming, art installations, and entertainment. Our 2025 event runs from Friday afternoon on March 14th to Monday the 17th at 9:00 PM and we provide a fully equipped sex-positive dungeon on Friday, Saturday & Sunday nights.\n\nOur event is hosted at the Hilton Stamford Hotel and Meeting Center in Stamford, CT starting at 8:00 PM on Friday, March 14th and concluding at 9:00 PM on Monday, March 17th.\n\nMany attendees choose to come in on Thursday evening to see the local sights, socialize with friends and help us get set up. Please see our website for up-to-date information on our event and for information on scheduling and how to get involved as it comes available!",
+    "longDescription": "Tethered Together is an event focused on rope bondage with additional programming in circus arts, kink, relationships, and body movement such as dance and yoga. Along with educational workshops, we host an assortment of quirky, magical, and fun attendee-led programming, art installations, and entertainment. Our 2025 event runs from Friday afternoon on March 14th to Monday the 17th at 9:00 PM and we provide a fully equipped sex-positive dungeon on Friday, Saturday & Sunday nights.\n\nOur event is hosted at the Hilton Stamford Hotel and Meeting Center in Stamford, CT starting at 8:00 PM on Friday, March 14th and concluding at 9:00 PM on Monday, March 17th.\n\nMany attendees choose to come in on Thursday evening to see the local sights, socialize with friends and help us get set up. Please see our website for up-to-date information on our event and for information on scheduling and how to get involved as it comes available!\n\nExperience the perfect blend of education, artistry, and community at Tethered Together. Our unique approach combines the technical precision of rope bondage with the grace and beauty of circus arts, creating an environment where both skills and creativity flourish. Whether you're a seasoned rigger or just beginning your journey, our diverse programming offers opportunities for growth, learning, and expression.\n\nImmerse yourself in a weekend of discovery where traditional rope techniques meet innovative approaches, where physical movement enhances sensual experience, and where relationships deepen through shared exploration. From intimate workshops to spectacular performances, from quiet contemplation to energetic celebration, Tethered Together creates a space where every aspect of your being can be engaged, challenged, and celebrated.\n\nJoin us for an unforgettable experience where bonds are formed, skills are honed, and the magic of human connection takes center stage.",
     "website": "https://tetheredtogether.net/",
     "logo": "/images/tethered.png",
     "features": [
@@ -742,7 +759,7 @@ export const events = [
     },
     "category": "Outdoor Event",
     "excerpt": "Join us for an intense weekend at Dark Odyssey Fusion, where kinksters, queers, swingers, spiritualists, the adventurous, and the perverted come together to fuse Sex, Kink, and Spirit. Experience the magic with a thousand fellow erotic explorers as we achieve ecstatic states of passion, desire, and transformation.",
-    "longDescription": "Join us for an intense weekend at Dark Odyssey Fusion, where kinksters, queers, swingers, spiritualists, the adventurous, and the perverted come together to fuse Sex, Kink, and Spirit. Experience the magic with a thousand fellow erotic explorers as we achieve ecstatic states of passion, desire, and transformation.\n\nA Magical Retreat: Our event takes place at the same enchanting retreat in Northern Maryland that has been Dark Odyssey's Summer home for years.\n\nUnleash Your Desires: Immerse yourself in a unique atmosphere where you can explore and celebrate your passions in a welcoming and inclusive community.",
+    "longDescription": "Join us for an intense weekend at Dark Odyssey Fusion, where kinksters, queers, swingers, spiritualists, the adventurous, and the perverted come together to fuse Sex, Kink, and Spirit. Experience the magic with a thousand fellow erotic explorers as we achieve ecstatic states of passion, desire, and transformation.\n\nA Magical Retreat: Our event takes place at the same enchanting retreat in Northern Maryland that has been Dark Odyssey's Summer home for years.\n\nUnleash Your Desires: Immerse yourself in a unique atmosphere where you can explore and celebrate your passions in a welcoming and inclusive community.\n\nDiscover the transformative power of fusion at Dark Odyssey Fusion, where the boundaries between physical pleasure, spiritual awakening, and personal growth blur into a seamless experience of pure ecstasy. This is not just an event—it's a journey of self-discovery, a celebration of diversity, and a testament to the power of authentic connection.\n\nExperience the magic of our carefully curated programming that bridges the gap between traditional kink practices and spiritual exploration. From intimate workshops that delve deep into the psyche to communal rituals that celebrate our shared humanity, every moment at Dark Odyssey Fusion is designed to awaken your senses and expand your consciousness.\n\nConnect with like-minded souls from across the spectrum of human experience, each bringing their unique perspective and energy to create a tapestry of diversity and inclusion. Whether you identify as queer, swinger, spiritualist, or simply adventurous, you'll find your tribe here among people who understand and celebrate your authentic self.\n\nAs the sun sets over our magical retreat, let the energy of a thousand passionate souls guide you into states of ecstasy you never imagined possible. This is where fantasy becomes reality, where desire meets destiny, and where the journey of transformation begins.",
     "website": "https://darkodyssey.com/fusion/",
     "logo": "/images/darkodyssey.png",
     "features": [
@@ -778,7 +795,7 @@ export const events = [
     },
     "category": "Indoor Event",
     "excerpt": "Charmed! has been setting the standard for in-person, erotic, and recreational hypnosis conventions since 2016. Attendees visit us from all over the world to take part in a multifaceted schedule that includes classes on basic education, recreational demonstrations, and erotic experiences.",
-    "longDescription": "Charmed! has been setting the standard for in-person, erotic, and recreational hypnosis conventions since 2016. Attendees visit us from all over the world to take part in a multifaceted schedule that includes classes on basic education, recreational demonstrations, and erotic experiences. Charmed! provides a safe and welcoming environment in which attendees can feel free to explore their interests and make connections in the larger recreational/erotic hypnosis community.",
+    "longDescription": "Charmed! has been setting the standard for in-person, erotic, and recreational hypnosis conventions since 2016. Attendees visit us from all over the world to take part in a multifaceted schedule that includes classes on basic education, recreational demonstrations, and erotic experiences. Charmed! provides a safe and welcoming environment in which attendees can feel free to explore their interests and make connections in the larger recreational/erotic hypnosis community.\n\nJoin us for an immersive weekend of exploration and discovery in the fascinating world of erotic and recreational hypnosis. Our carefully curated program offers something for everyone, from complete beginners to experienced practitioners. Learn from world-renowned experts who share their knowledge, techniques, and insights in an atmosphere of mutual respect and curiosity.\n\nExperience the magic of hypnosis through hands-on demonstrations, interactive workshops, and engaging presentations. Discover new techniques, refine your skills, and explore the boundaries of consciousness and pleasure. Whether you're interested in the science behind hypnosis, the art of induction, or the sensual applications of trance states, our comprehensive programming has you covered.\n\nNetwork with like-minded individuals from around the globe, share experiences, and build lasting connections within our vibrant community. From structured learning sessions to informal social gatherings, Charmed! creates the perfect environment for growth, exploration, and connection. Join us for an unforgettable weekend where fantasy meets reality and the impossible becomes possible.",
     "website": "https://charmedhypno.org/",
     "logo": "/images/charmed.png",
     "features": [
@@ -870,7 +887,7 @@ export const events = [
     },
     "category": "Indoor Event",
     "excerpt": "Kinky Con is an annual conference celebrating the education and exploration of BDSM, polyamory, gender identity, alternative sexuality, and welcoming people of all ages (18+), race, sexual orientation, gender identity, and spiritual belief.",
-    "longDescription": "Kinky Con is an annual conference celebrating the education and exploration of BDSM, polyamory, gender identity, alternative sexuality, and welcoming people of all ages (18+), race, sexual orientation, gender identity, and spiritual belief. Each event has a unique energy, with varying classes, demos, vendors and other activities (silent auctions, raffles, socials).\n\nOur welcoming community comes together for education and exploration across a diverse range of topics and interests. Expect varying classes, demos, vendors, and activities like silent auctions, raffles, and socials.",
+    "longDescription": "Kinky Con is an annual conference celebrating the education and exploration of BDSM, polyamory, gender identity, alternative sexuality, and welcoming people of all ages (18+), race, sexual orientation, gender identity, and spiritual belief. Each event has a unique energy, with varying classes, demos, vendors and other activities (silent auctions, raffles, socials).\n\nOur welcoming community comes together for education and exploration across a diverse range of topics and interests. Expect varying classes, demos, vendors, and activities like silent auctions, raffles, and socials.\n\nJoin us for an unforgettable weekend of learning, exploration, and embracing your wildest desires in a safe, supportive environment designed for exploration and community building. Whether you're brushing up on the basics or seeking advanced knowledge, our diverse programming has something for everyone.\n\nExperience the unique energy that makes each KinkyCon event special, with carefully curated programming that reflects the evolving needs and interests of our community. From hands-on workshops to thought-provoking discussions, from vendor showcases to social activities, every aspect of the weekend is designed to foster connection, learning, and personal growth.",
     "website": "https://kc.gotomyevent.com/",
     "logo": "/images/kinkycon.png",
     "features": [
@@ -932,12 +949,12 @@ export const events = [
     },
     "category": "Outdoor Event",
     "excerpt": "A summer-camp style weekend celebrating the diversity of kink — come play, explore, and express yourself among a welcoming community.",
-    "longDescription": "FetCamp celebrates the diversity of kink in a liberating summer-camp atmosphere. Enjoy classes and peer exchanges alongside playful self-expression and camaraderie among like‑minded folks. All identities and fetishes are welcome — come play and have a wonderfully liberating time.",
+    "longDescription": "FetCamp celebrates the diversity of kink in a liberating summer-camp atmosphere. Enjoy classes and peer exchanges alongside playful self-expression and camaraderie among like-minded folks. All identities and fetishes are welcome — come play and have a wonderfully liberating time.",
     "website": "https://www.fetcamp.com/",
     "logo": "/images/fetcamp.png",
     "seo": {
       "title": "FetCamp - Maryland Outdoor Kink Camp | East Coast Kink Events",
-      "description": "A liberating kink camp weekend with classes, peer exchanges, and playful self‑expression among a welcoming community.",
+      "description": "A liberating kink camp weekend with classes, peer exchanges, and playful self-expression among a welcoming community.",
       "keywords": "FetCamp, Maryland, kink camp, classes, community"
     }
   },
@@ -957,7 +974,7 @@ export const events = [
     },
     "category": "Outdoor Event",
     "excerpt": "A new summer adventure full of excitement and exploration awaits you at a well-appointed campground on the East Coast. You can look forward to engaging workshops spanning from the thoughtful thinky think to hands-on experiences, ensuring you never have to sacrifice one for the other.",
-    "longDescription": "A new summer adventure full of excitement and exploration awaits you at a well-appointed campground on the East Coast. You can look forward to engaging workshops spanning from the thoughtful thinky think to hands-on experiences, ensuring you never have to sacrifice one for the other. Each day is curated with unique themes to spark your desires, alongside the availability of not just one but TWO dungeons open daily for your indulgence. Additionally, there are outdoor play spaces, thrilling evening activities, a bustling vendor market, and an array of other offerings waiting for you to discover and enjoy.",
+    "longDescription": "A new summer adventure full of excitement and exploration awaits you at a well-appointed campground on the East Coast. You can look forward to engaging workshops spanning from the thoughtful thinky think to hands-on experiences, ensuring you never have to sacrifice one for the other. Each day is curated with unique themes to spark your desires, alongside the availability of not just one but TWO dungeons open daily for your indulgence. Additionally, there are outdoor play spaces, thrilling evening activities, a bustling vendor market, and an array of other offerings waiting for you to discover and enjoy.\n\nStep into a world where adventure meets sophistication at Rendezvous at the Ridge. Our carefully designed program balances intellectual stimulation with physical exploration, creating an environment where both your mind and body can find fulfillment. From thought-provoking discussions that challenge your perspectives to hands-on experiences that ignite your passions, every moment is crafted to enhance your journey of discovery.\n\nExperience the luxury of choice with our dual-dungeon setup, offering different atmospheres and equipment to suit your mood and preferences. Whether you're in the mood for intimate exploration or grand-scale adventure, our well-equipped spaces provide the perfect backdrop for your desires.\n\nImmerse yourself in our vibrant community where connections are made, skills are shared, and experiences are celebrated. From the crackling energy of our vendor market to the quiet intimacy of our outdoor play spaces, from the excitement of our evening activities to the peaceful contemplation of our natural surroundings, Rendezvous at the Ridge offers a complete experience that speaks to every aspect of your being.\n\nJoin us for a weekend where every desire finds expression, every question finds an answer, and every moment becomes a memory to cherish. This is where summer dreams come true and where the adventure of a lifetime awaits.",
     "website": "https://fetlife.com/events/1439077",
     "logo": "/images/rende.PNG",
     "features": [
@@ -1018,7 +1035,7 @@ export const events = [
     },
     "category": "Indoor Event",
     "excerpt": "We bring in top entertainers to mesmerize you each evening with their talents. From world-renowned DJs that keep the music bumping all night long, to mind-blowing bands that make you sing along, to performers like aerialists, cirque performers, professional pole and gogo dancers, burlesque and boylesque.",
-    "longDescription": "We bring in top entertainers to mesmerize you each evening with their talents. From world-renowned DJs that keep the music bumping all night long, to mind-blowing bands that make you sing along, to performers like aerialists, cirque performers, professional pole and gogo dancers, burlesque and boylesque, the entertainment at Naughty N'awlins will elevate your experience and leave you wanting more.\n\nNaughty N'awlins hosts the world's biggest (and only) \"Sexual Freedom Parade.\" This is a truly unique and amazing opportunity worth experiencing. March with us as we stand up for Sexual Freedom! Make a sign, and join your Naughty friends as we make a statement throughout the French Quarter.\n\nYou have your choice between; the Astor Crowne Plaza Hotel on Bourbon St & Canal and the NOPSI Hotel just a few blocks away. Each hotel is a different experience and is sure to provide you with all the comforts and amenities you need in order to enjoy your time at Naughty N'awlins.",
+    "longDescription": "We bring in top entertainers to mesmerize you each evening with their talents. From world-renowned DJs that keep the music bumping all night long, to mind-blowing bands that make you sing along, to performers like aerialists, cirque performers, professional pole and gogo dancers, burlesque and boylesque, the entertainment at Naughty N'awlins will elevate your experience and leave you wanting more.\n\nNaughty N'awlins hosts the world's biggest (and only) \"Sexual Freedom Parade.\" This is a truly unique and amazing opportunity worth experiencing. March with us as we stand up for Sexual Freedom! Make a sign, and join your Naughty friends as we make a statement throughout the French Quarter.\n\nYou have your choice between; the Astor Crowne Plaza Hotel on Bourbon St & Canal and the NOPSI Hotel just a few blocks away. Each hotel is a different experience and is sure to provide you with all the comforts and amenities you need in order to enjoy your time at Naughty N'awlins.\n\nExperience the magic of New Orleans like never before at Naughty N'Awlins, where the spirit of the Big Easy meets the passion of adult entertainment in perfect harmony. Our world-class lineup of entertainers represents the very best in their respective fields, bringing you performances that will leave you breathless and wanting more. From the pulsating rhythms of our internationally acclaimed DJs to the heart-stopping acrobatics of our cirque performers, every moment is designed to transport you to a world of pure entertainment bliss.\n\nImmerse yourself in the electric atmosphere of our Sexual Freedom Parade, a one-of-a-kind celebration that takes over the historic French Quarter in a display of unity, pride, and liberation. This isn't just a parade—it's a movement, a statement, and an unforgettable experience that you'll carry with you forever. March alongside hundreds of like-minded individuals as we make our voices heard and our presence felt in one of America's most iconic neighborhoods.\n\nChoose your adventure with our carefully curated hotel options, each offering its own unique character and amenities. The Astor Crowne Plaza puts you in the heart of the action on Bourbon Street, while the NOPSI Hotel offers a more sophisticated retreat just steps away. Both locations provide the perfect base for your Naughty N'Awlins experience, ensuring you have everything you need for comfort, convenience, and unforgettable memories.\n\nJoin us for a weekend where fantasy becomes reality, where entertainment reaches new heights, and where the spirit of New Orleans comes alive in ways you never imagined possible.",
     "website": "https://www.naughty-events.com/cover-naughty-nawlins",
     "logo": "/images/naughtynawlins.png",
     "features": [
