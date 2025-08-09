@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { supabaseAdmin } from '@/lib/supabase'
+import { supabase } from '@/lib/supabase'
 
 export async function POST(
   request: NextRequest,
@@ -7,13 +7,29 @@ export async function POST(
 ) {
   try {
     const { id } = params
+    const body = await request.json()
 
-    // Get the admin client
-    const client = supabaseAdmin.value
+    // Get the Supabase client
+    const client = supabase
     if (!client) {
       return NextResponse.json(
-        { error: 'Supabase admin client not configured' },
+        { error: 'Supabase client not configured' },
         { status: 500 }
+      )
+    }
+
+    // First, get the submission to log it
+    const { data: submission, error: fetchError } = await client
+      .from('submissions')
+      .select('*')
+      .eq('id', id)
+      .single()
+
+    if (fetchError) {
+      console.error('Error fetching submission:', fetchError)
+      return NextResponse.json(
+        { error: 'Submission not found' },
+        { status: 404 }
       )
     }
 
@@ -23,16 +39,34 @@ export async function POST(
       .update({
         status: 'rejected',
         reviewed_at: new Date().toISOString(),
-        reviewed_by: 'admin' // You might want to get this from the session
+        reviewer_notes: body.reviewerNotes || `Rejected on ${new Date().toLocaleDateString()}`
       })
       .eq('id', id)
 
     if (updateError) {
       console.error('Error updating submission:', updateError)
       return NextResponse.json(
-        { error: 'Failed to reject submission' },
+        { error: 'Failed to reject submission: ' + updateError.message },
         { status: 500 }
       )
+    }
+
+    // Log the rejection in moderation_logs
+    if (submission) {
+      const { error: logError } = await client
+        .from('moderation_logs')
+        .insert({
+          action: 'rejected',
+          article_title: submission.article_title || submission.contact_name || 'Unknown',
+          article_id: submission.id,
+          admin_name: 'Admin',
+          notes: body.reviewerNotes || 'Rejected by admin'
+        })
+
+      if (logError) {
+        console.error('Error logging rejection:', logError)
+        // Don't fail the request if logging fails
+      }
     }
 
     return NextResponse.json({ success: true })

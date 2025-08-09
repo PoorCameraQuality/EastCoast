@@ -8,12 +8,14 @@ import { useState } from 'react'
 import { EventListStructuredData } from '@/components/StructuredData'
 import Breadcrumb from '@/components/Breadcrumb'
 import Search from '@/components/Search'
+import EventSubmissionForm from '@/components/events/EventSubmissionForm'
 
 export default function EventsPageClient() {
   const allEvents = getAllEvents()
   const allDungeons = getAllDungeons()
   const categories = ['Outdoor Events', 'Indoor Events']
   const [selectedCategory, setSelectedCategory] = useState('All Events')
+  const [showSubmitForm, setShowSubmitForm] = useState(false)
 
   // Map plural button labels to singular category values
   const getCategoryForFilter = (filterLabel: string) => {
@@ -77,7 +79,24 @@ export default function EventsPageClient() {
               placeholder="Search events..."
             />
           </div>
+
+          {/* Submit Event Button */}
+          <div className="mb-8">
+            <button
+              onClick={() => setShowSubmitForm(!showSubmitForm)}
+              className="btn-primary"
+            >
+              {showSubmitForm ? 'Cancel Submission' : 'Submit Your Event'}
+            </button>
+          </div>
         </div>
+
+        {/* Submit Event Form */}
+        {showSubmitForm && (
+          <div className="mb-16">
+            <EventSubmissionForm />
+          </div>
+        )}
 
         {/* Filter Section */}
         <div className="mb-12">

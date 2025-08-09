@@ -6,10 +6,13 @@ import Link from 'next/link'
 import DungeonLogo from '@/components/DungeonLogo'
 import Breadcrumb from '@/components/Breadcrumb'
 import Search from '@/components/Search'
+import DungeonSubmissionForm from '@/components/dungeons/DungeonSubmissionForm'
+import { useState } from 'react'
 
 export default function DungeonsPageClient() {
   const allDungeons = getAllDungeons()
   const allEvents = getAllEvents()
+  const [showSubmitForm, setShowSubmitForm] = useState(false)
 
   const breadcrumbItems = [
     { label: 'Home', href: '/' },
@@ -36,7 +39,24 @@ export default function DungeonsPageClient() {
               placeholder="Search dungeons..."
             />
           </div>
+
+          {/* Submit Dungeon Button */}
+          <div className="mb-8">
+            <button
+              onClick={() => setShowSubmitForm(!showSubmitForm)}
+              className="btn-primary"
+            >
+              {showSubmitForm ? 'Cancel Submission' : 'Submit Your Dungeon'}
+            </button>
+          </div>
         </div>
+
+        {/* Submit Dungeon Form */}
+        {showSubmitForm && (
+          <div className="mb-16">
+            <DungeonSubmissionForm />
+          </div>
+        )}
 
         {/* Mobile: Vertical card layout */}
         <div className="md:hidden space-y-6 mb-8">

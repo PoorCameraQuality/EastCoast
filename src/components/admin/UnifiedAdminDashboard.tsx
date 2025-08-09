@@ -16,7 +16,7 @@ interface User {
 interface Submission {
   id: string
   submitted_at: string
-  submission_type: 'article' | 'contact'
+  submission_type: 'article' | 'contact' | 'event' | 'dungeon'
   author_name: string
   author_email: string
   author_credentials?: string
@@ -125,7 +125,41 @@ export default function UnifiedAdminDashboard({ user, isAdmin: isAdminProp }: Un
         })
 
         if (response.ok) {
-          alert('Submission approved and published!')
+          alert('Article submission approved and published!')
+          fetchSubmissions()
+          setSelectedSubmission(null)
+        } else {
+          alert('Error approving submission')
+        }
+      } catch (error) {
+        console.error('Error:', error)
+        alert('Error approving submission')
+      }
+    } else if (submission.submission_type === 'event') {
+      try {
+        const response = await fetch(`/api/admin/submissions/${submission.id}/approve`, {
+          method: 'POST',
+        })
+
+        if (response.ok) {
+          alert('Event submission approved and published!')
+          fetchSubmissions()
+          setSelectedSubmission(null)
+        } else {
+          alert('Error approving submission')
+        }
+      } catch (error) {
+        console.error('Error:', error)
+        alert('Error approving submission')
+      }
+    } else if (submission.submission_type === 'dungeon') {
+      try {
+        const response = await fetch(`/api/admin/submissions/${submission.id}/approve`, {
+          method: 'POST',
+        })
+
+        if (response.ok) {
+          alert('Dungeon submission approved and published!')
           fetchSubmissions()
           setSelectedSubmission(null)
         } else {
@@ -203,6 +237,23 @@ export default function UnifiedAdminDashboard({ user, isAdmin: isAdminProp }: Un
     }
 
     try {
+      // First, log the deletion in moderation_logs
+      const { error: logError } = await supabase
+        .from('moderation_logs')
+        .insert({
+          action: 'deleted',
+          article_title: submission.article_title || submission.contact_name || 'Unknown',
+          article_id: submission.id,
+          admin_name: 'Admin',
+          notes: 'Permanently deleted by admin'
+        })
+
+      if (logError) {
+        console.error('Error logging deletion:', logError)
+        // Continue with deletion even if logging fails
+      }
+
+      // Then delete the submission
       const { error } = await supabase
         .from('submissions')
         .delete()
@@ -210,7 +261,7 @@ export default function UnifiedAdminDashboard({ user, isAdmin: isAdminProp }: Un
 
       if (error) {
         console.error('Error deleting submission:', error)
-        alert('Error deleting submission')
+        alert('Error deleting submission: ' + error.message)
       } else {
         alert('Submission deleted successfully!')
         fetchSubmissions()
@@ -813,53 +864,128 @@ export default function UnifiedAdminDashboard({ user, isAdmin: isAdminProp }: Un
               <form onSubmit={handleArticleSubmit} className="space-y-8">
                 <div className="bg-dark-800 p-6 rounded-lg">
                   <h2 className="text-2xl font-semibold text-white mb-6">Create New Article</h2>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                      <label className="block text-white font-medium mb-2">Article Title</label>
-                      <input
-                        type="text"
-                        name="title"
-                        value={articleData.title}
-                        onChange={(e) => setArticleData(prev => ({ ...prev, title: e.target.value }))}
-                        className="w-full bg-dark-700 border border-dark-600 rounded-lg px-4 py-3 text-white"
+                  
+                  {/* Author Information */}
+                  <div className="mb-8">
+                    <h3 className="text-lg font-semibold text-white mb-4 border-b border-dark-600 pb-2">Author Information</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div>
+                        <label className="block text-white font-medium mb-2">Author Name *</label>
+                        <input
+                          type="text"
+                          name="author_name"
+                          value={articleData.author_name}
+                          onChange={(e) => setArticleData(prev => ({ ...prev, author_name: e.target.value }))}
+                          className="w-full bg-dark-700 border border-dark-600 rounded-lg px-4 py-3 text-white"
+                          required
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-white font-medium mb-2">Author Credentials</label>
+                        <input
+                          type="text"
+                          name="author_credentials"
+                          value={articleData.author_credentials}
+                          onChange={(e) => setArticleData(prev => ({ ...prev, author_credentials: e.target.value }))}
+                          className="w-full bg-dark-700 border border-dark-600 rounded-lg px-4 py-3 text-white"
+                          placeholder="e.g., Certified Educator, BDSM Professional"
+                        />
+                      </div>
+                    </div>
+                    <div className="mt-6">
+                      <label className="block text-white font-medium mb-2">Author Bio *</label>
+                      <textarea
+                        name="author_bio"
+                        value={articleData.author_bio}
+                        onChange={(e) => setArticleData(prev => ({ ...prev, author_bio: e.target.value }))}
+                        className="w-full bg-dark-700 border border-dark-600 rounded-lg px-4 py-3 text-white h-24"
+                        placeholder="Tell us about the author..."
                         required
                       />
                     </div>
-                    <div>
-                      <label className="block text-white font-medium mb-2">Category</label>
-                      <select
-                        name="category"
-                        value={articleData.category}
-                        onChange={(e) => setArticleData(prev => ({ ...prev, category: e.target.value }))}
-                        className="w-full bg-dark-700 border border-dark-600 rounded-lg px-4 py-3 text-white"
+                  </div>
+
+                  {/* Article Information */}
+                  <div className="mb-8">
+                    <h3 className="text-lg font-semibold text-white mb-4 border-b border-dark-600 pb-2">Article Information</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div>
+                        <label className="block text-white font-medium mb-2">Article Title *</label>
+                        <input
+                          type="text"
+                          name="title"
+                          value={articleData.title}
+                          onChange={(e) => setArticleData(prev => ({ ...prev, title: e.target.value }))}
+                          className="w-full bg-dark-700 border border-dark-600 rounded-lg px-4 py-3 text-white"
+                          required
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-white font-medium mb-2">Category *</label>
+                        <select
+                          name="category"
+                          value={articleData.category}
+                          onChange={(e) => setArticleData(prev => ({ ...prev, category: e.target.value }))}
+                          className="w-full bg-dark-700 border border-dark-600 rounded-lg px-4 py-3 text-white"
+                          required
+                        >
+                          <option value="">Select Category</option>
+                          <option value="Safety">Safety</option>
+                          <option value="Techniques">Techniques</option>
+                          <option value="Community">Community</option>
+                          <option value="Resources">Resources</option>
+                          <option value="Consent">Consent</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div className="mt-6">
+                      <label className="block text-white font-medium mb-2">Article Excerpt *</label>
+                      <textarea
+                        name="excerpt"
+                        value={articleData.excerpt}
+                        onChange={(e) => setArticleData(prev => ({ ...prev, excerpt: e.target.value }))}
+                        className="w-full bg-dark-700 border border-dark-600 rounded-lg px-4 py-3 text-white h-24"
+                        placeholder="A brief summary of the article..."
                         required
-                      >
-                        <option value="">Select Category</option>
-                        <option value="Safety">Safety</option>
-                        <option value="Techniques">Techniques</option>
-                        <option value="Community">Community</option>
-                        <option value="Resources">Resources</option>
-                        <option value="Consent">Consent</option>
-                      </select>
+                      />
+                    </div>
+                    <div className="mt-6">
+                      <label className="block text-white font-medium mb-2">Tags</label>
+                      <input
+                        type="text"
+                        name="tags"
+                        value={articleData.tags}
+                        onChange={(e) => setArticleData(prev => ({ ...prev, tags: e.target.value }))}
+                        className="w-full bg-dark-700 border border-dark-600 rounded-lg px-4 py-3 text-white"
+                        placeholder="Comma-separated tags (e.g., safety, beginners, rope)"
+                      />
+                    </div>
+                    <div className="mt-6">
+                      <label className="flex items-center space-x-2">
+                        <input
+                          type="checkbox"
+                          name="featured"
+                          checked={articleData.featured}
+                          onChange={(e) => setArticleData(prev => ({ ...prev, featured: e.target.checked }))}
+                          className="w-4 h-4 text-primary-500 bg-dark-700 border-dark-600 rounded focus:ring-primary-500"
+                        />
+                        <span className="text-white font-medium">Featured Article</span>
+                      </label>
                     </div>
                   </div>
-                  <div className="mt-6">
-                    <label className="block text-white font-medium mb-2">Article Excerpt</label>
-                    <textarea
-                      name="excerpt"
-                      value={articleData.excerpt}
-                      onChange={(e) => setArticleData(prev => ({ ...prev, excerpt: e.target.value }))}
-                      className="w-full bg-dark-700 border border-dark-600 rounded-lg px-4 py-3 text-white h-24"
-                      required
-                    />
+
+                  {/* Article Content */}
+                  <div className="mb-8">
+                    <h3 className="text-lg font-semibold text-white mb-4 border-b border-dark-600 pb-2">Article Content</h3>
+                    <div>
+                      <label className="block text-white font-medium mb-2">Article Content *</label>
+                      <RichTextEditor
+                        content={articleData.content}
+                        onChange={(content) => setArticleData(prev => ({ ...prev, content }))}
+                      />
+                    </div>
                   </div>
-                  <div className="mt-6">
-                    <label className="block text-white font-medium mb-2">Article Content</label>
-                    <RichTextEditor
-                      content={articleData.content}
-                      onChange={(content) => setArticleData(prev => ({ ...prev, content }))}
-                    />
-                  </div>
+
                   <div className="mt-6">
                     <button
                       type="submit"
