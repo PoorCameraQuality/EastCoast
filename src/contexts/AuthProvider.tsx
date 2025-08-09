@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState, ReactNode } from "react";
-import { supabase, restoreSession, syncSessionWithCookies, forceSessionRefresh } from "@/lib/supabase";
+import { supabase, restoreSession } from "@/lib/supabase";
 import type { Session, PostgrestError } from '@supabase/supabase-js';
 
 interface Profile {
@@ -22,7 +22,6 @@ type AuthContextType = {
   loading: boolean;
   isAdmin: boolean;
   refreshAuth: () => Promise<void>;
-  forceRefresh: () => Promise<void>;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -43,9 +42,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setLoading(false);
         return;
       }
-
-      // Sync session with cookies first
-      await syncSessionWithCookies();
 
       // Attempt to restore session from storage first
       const { session: restoredSession, error: restoreError } = await restoreSession();
@@ -76,14 +72,29 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       console.log('✅ AUTH PROVIDER: Session found for:', session.user.email);
 
       // Get user profile with role
-      const { data: profile, error: profileError } = await supabase
+      console.log('🔍 AUTH PROVIDER: Looking for profile with user ID:', session.user.id);
+      const { data: profiles, error: profileError } = await supabase
         .from('profiles')
         .select('id, role, name')
-        .eq('id', session.user.id)
-        .single() as { data: Profile | null, error: PostgrestError | null };
+        .eq('id', session.user.id);
 
-      if (profileError || !profile) {
+      if (profileError) {
         console.log('❌ AUTH PROVIDER: Profile error:', profileError);
+        setUser(null);
+        setIsAdmin(false);
+        setLoading(false);
+        return;
+      }
+
+      // Handle multiple profiles or no profile
+      let profile = null;
+      if (profiles && profiles.length > 0) {
+        // If multiple profiles exist, use the first one (shouldn't happen but just in case)
+        profile = profiles[0];
+        console.log('✅ AUTH PROVIDER: Found profile:', profile);
+      } else {
+        console.log('❌ AUTH PROVIDER: No profile found for user:', session.user.id);
+        console.log('🔍 AUTH PROVIDER: Available profiles:', profiles);
         setUser(null);
         setIsAdmin(false);
         setLoading(false);
@@ -108,16 +119,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setUser(null);
       setIsAdmin(false);
       setLoading(false);
-    }
-  };
-
-  const forceRefresh = async () => {
-    try {
-      console.log('🔄 AUTH PROVIDER: Force refreshing session...');
-      await forceSessionRefresh();
-      await refreshAuth();
-    } catch (error) {
-      console.error('❌ AUTH PROVIDER: Error force refreshing:', error);
     }
   };
 
@@ -168,12 +169,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         
         if (!mounted || !supabase) return;
 
-        // Sync session with cookies first
-        await syncSessionWithCookies();
-        
-        // Force session refresh to ensure cookies are set
-        await forceSessionRefresh();
-        
         // Explicitly restore session first
         await refreshAuth();
       } catch (error) {
@@ -203,7 +198,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   return (
     <AuthContext.Provider
-      value={{ user, loading, isAdmin, refreshAuth, forceRefresh }}
+      value={{ user, loading, isAdmin, refreshAuth }}
     >
       {children}
     </AuthContext.Provider>
