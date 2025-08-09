@@ -61,6 +61,7 @@ export default function UnifiedAdminDashboard({ user, isAdmin: isAdminProp }: Un
   const [filter, setFilter] = useState<FilterType>('pending')
   const [selectedSubmission, setSelectedSubmission] = useState<Submission | null>(null)
   const [contentType, setContentType] = useState<ContentType>('event')
+  const [isClient, setIsClient] = useState(false)
 
   // Create content form states
   const [eventData, setEventData] = useState({
@@ -85,10 +86,17 @@ export default function UnifiedAdminDashboard({ user, isAdmin: isAdminProp }: Un
   const [logoFile, setLogoFile] = useState<File | null>(null)
   const [logoPreview, setLogoPreview] = useState<string | null>(null)
 
-  // Fetch data on component mount
+  // Handle hydration
   useEffect(() => {
-    fetchSubmissions()
+    setIsClient(true)
   }, [])
+
+  // Fetch data on component mount (only on client)
+  useEffect(() => {
+    if (isClient) {
+      fetchSubmissions()
+    }
+  }, [isClient])
 
   // Data fetching functions
   const fetchSubmissions = async () => {
@@ -119,6 +127,8 @@ export default function UnifiedAdminDashboard({ user, isAdmin: isAdminProp }: Un
 
   // Submission management functions
   const handleApprove = async (submission: Submission) => {
+    if (!isClient) return
+
     if (submission.submission_type === 'article') {
       try {
         const response = await fetch(`/api/admin/submissions/${submission.id}/approve`, {
@@ -127,7 +137,12 @@ export default function UnifiedAdminDashboard({ user, isAdmin: isAdminProp }: Un
 
         if (response.ok) {
           alert('Article submission approved and published!')
-          fetchSubmissions()
+          // Update the submission status locally
+          setSubmissions(prev => prev.map(s => 
+            s.id === submission.id 
+              ? { ...s, status: 'approved', reviewed_at: new Date().toISOString() }
+              : s
+          ))
           setSelectedSubmission(null)
         } else {
           alert('Error approving submission')
@@ -144,7 +159,12 @@ export default function UnifiedAdminDashboard({ user, isAdmin: isAdminProp }: Un
 
         if (response.ok) {
           alert('Event submission approved and published!')
-          fetchSubmissions()
+          // Update the submission status locally
+          setSubmissions(prev => prev.map(s => 
+            s.id === submission.id 
+              ? { ...s, status: 'approved', reviewed_at: new Date().toISOString() }
+              : s
+          ))
           setSelectedSubmission(null)
         } else {
           alert('Error approving submission')
@@ -161,7 +181,12 @@ export default function UnifiedAdminDashboard({ user, isAdmin: isAdminProp }: Un
 
         if (response.ok) {
           alert('Dungeon submission approved and published!')
-          fetchSubmissions()
+          // Update the submission status locally
+          setSubmissions(prev => prev.map(s => 
+            s.id === submission.id 
+              ? { ...s, status: 'approved', reviewed_at: new Date().toISOString() }
+              : s
+          ))
           setSelectedSubmission(null)
         } else {
           alert('Error approving submission')
@@ -192,7 +217,12 @@ export default function UnifiedAdminDashboard({ user, isAdmin: isAdminProp }: Un
           alert('Error updating submission')
         } else {
           alert('Contact submission marked as responded!')
-          fetchSubmissions()
+          // Update the submission status locally
+          setSubmissions(prev => prev.map(s => 
+            s.id === submission.id 
+              ? { ...s, status: 'responded', reviewed_at: new Date().toISOString() }
+              : s
+          ))
           setSelectedSubmission(null)
         }
       } catch (error) {
@@ -203,6 +233,8 @@ export default function UnifiedAdminDashboard({ user, isAdmin: isAdminProp }: Un
   }
 
   const handleReject = async (submission: Submission) => {
+    if (!isClient) return
+
     try {
       const response = await fetch(`/api/admin/submissions/${submission.id}/reject`, {
         method: 'POST',
@@ -216,7 +248,12 @@ export default function UnifiedAdminDashboard({ user, isAdmin: isAdminProp }: Un
 
       if (response.ok) {
         alert('Submission rejected!')
-        fetchSubmissions()
+        // Update the submission status locally
+        setSubmissions(prev => prev.map(s => 
+          s.id === submission.id 
+            ? { ...s, status: 'rejected', reviewed_at: new Date().toISOString() }
+            : s
+        ))
         setSelectedSubmission(null)
       } else {
         alert('Error rejecting submission')
@@ -228,6 +265,8 @@ export default function UnifiedAdminDashboard({ user, isAdmin: isAdminProp }: Un
   }
 
   const handleDelete = async (submission: Submission) => {
+    if (!isClient) return
+
     if (!confirm(`Are you sure you want to delete this ${submission.submission_type} submission? This action cannot be undone.`)) {
       return
     }
@@ -265,7 +304,8 @@ export default function UnifiedAdminDashboard({ user, isAdmin: isAdminProp }: Un
         alert('Error deleting submission: ' + error.message)
       } else {
         alert('Submission deleted successfully!')
-        fetchSubmissions()
+        // Remove the submission from local state
+        setSubmissions(prev => prev.filter(s => s.id !== submission.id))
         setSelectedSubmission(null)
       }
     } catch (error) {
@@ -434,6 +474,18 @@ export default function UnifiedAdminDashboard({ user, isAdmin: isAdminProp }: Un
   }
 
   const counts = getSubmissionCounts()
+
+  // Don't render until client-side hydration is complete
+  if (!isClient) {
+    return (
+      <div className="min-h-screen bg-dark-900 flex items-center justify-center">
+        <div className="text-center">
+          <div className="text-white text-xl mb-4">Loading...</div>
+          <div className="text-gray-400">Initializing admin dashboard...</div>
+        </div>
+      </div>
+    )
+  }
 
   if (!isAdminProp) {
     return (
