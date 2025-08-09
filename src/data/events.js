@@ -1,52 +1,6 @@
 // Events data with SEO optimization
 export const events = [
   {
-    "name": "SMIRC 2024 - Past Event",
-    "slug": "smirc-2024-past",
-    "date": {
-      "start": "2024-08-02",
-      "end": "2024-08-04",
-      "display": "Aug 2-4, 2024"
-    },
-    "location": {
-      "city": "Troy",
-      "state": "MI",
-      "region": "Southeast, Michigan"
-    },
-    "category": "Indoor Event",
-    "excerpt": "The Summer Michigan Rope Conference (SMIRC) took place from August 2-4, 2024, at the Wingate Hotel in Troy, MI. This event featured top presenters from the US and Canada, offering a weekend of intensive rope education.",
-    "website": "https://www.smirc.net/",
-    "logo": "/images/smirc.jpg",
-    "seo": {
-      "title": "SMIRC 2024 - Past Michigan Rope Conference | East Coast Kink Events",
-      "description": "SMIRC 2024 was an intensive rope education event with top presenters from the US and Canada at the Wingate Hotel in Troy, MI.",
-      "keywords": "SMIRC 2024, Michigan rope conference, rope education, BDSM, Troy Michigan, rope bondage"
-    }
-  },
-  {
-    "name": "Dark Odyssey Summer Camp 2024",
-    "slug": "dark-odyssey-summer-camp-2024",
-    "date": {
-      "start": "2024-08-27",
-      "end": "2024-09-02",
-      "display": "Aug 27-Sep 2, 2024"
-    },
-    "location": {
-      "city": "Northern Maryland",
-      "state": "MD",
-      "region": "NorthEastern, Maryland"
-    },
-    "category": "Outdoor Event",
-    "excerpt": "Dark Odyssey's Summer Camp took place from August 27 to September 2, 2024, in Northern Maryland. This seven-day event blended kink and BDSM with spiritual exploration.",
-    "website": "https://darkodyssey.com/",
-    "logo": "/images/darkodyssey.png",
-    "seo": {
-      "title": "Dark Odyssey Summer Camp 2024 - Past Maryland BDSM Camp | East Coast Kink Events",
-      "description": "Dark Odyssey's Summer Camp 2024 was a seven-day event blending kink and BDSM with spiritual exploration in Northern Maryland.",
-      "keywords": "Dark Odyssey 2024, summer camp, Maryland, BDSM, spiritual exploration, outdoor event"
-    }
-  },
-  {
     "name": "The Master/slave Conference MsC 2024",
     "slug": "master-slave-conference-msc-2024",
     "date": {
@@ -149,7 +103,7 @@ export const events = [
     },
     "category": "Indoor Event",
     "excerpt": "Join us for an unforgettable kink and BDSM event at the Master slave Conference! Dive into 120 educational opportunities, including classes, panels, and intensives. Enjoy plenary events like the Meet & Greet Reception, Keynote Speaker, and Master/slave Contest. Explore exhibits from the Leather Library and Archives, shop at the Fetish Marketplace, and enjoy entertainment from cigar parties to dance shows. Connect in the Reconnecting Lounge or seek spiritual support in the Sanctuary. Secure your tickets now for this enriching experience!",
-    "longDescription": "Join us for an unforgettable kink and BDSM event at the Master slave Conference! Dive into 120 educational opportunities, including classes, panels, and intensives. Enjoy plenary events like the Meet & Greet Reception, Keynote Speaker, and Master/slave Contest. Explore exhibits from the Leather Library and Archives, shop at the Fetish Marketplace, and enjoy entertainment from cigar parties to dance shows. Connect in the Reconnecting Lounge or seek spiritual support in the Sanctuary. Secure your tickets now for this enriching experience!",
+    "longDescription": "Join us for an unforgettable kink and BDSM event at the Master slave Conference! Dive into 120 educational opportunities, including classes, panels, and intensives. Enjoy plenary events like the Meet & Greet Reception, Keynote Speaker, and Master/slave Contest. Explore exhibits from the Leather Library and Archives, shop at the Fetish Marketplace, and enjoy entertainment from cigar parties to dance shows. Connect in the Reconnecting Lounge or seek spiritual support in the Sanctuary. Secure your tickets now for this enriching experience!\n\nExperience the pinnacle of authority-based relationship education at the Master/slave Conference, where knowledge meets community in the heart of Washington, DC. Our comprehensive program offers an unparalleled opportunity to dive deep into the complexities of Master/slave dynamics through 120 carefully curated educational opportunities. From foundational classes for beginners to advanced intensives for experienced practitioners, every session is designed to expand your understanding and enhance your relationships.\n\nImmerse yourself in our diverse programming that spans the full spectrum of authority-based relationships. Attend thought-provoking panels led by community leaders and experts, participate in hands-on intensives that allow for deep exploration of specific topics, and engage in meaningful discussions that challenge your perspectives and expand your knowledge. Our educational offerings cover everything from basic concepts to advanced techniques, ensuring there's something valuable for everyone regardless of experience level.\n\nCelebrate excellence at our signature Master/slave Contest, where couples from across the community showcase their relationships and compete for recognition. This prestigious event highlights the beauty and complexity of authority-based relationships while providing inspiration and guidance for others on similar paths. Witness the dedication, communication, and mutual respect that define successful Master/slave dynamics.\n\nExplore our rich heritage through the Leather Library and Archives exhibits, where you can connect with the history and traditions that have shaped our community. Browse the extensive collection of literature, artifacts, and memorabilia that tell the story of our movement and its evolution over time. This living history serves as both education and inspiration for future generations.\n\nIndulge your desires at the Fetish Marketplace, where you'll find an extensive selection of toys, clothing, equipment, and accessories from the best vendors in the community. Whether you're shopping for practical items or indulging in luxury purchases, our marketplace offers something for every taste and budget. Connect with vendors who understand your needs and can provide expert guidance on their products.\n\nFind your perfect balance of social connection and spiritual support throughout the weekend. The Reconnecting Lounge provides a comfortable space to network, share experiences, and build lasting friendships with like-minded individuals. For those seeking spiritual nourishment, our Sanctuary offers a peaceful retreat for reflection, meditation, and spiritual support in a judgment-free environment.\n\nEntertainment options abound, from sophisticated cigar parties that encourage networking and conversation to high-energy dance shows that celebrate the joy and passion of our community. Every evening brings new opportunities to socialize, relax, and enjoy the vibrant atmosphere that makes the Master/slave Conference so special.\n\nJoin us for five days of education, celebration, and community building in the nation's capital. Whether you're exploring authority-based relationships for the first time or you're a seasoned practitioner, the Master/slave Conference offers an enriching experience that will enhance your journey and strengthen your connections within our community.",
     "website": "https://masterslaveconference.org/",
     "logo": "/images/masterslaveconference.jpg",
     "features": [
@@ -159,13 +113,20 @@ export const events = [
       "Leather Library & Archives",
       "Fetish Marketplace",
       "Plenary Events",
+      "Meet & Greet Reception",
+      "Keynote Speaker",
       "Reconnecting Lounge",
-      "Sanctuary for Spiritual Support"
+      "Sanctuary for Spiritual Support",
+      "Cigar Parties",
+      "Dance Shows",
+      "Community Networking",
+      "Expert Guidance",
+      "Heritage & History"
     ],
     "seo": {
       "title": "The Master/slave Conference MsC - Washington DC BDSM Education | East Coast Kink Events",
       "description": "Join the Master/slave Conference MsC in Washington, DC from August 28-September 1, 2025. Experience 120 educational opportunities, the Master/slave Contest, Leather Library exhibits, and more.",
-      "keywords": "Master slave conference, MsC, Washington DC, BDSM education, authority-based relationships, Master/slave Contest, Fetish Marketplace"
+      "keywords": "Master slave conference, MsC, Washington DC, BDSM education, authority-based relationships, Master/slave Contest, Fetish Marketplace, Leather Library"
     }
   },
   {
