@@ -547,26 +547,45 @@ export const events = [
     }
   },
   {
-    "name": "Beltane",
+    "name": "THE Beltane",
     "slug": "beltane",
     "date": {
-      "start": "2026-04-30",
-      "end": "2026-05-03",
-      "display": "Apr 30-May 3, 2026"
+      "start": "2025-04-30",
+      "end": "2025-05-04",
+      "display": "Apr 30-May 4, 2025"
     },
     "location": {
-      "city": "Northern Maryland",
+      "city": "North Eastern",
       "state": "MD",
-      "region": "NorthEastern, Maryland"
+      "region": "North Eastern, Maryland"
     },
     "category": "Outdoor Event",
-    "excerpt": "Beltane is a four-day outdoor BDSM and kink event celebrating spring and community in a beautiful natural setting.",
-    "website": "https://beltane.com/",
+    "excerpt": "Discover THE Beltane—an extraordinary event blending BDSM, kink, and community in a magical setting. Immerse yourself in a world of big poles festooned with ribbons, naked revelry, and bonfire drumming, dancing, and even sex if you wish.",
+    "longDescription": "Discover THE Beltane—an extraordinary event blending BDSM, kink, and community in a magical setting. Immerse yourself in a world of big poles festooned with ribbons, naked revelry, and bonfire drumming, dancing, and even sex if you wish. Engage in intimate conversations, attend classes on sex, intimacy, and kink, and partake in both serious and playful rituals. Experience a 10,000 sq ft sex-positive dungeon with top-notch equipment, all set on a stunning, clothing-optional campground with hot water and electricity. Embrace a relaxed atmosphere that fosters deep connections and personal growth. Join us for an unforgettable Beltane filled with magic and meaningful moments!\n\nWe believe the best events are smaller and more intimate. Our small class sizes help everyone learn better and have a more customized experience. The pace of our event is chill and relaxing and lends itself to more community building. You will have lots of time to make new friends and deepen old relationships.",
+    "website": "https://www.turtlehilleventco.com/the-beltane.html",
     "logo": "/images/beltane.png",
+    "features": [
+      "Intimate Community Setting",
+      "10,000 sq ft Sex-Positive Dungeon",
+      "Top-Notch Equipment",
+      "Clothing-Optional Campground",
+      "Hot Water & Electricity",
+      "Big Poles with Ribbons",
+      "Naked Revelry",
+      "Bonfire Drumming & Dancing",
+      "Classes on Sex, Intimacy & Kink",
+      "Serious & Playful Rituals",
+      "Intimate Conversations",
+      "Relaxed Atmosphere",
+      "Deep Connections",
+      "Personal Growth",
+      "Small Class Sizes",
+      "Community Building"
+    ],
     "seo": {
-      "title": "Beltane - Maryland Outdoor BDSM Event | East Coast Kink Events",
-      "description": "Beltane is a four-day outdoor BDSM and kink event celebrating spring and community in a beautiful natural setting.",
-      "keywords": "Beltane, Maryland, outdoor BDSM event, spring celebration"
+      "title": "THE Beltane - Maryland Outdoor BDSM & Kink Community Event | East Coast Kink Events",
+      "description": "Discover THE Beltane—an extraordinary event blending BDSM, kink, and community in a magical setting with a 10,000 sq ft dungeon and clothing-optional campground.",
+      "keywords": "THE Beltane, Maryland, outdoor BDSM event, kink community, sex-positive dungeon, clothing-optional campground, ritual, bonfire, drumming, dancing"
     }
   },
   {

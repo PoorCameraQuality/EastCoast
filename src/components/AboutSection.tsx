@@ -32,30 +32,26 @@ export default function AboutSection() {
 
             <div>
               <h3 className="text-2xl font-serif font-semibold text-white mb-6">
-                What We Offer
+                What We Do
               </h3>
-              <ul className="space-y-4 text-subtle">
-                <li className="flex items-start">
-                  <span className="text-primary-400 mr-3 mt-1">✓</span>
-                  <span>Comprehensive event listings across the East Coast</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-primary-400 mr-3 mt-1">✓</span>
-                  <span>Safe and inclusive community guidelines</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-primary-400 mr-3 mt-1">✓</span>
-                  <span>Event submission and promotion tools</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-primary-400 mr-3 mt-1">✓</span>
-                  <span>Educational resources and workshops</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-primary-400 mr-3 mt-1">✓</span>
-                  <span>Community networking opportunities</span>
-                </li>
-              </ul>
+              <div className="space-y-4 text-subtle">
+                <div className="flex items-start gap-3">
+                  <div className="w-6 h-6 bg-gradient-to-r from-primary-500 to-blue-500 rounded-full flex-shrink-0 mt-1"></div>
+                  <p>Curate and maintain a comprehensive directory of BDSM events and dungeons</p>
+                </div>
+                <div className="flex items-start gap-3">
+                  <div className="w-6 h-6 bg-gradient-to-r from-primary-500 to-blue-500 rounded-full flex-shrink-0 mt-1"></div>
+                  <p>Provide educational resources and safety guidelines</p>
+                </div>
+                <div className="flex items-start gap-3">
+                  <div className="w-6 h-6 bg-gradient-to-r from-primary-500 to-blue-500 rounded-full flex-shrink-0 mt-1"></div>
+                  <p>Foster community connections through Discord and events</p>
+                </div>
+                <div className="flex items-start gap-3">
+                  <div className="w-6 h-6 bg-gradient-to-r from-primary-500 to-blue-500 rounded-full flex-shrink-0 mt-1"></div>
+                  <p>Ensure transparency and safety in all listings</p>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -74,6 +70,9 @@ export default function AboutSection() {
                 className="btn-primary inline-flex items-center gap-2 discord-glow"
               >
                 Join Discord Community
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                </svg>
               </a>
             </div>
           </div>

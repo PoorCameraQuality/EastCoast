@@ -2,37 +2,188 @@
 
 import Link from 'next/link'
 import { useGoogleAnalytics } from '@/components/GoogleAnalytics'
+import { getAllEvents } from '@/data/events'
+import { getAllDungeons } from '@/data/dungeons'
+import { getAllArticles } from '@/data/education'
 
 export default function Hero() {
   const { trackEvent } = useGoogleAnalytics()
+  const allEvents = getAllEvents()
+  const allDungeons = getAllDungeons()
+  const allArticles = getAllArticles()
+  const upcomingEvents = allEvents.filter(event => new Date(event.date.start) >= new Date()).slice(0, 3)
+
   return (
-    <section className="bg-gradient-dark border-b border-dark-700" role="banner" aria-label="Hero section">
-      <div className="container-custom section-padding">
-        <div className="max-w-5xl mx-auto text-center">
-          <h1 className="text-5xl md:text-7xl font-serif font-bold text-white mb-8 leading-tight">
-            Discover Kink Events
-            <br />
-            <span className="text-primary-400">Across the East Coast</span>
-          </h1>
-          <p className="text-xl md:text-2xl mb-12 text-subtle max-w-3xl mx-auto leading-relaxed">
-            Connect with your community. Find events near you. Build meaningful relationships in a safe, inclusive environment.
+    <section className="relative min-h-screen bg-gradient-to-br from-black via-dark-900 to-black overflow-hidden" role="banner" aria-label="Hero section">
+      {/* Subtle background elements with blue spectrum */}
+      <div className="absolute inset-0 opacity-10">
+        <div className="absolute top-20 left-10 w-32 h-32 bg-gradient-to-r from-primary-400 to-primary-600 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute top-40 right-20 w-24 h-24 bg-gradient-to-r from-blue-400 to-cyan-400 rounded-full blur-2xl animate-pulse delay-1000"></div>
+        <div className="absolute bottom-40 left-1/3 w-40 h-40 bg-gradient-to-r from-primary-300 to-blue-400 rounded-full blur-3xl animate-pulse delay-500"></div>
+        <div className="absolute bottom-20 right-1/3 w-20 h-20 bg-gradient-to-r from-blue-400 to-primary-500 rounded-full blur-xl animate-pulse delay-1500"></div>
+      </div>
+
+      {/* Enhanced gradient overlay */}
+      <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/90"></div>
+      
+      {/* Additional glassy elements */}
+      <div className="absolute inset-0">
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-gradient-to-r from-primary-400/10 to-blue-400/10 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-gradient-to-r from-blue-400/10 to-primary-400/10 rounded-full blur-3xl"></div>
+      </div>
+
+      {/* Content */}
+      <div className="relative z-10 container-custom h-screen flex items-center justify-center">
+        <div className="max-w-6xl mx-auto text-center px-4">
+          {/* Main title with animated text */}
+          <div className="mb-6">
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-serif font-bold text-white leading-tight">
+              <span className="inline-block animate-fade-in-up">
+                Discover Kink Events
+              </span>
+              <br />
+              <span className="inline-block bg-gradient-to-r from-primary-300 via-blue-400 to-primary-500 bg-clip-text text-transparent animate-gradient-x bg-[length:200%_200%]">
+                Across the East Coast
+              </span>
+            </h1>
+          </div>
+
+          {/* Subtitle */}
+          <p className="text-lg md:text-xl lg:text-2xl mb-8 text-gray-300 max-w-3xl mx-auto leading-relaxed animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
+            Connect with your community. Find events, dungeons, and educational resources near you.
           </p>
-          <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
-            <Link href="/events" className="btn-primary min-w-[200px]">
-              Browse Events
+
+          {/* Quick navigation cards - Enhanced glassy design */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mb-8 max-w-4xl mx-auto animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
+            <Link 
+              href="/events" 
+              className="group backdrop-blur-xl bg-white/10 rounded-2xl p-4 md:p-6 border border-white/20 hover:border-white/40 transition-all duration-500 hover:scale-105 hover:bg-white/15 shadow-2xl hover:shadow-primary-500/20"
+            >
+              <div className="text-2xl md:text-3xl font-bold text-white mb-1">Events</div>
+              <div className="text-xs md:text-sm text-gray-300">Conferences, Workshops & More</div>
             </Link>
-            <Link href="/events" className="btn-outline min-w-[200px]">
-              Submit Your Event
+            <Link 
+              href="/dungeons" 
+              className="group backdrop-blur-xl bg-white/10 rounded-2xl p-4 md:p-6 border border-white/20 hover:border-white/40 transition-all duration-500 hover:scale-105 hover:bg-white/15 shadow-2xl hover:shadow-blue-500/20"
+            >
+              <div className="text-2xl md:text-3xl font-bold text-white mb-1">Dungeons</div>
+              <div className="text-xs md:text-sm text-gray-300">Play Spaces & Venues</div>
             </Link>
+            <Link 
+              href="/education" 
+              className="group backdrop-blur-xl bg-white/10 rounded-2xl p-4 md:p-6 border border-white/20 hover:border-white/40 transition-all duration-500 hover:scale-105 hover:bg-white/15 shadow-2xl hover:shadow-primary-500/20"
+            >
+              <div className="text-2xl md:text-3xl font-bold text-white mb-1">Education</div>
+              <div className="text-xs md:text-sm text-gray-300">Resources & Articles</div>
+            </Link>
+            <Link 
+              href="/events" 
+              className="group backdrop-blur-xl bg-white/10 rounded-2xl p-4 md:p-6 border border-white/20 hover:border-white/40 transition-all duration-500 hover:scale-105 hover:bg-white/15 shadow-2xl hover:shadow-blue-500/20"
+            >
+              <div className="text-2xl md:text-3xl font-bold text-white mb-1">Submit</div>
+              <div className="text-xs md:text-sm text-gray-300">Add Your Event</div>
+            </Link>
+          </div>
+
+          {/* Action buttons */}
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8 animate-fade-in-up" style={{ animationDelay: '0.5s' }}>
+            <Link 
+              href="/events" 
+              className="group relative inline-flex items-center justify-center px-6 md:px-8 py-3 md:py-4 backdrop-blur-xl bg-gradient-to-r from-primary-600/80 to-blue-600/80 text-white font-semibold rounded-full shadow-2xl hover:shadow-primary-500/25 transition-all duration-300 hover:scale-105 min-w-[180px] md:min-w-[200px] overflow-hidden border border-white/20 hover:border-white/40"
+            >
+              <span className="relative z-10 flex items-center gap-2">
+                Browse Events
+                <svg className="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                </svg>
+              </span>
+              <div className="absolute inset-0 bg-gradient-to-r from-primary-700/80 to-blue-700/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            </Link>
+
             <Link 
               href="https://discord.gg/xcnGGyGsmT" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="btn-secondary min-w-[200px] discord-glow"
+              className="group relative inline-flex items-center justify-center px-6 md:px-8 py-3 md:py-4 backdrop-blur-xl bg-gradient-to-r from-blue-600/80 to-primary-600/80 text-white font-semibold rounded-full shadow-2xl hover:shadow-blue-500/25 transition-all duration-300 hover:scale-105 min-w-[180px] md:min-w-[200px] overflow-hidden border border-white/20 hover:border-white/40"
               onClick={() => trackEvent('click', 'social', 'discord', 1)}
             >
-              Join Discord Community
+              <span className="relative z-10 flex items-center gap-2">
+                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515a.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0a12.64 12.64 0 0 0-.617-1.25a.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057a19.9 19.9 0 0 0 5.993 3.03a.078.078 0 0 0 .084-.028a14.09 14.09 0 0 0 1.226-1.994a.076.076 0 0 0-.041-.106a13.107 13.107 0 0 1-1.872-.892a.077.077 0 0 1-.008-.128a10.2 10.2 0 0 0 .372-.292a.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127a12.299 12.299 0 0 1-1.873.892a.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028a19.839 19.839 0 0 0 6.002-3.03a.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419c0-1.333.956-2.419 2.157-2.419c1.21 0 2.176 1.096 2.157 2.42c0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419c0-1.333.955-2.419 2.157-2.419c1.21 0 2.176 1.096 2.157 2.42c0 1.333-.946 2.418-2.157 2.418z"/>
+                </svg>
+                Join Discord
+              </span>
+              <div className="absolute inset-0 bg-gradient-to-r from-indigo-700/80 to-blue-700/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
             </Link>
+          </div>
+
+          {/* Quick stats - Enhanced glassy design */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6 max-w-2xl mx-auto animate-fade-in-up" style={{ animationDelay: '0.6s' }}>
+            <div className="backdrop-blur-xl bg-white/10 rounded-2xl p-3 md:p-4 border border-white/20 hover:bg-white/15 transition-all duration-300 shadow-2xl hover:shadow-purple-500/20">
+              <div className="text-xl md:text-2xl font-bold text-white">{allEvents.length || 0}</div>
+              <div className="text-xs md:text-sm text-gray-300">Total Events</div>
+            </div>
+            <div className="backdrop-blur-xl bg-white/10 rounded-2xl p-3 md:p-4 border border-white/20 hover:bg-white/15 transition-all duration-300 shadow-2xl hover:shadow-blue-500/20">
+              <div className="text-xl md:text-2xl font-bold text-white">{allDungeons.length || 0}</div>
+              <div className="text-xs md:text-sm text-gray-300">Dungeons</div>
+            </div>
+            <div className="backdrop-blur-xl bg-white/10 rounded-2xl p-3 md:p-4 border border-white/20 hover:bg-white/15 transition-all duration-300 shadow-2xl hover:shadow-emerald-500/20">
+              <div className="text-xl md:text-2xl font-bold text-white">{allArticles.length || 0}</div>
+              <div className="text-xs md:text-sm text-gray-300">Articles</div>
+            </div>
+          </div>
+
+          {/* Preview sections - Enhanced glassy design */}
+          <div className="hidden lg:grid grid-cols-2 gap-6 mt-12 max-w-5xl mx-auto animate-fade-in-up" style={{ animationDelay: '0.7s' }}>
+            {/* Upcoming Events Preview */}
+            <div className="backdrop-blur-xl bg-white/10 rounded-2xl p-6 border border-white/20 shadow-2xl">
+              <h3 className="text-lg font-semibold text-white mb-4">Upcoming Events</h3>
+              <div className="space-y-3">
+                {upcomingEvents.length > 0 ? (
+                  upcomingEvents.map((event) => (
+                    <Link 
+                      key={event.slug}
+                      href={`/events/${event.slug}`}
+                      className="block text-left hover:bg-white/10 rounded-xl p-3 transition-all duration-300 backdrop-blur-sm"
+                    >
+                      <div className="font-medium text-white text-sm">{event.name}</div>
+                      <div className="text-gray-300 text-xs">{event.date.display} • {event.location.city}, {event.location.state}</div>
+                    </Link>
+                  ))
+                ) : (
+                  <div className="text-gray-300 text-sm">No upcoming events at the moment.</div>
+                )}
+              </div>
+              <Link href="/events" className="inline-block mt-4 text-purple-400 hover:text-purple-300 text-sm font-medium">
+                View all events →
+              </Link>
+            </div>
+
+            {/* Community Preview */}
+            <div className="backdrop-blur-xl bg-white/10 rounded-2xl p-6 border border-white/20 shadow-2xl">
+              <h3 className="text-lg font-semibold text-white mb-4">Community Resources</h3>
+              <div className="space-y-3">
+                <Link href="/dungeons" className="block text-left hover:bg-white/10 rounded-xl p-3 transition-all duration-300 backdrop-blur-sm">
+                  <div className="font-medium text-white text-sm">BDSM Dungeons</div>
+                  <div className="text-gray-300 text-xs">Find play spaces and venues near you</div>
+                </Link>
+                <Link href="/education" className="block text-left hover:bg-white/10 rounded-xl p-3 transition-all duration-300 backdrop-blur-sm">
+                  <div className="font-medium text-white text-sm">Educational Articles</div>
+                  <div className="text-gray-300 text-xs">Safety, techniques, and community guides</div>
+                </Link>
+                <Link href="/events" className="block text-left hover:bg-white/10 rounded-xl p-3 transition-all duration-300 backdrop-blur-sm">
+                  <div className="font-medium text-white text-sm">Submit Your Event</div>
+                  <div className="text-gray-300 text-xs">Share your event with the community</div>
+                </Link>
+              </div>
+            </div>
+          </div>
+
+          {/* Scroll indicator */}
+          <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
+            <div className="w-6 h-10 border-2 border-white/40 rounded-full flex justify-center backdrop-blur-xl bg-white/10">
+              <div className="w-1 h-3 bg-white/80 rounded-full mt-2 animate-pulse"></div>
+            </div>
           </div>
         </div>
       </div>

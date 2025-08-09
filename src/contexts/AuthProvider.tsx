@@ -1,7 +1,7 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState, useRef, ReactNode } from "react";
-import { supabase, restoreSession } from "@/lib/supabase";
+import { createContext, useContext, useState, useEffect, ReactNode, useRef } from "react";
+import { supabase } from "@/lib/supabaseClient";
 import type { Session, PostgrestError } from '@supabase/supabase-js';
 
 interface Profile {
@@ -30,89 +30,51 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
-  const [isRefreshing, setIsRefreshing] = useState(false);
   const [isHydrated, setIsHydrated] = useState(false);
   const hasInitializedRef = useRef(false);
 
   const refreshAuth = async () => {
-    // Prevent multiple simultaneous refresh calls
-    if (isRefreshing) {
-      console.log('🔄 AUTH PROVIDER: Already refreshing, skipping...');
-      return;
-    }
-    
-    setIsRefreshing(true);
+    if (!supabase) return;
+
     try {
-      console.log('🔄 AUTH PROVIDER: Refreshing authentication...');
+      const { data: { session }, error } = await supabase.auth.getSession();
       
-      if (!supabase) {
-        console.log('❌ AUTH PROVIDER: Supabase not configured');
+      if (error) {
+        console.error('❌ AUTH PROVIDER: Session error:', error);
         setUser(null);
         setIsAdmin(false);
         setLoading(false);
-        setIsRefreshing(false);
         return;
       }
 
-      // Attempt to restore session from storage first
-      const { session: restoredSession, error: restoreError } = await restoreSession();
-      if (restoreError || !restoredSession) {
-        console.log('❌ AUTH PROVIDER: Failed to restore session:', restoreError);
-        // Fallback to getSession
-        const { data: { session }, error: sessionError } = await supabase.auth.getSession();
-        if (sessionError || !session?.user) {
-          console.log('❌ AUTH PROVIDER: No session found:', sessionError);
-          setUser(null);
-          setIsAdmin(false);
-          setLoading(false);
-          setIsRefreshing(false);
-          return;
-        }
-      } else {
-        console.log('✅ AUTH PROVIDER: Session restored from storage');
-      }
-
-      const session = restoredSession || (await supabase.auth.getSession()).data.session;
       if (!session?.user) {
-        console.log('❌ AUTH PROVIDER: No user in session');
+        console.log('❌ AUTH PROVIDER: No session found');
         setUser(null);
         setIsAdmin(false);
         setLoading(false);
-        setIsRefreshing(false);
         return;
       }
 
-      console.log('✅ AUTH PROVIDER: Session found for:', session.user.email);
-
-      // Get user profile with role
-      console.log('🔍 AUTH PROVIDER: Looking for profile with user ID:', session.user.id);
-      const { data: profiles, error: profileError } = await supabase
+      // Get user profile from profiles table
+      const { data: profile, error: profileError } = await supabase
         .from('profiles')
         .select('id, role, name')
-        .eq('id', session.user.id);
+        .eq('id', session.user.id)
+        .single();
 
       if (profileError) {
-        console.log('❌ AUTH PROVIDER: Profile error:', profileError);
+        console.error('❌ AUTH PROVIDER: Profile fetch error:', profileError);
         setUser(null);
         setIsAdmin(false);
         setLoading(false);
-        setIsRefreshing(false);
         return;
       }
 
-      // Handle multiple profiles or no profile
-      let profile = null;
-      if (profiles && profiles.length > 0) {
-        // If multiple profiles exist, use the first one (shouldn't happen but just in case)
-        profile = profiles[0];
-        console.log('✅ AUTH PROVIDER: Found profile:', profile);
-      } else {
-        console.log('❌ AUTH PROVIDER: No profile found for user:', session.user.id);
-        console.log('🔍 AUTH PROVIDER: Available profiles:', profiles);
+      if (!profile) {
+        console.log('❌ AUTH PROVIDER: No profile found');
         setUser(null);
         setIsAdmin(false);
         setLoading(false);
-        setIsRefreshing(false);
         return;
       }
 
@@ -123,19 +85,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         name: profile.name
       };
 
-      console.log('✅ AUTH PROVIDER: User authenticated:', userData.email, 'Role:', userData.role);
-      
+      console.log('✅ AUTH PROVIDER: User authenticated:', userData.email, userData.role);
       setUser(userData);
       setIsAdmin(userData.role === 'admin');
       setLoading(false);
-
     } catch (error) {
-      console.error('❌ AUTH PROVIDER: Error refreshing auth:', error);
+      console.error('❌ AUTH PROVIDER: Refresh auth error:', error);
       setUser(null);
       setIsAdmin(false);
       setLoading(false);
-    } finally {
-      setIsRefreshing(false);
     }
   };
 

@@ -58,6 +58,28 @@
     @apply hover:-translate-y-1 transition-transform duration-300;
   }
 
+  /* New hero animations */
+  .animate-fade-in-up {
+    animation: fadeInUp 0.8s ease-out forwards;
+  }
+
+  .animate-fade-in-up.delay-300 {
+    animation-delay: 0.3s;
+  }
+
+  .animate-fade-in-up.delay-500 {
+    animation-delay: 0.5s;
+  }
+
+  .animate-fade-in-up.delay-700 {
+    animation-delay: 0.7s;
+  }
+
+  .animate-gradient-x {
+    background-size: 200% 200%;
+    animation: gradientX 3s ease-in-out infinite;
+  }
+
   /* Discord/community CTA: soft purple-tinted glow (always visible, becomes very bright on hover) */
   .discord-glow {
     position: relative;
@@ -155,6 +177,29 @@
     to {
       opacity: 1;
       transform: translateX(0);
+    }
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes gradientX {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
     }
   }
 }
