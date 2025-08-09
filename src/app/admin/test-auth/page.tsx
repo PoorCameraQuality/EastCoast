@@ -5,7 +5,7 @@ import { useAuth } from '@/contexts/AuthProvider'
 import { supabase, forceSessionRefresh } from '@/lib/supabase'
 
 export default function TestAuthPage() {
-  const { user, loading, isAdmin, forceRefresh } = useAuth()
+  const { user, loading, isAdmin } = useAuth()
   const [debugInfo, setDebugInfo] = useState<any>({})
   const [testResults, setTestResults] = useState<string[]>([])
 
@@ -131,7 +131,11 @@ export default function TestAuthPage() {
               </button>
               
               <button
-                onClick={forceRefresh}
+                onClick={async () => {
+                  addTestResult('🔄 Force refreshing session...')
+                  await forceSessionRefresh()
+                  addTestResult('✅ Session refresh completed')
+                }}
                 className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-colors"
               >
                 Force Session Refresh
