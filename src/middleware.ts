@@ -12,12 +12,18 @@ export async function middleware(req: NextRequest) {
   const url = req.nextUrl.clone()
   const pathname = url.pathname
 
-  // Check for required environment variables
-  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+  // Check for required environment variables - only in production
+  if (process.env.NODE_ENV === 'production' && (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY)) {
     console.error('❌ MIDDLEWARE: Missing Supabase environment variables')
     console.error('NEXT_PUBLIC_SUPABASE_URL:', !!process.env.NEXT_PUBLIC_SUPABASE_URL)
     console.error('NEXT_PUBLIC_SUPABASE_ANON_KEY:', !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY)
     return NextResponse.redirect(new URL('/error', req.url))
+  }
+
+  // In development, just continue without Supabase if variables are missing
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+    console.log('⚠️ MIDDLEWARE: Missing Supabase environment variables in development - continuing without auth')
+    return NextResponse.next()
   }
 
   // Log request details for debugging
