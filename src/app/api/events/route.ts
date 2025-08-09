@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { validateEvent, sanitizeInput } from '@/lib/validation'
 import { isAdmin } from '@/lib/auth'
 import { withRateLimit, rateLimiters } from '@/lib/rateLimit'
+import { supabase } from '@/lib/supabase'
 
 // Missing logo files that need to be created:
 // - ohiosmart.png (Ohio SMART Fetish Flea)
