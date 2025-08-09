@@ -3,6 +3,7 @@ import Link from 'next/link'
 interface ArticleCardProps {
   article: {
     id: string
+    slug?: string
     title: string
     excerpt: string
     author_name: string
@@ -56,7 +57,7 @@ export default function ArticleCard({ article }: ArticleCardProps) {
   }
 
   return (
-    <Link href={`/education/${article.id}`} className="block group">
+    <Link href={`/education/${article.slug || article.id}`} className="block group">
       <div className="card-elegant h-full transform transition-all duration-300 hover:scale-105 hover:shadow-2xl border border-dark-600 hover:border-primary-500 overflow-hidden">
         {/* Header with category and featured badge */}
         <div className="relative p-6 pb-4">

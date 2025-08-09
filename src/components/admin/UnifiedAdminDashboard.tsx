@@ -279,25 +279,32 @@ export default function UnifiedAdminDashboard({ user, isAdmin: isAdminProp }: Un
     }
 
     try {
+      // Generate slug from title
+      const slug = articleData.title
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/(^-|-$)/g, '')
+
       const { error } = await supabase
         .from('articles')
         .insert([{
           title: articleData.title,
+          slug: slug,
           excerpt: articleData.excerpt,
           content: articleData.content,
           author_name: articleData.author_name,
-          author_credentials: articleData.author_credentials,
+          author_credentials: articleData.author_credentials || null,
           author_bio: articleData.author_bio,
           category: articleData.category,
-          tags: articleData.tags.split(',').map(tag => tag.trim()),
+          tags: articleData.tags ? articleData.tags.split(',').map(tag => tag.trim()).filter(tag => tag) : null,
           featured: articleData.featured,
           status: 'published',
-          created_at: new Date().toISOString()
+          // publish_date and last_updated will be automatically set by the database defaults
         }])
 
       if (error) {
         console.error('Error creating article:', error)
-        alert('Error creating article')
+        alert('Error creating article: ' + error.message)
       } else {
         alert('Article created successfully!')
         setArticleData({

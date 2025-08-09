@@ -55,7 +55,6 @@ export async function POST(request: NextRequest) {
     const requiredFields = [
       'authorName',
       'authorEmail',
-      'authorCredentials',
       'authorBio',
       'articleTitle',
       'articleExcerpt',
@@ -93,24 +92,24 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Save to Supabase
+    // Save to Supabase submissions table
     const { data, error } = await client
       .from('submissions')
       .insert([
         {
           author_name: body.authorName,
           author_email: body.authorEmail,
-          author_credentials: body.authorCredentials,
+          author_credentials: body.authorCredentials || null,
           author_bio: body.authorBio,
           article_title: body.articleTitle,
           article_excerpt: body.articleExcerpt,
           article_content: body.articleContent,
           article_category: body.articleCategory,
-          article_tags: body.articleTags || '',
-          submission_type: 'education',
+          article_tags: body.articleTags || null,
+          submission_type: 'article',
           status: 'pending',
           word_count: wordCount,
-          created_at: new Date().toISOString()
+          // submitted_at will be automatically set by the database default
         }
       ])
       .select()
@@ -118,7 +117,7 @@ export async function POST(request: NextRequest) {
     if (error) {
       console.error('Database error:', error)
       return NextResponse.json(
-        { error: 'Failed to save submission' },
+        { error: 'Failed to save submission: ' + error.message },
         { status: 500 }
       )
     }

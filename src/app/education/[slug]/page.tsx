@@ -20,7 +20,7 @@ async function getArticleBySlug(slug: string) {
     const { data: article, error } = await client
       .from('articles')
       .select('*')
-      .eq('id', slug)
+      .eq('slug', slug)
       .eq('status', 'published')
       .single()
 
@@ -54,7 +54,7 @@ export async function generateMetadata({ params }: ArticlePageProps): Promise<Me
       title: article.title,
       description: article.excerpt,
       type: 'article',
-      url: `https://eastcoastkinkevents.com/education/${article.id}`,
+      url: `https://eastcoastkinkevents.com/education/${article.slug}`,
       siteName: 'East Coast Kink Events',
       images: [
         {
@@ -72,7 +72,7 @@ export async function generateMetadata({ params }: ArticlePageProps): Promise<Me
       images: ['https://eastcoastkinkevents.com/og-image.png'],
     },
     alternates: {
-      canonical: `https://eastcoastkinkevents.com/education/${article.id}`,
+      canonical: `https://eastcoastkinkevents.com/education/${article.slug}`,
     },
   }
 }
@@ -91,7 +91,7 @@ export default async function ArticlePage({ params }: { params: { slug: string }
     const { data: article, error } = await client
       .from('articles')
       .select('*')
-      .eq('id', slug)
+      .eq('slug', slug)
       .eq('status', 'published')
       .single()
 
@@ -139,7 +139,7 @@ export default async function ArticlePage({ params }: { params: { slug: string }
       <div className="min-h-screen bg-black">
         {/* Breadcrumb JSON-LD */}
         <Script
-          id={`breadcrumb-structured-data-${article.id}`}
+          id={`breadcrumb-structured-data-${article.slug}`}
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
@@ -148,7 +148,7 @@ export default async function ArticlePage({ params }: { params: { slug: string }
               "itemListElement": [
                 {"@type": "ListItem", position: 1, name: 'Home', item: 'https://eastcoastkinkevents.com/'},
                 {"@type": "ListItem", position: 2, name: 'Education', item: 'https://eastcoastkinkevents.com/education'},
-                {"@type": "ListItem", position: 3, name: article.title, item: `https://eastcoastkinkevents.com/education/${article.id}`}
+                {"@type": "ListItem", position: 3, name: article.title, item: `https://eastcoastkinkevents.com/education/${article.slug}`}
               ]
             })
           }}
