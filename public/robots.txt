@@ -1,6 +1,10 @@
 User-agent: *
 Allow: /
 
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
+
 # Disallow admin sections from being crawled
 Disallow: /admin/
 Disallow: /admin/review-submissions

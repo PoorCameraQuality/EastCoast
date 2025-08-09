@@ -31,11 +31,27 @@
         {
           "key": "Cache-Control",
           "value": "public, max-age=0, must-revalidate"
+        },
+        {
+          "key": "X-Robots-Tag",
+          "value": "index, follow"
+        },
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
         }
       ]
     }
   ],
 
+  "redirects": [
+    {
+      "source": "/",
+      "destination": "/",
+      "permanent": false,
+      "status": 200
+    }
+  ],
   "build": {
     "env": {
       "DISABLE_VERCEL_FEEDBACK": "true"
