@@ -21,8 +21,8 @@ export default function Hero() {
             <Link href="/events" className="btn-primary min-w-[200px]">
               Browse Events
             </Link>
-            <Link href="/contact" className="btn-outline min-w-[200px]">
-              Submit Your Event/Dungeon
+            <Link href="/events" className="btn-outline min-w-[200px]">
+              Submit Your Event
             </Link>
             <Link 
               href="https://discord.gg/xcnGGyGsmT" 

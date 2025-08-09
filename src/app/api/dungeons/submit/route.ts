@@ -52,7 +52,7 @@ export async function POST(request: NextRequest) {
           dungeon_website: body.dungeonWebsite || null,
           author_name: body.ownerName,
           author_email: body.ownerEmail,
-          author_credentials: body.ownerPhone || null,
+          author_credentials: null, // No phone number needed
           author_bio: body.dungeonDescription,
           article_title: body.dungeonName,
           article_excerpt: body.dungeonDescription,

@@ -13,7 +13,8 @@ export async function POST(request: NextRequest) {
       'organizerName',
       'organizerEmail',
       'eventDescription',
-      'eventCategory'
+      'eventCategory',
+      'eventType'
     ]
 
     for (const field of requiredFields) {
@@ -54,7 +55,7 @@ export async function POST(request: NextRequest) {
           event_website: body.eventWebsite || null,
           author_name: body.organizerName,
           author_email: body.organizerEmail,
-          author_credentials: body.organizerPhone || null,
+          author_credentials: body.eventType || null, // Store eventType in author_credentials field
           author_bio: body.eventDescription,
           article_title: body.eventName,
           article_excerpt: body.eventDescription,

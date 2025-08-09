@@ -10,7 +10,6 @@ interface DungeonSubmissionFormData {
   dungeonWebsite: string
   ownerName: string
   ownerEmail: string
-  ownerPhone: string
   dungeonDescription: string
   dungeonCategory: string
   dungeonTags: string
@@ -24,7 +23,6 @@ export default function DungeonSubmissionForm() {
     dungeonWebsite: '',
     ownerName: '',
     ownerEmail: '',
-    ownerPhone: '',
     dungeonDescription: '',
     dungeonCategory: '',
     dungeonTags: '',
@@ -88,26 +86,6 @@ export default function DungeonSubmissionForm() {
             Thank you for submitting your dungeon. Our team will review it and get back to you soon.
           </p>
         </div>
-        <button
-          onClick={() => {
-            setSubmitSuccess(false)
-            setFormData({
-              dungeonName: '',
-              dungeonLocation: '',
-              dungeonWebsite: '',
-              ownerName: '',
-              ownerEmail: '',
-              ownerPhone: '',
-              dungeonDescription: '',
-              dungeonCategory: '',
-              dungeonTags: '',
-              agreeToTerms: false
-            })
-          }}
-          className="btn-primary"
-        >
-          Submit Another Dungeon
-        </button>
       </div>
     )
   }
@@ -234,17 +212,6 @@ export default function DungeonSubmissionForm() {
                 className="w-full bg-dark-700 border border-dark-600 rounded-lg px-4 py-3 text-white focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-colors"
                 placeholder="your@email.com"
                 required
-              />
-            </div>
-            <div>
-              <label className="block text-white font-medium mb-2">Owner Phone</label>
-              <input
-                type="tel"
-                name="ownerPhone"
-                value={formData.ownerPhone}
-                onChange={handleInputChange}
-                className="w-full bg-dark-700 border border-dark-600 rounded-lg px-4 py-3 text-white focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-colors"
-                placeholder="(555) 123-4567"
               />
             </div>
           </div>

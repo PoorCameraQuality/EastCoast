@@ -11,14 +11,18 @@ interface EventSubmissionFormData {
   eventWebsite: string
   organizerName: string
   organizerEmail: string
-  organizerPhone: string
   eventDescription: string
   eventCategory: string
+  eventType: 'indoor' | 'outdoor'
   eventTags: string
   agreeToTerms: boolean
 }
 
-export default function EventSubmissionForm() {
+interface EventSubmissionFormProps {
+  onSubmissionComplete?: () => void
+}
+
+export default function EventSubmissionForm({ onSubmissionComplete }: EventSubmissionFormProps) {
   const [formData, setFormData] = useState<EventSubmissionFormData>({
     eventName: '',
     eventDate: '',
@@ -26,9 +30,9 @@ export default function EventSubmissionForm() {
     eventWebsite: '',
     organizerName: '',
     organizerEmail: '',
-    organizerPhone: '',
     eventDescription: '',
     eventCategory: '',
+    eventType: 'indoor',
     eventTags: '',
     agreeToTerms: false
   })
@@ -66,6 +70,10 @@ export default function EventSubmissionForm() {
       if (response.ok) {
         setSubmitSuccess(true)
         trackEvent('submit', 'event_submission', formData.eventCategory, 1)
+        // Call the callback if provided
+        if (onSubmissionComplete) {
+          onSubmissionComplete()
+        }
       } else {
         setError(result.error || 'Failed to submit event')
       }
@@ -90,27 +98,6 @@ export default function EventSubmissionForm() {
             Thank you for submitting your event. Our team will review it and get back to you soon.
           </p>
         </div>
-        <button
-          onClick={() => {
-            setSubmitSuccess(false)
-            setFormData({
-              eventName: '',
-              eventDate: '',
-              eventLocation: '',
-              eventWebsite: '',
-              organizerName: '',
-              organizerEmail: '',
-              organizerPhone: '',
-              eventDescription: '',
-              eventCategory: '',
-              eventTags: '',
-              agreeToTerms: false
-            })
-          }}
-          className="btn-primary"
-        >
-          Submit Another Event
-        </button>
       </div>
     )
   }
@@ -188,12 +175,36 @@ export default function EventSubmissionForm() {
               >
                 <option value="">Select Category</option>
                 <option value="Conference">Conference</option>
-                <option value="Workshop">Workshop</option>
-                <option value="Party">Party</option>
-                <option value="Meetup">Meetup</option>
-                <option value="Educational">Educational</option>
-                <option value="Social">Social</option>
+                <option value="Indoor Event">Indoor Event</option>
+                <option value="Outdoor Event">Outdoor Event</option>
               </select>
+            </div>
+            <div>
+              <label className="block text-white font-medium mb-2">Event Type *</label>
+              <div className="flex gap-4">
+                <label className="flex items-center space-x-2">
+                  <input
+                    type="radio"
+                    name="eventType"
+                    value="indoor"
+                    checked={formData.eventType === 'indoor'}
+                    onChange={handleInputChange}
+                    className="w-4 h-4 text-primary-500 bg-dark-700 border-dark-600 focus:ring-primary-500"
+                  />
+                  <span className="text-white">Indoor</span>
+                </label>
+                <label className="flex items-center space-x-2">
+                  <input
+                    type="radio"
+                    name="eventType"
+                    value="outdoor"
+                    checked={formData.eventType === 'outdoor'}
+                    onChange={handleInputChange}
+                    className="w-4 h-4 text-primary-500 bg-dark-700 border-dark-600 focus:ring-primary-500"
+                  />
+                  <span className="text-white">Outdoor</span>
+                </label>
+              </div>
             </div>
             <div>
               <label className="block text-white font-medium mb-2">Event Tags</label>
@@ -248,17 +259,6 @@ export default function EventSubmissionForm() {
                 className="w-full bg-dark-700 border border-dark-600 rounded-lg px-4 py-3 text-white focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-colors"
                 placeholder="your@email.com"
                 required
-              />
-            </div>
-            <div>
-              <label className="block text-white font-medium mb-2">Organizer Phone</label>
-              <input
-                type="tel"
-                name="organizerPhone"
-                value={formData.organizerPhone}
-                onChange={handleInputChange}
-                className="w-full bg-dark-700 border border-dark-600 rounded-lg px-4 py-3 text-white focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-colors"
-                placeholder="(555) 123-4567"
               />
             </div>
           </div>

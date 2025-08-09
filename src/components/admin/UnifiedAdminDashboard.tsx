@@ -67,13 +67,14 @@ export default function UnifiedAdminDashboard({ user, isAdmin: isAdminProp }: Un
     title: '', shortTitle: '', slug: '', startDate: '', endDate: '', displayDate: '', 
     city: '', state: '', venue: '', shortDescription: '', longDescription: '', 
     seoDescription: '', category: '', tags: '', logo: '', images: '', website: '', 
-    organizer: '', email: '', phone: '', organizerWebsite: '', earlyBirdPrice: '', 
-    regularPrice: '', atDoorPrice: '', includes: '', features: '', seoTitle: '', seoKeywords: ''
+    organizer: '', email: '', organizerWebsite: '', earlyBirdPrice: '', 
+    regularPrice: '', atDoorPrice: '', includes: '', features: '', seoTitle: '', seoKeywords: '',
+    eventType: 'indoor' as 'indoor' | 'outdoor'
   })
 
   const [dungeonData, setDungeonData] = useState({
     name: '', slug: '', city: '', state: '', address: '', excerpt: '', logo: '', 
-    images: '', website: '', email: '', phone: '', seoTitle: '', seoDescription: '', seoKeywords: ''
+    images: '', website: '', email: '', seoTitle: '', seoDescription: '', seoKeywords: ''
   })
 
   const [articleData, setArticleData] = useState({
@@ -289,8 +290,9 @@ export default function UnifiedAdminDashboard({ user, isAdmin: isAdminProp }: Un
         title: '', shortTitle: '', slug: '', startDate: '', endDate: '', displayDate: '', 
         city: '', state: '', venue: '', shortDescription: '', longDescription: '', 
         seoDescription: '', category: '', tags: '', logo: '', images: '', website: '', 
-        organizer: '', email: '', phone: '', organizerWebsite: '', earlyBirdPrice: '', 
-        regularPrice: '', atDoorPrice: '', includes: '', features: '', seoTitle: '', seoKeywords: ''
+        organizer: '', email: '', organizerWebsite: '', earlyBirdPrice: '', 
+        regularPrice: '', atDoorPrice: '', includes: '', features: '', seoTitle: '', seoKeywords: '',
+        eventType: 'indoor'
       })
       setLogoFile(null)
       setLogoPreview(null)
@@ -312,7 +314,7 @@ export default function UnifiedAdminDashboard({ user, isAdmin: isAdminProp }: Un
       alert('Dungeon added successfully!')
       setDungeonData({
         name: '', slug: '', city: '', state: '', address: '', excerpt: '', logo: '', 
-        images: '', website: '', email: '', phone: '', seoTitle: '', seoDescription: '', seoKeywords: ''
+        images: '', website: '', email: '', seoTitle: '', seoDescription: '', seoKeywords: ''
       })
       setLogoFile(null)
       setLogoPreview(null)
@@ -623,9 +625,13 @@ export default function UnifiedAdminDashboard({ user, isAdmin: isAdminProp }: Un
                           <span className={`px-2 py-1 rounded text-xs font-medium ${
                             submission.submission_type === 'article' 
                               ? 'bg-blue-500 text-white' 
+                              : submission.submission_type === 'event'
+                              ? 'bg-purple-500 text-white'
+                              : submission.submission_type === 'dungeon'
+                              ? 'bg-orange-500 text-white'
                               : 'bg-green-500 text-white'
                           }`}>
-                            {submission.submission_type === 'article' ? 'Article' : 'Contact'}
+                            {submission.submission_type.charAt(0).toUpperCase() + submission.submission_type.slice(1)}
                           </span>
                           <span className={`px-2 py-1 rounded text-xs font-medium ${getStatusColor(submission.status)}`}>
                             {getStatusText(submission.status)}
@@ -635,7 +641,11 @@ export default function UnifiedAdminDashboard({ user, isAdmin: isAdminProp }: Un
                         <h3 className="text-xl font-semibold text-white mb-2">
                           {submission.submission_type === 'article' 
                             ? submission.article_title 
-                            : `${submission.contact_type} - ${submission.contact_name}`
+                            : submission.submission_type === 'event'
+                            ? submission.event_name || submission.article_title
+                            : submission.submission_type === 'dungeon'
+                            ? submission.dungeon_name || submission.article_title
+                            : `${submission.contact_type || 'Contact'} - ${submission.contact_name || submission.author_name}`
                           }
                         </h3>
                         
@@ -649,6 +659,24 @@ export default function UnifiedAdminDashboard({ user, isAdmin: isAdminProp }: Un
                               <p><strong>Word Count:</strong> {submission.word_count}</p>
                             </>
                           )}
+                          
+                          {submission.submission_type === 'event' && (
+                            <>
+                              <p><strong>Category:</strong> {submission.article_category}</p>
+                              <p><strong>Date:</strong> {submission.event_date}</p>
+                              <p><strong>Location:</strong> {submission.event_location}</p>
+                              {submission.author_credentials && (
+                                <p><strong>Type:</strong> {submission.author_credentials}</p>
+                              )}
+                            </>
+                          )}
+                          
+                          {submission.submission_type === 'dungeon' && (
+                            <>
+                              <p><strong>Category:</strong> {submission.article_category}</p>
+                              <p><strong>Location:</strong> {submission.dungeon_location}</p>
+                            </>
+                          )}
                         </div>
                       </div>
                       
@@ -660,10 +688,7 @@ export default function UnifiedAdminDashboard({ user, isAdmin: isAdminProp }: Un
                     <div className="border-t border-dark-600 pt-4">
                       <h4 className="text-white font-medium mb-2">Content Preview:</h4>
                       <div className="bg-dark-700 rounded p-3 text-gray-300 text-sm max-h-32 overflow-y-auto">
-                        {submission.submission_type === 'article' 
-                          ? submission.article_excerpt
-                          : submission.article_content
-                        }
+                        {submission.article_content}
                       </div>
                     </div>
                   </div>
@@ -700,7 +725,7 @@ export default function UnifiedAdminDashboard({ user, isAdmin: isAdminProp }: Un
                   <h2 className="text-2xl font-semibold text-white mb-6">Create New Event</h2>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                      <label className="block text-white font-medium mb-2">Event Title</label>
+                      <label className="block text-white font-medium mb-2">Event Name *</label>
                       <input
                         type="text"
                         name="title"
@@ -711,17 +736,7 @@ export default function UnifiedAdminDashboard({ user, isAdmin: isAdminProp }: Un
                       />
                     </div>
                     <div>
-                      <label className="block text-white font-medium mb-2">Short Title</label>
-                      <input
-                        type="text"
-                        name="shortTitle"
-                        value={eventData.shortTitle}
-                        onChange={(e) => setEventData(prev => ({ ...prev, shortTitle: e.target.value }))}
-                        className="w-full bg-dark-700 border border-dark-600 rounded-lg px-4 py-3 text-white"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-white font-medium mb-2">Start Date</label>
+                      <label className="block text-white font-medium mb-2">Event Date *</label>
                       <input
                         type="date"
                         name="startDate"
@@ -732,46 +747,114 @@ export default function UnifiedAdminDashboard({ user, isAdmin: isAdminProp }: Un
                       />
                     </div>
                     <div>
-                      <label className="block text-white font-medium mb-2">End Date</label>
-                      <input
-                        type="date"
-                        name="endDate"
-                        value={eventData.endDate}
-                        onChange={(e) => setEventData(prev => ({ ...prev, endDate: e.target.value }))}
-                        className="w-full bg-dark-700 border border-dark-600 rounded-lg px-4 py-3 text-white"
-                        required
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-white font-medium mb-2">City</label>
+                      <label className="block text-white font-medium mb-2">Event Location *</label>
                       <input
                         type="text"
                         name="city"
                         value={eventData.city}
                         onChange={(e) => setEventData(prev => ({ ...prev, city: e.target.value }))}
                         className="w-full bg-dark-700 border border-dark-600 rounded-lg px-4 py-3 text-white"
+                        placeholder="City, State"
                         required
                       />
                     </div>
                     <div>
-                      <label className="block text-white font-medium mb-2">State</label>
+                      <label className="block text-white font-medium mb-2">Event Website</label>
                       <input
-                        type="text"
-                        name="state"
-                        value={eventData.state}
-                        onChange={(e) => setEventData(prev => ({ ...prev, state: e.target.value }))}
+                        type="url"
+                        name="website"
+                        value={eventData.website}
+                        onChange={(e) => setEventData(prev => ({ ...prev, website: e.target.value }))}
+                        className="w-full bg-dark-700 border border-dark-600 rounded-lg px-4 py-3 text-white"
+                        placeholder="https://example.com"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-white font-medium mb-2">Event Category *</label>
+                      <select
+                        name="category"
+                        value={eventData.category}
+                        onChange={(e) => setEventData(prev => ({ ...prev, category: e.target.value }))}
                         className="w-full bg-dark-700 border border-dark-600 rounded-lg px-4 py-3 text-white"
                         required
+                      >
+                        <option value="">Select Category</option>
+                        <option value="Conference">Conference</option>
+                        <option value="Indoor Event">Indoor Event</option>
+                        <option value="Outdoor Event">Outdoor Event</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-white font-medium mb-2">Event Type *</label>
+                      <div className="flex gap-4">
+                        <label className="flex items-center space-x-2">
+                          <input
+                            type="radio"
+                            name="eventType"
+                            value="indoor"
+                            checked={eventData.eventType === 'indoor'}
+                            onChange={(e) => setEventData(prev => ({ ...prev, eventType: e.target.value as 'indoor' | 'outdoor' }))}
+                            className="w-4 h-4 text-primary-500 bg-dark-700 border-dark-600 focus:ring-primary-500"
+                          />
+                          <span className="text-white">Indoor</span>
+                        </label>
+                        <label className="flex items-center space-x-2">
+                          <input
+                            type="radio"
+                            name="eventType"
+                            value="outdoor"
+                            checked={eventData.eventType === 'outdoor'}
+                            onChange={(e) => setEventData(prev => ({ ...prev, eventType: e.target.value as 'indoor' | 'outdoor' }))}
+                            className="w-4 h-4 text-primary-500 bg-dark-700 border-dark-600 focus:ring-primary-500"
+                          />
+                          <span className="text-white">Outdoor</span>
+                        </label>
+                      </div>
+                    </div>
+                    <div>
+                      <label className="block text-white font-medium mb-2">Event Tags</label>
+                      <input
+                        type="text"
+                        name="tags"
+                        value={eventData.tags}
+                        onChange={(e) => setEventData(prev => ({ ...prev, tags: e.target.value }))}
+                        className="w-full bg-dark-700 border border-dark-600 rounded-lg px-4 py-3 text-white"
+                        placeholder="Comma-separated tags (e.g., beginners, rope, impact)"
                       />
                     </div>
                   </div>
                   <div className="mt-6">
-                    <label className="block text-white font-medium mb-2">Short Description</label>
+                    <label className="block text-white font-medium mb-2">Event Description *</label>
                     <textarea
                       name="shortDescription"
                       value={eventData.shortDescription}
                       onChange={(e) => setEventData(prev => ({ ...prev, shortDescription: e.target.value }))}
-                      className="w-full bg-dark-700 border border-dark-600 rounded-lg px-4 py-3 text-white h-24"
+                      className="w-full bg-dark-700 border border-dark-600 rounded-lg px-4 py-3 text-white h-32"
+                      placeholder="Describe your event in detail..."
+                      required
+                    />
+                  </div>
+                  <div className="mt-6">
+                    <label className="block text-white font-medium mb-2">Organizer Name *</label>
+                    <input
+                      type="text"
+                      name="organizer"
+                      value={eventData.organizer}
+                      onChange={(e) => setEventData(prev => ({ ...prev, organizer: e.target.value }))}
+                      className="w-full bg-dark-700 border border-dark-600 rounded-lg px-4 py-3 text-white"
+                      placeholder="Your name or organization name"
+                      required
+                    />
+                  </div>
+                  <div className="mt-6">
+                    <label className="block text-white font-medium mb-2">Organizer Email *</label>
+                    <input
+                      type="email"
+                      name="email"
+                      value={eventData.email}
+                      onChange={(e) => setEventData(prev => ({ ...prev, email: e.target.value }))}
+                      className="w-full bg-dark-700 border border-dark-600 rounded-lg px-4 py-3 text-white"
+                      placeholder="your@email.com"
                       required
                     />
                   </div>
@@ -1025,6 +1108,10 @@ export default function UnifiedAdminDashboard({ user, isAdmin: isAdminProp }: Un
                           <span className={`px-2 py-1 rounded text-xs font-medium ${
                             selectedSubmission.submission_type === 'article' 
                               ? 'bg-blue-500 text-white' 
+                              : selectedSubmission.submission_type === 'event'
+                              ? 'bg-purple-500 text-white'
+                              : selectedSubmission.submission_type === 'dungeon'
+                              ? 'bg-orange-500 text-white'
                               : 'bg-green-500 text-white'
                           }`}>
                             {selectedSubmission.submission_type === 'article' ? 'Article' : 'Contact'}

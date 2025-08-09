@@ -16,6 +16,7 @@ export default function EventsPageClient() {
   const categories = ['Outdoor Events', 'Indoor Events']
   const [selectedCategory, setSelectedCategory] = useState('All Events')
   const [showSubmitForm, setShowSubmitForm] = useState(false)
+  const [formSubmitted, setFormSubmitted] = useState(false)
 
   // Map plural button labels to singular category values
   const getCategoryForFilter = (filterLabel: string) => {
@@ -58,6 +59,16 @@ export default function EventsPageClient() {
     { label: 'Events', current: true }
   ]
 
+  const handleFormSubmission = () => {
+    setFormSubmitted(true)
+    setShowSubmitForm(false)
+  }
+
+  const handleCancelSubmission = () => {
+    setShowSubmitForm(false)
+    setFormSubmitted(false)
+  }
+
   return (
     <div className="min-h-screen bg-black">
       <EventListStructuredData />
@@ -81,20 +92,31 @@ export default function EventsPageClient() {
           </div>
 
           {/* Submit Event Button */}
-          <div className="mb-8">
-            <button
-              onClick={() => setShowSubmitForm(!showSubmitForm)}
-              className="btn-primary"
-            >
-              {showSubmitForm ? 'Cancel Submission' : 'Submit Your Event'}
-            </button>
-          </div>
+          {!formSubmitted && (
+            <div className="mb-8">
+              <button
+                onClick={() => setShowSubmitForm(!showSubmitForm)}
+                className="btn-primary"
+              >
+                {showSubmitForm ? 'Cancel Submission' : 'Submit Your Event'}
+              </button>
+            </div>
+          )}
+
+          {/* Success Message */}
+          {formSubmitted && (
+            <div className="mb-8">
+              <div className="bg-green-500/20 border border-green-500/50 rounded-lg p-4 max-w-md mx-auto">
+                <p className="text-green-400">Event submitted successfully! Thank you for your submission.</p>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Submit Event Form */}
         {showSubmitForm && (
           <div className="mb-16">
-            <EventSubmissionForm />
+            <EventSubmissionForm onSubmissionComplete={handleFormSubmission} />
           </div>
         )}
 
