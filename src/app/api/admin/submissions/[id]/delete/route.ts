@@ -1,13 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getSupabaseAdminClient } from '@/lib/supabase'
 
-export async function POST(
+export async function DELETE(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
     const { id } = params
-    const body = await request.json()
 
     // Get the Supabase admin client
     const client = getSupabaseAdminClient()
@@ -33,45 +32,41 @@ export async function POST(
       )
     }
 
-    // Update submission status to rejected
-    const { error: updateError } = await client
-      .from('submissions')
-      .update({
-        status: 'rejected',
-        reviewed_at: new Date().toISOString(),
-        reviewer_notes: body.reviewerNotes || `Rejected on ${new Date().toLocaleDateString()}`
-      })
-      .eq('id', id)
-
-    if (updateError) {
-      console.error('Error updating submission:', updateError)
-      return NextResponse.json(
-        { error: 'Failed to reject submission: ' + updateError.message },
-        { status: 500 }
-      )
-    }
-
-    // Log the rejection in moderation_logs
+    // Log the deletion in moderation_logs
     if (submission) {
       const { error: logError } = await client
         .from('moderation_logs')
         .insert({
-          action: 'rejected',
+          action: 'deleted',
           article_title: submission.article_title || submission.contact_name || 'Unknown',
           article_id: submission.id,
           admin_name: 'Admin',
-          notes: body.reviewerNotes || 'Rejected by admin'
+          notes: 'Permanently deleted by admin'
         })
 
       if (logError) {
-        console.error('Error logging rejection:', logError)
+        console.error('Error logging deletion:', logError)
         // Don't fail the request if logging fails
       }
     }
 
+    // Delete the submission
+    const { error: deleteError } = await client
+      .from('submissions')
+      .delete()
+      .eq('id', id)
+
+    if (deleteError) {
+      console.error('Error deleting submission:', deleteError)
+      return NextResponse.json(
+        { error: 'Failed to delete submission: ' + deleteError.message },
+        { status: 500 }
+      )
+    }
+
     return NextResponse.json({ success: true })
   } catch (error) {
-    console.error('Error in reject submission:', error)
+    console.error('Error in delete submission:', error)
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

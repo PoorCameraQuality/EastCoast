@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { supabase } from '@/lib/supabase'
+import { getSupabaseAdminClient } from '@/lib/supabase'
 
 export async function POST(
   request: NextRequest,
@@ -8,11 +8,11 @@ export async function POST(
   try {
     const { id } = params
 
-    // Get the Supabase client
-    const client = supabase
+    // Get the Supabase admin client
+    const client = getSupabaseAdminClient()
     if (!client) {
       return NextResponse.json(
-        { error: 'Supabase client not configured' },
+        { error: 'Supabase admin client not configured' },
         { status: 500 }
       )
     }

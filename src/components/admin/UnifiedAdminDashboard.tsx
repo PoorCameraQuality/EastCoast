@@ -271,42 +271,20 @@ export default function UnifiedAdminDashboard({ user, isAdmin: isAdminProp }: Un
       return
     }
 
-    if (!supabase) {
-      alert('Database is not configured')
-      return
-    }
-
     try {
-      // First, log the deletion in moderation_logs
-      const { error: logError } = await supabase
-        .from('moderation_logs')
-        .insert({
-          action: 'deleted',
-          article_title: submission.article_title || submission.contact_name || 'Unknown',
-          article_id: submission.id,
-          admin_name: 'Admin',
-          notes: 'Permanently deleted by admin'
-        })
+      const response = await fetch(`/api/admin/submissions/${submission.id}/delete`, {
+        method: 'DELETE',
+      })
 
-      if (logError) {
-        console.error('Error logging deletion:', logError)
-        // Continue with deletion even if logging fails
-      }
-
-      // Then delete the submission
-      const { error } = await supabase
-        .from('submissions')
-        .delete()
-        .eq('id', submission.id)
-
-      if (error) {
-        console.error('Error deleting submission:', error)
-        alert('Error deleting submission: ' + error.message)
-      } else {
+      if (response.ok) {
         alert('Submission deleted successfully!')
         // Remove the submission from local state
         setSubmissions(prev => prev.filter(s => s.id !== submission.id))
         setSelectedSubmission(null)
+      } else {
+        const errorData = await response.json()
+        console.error('Delete error:', errorData)
+        alert('Error deleting submission: ' + (errorData.error || 'Unknown error'))
       }
     } catch (error) {
       console.error('Error:', error)
