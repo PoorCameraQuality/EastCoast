@@ -192,6 +192,36 @@ export default function UnifiedAdminDashboard({ user, isAdmin: isAdminProp }: Un
     }
   }
 
+  const handleDelete = async (submission: Submission) => {
+    if (!confirm(`Are you sure you want to delete this ${submission.submission_type} submission? This action cannot be undone.`)) {
+      return
+    }
+
+    if (!supabase) {
+      alert('Database is not configured')
+      return
+    }
+
+    try {
+      const { error } = await supabase
+        .from('submissions')
+        .delete()
+        .eq('id', submission.id)
+
+      if (error) {
+        console.error('Error deleting submission:', error)
+        alert('Error deleting submission')
+      } else {
+        alert('Submission deleted successfully!')
+        fetchSubmissions()
+        setSelectedSubmission(null)
+      }
+    } catch (error) {
+      console.error('Error:', error)
+      alert('Error deleting submission')
+    }
+  }
+
   // Content creation functions
   const handleEventSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -309,6 +339,7 @@ export default function UnifiedAdminDashboard({ user, isAdmin: isAdminProp }: Un
 
   const filteredSubmissions = submissions.filter(submission => {
     if (filter === 'all') return true
+    if (filter === 'pending') return submission.status === 'pending'
     return submission.status === filter
   })
 
@@ -897,28 +928,36 @@ export default function UnifiedAdminDashboard({ user, isAdmin: isAdminProp }: Un
                 </div>
 
                 {/* Action Buttons */}
-                {selectedSubmission.status === 'pending' && (
-                  <div className="flex gap-4 mt-6 pt-6 border-t border-dark-600">
-                    <button
-                      onClick={() => handleApprove(selectedSubmission)}
-                      className="px-6 py-3 bg-green-500 hover:bg-green-600 text-white rounded-lg transition-colors font-medium"
-                    >
-                      {selectedSubmission.submission_type === 'article' ? 'Approve & Publish' : 'Mark Responded'}
-                    </button>
-                    <button
-                      onClick={() => handleReject(selectedSubmission)}
-                      className="px-6 py-3 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors font-medium"
-                    >
-                      Reject
-                    </button>
-                    <button
-                      onClick={() => setSelectedSubmission(null)}
-                      className="px-6 py-3 bg-gray-500 hover:bg-gray-600 text-white rounded-lg transition-colors font-medium"
-                    >
-                      Close
-                    </button>
-                  </div>
-                )}
+                <div className="flex gap-4 mt-6 pt-6 border-t border-dark-600">
+                  {selectedSubmission.status === 'pending' && (
+                    <>
+                      <button
+                        onClick={() => handleApprove(selectedSubmission)}
+                        className="px-6 py-3 bg-green-500 hover:bg-green-600 text-white rounded-lg transition-colors font-medium"
+                      >
+                        {selectedSubmission.submission_type === 'article' ? 'Approve & Publish' : 'Mark Responded'}
+                      </button>
+                      <button
+                        onClick={() => handleReject(selectedSubmission)}
+                        className="px-6 py-3 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors font-medium"
+                      >
+                        Reject
+                      </button>
+                    </>
+                  )}
+                  <button
+                    onClick={() => handleDelete(selectedSubmission)}
+                    className="px-6 py-3 bg-red-700 hover:bg-red-800 text-white rounded-lg transition-colors font-medium"
+                  >
+                    Delete
+                  </button>
+                  <button
+                    onClick={() => setSelectedSubmission(null)}
+                    className="px-6 py-3 bg-gray-500 hover:bg-gray-600 text-white rounded-lg transition-colors font-medium"
+                  >
+                    Close
+                  </button>
+                </div>
               </div>
             </div>
           </div>
