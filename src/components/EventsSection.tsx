@@ -1,3 +1,5 @@
+'use client'
+
 import Link from 'next/link'
 import { getUpcomingEvents } from '@/data/events'
 import EventLogo from './EventLogo'
