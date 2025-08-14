@@ -247,32 +247,37 @@ export const events = [
       "display": "Nov 14-16, 2025"
     },
     "location": {
-      "city": "Philadelphia",
-      "state": "PA",
-      "region": "Southeast, Pennsylvania"
+      "city": "St Louis Metro Area",
+      "state": "MO",
+      "region": "Eastern, Missouri"
     },
     "category": "Indoor Event",
-    "excerpt": "Exploration Into Kink (EiK) offers a full hotel takeover weekend with 35+ classes, vendor bazaar, cigar social, mentoring emporium, clothing-optional indoor pool, play parties, and midnight buffets.",
-    "longDescription": "Immerse yourself in a welcoming, inclusive weekend of exploration and education. Enjoy 35+ educational classes, a vendor bazaar, BeBe's cigar social, the Exploration Emporium (mentoring show-and-feel), a clothing-optional indoor pool, Friday and Saturday night play parties, and midnight buffets. EiK builds community through consent, diversity, and inclusivity.",
+    "excerpt": "Join us for a hotel takeover weekend in the St Louis metro area featuring outstanding educational classes, vendor bazaar, cigar social, clothing-optional indoor pool, play parties, and midnight buffets.",
+    "longDescription": "Welcome Explorers! Join us November 14-16 2025 for a hotel takeover weekend in the St Louis metro area. Meet and socialize with kinksters while immersing yourself for an entire weekend of exploration and education. From the moment you pass through the registration curtains, till it is time to checkout… the hotel is ours.\n\nDuring Exploration Into Kink, or EiK, you can enjoy our outstanding educational classes, the vendor bazaar, BeBe's cigar social, Exploration Emporium, clothing optional indoor swimming pool, Friday and Saturday night play parties, Friday and Saturday midnight buffets, and much more!\n\nOur goal is to build and grow the kink community through a weekend focused on consent, diversity, education, exploration, inclusivity, and integrity.",
     "website": "https://www.explorationintokink.com/",
     "logo": "/images/eik.jpg",
     "features": [
-      "Full Hotel Takeover",
-      "35+ Educational Classes",
+      "Hotel Takeover Weekend",
+      "St Louis Metro Area Location",
+      "Outstanding Educational Classes",
       "Vendor Bazaar",
-      "Cigar Social",
-      "Mentoring Emporium",
-      "Clothing-Optional Indoor Pool",
-      "Play Parties",
-      "Midnight Buffets",
-      "Consent-Focused",
-      "Diversity & Inclusivity",
-      "Community Building"
+      "BeBe's Cigar Social",
+      "Exploration Emporium",
+      "Clothing-Optional Indoor Swimming Pool",
+      "Friday & Saturday Night Play Parties",
+      "Friday & Saturday Midnight Buffets",
+      "Full Hotel Access",
+      "Registration Curtains Entry",
+      "Community Building Focus",
+      "Consent, Diversity & Education",
+      "Exploration & Inclusivity",
+      "Integrity-Based Community",
+      "Weekend Immersion Experience"
     ],
     "seo": {
-      "title": "Exploration Into Kink (EiK) - Hotel Takeover Education & Play | East Coast Kink Events",
-      "description": "A full weekend hotel takeover with 35+ classes, vendor bazaar, social events, indoor pool, play parties, and midnight buffets.",
-      "keywords": "Exploration Into Kink, EiK, BDSM education, vendor bazaar, hotel takeover"
+      "title": "Exploration Into Kink (EiK) - St Louis Metro Hotel Takeover | East Coast Kink Events",
+      "description": "Join us for a hotel takeover weekend in the St Louis metro area featuring outstanding educational classes, vendor bazaar, cigar social, clothing-optional indoor pool, play parties, and midnight buffets.",
+      "keywords": "Exploration Into Kink, EiK, St Louis metro, Missouri, BDSM education, hotel takeover, vendor bazaar, play parties"
     }
   },
 
@@ -280,19 +285,21 @@ export const events = [
     "name": "Coastal Carolina Fetish Fair",
     "slug": "coastal-carolina-fetish-fair",
     "date": {
-      "start": "2025-11-20",
-      "end": "2025-11-23",
-      "display": "Nov 20-23, 2025"
+      "start": "2025-11-19",
+      "end": "2025-11-24",
+      "display": "Nov 19-24, 2025"
     },
     "location": {
-      "city": "TBD",
+      "city": "Myrtle Beach",
       "state": "SC",
       "region": "North Eastern, South Carolina"
     },
     "category": "Indoor Event",
-    "excerpt": "A vendor-focused weekend featuring top toymakers, BDSM vendors, specialty service providers, and educational opportunities — shop, learn, and connect with fellow kinksters.",
-    "longDescription": "Have a blast with other kinksters while exploring a curated vendor fair with the best toymakers, BDSM vendors, and specialty service providers. Enjoy education, friends, and fun across a weekend designed for discovering lifestyle products and meeting favorite craftsmen and presenters.",
+    "excerpt": "A vendor-focused weekend featuring top toymakers, BDSM vendors, specialty service providers, and educational opportunities — shop, learn, and connect with fellow kinksters at The Ellie Beach Resort Myrtle Beach.",
+    "longDescription": "Have a blast with other kinksters while exploring a curated vendor fair with the best toymakers, BDSM vendors, and specialty service providers. Enjoy education, friends, and fun across a weekend designed for discovering lifestyle products and meeting favorite craftsmen and presenters.\n\nWe have a room block reserved at The Ellie Beach Resort Myrtle Beach, Tapestry by Hilton for November 19, 2025 through November 24, 2025. Booking your room is simple, just select \"Book a Room\" to receive your group's preferred rate. Book by October 20, 2025 to secure your spot.",
     "website": "https://coastalcarolinafetishfair.com/",
+    "hotel": "The Ellie Beach Resort Myrtle Beach, Tapestry by Hilton",
+    "bookingDeadline": "October 20, 2025",
     "logo": "/images/CoastalCarolina.PNG",
     "features": [
       "Vendor-Focused Weekend",
@@ -303,12 +310,15 @@ export const events = [
       "Shopping Experience",
       "Community Connection",
       "Lifestyle Products",
-      "Craftsmen & Presenters"
+      "Craftsmen & Presenters",
+      "Hotel Room Block Available",
+      "Group Preferred Rates",
+      "Myrtle Beach Location"
     ],
     "seo": {
-      "title": "Coastal Carolina Fetish Fair - South Carolina BDSM Vendor Weekend | East Coast Kink Events",
-      "description": "A multi-day vendor fair with education and community in Northeastern South Carolina. Shop, learn, and connect.",
-      "keywords": "Coastal Carolina Fetish Fair, South Carolina, BDSM vendors, kink fair, education"
+      "title": "Coastal Carolina Fetish Fair - Myrtle Beach BDSM Vendor Weekend | East Coast Kink Events",
+      "description": "A multi-day vendor fair with education and community in Myrtle Beach, South Carolina. Hotel room block available with group rates.",
+      "keywords": "Coastal Carolina Fetish Fair, Myrtle Beach, South Carolina, BDSM vendors, kink fair, education, hotel"
     }
   },
   {
@@ -320,33 +330,44 @@ export const events = [
       "display": "Dec 4-7, 2025"
     },
     "location": {
-      "city": "TBD",
+      "city": "Gettysburg",
       "state": "PA",
       "region": "South Central, Pennsylvania"
     },
     "category": "Indoor Event",
-    "excerpt": "Naughty Noel is a four-day, sex-positive hotel takeover with education, vendor shopping, festive parties, and exceptional playspaces including a 24/7 satellite space by the indoor pool.",
-    "longDescription": "Dive into four days of BDSM, kink, and personal growth in a relaxed, friendly atmosphere. Enjoy quality education, high-caliber vendor shopping, festive parties, fun activities, and exceptional playspaces — including a main area and a 24/7 satellite playspace by the indoor pool. A welcoming, inclusive Mid-Atlantic gathering for exploration and community.",
+    "excerpt": "Naughty Noel is a winter kink conference featuring a private two-hotel takeover in Gettysburg, PA with education, playspaces, festive parties, and holiday shopping.",
+    "longDescription": "Naughty Noel is a winter kink conference organized by Studio 58 Events, held the first weekend in December each year (Thursday to Sunday) with registration opening July 1st. This private two-hotel takeover in Gettysburg, PA offers optional add-on nights from Tuesday through Sunday.\n\nOur Naughty Noel Annual Event keeps getting better each year! Spend four days exploring your own personal development and relationship practices. Our event is designed for adults who want to enjoy meaningful connections among alternative lifestyle and LGBTQIA+ folks in a friendly, inclusive atmosphere.\n\nMake new friends; nurture your existing friendships; renew your connections with your partner(s); learn new skills; and enjoy festive activities. Naughty Noel will offer excellent education; festive socializing parties; playspaces; holiday shopping and product demonstrations; indoor pool; and the unforgettable opportunity to mingle with like-minded adults.\n\nNaughty Noel begins on Thursday and concludes on Sunday. Socializing, access to indoor pool, and a pre-event munch will begin Wednesday; programming will begin Thursday at noon and conclude Sunday at 1PM. A significant portion of attendees arrive on Wednesday or Thursday, with some folks arriving Friday for the weekend.",
     "website": "https://studio58events.com/naughty-noel-2025/",
+    "organizer": "Studio 58 Events",
+    "registrationOpens": "July 1st each year",
+    "hotel": "Private Two-Hotel Takeover in Gettysburg, PA",
     "logo": "/images/naughtynoel.jpg",
     "features": [
-      "Four-Day Hotel Takeover",
-      "Sex-Positive Environment",
-      "Education & Learning",
-      "Vendor Shopping",
-      "Festive Parties",
-      "Exceptional Playspaces",
-      "24/7 Satellite Space",
+      "Winter Kink Conference",
+      "Private Two-Hotel Takeover",
+      "Gettysburg, PA Location",
+      "Four-Day Main Event (Thursday-Sunday)",
+      "Optional Add-On Nights (Tuesday-Sunday)",
+      "Excellent Education Programming",
+      "Festive Socializing Parties",
+      "Multiple Playspaces",
+      "Holiday Shopping & Product Demonstrations",
       "Indoor Pool Access",
-      "BDSM & Kink Focus",
-      "Personal Growth",
-      "Mid-Atlantic Community",
-      "Inclusive Environment"
+      "Pre-Event Munch (Wednesday)",
+      "Personal Development Focus",
+      "Relationship Practices",
+      "Alternative Lifestyle Community",
+      "LGBTQIA+ Inclusive",
+      "VIP Weekend Bundle Available",
+      "Volunteer Opportunities",
+      "Vendor Registration",
+      "Presenter & Activity Host Applications",
+      "Studio 58 Events Organized"
     ],
     "seo": {
-      "title": "Naughty Noel - Pennsylvania Holiday BDSM Hotel Takeover | East Coast Kink Events",
-      "description": "A four-day hotel takeover with education, shopping, parties, and exceptional playspaces in South Central Pennsylvania.",
-      "keywords": "Naughty Noel, Pennsylvania, BDSM hotel takeover, education, playspace"
+      "title": "Naughty Noel - Gettysburg PA Winter Kink Conference | East Coast Kink Events",
+      "description": "A winter kink conference featuring a private two-hotel takeover in Gettysburg, PA with education, playspaces, festive parties, and holiday shopping.",
+      "keywords": "Naughty Noel, Gettysburg, Pennsylvania, winter kink conference, Studio 58 Events, hotel takeover, BDSM education, playspaces"
     }
   },
   {
@@ -358,33 +379,43 @@ export const events = [
       "display": "Mar 12-15, 2026"
     },
     "location": {
-      "city": "Northern New Jersey",
+      "city": "Fairfield",
       "state": "NJ",
       "region": "Northern, New Jersey"
     },
     "category": "Indoor Event",
-    "excerpt": "Where geek culture and BDSM collide: workshops that bridge kink and geekery, performances, meetups, TTRPGs, cosplay, gaming, and more in an inclusive community.",
-    "longDescription": "Enter the dungeon of your dreams at Dungeons & Geekdoms — a celebration of tabletop RPGs, anime, video games, Renaissance faires, pop culture, and geek culture alongside the fantasy of BDSM. Enjoy captivating performances and meetups, workshops focused on kink and geekery, TTRPG sessions, cosplay, soirees, gaming, and more.",
+    "excerpt": "Tempest Gatherings presents Dungeons & Geekdoms - where the worlds of geek and kink collide in Fairfield, NJ for an event celebrating the overlapping Venn Diagram of kink and geek cultures.",
+    "longDescription": "Welcome to Tempest Gatherings, where the worlds of geek and kink collide in \"Dungeons & Geekdoms.\" D&G is an event for the overlapping Venn Diagram of kink and geek cultures, including lovers of Ren Faires, sci-fi, novels, smut, anime, TTRPGs, card/board/video games, movies, pop culture, and so much more.\n\nStep into a realm of captivating performances and meetups, where geeks and kinksters unite. Explore workshops that focus on kink or geekery. Join a TTRPG, enjoy a fancy soiree, dress up in cosplay, play some games, and so much more. Join us as reality blurs with fiction, and your Venn diagrams collide.\n\n\"Dungeons & Geekdoms\" is a tapestry woven with threads of both geek culture and desire, a place where the mundane meets the arcane. Come, enter the Dungeons of exploration and indulgence, and partake in an extraordinary night that leaves you with memories to be shared for ages.\n\nWhether the dungeon you've crawled into is at the table or has a St. Andrew's cross, we hope you have a blast. DUNGEONS & GEEKDOMS IS ONLY FOR THOSE 21 AND OLDER.",
     "website": "https://tempestgatherings.com/",
+    "organizer": "Tempest Gatherings",
+    "ageRequirement": "21+ only",
     "logo": "/images/dungeonsgeekdoms.png",
     "features": [
-      "Geek Culture & BDSM Fusion",
-      "Workshops Bridging Kink & Geekery",
+      "Tempest Gatherings Event",
+      "Geek & Kink Culture Fusion",
+      "Overlapping Venn Diagram Experience",
+      "Ren Faires & Sci-Fi",
+      "Novels & Smut",
+      "Anime & TTRPGs",
+      "Card/Board/Video Games",
+      "Movies & Pop Culture",
       "Captivating Performances",
       "Meetups & Social Events",
+      "Workshops on Kink & Geekery",
       "TTRPG Sessions",
+      "Fancy Soiree",
       "Cosplay Activities",
       "Gaming & Entertainment",
-      "Tabletop RPGs",
-      "Anime & Video Games",
-      "Renaissance Faire Elements",
-      "Pop Culture Integration",
-      "Inclusive Community"
+      "Reality Blurs with Fiction",
+      "Mundane Meets Arcane",
+      "Exploration & Indulgence",
+      "21+ Age Requirement",
+      "Fairfield, NJ Location"
     ],
     "seo": {
-      "title": "Dungeons & Geekdoms - New Jersey BDSM & Geek Event | East Coast Kink Events",
-      "description": "A unique mashup of geek culture and BDSM with workshops, performances, meetups, TTRPGs, cosplay, and gaming.",
-      "keywords": "Dungeons & Geekdoms, New Jersey, BDSM, geek culture, TTRPG, cosplay"
+      "title": "Dungeons & Geekdoms - Fairfield NJ Geek & Kink Fusion Event | East Coast Kink Events",
+      "description": "Tempest Gatherings presents Dungeons & Geekdoms - where the worlds of geek and kink collide in Fairfield, NJ for an event celebrating the overlapping Venn Diagram of kink and geek cultures.",
+      "keywords": "Dungeons & Geekdoms, Fairfield, New Jersey, Tempest Gatherings, geek culture, kink fusion, TTRPG, cosplay, gaming, 21+ event"
     }
   },
   {
@@ -396,33 +427,45 @@ export const events = [
       "display": "Mar 26-29, 2026"
     },
     "location": {
-      "city": "TBD",
+      "city": "Gettysburg",
       "state": "PA",
       "region": "South Central, Pennsylvania"
     },
     "category": "Indoor Event",
-    "excerpt": "A high-energy, festive 3.5-day hotel takeover celebrating kinky Mardi Gras with 24-hour playspaces, education, vending, indoor/outdoor activities, entertainment, games, and more.",
-    "longDescription": "Recreate New Orleans' French Quarter across a host hotel where the sights and sounds of kinky Mardi Gras echo all weekend. Enjoy Studio 58's programming, special events, 24-hour playspaces, vendor market, indoor/outdoor activities, entertainment, games, naked swimming, a Saturday bead & throws drop, and outstanding play equipment.",
-    "website": "https://studio58events.com/naughty-gras-2025/",
+    "excerpt": "A 2-hotel takeover conference celebrating kinky Mardi Gras in Gettysburg, PA with educational classes, social activities, and French Quarter atmosphere.",
+    "longDescription": "Join us for Naughty Gras each spring in Gettysburg, PA. We will recreate New Orleans' French Quarter across our host hotels where the sights and sounds of kinky Mardi Gras will echo all weekend. This glamorous event will be a high-energy, festive, 4-day party for our Studio 58 friends and their partners.\n\nOur Programming Team will have a full fun-filled schedule, with Educational Classes and Social Activities for your Enjoyment. The event features a 2-hotel takeover with Host Hotel 1 arranged around a pool atrium decorated Bourbon Street-style, and Host Hotel 2 containing our main playspace. The two hotels are connected with a closed-in walkway.\n\nRegistration options include 4-Day VIP Weekend Bundle with Friday and Saturday dinners, T-shirt, and special Mardi Gras beads & gift bag, or 4-Day Standard Weekend Ticket with add-on options for dinners, T-shirts, and volunteer opportunities.",
+    "website": "https://studio58events.com/naughty-gras-2026/",
+    "organizer": "Studio 58 Events",
+    "hotel": "2-Hotel Takeover in Gettysburg, PA",
     "logo": "/images/naughtynawlins.png",
     "features": [
-      "3.5-Day Hotel Takeover",
+      "2-Hotel Takeover Conference",
+      "Gettysburg, PA Location",
       "Kinky Mardi Gras Celebration",
-      "24-Hour Playspaces",
-      "Education & Learning",
-      "Vendor Market",
-      "Indoor/Outdoor Activities",
-      "Entertainment & Games",
-      "Naked Swimming",
-      "Saturday Bead & Throws Drop",
-      "Outstanding Play Equipment",
-      "Studio 58 Programming",
-      "French Quarter Atmosphere"
+      "French Quarter Atmosphere",
+      "Educational Classes",
+      "Social Activities",
+      "4-Day Weekend Event",
+      "VIP Weekend Bundle Available",
+      "Friday & Saturday Dinners",
+      "Naughty Gras T-Shirt",
+      "Special Mardi Gras Beads & Gift Bag",
+      "Host Hotel 1 with Pool Atrium",
+      "Bourbon Street-Style Decoration",
+      "Poolside & Balcony Rooms",
+      "Satellite Playspace Around Pool",
+      "Host Hotel 2 with Main Playspace",
+      "Connected Hotels via Walkway",
+      "Room Rates Include Breakfast Buffet",
+      "Parking & All Taxes Included",
+      "Add-On Night Options Available",
+      "Volunteer Opportunities",
+      "Studio 58 Events Organized"
     ],
     "seo": {
-      "title": "Naughty Gras - Pennsylvania Mardi Gras BDSM Hotel Takeover | East Coast Kink Events",
-      "description": "A festive 3.5-day hotel takeover with 24-hour playspaces, education, vending, entertainment, and games in South Central Pennsylvania.",
-      "keywords": "Naughty Gras, Pennsylvania, BDSM hotel takeover, Mardi Gras, playspaces"
+      "title": "Naughty Gras 2026 - Gettysburg PA Mardi Gras BDSM Conference | East Coast Kink Events",
+      "description": "A 2-hotel takeover conference celebrating kinky Mardi Gras in Gettysburg, PA with educational classes, social activities, and French Quarter atmosphere.",
+      "keywords": "Naughty Gras 2026, Gettysburg, Pennsylvania, Mardi Gras, BDSM conference, 2-hotel takeover, Studio 58 Events"
     }
   },
   {
@@ -575,80 +618,111 @@ export const events = [
     "name": "Primal Arts Festival",
     "slug": "primal-arts-festival",
     "date": {
-      "start": "2025-05-08",
-      "end": "2025-05-12",
-      "display": "May 8-12, 2025"
+      "start": "2026-05-07",
+      "end": "2026-05-11",
+      "display": "May 7-11, 2026"
     },
     "location": {
-      "city": "North Eastern",
+      "city": "Darlington",
       "state": "MD",
       "region": "North Eastern, Maryland"
     },
     "category": "Outdoor Event",
-    "excerpt": "A Celebration of Ancient Arts: Immerse yourself in a venue dedicated to celebrating some of the most ancient and revered forms of art and expression. Engage in activities like fire performance, music, tattooing, scarification, suspension, sacred sexuality, kink, and more.",
-    "longDescription": "Community and Connection: Our safe and conscientious community space is designed for individuals to learn from and engage with one another. Everyone is welcome to participate and share their knowledge with the community at Primal Arts.\n\nA Celebration of Ancient Arts: Immerse yourself in a venue dedicated to celebrating some of the most ancient and revered forms of art and expression. Engage in activities like fire performance, music, tattooing, scarification, suspension, sacred sexuality, kink, and more.\n\nThis outdoor festival creates a unique space where participants can explore traditional and contemporary forms of artistic expression in a supportive, inclusive environment. Whether you're interested in the ancient arts, modern kink culture, or simply connecting with like-minded individuals, Primal Arts Festival offers something for everyone.",
+    "excerpt": "Primal Arts Fest returns to Darlington, Maryland May 7th through 11th, 2026 connecting body and spirit, provoking spiritual evolution, and embracing the sacred and the profane.",
+    "longDescription": "Primal Arts Fest returns to Darlington, Maryland May 7th through 11th, 2026 connecting body and spirit, provoking spiritual evolution, and embracing the sacred and the profane.\n\nWe want to offer you an unforgettable experience where you can explore your deepest desires, indulge in your wildest curiosities, and showcase your primal self. Primal Arts Fest provides a venue to celebrate some of the most ancient and revered forms of art and expression. We offer a safe and conscientious community space where individuals can learn from and engage with one another in activities such as fire performance, music, tattoo, scarification, suspension, ordeal work, sacred sexuality, kink, and more.\n\nAcross history and different cultures, there has been a universal human curiosity to gain a deeper comprehension of life and the world we share. This pursuit has led people from all walks of life to explore the nature of their relationships – with themselves, their bodies, others, and their most intimate longings.\n\nThis is a 21+ clothing optional, sex and kink positive event. Registration is not yet open. Join the Mailing List for updates on early bird rates and limited all inclusive options.",
     "website": "https://smsprimalarts.com/",
+    "ageRequirement": "21+ only",
+    "clothingPolicy": "Clothing optional",
+    "registrationStatus": "Not yet open - Join mailing list for updates",
     "logo": "/images/primalarts.png",
     "features": [
+      "Darlington, Maryland Location",
+      "Connecting Body and Spirit",
+      "Provoking Spiritual Evolution",
+      "Embracing the Sacred and the Profane",
       "Ancient Arts Celebration",
       "Fire Performance",
       "Music & Entertainment",
-      "Tattooing",
-      "Scarification",
-      "Suspension",
-      "Sacred Sexuality",
-      "Kink Activities",
-      "Community Connection",
-      "Safe Space",
-      "Knowledge Sharing",
-      "Outdoor Festival Setting"
+      "Tattooing & Scarification",
+      "Suspension & Ordeal Work",
+      "Sacred Sexuality & Kink",
+      "Nightly Ritual Fires",
+      "Drumming, Dancing & Connection",
+      "Daily Workshops & Special Events",
+      "Respected Educators & Performers",
+      "Three Dedicated Play Spaces",
+      "Indoor Play-Space by Studio 58",
+      "Covered Pavilion with Furniture",
+      "Fireside Moonlight Den",
+      "Natural Landscapes Access",
+      "The Primal Hunt Activity",
+      "Fire Play Demonstrations",
+      "Vendors Market",
+      "Vendor Workshops",
+      "Attendee-Run Embers Events",
+      "Midnight Snack by Primal Chefs",
+      "Camping with Hot Showers",
+      "Private Room & Cabin Upgrades",
+      "Dining Hall Meal Plan Available",
+      "21+ Clothing Optional Event",
+      "Sex & Kink Positive Environment",
+      "Explicit Consent Required",
+      "Inclusive Community",
+      "No Discrimination Policy",
+      "Pagan & Spiritual Focus",
+      "Drum Circles Welcome"
     ],
     "seo": {
-      "title": "Primal Arts Festival - Maryland Outdoor Ancient Arts & Kink Celebration | East Coast Kink Events",
-      "description": "A celebration of ancient arts in North Eastern, Maryland featuring fire performance, music, tattooing, scarification, suspension, sacred sexuality, kink, and community connection.",
-      "keywords": "Primal Arts Festival, Maryland, outdoor festival, ancient arts, fire performance, tattooing, scarification, suspension, sacred sexuality, kink"
+      "title": "Primal Arts Festival 2026 - Darlington MD Ancient Arts & Kink Celebration | East Coast Kink Events",
+      "description": "Primal Arts Fest returns to Darlington, Maryland May 7-11, 2026 connecting body and spirit, provoking spiritual evolution, and embracing the sacred and the profane.",
+      "keywords": "Primal Arts Festival 2026, Darlington, Maryland, ancient arts, fire performance, tattooing, scarification, suspension, sacred sexuality, kink, spiritual evolution"
     }
   },
   {
     "name": "THE Beltane",
     "slug": "beltane",
     "date": {
-      "start": "2025-04-30",
-      "end": "2025-05-04",
-      "display": "Apr 30-May 4, 2025"
+      "start": "2026-04-30",
+      "end": "2026-05-04",
+      "display": "Apr 30-May 4, 2026"
     },
     "location": {
-      "city": "North Eastern",
+      "city": "Darlington",
       "state": "MD",
       "region": "North Eastern, Maryland"
     },
     "category": "Outdoor Event",
-    "excerpt": "Discover THE Beltane—an extraordinary event blending BDSM, kink, and community in a magical setting. Immerse yourself in a world of big poles festooned with ribbons, naked revelry, and bonfire drumming, dancing, and even sex if you wish.",
-    "longDescription": "Discover THE Beltane—an extraordinary event blending BDSM, kink, and community in a magical setting. Immerse yourself in a world of big poles festooned with ribbons, naked revelry, and bonfire drumming, dancing, and even sex if you wish. Engage in intimate conversations, attend classes on sex, intimacy, and kink, and partake in both serious and playful rituals. Experience a 10,000 sq ft sex-positive dungeon with top-notch equipment, all set on a stunning, clothing-optional campground with hot water and electricity. Embrace a relaxed atmosphere that fosters deep connections and personal growth. Join us for an unforgettable Beltane filled with magic and meaningful moments!\n\nWe believe the best events are smaller and more intimate. Our small class sizes help everyone learn better and have a more customized experience. The pace of our event is chill and relaxing and lends itself to more community building. You will have lots of time to make new friends and deepen old relationships.",
+    "excerpt": "THE Beltane April 30-May 4, 2026 in Darlington, MD featuring big poles festooned with ribbons, naked revelry, bonfire activities, and a 10,000 sq ft sex-positive dungeon.",
+    "longDescription": "THE Beltane April 30-May 4, 2026 • Darlington, MD\n\nIs THE Beltane for you? If you're into some or all of the following, you may have just found an amazing event that's perfect for you:\n\n• big poles festooned with ribbons\n• naked people frolicking around them\n• drumming and dancing and sexing (if you like) around a bonfire\n• intimate conversations with interesting people\n• classes about sex, intimacy, kink, etc\n• rituals and woo, both serious and light-hearted\n• a 10,000 sq ft sex-positive dungeon with excellent equipment\n\nAnd we do it all on a beautiful, clothing-optional campground with cabins that have hot water and electricity in a magical spot where eagles soar overhead and the sounds of lovemaking echo across the land.\n\nWe believe the best events are smaller and more intimate. Our small class sizes help everyone learn better and have a more customized experience. The pace of our event is chill and relaxing and lends itself to more community building. You will have lots of time to make new friends and deepen old relationships.\n\nCome join us!",
     "website": "https://www.turtlehilleventco.com/the-beltane.html",
     "logo": "/images/beltane.png",
     "features": [
-      "Intimate Community Setting",
-      "10,000 sq ft Sex-Positive Dungeon",
-      "Top-Notch Equipment",
-      "Clothing-Optional Campground",
-      "Hot Water & Electricity",
-      "Big Poles with Ribbons",
-      "Naked Revelry",
+      "Darlington, Maryland Location",
+      "Big Poles Festooned with Ribbons",
+      "Naked People Frolicking",
       "Bonfire Drumming & Dancing",
-      "Classes on Sex, Intimacy & Kink",
-      "Serious & Playful Rituals",
+      "Sexing Around Bonfire (if you like)",
       "Intimate Conversations",
-      "Relaxed Atmosphere",
-      "Deep Connections",
-      "Personal Growth",
+      "Classes on Sex, Intimacy & Kink",
+      "Rituals and Woo (Serious & Light-hearted)",
+      "10,000 sq ft Sex-Positive Dungeon",
+      "Excellent Equipment",
+      "Clothing-Optional Campground",
+      "Cabins with Hot Water & Electricity",
+      "Magical Spot with Eagles Soaring",
+      "Sounds of Lovemaking Echoing",
+      "Small & Intimate Event",
       "Small Class Sizes",
-      "Community Building"
+      "Chill & Relaxing Pace",
+      "Community Building Focus",
+      "Time for New Friends",
+      "Deepen Old Relationships",
+      "Beautiful Natural Setting"
     ],
     "seo": {
-      "title": "THE Beltane - Maryland Outdoor BDSM & Kink Community Event | East Coast Kink Events",
-      "description": "Discover THE Beltane—an extraordinary event blending BDSM, kink, and community in a magical setting with a 10,000 sq ft dungeon and clothing-optional campground.",
-      "keywords": "THE Beltane, Maryland, outdoor BDSM event, kink community, sex-positive dungeon, clothing-optional campground, ritual, bonfire, drumming, dancing"
+      "title": "THE Beltane 2026 - Darlington MD BDSM & Kink Community Event | East Coast Kink Events",
+      "description": "THE Beltane April 30-May 4, 2026 in Darlington, MD featuring big poles festooned with ribbons, naked revelry, bonfire activities, and a 10,000 sq ft sex-positive dungeon.",
+      "keywords": "THE Beltane 2026, Darlington, Maryland, BDSM event, kink community, sex-positive dungeon, clothing-optional campground, ritual, bonfire, drumming, dancing, ribbons"
     }
   },
   {
@@ -732,41 +806,59 @@ export const events = [
       "display": "Apr 11-13, 2025"
     },
     "location": {
-      "city": "Rochester",
+      "city": "Auburn",
       "state": "NY",
-      "region": "North Western, New York"
+      "region": "Central, New York"
     },
     "category": "Indoor Event",
-    "excerpt": "Immerse yourself in a world of edgy, hot, and beautiful erotic art. Enjoy performances that span from classy aerial dance to bawdy burlesque, offering something for every taste. Discover unique shopping opportunities for clothing, jewelry, and sex toys, perfect for enhancing your personal collection.",
-    "longDescription": "Experience the Ultimate Adult-Only Hotel Takeover at the Rochester Erotic Arts Festival 2025!\n\nImmerse yourself in a world of edgy, hot, and beautiful erotic art. Enjoy performances that span from classy aerial dance to bawdy burlesque, offering something for every taste. Discover unique shopping opportunities for clothing, jewelry, and sex toys, perfect for enhancing your personal collection.\n\nExpand your horizons with a variety of classes in art, dance, and sex education, designed for adventurous adults looking to explore and learn. ASL interpreters will be available throughout the weekend to ensure an inclusive experience for all.\n\nJoin us for an unforgettable weekend where the entire hotel becomes a playground for sensual exploration and artistic expression. Don't miss the Rochester Erotic Arts Festival 2025 – it's an event like no other.",
+    "excerpt": "Hotel Take-Over! With Pool! Edgy, hot and beautiful erotic art featuring performances from aerial dance to burlesque, unique shopping, classes in art/dance/sex ed, and ASL interpreters available all weekend.",
+    "longDescription": "REAF 2025 will be held April 11-13, 2025 at the Holiday Inn, 75 North St., Auburn NY. This is a complete hotel take-over event with pool access. No one will be admitted to the hotel without a REAF pass. You do NOT have to have a hotel room to attend this event.\n\nRegistration opens at 3 pm on Friday and 8 am on Saturday. YOUR REAF PASS MUST BE VISIBLE ON YOUR UPPER BODY AT ALL TIMES WHEN YOU ARE IN THE HOTEL.\n\nEnjoy performances ranging from classy aerial dance to bawdy burlesque, unique shopping for clothing, jewelry, sex toys, and classes in art, dance, and sex ed for adventurous adults. Sign Language (ASL) Interpreters are available all weekend!\n\nWe have a fabulous weekend of late night parties for Swing and BDSM Lifestyle fun! Be sure to read our Playroom Details for eligibility requirements before adding playroom passes to your order.\n\nTicketing for Passes and Hotel Rooms opens Jan 11 at 12 noon. Ticket sales will close on April 2. NO PASSES at the door! Holiday Inn rooms may only be ordered through the REAF ticketing system.",
     "website": "https://www.rochestereroticartfest.org/",
+    "hotel": "Holiday Inn, 75 North St., Auburn NY",
+    "contact": {
+      "email": "Email Susie",
+      "phone": "315-677-9395"
+    },
+    "ticketing": {
+      "opens": "Jan 11 at 12 noon",
+      "closes": "April 2",
+      "noDoorPasses": true
+    },
+    "covidPolicy": "Up-to-date vax/boosters, daily rapid tests, and KN95 masks are strongly encouraged but not required for entry. If you feel ill, please stay home!",
     "logo": "/images/rochester.jpg",
     "features": [
-      "Adult-Only Hotel Takeover",
-      "Erotic Art Exhibitions",
+      "Complete Hotel Take-Over Event",
+      "Pool Access Available",
+      "Edgy, Hot & Beautiful Erotic Art",
       "Aerial Dance Performances",
       "Burlesque Shows",
-      "Unique Shopping Opportunities",
-      "Clothing, Jewelry & Sex Toys",
-      "Art, Dance & Sex Education Classes",
-      "ASL Interpreters Available",
-      "Inclusive Experience",
-      "Sensual Exploration",
-      "Artistic Expression"
+      "Unique Shopping for Clothing, Jewelry & Sex Toys",
+      "Classes in Art, Dance & Sex Education",
+      "ASL Interpreters Available All Weekend",
+      "Late Night Swing & BDSM Parties",
+      "Playroom Access Available",
+      "Holiday Inn Location",
+      "Auburn, NY Location",
+      "Registration Friday 3pm & Saturday 8am",
+      "Pass Must Be Visible at All Times",
+      "No Hotel Room Required to Attend",
+      "Ticketing System for Hotel Rooms",
+      "COVID Safety Measures Encouraged",
+      "Adventurous Adults Welcome"
     ],
     "seo": {
-      "title": "Rochester Erotic Arts Festival 2025 - New York Adult Art Event | East Coast Kink Events",
-      "description": "Immerse yourself in a world of edgy, hot, and beautiful erotic art at the Rochester Erotic Arts Festival. Enjoy performances, shopping, and educational classes in a hotel takeover setting.",
-      "keywords": "Rochester Erotic Arts Festival, New York, erotic art, adult event, burlesque, aerial dance, sex education, hotel takeover"
+      "title": "Rochester Erotic Arts Festival 2025 - Auburn NY Hotel Takeover | East Coast Kink Events",
+      "description": "Hotel Take-Over! With Pool! Edgy, hot and beautiful erotic art featuring performances from aerial dance to burlesque, unique shopping, classes in art/dance/sex ed, and ASL interpreters available all weekend.",
+      "keywords": "Rochester Erotic Arts Festival, REAF 2025, Auburn, New York, hotel takeover, erotic art, aerial dance, burlesque, sex education, ASL interpreters"
     }
   },
   {
     "name": "Tethered Together",
     "slug": "tethered",
     "date": {
-      "start": "2025-03-14",
-      "end": "2025-03-17",
-      "display": "Mar 14-17, 2025"
+      "start": "2026-02-27",
+      "end": "2026-03-02",
+      "display": "Feb 27-Mar 2, 2026"
     },
     "location": {
       "city": "Stamford",
@@ -884,25 +976,30 @@ export const events = [
       "region": "Central, Colorado"
     },
     "category": "Indoor Event",
-    "excerpt": "KinkyCon is a premier BDSM and kink conference featuring workshops, demonstrations, and social opportunities.",
-    "longDescription": "Experience KinkyCon, a premier BDSM and kink conference that brings together the community's most respected educators and practitioners. Enjoy comprehensive workshops covering everything from basic techniques to advanced practices, engaging demonstrations that showcase various skills and equipment, and numerous social opportunities to connect with fellow enthusiasts. Whether you're exploring new interests or deepening existing knowledge, KinkyCon provides a professional and welcoming environment for learning and community building.",
+    "excerpt": "KinkyCon is an annual conference celebrating the education and exploration of BDSM, polyamory, gender identity, alternative sexuality, and welcoming people of all ages (18+), race, sexual orientation, gender identity, and spiritual belief.",
+    "longDescription": "KinkyCon is an annual conference celebrating the education and exploration of BDSM, polyamory, gender identity, alternative sexuality, and welcoming people of all ages (18+), race, sexual orientation, gender identity, and spiritual belief. Each event has a unique energy, with varying classes, demos, vendors and other activities (silent auctions, raffles, socials).\n\nKinkyCon Wicked Weekend 2025: November 14-16, 2025 - Presenter proposals are now open with a deadline of July 6th, 2025.\n\nKinkyCon Community Co-op 2025: July 19, 2025 - Vendor applications are now open with a deadline of May 25th, 2025.",
     "website": "https://kinkycon.com/",
     "logo": "/images/kinkycon.png",
     "features": [
-      "Premier BDSM Conference",
-      "Comprehensive Workshops",
-      "Skill Demonstrations",
-      "Social Opportunities",
-      "Professional Environment",
-      "Community Building",
-      "All Experience Levels",
-      "Respected Educators",
-      "Welcoming Atmosphere"
+      "Annual BDSM Conference",
+      "Education & Exploration Focus",
+      "Polyamory Discussions",
+      "Gender Identity Support",
+      "Alternative Sexuality Education",
+      "All Ages Welcome (18+)",
+      "Inclusive Community",
+      "Varying Classes & Demos",
+      "Vendor Marketplace",
+      "Silent Auctions & Raffles",
+      "Social Activities",
+      "Unique Event Energy",
+      "Presenter Proposals Welcome",
+      "Vendor Applications Open"
     ],
     "seo": {
       "title": "KinkyCon - Denver BDSM Conference | East Coast Kink Events",
-      "description": "KinkyCon is a premier BDSM and kink conference featuring workshops, demonstrations, and social opportunities.",
-      "keywords": "KinkyCon, Denver, BDSM conference, kink education, Colorado"
+      "description": "KinkyCon is an annual conference celebrating the education and exploration of BDSM, polyamory, gender identity, alternative sexuality, and welcoming people of all ages (18+), race, sexual orientation, gender identity, and spiritual belief.",
+      "keywords": "KinkyCon, Denver, BDSM conference, kink education, Colorado, polyamory, gender identity, alternative sexuality, inclusive community"
     }
   },
 
@@ -920,21 +1017,51 @@ export const events = [
       "region": "South Central, Pennsylvania"
     },
     "category": "Indoor Event",
-    "excerpt": "A welcoming hotel takeover focused on personal development and relationship practices with education galore, skill sharing, playing, and partying for newcomers and experienced kinksters alike.",
-    "longDescription": "Join Studio 58 for 'Back to School' — a multi-day, inclusive event designed for meaningful connections among alternative lifestyle and LGBTQIA+ folks. Expect education across experience levels, an Exploratorium with demo stations, themed games and challenges, social lounges, indoor pool access, vendor shopping, and a range of playful activities.",
+    "excerpt": "Come join Studio 58 to head back to school at Naughty Knowledge 2025, a Private Hotel Takeover Event in Gettysburg PA featuring education, skill sharing, playing, and partying.",
+    "longDescription": "Come join Studio 58 to head back to school at Naughty Knowledge 2025, July 31-August 3, 2025, as a Private Hotel Takeover Event in Gettysburg PA. Spend 3-days exploring your own personal development and relationship practices. Our event is designed for adults who want to enjoy meaningful connections among alternative lifestyle and LGBTQIA+ folks in a friendly, inclusive atmosphere.\n\nNaughty Knowledge is designed for newcomers, swinks, swingers, experienced kinksters and even brand-new folks who may be kinky in the bedroom but want to know more about safe and consensual BDSM. This will be a fun event with education galore, skill sharing, playing, and partying.\n\nNaughty Knowledge begins on a Thursday at 9AM and concludes on Sunday at 11 AM. Socializing, access to indoor pool, and outdoor courtyard. Arrive as early as you can! A significant portion of attendees arrive on Thursday + some folks arrive early on Wednesday for longer weekend.",
     "website": "https://studio58events.com/naughty-knowledge-2/",
-    "logo": "/images/placeholder-logo.svg",
+    "organizer": "Studio 58 Events",
+    "hotel": "Private Hotel Takeover in Gettysburg, PA",
+    "registrationOpens": "April 1st at 8PM each year",
+    "contact": {
+      "email": "michelle@studio58events.com"
+    },
+    "logo": "https://studio58events.com/wp-content/uploads/Knowledge_Header-300x201.png",
     "features": [
-      "Education & Skill Sharing",
-      "Exploratorium Demo Stations",
-      "Games & Themed Activities",
-      "Indoor Pool Access",
-      "Vendor Shopping"
+      "Private Hotel Takeover Event",
+      "Gettysburg, PA Location",
+      "3-Day Event (Thursday-Sunday)",
+      "Personal Development Focus",
+      "Relationship Practices",
+      "Alternative Lifestyle Community",
+      "LGBTQIA+ Inclusive",
+      "Newcomers & Experienced Kinksters Welcome",
+      "Education Galore",
+      "Skill Sharing",
+      "Playing & Partying",
+      "Learn New Skills",
+      "Classes & Exploratorium Demo Stations",
+      "Mixers, Happy Hours & Games",
+      "Karaoke & Social Activities",
+      "Indoor Pool with 24/7 Nude or Not Swimming",
+      "Outdoor Activities & Play Equipment",
+      "Cigar Smoking Areas",
+      "Vendor Marketplace",
+      "Game Playing & Social Lounge",
+      "Craft Room",
+      "Special Littles Room",
+      "Hotel Room Reservations Available",
+      "VIP Event Bundle Registration",
+      "Volunteer Opportunities",
+      "Vendor Registration",
+      "Presenter & Activity Host Applications",
+      "Event YAPP for Registered Attendees",
+      "Fetlife Community Page"
     ],
     "seo": {
-      "title": "Naughty Knowledge - Pennsylvania Hotel Takeover Education Event | East Coast Kink Events",
-      "description": "A welcoming multi-day hotel takeover with education, demo stations, games, social spaces, and vendor shopping in South Central Pennsylvania.",
-      "keywords": "Naughty Knowledge, Pennsylvania, BDSM education, hotel takeover, Studio 58"
+      "title": "Naughty Knowledge 2025 - Gettysburg PA Hotel Takeover Education Event | East Coast Kink Events",
+      "description": "Come join Studio 58 to head back to school at Naughty Knowledge 2025, a Private Hotel Takeover Event in Gettysburg PA featuring education, skill sharing, playing, and partying.",
+      "keywords": "Naughty Knowledge 2025, Gettysburg, Pennsylvania, Studio 58 Events, hotel takeover, BDSM education, skill sharing, alternative lifestyle, LGBTQIA+"
     }
   },
 
@@ -1021,72 +1148,47 @@ export const events = [
       "display": "Jul 17-19, 2026"
     },
     "location": {
-      "city": "Northern Maryland",
-      "state": "MD",
-      "region": "NorthEastern, Maryland"
+      "city": "Northern Massachusetts",
+      "state": "MA",
+      "region": "Northern, Massachusetts"
     },
     "category": "Outdoor Event",
-    "excerpt": "A summer-camp style weekend celebrating the diversity of kink — come play, explore, and express yourself among a welcoming community.",
-    "longDescription": "FetCamp celebrates the diversity of kink in a liberating summer-camp atmosphere. Enjoy classes and peer exchanges alongside playful self-expression and camaraderie among like-minded folks. All identities and fetishes are welcome — come play and have a wonderfully liberating time.",
+    "excerpt": "A small gathering of likeminded fetishists and perverts held at a private campsite in Northern Massachusetts with all-inclusive meals, world-class play spaces, and unlimited exploration.",
+    "longDescription": "FetCamp is a small gathering of likeminded fetishists and perverts held at a private campsite in Northern Massachusetts. The camp is a short drive, around an hour and 30 min from Providence RI, Hartford CT, or Boston MA. The site is well situated away from busy traffic areas, with a large buffer of woods between any nearby lots.\n\nWe want to keep things simple so you can focus on the fun. One price gets you camping on site with all the classes and special events you can handle, shopping with top notch vendors and every meal from dinner Friday till Brunch on Sunday. The cost for this level of fun is $300 per person.\n\nYou may set up your tent and camp site anywhere you like within our huge central field or in a secluded spot within the tree line. You will have all the space and privacy you want, yet still be close to all the action. The grounds are yours to explore freely and to use respectfully, so if you really want to tie your date to a tree, we say have fun with that! FetCamp promises unparalleled relaxation in a kink friendly atmosphere.\n\nFetCamp is catering to the new kids, as well as the more experienced players. If you have a fetish or kink and want a fun safe space to explore it, FetCamp is the event for you!",
     "website": "https://www.fetcamp.com/",
+    "phone": "401-465-6829",
+    "email": "info@FetCamp.com",
     "logo": "/images/fetcamp.png",
     "features": [
-      "Summer-Camp Style Weekend",
-      "Diversity of Kink Celebration",
-      "Classes & Peer Exchanges",
-      "Playful Self-Expression",
-      "Community Camaraderie",
-      "All Identities Welcome",
-      "All Fetishes Welcome",
-      "Liberating Atmosphere",
-      "Welcoming Community",
-      "Play & Exploration"
+      "Private Campsite in Northern Massachusetts",
+      "All-Inclusive Meals (Friday Dinner to Sunday Brunch)",
+      "World-Class Tented Play Space",
+      "Outdoor Dungeon with Spanking Benches & Saint Andrew's Crosses",
+      "Suspension Gear & Equipment",
+      "Wax, Fire & Medical Play Areas",
+      "Bubble Tent Dungeons",
+      "Bob the Blue Igloo Sex-Positive Space",
+      "Sex Machines Available",
+      "Tree Suspension & Public Play Areas",
+      "Nude Sunbathing & Slave Hunts",
+      "Top Notch Vendors",
+      "Staff Photographer",
+      "Porta-Potties & Hot Outdoor Showers",
+      "Self-Contained RV Accommodations",
+      "Classes & Special Events",
+      "Pig Roast Saturday Evening",
+      "All Experience Levels Welcome",
+      "Kink-Friendly Atmosphere",
+      "Unlimited Exploration"
     ],
     "seo": {
-      "title": "FetCamp - Maryland Outdoor Kink Camp | East Coast Kink Events",
-      "description": "A liberating kink camp weekend with classes, peer exchanges, and playful self-expression among a welcoming community.",
-      "keywords": "FetCamp, Maryland, kink camp, classes, community"
+      "title": "FetCamp - Massachusetts Outdoor Kink Camp with All-Inclusive Meals | East Coast Kink Events",
+      "description": "A small gathering of likeminded fetishists and perverts at a private Massachusetts campsite with all-inclusive meals, world-class play spaces, and unlimited exploration.",
+      "keywords": "FetCamp, Massachusetts, kink camp, all-inclusive meals, outdoor dungeon, play spaces, camping, BDSM"
     }
   },
 
-  {
-    "name": "Rendezvous at the Ridge",
-    "slug": "rendezvous-at-the-ridge",
-    "date": {
-      "start": "2025-07-18",
-      "end": "2025-07-20",
-      "display": "Jul 18-20, 2025"
-    },
-    "location": {
-      "city": "Ontario",
-      "state": "ON",
-      "region": "Ontario, Canada"
-    },
-    "category": "Outdoor Event",
-    "excerpt": "A new summer adventure full of excitement and exploration awaits you at a well-appointed campground on the East Coast. You can look forward to engaging workshops spanning from the thoughtful thinky think to hands-on experiences, ensuring you never have to sacrifice one for the other.",
-    "longDescription": "A new summer adventure full of excitement and exploration awaits you at a well-appointed campground on the East Coast. You can look forward to engaging workshops spanning from the thoughtful thinky think to hands-on experiences, ensuring you never have to sacrifice one for the other. Each day is curated with unique themes to spark your desires, alongside the availability of not just one but TWO dungeons open daily for your indulgence. Additionally, there are outdoor play spaces, thrilling evening activities, a bustling vendor market, and an array of other offerings waiting for you to discover and enjoy.\n\nStep into a world where adventure meets sophistication at Rendezvous at the Ridge. Our carefully designed program balances intellectual stimulation with physical exploration, creating an environment where both your mind and body can find fulfillment. From thought-provoking discussions that challenge your perspectives to hands-on experiences that ignite your passions, every moment is crafted to enhance your journey of discovery.\n\nExperience the luxury of choice with our dual-dungeon setup, offering different atmospheres and equipment to suit your mood and preferences. Whether you're in the mood for intimate exploration or grand-scale adventure, our well-equipped spaces provide the perfect backdrop for your desires.\n\nImmerse yourself in our vibrant community where connections are made, skills are shared, and experiences are celebrated. From the crackling energy of our vendor market to the quiet intimacy of our outdoor play spaces, from the excitement of our evening activities to the peaceful contemplation of our natural surroundings, Rendezvous at the Ridge offers a complete experience that speaks to every aspect of your being.\n\nJoin us for a weekend where every desire finds expression, every question finds an answer, and every moment becomes a memory to cherish. This is where summer dreams come true and where the adventure of a lifetime awaits.",
-    "website": "https://fetlife.com/events/1439077",
-    "logo": "/images/rende.PNG",
-    "features": [
-      "Well-Appointed Campground",
-      "Engaging Workshops",
-      "Thinky Think Sessions",
-      "Hands-On Experiences",
-      "Daily Themes",
-      "Two Dungeons Open Daily",
-      "Outdoor Play Spaces",
-      "Thrilling Evening Activities",
-      "Bustling Vendor Market",
-      "Summer Adventure",
-      "Exciting Exploration",
-      "Desire-Inspiring Activities"
-    ],
-    "seo": {
-      "title": "Rendezvous at the Ridge - Ontario Outdoor Kink Camp Adventure | East Coast Kink Events",
-      "description": "A new summer adventure full of excitement and exploration at a well-appointed campground with workshops, two dungeons, outdoor play spaces, and thrilling activities in Ontario, Canada.",
-      "keywords": "Rendezvous at the Ridge, Ontario, Canada, outdoor kink camp, workshops, dungeons, outdoor play spaces, summer adventure"
-    }
-  },
+
   {
     "name": "Rendezvous",
     "slug": "rendezvous",
