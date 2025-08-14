@@ -6,7 +6,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "update:dates": "node scripts/updateEventDates.mjs",
+    "validate:dates": "node scripts/validateEventDates.mjs",
+    "cleanup:events": "node scripts/cleanupEvents.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.5.0",
