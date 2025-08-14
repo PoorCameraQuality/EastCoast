@@ -1,8 +1,8 @@
 "use client";
 
-import { createContext, useContext, useState, useEffect, ReactNode, useRef } from "react";
-import { supabase } from "@/lib/supabaseClient";
-import type { Session, PostgrestError } from '@supabase/supabase-js';
+import { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import { supabase } from "@/lib/supabase";
+import type { Session } from '@supabase/supabase-js';
 
 interface Profile {
   id: string;
@@ -30,8 +30,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
-  const [isHydrated, setIsHydrated] = useState(false);
-  const hasInitializedRef = useRef(false);
 
   const refreshAuth = async () => {
     if (!supabase) return;
@@ -97,23 +95,20 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  // Hydration effect - runs only on client
+  // Initialize auth and listen for changes
   useEffect(() => {
-    console.log('🚀 AUTH PROVIDER: Client hydration...');
-    setIsHydrated(true);
-  }, []);
-
-  // Initial hydration from Supabase local storage
-  useEffect(() => {
-    // Don't run auth logic until hydrated
-    if (!isHydrated) return;
-    
     console.log('🚀 AUTH PROVIDER: Initializing...');
+    
+    if (!supabase) {
+      console.error('❌ AUTH PROVIDER: Supabase client not available');
+      setLoading(false);
+      return;
+    }
     
     let mounted = true;
 
     // Listen for auth state changes
-    const authStateChange = supabase?.auth.onAuthStateChange(
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
         console.log('🔄 AUTH PROVIDER: Auth state changed:', event, session?.user?.email);
         
@@ -141,50 +136,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             setIsAdmin(false);
             setLoading(false);
           }
-          hasInitializedRef.current = true;
         }
       }
     );
 
-    // Initialize auth - only if not already handled by auth state listener
-    const initializeAuth = async () => {
-      try {
-        // Wait for auth state listener to be set up
-        await new Promise(resolve => setTimeout(resolve, 200));
-        
-        if (!mounted || !supabase) return;
-
-        // Only call refreshAuth if no auth state change has been triggered yet
-        if (!hasInitializedRef.current) {
-          console.log('🔄 AUTH PROVIDER: Initial auth check...');
-          await refreshAuth();
-          hasInitializedRef.current = true;
-        }
-      } catch (error) {
-        console.error('❌ AUTH PROVIDER: Initialization error:', error);
-        setUser(null);
-        setIsAdmin(false);
-        setLoading(false);
-        hasInitializedRef.current = true;
-      }
-    };
-
-    initializeAuth();
-
-    // Periodic session check (every 5 minutes)
-    const interval = setInterval(async () => {
-      if (mounted && supabase) {
-        console.log('🔄 AUTH PROVIDER: Periodic session check');
-        await refreshAuth();
-      }
-    }, 5 * 60 * 1000);
-
     return () => {
       mounted = false;
-      authStateChange?.data?.subscription?.unsubscribe();
-      clearInterval(interval);
+      subscription?.unsubscribe();
     };
-  }, [isHydrated]);
+  }, []);
 
   return (
     <AuthContext.Provider

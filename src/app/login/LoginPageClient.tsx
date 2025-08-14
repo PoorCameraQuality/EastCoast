@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import { useAuth } from '@/contexts/AuthProvider'
 import { supabase } from '@/lib/supabase'
 
 export default function LoginPageClient() {
@@ -11,40 +12,14 @@ export default function LoginPageClient() {
   const [error, setError] = useState('')
   const [message, setMessage] = useState('')
   const router = useRouter()
+  const { user, isAdmin, loading: authLoading } = useAuth()
 
   useEffect(() => {
-    // Check if user is already logged in
-    const checkUser = async () => {
-      try {
-        if (!supabase) {
-          console.error('Supabase not configured')
-          return
-        }
-        
-        const { data: { user }, error } = await supabase.auth.getUser()
-        
-        if (user && !error) {
-          // Check if user is admin
-          const { data: profile, error: profileError } = await supabase
-            .from('profiles')
-            .select('role')
-            .eq('id', user.id)
-            .single()
-
-          if (profile?.role === 'admin') {
-            router.push('/admin/dashboard')
-          } else {
-            await supabase.auth.signOut()
-            setError('Access denied. Admin privileges required.')
-          }
-        }
-      } catch (error) {
-        console.error('Error checking user:', error)
-      }
+    // If user is already logged in and is admin, redirect to dashboard
+    if (!authLoading && user && isAdmin) {
+      router.push('/admin/dashboard')
     }
-
-    checkUser()
-  }, [router])
+  }, [user, isAdmin, authLoading, router])
 
   const handleSignOut = async () => {
     try {
@@ -114,7 +89,10 @@ export default function LoginPageClient() {
         }
 
         setMessage('Login successful! Redirecting...')
-        router.push('/admin/dashboard')
+        // The AuthProvider will handle the redirect automatically
+        setTimeout(() => {
+          router.push('/admin/dashboard')
+        }, 1000)
       }
     } catch (error) {
       console.error('Login error:', error)
@@ -124,18 +102,28 @@ export default function LoginPageClient() {
     }
   }
 
-  const handleSignOutAndRedirect2 = async () => {
-    try {
-      if (!supabase) {
-        setError('Supabase not configured')
-        return
-      }
-      await supabase.auth.signOut()
-      router.push('/')
-    } catch (error) {
-      console.error('Error signing out:', error)
-      setError('Error signing out')
-    }
+  // Show loading while auth is being checked
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-dark-900 flex items-center justify-center">
+        <div className="text-center">
+          <div className="text-white mb-4">Loading...</div>
+          <div className="text-blue-400 text-sm">Checking authentication...</div>
+        </div>
+      </div>
+    )
+  }
+
+  // If already logged in as admin, show redirect message
+  if (user && isAdmin) {
+    return (
+      <div className="min-h-screen bg-dark-900 flex items-center justify-center">
+        <div className="text-center">
+          <div className="text-white mb-4">Already logged in!</div>
+          <div className="text-blue-400 text-sm">Redirecting to admin dashboard...</div>
+        </div>
+      </div>
+    )
   }
 
   return (

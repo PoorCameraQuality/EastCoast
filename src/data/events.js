@@ -1,28 +1,6 @@
 // Events data with SEO optimization
 export const events = [
-  {
-    "name": "The Master/slave Conference MsC 2024",
-    "slug": "master-slave-conference-msc-2024",
-    "date": {
-      "start": "2024-08-29",
-      "end": "2024-09-02",
-      "display": "Aug 29-Sep 2, 2024"
-    },
-    "location": {
-      "city": "Washington DC",
-      "state": "DC",
-      "region": "Central, District of Columbia"
-    },
-    "category": "Indoor Event",
-    "excerpt": "The Master/slave Conference 2024, created in 2004, was a highly educational annual event over Labor Day Weekend in the Washington DC Metropolitan area.",
-    "website": "https://masterslaveconference.org/",
-    "logo": "/images/masterslaveconference.jpg",
-    "seo": {
-      "title": "The Master/slave Conference MsC 2024 - Past Washington DC BDSM Education | East Coast Kink Events",
-      "description": "The Master/slave Conference 2024 was a highly educational annual event over Labor Day Weekend in the Washington DC Metropolitan area.",
-      "keywords": "Master slave conference 2024, MsC, Washington DC, BDSM education, authority-based relationships"
-    }
-  },
+
   {
     "name": "The Summer Michigan Rope Conference SMIRC",
     "slug": "summer-michigan-rope-conference-smirc",
@@ -178,6 +156,14 @@ export const events = [
     "longDescription": "Get ready for a weekend of excitement while you connect with like-minded individuals at one of the most beloved campgrounds on the East Coast. Open to all skill levels, Fornucopia blends education, entertainment, and the freedom to have fun. More than an event, it's a community gathering designed to help you make memories that last a lifetime.",
     "website": "https://www.fornucopiaevent.com/",
     "logo": "/images/fornucopia.png",
+    "features": [
+      "Community Connection",
+      "Education & Entertainment",
+      "All Skill Levels Welcome",
+      "Campground Setting",
+      "Weekend Event",
+      "Memorable Experiences"
+    ],
     "seo": {
       "title": "FORNUCOPIA - Maryland BDSM Community Camp Event | East Coast Kink Events",
       "description": "Fornucopia in Darlington, MD offers a community-focused weekend with education, entertainment, and inclusive fun at a beloved East Coast campground.",
@@ -202,6 +188,17 @@ export const events = [
     "longDescription": "Join Kinky Kollege for an unforgettable weekend of learning, play, and community. Enjoy accredited classes for all experience levels, from beginner to advanced edge players, with some sessions offering hands-on lab time and professional coaching. Explore a massive 15,000 sq ft playspace, shop the vendor market, and connect with like-minded attendees in a welcoming atmosphere.",
     "website": "https://kinkykollege.com/",
     "logo": "/images/kinkykollege.png",
+    "features": [
+      "Weekend-Long Education",
+      "Top Alternative Lifestyle Educators",
+      "15,000 sq ft Play Space",
+      "Robust Vendor Market",
+      "Accredited Classes",
+      "All Experience Levels",
+      "Hands-On Lab Time",
+      "Professional Coaching",
+      "Community Building"
+    ],
     "seo": {
       "title": "Kinky Kollege - Chicago BDSM Education Conference | East Coast Kink Events",
       "description": "A premier weekend near O'Hare with top educators, a 15,000 sq ft playspace, and a welcoming community for all experience levels.",
@@ -259,6 +256,19 @@ export const events = [
     "longDescription": "Immerse yourself in a welcoming, inclusive weekend of exploration and education. Enjoy 35+ educational classes, a vendor bazaar, BeBe's cigar social, the Exploration Emporium (mentoring show-and-feel), a clothing-optional indoor pool, Friday and Saturday night play parties, and midnight buffets. EiK builds community through consent, diversity, and inclusivity.",
     "website": "https://www.explorationintokink.com/",
     "logo": "/images/eik.jpg",
+    "features": [
+      "Full Hotel Takeover",
+      "35+ Educational Classes",
+      "Vendor Bazaar",
+      "Cigar Social",
+      "Mentoring Emporium",
+      "Clothing-Optional Indoor Pool",
+      "Play Parties",
+      "Midnight Buffets",
+      "Consent-Focused",
+      "Diversity & Inclusivity",
+      "Community Building"
+    ],
     "seo": {
       "title": "Exploration Into Kink (EiK) - Hotel Takeover Education & Play | East Coast Kink Events",
       "description": "A full weekend hotel takeover with 35+ classes, vendor bazaar, social events, indoor pool, play parties, and midnight buffets.",
@@ -284,6 +294,17 @@ export const events = [
     "longDescription": "Have a blast with other kinksters while exploring a curated vendor fair with the best toymakers, BDSM vendors, and specialty service providers. Enjoy education, friends, and fun across a weekend designed for discovering lifestyle products and meeting favorite craftsmen and presenters.",
     "website": "https://coastalcarolinafetishfair.com/",
     "logo": "/images/CoastalCarolina.PNG",
+    "features": [
+      "Vendor-Focused Weekend",
+      "Top Toymakers",
+      "BDSM Vendors",
+      "Specialty Service Providers",
+      "Educational Opportunities",
+      "Shopping Experience",
+      "Community Connection",
+      "Lifestyle Products",
+      "Craftsmen & Presenters"
+    ],
     "seo": {
       "title": "Coastal Carolina Fetish Fair - South Carolina BDSM Vendor Weekend | East Coast Kink Events",
       "description": "A multi-day vendor fair with education and community in Northeastern South Carolina. Shop, learn, and connect.",
@@ -306,8 +327,22 @@ export const events = [
     "category": "Indoor Event",
     "excerpt": "Naughty Noel is a four-day, sex-positive hotel takeover with education, vendor shopping, festive parties, and exceptional playspaces including a 24/7 satellite space by the indoor pool.",
     "longDescription": "Dive into four days of BDSM, kink, and personal growth in a relaxed, friendly atmosphere. Enjoy quality education, high-caliber vendor shopping, festive parties, fun activities, and exceptional playspaces — including a main area and a 24/7 satellite playspace by the indoor pool. A welcoming, inclusive Mid-Atlantic gathering for exploration and community.",
-    "website": "https://studio58events.com/naughty-noel-2024/",
+    "website": "https://studio58events.com/naughty-noel-2025/",
     "logo": "/images/naughtynoel.jpg",
+    "features": [
+      "Four-Day Hotel Takeover",
+      "Sex-Positive Environment",
+      "Education & Learning",
+      "Vendor Shopping",
+      "Festive Parties",
+      "Exceptional Playspaces",
+      "24/7 Satellite Space",
+      "Indoor Pool Access",
+      "BDSM & Kink Focus",
+      "Personal Growth",
+      "Mid-Atlantic Community",
+      "Inclusive Environment"
+    ],
     "seo": {
       "title": "Naughty Noel - Pennsylvania Holiday BDSM Hotel Takeover | East Coast Kink Events",
       "description": "A four-day hotel takeover with education, shopping, parties, and exceptional playspaces in South Central Pennsylvania.",
@@ -332,6 +367,20 @@ export const events = [
     "longDescription": "Enter the dungeon of your dreams at Dungeons & Geekdoms — a celebration of tabletop RPGs, anime, video games, Renaissance faires, pop culture, and geek culture alongside the fantasy of BDSM. Enjoy captivating performances and meetups, workshops focused on kink and geekery, TTRPG sessions, cosplay, soirees, gaming, and more.",
     "website": "https://tempestgatherings.com/",
     "logo": "/images/dungeonsgeekdoms.png",
+    "features": [
+      "Geek Culture & BDSM Fusion",
+      "Workshops Bridging Kink & Geekery",
+      "Captivating Performances",
+      "Meetups & Social Events",
+      "TTRPG Sessions",
+      "Cosplay Activities",
+      "Gaming & Entertainment",
+      "Tabletop RPGs",
+      "Anime & Video Games",
+      "Renaissance Faire Elements",
+      "Pop Culture Integration",
+      "Inclusive Community"
+    ],
     "seo": {
       "title": "Dungeons & Geekdoms - New Jersey BDSM & Geek Event | East Coast Kink Events",
       "description": "A unique mashup of geek culture and BDSM with workshops, performances, meetups, TTRPGs, cosplay, and gaming.",
@@ -356,6 +405,20 @@ export const events = [
     "longDescription": "Recreate New Orleans' French Quarter across a host hotel where the sights and sounds of kinky Mardi Gras echo all weekend. Enjoy Studio 58's programming, special events, 24-hour playspaces, vendor market, indoor/outdoor activities, entertainment, games, naked swimming, a Saturday bead & throws drop, and outstanding play equipment.",
     "website": "https://studio58events.com/naughty-gras-2025/",
     "logo": "/images/naughtynawlins.png",
+    "features": [
+      "3.5-Day Hotel Takeover",
+      "Kinky Mardi Gras Celebration",
+      "24-Hour Playspaces",
+      "Education & Learning",
+      "Vendor Market",
+      "Indoor/Outdoor Activities",
+      "Entertainment & Games",
+      "Naked Swimming",
+      "Saturday Bead & Throws Drop",
+      "Outstanding Play Equipment",
+      "Studio 58 Programming",
+      "French Quarter Atmosphere"
+    ],
     "seo": {
       "title": "Naughty Gras - Pennsylvania Mardi Gras BDSM Hotel Takeover | East Coast Kink Events",
       "description": "A festive 3.5-day hotel takeover with 24-hour playspaces, education, vending, entertainment, and games in South Central Pennsylvania.",
@@ -641,8 +704,19 @@ export const events = [
     },
     "category": "Indoor Event",
     "excerpt": "Rochester Kink is a BDSM and kink event featuring workshops, demonstrations, and social activities in a welcoming environment.",
+    "longDescription": "Join Rochester Kink for an engaging weekend of BDSM and kink education in a welcoming and supportive environment. Experience workshops led by experienced practitioners, hands-on demonstrations of various techniques, and social activities designed to build community connections. Whether you're new to the lifestyle or a seasoned participant, Rochester Kink offers opportunities to learn, grow, and connect with like-minded individuals in a safe and inclusive setting.",
     "website": "https://rochesterkink.com/",
     "logo": "/images/rochester.jpg",
+    "features": [
+      "BDSM & Kink Workshops",
+      "Hands-On Demonstrations",
+      "Social Activities",
+      "Community Building",
+      "Welcoming Environment",
+      "Educational Focus",
+      "Safe & Inclusive Setting",
+      "All Experience Levels Welcome"
+    ],
     "seo": {
       "title": "Rochester Kink - New York BDSM Event | East Coast Kink Events",
       "description": "Rochester Kink is a BDSM and kink event featuring workshops, demonstrations, and social activities in a welcoming environment.",
@@ -811,8 +885,20 @@ export const events = [
     },
     "category": "Indoor Event",
     "excerpt": "KinkyCon is a premier BDSM and kink conference featuring workshops, demonstrations, and social opportunities.",
+    "longDescription": "Experience KinkyCon, a premier BDSM and kink conference that brings together the community's most respected educators and practitioners. Enjoy comprehensive workshops covering everything from basic techniques to advanced practices, engaging demonstrations that showcase various skills and equipment, and numerous social opportunities to connect with fellow enthusiasts. Whether you're exploring new interests or deepening existing knowledge, KinkyCon provides a professional and welcoming environment for learning and community building.",
     "website": "https://kinkycon.com/",
     "logo": "/images/kinkycon.png",
+    "features": [
+      "Premier BDSM Conference",
+      "Comprehensive Workshops",
+      "Skill Demonstrations",
+      "Social Opportunities",
+      "Professional Environment",
+      "Community Building",
+      "All Experience Levels",
+      "Respected Educators",
+      "Welcoming Atmosphere"
+    ],
     "seo": {
       "title": "KinkyCon - Denver BDSM Conference | East Coast Kink Events",
       "description": "KinkyCon is a premier BDSM and kink conference featuring workshops, demonstrations, and social opportunities.",
@@ -908,6 +994,18 @@ export const events = [
     "longDescription": "Join us for a three-day camping and kink event hosted at an expansive campground. Enjoy engaging classes, demos, vendors, and a dedicated game area featuring axe throwing, an airsoft range, and more. A fun, community-focused weekend of playful exploration.",
     "website": "https://fetlife.com/events/1439241",
     "logo": "/images/whiipsandwine.PNG",
+    "features": [
+      "3-Day Camping Event",
+      "Kink Classes & Demos",
+      "Vendor Marketplace",
+      "Full Game Area",
+      "Axe Throwing",
+      "Airsoft Range",
+      "Community-Focused",
+      "Playful Exploration",
+      "Expansive Campground",
+      "Weekend Experience"
+    ],
     "seo": {
       "title": "Whips and Wine - Pennsylvania Outdoor Kink Camping | East Coast Kink Events",
       "description": "Three days of camping and kink with classes, demos, vendors, and a game area including axe throwing and an airsoft range.",
@@ -932,6 +1030,18 @@ export const events = [
     "longDescription": "FetCamp celebrates the diversity of kink in a liberating summer-camp atmosphere. Enjoy classes and peer exchanges alongside playful self-expression and camaraderie among like-minded folks. All identities and fetishes are welcome — come play and have a wonderfully liberating time.",
     "website": "https://www.fetcamp.com/",
     "logo": "/images/fetcamp.png",
+    "features": [
+      "Summer-Camp Style Weekend",
+      "Diversity of Kink Celebration",
+      "Classes & Peer Exchanges",
+      "Playful Self-Expression",
+      "Community Camaraderie",
+      "All Identities Welcome",
+      "All Fetishes Welcome",
+      "Liberating Atmosphere",
+      "Welcoming Community",
+      "Play & Exploration"
+    ],
     "seo": {
       "title": "FetCamp - Maryland Outdoor Kink Camp | East Coast Kink Events",
       "description": "A liberating kink camp weekend with classes, peer exchanges, and playful self-expression among a welcoming community.",
@@ -992,8 +1102,20 @@ export const events = [
     },
     "category": "Indoor Event",
     "excerpt": "Rendezvous is a BDSM and kink event featuring workshops, demonstrations, and social opportunities in a welcoming environment.",
+    "longDescription": "Join Rendezvous for an engaging BDSM and kink event that combines education, exploration, and community building. Experience informative workshops led by knowledgeable presenters, hands-on demonstrations of various techniques and equipment, and numerous social opportunities to connect with fellow enthusiasts. Set in a welcoming and inclusive environment, Rendezvous provides the perfect setting for learning new skills, discovering new interests, and building lasting connections within the community.",
     "website": "https://rendezvous.com/",
     "logo": "/images/rende.PNG",
+    "features": [
+      "BDSM & Kink Workshops",
+      "Hands-On Demonstrations",
+      "Social Opportunities",
+      "Community Building",
+      "Welcoming Environment",
+      "Educational Focus",
+      "Skill Development",
+      "Inclusive Atmosphere",
+      "Knowledgeable Presenters"
+    ],
     "seo": {
       "title": "Rendezvous - Philadelphia BDSM Event | East Coast Kink Events",
       "description": "Rendezvous is a BDSM and kink event featuring workshops, demonstrations, and social opportunities in a welcoming environment.",

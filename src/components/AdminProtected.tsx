@@ -1,6 +1,6 @@
 'use client';
 
-import React, { ReactNode, useEffect } from 'react';
+import React, { ReactNode, useEffect, useState } from 'react';
 import { useAuth } from '@/contexts/AuthProvider';
 import { useRouter } from 'next/navigation';
 
@@ -13,17 +13,25 @@ export default function AdminProtected({
 }) {
   const { user, loading, isAdmin } = useAuth();
   const router = useRouter();
+  const [hasRedirected, setHasRedirected] = useState(false);
 
   useEffect(() => {
+    // Prevent multiple redirects
+    if (hasRedirected) return;
+    
     // If finished loading and no user or not admin -> redirect.
     if (!loading) {
       if (!user) {
+        console.log('🔒 ADMIN PROTECTED: No user, redirecting to login');
+        setHasRedirected(true);
         router.replace(fallbackPath);
       } else if (!isAdmin) {
-        router.replace('/unauthorized'); // you can create a 403 page or change path
+        console.log('🔒 ADMIN PROTECTED: User not admin, redirecting to unauthorized');
+        setHasRedirected(true);
+        router.replace('/unauthorized');
       }
     }
-  }, [loading, user, isAdmin, router, fallbackPath]);
+  }, [loading, user, isAdmin, router, fallbackPath, hasRedirected]);
 
   // While loading, show nothing or a loader
   if (loading) return (

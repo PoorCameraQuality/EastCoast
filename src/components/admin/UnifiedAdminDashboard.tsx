@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
-import { isAdmin, getCurrentUser } from '@/lib/auth'
 import RichTextEditor from '@/components/education/RichTextEditor'
 import Image from 'next/image'
 

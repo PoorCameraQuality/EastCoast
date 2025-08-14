@@ -25,6 +25,15 @@ export default function AdminDashboard() {
     )
   }
 
+  // If not admin, AdminProtected will handle the redirect
+  if (!isAdmin) {
+    return (
+      <AdminProtected>
+        <div>Access Denied</div>
+      </AdminProtected>
+    )
+  }
+
   return (
     <AdminProtected>
       <UnifiedAdminDashboard user={user} isAdmin={isAdmin} />

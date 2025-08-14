@@ -84,7 +84,7 @@ export const metadata: Metadata = {
   },
   verification: {
     google: 'your-google-verification-code', // TODO: Replace with actual code from Google Search Console
-    yandex: 'f10419646ef86ab3',
+    yandex: 'd38c7affece1bb23',
   },
 };
 
@@ -109,7 +109,7 @@ export default function RootLayout({
         <meta name="format-detection" content="telephone=no" />
         <meta name="theme-color" content="#1f2937" />
         <meta name="color-scheme" content="dark light" />
-        <meta name="yandex-verification" content="f10419646ef86ab3" />
+        <meta name="yandex-verification" content="d38c7affece1bb23" />
         <link rel="preconnect" href="https://www.google-analytics.com"/>
         <link rel="preconnect" href="https://www.googletagmanager.com"/>
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous"/>
