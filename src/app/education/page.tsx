@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
 import ArticleCard from '@/components/education/ArticleCard'
+import Breadcrumb from '@/components/Breadcrumb'
 import Link from 'next/link'
 
 // Define the article type
@@ -37,6 +38,11 @@ export default function EducationPage() {
   const [loading, setLoading] = useState(true)
   const [selectedCategory, setSelectedCategory] = useState('all')
   const [error, setError] = useState<string | null>(null)
+
+  const breadcrumbItems = [
+    { label: 'Home', href: '/' },
+    { label: 'Education', current: true }
+  ]
 
   useEffect(() => {
     fetchArticles()
@@ -100,7 +106,16 @@ export default function EducationPage() {
     return (
       <div className="min-h-screen bg-gradient-to-br from-black via-dark-900 to-black relative overflow-hidden">
         <div className="container mx-auto px-4 py-8">
-          <p className="text-gray-400 text-center">{error}</p>
+          <div className="text-center">
+            <h1 className="text-4xl font-serif font-bold text-white mb-4">Error Loading Articles</h1>
+            <p className="text-gray-400 mb-8">{error}</p>
+            <button 
+              onClick={fetchArticles}
+              className="btn-primary"
+            >
+              Try Again
+            </button>
+          </div>
         </div>
       </div>
     )
@@ -112,204 +127,101 @@ export default function EducationPage() {
       <div className="absolute inset-0 opacity-5">
         <div className="absolute top-20 left-10 w-32 h-32 bg-gradient-to-r from-primary-400 to-primary-600 rounded-full blur-3xl animate-pulse"></div>
         <div className="absolute bottom-40 right-20 w-24 h-24 bg-gradient-to-r from-blue-400 to-cyan-400 rounded-full blur-2xl animate-pulse delay-1000"></div>
-        <div className="absolute top-40 right-1/4 w-40 h-40 bg-gradient-to-r from-primary-300 to-blue-400 rounded-full blur-3xl animate-pulse delay-500"></div>
-        <div className="absolute bottom-20 left-1/3 w-20 h-20 bg-gradient-to-r from-blue-400 to-primary-500 rounded-full blur-xl animate-pulse delay-1500"></div>
+        <div className="absolute top-40 right-1/4 w-40 h-40 bg-gradient-to-r from-primary-300 to-blue-400 rounded-full blur-2xl animate-pulse delay-500"></div>
       </div>
 
-      {/* Hero Section */}
-      <section className="relative overflow-hidden py-16">
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="max-w-5xl mx-auto text-center">
-            <h1 className="text-5xl md:text-7xl font-serif font-bold text-white mb-8 leading-tight">
-              <span className="inline-block bg-gradient-to-r from-primary-300 via-blue-400 to-primary-500 bg-clip-text text-transparent">
-                Kink Education
-              </span>
-              <br />
-              <span className="text-white">Knowledge & Community</span>
-            </h1>
-            <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-48 h-1 bg-gradient-to-r from-primary-400 to-blue-400 rounded-full mb-8"></div>
-            <p className="text-xl md:text-2xl mb-12 text-gray-400 max-w-3xl mx-auto leading-relaxed">
-              Discover educational content, safety guidelines, and community resources. 
-              Learn from experts and share your knowledge with the community.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
-              <Link href="/education/submit" className="group inline-block bg-gradient-to-r from-primary-600 via-blue-600 to-primary-700 text-white font-bold py-4 px-8 rounded-full hover:from-primary-700 hover:via-blue-700 hover:to-primary-800 transition-all duration-300 shadow-xl hover:shadow-primary-500/25 hover:scale-105 min-w-[200px] text-center">
-                <span className="flex items-center gap-2 justify-center group-hover:translate-x-1 transition-transform">
-                  Submit Your Article
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                  </svg>
-                </span>
-              </Link>
-              <Link href="#articles" className="group inline-block bg-white/10 backdrop-blur-xl border border-white/20 text-white font-bold py-4 px-8 rounded-full hover:bg-white/20 transition-all duration-300 shadow-xl hover:shadow-white/25 hover:scale-105 min-w-[200px] text-center">
-                <span className="flex items-center gap-2 justify-center">
-                  Browse Articles
-                  <svg className="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
-                </span>
-              </Link>
-            </div>
+      <div className="container mx-auto px-4 py-8 relative z-10">
+        <Breadcrumb items={breadcrumbItems} />
+        
+        {/* Enhanced Header */}
+        <div className="text-center mb-16">
+          <h1 className="text-4xl md:text-6xl font-serif font-bold text-white mb-6 relative">
+            <span className="inline-block bg-gradient-to-r from-primary-300 via-blue-400 to-primary-500 bg-clip-text text-transparent">
+              Educational Resources
+            </span>
+            <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-48 h-1 bg-gradient-to-r from-primary-400 to-blue-400 rounded-full"></div>
+          </h1>
+          <p className="text-xl text-gray-400 max-w-3xl mx-auto leading-relaxed">
+            Expand your knowledge with our curated collection of educational articles, safety guides, and community resources.
+          </p>
+        </div>
+
+        {/* Category Filter */}
+        <div className="mb-12">
+          <div className="flex flex-wrap gap-4 justify-center">
+            {CATEGORIES.map((category) => (
+              <button
+                key={category.id}
+                onClick={() => setSelectedCategory(category.id)}
+                className={`px-6 py-3 rounded-full font-bold transition-all duration-300 shadow-xl hover:scale-105 ${
+                  selectedCategory === category.id
+                    ? `${category.color} ${category.textColor} ${category.borderColor} border-2`
+                    : 'bg-dark-800 text-gray-300 hover:bg-dark-700 border-2 border-dark-600 hover:border-primary-500'
+                }`}
+              >
+                {category.name} ({getCategoryCount(category.id)})
+              </button>
+            ))}
           </div>
         </div>
-      </section>
 
-      {/* Category Filters with Counters */}
-      <section className="py-12 border-b border-gray-700/50 relative z-10">
-        <div className="container mx-auto px-4">
-          <div className="max-w-6xl mx-auto">
+        {/* Featured Articles */}
+        {featuredArticles.length > 0 && (
+          <div className="mb-16">
             <h2 className="text-3xl font-serif font-bold text-white mb-8 text-center">
-              <span className="inline-block bg-gradient-to-r from-primary-300 via-blue-400 to-primary-500 bg-clip-text text-transparent">
-                Explore by Category
-              </span>
+              Featured Articles
             </h2>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-              {CATEGORIES.map((category) => (
-                <button
-                  key={category.id}
-                  onClick={() => setSelectedCategory(category.id)}
-                  className={`group relative overflow-hidden rounded-2xl p-6 text-left transition-all duration-300 hover:scale-105 ${
-                    selectedCategory === category.id
-                      ? 'bg-gradient-to-r from-primary-600 to-blue-600 text-white shadow-2xl shadow-primary-500/25'
-                      : 'bg-white/10 backdrop-blur-xl border border-white/20 text-white hover:bg-white/20 hover:shadow-primary-500/25'
-                  }`}
-                >
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="font-bold text-sm">{category.name}</span>
-                    <span className={`text-xs px-2 py-1 rounded-full ${
-                      selectedCategory === category.id
-                        ? 'bg-white/20 text-white'
-                        : 'bg-primary-600/20 text-primary-300'
-                    }`}>
-                      {getCategoryCount(category.id)}
-                    </span>
-                  </div>
-                  {selectedCategory === category.id && (
-                    <div className="absolute inset-0 bg-gradient-to-r from-primary-600/20 to-blue-600/20 rounded-2xl"></div>
-                  )}
-                </button>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {featuredArticles.map((article) => (
+                <ArticleCard key={article.id} article={article} />
               ))}
             </div>
           </div>
-        </div>
-      </section>
+        )}
 
-      {/* Articles Section */}
-      <section id="articles" className="py-16 relative z-10">
-        <div className="container mx-auto px-4">
-          <div className="max-w-7xl mx-auto">
-            {/* Featured Articles Section */}
-            {featuredArticles.length > 0 && (
-              <div className="mb-16">
-                <div className="flex items-center justify-between mb-8">
-                  <h2 className="text-3xl font-serif font-bold text-white">
-                    <span className="inline-block bg-gradient-to-r from-primary-400 via-blue-400 to-primary-500 bg-clip-text text-transparent">
-                      Featured Articles
-                    </span>
-                  </h2>
-                  <div className="flex items-center gap-2 backdrop-blur-xl bg-white/10 border border-white/20 rounded-full px-4 py-2">
-                    <div className="w-3 h-3 bg-yellow-500 rounded-full animate-pulse"></div>
-                    <span className="text-yellow-400 font-medium">{featuredArticles.length} featured</span>
-                  </div>
-                </div>
-                <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-                  {featuredArticles.map((article) => (
-                    <div key={article.id} className="transform hover:scale-105 transition-transform duration-300">
-                      <div className="backdrop-blur-xl bg-white/10 border border-white/20 rounded-2xl p-6 shadow-xl hover:shadow-purple-500/25">
-                        <ArticleCard article={article} />
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-            
-            {/* All Articles Section */}
-            {filteredArticles.length > 0 ? (
-              <div>
-                <div className="flex items-center justify-between mb-8">
-                  <h2 className="text-3xl font-serif font-bold text-white">
-                    <span className="inline-block bg-gradient-to-r from-primary-400 via-blue-400 to-primary-500 bg-clip-text text-transparent">
-                      {featuredArticles.length > 0 ? 'All Articles' : 'Articles'}
-                    </span>
-                    {selectedCategory !== 'all' && (
-                      <span className="text-primary-400 ml-2">
-                        - {CATEGORIES.find(c => c.id === selectedCategory)?.name}
-                      </span>
-                    )}
-                  </h2>
-                  <div className="text-gray-400 backdrop-blur-xl bg-white/10 border border-white/20 rounded-full px-4 py-2">
-                    {regularArticles.length} {regularArticles.length === 1 ? 'article' : 'articles'}
-                  </div>
-                </div>
-                <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-                  {regularArticles.map((article) => (
-                    <div key={article.id} className="transform hover:scale-105 transition-transform duration-300">
-                      <div className="backdrop-blur-xl bg-white/10 border border-white/20 rounded-2xl p-6 shadow-xl hover:shadow-purple-500/25">
-                        <ArticleCard article={article} />
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ) : (
-              <div className="text-center py-16">
-                <div className="max-w-md mx-auto backdrop-blur-xl bg-white/10 border border-white/20 rounded-2xl p-8 shadow-2xl">
-                  <div className="w-24 h-24 bg-gradient-to-r from-primary-600 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-6">
-                    <svg className="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                    </svg>
-                  </div>
-                  <h3 className="text-xl font-semibold text-white mb-2">
-                    {selectedCategory === 'all' 
-                      ? 'No articles available yet' 
-                      : `No articles in ${CATEGORIES.find(c => c.id === selectedCategory)?.name} category`
-                    }
-                  </h3>
-                  <p className="text-gray-400 mb-6">
-                    {selectedCategory === 'all' 
-                      ? 'Be the first to contribute educational content to our community.'
-                      : 'Consider submitting an article in this category.'
-                    }
-                  </p>
-                  <Link href="/education/submit" className="group inline-block bg-gradient-to-r from-primary-600 via-blue-600 to-primary-700 text-white font-bold py-3 px-6 rounded-full hover:from-primary-700 hover:via-blue-700 hover:to-primary-800 transition-all duration-300 shadow-xl hover:shadow-primary-500/25 hover:scale-105">
-                    <span className="flex items-center gap-2 justify-center group-hover:translate-x-1 transition-transform">
-                      Submit Your First Article
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                      </svg>
-                    </span>
-                  </Link>
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-      </section>
-
-      {/* Submit Article CTA Section */}
-      <section className="py-16 bg-gradient-to-r from-primary-900/20 to-blue-900/20 border-t border-gray-700/50 relative z-10">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto text-center backdrop-blur-xl bg-white/10 border border-white/20 rounded-2xl p-8 shadow-2xl">
-            <h2 className="text-3xl md:text-4xl font-serif font-bold text-white mb-6">
-              <span className="inline-block bg-gradient-to-r from-primary-400 via-blue-400 to-primary-500 bg-clip-text text-transparent">
-                Share Your Knowledge
-              </span>
+        {/* Regular Articles */}
+        {regularArticles.length > 0 && (
+          <div>
+            <h2 className="text-3xl font-serif font-bold text-white mb-8 text-center">
+              {selectedCategory === 'all' ? 'All Articles' : `${CATEGORIES.find(c => c.id === selectedCategory)?.name} Articles`}
             </h2>
-            <p className="text-lg text-gray-300 mb-8 max-w-2xl mx-auto">
-              Have valuable insights to share? Submit your educational article and help build our community's knowledge base.
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {regularArticles.map((article) => (
+                <ArticleCard key={article.id} article={article} />
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* No Articles Message */}
+        {filteredArticles.length === 0 && (
+          <div className="text-center py-16">
+            <h3 className="text-2xl font-serif font-bold text-white mb-4">No Articles Found</h3>
+            <p className="text-gray-400 mb-8">
+              {selectedCategory === 'all' 
+                ? 'No articles are currently available.' 
+                : `No articles found in the "${CATEGORIES.find(c => c.id === selectedCategory)?.name}" category.`
+              }
             </p>
-            <Link href="/education/submit" className="group inline-block bg-gradient-to-r from-primary-600 via-blue-600 to-primary-700 text-white font-bold py-4 px-8 rounded-full hover:from-primary-700 hover:via-blue-700 hover:to-primary-800 transition-all duration-300 shadow-xl hover:shadow-primary-500/25 hover:scale-105 text-lg">
-              <span className="flex items-center gap-2 justify-center group-hover:translate-x-1 transition-transform">
-                Submit Your Article
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                </svg>
-              </span>
+            <Link href="/education/submit" className="btn-primary">
+              Submit an Article
+            </Link>
+          </div>
+        )}
+
+        {/* Submit Article CTA */}
+        <div className="mt-16 text-center">
+          <div className="backdrop-blur-xl bg-white/10 border border-white/20 rounded-2xl p-8 max-w-2xl mx-auto">
+            <h3 className="text-2xl font-serif font-bold text-white mb-4">Share Your Knowledge</h3>
+            <p className="text-gray-300 mb-6">
+              Have valuable insights to share with the community? Submit an educational article and help others learn and grow.
+            </p>
+            <Link href="/education/submit" className="btn-primary">
+              Submit Article
             </Link>
           </div>
         </div>
-      </section>
+      </div>
     </div>
   )
 }

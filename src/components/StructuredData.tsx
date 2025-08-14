@@ -89,40 +89,45 @@ export function EventStructuredData({ event }: EventStructuredDataProps) {
   )
 }
 
-interface DungeonStructuredDataProps {
-  dungeon: {
-    name: string
-    slug: string
-    excerpt: string
-    website: string
-    logo: string
-    location: {
-      city: string
-      state: string
-    }
-  }
-}
-
-export function DungeonStructuredData({ dungeon }: DungeonStructuredDataProps) {
+// New component for dungeon structured data with LocalBusiness schema
+export function DungeonStructuredData({ dungeon }: { dungeon: any }) {
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
     "name": dungeon.name,
     "description": dungeon.excerpt,
     "url": `https://eastcoastkinkevents.com/dungeons/${dungeon.slug}`,
-    "image": dungeon.logo ? `https://eastcoastkinkevents.com${dungeon.logo}` : undefined,
+    "image": dungeon.logo ? [`https://eastcoastkinkevents.com${dungeon.logo}`] : undefined,
+    "telephone": dungeon.phone || undefined,
+    "email": dungeon.email || undefined,
     "address": {
       "@type": "PostalAddress",
       "addressLocality": dungeon.location.city,
       "addressRegion": dungeon.location.state,
       "addressCountry": "US"
     },
-    "sameAs": dungeon.website,
+    "geo": {
+      "@type": "GeoCoordinates",
+      "latitude": dungeon.location.coordinates?.lat || undefined,
+      "longitude": dungeon.location.coordinates?.lng || undefined
+    },
+    "openingHours": dungeon.hours || undefined,
+    "priceRange": dungeon.priceRange || "$$",
+    "category": dungeon.category,
     "serviceType": "BDSM Dungeon",
-    "areaServed": {
-      "@type": "State",
-      "name": dungeon.location.state
-    }
+    "areaServed": dungeon.location.region || dungeon.location.state,
+    "hasOfferCatalog": {
+      "@type": "OfferCatalog",
+      "name": "Dungeon Services",
+      "itemListElement": dungeon.services?.map((service: string, index: number) => ({
+        "@type": "Offer",
+        "itemOffered": {
+          "@type": "Service",
+          "name": service
+        }
+      })) || []
+    },
+    "sameAs": dungeon.socialMedia ? Object.values(dungeon.socialMedia) : undefined
   }
 
   return (

@@ -31,12 +31,14 @@ export default function DungeonLogo({ src, alt, size = 'medium', className = '' 
     <div className={`flex justify-center items-center ${container} ${className}`}>
       <Image 
         src={src} 
-        alt={alt}
+        alt={alt || "Dungeon logo"}
         width={0}
         height={0}
         sizes="100vw"
         className={`object-contain rounded-xl ${image}`}
         style={{ width: 'auto', height: 'auto' }}
+        loading="lazy"
+        priority={size === 'large'} // Only prioritize large images
       />
     </div>
   )

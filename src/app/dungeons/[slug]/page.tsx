@@ -4,6 +4,7 @@ import Link from 'next/link'
 import DungeonLogo from '@/components/DungeonLogo'
 import { DungeonStructuredData } from '@/components/StructuredData'
 import Breadcrumb from '@/components/Breadcrumb'
+import RelatedContent from '@/components/RelatedContent'
 import Script from 'next/script'
 import Image from 'next/image'
 
@@ -98,6 +99,11 @@ export default function DungeonPage({ params }: { params: { slug: string } }) {
       <DungeonStructuredData dungeon={dungeon} />
       
       <EnhancedDungeonLayout dungeon={dungeon} breadcrumbItems={breadcrumbItems} />
+      
+      {/* Related Content */}
+      <div className="container-custom py-8">
+        <RelatedContent currentDungeon={dungeon} />
+      </div>
     </div>
   )
 }

@@ -4,6 +4,7 @@ import Link from 'next/link'
 import EventLogo from '@/components/EventLogo'
 import { EventStructuredData } from '@/components/StructuredData'
 import Breadcrumb from '@/components/Breadcrumb'
+import RelatedContent from '@/components/RelatedContent'
 import Script from 'next/script'
 
 // Generate metadata for SEO
@@ -99,6 +100,11 @@ export default function EventPage({ params }: { params: { slug: string } }) {
       <EventStructuredData event={event} />
       
       <EnhancedEventLayout event={event} breadcrumbItems={breadcrumbItems} />
+      
+      {/* Related Content */}
+      <div className="container-custom py-8">
+        <RelatedContent currentEvent={event} />
+      </div>
     </div>
   )
 }
@@ -408,6 +414,11 @@ function EnhancedEventLayout({ event, breadcrumbItems }: { event: any, breadcrum
           </div>
         </div>
       </section>
+      
+      {/* Related Content */}
+      <div className="container-custom py-8">
+        <RelatedContent currentEvent={event} />
+      </div>
     </div>
   )
 } 

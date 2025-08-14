@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Breadcrumb from '@/components/Breadcrumb'
 
 export const metadata: Metadata = {
   title: 'Community Guidelines - East Coast Kink Events',
@@ -27,10 +28,17 @@ export const metadata: Metadata = {
 }
 
 export default function GuidelinesPage() {
+  const breadcrumbItems = [
+    { label: 'Home', href: '/' },
+    { label: 'Guidelines', current: true }
+  ]
+
   return (
     <div className="min-h-screen bg-black">
       <div className="container-custom py-16">
         <div className="max-w-4xl mx-auto">
+          <Breadcrumb items={breadcrumbItems} />
+          
           {/* Header */}
           <div className="text-center mb-16">
             <h1 className="text-4xl md:text-6xl font-serif font-bold text-white mb-6">

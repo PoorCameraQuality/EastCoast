@@ -43,10 +43,11 @@ export default function EventLogo({ src, alt, size = 'medium', className = '' }:
         <div className={`flex items-center justify-center bg-gray-700 rounded-xl ${image} w-full`}>
           <Image 
             src="/images/placeholder-logo.svg" 
-            alt="Event placeholder"
+            alt="Event logo placeholder - image failed to load"
             width={48}
             height={48}
             className="object-contain"
+            loading="lazy"
           />
         </div>
       </div>
@@ -57,13 +58,15 @@ export default function EventLogo({ src, alt, size = 'medium', className = '' }:
     <div className={`flex justify-center items-center ${container} ${className}`}>
       <Image 
         src={src} 
-        alt={alt}
+        alt={alt || "Event logo"}
         width={0}
         height={0}
         sizes="100vw"
         className={`object-contain rounded-xl ${image}`}
         onError={handleImageError}
         style={{ width: 'auto', height: 'auto' }}
+        loading="lazy"
+        priority={size === 'large'} // Only prioritize large images
       />
     </div>
   )

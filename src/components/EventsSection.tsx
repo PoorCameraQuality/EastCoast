@@ -42,7 +42,7 @@ export default function EventsSection() {
                       <div className="relative">
                         <EventLogo 
                           src={event.logo} 
-                          alt={`${event.name} logo`}
+                          alt={`${event.name} logo - ${event.category} event in ${event.location.city}, ${event.location.state}`}
                           size="large"
                         />
                         <div className="absolute inset-0 bg-gradient-to-r from-primary-400/10 to-blue-400/10 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
@@ -76,9 +76,23 @@ export default function EventsSection() {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                       </svg>
-                      <p className="text-gray-300 text-sm">
-                        {event.location.city}, {event.location.state}
-                      </p>
+                      <div className="flex flex-wrap gap-2 justify-center">
+                        <Link 
+                          href={`/events?category=${encodeURIComponent(event.category)}`}
+                          className="text-primary-300 hover:text-primary-200 text-sm transition-colors"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          {event.category}
+                        </Link>
+                        <span className="text-gray-400">•</span>
+                        <Link 
+                          href={`/events?location=${encodeURIComponent(event.location.state)}`}
+                          className="text-gray-300 hover:text-white text-sm transition-colors"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          {event.location.city}, {event.location.state}
+                        </Link>
+                      </div>
                     </div>
                     
                     <p className="text-gray-400 leading-relaxed line-clamp-3">
@@ -105,8 +119,8 @@ export default function EventsSection() {
                     <div className="mb-6 flex-shrink-0">
                       <div className="relative">
                         <EventLogo 
-                          src={event.logo} 
-                          alt={`${event.name} logo`}
+                          src={event.logo}
+                          alt={`${event.name} logo - ${event.category} event in ${event.location.city}, ${event.location.state}`}
                           size="medium"
                         />
                         <div className="absolute inset-0 bg-gradient-to-r from-primary-400/10 to-blue-400/10 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>

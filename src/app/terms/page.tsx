@@ -1,12 +1,13 @@
 import type { Metadata } from 'next'
+import Breadcrumb from '@/components/Breadcrumb'
 
 export const metadata: Metadata = {
   title: 'Terms of Service - East Coast Kink Events',
-  description: 'Read our terms of service for using East Coast Kink Events website and services.',
-  keywords: 'terms of service, website terms, user agreement, kink events, BDSM terms',
+  description: 'Read our terms of service and understand the rules and guidelines for using East Coast Kink Events.',
+  keywords: 'terms of service, user agreement, website terms, kink events, BDSM events',
   openGraph: {
     title: 'Terms of Service - East Coast Kink Events',
-    description: 'Read our terms of service for using East Coast Kink Events website and services.',
+    description: 'Read our terms of service and understand the rules and guidelines for using our platform.',
     type: 'website',
     url: 'https://eastcoastkinkevents.com/terms',
     images: [
@@ -21,23 +22,30 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'Terms of Service - East Coast Kink Events',
-    description: 'Read our terms of service for using East Coast Kink Events.',
+    description: 'Read our terms of service and understand the rules and guidelines.',
     images: ['https://eastcoastkinkevents.com/og-image.png'],
   },
 }
 
 export default function TermsPage() {
+  const breadcrumbItems = [
+    { label: 'Home', href: '/' },
+    { label: 'Terms', current: true }
+  ]
+
   return (
     <div className="min-h-screen bg-black">
       <div className="container-custom py-16">
         <div className="max-w-4xl mx-auto">
+          <Breadcrumb items={breadcrumbItems} />
+          
           {/* Header */}
           <div className="text-center mb-16">
             <h1 className="text-4xl md:text-6xl font-serif font-bold text-white mb-6">
               Terms of Service
             </h1>
             <p className="text-lg text-subtle max-w-3xl mx-auto">
-              Please read these terms carefully before using our website.
+              Please read these terms carefully before using our services.
             </p>
           </div>
 
@@ -48,114 +56,128 @@ export default function TermsPage() {
                 
                 <section>
                   <h2 className="text-2xl font-serif font-semibold text-white mb-4">
-                    1. Information Disclaimer
+                    Acceptance of Terms
                   </h2>
                   <p className="mb-4">
-                    All information provided on this website is for informational purposes only. 
-                    We do not verify, endorse, or guarantee the accuracy, completeness, or reliability 
-                    of any information, events, venues, or services listed on this website.
+                    By accessing and using East Coast Kink Events, you accept and agree to be bound by 
+                    the terms and provision of this agreement.
                   </p>
                   <p>
-                    Users are responsible for independently verifying all information before making 
-                    any decisions or taking any actions based on the content provided on this website.
+                    If you do not agree to abide by the above, please do not use this service.
                   </p>
                 </section>
 
                 <section>
                   <h2 className="text-2xl font-serif font-semibold text-white mb-4">
-                    2. No Liability
+                    Use License
                   </h2>
                   <p className="mb-4">
-                    By using this website, you acknowledge and agree that we are not responsible 
-                    for any decisions you make or actions you take based on the information provided 
-                    on this website.
+                    Permission is granted to temporarily download one copy of the materials on East Coast 
+                    Kink Events for personal, non-commercial transitory viewing only.
                   </p>
-                  <p>
-                    We expressly disclaim all liability for any damages, losses, or injuries that 
-                    may result from your use of this website or reliance on any information contained herein.
+                  <p className="mb-4">This is the grant of a license, not a transfer of title, and under this license you may not:</p>
+                  <ul className="list-disc list-inside space-y-2 ml-4">
+                    <li>Modify or copy the materials</li>
+                    <li>Use the materials for any commercial purpose</li>
+                    <li>Attempt to reverse engineer any software contained on the website</li>
+                    <li>Remove any copyright or other proprietary notations from the materials</li>
+                    <li>Transfer the materials to another person</li>
+                  </ul>
+                </section>
+
+                <section>
+                  <h2 className="text-2xl font-serif font-semibold text-white mb-4">
+                    User Conduct
+                  </h2>
+                  <p className="mb-4">
+                    Users must not:
+                  </p>
+                  <ul className="list-disc list-inside space-y-2 ml-4">
+                    <li>Submit false or misleading information</li>
+                    <li>Violate any applicable laws or regulations</li>
+                    <li>Infringe on the rights of others</li>
+                    <li>Use the service for any illegal or unauthorized purpose</li>
+                    <li>Attempt to gain unauthorized access to our systems</li>
+                  </ul>
+                </section>
+
+                <section>
+                  <h2 className="text-2xl font-serif font-semibold text-white mb-4">
+                    Content Submission
+                  </h2>
+                  <p className="mb-4">
+                    When submitting events, dungeons, or other content:
+                  </p>
+                  <ul className="list-disc list-inside space-y-2 ml-4">
+                    <li>You must have the right to submit the content</li>
+                    <li>Content must be accurate and truthful</li>
+                    <li>You grant us a license to display and distribute your content</li>
+                    <li>We reserve the right to review and remove inappropriate content</li>
+                  </ul>
+                </section>
+
+                <section>
+                  <h2 className="text-2xl font-serif font-semibold text-white mb-4">
+                    Disclaimer
+                  </h2>
+                  <p className="mb-4">
+                    The materials on East Coast Kink Events are provided on an 'as is' basis. We make no 
+                    warranties, expressed or implied, and hereby disclaim and negate all other warranties 
+                    including without limitation, implied warranties or conditions of merchantability, fitness 
+                    for a particular purpose, or non-infringement of intellectual property or other violation of rights.
                   </p>
                 </section>
 
                 <section>
                   <h2 className="text-2xl font-serif font-semibold text-white mb-4">
-                    3. User Responsibility
+                    Limitations
                   </h2>
                   <p className="mb-4">
-                    You are solely responsible for your own safety, well-being, and compliance with 
-                    all applicable laws and regulations when participating in any events or activities 
-                    listed on this website.
-                  </p>
-                  <p>
-                    We encourage all users to exercise due diligence, use common sense, and make 
-                    informed decisions when engaging with any content or services found on this website.
+                    In no event shall East Coast Kink Events or its suppliers be liable for any damages 
+                    (including, without limitation, damages for loss of data or profit, or due to business 
+                    interruption) arising out of the use or inability to use the materials on our website.
                   </p>
                 </section>
 
                 <section>
                   <h2 className="text-2xl font-serif font-semibold text-white mb-4">
-                    4. Third-Party Content
+                    Revisions and Errata
                   </h2>
-                  <p className="mb-4">
-                    This website may contain links to third-party websites, events, or services. 
-                    We do not control, endorse, or assume responsibility for any third-party content, 
-                    privacy policies, or practices.
-                  </p>
                   <p>
-                    Any interactions with third-party websites or services are at your own risk, 
-                    and we are not liable for any issues that may arise from such interactions.
+                    The materials appearing on East Coast Kink Events could include technical, typographical, 
+                    or photographic errors. We do not warrant that any of the materials on our website are 
+                    accurate, complete, or current.
                   </p>
                 </section>
 
                 <section>
                   <h2 className="text-2xl font-serif font-semibold text-white mb-4">
-                    5. Website Usage
+                    Links
                   </h2>
-                  <p className="mb-4">
-                    By using this website, you agree to use it only for lawful purposes and in 
-                    accordance with these Terms of Service. You agree not to use the website in any 
-                    way that could damage, disable, overburden, or impair our servers or networks.
-                  </p>
                   <p>
-                    We reserve the right to modify, suspend, or discontinue any part of this website 
-                    at any time without notice.
+                    East Coast Kink Events has not reviewed all of the sites linked to its website and is 
+                    not responsible for the contents of any such linked site. The inclusion of any link does 
+                    not imply endorsement by East Coast Kink Events of the site.
                   </p>
                 </section>
 
                 <section>
                   <h2 className="text-2xl font-serif font-semibold text-white mb-4">
-                    6. Privacy and Data
+                    Modifications
                   </h2>
-                  <p className="mb-4">
-                    Your privacy is important to us. Please review our Privacy Policy to understand 
-                    how we collect, use, and protect your information.
-                  </p>
                   <p>
-                    By using this website, you consent to the collection and use of information 
-                    as outlined in our Privacy Policy.
+                    We may revise these terms of service at any time without notice. By using this website, 
+                    you are agreeing to be bound by the then current version of these Terms of Service.
                   </p>
                 </section>
 
                 <section>
                   <h2 className="text-2xl font-serif font-semibold text-white mb-4">
-                    7. Changes to Terms
-                  </h2>
-                  <p className="mb-4">
-                    We reserve the right to modify these Terms of Service at any time. Changes 
-                    will be effective immediately upon posting on this website.
-                  </p>
-                  <p>
-                    Your continued use of the website after any changes constitutes acceptance 
-                    of the modified terms.
-                  </p>
-                </section>
-
-                <section>
-                  <h2 className="text-2xl font-serif font-semibold text-white mb-4">
-                    8. Contact Information
+                    Contact Information
                   </h2>
                   <p>
-                    If you have any questions about these Terms of Service, please contact us 
-                    through our website's contact form.
+                    If you have any questions about these Terms of Service, please contact us through 
+                    our contact form.
                   </p>
                 </section>
 
@@ -163,12 +185,7 @@ export default function TermsPage() {
                   <p className="text-sm text-gray-400">
                     <strong>Last updated:</strong> {new Date().toLocaleDateString()}
                   </p>
-                  <p className="text-sm text-gray-400 mt-2">
-                    By using this website, you acknowledge that you have read, understood, 
-                    and agree to be bound by these Terms of Service.
-                  </p>
                 </div>
-
               </div>
             </div>
           </div>

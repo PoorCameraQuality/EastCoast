@@ -108,8 +108,8 @@ export default function PastEventsSection() {
                     <div className="mb-6 flex-shrink-0">
                       <div className="relative">
                         <EventLogo 
-                          src={event.logo} 
-                          alt={`${event.name} logo`}
+                          src={event.logo}
+                          alt={`${event.name} logo - ${event.category} event in ${event.location.city}, ${event.location.state}`}
                           size="medium"
                         />
                         <div className="absolute inset-0 bg-gradient-to-r from-primary-400/5 to-blue-400/5 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>

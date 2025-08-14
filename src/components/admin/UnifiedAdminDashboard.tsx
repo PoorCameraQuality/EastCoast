@@ -2,7 +2,9 @@
 
 import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
+import { isAdmin, getCurrentUser } from '@/lib/auth'
 import RichTextEditor from '@/components/education/RichTextEditor'
+import Breadcrumb from '@/components/Breadcrumb'
 import Image from 'next/image'
 
 interface User {
@@ -61,6 +63,12 @@ export default function UnifiedAdminDashboard({ user, isAdmin: isAdminProp }: Un
   const [selectedSubmission, setSelectedSubmission] = useState<Submission | null>(null)
   const [contentType, setContentType] = useState<ContentType>('event')
   const [isClient, setIsClient] = useState(false)
+
+  const breadcrumbItems = [
+    { label: 'Home', href: '/' },
+    { label: 'Admin', href: '/admin' },
+    { label: 'Dashboard', current: true }
+  ]
 
   // Create content form states
   const [eventData, setEventData] = useState({
@@ -475,6 +483,9 @@ export default function UnifiedAdminDashboard({ user, isAdmin: isAdminProp }: Un
   return (
     <div className="min-h-screen bg-dark-900">
       <div className="container mx-auto px-4 py-8">
+        {/* Breadcrumb */}
+        <Breadcrumb items={breadcrumbItems} />
+        
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center justify-between mb-6">
