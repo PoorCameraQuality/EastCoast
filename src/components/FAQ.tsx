@@ -54,6 +54,8 @@ export default function FAQ({ items, title = "Frequently Asked Questions" }: FAQ
             <div key={index} className="border border-dark-600 rounded-lg">
               <button
                 onClick={() => toggleItem(index)}
+                aria-expanded={openItems.includes(index)}
+                aria-controls={`faq-answer-${index}`}
                 className="w-full px-6 py-4 text-left flex justify-between items-center hover:bg-dark-700 transition-colors"
               >
                 <span className="text-white font-medium">{item.question}</span>
@@ -69,7 +71,7 @@ export default function FAQ({ items, title = "Frequently Asked Questions" }: FAQ
                 </svg>
               </button>
               {openItems.includes(index) && (
-                <div className="px-6 pb-4">
+                <div id={`faq-answer-${index}`} className="px-6 pb-4">
                   <p className="text-gray-300 leading-relaxed">{item.answer}</p>
                 </div>
               )}

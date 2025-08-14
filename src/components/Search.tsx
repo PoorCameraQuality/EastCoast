@@ -31,9 +31,19 @@ export default function Search({ events, dungeons, placeholder = "Search events 
   const [query, setQuery] = useState('')
   const [results, setResults] = useState<SearchResult[]>([])
   const [isSearching, setIsSearching] = useState(false)
+  const [debouncedQuery, setDebouncedQuery] = useState('')
+
+  // Debounce search input
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedQuery(query)
+    }, 300)
+
+    return () => clearTimeout(timer)
+  }, [query])
 
   useEffect(() => {
-    if (query.length < 2) {
+    if (debouncedQuery.length < 2) {
       setResults([])
       return
     }
@@ -41,7 +51,7 @@ export default function Search({ events, dungeons, placeholder = "Search events 
     setIsSearching(true)
     
     const searchResults: SearchResult[] = []
-    const lowerQuery = query.toLowerCase()
+    const lowerQuery = debouncedQuery.toLowerCase()
 
     // Search events
     events.forEach(event => {
@@ -49,7 +59,7 @@ export default function Search({ events, dungeons, placeholder = "Search events 
         event.name.toLowerCase().includes(lowerQuery) ||
         event.location.city.toLowerCase().includes(lowerQuery) ||
         event.location.state.toLowerCase().includes(lowerQuery) ||
-        event.category.toLowerCase().includes(lowerQuery)
+        (event.category && event.category.toLowerCase().includes(lowerQuery))
       ) {
         searchResults.push({
           type: 'event',
@@ -82,7 +92,7 @@ export default function Search({ events, dungeons, placeholder = "Search events 
 
     setResults(searchResults.slice(0, 6))
     setIsSearching(false)
-  }, [query, events, dungeons])
+  }, [debouncedQuery, events, dungeons])
 
   // Generate search structured data
   const structuredData = {
@@ -114,6 +124,9 @@ export default function Search({ events, dungeons, placeholder = "Search events 
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder={placeholder}
+            aria-label="Search events and dungeons"
+            aria-expanded={results.length > 0}
+            aria-controls="search-results"
             className="w-full px-4 py-3 bg-dark-700 text-white border border-dark-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
           />
           {isSearching && (
@@ -124,7 +137,7 @@ export default function Search({ events, dungeons, placeholder = "Search events 
         </div>
 
         {results.length > 0 && (
-          <div className="absolute top-full left-0 right-0 mt-2 bg-dark-800 border border-dark-600 rounded-lg shadow-xl z-50 max-h-96 overflow-y-auto">
+          <div id="search-results" className="absolute top-full left-0 right-0 mt-2 bg-dark-800 border border-dark-600 rounded-lg shadow-xl z-50 max-h-96 overflow-y-auto">
             {results.map((result, index) => (
               <Link
                 key={`${result.type}-${result.slug}`}

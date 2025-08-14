@@ -10,21 +10,23 @@ interface GoogleAnalyticsProps {
 function GoogleAnalyticsInner({ GA_MEASUREMENT_ID }: GoogleAnalyticsProps) {
   const pathname = usePathname()
   const searchParams = useSearchParams()
+  const GA_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || GA_MEASUREMENT_ID
 
   useEffect(() => {
     if (typeof window === 'undefined') return
+    if (!(window as any).gaConsent) return // require consent before tracking
     const url = pathname + (searchParams?.toString() ? `?${searchParams.toString()}` : '')
     if ((window as any).gtag) {
-      ;(window as any).gtag('config', GA_MEASUREMENT_ID, {
+      ;(window as any).gtag('config', GA_ID, {
         page_path: url,
       })
     }
-  }, [pathname, searchParams, GA_MEASUREMENT_ID])
+  }, [pathname, searchParams, GA_ID])
 
   return (
     <>
       <Script
-        src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
+        src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
         strategy="afterInteractive"
       />
       <Script
@@ -35,7 +37,7 @@ function GoogleAnalyticsInner({ GA_MEASUREMENT_ID }: GoogleAnalyticsProps) {
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);} 
             gtag('js', new Date());
-            gtag('config', '${GA_MEASUREMENT_ID}', {
+            gtag('config', '${GA_ID}', {
               page_title: document.title,
               page_location: window.location.href,
             });

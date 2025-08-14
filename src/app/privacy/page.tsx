@@ -33,8 +33,15 @@ export default function PrivacyPage() {
     { label: 'Privacy', current: true }
   ]
 
+  // Server-generated date to avoid hydration mismatch
+  const lastUpdated = new Date().toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  })
+
   return (
-    <div className="min-h-screen bg-black">
+    <main className="min-h-screen bg-black">
       <div className="container-custom py-16">
         <div className="max-w-4xl mx-auto">
           <Breadcrumb items={breadcrumbItems} />
@@ -50,12 +57,12 @@ export default function PrivacyPage() {
           </div>
 
           {/* Content */}
-          <div className="card-elegant">
+          <article className="card-elegant">
             <div className="prose prose-invert max-w-none">
               <div className="space-y-8 text-subtle leading-relaxed">
                 
                 <section>
-                  <h2 className="text-2xl font-serif font-semibold text-white mb-4">
+                  <h2 id="information-we-collect" className="text-2xl font-serif font-semibold text-white mb-4">
                     Information We Collect
                   </h2>
                   <p className="mb-4">
@@ -68,7 +75,7 @@ export default function PrivacyPage() {
                 </section>
 
                 <section>
-                  <h2 className="text-2xl font-serif font-semibold text-white mb-4">
+                  <h2 id="how-we-use-your-information" className="text-2xl font-serif font-semibold text-white mb-4">
                     How We Use Your Information
                   </h2>
                   <p className="mb-4">
@@ -84,7 +91,7 @@ export default function PrivacyPage() {
                 </section>
 
                 <section>
-                  <h2 className="text-2xl font-serif font-semibold text-white mb-4">
+                  <h2 id="information-sharing" className="text-2xl font-serif font-semibold text-white mb-4">
                     Information Sharing
                   </h2>
                   <p className="mb-4">
@@ -97,7 +104,7 @@ export default function PrivacyPage() {
                 </section>
 
                 <section>
-                  <h2 className="text-2xl font-serif font-semibold text-white mb-4">
+                  <h2 id="data-security" className="text-2xl font-serif font-semibold text-white mb-4">
                     Data Security
                   </h2>
                   <p className="mb-4">
@@ -111,7 +118,7 @@ export default function PrivacyPage() {
                 </section>
 
                 <section>
-                  <h2 className="text-2xl font-serif font-semibold text-white mb-4">
+                  <h2 id="your-rights" className="text-2xl font-serif font-semibold text-white mb-4">
                     Your Rights
                   </h2>
                   <p className="mb-4">
@@ -127,7 +134,7 @@ export default function PrivacyPage() {
                 </section>
 
                 <section>
-                  <h2 className="text-2xl font-serif font-semibold text-white mb-4">
+                  <h2 id="contact-us" className="text-2xl font-serif font-semibold text-white mb-4">
                     Contact Us
                   </h2>
                   <p>
@@ -137,7 +144,7 @@ export default function PrivacyPage() {
                 </section>
 
                 <section>
-                  <h2 className="text-2xl font-serif font-semibold text-white mb-4">
+                  <h2 id="updates-to-this-policy" className="text-2xl font-serif font-semibold text-white mb-4">
                     Updates to This Policy
                   </h2>
                   <p>
@@ -145,14 +152,14 @@ export default function PrivacyPage() {
                     changes by posting the new policy on this page and updating the "Last Updated" date.
                   </p>
                   <p className="mt-4 text-sm text-gray-500">
-                    Last Updated: {new Date().toLocaleDateString()}
+                    Last Updated: {lastUpdated}
                   </p>
                 </section>
               </div>
             </div>
-          </div>
+          </article>
         </div>
       </div>
-    </div>
+    </main>
   )
 }

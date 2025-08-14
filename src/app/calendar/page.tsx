@@ -33,19 +33,19 @@ export const metadata: Metadata = {
 }
 
 export default function CalendarPage() {
-  const allEvents = getAllEvents()
+  const eventsList = getAllEvents()
   const breadcrumbItems = [
     { label: 'Home', href: '/' },
     { label: 'Calendar', current: true }
   ]
 
   return (
-    <div className="min-h-screen bg-black">
+    <main className="min-h-screen bg-black">
       <CalendarStructuredData />
       <div className="container-custom py-16">
         <Breadcrumb items={breadcrumbItems} />
-        <CalendarClient allEvents={allEvents} />
+        <CalendarClient allEvents={eventsList} />
       </div>
-    </div>
+    </main>
   )
 }

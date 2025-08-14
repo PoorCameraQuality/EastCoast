@@ -37,11 +37,11 @@ export default function CalendarClient({ allEvents }: CalendarClientProps) {
     startDate.setDate(startDate.getDate() - firstDay.getDay())
 
     const days = []
-    const currentDate = new Date(startDate)
+    const dateIterator = new Date(startDate)
 
-    while (currentDate <= lastDay || currentDate.getDay() !== 0) {
-      days.push(new Date(currentDate))
-      currentDate.setDate(currentDate.getDate() + 1)
+    while (dateIterator <= lastDay || dateIterator.getDay() !== 0) {
+      days.push(new Date(dateIterator))
+      dateIterator.setDate(dateIterator.getDate() + 1)
     }
 
     return days
@@ -63,7 +63,7 @@ export default function CalendarClient({ allEvents }: CalendarClientProps) {
 
   // Get events for a specific date
   const getEventsForDate = (date: Date) => {
-    const dateStr = date.toISOString().split('T')[0]
+    const dateISO = date.toISOString().split('T')[0]
     
     return monthEvents.filter((event: CalendarEvent) => {
       const eventStart = new Date(event.date.start)
@@ -148,6 +148,7 @@ export default function CalendarClient({ allEvents }: CalendarClientProps) {
       {/* Calendar Navigation */}
       <div className="flex flex-col sm:flex-row items-center justify-between mb-8 gap-4">
         <button
+          aria-label="Go to previous month"
           onClick={goToPreviousMonth}
           className="btn-outline px-4 sm:px-6 py-2 sm:py-3 text-white hover:bg-primary-600 hover:border-primary-600 transition-colors text-sm sm:text-base"
         >
@@ -167,6 +168,7 @@ export default function CalendarClient({ allEvents }: CalendarClientProps) {
         </div>
         
         <button
+          aria-label="Go to next month"
           onClick={goToNextMonth}
           className="btn-outline px-4 sm:px-6 py-2 sm:py-3 text-white hover:bg-primary-600 hover:border-primary-600 transition-colors text-sm sm:text-base"
         >
@@ -198,6 +200,7 @@ export default function CalendarClient({ allEvents }: CalendarClientProps) {
                   return (
                     <div
                       key={index}
+                      aria-label={`${date.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}${events.length > 0 ? ` - ${events.length} event${events.length > 1 ? 's' : ''}` : ''}`}
                       className={`min-h-20 p-1 border border-dark-600 ${
                         isCurrentMonth ? 'bg-dark-800' : 'bg-dark-900'
                       } ${isPast ? 'opacity-50' : ''}`}
@@ -260,6 +263,7 @@ export default function CalendarClient({ allEvents }: CalendarClientProps) {
                 return (
                   <div
                     key={index}
+                    aria-label={`${date.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}${events.length > 0 ? ` - ${events.length} event${events.length > 1 ? 's' : ''}` : ''}`}
                     className={`min-h-32 p-2 border border-dark-600 ${
                       isCurrentMonth ? 'bg-dark-800' : 'bg-dark-900'
                     } ${isPast ? 'opacity-50' : ''}`}

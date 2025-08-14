@@ -27,6 +27,11 @@ interface EventStructuredDataProps {
   }
 }
 
+// Helper function to safely escape HTML in JSON
+function escapeHtmlInJson(data: any): string {
+  return JSON.stringify(data).replace(/</g, '\\u003c')
+}
+
 export function EventStructuredData({ event }: EventStructuredDataProps) {
   // Determine country code (support US/CA based on state/region hints)
   const addressCountry = ((): string => {
@@ -80,13 +85,20 @@ export function EventStructuredData({ event }: EventStructuredDataProps) {
     }
   }
 
-  return (
-    <Script
-      id={`event-structured-data-${event.slug}`}
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-    />
-  )
+  // Validate JSON before injecting
+  try {
+    const jsonString = escapeHtmlInJson(structuredData)
+    return (
+      <Script
+        id={`event-structured-data-${event.slug}`}
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: jsonString }}
+      />
+    )
+  } catch (error) {
+    console.error('Invalid JSON in EventStructuredData:', error)
+    return null
+  }
 }
 
 // New component for dungeon structured data with LocalBusiness schema
@@ -130,13 +142,20 @@ export function DungeonStructuredData({ dungeon }: { dungeon: any }) {
     "sameAs": dungeon.socialMedia ? Object.values(dungeon.socialMedia) : undefined
   }
 
-  return (
-    <Script
-      id={`dungeon-structured-data-${dungeon.slug}`}
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-    />
-  )
+  // Validate JSON before injecting
+  try {
+    const jsonString = escapeHtmlInJson(structuredData)
+    return (
+      <Script
+        id={`dungeon-structured-data-${dungeon.slug}`}
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: jsonString }}
+      />
+    )
+  } catch (error) {
+    console.error('Invalid JSON in DungeonStructuredData:', error)
+    return null
+  }
 }
 
 export function WebsiteStructuredData() {
@@ -154,13 +173,20 @@ export function WebsiteStructuredData() {
     }
   }
 
-  return (
-    <Script
-      id="website-structured-data"
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-    />
-  )
+  // Validate JSON before injecting
+  try {
+    const jsonString = escapeHtmlInJson(structuredData)
+    return (
+      <Script
+        id="website-structured-data"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: jsonString }}
+      />
+    )
+  } catch (error) {
+    console.error('Invalid JSON in WebsiteStructuredData:', error)
+    return null
+  }
 }
 
 // New component for enhanced event listing page
@@ -190,13 +216,20 @@ export function EventListStructuredData() {
     "itemListElement": itemListElement
   }
 
-  return (
-    <Script
-      id="event-list-structured-data"
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-    />
-  )
+  // Validate JSON before injecting
+  try {
+    const jsonString = escapeHtmlInJson(structuredData)
+    return (
+      <Script
+        id="event-list-structured-data"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: jsonString }}
+      />
+    )
+  } catch (error) {
+    console.error('Invalid JSON in EventListStructuredData:', error)
+    return null
+  }
 }
 
 // New component for organization structured data
@@ -238,13 +271,20 @@ export function OrganizationStructuredData() {
     }
   }
 
-  return (
-    <Script
-      id="organization-structured-data"
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-    />
-  )
+  // Validate JSON before injecting
+  try {
+    const jsonString = escapeHtmlInJson(structuredData)
+    return (
+      <Script
+        id="organization-structured-data"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: jsonString }}
+      />
+    )
+  } catch (error) {
+    console.error('Invalid JSON in OrganizationStructuredData:', error)
+    return null
+  }
 }
 
 // New component for calendar page structured data
@@ -279,13 +319,20 @@ export function CalendarStructuredData() {
     }
   }
 
-  return (
-    <Script
-      id="calendar-structured-data"
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-    />
-  )
+  // Validate JSON before injecting
+  try {
+    const jsonString = escapeHtmlInJson(structuredData)
+    return (
+      <Script
+        id="calendar-structured-data"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: jsonString }}
+      />
+    )
+  } catch (error) {
+    console.error('Invalid JSON in CalendarStructuredData:', error)
+    return null
+  }
 }
 
 // New component for contact page structured data
@@ -315,13 +362,20 @@ export function ContactPageStructuredData() {
     }
   }
 
-  return (
-    <Script
-      id="contact-page-structured-data"
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-    />
-  )
+  // Validate JSON before injecting
+  try {
+    const jsonString = escapeHtmlInJson(structuredData)
+    return (
+      <Script
+        id="contact-page-structured-data"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: jsonString }}
+      />
+    )
+  } catch (error) {
+    console.error('Invalid JSON in ContactPageStructuredData:', error)
+    return null
+  }
 }
 
 // New component for education page structured data
@@ -393,13 +447,20 @@ export function EducationStructuredData() {
     }
   }
 
-  return (
-    <Script
-      id="education-structured-data"
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-    />
-  )
+  // Validate JSON before injecting
+  try {
+    const jsonString = escapeHtmlInJson(structuredData)
+    return (
+      <Script
+        id="education-structured-data"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: jsonString }}
+      />
+    )
+  } catch (error) {
+    console.error('Invalid JSON in EducationStructuredData:', error)
+    return null
+  }
 }
 
 // New component for homepage structured data
@@ -470,13 +531,20 @@ export function HomepageStructuredData() {
     }
   }
 
-  return (
-    <Script
-      id="homepage-structured-data"
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-    />
-  )
+  // Validate JSON before injecting
+  try {
+    const jsonString = escapeHtmlInJson(structuredData)
+    return (
+      <Script
+        id="homepage-structured-data"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: jsonString }}
+      />
+    )
+  } catch (error) {
+    console.error('Invalid JSON in HomepageStructuredData:', error)
+    return null
+  }
 }
 
 // New component for individual article structured data
@@ -522,10 +590,19 @@ export function ArticleStructuredData({ article }: { article: any }) {
     }
   }
 
-  return (
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-    />
-  )
+  // Validate JSON before injecting
+  try {
+    const jsonString = escapeHtmlInJson(structuredData)
+    return (
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: jsonString.replace(/</g, '\\u003c')
+        }}
+      />
+    )
+  } catch (error) {
+    console.error('Invalid JSON in ArticleStructuredData:', error)
+    return null
+  }
 }

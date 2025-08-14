@@ -36,7 +36,9 @@ export default function AdminDashboard() {
 
   return (
     <AdminProtected>
-      <UnifiedAdminDashboard user={user} isAdmin={isAdmin} />
+      <main className="min-h-screen bg-black text-white p-6" aria-label="Admin Dashboard">
+        <UnifiedAdminDashboard user={user} isAdmin={isAdmin} />
+      </main>
     </AdminProtected>
   )
 }

@@ -29,5 +29,10 @@ export const metadata: Metadata = {
 }
 
 export default function LoginPage() {
-  return <LoginPageClient />
+  return (
+    <>
+      <h1 className="sr-only">Admin Login - East Coast Kink Events</h1>
+      <LoginPageClient />
+    </>
+  )
 }

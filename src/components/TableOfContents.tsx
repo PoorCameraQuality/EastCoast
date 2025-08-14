@@ -30,24 +30,26 @@ export default function TableOfContents({ content }: TableOfContentsProps) {
     }
   }, [content])
 
-  // Update active heading based on scroll position
+  // Update active heading based on scroll position using IntersectionObserver
   useEffect(() => {
-    const handleScroll = () => {
-      const headings = document.querySelectorAll('h1, h2, h3')
-      let current = ''
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setActiveId(entry.target.id)
+          }
+        })
+      },
+      {
+        rootMargin: '-100px 0px -66% 0px',
+        threshold: 0
+      }
+    )
 
-      headings.forEach((heading) => {
-        const rect = heading.getBoundingClientRect()
-        if (rect.top <= 100) {
-          current = heading.id
-        }
-      })
+    const headings = document.querySelectorAll('h1, h2, h3')
+    headings.forEach((heading) => observer.observe(heading))
 
-      setActiveId(current)
-    }
-
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
+    return () => observer.disconnect()
   }, [])
 
   const scrollToHeading = (id: string) => {
@@ -70,6 +72,7 @@ export default function TableOfContents({ content }: TableOfContentsProps) {
             className={`block w-full text-left text-sm transition-colors duration-200 hover:text-primary-400 ${
               activeId === item.id ? 'text-primary-400 font-medium' : 'text-subtle'
             } ${item.level === 1 ? 'font-medium' : item.level === 2 ? 'ml-4' : 'ml-8'}`}
+            aria-current={activeId === item.id ? 'true' : undefined}
           >
             {item.text}
           </button>

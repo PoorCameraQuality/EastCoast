@@ -7,11 +7,9 @@ export default function BackToTop() {
 
   // Show button when page is scrolled up to given distance
   const toggleVisibility = () => {
-    if (window.pageYOffset > 300) {
-      setIsVisible(true)
-    } else {
-      setIsVisible(false)
-    }
+    requestAnimationFrame(() => {
+      setIsVisible(window.pageYOffset > 300)
+    })
   }
 
   // Set the scroll event listener
@@ -39,6 +37,7 @@ export default function BackToTop() {
           aria-label="Back to top"
         >
           <svg
+            aria-hidden="true"
             className="w-6 h-6"
             fill="none"
             stroke="currentColor"

@@ -3,7 +3,11 @@
 import { useState } from 'react'
 import { useGoogleAnalytics } from '@/components/GoogleAnalytics'
 
-export default function ContactForm() {
+interface ContactFormProps {
+  'aria-label'?: string;
+}
+
+export default function ContactForm({ 'aria-label': ariaLabel }: ContactFormProps = {}) {
   const { trackEvent } = useGoogleAnalytics()
   const [contactType, setContactType] = useState('')
   const [showPopup, setShowPopup] = useState(false)
@@ -122,7 +126,7 @@ export default function ContactForm() {
       </h1>
       
       {showPopup && (
-        <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4">
+        <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4" aria-live="polite">
           <div className="backdrop-blur-xl bg-white/10 border border-white/20 rounded-2xl p-6 max-w-xl w-full shadow-2xl">
             <div className="flex items-start">
               <div className="flex-shrink-0">
@@ -153,7 +157,7 @@ export default function ContactForm() {
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="space-y-8">
+      <form onSubmit={handleSubmit} className="space-y-8" aria-label={ariaLabel}>
         {/* Name and Email Row */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
@@ -181,6 +185,7 @@ export default function ContactForm() {
               id="email"
               name="email"
               required
+              pattern="^[\\w-.]+@([\\w-]+\\.)+[\\w-]{2,}$"
               className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent backdrop-blur-xl transition-all duration-300"
               placeholder="your.email@example.com"
               value={formData.email}

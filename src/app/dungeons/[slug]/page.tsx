@@ -89,11 +89,26 @@ export default function DungeonPage({ params }: { params: { slug: string } }) {
             "@context": "https://schema.org",
             "@type": "BreadcrumbList",
             "itemListElement": [
-              {"@type": "ListItem", position: 1, name: 'Home', item: 'https://eastcoastkinkevents.com/'},
-              {"@type": "ListItem", position: 2, name: 'Dungeons', item: 'https://eastcoastkinkevents.com/dungeons'},
-              {"@type": "ListItem", position: 3, name: dungeon.name, item: `https://eastcoastkinkevents.com/dungeons/${dungeon.slug}`}
+              {
+                "@type": "ListItem",
+                position: 1,
+                name: 'Home',
+                item: 'https://eastcoastkinkevents.com/'
+              },
+              {
+                "@type": "ListItem",
+                position: 2,
+                name: 'Dungeons',
+                item: 'https://eastcoastkinkevents.com/dungeons'
+              },
+              {
+                "@type": "ListItem",
+                position: 3,
+                name: dungeon.name,
+                item: `https://eastcoastkinkevents.com/dungeons/${encodeURIComponent(dungeon.slug)}`
+              }
             ]
-          })
+          }).replace(/</g, '\\u003c')
         }}
       />
       <DungeonStructuredData dungeon={dungeon} />

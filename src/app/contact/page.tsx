@@ -37,7 +37,7 @@ export default function ContactPage() {
   ]
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-black via-dark-900 to-black relative overflow-hidden">
+    <main className="min-h-screen bg-gradient-to-br from-black via-dark-900 to-black relative overflow-hidden">
       {/* Subtle background elements with blue spectrum */}
       <div className="absolute inset-0 opacity-5">
         <div className="absolute top-20 left-10 w-32 h-32 bg-gradient-to-r from-primary-400 to-primary-600 rounded-full blur-3xl animate-pulse"></div>
@@ -66,10 +66,10 @@ export default function ContactPage() {
 
           {/* Contact Form */}
           <div className="backdrop-blur-xl bg-white/10 border border-white/20 rounded-2xl p-8 shadow-2xl">
-            <ContactForm />
+            <ContactForm aria-label="Contact form for East Coast Kink Events" />
           </div>
         </div>
       </div>
-    </div>
+    </main>
   )
 }

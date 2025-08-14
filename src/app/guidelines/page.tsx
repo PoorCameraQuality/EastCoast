@@ -33,8 +33,15 @@ export default function GuidelinesPage() {
     { label: 'Guidelines', current: true }
   ]
 
+  // Server-generated date to avoid hydration mismatch
+  const lastUpdated = new Date().toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  })
+
   return (
-    <div className="min-h-screen bg-black">
+    <main className="min-h-screen bg-black">
       <div className="container-custom py-16">
         <div className="max-w-4xl mx-auto">
           <Breadcrumb items={breadcrumbItems} />
@@ -50,12 +57,12 @@ export default function GuidelinesPage() {
           </div>
 
           {/* Content */}
-          <div className="card-elegant">
+          <article className="card-elegant">
             <div className="prose prose-invert max-w-none">
               <div className="space-y-8 text-subtle leading-relaxed">
                 
                 <section>
-                  <h2 className="text-2xl font-serif font-semibold text-white mb-4">
+                  <h2 id="our-mission" className="text-2xl font-serif font-semibold text-white mb-4">
                     Our Mission
                   </h2>
                   <p className="mb-4">
@@ -72,7 +79,7 @@ export default function GuidelinesPage() {
                 </section>
 
                 <section>
-                  <h2 className="text-2xl font-serif font-semibold text-white mb-4">
+                  <h2 id="inclusivity-respect" className="text-2xl font-serif font-semibold text-white mb-4">
                     1. Inclusivity & Respect
                   </h2>
                   <p className="mb-4">
@@ -97,7 +104,7 @@ export default function GuidelinesPage() {
                 </section>
 
                 <section>
-                  <h2 className="text-2xl font-serif font-semibold text-white mb-4">
+                  <h2 id="consent-safety" className="text-2xl font-serif font-semibold text-white mb-4">
                     2. Consent & Safety
                   </h2>
                   <p className="mb-4">
@@ -119,7 +126,7 @@ export default function GuidelinesPage() {
                 </section>
 
                 <section>
-                  <h2 className="text-2xl font-serif font-semibold text-white mb-4">
+                  <h2 id="communication-behavior" className="text-2xl font-serif font-semibold text-white mb-4">
                     3. Communication & Behavior
                   </h2>
                   <p className="mb-4">
@@ -137,7 +144,7 @@ export default function GuidelinesPage() {
                 </section>
 
                 <section>
-                  <h2 className="text-2xl font-serif font-semibold text-white mb-4">
+                  <h2 id="privacy-discretion" className="text-2xl font-serif font-semibold text-white mb-4">
                     4. Privacy & Discretion
                   </h2>
                   <p className="mb-4">
@@ -154,7 +161,7 @@ export default function GuidelinesPage() {
                 </section>
 
                 <section>
-                  <h2 className="text-2xl font-serif font-semibold text-white mb-4">
+                  <h2 id="event-participation" className="text-2xl font-serif font-semibold text-white mb-4">
                     5. Event Participation
                   </h2>
                   <p className="mb-4">
@@ -172,7 +179,7 @@ export default function GuidelinesPage() {
                 </section>
 
                 <section>
-                  <h2 className="text-2xl font-serif font-semibold text-white mb-4">
+                  <h2 id="online-behavior" className="text-2xl font-serif font-semibold text-white mb-4">
                     6. Online Behavior
                   </h2>
                   <p className="mb-4">
@@ -190,7 +197,7 @@ export default function GuidelinesPage() {
                 </section>
 
                 <section>
-                  <h2 className="text-2xl font-serif font-semibold text-white mb-4">
+                  <h2 id="education-learning" className="text-2xl font-serif font-semibold text-white mb-4">
                     7. Education & Learning
                   </h2>
                   <p className="mb-4">
@@ -208,7 +215,7 @@ export default function GuidelinesPage() {
                 </section>
 
                 <section>
-                  <h2 className="text-2xl font-serif font-semibold text-white mb-4">
+                  <h2 id="health-safety" className="text-2xl font-serif font-semibold text-white mb-4">
                     8. Health & Safety
                   </h2>
                   <p className="mb-4">
@@ -226,7 +233,7 @@ export default function GuidelinesPage() {
                 </section>
 
                 <section>
-                  <h2 className="text-2xl font-serif font-semibold text-white mb-4">
+                  <h2 id="reporting-enforcement" className="text-2xl font-serif font-semibold text-white mb-4">
                     9. Reporting & Enforcement
                   </h2>
                   <p className="mb-4">
@@ -243,7 +250,7 @@ export default function GuidelinesPage() {
                 </section>
 
                 <section>
-                  <h2 className="text-2xl font-serif font-semibold text-white mb-4">
+                  <h2 id="age-legal-requirements" className="text-2xl font-serif font-semibold text-white mb-4">
                     10. Age & Legal Requirements
                   </h2>
                   <p className="mb-4">
@@ -259,7 +266,7 @@ export default function GuidelinesPage() {
                 </section>
 
                 <section>
-                  <h2 className="text-2xl font-serif font-semibold text-white mb-4">
+                  <h2 id="support-resources" className="text-2xl font-serif font-semibold text-white mb-4">
                     11. Support & Resources
                   </h2>
                   <p className="mb-4">
@@ -276,7 +283,7 @@ export default function GuidelinesPage() {
                 </section>
 
                 <div className="border-t border-dark-600 pt-8 mt-12">
-                  <h3 className="text-xl font-serif font-semibold text-white mb-4">
+                  <h3 id="final-notes" className="text-xl font-serif font-semibold text-white mb-4">
                     Final Notes
                   </h3>
                   <p className="mb-4">
@@ -288,15 +295,15 @@ export default function GuidelinesPage() {
                     these guidelines, you help create the safe, inclusive community we all deserve.
                   </p>
                   <p className="text-sm text-gray-400">
-                    <strong>Last updated:</strong> {new Date().toLocaleDateString()}
+                    <strong>Last updated:</strong> {lastUpdated}
                   </p>
                 </div>
 
               </div>
             </div>
-          </div>
+          </article>
         </div>
       </div>
-    </div>
+    </main>
   )
 }

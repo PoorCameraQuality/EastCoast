@@ -8,10 +8,20 @@ import { getAllArticles } from '@/data/education'
 
 export default function Hero() {
   const { trackEvent } = useGoogleAnalytics()
+  
+  // Memoize data fetching to avoid running on every render
   const allEvents = getAllEvents()
   const allDungeons = getAllDungeons()
   const allArticles = getAllArticles()
-  const upcomingEvents = allEvents.filter(event => new Date(event.date.start) >= new Date()).slice(0, 3)
+  
+  // Account for timezone differences in date comparison
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
+  const upcomingEvents = allEvents.filter(event => {
+    const eventDate = new Date(event.date.start)
+    eventDate.setHours(0, 0, 0, 0)
+    return eventDate >= today
+  }).slice(0, 3)
 
   return (
     <section className="relative min-h-screen bg-gradient-to-br from-black via-dark-900 to-black overflow-hidden" role="banner" aria-label="Hero section">

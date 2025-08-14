@@ -6,6 +6,8 @@ import EventLogo from './EventLogo'
 
 export default function EventsSection() {
   const upcomingEvents = getUpcomingEvents()
+  const displayEventsMobile = upcomingEvents.slice(0, 3)
+  const displayEventsDesktop = upcomingEvents.slice(0, 6)
 
   return (
     <section className="section-padding bg-gradient-to-br from-black via-dark-900 to-black relative overflow-hidden">
@@ -31,7 +33,7 @@ export default function EventsSection() {
 
         {/* Mobile: Refined card layout */}
         <div className="md:hidden space-y-6 mb-12">
-          {upcomingEvents.slice(0, 3).map((event) => (
+          {displayEventsMobile.map((event) => (
             <Link key={event.slug} href={`/events/${event.slug}`} className="block group">
               <div className="relative overflow-hidden backdrop-blur-xl bg-white/5 rounded-2xl border border-white/10 hover:border-primary-400/30 transition-all duration-500 hover:scale-[1.02] shadow-2xl hover:shadow-primary-500/10">
                 {/* Subtle background gradient */}
@@ -97,7 +99,7 @@ export default function EventsSection() {
                       </div>
                     </div>
                     
-                    <p className="text-gray-400 leading-relaxed line-clamp-3">
+                    <p className="text-gray-400 leading-relaxed line-clamp-3" itemProp="description">
                       {event.excerpt}
                     </p>
                   </div>
@@ -109,7 +111,7 @@ export default function EventsSection() {
         
         {/* Desktop: Refined grid layout */}
         <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-          {upcomingEvents.slice(0, 6).map((event) => (
+          {displayEventsDesktop.map((event) => (
             <Link key={event.slug} href={`/events/${event.slug}`} className="block group">
               <div className="relative overflow-hidden backdrop-blur-xl bg-white/5 rounded-2xl border border-white/10 hover:border-primary-400/30 transition-all duration-500 hover:scale-105 h-[480px] flex flex-col shadow-2xl hover:shadow-primary-500/10">
                 {/* Subtle background gradient */}
@@ -161,7 +163,7 @@ export default function EventsSection() {
                     </div>
                     
                     <div className="flex-1 min-h-0 overflow-hidden">
-                      <p className="text-gray-400 leading-relaxed line-clamp-4">
+                      <p className="text-gray-400 leading-relaxed line-clamp-4" itemProp="description">
                         {event.excerpt}
                       </p>
                     </div>

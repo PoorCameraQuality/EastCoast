@@ -101,25 +101,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" dir="ltr">
-      <head>
-        <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
-        <meta name="format-detection" content="telephone=no" />
-        <meta name="theme-color" content="#1f2937" />
-        <meta name="color-scheme" content="dark light" />
-        <meta name="yandex-verification" content="d38c7affece1bb23" />
-        <link rel="preconnect" href="https://www.google-analytics.com"/>
-        <link rel="preconnect" href="https://www.googletagmanager.com"/>
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous"/>
-        <link rel="preconnect" href="https://fonts.googleapis.com"/>
-      </head>
-      <body className={inter.className}>
+    <html lang="en" className="bg-black text-white">
+      <body className="antialiased">
         {/* Skip to content link for keyboard users */}
         <a
           href="#main-content"
-          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:bg-primary-600 focus:text-white focus:px-4 focus:py-2"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:bg-primary-600 focus:text-white focus:px-4 focus:py-2 focus:rounded focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-offset-2 focus:ring-offset-black"
         >
           Skip to main content
         </a>

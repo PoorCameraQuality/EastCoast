@@ -20,7 +20,7 @@ export default function Breadcrumb({ items }: BreadcrumbProps) {
       "@type": "ListItem",
       "position": index + 1,
       "name": item.label,
-      "item": item.href ? `https://eastcoastkinkevents.com${item.href}` : undefined
+      ...(item.href ? { "item": `https://eastcoastkinkevents.com${item.href}` } : {})
     }))
   }
 
@@ -31,32 +31,18 @@ export default function Breadcrumb({ items }: BreadcrumbProps) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
-      <nav className="mb-8" aria-label="Breadcrumb">
-        <ol className="flex items-center space-x-2 text-sm text-subtle">
-          {items.map((item, index) => (
-            <li key={index} className="flex items-center">
-              {index > 0 && (
-                <svg className="w-4 h-4 mx-2 text-gray-500" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
-                </svg>
-              )}
-              {item.current ? (
-                <span className="text-white font-medium" aria-current="page">
-                  {item.label}
-                </span>
-              ) : item.href ? (
-                <Link 
-                  href={item.href}
-                  className="text-primary-400 hover:text-primary-300 transition-colors"
-                >
-                  {item.label}
-                </Link>
-              ) : (
-                <span className="text-subtle">{item.label}</span>
-              )}
-            </li>
-          ))}
-        </ol>
+      <nav aria-label="Breadcrumb" className="text-sm text-gray-300 flex gap-2">
+        {items.map((item, index) => (
+          <span key={index}>
+            {item.current ? (
+              <span aria-current="page" className="text-yellow-400">{item.label}</span>
+            ) : (
+              <a href={item.href} className="hover:underline focus:outline-none focus:ring-2 focus:ring-yellow-400">
+                {item.label}
+              </a>
+            )}
+          </span>
+        ))}
       </nav>
     </>
   )

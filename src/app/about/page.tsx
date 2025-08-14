@@ -35,6 +35,18 @@ export default function AboutPage() {
     { label: 'About', current: true }
   ]
 
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "AboutPage",
+    "name": "About East Coast Kink Events",
+    "description": "Learn more about East Coast Kink Events and our mission to connect the BDSM and kink community.",
+    "publisher": {
+      "@type": "Organization",
+      "name": "East Coast Kink Events",
+      "url": "https://eastcoastkinkevents.com"
+    }
+  }
+
   const faqItems = [
     {
       question: "What is East Coast Kink Events?",
@@ -59,7 +71,11 @@ export default function AboutPage() {
   ]
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-black via-dark-900 to-black relative overflow-hidden">
+    <main className="min-h-screen bg-gradient-to-br from-black via-dark-900 to-black relative overflow-hidden" aria-label="About East Coast Kink Events">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData).replace(/</g, '\\u003c') }}
+      />
       {/* Subtle background elements with blue spectrum */}
       <div className="absolute inset-0 opacity-5">
         <div className="absolute top-20 left-10 w-32 h-32 bg-gradient-to-r from-primary-400 to-primary-600 rounded-full blur-3xl animate-pulse"></div>
@@ -210,6 +226,6 @@ export default function AboutPage() {
           </div>
         </div>
       </div>
-    </div>
+    </main>
   )
 }

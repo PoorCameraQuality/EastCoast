@@ -90,7 +90,7 @@ export default function DungeonsPageClient() {
                       <div className="absolute inset-0 bg-gradient-to-r from-primary-500 to-blue-500 rounded-2xl blur-lg opacity-50 group-hover:opacity-75 transition-opacity"></div>
                       <DungeonLogo 
                         src={dungeon.logo} 
-                        alt={`${dungeon.name} logo`}
+                        alt={`Logo for ${dungeon.name}`}
                         size="large"
                         className="relative bg-black/80 backdrop-blur-sm rounded-2xl p-4 border border-white/20 shadow-xl"
                       />
@@ -148,7 +148,7 @@ export default function DungeonsPageClient() {
                       <div className="absolute inset-0 bg-gradient-to-r from-primary-500 to-blue-500 rounded-2xl blur-lg opacity-50 group-hover:opacity-75 transition-opacity"></div>
                       <DungeonLogo 
                         src={dungeon.logo} 
-                        alt={`${dungeon.name} logo`}
+                        alt={`Logo for ${dungeon.name}`}
                         size="medium"
                         className="relative bg-black/80 backdrop-blur-sm rounded-2xl p-4 border border-white/20 shadow-xl"
                       />

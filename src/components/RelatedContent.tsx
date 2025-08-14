@@ -84,6 +84,8 @@ export default function RelatedContent({ currentEvent, currentDungeon, maxItems 
               <Link 
                 key={event.slug} 
                 href={`/events/${event.slug}`}
+                prefetch={true}
+                aria-label={`View ${event.name || 'Event'} details`}
                 className="block p-4 bg-dark-800 border border-dark-600 rounded-lg hover:border-primary-500/50 transition-all duration-300 hover:scale-105"
               >
                 <div className="flex items-center space-x-3">
@@ -122,6 +124,8 @@ export default function RelatedContent({ currentEvent, currentDungeon, maxItems 
               <Link 
                 key={dungeon.slug} 
                 href={`/dungeons/${dungeon.slug}`}
+                prefetch={true}
+                aria-label={`View ${dungeon.name || 'Dungeon'} details`}
                 className="block p-4 bg-dark-800 border border-dark-600 rounded-lg hover:border-primary-500/50 transition-all duration-300 hover:scale-105"
               >
                 <div className="flex items-center space-x-3">

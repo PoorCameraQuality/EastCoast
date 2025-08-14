@@ -8,10 +8,12 @@ export default function Home() {
   return (
     <>
       <HomepageStructuredData />
-      <Hero />
-      <EventsSection />
-      <PastEventsSection />
-      <AboutSection />
+      <main lang="en">
+        <Hero />
+        <EventsSection />
+        <PastEventsSection />
+        <AboutSection />
+      </main>
     </>
   )
 } 

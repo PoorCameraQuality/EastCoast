@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 import { useAuth } from '@/contexts/AuthProvider'
 import { supabase } from '@/lib/supabase'
 
@@ -52,6 +53,12 @@ export default function LoginPageClient() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    
+    // Prevent double submission
+    if (loading) {
+      return
+    }
+    
     setLoading(true)
     setError('')
     setMessage('')
@@ -68,7 +75,8 @@ export default function LoginPageClient() {
       })
 
       if (error) {
-        setError(error.message)
+        console.error('Login error:', error)
+        setError('Invalid email or password')
         return
       }
 
@@ -159,6 +167,7 @@ export default function LoginPageClient() {
                 onChange={(e) => setEmail(e.target.value)}
                 required
                 autoComplete="email"
+                aria-label="Email address"
                 className="w-full px-3 py-2 bg-dark-700 border border-gray-600 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                 placeholder="admin@example.com"
               />
@@ -175,6 +184,7 @@ export default function LoginPageClient() {
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 autoComplete="current-password"
+                aria-label="Password"
                 className="w-full px-3 py-2 bg-dark-700 border border-gray-600 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                 placeholder="••••••••"
               />
@@ -183,6 +193,7 @@ export default function LoginPageClient() {
             <button
               type="submit"
               disabled={loading}
+              aria-label={loading ? 'Signing in, please wait' : 'Sign in to admin panel'}
               className="w-full bg-primary-600 hover:bg-primary-700 disabled:opacity-50 text-white font-medium py-2 px-4 rounded-md transition-colors duration-200"
             >
               {loading ? 'Signing in...' : 'Sign In'}
@@ -190,12 +201,13 @@ export default function LoginPageClient() {
           </form>
 
           <div className="mt-6 text-center">
-            <button
-              onClick={handleSignOutAndRedirect}
+            <Link
+              href="/"
               className="text-gray-400 hover:text-white text-sm transition-colors duration-200"
+              aria-label="Return to home page"
             >
               ← Back to Home
-            </button>
+            </Link>
           </div>
         </div>
       </div>

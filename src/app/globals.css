@@ -5,11 +5,68 @@
 @tailwind utilities;
 
 @layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  
   body {
     @apply text-gray-100 bg-black font-sans;
   }
   h1, h2, h3, h4, h5, h6 {
     @apply font-serif;
+  }
+  
+  /* Accessible focus outline for all interactive elements */
+  a:focus, button:focus, input:focus, select:focus, textarea:focus {
+    outline: 3px solid #fbbf24; /* amber-400 for visibility */
+    outline-offset: 2px;
+  }
+  
+  /* Improve default link contrast */
+  a {
+    color: #facc15; /* yellow-400 */
+  }
+  
+  /* Ensure visited links still meet contrast requirements */
+  a:visited {
+    color: #eab308; /* yellow-500 */
+  }
+  
+  /* Focus states for interactive elements with proper contrast */
+  button:focus-visible,
+  input:focus-visible,
+  textarea:focus-visible,
+  select:focus-visible,
+  a:focus-visible,
+  [tabindex]:focus-visible {
+    outline: 2px solid #4A7CFF;
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+  
+  /* Ensure focus states are visible on all interactive elements */
+  .btn-primary:focus-visible,
+  .btn-secondary:focus-visible,
+  .btn-outline:focus-visible {
+    outline: 2px solid #4A7CFF;
+    outline-offset: 2px;
+    box-shadow: 0 0 0 4px rgba(74, 124, 255, 0.2);
+  }
+  
+  /* High contrast focus for form inputs */
+  input:focus-visible,
+  textarea:focus-visible,
+  select:focus-visible {
+    outline: 2px solid #4A7CFF;
+    outline-offset: 2px;
+    border-color: #4A7CFF;
+  }
+  
+  /* Focus styles for links */
+  a:focus-visible {
+    outline: 2px solid #4A7CFF;
+    outline-offset: 2px;
+    text-decoration: underline;
   }
 }
 

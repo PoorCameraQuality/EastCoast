@@ -33,8 +33,15 @@ export default function TermsPage() {
     { label: 'Terms', current: true }
   ]
 
+  // Server-generated date to avoid hydration mismatch
+  const lastUpdated = new Date().toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  })
+
   return (
-    <div className="min-h-screen bg-black">
+    <main className="min-h-screen bg-black">
       <div className="container-custom py-16">
         <div className="max-w-4xl mx-auto">
           <Breadcrumb items={breadcrumbItems} />
@@ -50,12 +57,12 @@ export default function TermsPage() {
           </div>
 
           {/* Content */}
-          <div className="card-elegant">
+          <article className="card-elegant">
             <div className="prose prose-invert max-w-none">
               <div className="space-y-8 text-subtle leading-relaxed">
                 
                 <section>
-                  <h2 className="text-2xl font-serif font-semibold text-white mb-4">
+                  <h2 id="acceptance-of-terms" className="text-2xl font-serif font-semibold text-white mb-4">
                     Acceptance of Terms
                   </h2>
                   <p className="mb-4">
@@ -68,7 +75,7 @@ export default function TermsPage() {
                 </section>
 
                 <section>
-                  <h2 className="text-2xl font-serif font-semibold text-white mb-4">
+                  <h2 id="use-license" className="text-2xl font-serif font-semibold text-white mb-4">
                     Use License
                   </h2>
                   <p className="mb-4">
@@ -86,7 +93,7 @@ export default function TermsPage() {
                 </section>
 
                 <section>
-                  <h2 className="text-2xl font-serif font-semibold text-white mb-4">
+                  <h2 id="user-conduct" className="text-2xl font-serif font-semibold text-white mb-4">
                     User Conduct
                   </h2>
                   <p className="mb-4">
@@ -102,7 +109,7 @@ export default function TermsPage() {
                 </section>
 
                 <section>
-                  <h2 className="text-2xl font-serif font-semibold text-white mb-4">
+                  <h2 id="content-submission" className="text-2xl font-serif font-semibold text-white mb-4">
                     Content Submission
                   </h2>
                   <p className="mb-4">
@@ -117,7 +124,7 @@ export default function TermsPage() {
                 </section>
 
                 <section>
-                  <h2 className="text-2xl font-serif font-semibold text-white mb-4">
+                  <h2 id="disclaimer" className="text-2xl font-serif font-semibold text-white mb-4">
                     Disclaimer
                   </h2>
                   <p className="mb-4">
@@ -129,7 +136,7 @@ export default function TermsPage() {
                 </section>
 
                 <section>
-                  <h2 className="text-2xl font-serif font-semibold text-white mb-4">
+                  <h2 id="limitations" className="text-2xl font-serif font-semibold text-white mb-4">
                     Limitations
                   </h2>
                   <p className="mb-4">
@@ -140,7 +147,7 @@ export default function TermsPage() {
                 </section>
 
                 <section>
-                  <h2 className="text-2xl font-serif font-semibold text-white mb-4">
+                  <h2 id="revisions-and-errata" className="text-2xl font-serif font-semibold text-white mb-4">
                     Revisions and Errata
                   </h2>
                   <p>
@@ -151,7 +158,7 @@ export default function TermsPage() {
                 </section>
 
                 <section>
-                  <h2 className="text-2xl font-serif font-semibold text-white mb-4">
+                  <h2 id="links" className="text-2xl font-serif font-semibold text-white mb-4">
                     Links
                   </h2>
                   <p>
@@ -162,7 +169,7 @@ export default function TermsPage() {
                 </section>
 
                 <section>
-                  <h2 className="text-2xl font-serif font-semibold text-white mb-4">
+                  <h2 id="modifications" className="text-2xl font-serif font-semibold text-white mb-4">
                     Modifications
                   </h2>
                   <p>
@@ -172,7 +179,7 @@ export default function TermsPage() {
                 </section>
 
                 <section>
-                  <h2 className="text-2xl font-serif font-semibold text-white mb-4">
+                  <h2 id="contact-information" className="text-2xl font-serif font-semibold text-white mb-4">
                     Contact Information
                   </h2>
                   <p>
@@ -183,14 +190,14 @@ export default function TermsPage() {
 
                 <div className="border-t border-dark-600 pt-8 mt-12">
                   <p className="text-sm text-gray-400">
-                    <strong>Last updated:</strong> {new Date().toLocaleDateString()}
+                    <strong>Last updated:</strong> {lastUpdated}
                   </p>
                 </div>
               </div>
             </div>
-          </div>
+          </article>
         </div>
       </div>
-    </div>
+    </main>
   )
 }

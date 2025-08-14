@@ -51,7 +51,7 @@ export default function Header() {
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center space-x-1">
+          <nav className="hidden lg:flex items-center space-x-1" role="navigation">
             {[
               { href: '/events', label: 'Events' },
               { href: '/dungeons', label: 'Dungeons' },
@@ -78,7 +78,7 @@ export default function Header() {
             
             <div className="mx-2 w-px h-6 bg-dark-600"></div>
             
-            <Link href="/events" className="btn-outline text-sm px-5 py-2">
+            <Link href="/events" className="btn-outline text-sm px-5 py-2" role="button" aria-label="Submit your event for listing">
               Submit Event
             </Link>
             
@@ -90,6 +90,7 @@ export default function Header() {
           {/* Mobile menu button */}
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
+            aria-label="Toggle mobile navigation menu"
             className="lg:hidden relative p-3 rounded-lg text-gray-300 hover:text-white hover:bg-dark-800/50 transition-all duration-300 group"
           >
             <div className={`w-6 h-6 flex flex-col justify-center items-center transition-all duration-300 ${
@@ -113,7 +114,7 @@ export default function Header() {
           isMenuOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
         }`}>
           <div className="py-6 border-t border-dark-700/50 bg-black/50 backdrop-blur-sm">
-            <nav className="grid grid-cols-2 gap-4">
+            <nav className="grid grid-cols-2 gap-4" role="navigation">
               {[
                 { href: '/events', label: 'Events', icon: '🎪' },
                 { href: '/dungeons', label: 'Dungeons', icon: '🏰' },
@@ -139,7 +140,7 @@ export default function Header() {
             
             <div className="mt-6 pt-6 border-t border-dark-700/50">
               <div className="flex justify-center space-x-4">
-                <Link href="/events" className="btn-outline w-full text-center">
+                <Link href="/events" className="btn-outline w-full text-center" role="button" aria-label="Submit your event for listing">
                   Submit Event
                 </Link>
                 <div className="w-32">

@@ -217,7 +217,7 @@ export default function EventsPageClient() {
                             <div className="absolute inset-0 bg-gradient-to-r from-primary-500 to-blue-500 rounded-2xl blur-lg opacity-50 group-hover:opacity-75 transition-opacity"></div>
                             <EventLogo 
                               src={event.logo} 
-                              alt={`${event.name} logo`}
+                              alt={event.altText || `Promotional image for ${event.name}`}
                               size="large"
                               className="relative bg-black/80 backdrop-blur-sm rounded-2xl p-4 border border-white/20 shadow-xl"
                             />
@@ -282,7 +282,7 @@ export default function EventsPageClient() {
                             <div className="absolute inset-0 bg-gradient-to-r from-primary-500 to-blue-500 rounded-2xl blur-lg opacity-50 group-hover:opacity-75 transition-opacity"></div>
                             <EventLogo 
                               src={event.logo} 
-                              alt={`${event.name} logo`}
+                              alt={event.altText || `Promotional image for ${event.name}`}
                               size="medium"
                               className="relative bg-black/80 backdrop-blur-sm rounded-2xl p-4 border border-white/20 shadow-xl"
                             />
@@ -367,7 +367,7 @@ export default function EventsPageClient() {
                             <div className="absolute inset-0 bg-gradient-to-r from-gray-500 to-slate-500 rounded-2xl blur-lg opacity-50 group-hover:opacity-75 transition-opacity"></div>
                             <EventLogo 
                               src={event.logo} 
-                              alt={`${event.name} logo`}
+                              alt={event.altText || `Promotional image for ${event.name}`}
                               size="large"
                               className="relative bg-black/80 backdrop-blur-sm rounded-2xl p-4 border border-white/20 shadow-xl"
                             />
@@ -432,7 +432,7 @@ export default function EventsPageClient() {
                             <div className="absolute inset-0 bg-gradient-to-r from-gray-500 to-slate-500 rounded-2xl blur-lg opacity-50 group-hover:opacity-75 transition-opacity"></div>
                             <EventLogo 
                               src={event.logo} 
-                              alt={`${event.name} logo`}
+                              alt={event.altText || `Promotional image for ${event.name}`}
                               size="medium"
                               className="relative bg-black/80 backdrop-blur-sm rounded-2xl p-4 border border-white/20 shadow-xl"
                             />

@@ -31,9 +31,9 @@ export default function DungeonLogo({ src, alt, size = 'medium', className = '' 
     <div className={`flex justify-center items-center ${container} ${className}`}>
       <Image 
         src={src} 
-        alt={alt || "Dungeon logo"}
-        width={0}
-        height={0}
+        alt={alt || `Logo for ${alt || "dungeon"}`}
+        width={200}
+        height={200}
         sizes="100vw"
         className={`object-contain rounded-xl ${image}`}
         style={{ width: 'auto', height: 'auto' }}
