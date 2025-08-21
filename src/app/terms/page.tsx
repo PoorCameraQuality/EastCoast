@@ -3,7 +3,7 @@ import Breadcrumb from '@/components/Breadcrumb'
 
 export const metadata: Metadata = {
   title: 'Terms of Service - East Coast Kink Events',
-  description: 'Read our terms of service and understand the rules and guidelines for using East Coast Kink Events.',
+  description: 'Read our terms of service and understand the rules and guidelines for using East Coast Kink Events. Updated for 2025.',
   keywords: 'terms of service, user agreement, website terms, kink events, BDSM events',
   robots: {
     index: true,
