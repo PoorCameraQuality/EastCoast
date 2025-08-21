@@ -31,10 +31,35 @@
       "permanent": true
     }
   ],
-  "domains": [
+  "redirects": [
     {
-      "source": "eastcoastkinkevents.com",
-      "destination": "www.eastcoastkinkevents.com",
+      "source": "/kinkeducationcenter/:slug*",
+      "destination": "/education/:slug*",
+      "permanent": true
+    },
+    {
+      "source": "/kinkeducationcenter",
+      "destination": "/education/",
+      "permanent": true
+    },
+    {
+      "source": "/?category=:category*",
+      "destination": "/events/",
+      "permanent": true
+    },
+    {
+      "source": "/?format=amp",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/:slug?format=amp",
+      "destination": "/:slug",
+      "permanent": true
+    },
+    {
+      "source": "https://eastcoastkinkevents.com/:path*",
+      "destination": "https://www.eastcoastkinkevents.com/:path*",
       "permanent": true
     }
   ],
