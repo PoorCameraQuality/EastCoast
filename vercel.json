@@ -1,5 +1,4 @@
 {
-  // Vercel configuration for East Coast Kink Events
   "functions": {
     "app/**/*.tsx": {
       "maxDuration": 30
