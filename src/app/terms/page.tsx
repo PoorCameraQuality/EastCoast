@@ -201,7 +201,7 @@ export default function TermsPage() {
 
                 <div className="border-t border-dark-600 pt-8 mt-12">
                   <p className="text-sm text-gray-400">
-                    <strong>Last updated:</strong> {lastUpdated}
+                    <strong>Last updated:</strong> {lastUpdated} (Terms updated for 2025)
                   </p>
                 </div>
               </div>
