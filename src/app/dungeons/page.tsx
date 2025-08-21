@@ -20,6 +20,9 @@ export const metadata: Metadata = {
     'safe spaces',
     'inclusive environments'
   ],
+  alternates: {
+    canonical: 'https://eastcoastkinkevents.com/dungeons',
+  },
   openGraph: {
     type: 'website',
     locale: 'en_US',

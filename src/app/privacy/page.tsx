@@ -5,6 +5,9 @@ export const metadata: Metadata = {
   title: 'Privacy Policy - East Coast Kink Events',
   description: 'Learn about how we collect, use, and protect your personal information on East Coast Kink Events.',
   keywords: 'privacy policy, data protection, personal information, kink events, BDSM events',
+  alternates: {
+    canonical: 'https://eastcoastkinkevents.com/privacy',
+  },
   openGraph: {
     title: 'Privacy Policy - East Coast Kink Events',
     description: 'Learn about how we collect, use, and protect your personal information.',

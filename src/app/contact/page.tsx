@@ -8,6 +8,17 @@ export const metadata: Metadata = {
   title: 'Contact Us - East Coast Kink Events',
   description: 'Get in touch with East Coast Kink Events. Add your event or dungeon, provide feedback, or contact site administration.',
   keywords: 'contact, add event, add dungeon, feedback, kink events, BDSM events, east coast',
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+    },
+  },
+  alternates: {
+    canonical: 'https://eastcoastkinkevents.com/contact',
+  },
   openGraph: {
     title: 'Contact Us - East Coast Kink Events',
     description: 'Get in touch with East Coast Kink Events. Add your event or dungeon, provide feedback, or contact site administration.',

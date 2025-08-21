@@ -5,6 +5,9 @@ export const metadata: Metadata = {
   title: 'Community Guidelines - East Coast Kink Events',
   description: 'Learn about our community guidelines for creating a safe, inclusive, and respectful environment for all kink enthusiasts.',
   keywords: 'community guidelines, safety, inclusivity, consent, kink community, BDSM guidelines',
+  alternates: {
+    canonical: 'https://eastcoastkinkevents.com/guidelines',
+  },
   openGraph: {
     title: 'Community Guidelines - East Coast Kink Events',
     description: 'Learn about our community guidelines for creating a safe, inclusive, and respectful environment for all kink enthusiasts.',

@@ -6,6 +6,9 @@ export const metadata: Metadata = {
   description: 'Admin login portal for East Coast Kink Events management.',
   robots: { index: false, follow: false },
   keywords: 'admin login, website management, kink events admin',
+  alternates: {
+    canonical: 'https://eastcoastkinkevents.com/login',
+  },
   openGraph: {
     title: 'Admin Login - East Coast Kink Events',
     description: 'Admin login portal for East Coast Kink Events management.',

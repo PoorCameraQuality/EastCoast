@@ -10,6 +10,17 @@ export const metadata: Metadata = {
   title: 'Event Calendar - East Coast Kink Events',
   description: 'Browse upcoming kink events by month with our interactive calendar. Find BDSM events, conferences, and workshops across the East Coast.',
   keywords: 'kink event calendar, BDSM events, east coast calendar, monthly events, kink conferences, workshops',
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+    },
+  },
+  alternates: {
+    canonical: 'https://eastcoastkinkevents.com/calendar',
+  },
   openGraph: {
     title: 'Event Calendar - East Coast Kink Events',
     description: 'Browse upcoming kink events by month with our interactive calendar. Find BDSM events, conferences, and workshops across the East Coast.',

@@ -6,6 +6,7 @@ import { EventStructuredData } from '@/components/StructuredData'
 import Breadcrumb from '@/components/Breadcrumb'
 import RelatedContent from '@/components/RelatedContent'
 import Script from 'next/script'
+import EventCalendarExport from '@/components/EventCalendarExport'
 
 // Generate metadata for SEO
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
@@ -381,6 +382,9 @@ function EnhancedEventLayout({ event, breadcrumbItems }: { event: any, breadcrum
                     </a>
                   </div>
                 </div>
+
+                {/* Calendar Export */}
+                <EventCalendarExport event={event} />
 
                 {/* Discord Community */}
                 <div className="bg-gradient-to-br from-gray-900 to-black border border-gray-700 rounded-2xl p-6">

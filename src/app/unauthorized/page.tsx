@@ -4,7 +4,10 @@ import type { Metadata } from 'next'
 export const metadata: Metadata = {
   title: 'Unauthorized - East Coast Kink Events',
   description: 'You do not have permission to access this page.',
-  robots: 'noindex, nofollow'
+  robots: 'noindex, nofollow',
+  alternates: {
+    canonical: 'https://eastcoastkinkevents.com/unauthorized',
+  }
 }
 
 export default function UnauthorizedPage() {

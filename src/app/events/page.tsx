@@ -21,6 +21,9 @@ export const metadata: Metadata = {
     'workshops',
     'community events'
   ],
+  alternates: {
+    canonical: 'https://eastcoastkinkevents.com/events',
+  },
   openGraph: {
     type: 'website',
     locale: 'en_US',

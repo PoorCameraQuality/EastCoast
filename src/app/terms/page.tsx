@@ -5,6 +5,17 @@ export const metadata: Metadata = {
   title: 'Terms of Service - East Coast Kink Events',
   description: 'Read our terms of service and understand the rules and guidelines for using East Coast Kink Events.',
   keywords: 'terms of service, user agreement, website terms, kink events, BDSM events',
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+    },
+  },
+  alternates: {
+    canonical: 'https://eastcoastkinkevents.com/terms',
+  },
   openGraph: {
     title: 'Terms of Service - East Coast Kink Events',
     description: 'Read our terms of service and understand the rules and guidelines for using our platform.',

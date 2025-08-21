@@ -132,7 +132,7 @@ export default async function sitemap() {
       url: `${baseUrl}/terms`,
       lastModified: new Date(),
       changeFrequency: 'monthly' as const,
-      priority: 0.5,
+      priority: 0.7,
       alternates: {
         canonical: `${baseUrl}/terms`,
       },

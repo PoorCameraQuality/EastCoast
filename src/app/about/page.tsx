@@ -7,6 +7,17 @@ export const metadata: Metadata = {
   title: 'About - East Coast Kink Events',
   description: 'Learn about East Coast Kink Events, our mission to connect the kink community with vetted events and foster transparency in the BDSM community.',
   keywords: 'about, mission, kink community, BDSM events, transparency, safety',
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+    },
+  },
+  alternates: {
+    canonical: 'https://eastcoastkinkevents.com/about',
+  },
   openGraph: {
     title: 'About - East Coast Kink Events',
     description: 'Learn about East Coast Kink Events, our mission to connect the kink community with vetted events and foster transparency in the BDSM community.',
