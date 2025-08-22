@@ -6,16 +6,6 @@
   },
   "redirects": [
     {
-      "source": "/kinkeducationcenter/:slug*",
-      "destination": "/education/:slug*",
-      "permanent": true
-    },
-    {
-      "source": "/kinkeducationcenter",
-      "destination": "/education/",
-      "permanent": true
-    },
-    {
       "source": "/",
       "has": [
         {
@@ -48,11 +38,6 @@
         }
       ],
       "destination": "/:slug",
-      "permanent": true
-    },
-    {
-      "source": "/:path*",
-      "destination": "https://www.eastcoastkinkevents.com/:path*",
       "permanent": true
     }
   ],
