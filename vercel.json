@@ -16,7 +16,7 @@
       "permanent": true
     },
     {
-      "source": "/?category=:category*",
+      "source": "/?category=:category",
       "destination": "/events/",
       "permanent": true
     },
