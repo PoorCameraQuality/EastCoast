@@ -247,6 +247,112 @@ export default function CalendarClient({ allEvents }: CalendarClientProps) {
     document.body.removeChild(link)
   }
 
+  // Add to Apple Calendar
+  const addToAppleCalendar = (event: CalendarEvent) => {
+    const startDate = new Date(event.date.start)
+    const endDate = new Date(event.date.end)
+    
+    // Format dates for iCal (YYYYMMDDTHHMMSSZ)
+    const formatDateForICal = (date: Date) => {
+      return date.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '')
+    }
+    
+    const icalContent = [
+      'BEGIN:VCALENDAR',
+      'VERSION:2.0',
+      'PRODID:-//East Coast Kink Events//Calendar//EN',
+      'BEGIN:VEVENT',
+      `UID:${event.slug}@eastcoastkinkevents.com`,
+      `DTSTART:${formatDateForICal(startDate)}`,
+      `DTEND:${formatDateForICal(endDate)}`,
+      `SUMMARY:${event.name}`,
+      `DESCRIPTION:${event.name} - ${event.date.display}\\nLocation: ${event.location.city}, ${event.location.state}\\n\\nMore info: https://eastcoastkinkevents.com/events/${event.slug}`,
+      `LOCATION:${event.location.city}, ${event.location.state}`,
+      `URL:https://eastcoastkinkevents.com/events/${event.slug}`,
+      'END:VEVENT',
+      'END:VCALENDAR'
+    ].join('\r\n')
+    
+    // Create data URL for Apple Calendar integration
+    const dataUrl = `data:text/calendar;charset=utf8,${encodeURIComponent(icalContent)}`
+    
+    // Try to open with Apple Calendar if on macOS/iOS, otherwise download
+    if (navigator.userAgent.includes('Mac') || navigator.userAgent.includes('iPhone') || navigator.userAgent.includes('iPad')) {
+      // On Apple devices, try to open with calendar app
+      const link = document.createElement('a')
+      link.href = dataUrl
+      link.download = `${event.slug}.ics`
+      link.click()
+    } else {
+      // On other devices, download the file
+      const blob = new Blob([icalContent], { type: 'text/calendar;charset=utf-8' })
+      const link = document.createElement('a')
+      link.href = URL.createObjectURL(blob)
+      link.download = `${event.slug}.ics`
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+    }
+  }
+
+  // Add all month events to Apple Calendar
+  const addMonthToAppleCalendar = () => {
+    if (monthEvents.length === 0) return
+    
+    const startDate = new Date(currentYear, currentMonth, 1)
+    const endDate = new Date(currentYear, currentMonth + 1, 0)
+    
+    const formatDateForICal = (date: Date) => {
+      return date.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '')
+    }
+    
+    let icalContent = [
+      'BEGIN:VCALENDAR',
+      'VERSION:2.0',
+      'PRODID:-//East Coast Kink Events//Calendar//EN'
+    ]
+    
+    monthEvents.forEach(event => {
+      const eventStart = new Date(event.date.start)
+      const eventEnd = new Date(event.date.end)
+      
+      icalContent.push(
+        'BEGIN:VEVENT',
+        `UID:${event.slug}@eastcoastkinkevents.com`,
+        `DTSTART:${formatDateForICal(eventStart)}`,
+        `DTEND:${formatDateForICal(eventEnd)}`,
+        `SUMMARY:${event.name}`,
+        `DESCRIPTION:${event.name} - ${event.date.display}\\nLocation: ${event.location.city}, ${event.location.state}\\n\\nMore info: https://eastcoastkinkevents.com/events/${event.slug}`,
+        `LOCATION:${event.location.city}, ${event.location.state}`,
+        `URL:https://eastcoastkinkevents.com/events/${event.slug}`,
+        'END:VEVENT'
+      )
+    })
+    
+    icalContent.push('END:VCALENDAR')
+    
+    // Create data URL for Apple Calendar integration
+    const dataUrl = `data:text/calendar;charset=utf8,${encodeURIComponent(icalContent.join('\r\n'))}`
+    
+    // Try to open with Apple Calendar if on macOS/iOS, otherwise download
+    if (navigator.userAgent.includes('Mac') || navigator.userAgent.includes('iPhone') || navigator.userAgent.includes('iPad')) {
+      // On Apple devices, try to open with calendar app
+      const link = document.createElement('a')
+      link.href = dataUrl
+      link.download = `east-coast-kink-events-${startDate.getFullYear()}-${String(startDate.getMonth() + 1).padStart(2, '0')}.ics`
+      link.click()
+    } else {
+      // On other devices, download the file
+      const blob = new Blob([icalContent.join('\r\n')], { type: 'text/calendar;charset=utf-8' })
+      const link = document.createElement('a')
+      link.href = URL.createObjectURL(blob)
+      link.download = `east-coast-kink-events-${startDate.getFullYear()}-${String(startDate.getMonth() + 1).padStart(2, '0')}.ics`
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+    }
+  }
+
   const monthNames = [
     'January', 'February', 'March', 'April', 'May', 'June',
     'July', 'August', 'September', 'October', 'November', 'December'
@@ -302,29 +408,44 @@ export default function CalendarClient({ allEvents }: CalendarClientProps) {
         </div>
 
         {/* Export Buttons */}
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-3">
           <button
             onClick={exportMonthToGoogleCalendar}
             disabled={monthEvents.length === 0}
-            className="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white font-medium transition-colors flex items-center gap-2"
+            className="group inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 disabled:from-gray-600 disabled:to-gray-700 disabled:cursor-not-allowed text-white font-medium transition-all duration-300 shadow-lg hover:shadow-blue-500/25 hover:scale-105 disabled:hover:scale-100"
             title="Add all month events to Google Calendar"
           >
             <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
               <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/>
             </svg>
-            Export Month to Google
+            <span className="hidden sm:inline">Export Month to Google</span>
+            <span className="sm:hidden">Google</span>
+          </button>
+          
+          <button
+            onClick={addMonthToAppleCalendar}
+            disabled={monthEvents.length === 0}
+            className="group inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-gray-800 to-gray-900 hover:from-gray-700 hover:to-gray-800 disabled:from-gray-600 disabled:to-gray-700 disabled:cursor-not-allowed text-white font-medium transition-all duration-300 shadow-lg hover:shadow-gray-500/25 hover:scale-105 disabled:hover:scale-100"
+            title="Add all month events to Apple Calendar"
+          >
+            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M18.71 19.5c-.83 1.24-1.71 2.5-3.05 2.47-1.34-.03-1.74-.79-3.27-.79-1.53 0-2 .77-3.27.79-1.34.03-2.22-1.23-3.05-2.47C5.04 17.68 4 15.33 4 13c0-5.52 4.48-10 10-10s10 4.48 10 10c0 2.33-1.04 4.68-5.29 6.5z"/>
+            </svg>
+            <span className="hidden sm:inline">Export Month to Apple</span>
+            <span className="sm:hidden">Apple</span>
           </button>
           
           <button
             onClick={exportMonthToICal}
             disabled={monthEvents.length === 0}
-            className="px-4 py-2 rounded-lg bg-green-600 hover:bg-green-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white font-medium transition-colors flex items-center gap-2"
+            className="group inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 disabled:from-gray-600 disabled:to-gray-700 disabled:cursor-not-allowed text-white font-medium transition-all duration-300 shadow-lg hover:shadow-green-500/25 hover:scale-105 disabled:hover:scale-100"
             title="Download all month events as iCal file"
           >
             <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
               <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
             </svg>
-            Export Month to iCal
+            <span className="hidden sm:inline">Export Month to iCal</span>
+            <span className="sm:hidden">iCal</span>
           </button>
         </div>
       </div>
@@ -389,10 +510,10 @@ export default function CalendarClient({ allEvents }: CalendarClientProps) {
                         </Link>
                         
                         {/* Export buttons for each event */}
-                        <div className="flex gap-1">
+                        <div className="flex gap-1.5">
                           <button
                             onClick={() => exportToGoogleCalendar(event)}
-                            className="w-4 h-4 bg-blue-600 hover:bg-blue-700 rounded text-white text-xs flex items-center justify-center transition-colors"
+                            className="w-5 h-5 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 rounded-md text-white text-xs flex items-center justify-center transition-all duration-200 hover:scale-110 shadow-sm hover:shadow-blue-500/25"
                             title={`Add ${event.name} to Google Calendar`}
                           >
                             <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
@@ -401,8 +522,18 @@ export default function CalendarClient({ allEvents }: CalendarClientProps) {
                           </button>
                           
                           <button
+                            onClick={() => addToAppleCalendar(event)}
+                            className="w-5 h-5 bg-gradient-to-r from-gray-700 to-gray-800 hover:from-gray-600 hover:to-gray-700 rounded-md text-white text-xs flex items-center justify-center transition-all duration-200 hover:scale-110 shadow-sm hover:shadow-gray-500/25"
+                            title={`Add ${event.name} to Apple Calendar`}
+                          >
+                            <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
+                              <path d="M18.71 19.5c-.83 1.24-1.71 2.5-3.05 2.47-1.34-.03-1.74-.79-3.27-.79-1.53 0-2 .77-3.27.79-1.34.03-2.22-1.23-3.05-2.47C5.04 17.68 4 15.33 4 13c0-5.52 4.48-10 10-10s10 4.48 10 10c0 2.33-1.04 4.68-5.29 6.5z"/>
+                            </svg>
+                          </button>
+                          
+                          <button
                             onClick={() => exportToICal(event)}
-                            className="w-4 h-4 bg-green-600 hover:bg-green-700 rounded text-white text-xs flex items-center justify-center transition-colors"
+                            className="w-5 h-5 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 rounded-md text-white text-xs flex items-center justify-center transition-all duration-200 hover:scale-110 shadow-sm hover:shadow-green-500/25"
                             title={`Download ${event.name} as iCal file`}
                           >
                             <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
