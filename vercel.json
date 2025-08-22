@@ -79,6 +79,7 @@
     "env": {
       "DISABLE_VERCEL_FEEDBACK": "true"
     }
-  }
+  },
+  "buildCommand": "npm run build"
 }
 
