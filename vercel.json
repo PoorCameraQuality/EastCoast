@@ -51,7 +51,7 @@
       "permanent": true
     },
     {
-      "source": "https://eastcoastkinkevents.com/:path*",
+      "source": "/:path*",
       "destination": "https://www.eastcoastkinkevents.com/:path*",
       "permanent": true
     }
