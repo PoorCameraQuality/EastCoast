@@ -27,12 +27,26 @@
       "permanent": true
     },
     {
-      "source": "/?format=amp",
+      "source": "/",
+      "has": [
+        {
+          "type": "query",
+          "key": "format",
+          "value": "amp"
+        }
+      ],
       "destination": "/",
       "permanent": true
     },
     {
-      "source": "/:slug?format=amp",
+      "source": "/:slug",
+      "has": [
+        {
+          "type": "query",
+          "key": "format",
+          "value": "amp"
+        }
+      ],
       "destination": "/:slug",
       "permanent": true
     },
