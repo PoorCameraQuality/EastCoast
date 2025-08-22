@@ -1,4 +1,5 @@
 {
+  "// Configuration for East Coast Kink Events deployment": "",
   "functions": {
     "app/**/*.tsx": {
       "maxDuration": 30
