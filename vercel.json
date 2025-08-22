@@ -1,5 +1,4 @@
 {
-  "description": "East Coast Kink Events - Updated deployment trigger",
   "functions": {
     "app/**/*.tsx": {
       "maxDuration": 30
