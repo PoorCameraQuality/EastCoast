@@ -80,6 +80,7 @@
       "DISABLE_VERCEL_FEEDBACK": "true"
     }
   },
-  "buildCommand": "npm run build"
+  "buildCommand": "npm run build",
+  "installCommand": "npm install"
 }
 
