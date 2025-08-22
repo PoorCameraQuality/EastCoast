@@ -16,7 +16,13 @@
       "permanent": true
     },
     {
-      "source": "/?category=:category",
+      "source": "/",
+      "has": [
+        {
+          "type": "query",
+          "key": "category"
+        }
+      ],
       "destination": "/events/",
       "permanent": true
     },
