@@ -1330,3 +1330,58 @@ export const events = [
     }
   }
 ];
+
+export const getEventBySlug = (slug) => {
+  return events.find(event => event.slug === slug);
+};
+
+export const getAllEvents = () => {
+  return events.sort((a, b) => new Date(a.date.start) - new Date(b.date.start));
+};
+
+export const getUpcomingEvents = () => {
+  const today = new Date();
+  return events
+    .filter(event => new Date(event.date.start) >= today)
+    .sort((a, b) => new Date(a.date.start) - new Date(b.date.start));
+};
+
+export const getPastEvents = () => {
+  const today = new Date();
+  return events
+    .filter(event => new Date(event.date.end) < today)
+    .sort((a, b) => new Date(b.date.start) - new Date(a.date.start));
+};
+
+export const getEventsByCategory = (category) => {
+  if (!category) return events;
+  return events.filter(event => event.category === category);
+};
+
+export const getEventsByLocation = (state) => {
+  if (!state) return events;
+  return events.filter(event => event.location.state === state);
+};
+
+export const generateEventSEO = (event) => {
+  return {
+    title: `${event.name} - ${event.date.display} | East Coast Kink Events`,
+    description: event.excerpt,
+    keywords: event.seo?.keywords || `${event.name}, ${event.location.city}, ${event.location.state}, kink events, BDSM`,
+    openGraph: {
+      title: event.seo?.title || `${event.name} - ${event.date.display}`,
+      description: event.seo?.description || event.excerpt,
+      images: [
+        {
+          url: event.logo || '/images/og-image.png',
+          width: 1200,
+          height: 630,
+          alt: event.name
+        }
+      ],
+      type: 'website',
+      url: `https://eastcoastkinkevents.com/events/${event.slug}`,
+      siteName: 'East Coast Kink Events'
+    }
+  };
+};
