@@ -71,9 +71,9 @@ export const events = [
     "name": "Dark Odyssey Summer Camp",
     "slug": "dark-odyssey-summer-camp",
     "date": {
-      "start": "2025-08-26",
-      "end": "2025-09-01",
-      "display": "Aug 26-Sep 1, 2025"
+      "start": "2026-09-01",
+      "end": "2026-09-07",
+      "display": "Sep 1-7, 2026"
     },
     "location": {
       "city": "Northern Maryland",
@@ -81,8 +81,8 @@ export const events = [
       "region": "NorthEastern, Maryland"
     },
     "category": "Outdoor Event",
-    "excerpt": "Join Dark Odyssey's Summer Camp from Aug 26-Sep 1, 2025to Aug 26-Sep 1, 2025, in Northern Maryland. This seven-day transformative event blends kink and BDSM with spiritual exploration, offering workshops, massive play spaces, and special events in a unique, inclusive environment. Enjoy a vibrant community atmosphere with diverse accommodations, meal plans, and a welcoming mix of kinksters, queers, and swingers. Create your own erotic vacation where you can learn, play, and connect with like-minded individuals. Experience this week-long journey of self-discovery and community building in a safe, supportive space designed for exploration and growth.",
-    "longDescription": "Experience Dark Odyssey's Summer Camp from Aug 26-Sep 1, 2025to Aug 26-Sep 1, 2025, in Northern Maryland. This week-long event blends kink and BDSM with spiritual exploration, offering workshops, massive play spaces, and special events. Enjoy a vibrant community atmosphere with diverse accommodations, meal plans, and a welcoming mix of kinksters, queers, and swingers. Create your own erotic vacation in a unique, inclusive environment where you can learn, play, and connect with like-minded individuals. Don't miss out on this transformative experience!",
+    "excerpt": "Join Dark Odyssey's Summer Camp from Sep 1-7, 20262025to Sep 1-7, 2026, in Northern Maryland. This seven-day transformative event blends kink and BDSM with spiritual exploration, offering workshops, massive play spaces, and special events in a unique, inclusive environment. Enjoy a vibrant community atmosphere with diverse accommodations, meal plans, and a welcoming mix of kinksters, queers, and swingers. Create your own erotic vacation where you can learn, play, and connect with like-minded individuals. Experience this week-long journey of self-discovery and community building in a safe, supportive space designed for exploration and growth.",
+    "longDescription": "Experience Dark Odyssey's Summer Camp from Sep 1-7, 20262025to Sep 1-7, 2026, in Northern Maryland. This week-long event blends kink and BDSM with spiritual exploration, offering workshops, massive play spaces, and special events. Enjoy a vibrant community atmosphere with diverse accommodations, meal plans, and a welcoming mix of kinksters, queers, and swingers. Create your own erotic vacation in a unique, inclusive environment where you can learn, play, and connect with like-minded individuals. Don't miss out on this transformative experience!",
     "website": "https://darkodyssey.com/summerfest/",
     "logo": "/images/darkodyssey.png",
     "features": [
@@ -928,9 +928,9 @@ export const events = [
     "name": "Dark Odyssey Fusion",
     "slug": "dark-odyssey-fusion",
     "date": {
-      "start": "2025-06-24",
-      "end": "2025-06-30",
-      "display": "Jun 24-30, 2025"
+      "start": "2026-06-23",
+      "end": "2026-06-29",
+      "display": "Jun 23-29, 2026"
     },
     "location": {
       "city": "Darlington",
@@ -1330,62 +1330,3 @@ export const events = [
     }
   }
 ];
-
-export const getEventBySlug = (slug) => {
-  return events.find(event => event.slug === slug);
-};
-
-export const getAllEvents = () => {
-  return events.sort((a, b) => new Date(a.date.start) - new Date(b.date.start));
-};
-
-export const getUpcomingEvents = () => {
-  const today = new Date();
-  return events
-    .filter(event => new Date(event.date.start) >= today)
-    .sort((a, b) => new Date(a.date.start) - new Date(b.date.start));
-};
-
-export const getPastEvents = () => {
-  const today = new Date();
-  return events
-    .filter(event => new Date(event.date.end) < today)
-    .sort((a, b) => new Date(b.date.start) - new Date(a.date.start));
-};
-
-export const getEventsByCategory = (category) => {
-  if (!category) return events;
-  return events.filter(event => event.category === category);
-};
-
-export const getEventsByLocation = (state) => {
-  if (!state) return events;
-  return events.filter(event => event.location.state === state);
-};
-
-export const generateEventSEO = (event) => {
-  if (!event) return {
-    title: '',
-    description: '',
-    keywords: '',
-    openGraph: {
-      images: []
-    }
-  };
-  
-  return {
-    title: event.seo?.title || `${event.name} - ${event.location.city}, ${event.location.state} BDSM Event | East Coast Kink Events`,
-    description: event.seo?.description || event.excerpt,
-    keywords: event.seo?.keywords || `${event.name.toLowerCase()}, ${event.location.city.toLowerCase()}, ${event.location.state.toLowerCase()}, BDSM event, kink community`,
-    openGraph: {
-      images: [
-        {
-          url: event.logo || '/og-image.png',
-          width: 1200,
-          height: 630,
-          alt: `${event.name} - ${event.location.city}, ${event.location.state}`
-        }
-      ]
-    }
-  };
-};
