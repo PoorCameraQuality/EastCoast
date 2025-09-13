@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import FooterRecentContent from './FooterRecentContent'
 
 export default function Footer() {
   return (
@@ -53,7 +54,7 @@ export default function Footer() {
           </div>
 
           {/* Quick Links */}
-          <div className="lg:col-span-2">
+          <div className="lg:col-span-1">
             <h3 className="text-lg font-serif font-semibold text-white mb-6 flex items-center">
               <span className="w-8 h-px bg-primary-500 mr-3"></span>
               Quick Links
@@ -77,6 +78,9 @@ export default function Footer() {
               ))}
             </ul>
           </div>
+
+          {/* Recent Content */}
+          <FooterRecentContent />
 
           {/* Resources */}
           <div className="lg:col-span-2">

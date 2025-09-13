@@ -5,6 +5,7 @@ import { useGoogleAnalytics } from '@/components/GoogleAnalytics'
 import { getAllEvents } from '@/data/events'
 import { getAllDungeons } from '@/data/dungeons'
 import { getAllArticles } from '@/data/education'
+import DynamicStats from '@/components/DynamicStats'
 
 export default function Hero() {
   const { trackEvent } = useGoogleAnalytics()
@@ -127,20 +128,9 @@ export default function Hero() {
             </Link>
           </div>
 
-          {/* Quick stats - Enhanced glassy design */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6 max-w-2xl mx-auto animate-fade-in-up" style={{ animationDelay: '0.6s' }}>
-            <div className="backdrop-blur-xl bg-white/10 rounded-2xl p-3 md:p-4 border border-white/20 hover:bg-white/15 transition-all duration-300 shadow-2xl hover:shadow-purple-500/20">
-              <div className="text-xl md:text-2xl font-bold text-white">{allEvents.length || 0}</div>
-              <div className="text-xs md:text-sm text-gray-300">Total Events</div>
-            </div>
-            <div className="backdrop-blur-xl bg-white/10 rounded-2xl p-3 md:p-4 border border-white/20 hover:bg-white/15 transition-all duration-300 shadow-2xl hover:shadow-blue-500/20">
-              <div className="text-xl md:text-2xl font-bold text-white">{allDungeons.length || 0}</div>
-              <div className="text-xs md:text-sm text-gray-300">Dungeons</div>
-            </div>
-            <div className="backdrop-blur-xl bg-white/10 rounded-2xl p-3 md:p-4 border border-white/20 hover:bg-white/15 transition-all duration-300 shadow-2xl hover:shadow-emerald-500/20">
-              <div className="text-xl md:text-2xl font-bold text-white">{allArticles.length || 0}</div>
-              <div className="text-xs md:text-sm text-gray-300">Articles</div>
-            </div>
+          {/* Dynamic Stats - Enhanced with recent content */}
+          <div className="animate-fade-in-up" style={{ animationDelay: '0.6s' }}>
+            <DynamicStats />
           </div>
 
           {/* Preview sections - Enhanced glassy design */}

@@ -1,8 +1,12 @@
+'use client'
+
 import Link from 'next/link'
 import { getAllEvents, getEventsByLocation, getEventsByCategory } from '@/data/events'
 import { getAllDungeons, getDungeonsByLocation } from '@/data/dungeons'
 import EventLogo from './EventLogo'
 import DungeonLogo from './DungeonLogo'
+import { useState, useEffect, useCallback } from 'react'
+import { supabase } from '@/lib/supabase'
 
 interface RelatedContentProps {
   currentEvent?: any
@@ -11,60 +15,127 @@ interface RelatedContentProps {
 }
 
 export default function RelatedContent({ currentEvent, currentDungeon, maxItems = 3 }: RelatedContentProps) {
-  let relatedEvents: any[] = []
-  let relatedDungeons: any[] = []
+  const [relatedEvents, setRelatedEvents] = useState<any[]>([])
+  const [relatedDungeons, setRelatedDungeons] = useState<any[]>([])
+  const [relatedArticles, setRelatedArticles] = useState<any[]>([])
+  const [loading, setLoading] = useState(true)
 
-  try {
-    if (currentEvent && currentEvent.location?.state && currentEvent.category) {
-      // Find events in the same location
-      const locationEvents = getEventsByLocation(currentEvent.location.state) || []
-      const filteredLocationEvents = locationEvents
-        .filter(event => event.slug !== currentEvent.slug)
-        .slice(0, maxItems)
-      
-      // Find events in the same category
-      const categoryEvents = getEventsByCategory(currentEvent.category) || []
-      const filteredCategoryEvents = categoryEvents
-        .filter(event => event.slug !== currentEvent.slug)
-        .slice(0, maxItems)
-      
-      // Combine and remove duplicates
-      const allRelated = [...filteredLocationEvents, ...filteredCategoryEvents]
-      relatedEvents = allRelated
-        .filter((event, index, self) => 
-          index === self.findIndex(e => e.slug === event.slug)
-        )
-        .slice(0, maxItems)
-    }
+  const loadRelatedContent = useCallback(async () => {
+    try {
+      setLoading(true)
+      let events: any[] = []
+      let dungeons: any[] = []
+      let articles: any[] = []
 
-    if (currentDungeon && currentDungeon.location?.state && currentDungeon.category) {
-      // Find dungeons in the same location
-      const locationDungeons = getDungeonsByLocation(currentDungeon.location.state) || []
-      const filteredLocationDungeons = locationDungeons
-        .filter(dungeon => dungeon.slug !== currentDungeon.slug)
-        .slice(0, maxItems)
-      
-      // Find dungeons in the same category
-      const categoryDungeons = getAllDungeons() || []
-      const filteredCategoryDungeons = categoryDungeons
-        .filter(dungeon => dungeon.category === currentDungeon.category && dungeon.slug !== currentDungeon.slug)
-        .slice(0, maxItems)
-      
-      // Combine and remove duplicates
-      const allRelated = [...filteredLocationDungeons, ...filteredCategoryDungeons]
-      relatedDungeons = allRelated
-        .filter((dungeon, index, self) => 
-          index === self.findIndex(d => d.slug === dungeon.slug)
-        )
-        .slice(0, maxItems)
+      // Load related content based on current page type
+      if (currentEvent && currentEvent.location?.state && currentEvent.category) {
+        // Find events in the same location
+        const locationEvents = getEventsByLocation(currentEvent.location.state) || []
+        const filteredLocationEvents = locationEvents
+          .filter(event => event.slug !== currentEvent.slug)
+          .slice(0, maxItems)
+        
+        // Find events in the same category
+        const categoryEvents = getEventsByCategory(currentEvent.category) || []
+        const filteredCategoryEvents = categoryEvents
+          .filter(event => event.slug !== currentEvent.slug)
+          .slice(0, maxItems)
+        
+        // Combine and remove duplicates
+        const allRelated = [...filteredLocationEvents, ...filteredCategoryEvents]
+        events = allRelated
+          .filter((event, index, self) => 
+            index === self.findIndex(e => e.slug === event.slug)
+          )
+          .slice(0, maxItems)
+
+        // Find dungeons in the same location
+        const locationDungeons = getDungeonsByLocation(currentEvent.location.state) || []
+        dungeons = locationDungeons.slice(0, 2) // Show fewer dungeons for events
+      }
+
+      if (currentDungeon && currentDungeon.location?.state && currentDungeon.category) {
+        // Find dungeons in the same location
+        const locationDungeons = getDungeonsByLocation(currentDungeon.location.state) || []
+        const filteredLocationDungeons = locationDungeons
+          .filter(dungeon => dungeon.slug !== currentDungeon.slug)
+          .slice(0, maxItems)
+        
+        // Find dungeons in the same category
+        const categoryDungeons = getAllDungeons() || []
+        const filteredCategoryDungeons = categoryDungeons
+          .filter(dungeon => dungeon.category === currentDungeon.category && dungeon.slug !== currentDungeon.slug)
+          .slice(0, maxItems)
+        
+        // Combine and remove duplicates
+        const allRelated = [...filteredLocationDungeons, ...filteredCategoryDungeons]
+        dungeons = allRelated
+          .filter((dungeon, index, self) => 
+            index === self.findIndex(d => d.slug === dungeon.slug)
+          )
+          .slice(0, maxItems)
+
+        // Find events in the same location
+        const locationEvents = getEventsByLocation(currentDungeon.location.state) || []
+        events = locationEvents.slice(0, 2) // Show fewer events for dungeons
+      }
+
+      // Load related education articles
+      if (supabase) {
+        try {
+          const searchTerms = []
+          if (currentEvent) {
+            searchTerms.push(currentEvent.category, currentEvent.location.state)
+          }
+          if (currentDungeon) {
+            searchTerms.push(currentDungeon.category, currentDungeon.location.state)
+          }
+
+          // Get articles that might be related to the content
+          const { data: articlesData, error } = await supabase
+            .from('articles')
+            .select('id, title, slug, category, created_at')
+            .eq('status', 'published')
+            .order('featured', { ascending: false })
+            .order('created_at', { ascending: false })
+            .limit(maxItems)
+
+          if (!error && articlesData) {
+            articles = articlesData
+          }
+        } catch (error) {
+          console.error('Error fetching related articles:', error)
+        }
+      }
+
+      setRelatedEvents(events)
+      setRelatedDungeons(dungeons)
+      setRelatedArticles(articles)
+    } catch (error) {
+      console.error('Error loading related content:', error)
+    } finally {
+      setLoading(false)
     }
-  } catch (error) {
-    console.error('Error loading related content:', error)
-    // Return null if there's an error to prevent crashes
-    return null
+  }, [currentEvent, currentDungeon, maxItems])
+
+  useEffect(() => {
+    loadRelatedContent()
+  }, [loadRelatedContent])
+
+  if (loading) {
+    return (
+      <div className="mt-12 p-6 bg-dark-900/50 border border-dark-700 rounded-2xl animate-pulse">
+        <div className="h-6 bg-dark-700 rounded w-1/3 mb-4"></div>
+        <div className="space-y-3">
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="h-16 bg-dark-700 rounded"></div>
+          ))}
+        </div>
+      </div>
+    )
   }
 
-  if (relatedEvents.length === 0 && relatedDungeons.length === 0) {
+  if (relatedEvents.length === 0 && relatedDungeons.length === 0 && relatedArticles.length === 0) {
     return null
   }
 
@@ -150,6 +221,49 @@ export default function RelatedContent({ currentEvent, currentDungeon, maxItems 
                 </div>
               </Link>
             ))}
+          </div>
+        </div>
+      )}
+
+      {/* Related Education Articles */}
+      {relatedArticles.length > 0 && (
+        <div className="mt-8">
+          <h3 className="text-lg font-semibold text-primary-300 mb-4 flex items-center">
+            <span className="mr-2">📚</span>
+            Educational Resources
+          </h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {relatedArticles.map((article) => (
+              <Link 
+                key={article.id} 
+                href={`/education/${article.slug}`}
+                prefetch={true}
+                aria-label={`Read ${article.title} article`}
+                className="block p-4 bg-dark-800 border border-dark-600 rounded-lg hover:border-primary-500/50 transition-all duration-300 hover:scale-105"
+              >
+                <div className="flex-1 min-w-0">
+                  <h4 className="text-white font-medium text-sm line-clamp-2 mb-2">
+                    {article.title}
+                  </h4>
+                  <div className="flex items-center justify-between">
+                    <span className="px-2 py-1 bg-primary-500/20 text-primary-300 text-xs rounded border border-primary-500/30">
+                      {article.category}
+                    </span>
+                    <span className="text-gray-400 text-xs">
+                      {new Date(article.created_at).toLocaleDateString('en-US', {
+                        month: 'short',
+                        day: 'numeric'
+                      })}
+                    </span>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+          <div className="mt-4 text-center">
+            <Link href="/education" className="text-primary-400 hover:text-primary-300 text-sm font-medium transition-colors">
+              View all educational resources →
+            </Link>
           </div>
         </div>
       )}
