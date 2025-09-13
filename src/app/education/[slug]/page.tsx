@@ -258,7 +258,7 @@ export default async function ArticlePage({ params }: { params: { slug: string }
                   </header>
 
                   {/* Article Content */}
-                  <div className="prose prose-neutral dark:prose-invert prose-headings:scroll-mt-20 prose-li:marker:text-muted-foreground prose-img:rounded-xl prose-pre:rounded-xl leading-relaxed max-w-none">
+                  <div className="prose prose-neutral dark:prose-invert prose-headings:scroll-mt-20 prose-li:marker:text-muted-foreground prose-img:rounded-xl prose-pre:rounded-xl prose-strong:text-white prose-strong:font-semibold prose-a:text-primary-400 prose-a:no-underline hover:prose-a:underline prose-p:text-gray-300 prose-li:text-gray-300 prose-ul:text-gray-300 prose-ol:text-gray-300 leading-relaxed max-w-none">
                     <div 
                       dangerouslySetInnerHTML={{ __html: contentHtml }} 
                     />
