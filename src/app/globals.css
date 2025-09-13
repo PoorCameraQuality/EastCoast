@@ -16,10 +16,17 @@
     @apply font-serif;
   }
   
-  /* Accessible focus outline for all interactive elements */
-  a:focus, button:focus, input:focus, select:focus, textarea:focus {
-    outline: 3px solid #fbbf24; /* amber-400 for visibility */
+  /* Accessible focus outline for keyboard navigation only */
+  a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+    outline: 2px solid #fbbf24; /* amber-400 for visibility */
     outline-offset: 2px;
+    transition: outline 0.15s ease-out;
+  }
+  
+  /* Remove focus outline on mouse clicks */
+  a:focus:not(:focus-visible), button:focus:not(:focus-visible), input:focus:not(:focus-visible), 
+  select:focus:not(:focus-visible), textarea:focus:not(:focus-visible) {
+    outline: none;
   }
   
   /* Improve default link contrast */
