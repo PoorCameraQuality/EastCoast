@@ -11,12 +11,8 @@ export default function AdminNavigation() {
       label: 'Review Submissions',
       href: '/admin/review-submissions',
       description: 'Review and approve/reject article submissions'
-    },
-    {
-      label: 'Manage Articles',
-      href: '/admin/manage-articles',
-      description: 'Edit and delete published articles'
     }
+    // Note: Manage Articles page removed - functionality can be added later if needed
   ]
 
   return (

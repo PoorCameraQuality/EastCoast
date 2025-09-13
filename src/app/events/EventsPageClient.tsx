@@ -4,7 +4,8 @@ import { getAllEvents, getEventsByCategory } from '@/data/events'
 import { getAllDungeons } from '@/data/dungeons'
 import Link from 'next/link'
 import EventLogo from '@/components/EventLogo'
-import { useState } from 'react'
+import { useState, useEffect, useMemo } from 'react'
+import { useSearchParams } from 'next/navigation'
 import { EventListStructuredData } from '@/components/StructuredData'
 import Breadcrumb from '@/components/Breadcrumb'
 import Search from '@/components/Search'
@@ -13,10 +14,29 @@ import EventSubmissionForm from '@/components/events/EventSubmissionForm'
 export default function EventsPageClient() {
   const allEvents = getAllEvents()
   const allDungeons = getAllDungeons()
-  const categories = ['Outdoor Events', 'Indoor Events']
+  const categories = useMemo(() => ['Outdoor Events', 'Indoor Events'], [])
   const [selectedCategory, setSelectedCategory] = useState('All Events')
   const [showSubmitForm, setShowSubmitForm] = useState(false)
   const [formSubmitted, setFormSubmitted] = useState(false)
+  const searchParams = useSearchParams()
+
+  // Handle URL parameters for filtering
+  useEffect(() => {
+    const categoryParam = searchParams.get('category')
+    const locationParam = searchParams.get('location')
+    
+    if (categoryParam) {
+      // Map URL category to display category
+      const decodedCategory = decodeURIComponent(categoryParam)
+      if (categories.includes(decodedCategory)) {
+        setSelectedCategory(decodedCategory)
+      }
+    } else if (locationParam) {
+      // For location filtering, we'll use "All Events" but show filtered results
+      const decodedLocation = decodeURIComponent(locationParam)
+      setSelectedCategory(`Location: ${decodedLocation}`)
+    }
+  }, [searchParams, categories])
 
   // Map plural button labels to singular category values
   const getCategoryForFilter = (filterLabel: string) => {
@@ -48,10 +68,32 @@ export default function EventsPageClient() {
     return { upcomingEvents, pastEvents }
   }
 
-  const baseEvents = selectedCategory === 'All Events'
-    ? allEvents
-    : getEventsByCategory(getCategoryForFilter(selectedCategory))
+  // Filter events based on selected category or location
+  const getFilteredEvents = () => {
+    const locationParam = searchParams.get('location')
+    
+    if (locationParam) {
+      // Filter by location
+      const decodedLocation = decodeURIComponent(locationParam)
+      return allEvents.filter(event => 
+        event.location.state.toLowerCase().includes(decodedLocation.toLowerCase()) ||
+        event.location.city.toLowerCase().includes(decodedLocation.toLowerCase())
+      )
+    } else if (selectedCategory === 'All Events') {
+      return allEvents
+    } else if (selectedCategory.startsWith('Location: ')) {
+      // Handle location category display
+      const location = selectedCategory.replace('Location: ', '')
+      return allEvents.filter(event => 
+        event.location.state.toLowerCase().includes(location.toLowerCase()) ||
+        event.location.city.toLowerCase().includes(location.toLowerCase())
+      )
+    } else {
+      return getEventsByCategory(getCategoryForFilter(selectedCategory))
+    }
+  }
 
+  const baseEvents = getFilteredEvents()
   const { upcomingEvents, pastEvents } = separateEventsByDate(baseEvents)
 
   const breadcrumbItems = [
