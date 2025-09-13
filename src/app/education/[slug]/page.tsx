@@ -382,6 +382,115 @@ export default async function ArticlePage({ params }: { params: { slug: string }
                     </Link>
                   </>
                 )}
+                {/* Featured Articles Cross-Linking */}
+                {article.slug === 'kink-myths-debunked-beginners' && (
+                  <>
+                    <Link href="/education/understanding-drop-kink-sub-top-event" className="block p-4 bg-dark-800 rounded-lg hover:bg-dark-700 transition-colors">
+                      <h4 className="text-lg font-medium text-white mb-2">Understanding Drop</h4>
+                      <p className="text-sm text-gray-400">Learn about emotional aftermath after scenes</p>
+                    </Link>
+                    <Link href="/education/find-kink-aware-therapist" className="block p-4 bg-dark-800 rounded-lg hover:bg-dark-700 transition-colors">
+                      <h4 className="text-lg font-medium text-white mb-2">Finding Support</h4>
+                      <p className="text-sm text-gray-400">How to find kink-aware mental health professionals</p>
+                    </Link>
+                  </>
+                )}
+                {article.slug === 'understanding-drop-kink-sub-top-event' && (
+                  <>
+                    <Link href="/education/find-kink-aware-therapist" className="block p-4 bg-dark-800 rounded-lg hover:bg-dark-700 transition-colors">
+                      <h4 className="text-lg font-medium text-white mb-2">Mental Health Support</h4>
+                      <p className="text-sm text-gray-400">Find kink-aware therapists for drop support</p>
+                    </Link>
+                    <Link href="/education/kink-orientation-vs-leisure-identity" className="block p-4 bg-dark-800 rounded-lg hover:bg-dark-700 transition-colors">
+                      <h4 className="text-lg font-medium text-white mb-2">Identity & Kink</h4>
+                      <p className="text-sm text-gray-400">Understanding your relationship to kink</p>
+                    </Link>
+                  </>
+                )}
+                {article.slug === 'find-kink-aware-therapist' && (
+                  <>
+                    <Link href="/education/what-is-kap-directory-guide" className="block p-4 bg-dark-800 rounded-lg hover:bg-dark-700 transition-colors">
+                      <h4 className="text-lg font-medium text-white mb-2">KAP Directory</h4>
+                      <p className="text-sm text-gray-400">How to use the Kink Aware Professionals directory</p>
+                    </Link>
+                    <Link href="/education/partner-abuse-in-kink-communities" className="block p-4 bg-dark-800 rounded-lg hover:bg-dark-700 transition-colors">
+                      <h4 className="text-lg font-medium text-white mb-2">Safety & Abuse</h4>
+                      <p className="text-sm text-gray-400">Recognizing the difference between kink and abuse</p>
+                    </Link>
+                  </>
+                )}
+                {article.slug === 'partner-abuse-in-kink-communities' && (
+                  <>
+                    <Link href="/education/find-kink-aware-therapist" className="block p-4 bg-dark-800 rounded-lg hover:bg-dark-700 transition-colors">
+                      <h4 className="text-lg font-medium text-white mb-2">Get Support</h4>
+                      <p className="text-sm text-gray-400">Find kink-aware mental health professionals</p>
+                    </Link>
+                    <Link href="/education/kink-myths-debunked-beginners" className="block p-4 bg-dark-800 rounded-lg hover:bg-dark-700 transition-colors">
+                      <h4 className="text-lg font-medium text-white mb-2">Myths Debunked</h4>
+                      <p className="text-sm text-gray-400">Common misconceptions about kink and consent</p>
+                    </Link>
+                  </>
+                )}
+                {article.slug === 'a-to-z-kinks-and-fetishes-guide' && (
+                  <>
+                    <Link href="/education/nipple-play-beginners-guide" className="block p-4 bg-dark-800 rounded-lg hover:bg-dark-700 transition-colors">
+                      <h4 className="text-lg font-medium text-white mb-2">Sensation Play</h4>
+                      <p className="text-sm text-gray-400">Deep dive into nipple play techniques</p>
+                    </Link>
+                    <Link href="/education/age-play-101-adult-consensual-safe" className="block p-4 bg-dark-800 rounded-lg hover:bg-dark-700 transition-colors">
+                      <h4 className="text-lg font-medium text-white mb-2">Age Play Guide</h4>
+                      <p className="text-sm text-gray-400">Understanding caregiver/little dynamics</p>
+                    </Link>
+                  </>
+                )}
+                {article.slug === 'top-research-books-bdsm-kink-academic' && (
+                  <>
+                    <Link href="/education/sex-positive-kink-inclusive-websites-resources" className="block p-4 bg-dark-800 rounded-lg hover:bg-dark-700 transition-colors">
+                      <h4 className="text-lg font-medium text-white mb-2">Resource Websites</h4>
+                      <p className="text-sm text-gray-400">Curated list of sex-positive websites</p>
+                    </Link>
+                    <Link href="/education/kink-orientation-vs-leisure-identity" className="block p-4 bg-dark-800 rounded-lg hover:bg-dark-700 transition-colors">
+                      <h4 className="text-lg font-medium text-white mb-2">Identity Research</h4>
+                      <p className="text-sm text-gray-400">Understanding kink as orientation vs leisure</p>
+                    </Link>
+                  </>
+                )}
+                {article.slug === 'sex-positive-kink-inclusive-websites-resources' && (
+                  <>
+                    <Link href="/education/what-is-kap-directory-guide" className="block p-4 bg-dark-800 rounded-lg hover:bg-dark-700 transition-colors">
+                      <h4 className="text-lg font-medium text-white mb-2">Professional Directory</h4>
+                      <p className="text-sm text-gray-400">Find kink-aware professionals near you</p>
+                    </Link>
+                    <Link href="/education/top-research-books-bdsm-kink-academic" className="block p-4 bg-dark-800 rounded-lg hover:bg-dark-700 transition-colors">
+                      <h4 className="text-lg font-medium text-white mb-2">Academic Research</h4>
+                      <p className="text-sm text-gray-400">Evidence-based studies on kink and mental health</p>
+                    </Link>
+                  </>
+                )}
+                {article.slug === 'what-is-kap-directory-guide' && (
+                  <>
+                    <Link href="/education/find-kink-aware-therapist" className="block p-4 bg-dark-800 rounded-lg hover:bg-dark-700 transition-colors">
+                      <h4 className="text-lg font-medium text-white mb-2">Therapist Screening</h4>
+                      <p className="text-sm text-gray-400">How to interview potential therapists</p>
+                    </Link>
+                    <Link href="/education/partner-abuse-in-kink-communities" className="block p-4 bg-dark-800 rounded-lg hover:bg-dark-700 transition-colors">
+                      <h4 className="text-lg font-medium text-white mb-2">Safety First</h4>
+                      <p className="text-sm text-gray-400">Recognizing abuse vs healthy kink</p>
+                    </Link>
+                  </>
+                )}
+                {article.slug === 'kink-orientation-vs-leisure-identity' && (
+                  <>
+                    <Link href="/education/understanding-drop-kink-sub-top-event" className="block p-4 bg-dark-800 rounded-lg hover:bg-dark-700 transition-colors">
+                      <h4 className="text-lg font-medium text-white mb-2">Understanding Drop</h4>
+                      <p className="text-sm text-gray-400">How identity affects emotional processing</p>
+                    </Link>
+                    <Link href="/education/top-research-books-bdsm-kink-academic" className="block p-4 bg-dark-800 rounded-lg hover:bg-dark-700 transition-colors">
+                      <h4 className="text-lg font-medium text-white mb-2">Research Insights</h4>
+                      <p className="text-sm text-gray-400">Academic studies on kink identity</p>
+                    </Link>
+                  </>
+                )}
               </div>
             </div>
           </div>
