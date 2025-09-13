@@ -5,7 +5,6 @@ import Link from 'next/link'
 import { getAllEvents } from '@/data/events'
 import { getAllDungeons } from '@/data/dungeons'
 import { supabase } from '@/lib/supabase'
-import PersonalizedRecommendations from './PersonalizedRecommendations'
 
 interface StatsData {
   totalEvents: number
@@ -254,10 +253,6 @@ export default function DynamicStats() {
         </div>
       )}
 
-      {/* Personalized Recommendations */}
-      <div className="mt-8">
-        <PersonalizedRecommendations maxRecommendations={3} />
-      </div>
     </div>
   )
 }

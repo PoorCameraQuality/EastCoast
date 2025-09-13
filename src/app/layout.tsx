@@ -6,6 +6,7 @@ import Footer from '@/components/Footer'
 import AgeVerification from '@/components/AgeVerification'
 import BackToTop from '@/components/BackToTop'
 import { AuthProvider } from "@/contexts/AuthProvider";
+import { GA4Provider } from "@/contexts/GA4Provider";
 import { WebsiteStructuredData, OrganizationStructuredData } from '@/components/StructuredData'
 import GoogleAnalytics from '@/components/GoogleAnalytics'
 import VercelFeedbackBlocker from '@/components/VercelFeedbackBlocker'
@@ -119,13 +120,15 @@ export default function RootLayout({
         <VercelFeedbackBlocker />
         {/* AuthProvider at root so it never unmounts */}
         <AuthProvider>
-          <AgeVerification />
-          <Header />
-          <main id="main-content" role="main" tabIndex={-1}>
-            {children}
-          </main>
-          <Footer />
-          <BackToTop />
+          <GA4Provider>
+            <AgeVerification />
+            <Header />
+            <main id="main-content" role="main" tabIndex={-1}>
+              {children}
+            </main>
+            <Footer />
+            <BackToTop />
+          </GA4Provider>
         </AuthProvider>
       </body>
     </html>
