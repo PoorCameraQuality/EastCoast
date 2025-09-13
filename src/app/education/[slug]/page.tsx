@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import Breadcrumb from '@/components/Breadcrumb'
 import Script from 'next/script'
+import { markdownToHtml, stripFirstH1 } from '@/lib/markdown'
 
 interface ArticlePageProps {
   params: { slug: string }
@@ -111,6 +112,10 @@ export default async function ArticlePage({ params }: { params: { slug: string }
 
     const articleTags = formatTags(article.tags)
 
+    // Process Markdown content
+    const processedContent = stripFirstH1(article.content)
+    const contentHtml = await markdownToHtml(processedContent)
+
     // Get category color
     const getCategoryColor = (category: string) => {
       switch (category) {
@@ -193,7 +198,7 @@ export default async function ArticlePage({ params }: { params: { slug: string }
                   </div>
                   
                   {/* Article Meta */}
-                  <div className="space-y-4 text-subtle border-t border-dark-600 pt-6">
+                  <div className="mt-8 border-t border-dark-600 pt-6 space-y-4 text-sm text-muted-foreground">
                     <div>
                       <span className="font-medium text-white">Category:</span>
                       <p>{article.category}</p>
@@ -218,7 +223,7 @@ export default async function ArticlePage({ params }: { params: { slug: string }
               
               {/* Article Content */}
               <div className="lg:col-span-2">
-                <div className="card-elegant">
+                <div className="card-elegant px-4 sm:px-6 lg:px-8">
                   {/* Article Header */}
                   <header className="mb-8">
                     <div className="flex items-center gap-3 mb-4">
@@ -253,10 +258,9 @@ export default async function ArticlePage({ params }: { params: { slug: string }
                   </header>
 
                   {/* Article Content */}
-                  <div className="prose prose-invert max-w-none">
+                  <div className="prose prose-neutral dark:prose-invert prose-headings:scroll-mt-20 prose-li:marker:text-muted-foreground prose-img:rounded-xl prose-pre:rounded-xl leading-relaxed max-w-none">
                     <div 
-                      className="text-subtle leading-relaxed text-lg"
-                      dangerouslySetInnerHTML={{ __html: article.content }} 
+                      dangerouslySetInnerHTML={{ __html: contentHtml }} 
                     />
                   </div>
                 </div>
