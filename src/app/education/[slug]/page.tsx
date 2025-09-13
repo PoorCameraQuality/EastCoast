@@ -5,6 +5,7 @@ import Link from 'next/link'
 import Breadcrumb from '@/components/Breadcrumb'
 import Script from 'next/script'
 import { markdownToHtml, stripFirstH1 } from '@/lib/markdown'
+import ContinueYourJourney from '@/components/education/ContinueYourJourney'
 
 interface ArticlePageProps {
   params: { slug: string }
@@ -292,208 +293,15 @@ export default async function ArticlePage({ params }: { params: { slug: string }
             </div>
           </div>
           
-          {/* Article Series Navigation */}
-          <div className="mt-12 border-t border-dark-600 pt-6">
-            <div className="card-elegant">
-              <h3 className="text-xl font-serif font-semibold text-white mb-4">Continue Your Journey</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {article.slug === 'nipple-play-beginners-guide' && (
-                  <>
-                    <Link href="/education/nipple-clamps-intermediate-techniques" className="block p-4 bg-dark-800 rounded-lg hover:bg-dark-700 transition-colors">
-                      <h4 className="text-lg font-medium text-white mb-2">Next: Nipple Clamps 201</h4>
-                      <p className="text-sm text-gray-400">Intermediate tools and safety techniques</p>
-                    </Link>
-                    <Link href="/education/advanced-breast-play-edgeplay" className="block p-4 bg-dark-800 rounded-lg hover:bg-dark-700 transition-colors">
-                      <h4 className="text-lg font-medium text-white mb-2">Level 3: Edgeplay & Intensity</h4>
-                      <p className="text-sm text-gray-400">Advanced techniques and risk management</p>
-                    </Link>
-                  </>
-                )}
-                {article.slug === 'nipple-clamps-intermediate-techniques' && (
-                  <>
-                    <Link href="/education/nipple-play-beginners-guide" className="block p-4 bg-dark-800 rounded-lg hover:bg-dark-700 transition-colors">
-                      <h4 className="text-lg font-medium text-white mb-2">Previous: Nipple Play 101</h4>
-                      <p className="text-sm text-gray-400">Back to the basics and foundations</p>
-                    </Link>
-                    <Link href="/education/advanced-breast-play-edgeplay" className="block p-4 bg-dark-800 rounded-lg hover:bg-dark-700 transition-colors">
-                      <h4 className="text-lg font-medium text-white mb-2">Next: Advanced Edgeplay</h4>
-                      <p className="text-sm text-gray-400">Take it to the next level</p>
-                    </Link>
-                  </>
-                )}
-                {article.slug === 'advanced-breast-play-edgeplay' && (
-                  <>
-                    <Link href="/education/nipple-clamps-intermediate-techniques" className="block p-4 bg-dark-800 rounded-lg hover:bg-dark-700 transition-colors">
-                      <h4 className="text-lg font-medium text-white mb-2">Previous: Intermediate Techniques</h4>
-                      <p className="text-sm text-gray-400">Review intermediate skills</p>
-                    </Link>
-                    <Link href="/education/breast-play-scene-design-mastery" className="block p-4 bg-dark-800 rounded-lg hover:bg-dark-700 transition-colors">
-                      <h4 className="text-lg font-medium text-white mb-2">Final: Scene Design & Mastery</h4>
-                      <p className="text-sm text-gray-400">Master the art of scene creation</p>
-                    </Link>
-                  </>
-                )}
-                {article.slug === 'breast-play-scene-design-mastery' && (
-                  <>
-                    <Link href="/education/advanced-breast-play-edgeplay" className="block p-4 bg-dark-800 rounded-lg hover:bg-dark-700 transition-colors">
-                      <h4 className="text-lg font-medium text-white mb-2">Previous: Advanced Edgeplay</h4>
-                      <p className="text-sm text-gray-400">Review advanced techniques</p>
-                    </Link>
-                    <Link href="/education" className="block p-4 bg-dark-800 rounded-lg hover:bg-dark-700 transition-colors">
-                      <h4 className="text-lg font-medium text-white mb-2">Explore All Articles</h4>
-                      <p className="text-sm text-gray-400">Discover more educational content</p>
-                    </Link>
-                  </>
-                )}
-                {/* Age Play Series Navigation */}
-                {article.slug === 'age-play-101-adult-consensual-safe' && (
-                  <>
-                    <Link href="/education/age-play-201-rules-routines-power-exchange" className="block p-4 bg-dark-800 rounded-lg hover:bg-dark-700 transition-colors">
-                      <h4 className="text-lg font-medium text-white mb-2">Next: Age Play 201</h4>
-                      <p className="text-sm text-gray-400">Rules, routines, and power exchange</p>
-                    </Link>
-                    <Link href="/education/age-play-301-taboo-edgeplay-psychological-depth" className="block p-4 bg-dark-800 rounded-lg hover:bg-dark-700 transition-colors">
-                      <h4 className="text-lg font-medium text-white mb-2">Level 3: Taboo & Edgeplay</h4>
-                      <p className="text-sm text-gray-400">Advanced techniques and psychological safety</p>
-                    </Link>
-                  </>
-                )}
-                {article.slug === 'age-play-201-rules-routines-power-exchange' && (
-                  <>
-                    <Link href="/education/age-play-101-adult-consensual-safe" className="block p-4 bg-dark-800 rounded-lg hover:bg-dark-700 transition-colors">
-                      <h4 className="text-lg font-medium text-white mb-2">Previous: Age Play 101</h4>
-                      <p className="text-sm text-gray-400">Back to the basics and foundations</p>
-                    </Link>
-                    <Link href="/education/age-play-301-taboo-edgeplay-psychological-depth" className="block p-4 bg-dark-800 rounded-lg hover:bg-dark-700 transition-colors">
-                      <h4 className="text-lg font-medium text-white mb-2">Next: Taboo & Edgeplay</h4>
-                      <p className="text-sm text-gray-400">Take it to the next level</p>
-                    </Link>
-                  </>
-                )}
-                {article.slug === 'age-play-301-taboo-edgeplay-psychological-depth' && (
-                  <>
-                    <Link href="/education/age-play-201-rules-routines-power-exchange" className="block p-4 bg-dark-800 rounded-lg hover:bg-dark-700 transition-colors">
-                      <h4 className="text-lg font-medium text-white mb-2">Previous: Age Play 201</h4>
-                      <p className="text-sm text-gray-400">Review rules and routines</p>
-                    </Link>
-                    <Link href="/education" className="block p-4 bg-dark-800 rounded-lg hover:bg-dark-700 transition-colors">
-                      <h4 className="text-lg font-medium text-white mb-2">Explore All Articles</h4>
-                      <p className="text-sm text-gray-400">Discover more educational content</p>
-                    </Link>
-                  </>
-                )}
-                {/* Featured Articles Cross-Linking */}
-                {article.slug === 'kink-myths-debunked-beginners' && (
-                  <>
-                    <Link href="/education/understanding-drop-kink-sub-top-event" className="block p-4 bg-dark-800 rounded-lg hover:bg-dark-700 transition-colors">
-                      <h4 className="text-lg font-medium text-white mb-2">Understanding Drop</h4>
-                      <p className="text-sm text-gray-400">Learn about emotional aftermath after scenes</p>
-                    </Link>
-                    <Link href="/education/find-kink-aware-therapist" className="block p-4 bg-dark-800 rounded-lg hover:bg-dark-700 transition-colors">
-                      <h4 className="text-lg font-medium text-white mb-2">Finding Support</h4>
-                      <p className="text-sm text-gray-400">How to find kink-aware mental health professionals</p>
-                    </Link>
-                  </>
-                )}
-                {article.slug === 'understanding-drop-kink-sub-top-event' && (
-                  <>
-                    <Link href="/education/find-kink-aware-therapist" className="block p-4 bg-dark-800 rounded-lg hover:bg-dark-700 transition-colors">
-                      <h4 className="text-lg font-medium text-white mb-2">Mental Health Support</h4>
-                      <p className="text-sm text-gray-400">Find kink-aware therapists for drop support</p>
-                    </Link>
-                    <Link href="/education/kink-orientation-vs-leisure-identity" className="block p-4 bg-dark-800 rounded-lg hover:bg-dark-700 transition-colors">
-                      <h4 className="text-lg font-medium text-white mb-2">Identity & Kink</h4>
-                      <p className="text-sm text-gray-400">Understanding your relationship to kink</p>
-                    </Link>
-                  </>
-                )}
-                {article.slug === 'find-kink-aware-therapist' && (
-                  <>
-                    <Link href="/education/what-is-kap-directory-guide" className="block p-4 bg-dark-800 rounded-lg hover:bg-dark-700 transition-colors">
-                      <h4 className="text-lg font-medium text-white mb-2">KAP Directory</h4>
-                      <p className="text-sm text-gray-400">How to use the Kink Aware Professionals directory</p>
-                    </Link>
-                    <Link href="/education/partner-abuse-in-kink-communities" className="block p-4 bg-dark-800 rounded-lg hover:bg-dark-700 transition-colors">
-                      <h4 className="text-lg font-medium text-white mb-2">Safety & Abuse</h4>
-                      <p className="text-sm text-gray-400">Recognizing the difference between kink and abuse</p>
-                    </Link>
-                  </>
-                )}
-                {article.slug === 'partner-abuse-in-kink-communities' && (
-                  <>
-                    <Link href="/education/find-kink-aware-therapist" className="block p-4 bg-dark-800 rounded-lg hover:bg-dark-700 transition-colors">
-                      <h4 className="text-lg font-medium text-white mb-2">Get Support</h4>
-                      <p className="text-sm text-gray-400">Find kink-aware mental health professionals</p>
-                    </Link>
-                    <Link href="/education/kink-myths-debunked-beginners" className="block p-4 bg-dark-800 rounded-lg hover:bg-dark-700 transition-colors">
-                      <h4 className="text-lg font-medium text-white mb-2">Myths Debunked</h4>
-                      <p className="text-sm text-gray-400">Common misconceptions about kink and consent</p>
-                    </Link>
-                  </>
-                )}
-                {article.slug === 'a-to-z-kinks-and-fetishes-guide' && (
-                  <>
-                    <Link href="/education/nipple-play-beginners-guide" className="block p-4 bg-dark-800 rounded-lg hover:bg-dark-700 transition-colors">
-                      <h4 className="text-lg font-medium text-white mb-2">Sensation Play</h4>
-                      <p className="text-sm text-gray-400">Deep dive into nipple play techniques</p>
-                    </Link>
-                    <Link href="/education/age-play-101-adult-consensual-safe" className="block p-4 bg-dark-800 rounded-lg hover:bg-dark-700 transition-colors">
-                      <h4 className="text-lg font-medium text-white mb-2">Age Play Guide</h4>
-                      <p className="text-sm text-gray-400">Understanding caregiver/little dynamics</p>
-                    </Link>
-                  </>
-                )}
-                {article.slug === 'top-research-books-bdsm-kink-academic' && (
-                  <>
-                    <Link href="/education/sex-positive-kink-inclusive-websites-resources" className="block p-4 bg-dark-800 rounded-lg hover:bg-dark-700 transition-colors">
-                      <h4 className="text-lg font-medium text-white mb-2">Resource Websites</h4>
-                      <p className="text-sm text-gray-400">Curated list of sex-positive websites</p>
-                    </Link>
-                    <Link href="/education/kink-orientation-vs-leisure-identity" className="block p-4 bg-dark-800 rounded-lg hover:bg-dark-700 transition-colors">
-                      <h4 className="text-lg font-medium text-white mb-2">Identity Research</h4>
-                      <p className="text-sm text-gray-400">Understanding kink as orientation vs leisure</p>
-                    </Link>
-                  </>
-                )}
-                {article.slug === 'sex-positive-kink-inclusive-websites-resources' && (
-                  <>
-                    <Link href="/education/what-is-kap-directory-guide" className="block p-4 bg-dark-800 rounded-lg hover:bg-dark-700 transition-colors">
-                      <h4 className="text-lg font-medium text-white mb-2">Professional Directory</h4>
-                      <p className="text-sm text-gray-400">Find kink-aware professionals near you</p>
-                    </Link>
-                    <Link href="/education/top-research-books-bdsm-kink-academic" className="block p-4 bg-dark-800 rounded-lg hover:bg-dark-700 transition-colors">
-                      <h4 className="text-lg font-medium text-white mb-2">Academic Research</h4>
-                      <p className="text-sm text-gray-400">Evidence-based studies on kink and mental health</p>
-                    </Link>
-                  </>
-                )}
-                {article.slug === 'what-is-kap-directory-guide' && (
-                  <>
-                    <Link href="/education/find-kink-aware-therapist" className="block p-4 bg-dark-800 rounded-lg hover:bg-dark-700 transition-colors">
-                      <h4 className="text-lg font-medium text-white mb-2">Therapist Screening</h4>
-                      <p className="text-sm text-gray-400">How to interview potential therapists</p>
-                    </Link>
-                    <Link href="/education/partner-abuse-in-kink-communities" className="block p-4 bg-dark-800 rounded-lg hover:bg-dark-700 transition-colors">
-                      <h4 className="text-lg font-medium text-white mb-2">Safety First</h4>
-                      <p className="text-sm text-gray-400">Recognizing abuse vs healthy kink</p>
-                    </Link>
-                  </>
-                )}
-                {article.slug === 'kink-orientation-vs-leisure-identity' && (
-                  <>
-                    <Link href="/education/understanding-drop-kink-sub-top-event" className="block p-4 bg-dark-800 rounded-lg hover:bg-dark-700 transition-colors">
-                      <h4 className="text-lg font-medium text-white mb-2">Understanding Drop</h4>
-                      <p className="text-sm text-gray-400">How identity affects emotional processing</p>
-                    </Link>
-                    <Link href="/education/top-research-books-bdsm-kink-academic" className="block p-4 bg-dark-800 rounded-lg hover:bg-dark-700 transition-colors">
-                      <h4 className="text-lg font-medium text-white mb-2">Research Insights</h4>
-                      <p className="text-sm text-gray-400">Academic studies on kink identity</p>
-                    </Link>
-                  </>
-                )}
-              </div>
-            </div>
-          </div>
+          {/* Continue Your Journey - Dynamic Related Articles */}
+          <ContinueYourJourney 
+            currentArticle={{
+              id: article.id,
+              slug: article.slug,
+              category: article.category,
+              tags: articleTags
+            }}
+          />
 
           {/* Related Articles CTA */}
           <div className="mt-16">
