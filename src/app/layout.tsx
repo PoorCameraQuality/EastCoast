@@ -124,7 +124,7 @@ export default function RootLayout({
         <AuthProvider>
           <GA4Provider>
             <ErrorTracker />
-            <ComprehensiveTrackingWrapper>
+            {/* <ComprehensiveTrackingWrapper> */}
               <AgeVerification />
               <Header />
               <main id="main-content" role="main" tabIndex={-1}>
@@ -132,7 +132,7 @@ export default function RootLayout({
               </main>
               <Footer />
               <BackToTop />
-            </ComprehensiveTrackingWrapper>
+            {/* </ComprehensiveTrackingWrapper> */}
           </GA4Provider>
         </AuthProvider>
       </body>
