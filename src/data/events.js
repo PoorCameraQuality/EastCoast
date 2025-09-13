@@ -503,6 +503,68 @@ export const events = [
     }
   },
   {
+    "name": "CURE 2026",
+    "slug": "cure-2026",
+    "date": {
+      "start": "2026-01-09",
+      "end": "2026-01-11",
+      "display": "Jan 9-11, 2026"
+    },
+    "location": {
+      "city": "Columbus",
+      "state": "OH",
+      "region": "Central, Ohio"
+    },
+    "category": "Indoor Event",
+    "excerpt": "CURE 2026—Columbus' Ultimate Relationship Exploration—returns for its second year with a full hotel takeover! This immersive weekend event features alternative lifestyle education, fetish demonstrations, vendor showcases, and community building in a consent-focused, inclusive environment.",
+    "longDescription": "We're thrilled to announce the return of CURE—Columbus' Ultimate Relationship Exploration—for its second year, and this time we're taking things to the next level with a full hotel takeover from the start! This immersive weekend event will take place January 9-11, 2026, at a private hotel location in Northern Columbus. The exact address will be shared with attendees after ticket purchase and registration confirmation.\n\nUnlike our monthly KIC events, this weekend-long experience gives you the chance to stay on-site and fully dive into everything the weekend has to offer. Book a room, attend classes, play, nap, and do it all again—no driving necessary, no leaving the space. It's your chance to explore kink, connection, and community in a fully immersive and supportive environment.\n\nWe're curating a dynamic lineup of presenters from across the country, offering a wide range of classes and workshops. From rope and impact to polyamorous relationships, power exchange, medical play, and safety topics, we're bringing in educators who reflect the diversity and depth of our community's interests.\n\nCURE 2026 will also feature a vendor market filled with kinky goods to explore. Whether you're shopping for rope, paddles, collars, gags, bratty stickers, or that one perfect toy you didn't know you needed, you'll find it here.\n\n**Consent Policy**: Consent is mandatory and defined as enthusiastic, clear-headed, mutual, informed, without manipulation or coercion. We maintain a strict 18+ policy for all content related to consensual adult sexuality.\n\n**Demonstrations & Education**: Experience fire play, electric play, corporal demonstrations, and educational workshops in a safe, supportive environment. Our programming focuses on alternative lifestyle education, community building, and inclusive practices.\n\nMark your calendars for January 9-11, 2026—CURE is back and bigger than ever.",
+    "website": "https://kicevents.com/cure",
+    "organizer": "KIC Events LLC (Kinky In Columbus)",
+    "contact": "Kiceventsllc@gmail.com",
+    "ageRequirement": "18+ only",
+    "consentPolicy": "Mandatory enthusiastic, clear-headed, mutual, informed consent without manipulation or coercion",
+    "logo": "https://kicevents.com/images/redesign/CURE-2026-Logo.png",
+    "features": [
+      "Full Hotel Takeover",
+      "Weekend-Long Immersive Experience",
+      "On-Site Accommodations",
+      "Alternative Lifestyle Education",
+      "Fetish Demonstrations",
+      "Fire Play Demonstrations",
+      "Electric Play Demonstrations",
+      "Corporal Play Education",
+      "Rope and Impact Classes",
+      "Polyamorous Relationship Workshops",
+      "Power Exchange Education",
+      "Medical Play Sessions",
+      "Safety Topic Classes",
+      "Vendor Market & Showcases",
+      "Kinky Goods Shopping",
+      "Community Building Focus",
+      "Consent-Focused Environment",
+      "Inclusive Programming",
+      "No Driving Required",
+      "Private Hotel Location",
+      "Sponsor Opportunities Available"
+    ],
+    "communityResources": [
+      "National Coalition for Sexual Freedom (NCSF)",
+      "Equitas Health",
+      "Sexual Assault Response Network of Central Ohio (SARNCO)",
+      "Columbus Public Health Department"
+    ],
+    "socialMedia": {
+      "instagram": "Available",
+      "fetlife": "Available", 
+      "discord": "Available"
+    },
+    "seo": {
+      "title": "CURE 2026 - Columbus Ultimate Relationship Exploration | East Coast Kink Events",
+      "description": "CURE 2026 is Columbus' Ultimate Relationship Exploration featuring a full hotel takeover, alternative lifestyle education, fetish demonstrations, and vendor showcases in a consent-focused environment.",
+      "keywords": "CURE 2026, Columbus, Ohio, Ultimate Relationship Exploration, hotel takeover, kink education, fetish demonstrations, fire play, electric play, consent culture, KIC Events, alternative lifestyle"
+    }
+  },
+  {
     "name": "Dark Odyssey Winter Fire",
     "slug": "dark-odyssey-winter-fire",
     "date": {
@@ -615,9 +677,9 @@ export const events = [
     "name": "Frolicon",
     "slug": "frolicon",
     "date": {
-      "start": "2025-05-15",
-      "end": "2025-05-18",
-      "display": "May 15-18, 2025"
+      "start": "2026-05-14",
+      "end": "2026-05-14",
+      "display": "May 14, 2026"
     },
     "location": {
       "city": "Atlanta",
@@ -625,27 +687,32 @@ export const events = [
       "region": "South Eastern, Georgia"
     },
     "category": "Indoor Event",
-    "excerpt": "Kink Track: Engage with your kinky peers in a weekend filled with fun, community, education, and play. Our kink track offers a balanced selection of technique, theory, and relationship classes, along with Meet and Greets and three days of kinky play in our 6000 square foot, fully equipped Playroom, outfitted by Sadistic Engineering.",
-    "longDescription": "Join Us at Frolicon 2025 for a Weekend of Fun, Sexy, and Unique Entertainment!\n\nFrolicon proudly brings our attendees a stunning array of entertainment every year. With shows, contests, music, and dancing, we truly have something for everyone.\n\n**Burlesque Shows**: Watch the captivating performances of burlesque artists from some of the Southeast's most talented troupes, featuring both beautiful ladies and a few charming gentlemen.\n\n**Unique Acts**: Be mesmerized by the adult hypnosis show, witness incredible feats of strength and daring at circus sideshows, and laugh until you drop with Atlanta's top standup and improv comics.\n\n**Contests and Competitions**: Whether you want to win big or enjoy the hilarity of friends making fools of themselves, Frolicon has you covered. Participate in costume contests, lip sync battles, and pantsless dancing. And don't miss the one-of-a-kind Frolicon's Most Spankable Ass Competition.\n\n**Music Midway**: Enjoy live performances from some of your favorite musical guests who will serenade you throughout the weekend.\n\n**Kink Track**: Engage with your kinky peers in a weekend filled with fun, community, education, and play. Our kink track offers a balanced selection of technique, theory, and relationship classes, along with Meet and Greets and three days of kinky play in our 6000 square foot, fully equipped Playroom, outfitted by Sadistic Engineering.\n\n**Classes and Workshops**: With over 70 classes and workshops, we promise to keep you entertained and educated. Regardless of your skill level or interests, there's something for everyone.\n\nJoin us at Frolicon 2025 for an unforgettable experience.",
+    "excerpt": "Frolicon is the unique juxtaposition of the geek and kink worlds celebrated in glorious fashion in the heart of downtown Atlanta. Each year we celebrate our unique sense of fun and frivolity with 2500+ of our closest friends. What's your poison? We've got it all — kink, gaming, burlesque, music, costuming, parties, lots and lots of parties.",
+    "longDescription": "Frolicon is the unique juxtaposition of the geek and kink worlds celebrated in glorious fashion in the heart of downtown Atlanta. Each year we celebrate our unique sense of fun and frivolity with 2500+ of our closest friends. What's your poison? We've got it all — kink, gaming, burlesque, music, costuming, parties, lots and lots of parties.\n\nAt Frolicon we pride ourselves on providing a safe and comfortable place where you can be you. Programming includes LGBTQIA, erotica and sci-fi/fantasy authors, photography, dance, polyamory, psychology, and more.\n\nJoin us for a weekend where nerdy meets naughty in the most spectacular way possible. Experience the perfect blend of geek culture and kink exploration in a welcoming, inclusive environment that celebrates both communities.",
     "website": "https://frolicon.com/",
+    "contact": "chrissie.frolicon@gmail.com",
     "logo": "/images/frolicon.png",
     "features": [
-      "Kink Track with 70+ Classes",
-      "6000 sq ft Fully Equipped Playroom",
+      "Geek and Kink Culture Fusion",
+      "2500+ Attendees",
+      "Kink Programming",
+      "Gaming Activities",
       "Burlesque Shows",
-      "Adult Hypnosis Show",
-      "Circus Sideshows",
-      "Standup & Improv Comedy",
-      "Costume Contests",
-      "Lip Sync Battles",
-      "Live Music Performances",
-      "Meet & Greets",
-      "Sadistic Engineering Equipment"
+      "Music Performances",
+      "Costuming Events",
+      "Multiple Parties",
+      "LGBTQIA Programming",
+      "Erotica and Sci-Fi Authors",
+      "Photography Workshops",
+      "Dance Events",
+      "Polyamory Discussions",
+      "Psychology Sessions",
+      "Safe and Comfortable Environment"
     ],
     "seo": {
-      "title": "Frolicon 2025 - Atlanta BDSM Conference & Entertainment | East Coast Kink Events",
-      "description": "Join Frolicon 2025 for a weekend of kink education, 6000 sq ft playroom, burlesque shows, entertainment, and over 70 classes and workshops in Atlanta, GA.",
-      "keywords": "Frolicon 2025, Atlanta, BDSM conference, kink education, burlesque shows, entertainment, playroom, Georgia"
+      "title": "Frolicon 2026 - Where Nerdy Meets Naughty | East Coast Kink Events",
+      "description": "Frolicon is the unique juxtaposition of the geek and kink worlds celebrated in glorious fashion in downtown Atlanta with 2500+ attendees, kink, gaming, burlesque, music, and parties.",
+      "keywords": "Frolicon 2026, Atlanta, geek culture, kink, gaming, burlesque, music, costuming, parties, LGBTQIA, Georgia"
     }
   },
   {
