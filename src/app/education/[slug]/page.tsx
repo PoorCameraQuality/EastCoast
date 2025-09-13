@@ -10,6 +10,26 @@ interface ArticlePageProps {
   params: { slug: string }
 }
 
+interface Article {
+  id: string
+  title: string
+  slug: string
+  excerpt: string
+  content: string
+  author_name: string
+  author_credentials?: string
+  author_bio?: string
+  category: string
+  tags?: string[]
+  featured: boolean
+  status: string
+  created_at: string
+  read_time?: string
+  seo_title?: string
+  meta_description?: string
+  focus_keywords?: string[]
+}
+
 async function getArticleBySlug(slug: string) {
   try {
     const client = supabase
@@ -47,13 +67,17 @@ export async function generateMetadata({ params }: ArticlePageProps): Promise<Me
     }
   }
 
+  const title = article.seo_title || article.title
+  const description = article.meta_description || article.excerpt
+  const keywords = article.focus_keywords || (article.tags ? (Array.isArray(article.tags) ? article.tags : article.tags.split(',').map((tag: string) => tag.trim())) : [])
+
   return {
-    title: `${article.title} | East Coast Kink Events`,
-    description: article.excerpt,
-    keywords: article.tags ? (Array.isArray(article.tags) ? article.tags : article.tags.split(',').map((tag: string) => tag.trim())) : [],
+    title: `${title} | East Coast Kink Events`,
+    description: description,
+    keywords: keywords,
     openGraph: {
-      title: article.title,
-      description: article.excerpt,
+      title: title,
+      description: description,
       type: 'article',
       url: `https://eastcoastkinkevents.com/education/${article.slug}`,
       siteName: 'East Coast Kink Events',
@@ -62,14 +86,14 @@ export async function generateMetadata({ params }: ArticlePageProps): Promise<Me
           url: 'https://eastcoastkinkevents.com/og-image.png',
           width: 1200,
           height: 630,
-          alt: `${article.title} - East Coast Kink Events`,
+          alt: `${title} - East Coast Kink Events`,
         },
       ],
     },
     twitter: {
       card: 'summary_large_image',
-      title: article.title,
-      description: article.excerpt,
+      title: title,
+      description: description,
       images: ['https://eastcoastkinkevents.com/og-image.png'],
     },
     alternates: {
@@ -268,6 +292,63 @@ export default async function ArticlePage({ params }: { params: { slug: string }
             </div>
           </div>
           
+          {/* Article Series Navigation */}
+          <div className="mt-12 border-t border-dark-600 pt-6">
+            <div className="card-elegant">
+              <h3 className="text-xl font-serif font-semibold text-white mb-4">Continue Your Journey</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {article.slug === 'nipple-play-beginners-guide' && (
+                  <>
+                    <Link href="/education/nipple-clamps-intermediate-techniques" className="block p-4 bg-dark-800 rounded-lg hover:bg-dark-700 transition-colors">
+                      <h4 className="text-lg font-medium text-white mb-2">Next: Nipple Clamps 201</h4>
+                      <p className="text-sm text-gray-400">Intermediate tools and safety techniques</p>
+                    </Link>
+                    <Link href="/education/advanced-breast-play-edgeplay" className="block p-4 bg-dark-800 rounded-lg hover:bg-dark-700 transition-colors">
+                      <h4 className="text-lg font-medium text-white mb-2">Level 3: Edgeplay & Intensity</h4>
+                      <p className="text-sm text-gray-400">Advanced techniques and risk management</p>
+                    </Link>
+                  </>
+                )}
+                {article.slug === 'nipple-clamps-intermediate-techniques' && (
+                  <>
+                    <Link href="/education/nipple-play-beginners-guide" className="block p-4 bg-dark-800 rounded-lg hover:bg-dark-700 transition-colors">
+                      <h4 className="text-lg font-medium text-white mb-2">Previous: Nipple Play 101</h4>
+                      <p className="text-sm text-gray-400">Back to the basics and foundations</p>
+                    </Link>
+                    <Link href="/education/advanced-breast-play-edgeplay" className="block p-4 bg-dark-800 rounded-lg hover:bg-dark-700 transition-colors">
+                      <h4 className="text-lg font-medium text-white mb-2">Next: Advanced Edgeplay</h4>
+                      <p className="text-sm text-gray-400">Take it to the next level</p>
+                    </Link>
+                  </>
+                )}
+                {article.slug === 'advanced-breast-play-edgeplay' && (
+                  <>
+                    <Link href="/education/nipple-clamps-intermediate-techniques" className="block p-4 bg-dark-800 rounded-lg hover:bg-dark-700 transition-colors">
+                      <h4 className="text-lg font-medium text-white mb-2">Previous: Intermediate Techniques</h4>
+                      <p className="text-sm text-gray-400">Review intermediate skills</p>
+                    </Link>
+                    <Link href="/education/breast-play-scene-design-mastery" className="block p-4 bg-dark-800 rounded-lg hover:bg-dark-700 transition-colors">
+                      <h4 className="text-lg font-medium text-white mb-2">Final: Scene Design & Mastery</h4>
+                      <p className="text-sm text-gray-400">Master the art of scene creation</p>
+                    </Link>
+                  </>
+                )}
+                {article.slug === 'breast-play-scene-design-mastery' && (
+                  <>
+                    <Link href="/education/advanced-breast-play-edgeplay" className="block p-4 bg-dark-800 rounded-lg hover:bg-dark-700 transition-colors">
+                      <h4 className="text-lg font-medium text-white mb-2">Previous: Advanced Edgeplay</h4>
+                      <p className="text-sm text-gray-400">Review advanced techniques</p>
+                    </Link>
+                    <Link href="/education" className="block p-4 bg-dark-800 rounded-lg hover:bg-dark-700 transition-colors">
+                      <h4 className="text-lg font-medium text-white mb-2">Explore All Articles</h4>
+                      <p className="text-sm text-gray-400">Discover more educational content</p>
+                    </Link>
+                  </>
+                )}
+              </div>
+            </div>
+          </div>
+
           {/* Related Articles CTA */}
           <div className="mt-16">
             <div className="card-elegant text-center">
