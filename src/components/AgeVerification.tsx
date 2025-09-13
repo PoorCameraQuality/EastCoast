@@ -8,6 +8,32 @@ export default function AgeVerification() {
   const [isChecked, setIsChecked] = useState(false)
 
   useEffect(() => {
+    // Check if this is a search engine bot
+    const isBot = () => {
+      if (typeof navigator === 'undefined') return true // SSR - assume bot
+      
+      const userAgent = navigator.userAgent.toLowerCase()
+      const botPatterns = [
+        'googlebot', 'bingbot', 'slurp', 'duckduckbot', 'baiduspider',
+        'yandexbot', 'facebookexternalhit', 'twitterbot', 'rogerbot',
+        'linkedinbot', 'embedly', 'quora link preview', 'showyoubot',
+        'outbrain', 'pinterest/0.', 'developers.google.com/+/web/snippet',
+        'www.google.com/webmasters/tools/richsnippets', 'slackbot', 'vkshare',
+        'w3c_validator', 'redditbot', 'applebot', 'whatsapp', 'flipboard',
+        'tumblr', 'bitlybot', 'skypeuripreview', 'nuzzel', 'discordbot',
+        'google page speed', 'qwantify', 'pinterestbot', 'bitrix link preview',
+        'xing-contenttabreceiver', 'chrome-lighthouse', 'telegrambot'
+      ]
+      
+      return botPatterns.some(pattern => userAgent.includes(pattern))
+    }
+
+    // Skip age verification for search engine bots
+    if (isBot()) {
+      setIsVerified(true)
+      return
+    }
+
     // Check if user has already verified their age
     const verified = localStorage.getItem('ageVerified')
     if (verified === 'true') {
