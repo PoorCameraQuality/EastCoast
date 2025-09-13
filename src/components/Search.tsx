@@ -169,22 +169,30 @@ export default function Search({ events, dungeons, placeholder = "Search events 
                 href={`/${result.type}s/${result.slug}`}
                 className="block p-4 hover:bg-dark-700 transition-colors border-b border-dark-600 last:border-b-0"
                 onClick={() => {
-                  // trackSearch({
-                  //   search_term: query,
-                  //   results_count: results.length,
-                  //   search_type: 'site_search',
-                  //   clicked_result: true,
-                  //   result_position: index + 1
-                  // })
-                  // trackInternalLinkClick({
-                  //   from_page: window.location.pathname,
-                  //   to_page: `/${result.type}s/${result.slug}`,
-                  //   link_text: result.name,
-                  //   link_type: result.type,
-                  //   link_position: 'search_results',
-                  //   content_category: result.category,
-                  //   content_location: `${result.location.city}, ${result.location.state}`
-                  // })
+                  // Safe tracking - use setTimeout to avoid blocking navigation
+                  setTimeout(() => {
+                    try {
+                      trackSearch({
+                        search_term: query,
+                        results_count: results.length,
+                        search_type: 'site_search',
+                        clicked_result: true,
+                        result_position: index + 1
+                      })
+                      trackInternalLinkClick({
+                        from_page: window.location.pathname,
+                        to_page: `/${result.type}s/${result.slug}`,
+                        link_text: result.name,
+                        link_type: result.type,
+                        link_position: 'search_results',
+                        content_category: result.category,
+                        content_location: `${result.location.city}, ${result.location.state}`
+                      })
+                    } catch (error) {
+                      // Silently fail if tracking has issues - don't block navigation
+                      console.warn('Analytics tracking failed:', error)
+                    }
+                  }, 0)
                 }}
               >
                 <div className="flex items-center space-x-3">
