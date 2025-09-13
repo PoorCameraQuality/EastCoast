@@ -11,7 +11,7 @@ import { WebsiteStructuredData, OrganizationStructuredData } from '@/components/
 import GoogleAnalytics from '@/components/GoogleAnalytics'
 import VercelFeedbackBlocker from '@/components/VercelFeedbackBlocker'
 import ErrorTracker from '@/components/ErrorTracker'
-import ComprehensiveTrackingWrapper from '@/components/ComprehensiveTrackingWrapper'
+import SafeTrackingWrapper from '@/components/SafeTrackingWrapper'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -122,11 +122,11 @@ export default function RootLayout({
         <VercelFeedbackBlocker />
         {/* AuthProvider at root so it never unmounts */}
         <AuthProvider>
-          {/* Step 2: Add basic tracking components (no click listeners) */}
+          {/* Step 2 FIXED: Using safer tracking wrapper */}
           <GA4Provider>
             {/* ErrorTracker still disabled - had problematic click listeners */}
             {/* <ErrorTracker /> */}
-            <ComprehensiveTrackingWrapper>
+            <SafeTrackingWrapper>
               <AgeVerification />
               <Header />
               <main id="main-content" role="main" tabIndex={-1}>
@@ -134,7 +134,7 @@ export default function RootLayout({
               </main>
               <Footer />
               <BackToTop />
-            </ComprehensiveTrackingWrapper>
+            </SafeTrackingWrapper>
           </GA4Provider>
         </AuthProvider>
       </body>
