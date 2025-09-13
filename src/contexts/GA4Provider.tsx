@@ -14,7 +14,7 @@ interface GA4ContextType {
   trackSessionEvent: (sessionData: any) => void
   trackTimeOnPage: (timeData: any) => void
   trackScrollDepth: (scrollData: any) => void
-  trackMouseMovement: (mouseData: any) => void
+  trackButtonInteraction: (interactionData: any) => void
   trackFormInteraction: (formData: any) => void
   trackReturnVisit: (visitData: any) => void
   trackContentAffinity: (affinityData: any) => void
@@ -132,7 +132,7 @@ export function GA4Provider({ children }: { children: React.ReactNode }) {
     trackSessionEvent: enhancedTrackSessionEvent,
     trackTimeOnPage: ga4.trackTimeOnPage,
     trackScrollDepth: ga4.trackScrollDepth,
-    trackMouseMovement: ga4.trackMouseMovement,
+    trackButtonInteraction: ga4.trackButtonInteraction,
     trackFormInteraction: ga4.trackFormInteraction,
     trackReturnVisit: ga4.trackReturnVisit,
     trackContentAffinity: ga4.trackContentAffinity,

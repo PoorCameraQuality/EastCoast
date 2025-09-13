@@ -18,9 +18,7 @@ export default function useComprehensiveTracking() {
   const [sectionsViewed, setSectionsViewed] = useState<Set<string>>(new Set())
   const [contentSkipped, setContentSkipped] = useState<Set<string>>(new Set())
   
-  // Mouse tracking
-  const [mousePositions, setMousePositions] = useState<Array<{x: number, y: number, time: number}>>([])
-  const [hoverElements, setHoverElements] = useState<Map<string, number>>(new Map())
+  // Mouse tracking removed - not necessary for core analytics
   
   // Form tracking
   const [formInteractions, setFormInteractions] = useState<Map<string, any>>(new Map())
@@ -186,51 +184,33 @@ export default function useComprehensiveTracking() {
     }
   }, [maxScrollDepth, pathname, ga4, sectionsViewed, contentSkipped, scrollStartTime])
 
-  // Mouse movement tracking
-  const trackMouseMove = useCallback((e: MouseEvent) => {
-    const now = Date.now()
-    const newPosition = { x: e.clientX, y: e.clientY, time: now }
-    
-    setMousePositions(prev => {
-      const updated = [...prev.slice(-50), newPosition] // Keep last 50 positions
-      return updated
-    })
-
-    // Track mouse movement patterns every 10 seconds
-    if (now - lastInteractionTime > 10000) {
-      setLastInteractionTime(now)
-      
-      ga4.trackMouseMovement({
-        page_path: pathname,
-        movement_type: 'hover',
-        element_type: 'page',
-        hover_duration: now - lastInteractionTime
-      })
-    }
-  }, [pathname, ga4, lastInteractionTime])
-
-  // Click tracking - only track specific elements, don't interfere with navigation
+  // Mouse tracking removed - keeping only essential click tracking for engagement
   const trackClick = useCallback((e: MouseEvent) => {
     const target = e.target as HTMLElement
     
-    // Only track clicks on non-navigation elements to avoid interference
+    // Only track meaningful interactions, not navigation
     if (target.tagName === 'A' || target.closest('a')) {
       // Let links work normally, don't track them here
       return
     }
     
-    const elementType = target.tagName.toLowerCase()
-    const elementContent = target.textContent?.slice(0, 50) || ''
-    
-    setLastInteractionTime(Date.now())
+    // Only track clicks on buttons, forms, or interactive elements
+    if (target.tagName === 'BUTTON' || target.closest('button') || 
+        target.closest('form') || target.closest('[role="button"]')) {
+      
+      const elementType = target.tagName.toLowerCase()
+      const elementContent = target.textContent?.slice(0, 50) || ''
+      
+      setLastInteractionTime(Date.now())
 
-    ga4.trackMouseMovement({
-      page_path: pathname,
-      movement_type: 'click',
-      element_type: elementType,
-      element_content: elementContent,
-      click_position: { x: e.clientX, y: e.clientY }
-    })
+      ga4.trackButtonInteraction({
+        page_path: pathname,
+        interaction_type: 'button_click',
+        element_type: elementType,
+        element_content: elementContent,
+        click_position: { x: e.clientX, y: e.clientY }
+      })
+    }
   }, [pathname, ga4])
 
   // Form interaction tracking
@@ -343,20 +323,18 @@ export default function useComprehensiveTracking() {
     return () => window.removeEventListener('beforeunload', handleBeforeUnload)
   }, [pathname, ga4, pageStartTime, trackEngagementVelocity])
 
-  // Set up event listeners - use passive listeners to avoid interference
+  // Set up event listeners - only essential tracking
   useEffect(() => {
     if (typeof window === 'undefined') return
 
     window.addEventListener('scroll', trackScroll, { passive: true })
-    window.addEventListener('mousemove', trackMouseMove, { passive: true })
     window.addEventListener('click', trackClick, { passive: true })
 
     return () => {
       window.removeEventListener('scroll', trackScroll)
-      window.removeEventListener('mousemove', trackMouseMove)
       window.removeEventListener('click', trackClick)
     }
-  }, [trackScroll, trackMouseMove, trackClick])
+  }, [trackScroll, trackClick])
 
   return {
     trackFormField,

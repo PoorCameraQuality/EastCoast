@@ -201,23 +201,21 @@ export default function useEnhancedGA4() {
     }
   }
 
-  // Track mouse movement and cursor patterns
-  const trackMouseMovement = (mouseData: {
+  // Track button and form interactions (simplified from mouse tracking)
+  const trackButtonInteraction = (interactionData: {
     page_path: string
-    movement_type: 'hover' | 'click' | 'drag' | 'scroll'
+    interaction_type: 'button_click' | 'form_submit' | 'form_field_focus'
     element_type: string
     element_content?: string
-    hover_duration?: number
     click_position?: { x: number, y: number }
   }) => {
     if (typeof window !== 'undefined' && window.gtag) {
-      window.gtag('event', 'mouse_interaction', {
-        page_path: mouseData.page_path,
-        movement_type: mouseData.movement_type,
-        element_type: mouseData.element_type,
-        element_content: mouseData.element_content,
-        hover_duration: mouseData.hover_duration,
-        click_position: mouseData.click_position,
+      window.gtag('event', 'button_interaction', {
+        page_path: interactionData.page_path,
+        interaction_type: interactionData.interaction_type,
+        element_type: interactionData.element_type,
+        element_content: interactionData.element_content,
+        click_position: interactionData.click_position,
         timestamp: Date.now()
       })
     }
@@ -394,7 +392,7 @@ export default function useEnhancedGA4() {
     trackSessionEvent,
     trackTimeOnPage,
     trackScrollDepth,
-    trackMouseMovement,
+    trackButtonInteraction,
     trackFormInteraction,
     trackReturnVisit,
     trackContentAffinity,
