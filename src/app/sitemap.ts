@@ -1,6 +1,7 @@
 import { getAllEvents } from '@/data/events'
 import { getAllDungeons } from '@/data/dungeons'
 import { getAllArticles } from '@/data/education'
+import { supabase } from '@/lib/supabase'
 
 export default async function sitemap() {
   const baseUrl = 'https://eastcoastkinkevents.com'
@@ -8,7 +9,24 @@ export default async function sitemap() {
   // Get all events, dungeons, and articles
   const events = getAllEvents()
   const dungeons = getAllDungeons()
-  const articles = getAllArticles()
+  const staticArticles = getAllArticles()
+  
+  // Get database articles from Supabase
+  let databaseArticles: any[] = []
+  try {
+    if (supabase) {
+      const { data, error } = await supabase
+        .from('articles')
+        .select('slug, created_at, updated_at')
+        .eq('status', 'published')
+      
+      if (data && !error) {
+        databaseArticles = data
+      }
+    }
+  } catch (error) {
+    console.warn('Failed to fetch database articles for sitemap:', error)
+  }
   
   // Generate event URLs with enhanced metadata
   const eventUrls = events.map((event) => ({
@@ -32,8 +50,8 @@ export default async function sitemap() {
     },
   }))
 
-  // Generate education article URLs (only published articles)
-  const articleUrls = articles
+  // Generate static education article URLs (only published articles)
+  const staticArticleUrls = staticArticles
     .filter((article) => article.status === 'published')
     .map((article) => ({
       url: `${baseUrl}/education/${article.slug}`,
@@ -44,6 +62,20 @@ export default async function sitemap() {
         canonical: `${baseUrl}/education/${article.slug}`,
       },
     }))
+
+  // Generate database education article URLs
+  const databaseArticleUrls = databaseArticles.map((article) => ({
+    url: `${baseUrl}/education/${article.slug}`,
+    lastModified: new Date(article.updated_at || article.created_at),
+    changeFrequency: 'monthly' as const,
+    priority: 0.7,
+    alternates: {
+      canonical: `${baseUrl}/education/${article.slug}`,
+    },
+  }))
+
+  // Combine all article URLs
+  const allArticleUrls = [...staticArticleUrls, ...databaseArticleUrls]
 
   return [
     // Main pages with high priority
@@ -167,6 +199,6 @@ export default async function sitemap() {
     // Dynamic content pages
     ...eventUrls,
     ...dungeonUrls,
-    ...articleUrls,
+    ...allArticleUrls,
   ]
 } 
