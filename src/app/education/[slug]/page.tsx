@@ -345,6 +345,43 @@ export default async function ArticlePage({ params }: { params: { slug: string }
                     </Link>
                   </>
                 )}
+                {/* Age Play Series Navigation */}
+                {article.slug === 'age-play-101-adult-consensual-safe' && (
+                  <>
+                    <Link href="/education/age-play-201-rules-routines-power-exchange" className="block p-4 bg-dark-800 rounded-lg hover:bg-dark-700 transition-colors">
+                      <h4 className="text-lg font-medium text-white mb-2">Next: Age Play 201</h4>
+                      <p className="text-sm text-gray-400">Rules, routines, and power exchange</p>
+                    </Link>
+                    <Link href="/education/age-play-301-taboo-edgeplay-psychological-depth" className="block p-4 bg-dark-800 rounded-lg hover:bg-dark-700 transition-colors">
+                      <h4 className="text-lg font-medium text-white mb-2">Level 3: Taboo & Edgeplay</h4>
+                      <p className="text-sm text-gray-400">Advanced techniques and psychological safety</p>
+                    </Link>
+                  </>
+                )}
+                {article.slug === 'age-play-201-rules-routines-power-exchange' && (
+                  <>
+                    <Link href="/education/age-play-101-adult-consensual-safe" className="block p-4 bg-dark-800 rounded-lg hover:bg-dark-700 transition-colors">
+                      <h4 className="text-lg font-medium text-white mb-2">Previous: Age Play 101</h4>
+                      <p className="text-sm text-gray-400">Back to the basics and foundations</p>
+                    </Link>
+                    <Link href="/education/age-play-301-taboo-edgeplay-psychological-depth" className="block p-4 bg-dark-800 rounded-lg hover:bg-dark-700 transition-colors">
+                      <h4 className="text-lg font-medium text-white mb-2">Next: Taboo & Edgeplay</h4>
+                      <p className="text-sm text-gray-400">Take it to the next level</p>
+                    </Link>
+                  </>
+                )}
+                {article.slug === 'age-play-301-taboo-edgeplay-psychological-depth' && (
+                  <>
+                    <Link href="/education/age-play-201-rules-routines-power-exchange" className="block p-4 bg-dark-800 rounded-lg hover:bg-dark-700 transition-colors">
+                      <h4 className="text-lg font-medium text-white mb-2">Previous: Age Play 201</h4>
+                      <p className="text-sm text-gray-400">Review rules and routines</p>
+                    </Link>
+                    <Link href="/education" className="block p-4 bg-dark-800 rounded-lg hover:bg-dark-700 transition-colors">
+                      <h4 className="text-lg font-medium text-white mb-2">Explore All Articles</h4>
+                      <p className="text-sm text-gray-400">Discover more educational content</p>
+                    </Link>
+                  </>
+                )}
               </div>
             </div>
           </div>
