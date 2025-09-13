@@ -5,7 +5,7 @@ import Link from 'next/link'
 import EventLogo from '@/components/EventLogo'
 import DungeonLogo from '@/components/DungeonLogo'
 import SmartSearchSuggestions from '@/components/SmartSearchSuggestions'
-import { useGA4 } from '@/contexts/GA4Provider'
+// import { useGA4 } from '@/contexts/GA4Provider' // Temporarily disabled for testing
 import Script from 'next/script'
 
 interface SearchResult {
@@ -36,7 +36,7 @@ export default function Search({ events, dungeons, placeholder = "Search events 
   const [debouncedQuery, setDebouncedQuery] = useState('')
   const [showSuggestions, setShowSuggestions] = useState(false)
   const [searchFocused, setSearchFocused] = useState(false)
-  const { trackSearch, trackInternalLinkClick, trackUserInteraction } = useGA4()
+  // const { trackSearch, trackInternalLinkClick, trackUserInteraction } = useGA4() // Temporarily disabled
 
   // Debounce search input
   useEffect(() => {
@@ -101,13 +101,13 @@ export default function Search({ events, dungeons, placeholder = "Search events 
     setIsSearching(false)
 
     // Track search event
-    trackSearch({
-      search_term: debouncedQuery,
-      results_count: searchResults.length,
-      search_type: 'site_search',
-      clicked_result: false
-    })
-  }, [debouncedQuery, events, dungeons, trackSearch])
+    // trackSearch({
+    //   search_term: debouncedQuery,
+    //   results_count: searchResults.length,
+    //   search_type: 'site_search',
+    //   clicked_result: false
+    // })
+  }, [debouncedQuery, events, dungeons]) // trackSearch removed
 
   // Generate search structured data
   const structuredData = {
@@ -169,22 +169,22 @@ export default function Search({ events, dungeons, placeholder = "Search events 
                 href={`/${result.type}s/${result.slug}`}
                 className="block p-4 hover:bg-dark-700 transition-colors border-b border-dark-600 last:border-b-0"
                 onClick={() => {
-                  trackSearch({
-                    search_term: query,
-                    results_count: results.length,
-                    search_type: 'site_search',
-                    clicked_result: true,
-                    result_position: index + 1
-                  })
-                  trackInternalLinkClick({
-                    from_page: window.location.pathname,
-                    to_page: `/${result.type}s/${result.slug}`,
-                    link_text: result.name,
-                    link_type: result.type,
-                    link_position: 'search_results',
-                    content_category: result.category,
-                    content_location: `${result.location.city}, ${result.location.state}`
-                  })
+                  // trackSearch({
+                  //   search_term: query,
+                  //   results_count: results.length,
+                  //   search_type: 'site_search',
+                  //   clicked_result: true,
+                  //   result_position: index + 1
+                  // })
+                  // trackInternalLinkClick({
+                  //   from_page: window.location.pathname,
+                  //   to_page: `/${result.type}s/${result.slug}`,
+                  //   link_text: result.name,
+                  //   link_type: result.type,
+                  //   link_position: 'search_results',
+                  //   content_category: result.category,
+                  //   content_location: `${result.location.city}, ${result.location.state}`
+                  // })
                 }}
               >
                 <div className="flex items-center space-x-3">

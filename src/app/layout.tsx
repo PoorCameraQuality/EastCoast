@@ -122,9 +122,10 @@ export default function RootLayout({
         <VercelFeedbackBlocker />
         {/* AuthProvider at root so it never unmounts */}
         <AuthProvider>
-          <GA4Provider>
+          {/* Temporarily disable ALL analytics to test navigation */}
+          {/* <GA4Provider>
             <ErrorTracker />
-            <ComprehensiveTrackingWrapper>
+            <ComprehensiveTrackingWrapper> */}
               <AgeVerification />
               <Header />
               <main id="main-content" role="main" tabIndex={-1}>
@@ -132,8 +133,8 @@ export default function RootLayout({
               </main>
               <Footer />
               <BackToTop />
-            </ComprehensiveTrackingWrapper>
-          </GA4Provider>
+            {/* </ComprehensiveTrackingWrapper>
+          </GA4Provider> */}
         </AuthProvider>
       </body>
     </html>

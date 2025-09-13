@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { getAllEvents } from '@/data/events'
 import { getAllDungeons } from '@/data/dungeons'
 import { supabase } from '@/lib/supabase'
-import { useGA4 } from '@/contexts/GA4Provider'
+// import { useGA4 } from '@/contexts/GA4Provider' // Temporarily disabled for testing
 
 interface SearchSuggestion {
   id: string
@@ -25,7 +25,7 @@ interface SmartSearchSuggestionsProps {
 export default function SmartSearchSuggestions({ searchQuery, maxSuggestions = 5 }: SmartSearchSuggestionsProps) {
   const [suggestions, setSuggestions] = useState<SearchSuggestion[]>([])
   const [loading, setLoading] = useState(false)
-  const { trackSearch, trackInternalLinkClick } = useGA4()
+  // const { trackSearch, trackInternalLinkClick } = useGA4() // Temporarily disabled
 
   const calculateRelevanceScore = useCallback((item: any, query: string, type: string): number => {
     const queryLower = query.toLowerCase()
@@ -220,22 +220,22 @@ export default function SmartSearchSuggestions({ searchQuery, maxSuggestions = 5
             href={getHref(suggestion)}
             className="block p-3 hover:bg-dark-700 rounded-lg transition-colors group"
             onClick={() => {
-              trackSearch({
-                search_term: searchQuery,
-                results_count: suggestions.length,
-                search_type: 'smart_suggestions',
-                clicked_result: true,
-                result_position: suggestions.indexOf(suggestion) + 1
-              })
-              trackInternalLinkClick({
-                from_page: window.location.pathname,
-                to_page: getHref(suggestion),
-                link_text: suggestion.title,
-                link_type: suggestion.type,
-                link_position: 'search_suggestions',
-                content_category: suggestion.category,
-                content_location: suggestion.location
-              })
+              // trackSearch({
+              //   search_term: searchQuery,
+              //   results_count: suggestions.length,
+              //   search_type: 'smart_suggestions',
+              //   clicked_result: true,
+              //   result_position: suggestions.indexOf(suggestion) + 1
+              // })
+              // trackInternalLinkClick({
+              //   from_page: window.location.pathname,
+              //   to_page: getHref(suggestion),
+              //   link_text: suggestion.title,
+              //   link_type: suggestion.type,
+              //   link_position: 'search_suggestions',
+              //   content_category: suggestion.category,
+              //   content_location: suggestion.location
+              // })
             }}
           >
             <div className="flex items-center space-x-3">
