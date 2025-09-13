@@ -323,16 +323,17 @@ export default function useComprehensiveTracking() {
     return () => window.removeEventListener('beforeunload', handleBeforeUnload)
   }, [pathname, ga4, pageStartTime, trackEngagementVelocity])
 
-  // Set up event listeners - only essential tracking
+  // Set up event listeners - only essential tracking (click tracking disabled to fix navigation)
   useEffect(() => {
     if (typeof window === 'undefined') return
 
     window.addEventListener('scroll', trackScroll, { passive: true })
-    window.addEventListener('click', trackClick, { passive: true })
+    // Temporarily disabled click tracking to fix navigation issues
+    // window.addEventListener('click', trackClick, { passive: true })
 
     return () => {
       window.removeEventListener('scroll', trackScroll)
-      window.removeEventListener('click', trackClick)
+      // window.removeEventListener('click', trackClick)
     }
   }, [trackScroll, trackClick])
 
