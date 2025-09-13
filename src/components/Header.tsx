@@ -4,11 +4,13 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import UserMenu from './auth/UserMenu'
+import NavigationBadges from './NavigationBadges'
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
   const pathname = usePathname()
+  const badgeData = NavigationBadges()
 
   // Auto-close mobile menu when route changes
   useEffect(() => {
@@ -53,28 +55,45 @@ export default function Header() {
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center space-x-1" role="navigation">
             {[
-              { href: '/events', label: 'Events' },
-              { href: '/dungeons', label: 'Dungeons' },
-              { href: '/education', label: 'Education' },
+              { href: '/events', label: 'Events', badgeType: 'events' },
+              { href: '/dungeons', label: 'Dungeons', badgeType: 'dungeons' },
+              { href: '/education', label: 'Education', badgeType: 'education' },
               { href: '/calendar', label: 'Calendar' },
               { href: '/about', label: 'About' },
               { href: '/contact', label: 'Contact' }
-            ].map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={`relative px-4 py-2 rounded-lg font-medium transition-all duration-300 ${
-                  pathname === link.href
-                    ? 'text-primary-300 bg-primary-600/20 border border-primary-600/30'
-                    : 'text-gray-300 hover:text-white hover:bg-dark-800/50'
-                }`}
-              >
-                {link.label}
-                {pathname === link.href && (
-                  <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-primary-400 rounded-full"></div>
-                )}
-              </Link>
-            ))}
+            ].map((link) => {
+              const linkBadgeData = link.badgeType && badgeData ? badgeData.getBadgeCounts(link.badgeType) : null
+              const newBadgeData = linkBadgeData && linkBadgeData.new > 0 ? linkBadgeData : null
+              
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className={`relative px-4 py-2 rounded-lg font-medium transition-all duration-300 ${
+                    pathname === link.href
+                      ? 'text-primary-300 bg-primary-600/20 border border-primary-600/30'
+                      : 'text-gray-300 hover:text-white hover:bg-dark-800/50'
+                  }`}
+                >
+                  <div className="flex items-center space-x-2">
+                    <span>{link.label}</span>
+                    {linkBadgeData && linkBadgeData.total > 0 && badgeData && link.badgeType && (
+                      <span className={`px-2 py-0.5 text-xs rounded-full ${badgeData.getBadgeColor(link.badgeType)} text-white`}>
+                        {linkBadgeData.total}
+                      </span>
+                    )}
+                    {newBadgeData && badgeData && link.badgeType && (
+                      <span className={`px-1.5 py-0.5 text-xs rounded-full ${badgeData.getNewBadgeColor(link.badgeType)} text-white animate-pulse`}>
+                        NEW
+                      </span>
+                    )}
+                  </div>
+                  {pathname === link.href && (
+                    <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-primary-400 rounded-full"></div>
+                  )}
+                </Link>
+              )
+            })}
             
             <div className="mx-2 w-px h-6 bg-dark-600"></div>
             

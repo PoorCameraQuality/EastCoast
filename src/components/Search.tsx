@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import EventLogo from '@/components/EventLogo'
 import DungeonLogo from '@/components/DungeonLogo'
+import SmartSearchSuggestions from '@/components/SmartSearchSuggestions'
 import Script from 'next/script'
 
 interface SearchResult {
@@ -32,6 +33,8 @@ export default function Search({ events, dungeons, placeholder = "Search events 
   const [results, setResults] = useState<SearchResult[]>([])
   const [isSearching, setIsSearching] = useState(false)
   const [debouncedQuery, setDebouncedQuery] = useState('')
+  const [showSuggestions, setShowSuggestions] = useState(false)
+  const [searchFocused, setSearchFocused] = useState(false)
 
   // Debounce search input
   useEffect(() => {
@@ -45,6 +48,7 @@ export default function Search({ events, dungeons, placeholder = "Search events 
   useEffect(() => {
     if (debouncedQuery.length < 2) {
       setResults([])
+      setShowSuggestions(false)
       return
     }
 
@@ -91,6 +95,7 @@ export default function Search({ events, dungeons, placeholder = "Search events 
     })
 
     setResults(searchResults.slice(0, 6))
+    setShowSuggestions(true)
     setIsSearching(false)
   }, [debouncedQuery, events, dungeons])
 
@@ -123,6 +128,11 @@ export default function Search({ events, dungeons, placeholder = "Search events 
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
+            onFocus={() => setSearchFocused(true)}
+            onBlur={() => {
+              // Delay hiding suggestions to allow clicks
+              setTimeout(() => setSearchFocused(false), 200)
+            }}
             placeholder={placeholder}
             aria-label="Search events and dungeons"
             aria-expanded={results.length > 0}
@@ -135,6 +145,11 @@ export default function Search({ events, dungeons, placeholder = "Search events 
             </div>
           )}
         </div>
+
+        {/* Smart Search Suggestions */}
+        {searchFocused && query.length >= 2 && (
+          <SmartSearchSuggestions searchQuery={query} />
+        )}
 
         {results.length > 0 && (
           <div id="search-results" className="absolute top-full left-0 right-0 mt-2 bg-dark-800 border border-dark-600 rounded-lg shadow-xl z-50 max-h-96 overflow-y-auto">

@@ -5,6 +5,7 @@ import { supabase } from '@/lib/supabase'
 import { isAdmin, getCurrentUser } from '@/lib/auth'
 import RichTextEditor from '@/components/education/RichTextEditor'
 import Breadcrumb from '@/components/Breadcrumb'
+import InternalLinkAnalytics from '@/components/InternalLinkAnalytics'
 import Image from 'next/image'
 
 interface User {
@@ -1219,6 +1220,21 @@ export default function UnifiedAdminDashboard({ user, isAdmin: isAdminProp }: Un
             </div>
           </div>
         )}
+
+        {/* Analytics Section */}
+        <div className="mt-12">
+          <div className="border-b border-dark-600 pb-4 mb-8">
+            <h2 className="text-2xl font-serif font-bold text-white flex items-center">
+              <span className="mr-3">📊</span>
+              Internal Link Analytics
+            </h2>
+            <p className="text-gray-400 mt-2">
+              Track user behavior and optimize internal linking performance
+            </p>
+          </div>
+          
+          <InternalLinkAnalytics isAdmin={true} />
+        </div>
       </div>
     </div>
   )
