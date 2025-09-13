@@ -161,6 +161,214 @@ export default function useEnhancedGA4() {
     }
   }
 
+  // Track time on page with reading speed analysis
+  const trackTimeOnPage = (timeData: {
+    page_path: string
+    time_spent_seconds: number
+    content_length?: number
+    reading_speed_wpm?: number
+    engagement_level: 'low' | 'medium' | 'high'
+  }) => {
+    if (typeof window !== 'undefined' && window.gtag) {
+      window.gtag('event', 'time_on_page', {
+        page_path: timeData.page_path,
+        time_spent_seconds: timeData.time_spent_seconds,
+        content_length: timeData.content_length,
+        reading_speed_wpm: timeData.reading_speed_wpm,
+        engagement_level: timeData.engagement_level,
+        timestamp: Date.now()
+      })
+    }
+  }
+
+  // Track scroll depth and content consumption patterns
+  const trackScrollDepth = (scrollData: {
+    page_path: string
+    scroll_depth_percentage: number
+    sections_viewed: string[]
+    content_skipped: string[]
+    time_to_scroll: number
+  }) => {
+    if (typeof window !== 'undefined' && window.gtag) {
+      window.gtag('event', 'scroll_depth', {
+        page_path: scrollData.page_path,
+        scroll_depth_percentage: scrollData.scroll_depth_percentage,
+        sections_viewed: scrollData.sections_viewed,
+        content_skipped: scrollData.content_skipped,
+        time_to_scroll: scrollData.time_to_scroll,
+        timestamp: Date.now()
+      })
+    }
+  }
+
+  // Track mouse movement and cursor patterns
+  const trackMouseMovement = (mouseData: {
+    page_path: string
+    movement_type: 'hover' | 'click' | 'drag' | 'scroll'
+    element_type: string
+    element_content?: string
+    hover_duration?: number
+    click_position?: { x: number, y: number }
+  }) => {
+    if (typeof window !== 'undefined' && window.gtag) {
+      window.gtag('event', 'mouse_interaction', {
+        page_path: mouseData.page_path,
+        movement_type: mouseData.movement_type,
+        element_type: mouseData.element_type,
+        element_content: mouseData.element_content,
+        hover_duration: mouseData.hover_duration,
+        click_position: mouseData.click_position,
+        timestamp: Date.now()
+      })
+    }
+  }
+
+  // Track form field interactions
+  const trackFormInteraction = (formData: {
+    form_id: string
+    field_name: string
+    interaction_type: 'focus' | 'blur' | 'input' | 'submit' | 'abandon'
+    time_spent_field?: number
+    field_completion_rate?: number
+    form_abandonment_point?: string
+  }) => {
+    if (typeof window !== 'undefined' && window.gtag) {
+      window.gtag('event', 'form_interaction', {
+        form_id: formData.form_id,
+        field_name: formData.field_name,
+        interaction_type: formData.interaction_type,
+        time_spent_field: formData.time_spent_field,
+        field_completion_rate: formData.field_completion_rate,
+        form_abandonment_point: formData.form_abandonment_point,
+        timestamp: Date.now()
+      })
+    }
+  }
+
+  // Track return visits and user loyalty
+  const trackReturnVisit = (visitData: {
+    page_path: string
+    visit_number: number
+    days_since_last_visit: number
+    returning_content_id?: string
+    loyalty_tier: 'new' | 'returning' | 'frequent' | 'loyal'
+  }) => {
+    if (typeof window !== 'undefined' && window.gtag) {
+      window.gtag('event', 'return_visit', {
+        page_path: visitData.page_path,
+        visit_number: visitData.visit_number,
+        days_since_last_visit: visitData.days_since_last_visit,
+        returning_content_id: visitData.returning_content_id,
+        loyalty_tier: visitData.loyalty_tier,
+        timestamp: Date.now()
+      })
+    }
+  }
+
+  // Track content affinity and preferences
+  const trackContentAffinity = (affinityData: {
+    content_type: 'event' | 'dungeon' | 'article'
+    content_category: string
+    content_location: string
+    affinity_score: number
+    preference_strength: 'weak' | 'moderate' | 'strong'
+    topic_cluster: string
+  }) => {
+    if (typeof window !== 'undefined' && window.gtag) {
+      window.gtag('event', 'content_affinity', {
+        content_type: affinityData.content_type,
+        content_category: affinityData.content_category,
+        content_location: affinityData.content_location,
+        affinity_score: affinityData.affinity_score,
+        preference_strength: affinityData.preference_strength,
+        topic_cluster: affinityData.topic_cluster,
+        timestamp: Date.now()
+      })
+    }
+  }
+
+  // Track engagement velocity (how quickly users navigate)
+  const trackEngagementVelocity = (velocityData: {
+    page_path: string
+    navigation_speed: 'slow' | 'medium' | 'fast'
+    time_between_clicks: number
+    pages_per_session: number
+    velocity_score: number
+  }) => {
+    if (typeof window !== 'undefined' && window.gtag) {
+      window.gtag('event', 'engagement_velocity', {
+        page_path: velocityData.page_path,
+        navigation_speed: velocityData.navigation_speed,
+        time_between_clicks: velocityData.time_between_clicks,
+        pages_per_session: velocityData.pages_per_session,
+        velocity_score: velocityData.velocity_score,
+        timestamp: Date.now()
+      })
+    }
+  }
+
+  // Track errors and broken interactions
+  const trackError = (errorData: {
+    error_type: '404' | 'broken_link' | 'form_error' | 'api_error' | 'javascript_error'
+    error_url?: string
+    error_message?: string
+    user_action: string
+    page_context: string
+  }) => {
+    if (typeof window !== 'undefined' && window.gtag) {
+      window.gtag('event', 'error_occurred', {
+        error_type: errorData.error_type,
+        error_url: errorData.error_url,
+        error_message: errorData.error_message,
+        user_action: errorData.user_action,
+        page_context: errorData.page_context,
+        timestamp: Date.now()
+      })
+    }
+  }
+
+  // Track device and browser information
+  const trackDeviceInfo = (deviceData: {
+    device_type: 'mobile' | 'tablet' | 'desktop'
+    screen_resolution: string
+    browser_type: string
+    browser_version: string
+    operating_system: string
+    viewport_size: string
+  }) => {
+    if (typeof window !== 'undefined' && window.gtag) {
+      window.gtag('event', 'device_info', {
+        device_type: deviceData.device_type,
+        screen_resolution: deviceData.screen_resolution,
+        browser_type: deviceData.browser_type,
+        browser_version: deviceData.browser_version,
+        operating_system: deviceData.operating_system,
+        viewport_size: deviceData.viewport_size,
+        timestamp: Date.now()
+      })
+    }
+  }
+
+  // Track traffic source attribution
+  const trackTrafficSource = (sourceData: {
+    traffic_source: 'direct' | 'organic' | 'social' | 'referral' | 'email' | 'paid'
+    source_medium?: string
+    source_campaign?: string
+    referring_domain?: string
+    utm_parameters?: Record<string, string>
+  }) => {
+    if (typeof window !== 'undefined' && window.gtag) {
+      window.gtag('event', 'traffic_source', {
+        traffic_source: sourceData.traffic_source,
+        source_medium: sourceData.source_medium,
+        source_campaign: sourceData.source_campaign,
+        referring_domain: sourceData.referring_domain,
+        utm_parameters: sourceData.utm_parameters,
+        timestamp: Date.now()
+      })
+    }
+  }
+
   // Track custom events
   const trackCustomEvent = (eventName: string, parameters: Record<string, any>) => {
     if (typeof window !== 'undefined' && window.gtag) {
@@ -184,6 +392,16 @@ export default function useEnhancedGA4() {
     trackUserInteraction,
     trackNavigation,
     trackSessionEvent,
+    trackTimeOnPage,
+    trackScrollDepth,
+    trackMouseMovement,
+    trackFormInteraction,
+    trackReturnVisit,
+    trackContentAffinity,
+    trackEngagementVelocity,
+    trackError,
+    trackDeviceInfo,
+    trackTrafficSource,
     trackCustomEvent
   }
 }

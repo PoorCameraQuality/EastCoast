@@ -10,6 +10,8 @@ import { GA4Provider } from "@/contexts/GA4Provider";
 import { WebsiteStructuredData, OrganizationStructuredData } from '@/components/StructuredData'
 import GoogleAnalytics from '@/components/GoogleAnalytics'
 import VercelFeedbackBlocker from '@/components/VercelFeedbackBlocker'
+import ErrorTracker from '@/components/ErrorTracker'
+import ComprehensiveTrackingWrapper from '@/components/ComprehensiveTrackingWrapper'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -121,13 +123,16 @@ export default function RootLayout({
         {/* AuthProvider at root so it never unmounts */}
         <AuthProvider>
           <GA4Provider>
-            <AgeVerification />
-            <Header />
-            <main id="main-content" role="main" tabIndex={-1}>
-              {children}
-            </main>
-            <Footer />
-            <BackToTop />
+            <ErrorTracker />
+            <ComprehensiveTrackingWrapper>
+              <AgeVerification />
+              <Header />
+              <main id="main-content" role="main" tabIndex={-1}>
+                {children}
+              </main>
+              <Footer />
+              <BackToTop />
+            </ComprehensiveTrackingWrapper>
           </GA4Provider>
         </AuthProvider>
       </body>

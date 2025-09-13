@@ -12,6 +12,16 @@ interface GA4ContextType {
   trackUserInteraction: (interactionData: any) => void
   trackNavigation: (navData: any) => void
   trackSessionEvent: (sessionData: any) => void
+  trackTimeOnPage: (timeData: any) => void
+  trackScrollDepth: (scrollData: any) => void
+  trackMouseMovement: (mouseData: any) => void
+  trackFormInteraction: (formData: any) => void
+  trackReturnVisit: (visitData: any) => void
+  trackContentAffinity: (affinityData: any) => void
+  trackEngagementVelocity: (velocityData: any) => void
+  trackError: (errorData: any) => void
+  trackDeviceInfo: (deviceData: any) => void
+  trackTrafficSource: (sourceData: any) => void
   trackCustomEvent: (eventName: string, parameters: Record<string, any>) => void
 }
 
@@ -120,6 +130,16 @@ export function GA4Provider({ children }: { children: React.ReactNode }) {
     trackUserInteraction: enhancedTrackUserInteraction,
     trackNavigation: enhancedTrackNavigation,
     trackSessionEvent: enhancedTrackSessionEvent,
+    trackTimeOnPage: ga4.trackTimeOnPage,
+    trackScrollDepth: ga4.trackScrollDepth,
+    trackMouseMovement: ga4.trackMouseMovement,
+    trackFormInteraction: ga4.trackFormInteraction,
+    trackReturnVisit: ga4.trackReturnVisit,
+    trackContentAffinity: ga4.trackContentAffinity,
+    trackEngagementVelocity: ga4.trackEngagementVelocity,
+    trackError: ga4.trackError,
+    trackDeviceInfo: ga4.trackDeviceInfo,
+    trackTrafficSource: ga4.trackTrafficSource,
     trackCustomEvent: enhancedTrackCustomEvent
   }
 
