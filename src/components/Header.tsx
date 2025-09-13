@@ -78,8 +78,8 @@ export default function Header() {
             
             <div className="mx-2 w-px h-6 bg-dark-600"></div>
             
-            <Link href="/events" className="btn-outline text-sm px-5 py-2" role="button" aria-label="Submit your event for listing">
-              Submit Event
+            <Link href="/events" className="btn-outline text-sm px-5 py-2" role="button" aria-label="Add your event for listing">
+              Add Event
             </Link>
             
             <div className="ml-2">
@@ -140,8 +140,8 @@ export default function Header() {
             
             <div className="mt-6 pt-6 border-t border-dark-700/50">
               <div className="flex justify-center space-x-4">
-                <Link href="/events" className="btn-outline w-full text-center" role="button" aria-label="Submit your event for listing">
-                  Submit Event
+                <Link href="/events" className="btn-outline w-full text-center" role="button" aria-label="Add your event for listing">
+                  Add Event
                 </Link>
                 <div className="w-32">
                   <UserMenu />

@@ -63,7 +63,7 @@ export default function Footer() {
               {[
                 { href: '/events', label: 'Browse Events', icon: '🎪' },
                 { href: '/calendar', label: 'Event Calendar', icon: '📅' },
-                { href: '/contact', label: 'Submit Event', icon: '➕' },
+                { href: '/events', label: 'Add Event', icon: '➕' },
                 { href: '/about', label: 'About Us', icon: 'ℹ️' }
               ].map((link) => (
                 <li key={link.href}>
