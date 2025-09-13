@@ -17,15 +17,7 @@ export default function ErrorTracker() {
       trackError('javascript_error', undefined, event.reason?.toString() || 'Unhandled promise rejection')
     }
 
-    // Track 404 errors for broken links
-    const handleLinkError = (event: Event) => {
-      const target = event.target as HTMLElement
-      if (target.tagName === 'A') {
-        trackError('broken_link', (target as HTMLAnchorElement).href)
-      }
-    }
-
-    // Track form errors
+    // Track form errors (only on form submission failures)
     const handleFormError = (event: Event) => {
       const target = event.target as HTMLFormElement
       if (target.tagName === 'FORM') {
@@ -33,16 +25,14 @@ export default function ErrorTracker() {
       }
     }
 
-    // Add event listeners
+    // Add event listeners - removed global click listener that was interfering with navigation
     window.addEventListener('error', handleError)
     window.addEventListener('unhandledrejection', handleUnhandledRejection)
-    window.addEventListener('click', handleLinkError)
     window.addEventListener('submit', handleFormError)
 
     return () => {
       window.removeEventListener('error', handleError)
       window.removeEventListener('unhandledrejection', handleUnhandledRejection)
-      window.removeEventListener('click', handleLinkError)
       window.removeEventListener('submit', handleFormError)
     }
   }, [trackError])
