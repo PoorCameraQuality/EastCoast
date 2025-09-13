@@ -209,9 +209,16 @@ export default function useComprehensiveTracking() {
     }
   }, [pathname, ga4, lastInteractionTime])
 
-  // Click tracking
+  // Click tracking - only track specific elements, don't interfere with navigation
   const trackClick = useCallback((e: MouseEvent) => {
     const target = e.target as HTMLElement
+    
+    // Only track clicks on non-navigation elements to avoid interference
+    if (target.tagName === 'A' || target.closest('a')) {
+      // Let links work normally, don't track them here
+      return
+    }
+    
     const elementType = target.tagName.toLowerCase()
     const elementContent = target.textContent?.slice(0, 50) || ''
     
@@ -336,13 +343,13 @@ export default function useComprehensiveTracking() {
     return () => window.removeEventListener('beforeunload', handleBeforeUnload)
   }, [pathname, ga4, pageStartTime, trackEngagementVelocity])
 
-  // Set up event listeners
+  // Set up event listeners - use passive listeners to avoid interference
   useEffect(() => {
     if (typeof window === 'undefined') return
 
-    window.addEventListener('scroll', trackScroll)
-    window.addEventListener('mousemove', trackMouseMove)
-    window.addEventListener('click', trackClick)
+    window.addEventListener('scroll', trackScroll, { passive: true })
+    window.addEventListener('mousemove', trackMouseMove, { passive: true })
+    window.addEventListener('click', trackClick, { passive: true })
 
     return () => {
       window.removeEventListener('scroll', trackScroll)
