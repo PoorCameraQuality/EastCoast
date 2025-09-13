@@ -122,11 +122,11 @@ export default function RootLayout({
         <VercelFeedbackBlocker />
         {/* AuthProvider at root so it never unmounts */}
         <AuthProvider>
-          {/* Step 1: Re-enable basic GA4Provider without event listeners */}
+          {/* Step 2: Add basic tracking components (no click listeners) */}
           <GA4Provider>
-            {/* ErrorTracker and ComprehensiveTrackingWrapper still disabled for now */}
-            {/* <ErrorTracker />
-            <ComprehensiveTrackingWrapper> */}
+            {/* ErrorTracker still disabled - had problematic click listeners */}
+            {/* <ErrorTracker /> */}
+            <ComprehensiveTrackingWrapper>
               <AgeVerification />
               <Header />
               <main id="main-content" role="main" tabIndex={-1}>
@@ -134,7 +134,7 @@ export default function RootLayout({
               </main>
               <Footer />
               <BackToTop />
-            {/* </ComprehensiveTrackingWrapper> */}
+            </ComprehensiveTrackingWrapper>
           </GA4Provider>
         </AuthProvider>
       </body>
