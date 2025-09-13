@@ -44,40 +44,41 @@ export function GA4Provider({ children }: { children: React.ReactNode }) {
     })
   }, [])
 
-  // Track page focus/blur for engagement
-  useEffect(() => {
-    const handleFocus = () => {
-      ga4.trackSessionEvent({
-        session_event: 'page_focus'
-      })
-    }
+  // Temporarily disabled focus/blur/beforeunload event listeners for gradual re-implementation
+  // These were causing navigation interference - will add back carefully
+  // useEffect(() => {
+  //   const handleFocus = () => {
+  //     ga4.trackSessionEvent({
+  //       session_event: 'page_focus'
+  //     })
+  //   }
 
-    const handleBlur = () => {
-      ga4.trackSessionEvent({
-        session_event: 'page_blur'
-      })
-    }
+  //   const handleBlur = () => {
+  //     ga4.trackSessionEvent({
+  //       session_event: 'page_blur'
+  //     })
+  //   }
 
-    const handleBeforeUnload = () => {
-      const sessionDuration = Date.now() - sessionStart
-      ga4.trackSessionEvent({
-        session_event: 'session_end',
-        session_duration: Math.floor(sessionDuration / 1000),
-        page_views: pageViews,
-        interactions_count: interactions
-      })
-    }
+  //   const handleBeforeUnload = () => {
+  //     const sessionDuration = Date.now() - sessionStart
+  //     ga4.trackSessionEvent({
+  //       session_event: 'session_end',
+  //       session_duration: Math.floor(sessionDuration / 1000),
+  //       page_views: pageViews,
+  //       interactions_count: interactions
+  //     })
+  //   }
 
-    window.addEventListener('focus', handleFocus)
-    window.addEventListener('blur', handleBlur)
-    window.addEventListener('beforeunload', handleBeforeUnload)
+  //   window.addEventListener('focus', handleFocus)
+  //   window.addEventListener('blur', handleBlur)
+  //   window.addEventListener('beforeunload', handleBeforeUnload)
 
-    return () => {
-      window.removeEventListener('focus', handleFocus)
-      window.removeEventListener('blur', handleBlur)
-      window.removeEventListener('beforeunload', handleBeforeUnload)
-    }
-  }, [sessionStart, pageViews, interactions, ga4])
+  //   return () => {
+  //     window.removeEventListener('focus', handleFocus)
+  //     window.removeEventListener('blur', handleBlur)
+  //     window.removeEventListener('beforeunload', handleBeforeUnload)
+  //   }
+  // }, [sessionStart, pageViews, interactions, ga4])
 
   // Track page views
   useEffect(() => {

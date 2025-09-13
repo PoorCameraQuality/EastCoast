@@ -5,7 +5,7 @@ import Link from 'next/link'
 import EventLogo from '@/components/EventLogo'
 import DungeonLogo from '@/components/DungeonLogo'
 import SmartSearchSuggestions from '@/components/SmartSearchSuggestions'
-// import { useGA4 } from '@/contexts/GA4Provider' // Temporarily disabled for testing
+import { useGA4 } from '@/contexts/GA4Provider'
 import Script from 'next/script'
 
 interface SearchResult {
@@ -36,7 +36,7 @@ export default function Search({ events, dungeons, placeholder = "Search events 
   const [debouncedQuery, setDebouncedQuery] = useState('')
   const [showSuggestions, setShowSuggestions] = useState(false)
   const [searchFocused, setSearchFocused] = useState(false)
-  // const { trackSearch, trackInternalLinkClick, trackUserInteraction } = useGA4() // Temporarily disabled
+  const { trackSearch, trackInternalLinkClick, trackUserInteraction } = useGA4()
 
   // Debounce search input
   useEffect(() => {
@@ -100,14 +100,14 @@ export default function Search({ events, dungeons, placeholder = "Search events 
     setShowSuggestions(true)
     setIsSearching(false)
 
-    // Track search event
-    // trackSearch({
-    //   search_term: debouncedQuery,
-    //   results_count: searchResults.length,
-    //   search_type: 'site_search',
-    //   clicked_result: false
-    // })
-  }, [debouncedQuery, events, dungeons]) // trackSearch removed
+    // Track search event (non-intrusive, no event listeners)
+    trackSearch({
+      search_term: debouncedQuery,
+      results_count: searchResults.length,
+      search_type: 'site_search',
+      clicked_result: false
+    })
+  }, [debouncedQuery, events, dungeons, trackSearch])
 
   // Generate search structured data
   const structuredData = {
