@@ -65,6 +65,17 @@ export default function DynamicStats() {
       
       if (supabase) {
         try {
+          // First get the total count of published articles
+          const { count: totalCount, error: countError } = await supabase
+            .from('articles')
+            .select('*', { count: 'exact', head: true })
+            .eq('status', 'published')
+
+          if (!countError && totalCount !== null) {
+            totalArticles = totalCount
+          }
+
+          // Then get recent articles for preview
           const { data: articles, error } = await supabase
             .from('articles')
             .select('id, title, slug, category, created_at')
@@ -74,7 +85,6 @@ export default function DynamicStats() {
 
           if (!error && articles) {
             recentArticles = articles
-            totalArticles = articles.length
           }
         } catch (error) {
           console.error('Error fetching articles:', error)
