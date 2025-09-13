@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { supabase } from '@/lib/supabase'
+import { debouncedSitemapPing } from '@/lib/sitemapPing'
 
 // Simple email function using fetch to a webhook or email service
 async function sendEmailNotification(subject: string, content: string) {
@@ -121,6 +122,10 @@ export async function POST(request: NextRequest) {
         { status: 500 }
       )
     }
+
+    // Ping search engines about potential new content
+    // (Articles need approval first, but this ensures quick indexing when approved)
+    debouncedSitemapPing()
 
     return NextResponse.json({
       success: true,

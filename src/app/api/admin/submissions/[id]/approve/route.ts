@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getSupabaseAdminClient } from '@/lib/supabase'
+import { safePingSitemap } from '@/lib/sitemapPing'
 
 export async function POST(
   request: NextRequest,
@@ -179,6 +180,10 @@ export async function POST(
       console.error('Error logging approval:', logError)
       // Don't fail the request if logging fails
     }
+
+    // Notify search engines that new content has been published
+    // This is the critical moment when content becomes publicly available
+    safePingSitemap()
 
     return NextResponse.json({ success: true })
   } catch (error) {
