@@ -2,27 +2,12 @@
 
 import Link from 'next/link'
 import { useGoogleAnalytics } from '@/components/GoogleAnalytics'
-import { getAllEvents } from '@/data/events'
-import { getAllDungeons } from '@/data/dungeons'
-import { getAllArticles } from '@/data/education'
 import DynamicStats from '@/components/DynamicStats'
 
 export default function Hero() {
   const { trackEvent } = useGoogleAnalytics()
   
-  // Memoize data fetching to avoid running on every render
-  const allEvents = getAllEvents()
-  const allDungeons = getAllDungeons()
-  const allArticles = getAllArticles()
-  
-  // Account for timezone differences in date comparison
-  const today = new Date()
-  today.setHours(0, 0, 0, 0)
-  const upcomingEvents = allEvents.filter(event => {
-    const eventDate = new Date(event.date.start)
-    eventDate.setHours(0, 0, 0, 0)
-    return eventDate >= today
-  }).slice(0, 3)
+  // Note: Data fetching is now handled by DynamicStats component
 
   return (
     <section className="relative min-h-screen bg-gradient-to-br from-black via-dark-900 to-black overflow-hidden" role="banner" aria-label="Hero section">
@@ -133,51 +118,6 @@ export default function Hero() {
             <DynamicStats />
           </div>
 
-          {/* Preview sections - Enhanced glassy design */}
-          <div className="hidden lg:grid grid-cols-2 gap-6 mt-12 max-w-5xl mx-auto animate-fade-in-up" style={{ animationDelay: '0.7s' }}>
-            {/* Upcoming Events Preview */}
-            <div className="backdrop-blur-xl bg-white/10 rounded-2xl p-6 border border-white/20 shadow-2xl">
-              <h3 className="text-lg font-semibold text-white mb-4">Upcoming Events</h3>
-              <div className="space-y-3">
-                {upcomingEvents.length > 0 ? (
-                  upcomingEvents.map((event) => (
-                    <Link 
-                      key={event.slug}
-                      href={`/events/${event.slug}`}
-                      className="block text-left hover:bg-white/10 rounded-xl p-3 transition-all duration-300 backdrop-blur-sm"
-                    >
-                      <div className="font-medium text-white text-sm">{event.name}</div>
-                      <div className="text-gray-300 text-xs">{event.date.display} • {event.location.city}, {event.location.state}</div>
-                    </Link>
-                  ))
-                ) : (
-                  <div className="text-gray-300 text-sm">No upcoming events at the moment.</div>
-                )}
-              </div>
-              <Link href="/events" className="inline-block mt-4 text-purple-400 hover:text-purple-300 text-sm font-medium">
-                View all events →
-              </Link>
-            </div>
-
-            {/* Community Preview */}
-            <div className="backdrop-blur-xl bg-white/10 rounded-2xl p-6 border border-white/20 shadow-2xl">
-              <h3 className="text-lg font-semibold text-white mb-4">Community Resources</h3>
-              <div className="space-y-3">
-                <Link href="/dungeons" className="block text-left hover:bg-white/10 rounded-xl p-3 transition-all duration-300 backdrop-blur-sm">
-                  <div className="font-medium text-white text-sm">BDSM Dungeons</div>
-                  <div className="text-gray-300 text-xs">Find play spaces and venues near you</div>
-                </Link>
-                <Link href="/education" className="block text-left hover:bg-white/10 rounded-xl p-3 transition-all duration-300 backdrop-blur-sm">
-                  <div className="font-medium text-white text-sm">Educational Articles</div>
-                  <div className="text-gray-300 text-xs">Safety, techniques, and community guides</div>
-                </Link>
-                <Link href="/events" className="block text-left hover:bg-white/10 rounded-xl p-3 transition-all duration-300 backdrop-blur-sm">
-                  <div className="font-medium text-white text-sm">Submit Your Event</div>
-                  <div className="text-gray-300 text-xs">Share your event with the community</div>
-                </Link>
-              </div>
-            </div>
-          </div>
 
           {/* Scroll indicator */}
           <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
