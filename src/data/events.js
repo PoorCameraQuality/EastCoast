@@ -1,6 +1,72 @@
 // Events data with SEO optimization
 export const events = [
   {
+    "name": "Mid-Atlantic Leather Weekend 2026",
+    "slug": "mid-atlantic-leather-weekend-2026",
+    "date": {
+      "start": "2026-01-16",
+      "end": "2026-01-19",
+      "display": "Jan 16-19, 2026"
+    },
+    "location": {
+      "city": "Washington",
+      "state": "DC",
+      "region": "Central, District of Columbia"
+    },
+    "category": "Indoor Event",
+    "excerpt": "Mid-Atlantic Leather Weekend (MAL 2026) is a premier leather community event featuring Leather Cocktails, the prestigious Mr. Mid-Atlantic Leather Contest, an extensive exhibitor hall, and community building in the heart of Washington, DC. Organized by the Centaur Motorcycle Club, this 21+ event celebrates leather culture with education, socializing, and charitable giving.",
+    "longDescription": "Join us for Mid-Atlantic Leather Weekend (MAL 2026) from January 16-19, 2026, at the Hyatt Regency Capitol Hill in Washington, DC. This premier leather community event, organized by the Centaur Motorcycle Club, brings together thousands of leather enthusiasts for a weekend of celebration, education, and community building.\n\n**Event Highlights:**\n\n**Leather Cocktails** - A formal Saturday evening social featuring an open bar, great food, and plenty of opportunities to connect with fellow attendees in an elegant atmosphere.\n\n**Mr. Mid-Atlantic Leather Contest** - Witness the prestigious competition held on Sunday, celebrating excellence in the leather community and showcasing the dedication, communication, and mutual respect that define successful leather relationships.\n\n**Exhibitor Hall** - Open throughout the weekend, featuring an extensive marketplace with leather goods, fetish wear, toys, accessories, and equipment from the best vendors in the community.\n\n**Sunday Breakfast** - A communal meal providing the perfect opportunity to connect and unwind with fellow attendees before the final day's events.\n\n**Closing Dance** - Presented by Kinetic on Sunday night, marking the end of the weekend's festivities with high-energy entertainment.\n\n**Package Options:**\n\n**Full Weekend Run Package ($290 + fees)** - Includes access to Leather Cocktails, the Mr. MAL Contest, the Exhibitor Hall, priority access to the host hotel lobby, an official MAL wristband and run pin, Sunday Breakfast, and admission to the closing dance. Also includes a unique hotel reservation link.\n\n**Three-Day Pass ($45 + fees)** - Provides access to the Exhibitor Hall for all three days and admission to the Mr. Mid-Atlantic Leather Contest on Sunday.\n\n**Special Features:**\n\n**Health Services** - DC Health, in partnership with Nasty Pig, provides onsite services including MPox vaccines, Doxy PEP, HIV testing, Narcan kits, and Fentanyl test strips during the event.\n\n**Accessibility** - The host hotel offers ramps and elevators for accessibility. Interpreters are provided for the Mr. MAL contest for those who may be hearing impaired.\n\n**Dress Code** - While various attire is welcomed, nudity is not permitted in publicly accessible spaces. For Leather Cocktails, formal leather attire is encouraged.\n\n**Charity Impact** - In 2025, the Centaur MC donated $185,000 to various LGBTQ+ charities, including the Leather Archives & Museum, MedStar Health, H.I.P.S., LAMBDA Legal, LGBT Life Center, Team DC, and The Bear History Project.\n\n**Registration & Hotel:**\n\nFull Run Packages go on sale Saturday, September 27, 2025, at Noon EST. Upon purchasing a package or pass, attendees receive a unique link to reserve a hotel room for the weekend. This link is valid for one reservation per purchase.\n\n**Age Requirement:** MAL Weekend is a 21+ only event. All attendees must provide proof of age and wear an approved wristband to gain access to the Hyatt.\n\n**History & Legacy:**\n\nMAL has a rich history dating back to 1976, originating from intimate leather gatherings and evolving into a significant annual event that attracts thousands of participants. This tradition of excellence and community building continues to make MAL one of the most respected events in the leather community.\n\nJoin us for four days of celebration, education, and community building in the nation's capital. Whether you're new to the leather community or a seasoned participant, Mid-Atlantic Leather Weekend offers an enriching experience that will enhance your journey and strengthen your connections within our community.",
+    "website": "https://www.leatherweekend.org/",
+    "organizer": "Centaur Motorcycle Club",
+    "hotel": "Hyatt Regency Capitol Hill, Washington, DC",
+    "ageRequirement": "21+ only",
+    "registrationOpens": "September 27, 2025 at Noon EST",
+    "logo": "https://images.squarespace-cdn.com/content/v1/67eec8fb79f17c0286dfc33d/db103d4a-6df5-4693-9d1b-fa2ee0822a6e/MAL_website_banner_2c.png?format=2500w",
+    "features": [
+      "Leather Cocktails with Open Bar",
+      "Mr. Mid-Atlantic Leather Contest",
+      "Extensive Exhibitor Hall",
+      "Sunday Breakfast",
+      "Closing Dance by Kinetic",
+      "Priority Hotel Lobby Access",
+      "Official MAL Wristband & Run Pin",
+      "Unique Hotel Reservation Link",
+      "Health Services Onsite",
+      "Accessibility Features",
+      "Charity Impact ($185,000 donated in 2025)",
+      "Rich History Since 1976",
+      "Community Building Focus",
+      "Educational Opportunities",
+      "Social Networking",
+      "Leather Culture Celebration",
+      "LGBTQ+ Community Support",
+      "Professional Entertainment",
+      "Vendor Marketplace",
+      "Formal Leather Attire Encouraged"
+    ],
+    "charityRecipients": [
+      "Leather Archives & Museum",
+      "MedStar Health",
+      "H.I.P.S.",
+      "LAMBDA Legal",
+      "LGBT Life Center",
+      "Team DC",
+      "The Bear History Project"
+    ],
+    "healthServices": [
+      "MPox Vaccines",
+      "Doxy PEP",
+      "HIV Testing",
+      "Narcan Kits",
+      "Fentanyl Test Strips"
+    ],
+    "seo": {
+      "title": "Mid-Atlantic Leather Weekend 2026 - Washington DC Leather Community Event | East Coast Kink Events",
+      "description": "Join Mid-Atlantic Leather Weekend 2026 in Washington, DC featuring Leather Cocktails, Mr. MAL Contest, exhibitor hall, and community building. Organized by Centaur Motorcycle Club with $185,000 charity impact.",
+      "keywords": "Mid-Atlantic Leather Weekend, MAL 2026, Washington DC, leather community, Centaur Motorcycle Club, Mr. MAL Contest, Leather Cocktails, BDSM, kink events, LGBTQ+ charity, Hyatt Regency Capitol Hill"
+    }
+  },
+  {
     "name": "Kink Down South Weekend",
     "slug": "kink-down-south-weekend",
     "date": {
@@ -1394,6 +1460,72 @@ export const events = [
       "title": "TESFest - New Jersey Kinky Learning & Community Event | East Coast Kink Events",
       "description": "TESFest offers an impressive lineup of local, national, and international presenters providing classes, demonstrations, hands-on workshops, play spaces, and vendors in Piscataway, NJ.",
       "keywords": "TESFest, New Jersey, Piscataway, kinky learning, BDSM education, workshops, play spaces, vendors, community"
+    }
+  },
+  {
+    "name": "Beyond Leather - International Power Exchange® Contest",
+    "slug": "beyond-leather-international-power-exchange-contest",
+    "date": {
+      "start": "2026-04-30",
+      "end": "2026-05-03",
+      "display": "Apr 30 - May 3, 2026"
+    },
+    "location": {
+      "city": "West Palm Beach",
+      "state": "FL",
+      "region": "Southeastern, Florida"
+    },
+    "category": "Conference",
+    "excerpt": "Beyond Leather is an all-inclusive premier 4-day educational BDSM kinky fetish event featuring 55+ workshops from presenters nationwide. Attendees come to explore, learn, play, socialize and have fun in a safe environment. The event includes the International Power Exchange® Contest and provides 27,000 square feet of dedicated space across multiple venues.",
+    "longDescription": "Beyond Leather is an all-inclusive premier 4-day educational BDSM kinky fetish event with 55+ workshops from presenters all around the country where people come to explore, learn, play, socialize and have fun in a safe environment!\n\nThrough the years presenters, volunteers and attendees have told us that coming to Beyond Leather feels like coming home and we encourage you to reach out and get to know one another on a deeper level. Allow yourself to emerge thoroughly during this weekend experience and engage with people and scenes you haven't before. There's something for everyone at Beyond Leather!\n\n**WHAT TO EXPECT AT BEYOND LEATHER:**\n\n• Premier All Inclusive Diverse Positive Energy Event\n• 55+ Workshops by Esteemed Presenters\n• SEXY Exciting Theaters: Burlesque, Fire & More\n• Dungeon Play to Power Your Darkest Desire\n• BIPoC Social Friday Night\n• 2 Different Meet & Greets\n• Speed Perving Fun & Games\n• Daytime & Nighttime Dungeon Play\n• Hospitality Delicacies to Tempt Your Palate\n• International Power Exchange Contest\n• 27,000 square feet of Dedicated Space\n\n**WORKSHOP TOPICS INCLUDE:**\n\n• NOVICE BDSM/KINK & How To Get Started\n• ADVANCED BDSM/KINK Skills & Panels\n• POWER EXCHANGE RELATIONSHIPS\n• PERSONAL DEVELOPMENT SKILLS\n• EDGE PLAY & BLOOD SPORTS\n• DEMO'S AND HANDS-ON\n• ROPE & BDSM SKILLS\n• DISCUSSION PANELS\n• SEX & BONDAGE\n\n**WHAT'S BEYOND LEATHER ALL ABOUT:**\n\nImagine taking your vacation in West Palm Beach Florida 4-Star Hotel with 500 kinksters. You're learning from the best minds in kink. Not just physical techniques, but also personal skills. You come away excited with new ideas to try or add to your play.\n\nQuestions about how to build and maintain relationships? Questions you've always had – now have answers. You've got new insights, new ideas for how to make things better for you and your partner(s).\n\nBe fully immersed in the joy surrounding you. Feel the sexual freedom in the air as you watch people try new things they've learned. Share in the journey as you also get to play. Welcome to Beyond Leather, an experience that will leave you transformed.",
+    "website": "https://beyondleather.net/wp/?agreecheck=on",
+    "organizer": "Beyond Leather",
+    "hotel": "West Palm Beach, Florida (4-Star Hotel)",
+    "ageRequirement": "18+",
+    "registrationOpens": "Registration Available Online",
+    "logo": "/images/beyond-leather-logo.png",
+    "features": [
+      "55+ Educational Workshops",
+      "International Power Exchange® Contest",
+      "Multiple Theaters (Burlesque, Fire & More)",
+      "Daytime and Nighttime Dungeon Play",
+      "BIPoC Social Friday Night",
+      "Speed Perving Events",
+      "Meet & Greets",
+      "Vendor Marketplace",
+      "Hospitality and Dining",
+      "27,000 Square Feet of Space",
+      "Community Building Focus",
+      "Safe Environment",
+      "Esteemed Presenters",
+      "Workshop Categories for All Levels",
+      "Power Exchange Relationships",
+      "Personal Development Skills",
+      "Edge Play & Blood Sports",
+      "Rope & BDSM Skills",
+      "Discussion Panels",
+      "Hands-on Demonstrations",
+      "Sex & Bondage Education",
+      "Novice to Advanced Levels",
+      "Professional Entertainment",
+      "Social Networking Opportunities",
+      "Transformative Experience"
+    ],
+    "workshopCategories": [
+      "Novice BDSM/Kink & How To Get Started",
+      "Advanced BDSM/Kink Skills & Panels",
+      "Power Exchange Relationships",
+      "Personal Development Skills",
+      "Edge Play & Blood Sports",
+      "Demos and Hands-on Sessions",
+      "Rope & BDSM Skills",
+      "Discussion Panels",
+      "Sex & Bondage"
+    ],
+    "seo": {
+      "title": "Beyond Leather 2026 - International Power Exchange Contest | East Coast Kink Events",
+      "description": "Join Beyond Leather 2026 in West Palm Beach, FL for 55+ BDSM workshops, International Power Exchange Contest, multiple theaters, dungeon play, and community building in a safe environment.",
+      "keywords": "Beyond Leather, International Power Exchange Contest, West Palm Beach, BDSM workshops, kink education, power exchange, leather community, dungeon play, burlesque, fire theater, BIPoC social, speed perving, fetish education, Florida kink events"
     }
   }
 ];
