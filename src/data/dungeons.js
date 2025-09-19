@@ -233,6 +233,44 @@ export const dungeons = [
       "description": "Welcome to The Ascend Hudson Valley Community - A nurturing space for consenting adults in the kink and alternative lifestyle community. We foster a risk-aware, consensual kink (RACK) community in the Hudson Valley.",
       "keywords": "Ascend Hudson Valley Community, Hudson Valley, New York, RACK community, kink community, NCSF partner, Mid-Hudson Valley"
     }
+  },
+  {
+    "name": "The Mark by CPI",
+    "slug": "the-mark-by-cpi-nashville",
+    "location": {
+      "city": "Nashville",
+      "state": "TN",
+      "address": "South Nashville, TN"
+    },
+    "category": "BDSM Dungeon",
+    "excerpt": "CPI is a Tennessee non-profit, membership organization whose mission is to provide and maintain a self-sustainable, vision-driven, and ever-upgrading interaction space for the BDSM/Fetish/Kink community of Nashville, Middle Tennessee, and beyond.",
+    "description": {
+      "long": "The Mark by CPI - Nashville, Tennessee\n\nCPI is a Tennessee non-profit, membership organization founded in 2005, whose mission is to provide and maintain a self-sustainable, vision-driven, and ever-upgrading interaction space; and to empower the educational programs, support functions, and social opportunities that strengthen the BDSM/Fetish/Kink community of Nashville, Middle Tennessee, and beyond.\n\nOur Facility - The Mark\nOur facility -- The Mark -- in South Nashville provides 6000 sqft of social, classroom, and play space, all of which are secure, clean, comfortable, gender-neutral, and ADA accessible... providing a safe space for open-minded people to be themselves among others who understand.\n\nAs a private membership organization, nobody may enter The Mark for a CPI member function unless they are a member in good standing or an official guest of such a member.\n\nOur Guiding Principles\n\nSocial Equity: We strive to interrupt patterns of oppression, focusing on those manifested in kink-positive and sex-positive contexts, and be responsive to the unique and evolving needs of marginalized kinksters – as defined by marginalized kinksters, themselves.\n\nSex-Positivity: We affirm and defend consensual sexuality as a human right. We do not judge any consensual expressions of sexuality as inherently immoral or inherently unhealthy, and we critically consider the ways that sex impacts and is impacted by individual trauma and systemic oppression.\n\nConsensuality: We work to foster a culture in which a \"No\" is valued, a \"Yes\" is celebrated, and kinksters' decision-making is free of coercion and supported by whole, accurate, accessible information.\n\nOur Commitment to \"Safe, Sane, and Consensual\"\nCPI considers the cornerstone of BDSM activity to be the guiding principles of \"Safe, Sane, and Consensual\":\n\n• Safe is being knowledgeable about the techniques and safety concerns involved in what you are doing, and acting in accordance with that knowledge.\n• Sane is knowing the difference between fantasy and reality, and acting in accordance with that knowledge.\n• Consensual is respecting the limits imposed by each participant at all times.\n\nConsent Characteristics\nCPI is a consent-based organization and does not condone or tolerate abusive behavior or relationships. Our consent framework includes:\n\n• Consent is choice - voluntary participation without threats, fraud, coercion or deceit\n• Consent is informed - all participants must know enough to give informed consent\n• Consent is given by adults with sound mind - clearheaded state, not impaired\n• Consent is given within limits - not a blank check, must be clear about activities\n• Consent is revocable - anyone can revoke consent at any time\n• Consent is communication - mutually understood means of communication required\n\nCPI is committed to providing a safe, welcoming, sex-positive, consent-based environment for those adults desiring growth and exploration of the BDSM, fetish, and kink lifestyles, no matter who they are."
+    },
+    "contact": {
+      "email": "info@themarkbycpi.org",
+      "phone": "(615) 555-0127"
+    },
+    "website": "https://themarkbycpi.org/",
+    "logo": "/images/themarklogo_slide.png",
+    "images": [
+      "/images/TheMarkV2-SplashA.jpg",
+      "/images/TheMarkV2-SplashB.jpg",
+      "/images/TheMarkV2-Facilities-SocialSpaceA.jpg",
+      "/images/TheMarkV2-Facilities-SocialSpaceB.jpg",
+      "/images/TheMarkV2-Facilities-SocialSpaceC.jpg",
+      "/images/TheMarkV2-Facilities-SocialSpaceD.jpg",
+      "/images/TheMarkV2-Facilities-SocialSpaceE.jpg",
+      "/images/TheMarkV2-Facilities-PlaySpaceA.jpg",
+      "/images/TheMarkV2-Facilities-PlaySpaceB.jpg",
+      "/images/TheMarkV2-Facilities-PlaySpaceC.jpg",
+      "/images/TheMarkV2-Facilities-PlaySpaceE.jpg"
+    ],
+    "seo": {
+      "title": "The Mark by CPI - Nashville Tennessee BDSM Dungeon & Community Space | East Coast Kink Events",
+      "description": "CPI is a Tennessee non-profit, membership organization whose mission is to provide and maintain a self-sustainable, vision-driven, and ever-upgrading interaction space for the BDSM/Fetish/Kink community of Nashville, Middle Tennessee, and beyond.",
+      "keywords": "The Mark, CPI, Nashville, Tennessee, BDSM dungeon, kink community, non-profit, membership organization, Middle Tennessee, 6000 sqft, ADA accessible, safe sane consensual"
+    }
   }
 ];
 
