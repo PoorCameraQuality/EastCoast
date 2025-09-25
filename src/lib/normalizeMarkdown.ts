@@ -1,29 +1,29 @@
+// Strong, safe normalizer for imported/pasted content.
 export function normalizeMarkdown(raw: string): string {
   if (!raw) return "";
 
   let md = raw;
 
-  // 1) Decode escaped newlines/tabs from CSV/SQL imports
+  // A) Decode escaped newlines/tabs and HTMLy breaks
   md = md
     .replace(/\\r\\n/g, "\n")
     .replace(/\\n/g, "\n")
     .replace(/\\r/g, "\n")
     .replace(/\\t/g, "\t")
-    .replace(/\r\n?/g, "\n");
+    .replace(/\r\n?/g, "\n")
+    .replace(/<br\s*\/?>/gi, "\n")        // HTML <br> -> newline
+    .replace(/&nbsp;/gi, " ")              // non-breaking spaces
+    .replace(/\u00A0/g, " ");              // NBSP char
 
-  // 2) Replace em/en dashes with spaced hyphen (your site-wide style)
+  // B) Site style: no em/en dashes
   md = md.replace(/[\u2014\u2013]/g, " - ");
 
-  // 3) If headings/lists/tables appear without a preceding newline,
-  //    inject a block break before them.
-  // Headings anywhere in the text
-  md = md.replace(/([^\n])\s+(#{1,6}\s)/g, "$1\n\n$2");
-  // Lists anywhere in the text
-  md = md.replace(/([^\n])\s+(\* |\d+\. |- )/g, "$1\n\n$2");
-  // Table header anywhere in the text
-  md = md.replace(/([^\n])\s+(\|[^|\n]+(\|[^|\n]+)+\|)/g, "$1\n\n$2");
+  // C) Ensure block breaks before headings/lists/tables anywhere in a line
+  md = md.replace(/([^\n])\s+(#{1,6}\s)/g, "$1\n\n$2");      // headings
+  md = md.replace(/([^\n])\s+(\* |\d+\. |- )/g, "$1\n\n$2"); // lists
+  md = md.replace(/([^\n])\s+(\|[^|\n]+(\|[^|\n]+)+\|)/g, "$1\n\n$2"); // table header
 
-  // 4) Ensure table separator after a header row if missing
+  // D) Add table separator after a header row if missing
   md = md.replace(
     /(^|\n)(\|[^|\n]+(\|[^|\n]+)+\|)\n(?!\|[-:\s]+(\|[-:\s]+)+\|)/g,
     (_m, lead, header) => {
@@ -34,7 +34,7 @@ export function normalizeMarkdown(raw: string): string {
     }
   );
 
-  // 5) Collapse 3+ blank lines to 2; trim trailing spaces; final newline
+  // E) At most 2 blank lines; trim trailing spaces; ensure final newline
   md = md.replace(/\n{3,}/g, "\n\n");
   md = md.replace(/[ \t]+$/gm, "");
 
