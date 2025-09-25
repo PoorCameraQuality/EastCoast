@@ -1,0 +1,82 @@
+/* Base article body */
+.article-prose {
+  /* Use typography defaults, then tweak below */
+}
+
+/* Headings: a bit tighter and bolder */
+.article-prose :where(h1, h2, h3, h4) {
+  line-height: 1.2;
+  font-weight: 700;
+}
+
+/* Paragraph size/line-height for readability */
+.article-prose p {
+  line-height: 1.75;
+  font-size: 1.05rem;
+}
+
+/* Lists: more breathing room */
+.article-prose ul, 
+.article-prose ol {
+  padding-left: 1.25rem;
+  margin: 0.6rem 0 1rem;
+}
+
+/* --- TABLES (Dark Mode Friendly) --- */
+.article-prose table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 0.975rem;
+  line-height: 1.6;
+  border-radius: 0.75rem;
+  overflow: hidden;             /* clip rounded corners */
+  border: 1px solid rgba(255,255,255,0.08);
+  box-shadow: 0 4px 18px rgba(0,0,0,0.25);
+}
+
+/* Header row */
+.article-prose thead th {
+  background: rgba(255,255,255,0.06);
+  font-weight: 700;
+  text-align: left;
+  padding: 0.85rem 0.9rem;
+  border-bottom: 1px solid rgba(255,255,255,0.12);
+  color: rgba(255,255,255,0.92);
+  vertical-align: middle;
+}
+
+/* Cells */
+.article-prose td {
+  padding: 0.8rem 0.9rem;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  color: rgba(255,255,255,0.9);
+}
+
+/* Zebra striping for long tables */
+.article-prose tbody tr:nth-child(odd) td {
+  background: rgba(255,255,255,0.03);
+}
+
+/* Row hover */
+.article-prose tbody tr:hover td {
+  background: rgba(255,255,255,0.06);
+}
+
+/* Make links pop a bit more in dark mode */
+.article-prose a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* Small screens: make tables scrollable horizontally */
+.article-prose .table-wrap {
+  overflow-x: auto;
+}
+
+/* Code/inline code contrast if you have any */
+.article-prose code {
+  background: rgba(255,255,255,0.08);
+  padding: 0.15rem 0.35rem;
+  border-radius: 0.35rem;
+}

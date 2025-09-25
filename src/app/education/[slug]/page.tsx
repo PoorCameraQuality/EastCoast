@@ -6,6 +6,7 @@ import Breadcrumb from '@/components/Breadcrumb'
 import Script from 'next/script'
 import { stripFirstH1 } from '@/lib/markdown'
 import ContinueYourJourney from '@/components/education/ContinueYourJourney'
+import Markdown from '@/components/Markdown'
 
 interface ArticlePageProps {
   params: { slug: string }
@@ -137,35 +138,8 @@ export default async function ArticlePage({ params }: { params: { slug: string }
 
     const articleTags = formatTags(article.tags)
 
-    // Simple content processing - avoid markdown processing that's causing React errors
-    let contentHtml: string
-    
-    try {
-      // Check if content is HTML or markdown and process accordingly
-      if (article.content.includes('<p>') || article.content.includes('<h1>') || article.content.includes('<div>') || article.content.includes('<br>')) {
-        // Content is already HTML, use it directly
-        contentHtml = article.content
-      } else if (article.content.includes('# ') || article.content.includes('## ') || article.content.includes('**') || article.content.includes('*')) {
-        // Content is markdown, but use simple processing to avoid React errors
-        const processedContent = stripFirstH1(article.content)
-        // Simple markdown to HTML conversion without external libraries
-        contentHtml = processedContent
-          .replace(/^# (.*$)/gim, '<h1>$1</h1>')
-          .replace(/^## (.*$)/gim, '<h2>$1</h2>')
-          .replace(/^### (.*$)/gim, '<h3>$1</h3>')
-          .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-          .replace(/\*(.*?)\*/g, '<em>$1</em>')
-          .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>')
-          .replace(/\n/g, '<br>')
-      } else {
-        // Fallback: treat as plain text
-        contentHtml = `<div class="prose">${article.content.replace(/\n/g, '<br>')}</div>`
-      }
-    } catch (error) {
-      console.error('Content processing error:', error)
-      // Fallback to simple text rendering
-      contentHtml = `<div class="prose">${article.content.replace(/\n/g, '<br>')}</div>`
-    }
+    // Process content for markdown rendering
+    const processedContent = stripFirstH1(article.content)
 
     // Get category color
     const getCategoryColor = (category: string) => {
@@ -309,11 +283,9 @@ export default async function ArticlePage({ params }: { params: { slug: string }
                   </header>
 
                   {/* Article Content */}
-                  <div className="prose prose-neutral dark:prose-invert prose-headings:scroll-mt-20 prose-li:marker:text-muted-foreground prose-img:rounded-xl prose-pre:rounded-xl prose-strong:text-white prose-strong:font-semibold prose-a:text-primary-400 prose-a:no-underline hover:prose-a:underline prose-p:text-gray-300 prose-li:text-gray-300 prose-ul:text-gray-300 prose-ol:text-gray-300 leading-relaxed max-w-none">
-                    <div 
-                      dangerouslySetInnerHTML={{ __html: contentHtml }} 
-                    />
-                  </div>
+                  <section className="mt-8">
+                    <Markdown content={processedContent} />
+                  </section>
                 </div>
               </div>
             </div>
