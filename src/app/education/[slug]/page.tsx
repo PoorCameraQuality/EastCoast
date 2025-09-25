@@ -139,7 +139,8 @@ export default async function ArticlePage({ params }: { params: { slug: string }
     const articleTags = formatTags(article.tags)
 
     // Process content for markdown rendering
-    const processedContent = stripFirstH1(article.content)
+    // Use the content directly since our Markdown component handles everything
+    const processedContent = article.content
 
     // Get category color
     const getCategoryColor = (category: string) => {
