@@ -20,8 +20,8 @@ const sanitizeSchema = {
 };
 
 const rehypeWrapTables = () => (tree: any) => {
-  visit(tree, "element", (node: any, i: number, parent: any) => {
-    if (node.tagName === "table" && parent && Array.isArray(parent.children)) {
+  visit(tree, "element", (node: any, i: number | undefined, parent: any) => {
+    if (node.tagName === "table" && parent && Array.isArray(parent.children) && typeof i === 'number') {
       parent.children[i] = {
         type: "element",
         tagName: "div",
