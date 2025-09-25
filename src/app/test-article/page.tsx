@@ -23,15 +23,19 @@ export default async function TestArticle() {
     let contentHtml: string
     let contentFormat: string
     
-    if (article.content.includes('<p>') || article.content.includes('<h1>') || article.content.includes('<div>')) {
+    if (article.content.includes('<p>') || article.content.includes('<h1>') || article.content.includes('<div>') || article.content.includes('<br>')) {
       // Content is already HTML, use it directly
       contentHtml = article.content
       contentFormat = 'HTML'
-    } else {
+    } else if (article.content.includes('# ') || article.content.includes('## ') || article.content.includes('**') || article.content.includes('*')) {
       // Content is markdown, process it
       const processedContent = stripFirstH1(article.content)
       contentHtml = await markdownToHtml(processedContent)
       contentFormat = 'Markdown'
+    } else {
+      // Fallback: treat as plain text
+      contentHtml = `<div class="prose">${article.content.replace(/\n/g, '<br>')}</div>`
+      contentFormat = 'Plain Text'
     }
 
     return (

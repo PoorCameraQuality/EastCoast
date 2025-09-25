@@ -140,13 +140,16 @@ export default async function ArticlePage({ params }: { params: { slug: string }
     // Check if content is HTML or markdown and process accordingly
     let contentHtml: string
     
-    if (article.content.includes('<p>') || article.content.includes('<h1>') || article.content.includes('<div>')) {
+    if (article.content.includes('<p>') || article.content.includes('<h1>') || article.content.includes('<div>') || article.content.includes('<br>')) {
       // Content is already HTML, use it directly
       contentHtml = article.content
-    } else {
+    } else if (article.content.includes('# ') || article.content.includes('## ') || article.content.includes('**') || article.content.includes('*')) {
       // Content is markdown, process it
       const processedContent = stripFirstH1(article.content)
       contentHtml = await markdownToHtml(processedContent)
+    } else {
+      // Fallback: treat as plain text
+      contentHtml = `<div class="prose">${article.content.replace(/\n/g, '<br>')}</div>`
     }
 
     // Get category color
