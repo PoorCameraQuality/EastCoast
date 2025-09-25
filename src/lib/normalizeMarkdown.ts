@@ -4,62 +4,39 @@ export function normalizeMarkdown(raw: string): string {
   let md = raw;
 
   // 1) Decode escaped newlines/tabs from CSV/SQL imports
-  //    Turns literal "\r\n", "\n", "\r", "\t" into real characters
   md = md
     .replace(/\\r\\n/g, "\n")
     .replace(/\\n/g, "\n")
     .replace(/\\r/g, "\n")
-    .replace(/\\t/g, "\t");
+    .replace(/\\t/g, "\t")
+    .replace(/\r\n?/g, "\n");
 
-  // Normalize real CRLF to \n
-  md = md.replace(/\r\n?/g, "\n");
-
-  // 2) Swap em/en dashes for spaced hyphen (your site-wide choice)
+  // 2) Replace em/en dashes with spaced hyphen (your site-wide style)
   md = md.replace(/[\u2014\u2013]/g, " - ");
 
-  // 3) Ensure block breaks before headings/lists/tables
-  const lines = md.split("\n");
-  const out: string[] = [];
+  // 3) If headings/lists/tables appear without a preceding newline,
+  //    inject a block break before them.
+  // Headings anywhere in the text
+  md = md.replace(/([^\n])\s+(#{1,6}\s)/g, "$1\n\n$2");
+  // Lists anywhere in the text
+  md = md.replace(/([^\n])\s+(\* |\d+\. |- )/g, "$1\n\n$2");
+  // Table header anywhere in the text
+  md = md.replace(/([^\n])\s+(\|[^|\n]+(\|[^|\n]+)+\|)/g, "$1\n\n$2");
 
-  const reTableHeader = /^\|[^|]+(\|[^|]+)+\|$/;
-  const reTableSep    = /^\|[-: ]+(\|[-: ]+)+\|$/;
-  const reHeading     = /^#{1,6} /;
-  const reList        = /^(\* |- |\d+\. )/;
-
-  let blankRun = 0;
-  for (let i = 0; i < lines.length; i++) {
-    const curr = lines[i] ?? "";
-    const next = i < lines.length - 1 ? (lines[i + 1] ?? "") : "";
-    const isBlank = curr.trim() === "";
-
-    // Keep at most 2 consecutive blanks (single-spaced sections)
-    if (isBlank) {
-      if (++blankRun <= 2) out.push(curr);
-      continue;
+  // 4) Ensure table separator after a header row if missing
+  md = md.replace(
+    /(^|\n)(\|[^|\n]+(\|[^|\n]+)+\|)\n(?!\|[-:\s]+(\|[-:\s]+)+\|)/g,
+    (_m, lead, header) => {
+      const pipes = (header.match(/\|/g) || []).length;
+      const cells = Math.max(pipes - 1, 1);
+      const sep = "|" + Array(cells).fill("---").join("|") + "|";
+      return `${lead}${header}\n${sep}\n`;
     }
-    blankRun = 0;
+  );
 
-    // Table header → ensure blank line before + separator after
-    if (reTableHeader.test(curr) && !reTableSep.test(curr)) {
-      if (out.length && out[out.length - 1].trim() !== "") out.push("");
-      out.push(curr);
-      if (!reTableSep.test(next)) {
-        const pipes = (curr.match(/\|/g) || []).length;
-        const cells = Math.max(pipes - 1, 1);
-        out.push("|" + Array(cells).fill("---").join("|") + "|");
-      }
-      continue;
-    }
+  // 5) Collapse 3+ blank lines to 2; trim trailing spaces; final newline
+  md = md.replace(/\n{3,}/g, "\n\n");
+  md = md.replace(/[ \t]+$/gm, "");
 
-    // Headings / list items → ensure blank line before
-    if (reHeading.test(curr) || reList.test(curr)) {
-      if (out.length && out[out.length - 1].trim() !== "") out.push("");
-      out.push(curr);
-      continue;
-    }
-
-    out.push(curr);
-  }
-
-  return out.join("\n").trim() + "\n";
+  return md.trim() + "\n";
 }
