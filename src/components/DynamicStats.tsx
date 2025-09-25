@@ -62,9 +62,9 @@ export default function DynamicStats() {
           // Then get recent articles for preview
           const { data: articles, error } = await supabase
             .from('articles')
-            .select('id, title, slug, category, created_at')
+            .select('id, title, slug, category, publish_date')
             .eq('status', 'published')
-            .order('created_at', { ascending: false })
+            .order('publish_date', { ascending: false })
             .limit(3)
 
           if (!error && articles) {
@@ -206,7 +206,7 @@ export default function DynamicStats() {
                         {article.category}
                       </span>
                       <span className="text-gray-400 text-xs">
-                        {new Date(article.created_at).toLocaleDateString('en-US', {
+                        {new Date(article.publish_date).toLocaleDateString('en-US', {
                           month: 'short',
                           day: 'numeric'
                         })}

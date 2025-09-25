@@ -18,7 +18,7 @@ interface RecentContent {
     title: string
     slug: string
     category: string
-    created_at: string
+    publish_date: string
   }>
   featuredDungeons: Array<{
     slug: string
@@ -65,9 +65,9 @@ export default function FooterRecentContent() {
         try {
           const { data: articles, error } = await supabase
             .from('articles')
-            .select('id, title, slug, category, created_at')
+            .select('id, title, slug, category, publish_date')
             .eq('status', 'published')
-            .order('created_at', { ascending: false })
+            .order('publish_date', { ascending: false })
             .limit(3)
 
           if (!error && articles) {
@@ -150,7 +150,7 @@ export default function FooterRecentContent() {
                       {article.title}
                     </div>
                     <div className="text-xs text-gray-400">
-                      {article.category} • {new Date(article.created_at).toLocaleDateString('en-US', {
+                      {article.category} • {new Date(article.publish_date).toLocaleDateString('en-US', {
                         month: 'short',
                         day: 'numeric'
                       })}

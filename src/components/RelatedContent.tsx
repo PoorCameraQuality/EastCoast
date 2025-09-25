@@ -94,10 +94,10 @@ export default function RelatedContent({ currentEvent, currentDungeon, maxItems 
           // Get articles that might be related to the content
           const { data: articlesData, error } = await supabase
             .from('articles')
-            .select('id, title, slug, category, created_at')
+            .select('id, title, slug, category, publish_date')
             .eq('status', 'published')
             .order('featured', { ascending: false })
-            .order('created_at', { ascending: false })
+            .order('publish_date', { ascending: false })
             .limit(maxItems)
 
           if (!error && articlesData) {
@@ -250,7 +250,7 @@ export default function RelatedContent({ currentEvent, currentDungeon, maxItems 
                       {article.category}
                     </span>
                     <span className="text-gray-400 text-xs">
-                      {new Date(article.created_at).toLocaleDateString('en-US', {
+                      {new Date(article.publish_date).toLocaleDateString('en-US', {
                         month: 'short',
                         day: 'numeric'
                       })}

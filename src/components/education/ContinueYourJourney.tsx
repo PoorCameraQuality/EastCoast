@@ -12,7 +12,7 @@ interface Article {
   category: string
   tags?: string[]
   featured: boolean
-  created_at: string
+  publish_date: string
 }
 
 interface ContinueYourJourneyProps {
@@ -39,12 +39,12 @@ export default function ContinueYourJourney({ currentArticle }: ContinueYourJour
       // First, try to get articles from the same category
       let { data: categoryArticles, error: categoryError } = await client
         .from('articles')
-        .select('id, title, slug, excerpt, category, tags, featured, created_at')
+        .select('id, title, slug, excerpt, category, tags, featured, publish_date')
         .eq('status', 'published')
         .eq('category', currentArticle.category)
         .neq('id', currentArticle.id)
         .order('featured', { ascending: false })
-        .order('created_at', { ascending: false })
+        .order('publish_date', { ascending: false })
         .limit(2)
 
       if (categoryError) {
@@ -57,12 +57,12 @@ export default function ContinueYourJourney({ currentArticle }: ContinueYourJour
       if (!categoryArticles || categoryArticles.length < 2) {
         const { data: recentArticles, error: recentError } = await client
           .from('articles')
-          .select('id, title, slug, excerpt, category, tags, featured, created_at')
+          .select('id, title, slug, excerpt, category, tags, featured, publish_date')
           .eq('status', 'published')
           .neq('id', currentArticle.id)
           .not('category', 'eq', currentArticle.category)
           .order('featured', { ascending: false })
-          .order('created_at', { ascending: false })
+          .order('publish_date', { ascending: false })
           .limit(2 - (categoryArticles?.length || 0))
 
         if (!recentError && recentArticles) {
@@ -172,7 +172,7 @@ export default function ContinueYourJourney({ currentArticle }: ContinueYourJour
                   {article.category}
                 </span>
                 <span className="text-xs text-gray-500">
-                  {new Date(article.created_at).toLocaleDateString('en-US', {
+                  {new Date(article.publish_date).toLocaleDateString('en-US', {
                     month: 'short',
                     day: 'numeric',
                     year: 'numeric'

@@ -17,7 +17,7 @@ export default async function sitemap() {
     if (supabase) {
       const { data, error } = await supabase
         .from('articles')
-        .select('slug, created_at, updated_at')
+        .select('slug, publish_date, last_updated')
         .eq('status', 'published')
       
       if (data && !error) {
@@ -66,7 +66,7 @@ export default async function sitemap() {
   // Generate database education article URLs
   const databaseArticleUrls = databaseArticles.map((article) => ({
     url: `${baseUrl}/education/${article.slug}`,
-    lastModified: new Date(article.updated_at || article.created_at),
+    lastModified: new Date(article.last_updated || article.publish_date),
     changeFrequency: 'monthly' as const,
     priority: 0.7,
     alternates: {
