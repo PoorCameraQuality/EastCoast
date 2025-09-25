@@ -137,9 +137,17 @@ export default async function ArticlePage({ params }: { params: { slug: string }
 
     const articleTags = formatTags(article.tags)
 
-    // Process Markdown content
-    const processedContent = stripFirstH1(article.content)
-    const contentHtml = await markdownToHtml(processedContent)
+    // Check if content is HTML or markdown and process accordingly
+    let contentHtml: string
+    
+    if (article.content.includes('<p>') || article.content.includes('<h1>') || article.content.includes('<div>')) {
+      // Content is already HTML, use it directly
+      contentHtml = article.content
+    } else {
+      // Content is markdown, process it
+      const processedContent = stripFirstH1(article.content)
+      contentHtml = await markdownToHtml(processedContent)
+    }
 
     // Get category color
     const getCategoryColor = (category: string) => {
