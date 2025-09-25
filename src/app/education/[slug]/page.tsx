@@ -139,7 +139,20 @@ export default async function ArticlePage({ params }: { params: { slug: string }
 
     // Process Markdown content
     const processedContent = stripFirstH1(article.content)
-    const contentHtml = await markdownToHtml(processedContent)
+    let contentHtml: string
+    
+    // Debug logging
+    console.log('Article content length:', article.content.length)
+    console.log('Processed content length:', processedContent.length)
+    
+    try {
+      contentHtml = await markdownToHtml(processedContent)
+      console.log('Generated HTML length:', contentHtml.length)
+    } catch (error) {
+      console.error('Markdown processing error:', error)
+      // Fallback to raw content if markdown processing fails
+      contentHtml = `<div class="prose">${article.content.replace(/\n/g, '<br>')}</div>`
+    }
 
     // Get category color
     const getCategoryColor = (category: string) => {
