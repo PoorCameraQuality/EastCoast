@@ -6,7 +6,7 @@ import Breadcrumb from '@/components/Breadcrumb'
 import Script from 'next/script'
 import { stripFirstH1 } from '@/lib/markdown'
 import ContinueYourJourney from '@/components/education/ContinueYourJourney'
-import Markdown from '@/components/Markdown'
+import Markdown from '@/components/MarkdownSimple'
 import { normalizeMarkdown } from '@/lib/normalizeMarkdown'
 
 interface ArticlePageProps {
@@ -141,6 +141,11 @@ export default async function ArticlePage({ params }: { params: { slug: string }
 
     // Process content for markdown rendering
     const processedContent = normalizeMarkdown(article.content || "")
+    
+    // Debug: Log content info
+    console.log('Article content length:', article.content?.length || 0)
+    console.log('Processed content length:', processedContent.length)
+    console.log('First 200 chars of processed content:', processedContent.substring(0, 200))
 
     // Get category color
     const getCategoryColor = (category: string) => {
