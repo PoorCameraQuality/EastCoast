@@ -4,7 +4,7 @@ import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import Breadcrumb from '@/components/Breadcrumb'
 import Script from 'next/script'
-import { markdownToHtml, stripFirstH1 } from '@/lib/markdown'
+import { stripFirstH1 } from '@/lib/markdown'
 import ContinueYourJourney from '@/components/education/ContinueYourJourney'
 
 interface ArticlePageProps {
@@ -137,18 +137,33 @@ export default async function ArticlePage({ params }: { params: { slug: string }
 
     const articleTags = formatTags(article.tags)
 
-    // Check if content is HTML or markdown and process accordingly
+    // Simple content processing - avoid markdown processing that's causing React errors
     let contentHtml: string
     
-    if (article.content.includes('<p>') || article.content.includes('<h1>') || article.content.includes('<div>') || article.content.includes('<br>')) {
-      // Content is already HTML, use it directly
-      contentHtml = article.content
-    } else if (article.content.includes('# ') || article.content.includes('## ') || article.content.includes('**') || article.content.includes('*')) {
-      // Content is markdown, process it
-      const processedContent = stripFirstH1(article.content)
-      contentHtml = await markdownToHtml(processedContent)
-    } else {
-      // Fallback: treat as plain text
+    try {
+      // Check if content is HTML or markdown and process accordingly
+      if (article.content.includes('<p>') || article.content.includes('<h1>') || article.content.includes('<div>') || article.content.includes('<br>')) {
+        // Content is already HTML, use it directly
+        contentHtml = article.content
+      } else if (article.content.includes('# ') || article.content.includes('## ') || article.content.includes('**') || article.content.includes('*')) {
+        // Content is markdown, but use simple processing to avoid React errors
+        const processedContent = stripFirstH1(article.content)
+        // Simple markdown to HTML conversion without external libraries
+        contentHtml = processedContent
+          .replace(/^# (.*$)/gim, '<h1>$1</h1>')
+          .replace(/^## (.*$)/gim, '<h2>$1</h2>')
+          .replace(/^### (.*$)/gim, '<h3>$1</h3>')
+          .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+          .replace(/\*(.*?)\*/g, '<em>$1</em>')
+          .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>')
+          .replace(/\n/g, '<br>')
+      } else {
+        // Fallback: treat as plain text
+        contentHtml = `<div class="prose">${article.content.replace(/\n/g, '<br>')}</div>`
+      }
+    } catch (error) {
+      console.error('Content processing error:', error)
+      // Fallback to simple text rendering
       contentHtml = `<div class="prose">${article.content.replace(/\n/g, '<br>')}</div>`
     }
 
