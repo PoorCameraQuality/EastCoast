@@ -7,6 +7,7 @@ import Script from 'next/script'
 import { stripFirstH1 } from '@/lib/markdown'
 import ContinueYourJourney from '@/components/education/ContinueYourJourney'
 import Markdown from '@/components/Markdown'
+import { normalizeMarkdown } from '@/lib/normalizeMarkdown'
 
 interface ArticlePageProps {
   params: { slug: string }
@@ -139,8 +140,7 @@ export default async function ArticlePage({ params }: { params: { slug: string }
     const articleTags = formatTags(article.tags)
 
     // Process content for markdown rendering
-    // Use the content directly since our Markdown component handles everything
-    const processedContent = article.content
+    const processedContent = normalizeMarkdown(article.content || "")
 
     // Get category color
     const getCategoryColor = (category: string) => {
