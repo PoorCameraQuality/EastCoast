@@ -261,7 +261,7 @@ export default async function MinimalArticlePage({ params }: { params: { slug: s
                   {/* Article Content - MINIMAL RENDERING */}
                   <div className="prose prose-neutral dark:prose-invert max-w-none">
                     <div className="text-gray-300 leading-relaxed">
-                      {article.content.split('\n').map((line, index) => (
+                      {article.content.split('\n').map((line: string, index: number) => (
                         <div key={index} className="mb-2">
                           {line.startsWith('# ') ? (
                             <h1 className="text-3xl font-bold text-white mb-4">{line.substring(2)}</h1>
