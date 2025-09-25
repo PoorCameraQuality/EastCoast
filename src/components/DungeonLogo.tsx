@@ -37,7 +37,7 @@ export default function DungeonLogo({ src, alt, size = 'medium', className = '' 
         sizes="100vw"
         className={`object-contain rounded-xl ${image}`}
         style={{ width: 'auto', height: 'auto' }}
-        loading="lazy"
+        loading={size === 'large' ? 'eager' : 'lazy'}
         priority={size === 'large'} // Only prioritize large images
       />
     </div>

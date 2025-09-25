@@ -66,7 +66,7 @@ export default function EventLogo({ src, alt, size = 'medium', className = '' }:
         className={`object-contain rounded-xl ${image}`}
         onError={handleImageError}
         style={{ width: 'auto', height: 'auto' }}
-        loading="lazy"
+        loading={size === 'large' ? 'eager' : 'lazy'}
         priority={size === 'large'} // Only prioritize large images
       />
     </div>

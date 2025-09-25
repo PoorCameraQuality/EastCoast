@@ -24,7 +24,7 @@ interface Article {
   tags?: string[]
   featured: boolean
   status: string
-  created_at: string
+  publish_date: string
   read_time?: string
   seo_title?: string
   meta_description?: string
@@ -236,7 +236,7 @@ export default async function ArticlePage({ params }: { params: { slug: string }
                     )}
                     <div>
                       <span className="font-medium text-white">Published:</span>
-                      <p>{new Date(article.created_at).toLocaleDateString('en-US', {
+                      <p>{new Date(article.publish_date).toLocaleDateString('en-US', {
                         year: 'numeric',
                         month: 'long',
                         day: 'numeric'

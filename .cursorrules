@@ -1,161 +1,459 @@
 # =====================================================
-# CURSOR RULES – East Coast Kink Events Project
+# CURSOR RULES – COMPREHENSIVE WEB PROJECT TEMPLATE
 # =====================================================
+# Drop this file into any new project root for comprehensive 
+# SEO, analytics, accessibility, and modern web best practices
 
 # ===========================
-# DATE AUTHORITY & REWRITE
+# PROJECT ARCHITECTURE STANDARDS
 # ===========================
 rules:
-  - Date Authority:
-      - The ONLY authoritative dates are the structured fields in data objects:
-        - events[*].date.start, events[*].date.end, events[*].date.display
-      - Never trust dates embedded inside prose (excerpt, longDescription, SEO text) unless they match the authoritative fields.
+  - Technology Stack:
+      - Use Next.js 14+ App Router for all new projects
+      - TypeScript for all code (strict mode enabled)
+      - Tailwind CSS for styling with custom design system
+      - Supabase for backend/database when needed
+      - Vercel for deployment (or compatible platform)
 
-  - Date Update Workflow (MANDATORY):
-      1) When the user gives a new date for an event (e.g., new year or specific start/end):
-         - Locate the event by slug or exact name.
-         - Update `date.start` and/or `date.end`.
-         - Regenerate `date.display` from start/end (keep existing formatting style).
-      2) Rewrite any stale dates in:
-         - `excerpt`, `longDescription`, `seo.title`, `seo.description`, `seo.keywords`
-         - any other strings in that event that contain years or explicit date ranges
-      3) If the site uses templates/components that render dates, prefer inserting a placeholder (e.g., `{{date.display}}`) over hard-coded dates.
-      4) After rewriting, run a **Stale-Date Scan** (see patterns below). If any mismatch remains, STOP and report:
-         - "⚠ Stale date reference found: '<match>' — please confirm or remove."
+  - File Structure Standards:
+      - /src/app/ - Next.js App Router pages
+      - /src/components/ - Reusable UI components
+      - /src/data/ - Static data files (.js for flexibility)
+      - /src/lib/ - Utility functions and configurations
+      - /src/hooks/ - Custom React hooks
+      - /src/contexts/ - React context providers
+      - /src/types/ - TypeScript type definitions
+      - /public/ - Static assets (images, icons, etc.)
 
-  - Stale-Date Scan (Regex patterns to search in all string fields):
-      # Years
-      - /\b(19|20)\d{2}\b/g
-      # Month + day (e.g., May 7–11, 2026)
-      - /\b(Jan(uary)?|Feb(ruary)?|Mar(ch)?|Apr(il)?|May|Jun(e)?|Jul(y)?|Aug(ust)?|Sep(t)?(ember)?|Oct(ober)?|Nov(ember)?|Dec(ember)?)\s+\d{1,2}(\s?[-–—]\s?\d{1,2})?,?\s*(,?\s*(19|20)\d{2})?\b/g
-      # Abbrev date ranges (e.g., May 7–11, '26; Aug 26–Sep 1, 2025)
-      - /\b(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\.?\s+\d{1,2}\s?[-–—]\s?(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\.?\s+\d{1,2},?\s*(19|20)\d{2}\b/g
-      # Display-like strings (e.g., "Aug 26-Sep 1, 2025", "May 7-11, 2026")
-      - /\b([A-Z][a-z]{2,9})\s+\d{1,2}\s?[-–]\s?([A-Z][a-z]{2,9})?\s?\d{1,2},?\s*(19|20)\d{2}\b/g
-
-  - Rewrite Rules:
-      - If a string contains a date/year that doesn't equal the authoritative start/end years (or `date.display`), replace it with the new computed `date.display`.
-      - Keep the exact style already used in `date.display` (e.g., "Aug 26-Sep 1, 2025").
-      - Never convert a single date to a range or vice versa unless `date.start`/`date.end` dictates it.
-
-  - No Guessing:
-      - If either start or end is unknown, do not invent. Output:
-        "⚠ Missing date.start or date.end for {slug} — cannot regenerate display."
-
-  - Output Style (for marketing):
-      - Use `{{date.display}}` or the computed display string, not hard-coded numbers.
-      - Prefer removing fixed years from prose where possible and reference the display field.
+  - Component Architecture:
+      - Functional components with hooks only
+      - Client components explicitly marked with "use client"
+      - Server components by default (no "use client" unless needed)
+      - Separate business logic from presentation
+      - Use custom hooks for complex state management
 
 # ===========================
-# CONTENT CREATION & DATA SOURCE DISCIPLINE
+# SEO & METADATA REQUIREMENTS
 # ===========================
-  # 1. Data Source Discipline
-  - Always locate and read these source files before generating descriptions:
-    - /src/data/events.js
-    - /src/data/dungeons.js
-    - /src/data/education.js
-  - Never use invented or assumed details.
-  - If a fact is missing, output:  
-    "⚠ Missing [FIELD NAME] in source — please provide."
-  - Do not pull data from unrelated files or external memory unless explicitly provided.
+  - Metadata Strategy (MANDATORY for every page):
+      1. **Root Layout** (layout.tsx):
+         - Complete Metadata object with title template
+         - OpenGraph configuration (type, locale, siteName, images)
+         - Twitter Card setup (summary_large_image)
+         - Robots configuration (index, follow, googleBot settings)
+         - Verification codes (Google, Bing, etc.)
+         - Canonical URLs and alternates
+         - Viewport configuration
+         - Icons (favicon, apple-touch-icon)
 
-  # 2. Field Extraction Requirements
-  - Parse and use these exact fields from the JS data objects:
-    - name
-    - slug
-    - date.start
-    - date.end
-    - date.display
-    - location.city
-    - location.state
-    - location.region (if present)
-    - category
-    - excerpt
-    - longDescription
-    - website
-    - logo
-    - features[]
-    - seo.title
-    - seo.description
-    - seo.keywords
-  - Preserve all spelling, capitalization, and date formats from source data.
+      2. **Individual Pages** (page.tsx):
+         - Unique title and description for every page
+         - Relevant keywords array
+         - Page-specific OpenGraph data
+         - Custom canonical URLs when needed
+         - Structured data components
 
-  # 3. Description Generation
-  - Base marketing descriptions ONLY on `excerpt`, `longDescription`, and `features[]`.
-  - Use active, inviting language.
-  - Keep factual data (dates, locations, URLs, names) exactly as in source.
-  - Structure:  
-    1. **Headline**: event/dungeon name + date + location.  
-    2. **Hook**: 1–2 sentences from excerpt.  
-    3. **Highlights**: bullet list of top features from features[].  
-    4. **Call-to-Action**: short, direct, encouraging click/attendance.
+      3. **Dynamic Pages** ([slug]/page.tsx):
+         - generateMetadata() function using params
+         - Dynamic titles with consistent templates
+         - Content-based descriptions (excerpt/summary)
+         - Dynamic OpenGraph images when available
+         - Proper canonical URL generation
 
-  # 4. Style & SEO Guidelines
-  - Use inclusive, positive language.
-  - Naturally integrate keywords from seo.keywords.
-  - Keep sentences clear, avoid jargon unless defined.
-  - No exaggerated claims beyond what's in source.
+  - Title Templates:
+      - Homepage: "Site Name - Primary Value Proposition"
+      - Content Pages: "Page Title | Site Name"
+      - Dynamic Content: "Content Title | Site Name"
+      - Keep titles under 60 characters
+      - Include primary keywords naturally
 
-  # 5. Consistency Rules
-  - Match formatting style of existing repo entries.
-  - Keep bullet points concise (3–8 words each).
-  - Follow same HTML/Markdown conventions as other event pages.
-
-  # 6. Missing Info Handling
-  - Never invent:
-    - Dates
-    - Locations
-    - Age restrictions
-    - Pricing
-  - Instead, insert placeholder + request clarification.
-
-  # 7. Example Template
-  - Example for event:
-    ```
-    ## {name} — {date.display}, {location.city}, {location.state}
-
-    {excerpt}
-
-    **Event Highlights**
-    - {feature_1}
-    - {feature_2}
-    - {feature_3}
-
-    🔗 Learn more and register: {website}
-    ```
+  - Description Guidelines:
+      - 150-160 characters maximum
+      - Include primary keywords in first 120 characters
+      - Write for users, not just search engines
+      - Unique description for every page
+      - Include call-to-action when appropriate
 
 # ===========================
-# PROJECT STRUCTURE & STANDARDS
+# STRUCTURED DATA REQUIREMENTS
 # ===========================
-  - Code Standards:
-      - Use TypeScript for all new code
-      - Follow Next.js 14+ App Router conventions
-      - Use Tailwind CSS for styling
-      - Prefer functional components with hooks
-      - Maintain mobile-first responsive design
+  - Schema.org Implementation (MANDATORY):
+      1. **Website Level**:
+         - WebSite schema on homepage
+         - Organization schema with contact info
+         - SearchAction if search functionality exists
 
+      2. **Content Types**:
+         - Article schema for blog posts/articles
+         - Event schema for events (with location, date, organizer)
+         - LocalBusiness for business listings
+         - ItemList for collection pages
+         - ContactPage for contact pages
+
+      3. **Implementation Standards**:
+         - Use Next.js Script component with type="application/ld+json"
+         - Escape HTML in JSON with custom escapeHtmlInJson function
+         - Validate JSON before injection (try/catch blocks)
+         - Include unique IDs for multiple schemas on same page
+         - Use semantic HTML5 elements alongside structured data
+
+  - Required Schema Properties:
+      - @context: "https://schema.org"
+      - @type: Appropriate schema type
+      - name/headline: Clear, descriptive title
+      - description: Concise, informative description
+      - url: Canonical URL
+      - mainEntityOfPage: Reference to the page
+      - datePublished/dateModified: ISO date strings
+      - author/publisher: Organization or Person schema
+
+# ===========================
+# ANALYTICS & TRACKING SETUP
+# ===========================
+  - Google Analytics 4 Implementation:
+      1. **Core Setup**:
+         - GoogleAnalytics component with consent management
+         - Environment variable for GA_MEASUREMENT_ID
+         - usePathname and useSearchParams for route tracking
+         - Suspense wrapper for client-side components
+
+      2. **Custom Tracking Hooks**:
+         - useGoogleAnalytics hook for event tracking
+         - useComprehensiveTracking for advanced metrics
+         - useSafeTracking for lightweight tracking
+         - Form interaction tracking
+         - Scroll depth tracking
+         - Time on page tracking
+
+      3. **Event Tracking Categories**:
+         - Page views (automatic)
+         - User interactions (clicks, form submissions)
+         - Content engagement (scroll depth, time spent)
+         - Error tracking (404s, form errors, API errors)
+         - Traffic source analysis (UTM parameters, referrers)
+         - Device and browser information
+
+  - Privacy & Consent:
+      - Implement consent management before tracking
+      - Respect Do Not Track headers
+      - GDPR compliance for EU users
+      - Clear privacy policy with tracking disclosure
+      - Option to opt-out of tracking
+
+  - Context Providers Structure:
+      - AuthProvider for authentication state
+      - GA4Provider for analytics context
+      - Tracking wrappers for safe event handling
+
+# ===========================
+# ACCESSIBILITY STANDARDS
+# ===========================
+  - WCAG 2.1 AA Compliance (MANDATORY):
+      1. **Semantic HTML**:
+         - Use proper heading hierarchy (h1 → h6)
+         - Semantic elements (main, nav, section, article, aside)
+         - Form labels and fieldsets
+         - Button vs link semantic correctness
+
+      2. **Keyboard Navigation**:
+         - Skip to content link (sr-only, focus:not-sr-only)
+         - Proper tab order (tabIndex management)
+         - Focus indicators on all interactive elements
+         - Escape key handling for modals/dropdowns
+
+      3. **Screen Reader Support**:
+         - Alt text for all images
+         - ARIA labels and descriptions
+         - Role attributes for custom components
+         - Live regions for dynamic content updates
+
+      4. **Color & Contrast**:
+         - Minimum 4.5:1 contrast ratio for text
+         - 3:1 for large text and UI elements
+         - Don't rely solely on color for information
+         - Test with color blindness simulators
+
+# ===========================
+# PERFORMANCE OPTIMIZATION
+# ===========================
+  - Core Web Vitals Targets:
+      - LCP (Largest Contentful Paint): < 2.5s
+      - FID (First Input Delay): < 100ms
+      - CLS (Cumulative Layout Shift): < 0.1
+
+  - Image Optimization:
+      - Use Next.js Image component with proper sizing
+      - WebP format with fallbacks
+      - Lazy loading for below-fold images
+      - Proper alt text and aspect ratios
+      - Responsive images with srcSet
+
+  - Code Splitting:
+      - Dynamic imports for heavy components
+      - Route-based code splitting (automatic with App Router)
+      - Lazy load components below the fold
+      - Bundle analysis and optimization
+
+  - Caching Strategy:
+      - Static asset caching (images, fonts, CSS)
+      - API response caching where appropriate
+      - Browser caching headers
+      - CDN utilization
+
+# ===========================
+# SECURITY HEADERS & BEST PRACTICES
+# ===========================
+  - Required Security Headers (in next.config.js):
+      - X-Frame-Options: DENY
+      - X-Content-Type-Options: nosniff
+      - X-XSS-Protection: 1; mode=block
+      - Referrer-Policy: origin-when-cross-origin
+      - Strict-Transport-Security: max-age=31536000; includeSubDomains
+      - Content-Security-Policy: (customized per project needs)
+
+  - Content Security Policy Guidelines:
+      - default-src 'self'
+      - script-src: only trusted domains (Google Analytics, etc.)
+      - style-src: 'self' 'unsafe-inline' for Tailwind
+      - img-src: 'self' data: https: for external images
+      - connect-src: API endpoints and analytics
+      - Regularly audit and update CSP
+
+# ===========================
+# SITEMAP & ROBOTS.TXT
+# ===========================
+  - Dynamic Sitemap Generation:
+      - /app/sitemap.ts with proper TypeScript types
+      - Include all public pages with metadata
+      - lastModified dates for content freshness
+      - changeFrequency and priority settings
+      - Canonical URLs for all entries
+      - Filter out draft/unpublished content
+
+  - Robots.txt Configuration:
+      - Allow all crawlers by default
+      - Disallow admin/auth/API routes
+      - Include sitemap location
+      - Crawl-delay for respectful crawling
+      - User-agent specific rules when needed
+
+# ===========================
+# CONTENT MANAGEMENT
+# ===========================
   - Data Structure Standards:
-      - All events must have: excerpt, longDescription, features array
-      - Consistent field ordering across all event objects
-      - Validate all slugs are unique
-      - Ensure all required fields are present
+      - Consistent field naming across all content types
+      - Required fields: name, slug, excerpt, description
+      - SEO fields: seo.title, seo.description, seo.keywords
+      - Date fields: ISO 8601 format strings
+      - Location fields: structured objects (city, state, region)
+      - Status fields for published/draft content
 
-  - Geographic Standards:
-      - East Coast = anything east of the Mississippi River
-      - Include: ME, NH, VT, MA, RI, CT, NY, NJ, PA, DE, MD, VA, NC, SC, GA, FL, IL, OH, LA, MI, etc.
-      - Standardize region naming (Northeastern, Southeastern, etc.)
+  - Content Validation:
+      - Zod schemas for type safety
+      - Required field validation
+      - Slug uniqueness checks
+      - Date format validation
+      - URL format validation
+
+# ===========================
+# RESPONSIVE DESIGN STANDARDS
+# ===========================
+  - Mobile-First Approach:
+      - Design for mobile screens first (320px+)
+      - Progressive enhancement for larger screens
+      - Touch-friendly interactive elements (44px minimum)
+      - Readable text without zooming (16px base)
+
+  - Breakpoint Strategy:
+      - sm: 640px (mobile landscape)
+      - md: 768px (tablet portrait)
+      - lg: 1024px (tablet landscape/small desktop)
+      - xl: 1280px (desktop)
+      - 2xl: 1536px (large desktop)
+
+  - Layout Patterns:
+      - CSS Grid for page layouts
+      - Flexbox for component layouts
+      - Container queries when supported
+      - Avoid horizontal scrolling
+
+# ===========================
+# ERROR HANDLING & LOGGING
+# ===========================
+  - Error Boundaries:
+      - React error boundaries for component crashes
+      - Graceful fallback UI components
+      - Error reporting to analytics
+      - User-friendly error messages
+
+  - API Error Handling:
+      - Consistent error response format
+      - HTTP status code standards
+      - Rate limiting implementation
+      - Request validation with proper error messages
+
+  - Client-Side Error Tracking:
+      - JavaScript error tracking
+      - Network error handling
+      - Form validation errors
+      - 404 and routing errors
+
+# ===========================
+# DEVELOPMENT WORKFLOW
+# ===========================
+  - Code Quality Standards:
+      - ESLint configuration with Next.js rules
+      - Prettier for code formatting
+      - TypeScript strict mode
+      - Pre-commit hooks for quality checks
+
+  - Testing Strategy:
+      - Unit tests for utility functions
+      - Integration tests for API routes
+      - End-to-end tests for critical user flows
+      - Accessibility testing with automated tools
+
+  - Build Process:
+      - Type checking before builds
+      - Bundle size analysis
+      - Performance budgets
+      - Environment-specific configurations
+
+# ===========================
+# DEPLOYMENT CHECKLIST
+# ===========================
+  - Pre-Deployment Verification:
+      - All environment variables configured
+      - Database migrations completed
+      - SSL certificate installed
+      - Domain DNS properly configured
+      - CDN configured for static assets
+
+  - Post-Deployment Testing:
+      - All pages load correctly
+      - Forms submit successfully
+      - Analytics tracking works
+      - Search console verification
+      - Performance metrics within targets
+
+  - Monitoring Setup:
+      - Error monitoring (Sentry, etc.)
+      - Performance monitoring
+      - Uptime monitoring
+      - Analytics dashboard setup
 
 # ===========================
 # AI ASSISTANT BEHAVIOR
 # ===========================
-  - Always test builds after making changes
-  - Maintain existing authentication patterns
-  - Preserve existing naming conventions
-  - Report any data inconsistencies found
-  - Provide comprehensive change summaries
+  - Implementation Priority:
+      1. Create proper file structure first
+      2. Implement metadata and SEO for each page
+      3. Add structured data components
+      4. Set up analytics and tracking
+      5. Ensure accessibility compliance
+      6. Optimize performance
+      7. Test and validate everything
+
+  - Code Generation Rules:
+      - Always include proper TypeScript types
+      - Add comprehensive comments for complex logic
+      - Use semantic HTML elements
+      - Include proper error handling
+      - Follow established naming conventions
+      - Test builds after major changes
+
+  - Content Creation Guidelines:
+      - Write for humans first, search engines second
+      - Use inclusive, accessible language
+      - Include proper heading hierarchy
+      - Add alt text for all images
+      - Ensure content is scannable with bullet points
 
 notes:
-  - Goal: "Read First, Write Second." Dates live in the structured fields; prose stays date-agnostic or uses the display string.
-  - Priority: Data consistency > User experience > Code optimization
-  - Always validate changes with a build test before considering work complete.
-  - This applies to **all** content touching events, dungeons, or education.
+  - Goal: "Build it right the first time" - SEO, analytics, and accessibility from day one
+  - Priority: User experience > Search rankings > Development speed
+  - Always validate changes with lighthouse audits and accessibility testing
+  - Keep performance budgets and core web vitals in mind
+  - Document any deviations from these standards with clear reasoning
+
+# ===========================
+# QUICK REFERENCE TEMPLATES
+# ===========================
+
+# Basic Page Metadata Template:
+```typescript
+export const metadata: Metadata = {
+  title: 'Page Title | Site Name',
+  description: 'Compelling description under 160 characters that includes primary keywords and value proposition.',
+  keywords: ['primary keyword', 'secondary keyword', 'related terms'],
+  openGraph: {
+    title: 'Page Title | Site Name',
+    description: 'Same as meta description or slightly different for social sharing.',
+    type: 'website',
+    url: 'https://yourdomain.com/page-path',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Descriptive alt text' }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Page Title | Site Name',
+    description: 'Twitter-optimized description.',
+    images: ['/og-image.png'],
+  },
+  alternates: { canonical: 'https://yourdomain.com/page-path' },
+}
+```
+
+# Basic Structured Data Template:
+```typescript
+export function PageStructuredData({ data }: { data: any }) {
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "WebPage", // or Article, Event, etc.
+    "name": data.title,
+    "description": data.description,
+    "url": `https://yourdomain.com/${data.slug}`,
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": `https://yourdomain.com/${data.slug}`
+    }
+  }
+
+  try {
+    const jsonString = JSON.stringify(structuredData).replace(/</g, '\\u003c')
+    return (
+      <Script
+        id={`page-structured-data-${data.slug}`}
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: jsonString }}
+      />
+    )
+  } catch (error) {
+    console.error('Invalid JSON in PageStructuredData:', error)
+    return null
+  }
+}
+```
+
+# Analytics Hook Template:
+```typescript
+export const useAnalytics = () => {
+  const trackEvent = (action: string, category: string, label?: string) => {
+    if (typeof window !== 'undefined' && (window as any).gtag) {
+      (window as any).gtag('event', action, {
+        event_category: category,
+        event_label: label,
+      })
+    }
+  }
+
+  const trackPageView = (url: string) => {
+    if (typeof window !== 'undefined' && (window as any).gtag) {
+      (window as any).gtag('config', process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID, {
+        page_path: url,
+      })
+    }
+  }
+
+  return { trackEvent, trackPageView }
+}
+```

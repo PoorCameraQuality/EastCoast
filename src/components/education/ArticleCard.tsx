@@ -12,7 +12,7 @@ interface ArticleCardProps {
     tags?: string | string[]
     featured: boolean
     read_time?: string
-    created_at?: string
+    publish_date?: string
   }
 }
 
@@ -122,7 +122,7 @@ export default function ArticleCard({ article }: ArticleCardProps) {
               {article.read_time && (
                 <div className="text-xs text-gray-400 mb-1">{article.read_time}</div>
               )}
-              <div className="text-xs text-gray-500">{formatDate(article.created_at)}</div>
+              <div className="text-xs text-gray-500">{formatDate(article.publish_date)}</div>
             </div>
           </div>
         </div>

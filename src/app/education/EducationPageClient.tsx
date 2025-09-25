@@ -19,7 +19,7 @@ interface Article {
   tags?: string | string[]
   featured: boolean
   status: string
-  created_at: string
+  publish_date: string
   read_time?: string
 }
 
@@ -60,7 +60,7 @@ export default function EducationPageClient() {
         .from('articles')
         .select('*')
         .eq('status', 'published')
-        .order('id', { ascending: false })
+        .order('publish_date', { ascending: false })
 
       if (articlesError) {
         throw articlesError
