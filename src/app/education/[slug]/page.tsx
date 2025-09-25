@@ -6,7 +6,7 @@ import Breadcrumb from '@/components/Breadcrumb'
 import Script from 'next/script'
 import { stripFirstH1 } from '@/lib/markdown'
 import ContinueYourJourney from '@/components/education/ContinueYourJourney'
-import Markdown from '@/components/MarkdownSimple'
+import Markdown from '@/components/Markdown'
 import { normalizeMarkdown } from '@/lib/normalizeMarkdown'
 
 interface ArticlePageProps {
