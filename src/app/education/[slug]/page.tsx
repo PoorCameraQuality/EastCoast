@@ -9,6 +9,51 @@ import ContinueYourJourney from '@/components/education/ContinueYourJourney'
 import Markdown from '@/components/Markdown'
 import { normalizeMarkdown } from '@/lib/normalizeMarkdown'
 
+// Article JSON-LD structured data
+function ArticleStructuredData({ article }: { article: Article }) {
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": article.title,
+    "description": article.excerpt,
+    "datePublished": article.publish_date,
+    "dateModified": article.publish_date, // Use last_updated if available
+    "author": {
+      "@type": "Person",
+      "name": article.author_name,
+      "description": article.author_bio
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "East Coast Kink Events",
+      "url": "https://eastcoastkinkevents.com"
+    },
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": `https://eastcoastkinkevents.com/education/${article.slug}`
+    },
+    "url": `https://eastcoastkinkevents.com/education/${article.slug}`,
+    "image": "https://eastcoastkinkevents.com/og-image.png",
+    "keywords": article.focus_keywords || article.tags,
+    "articleSection": article.category,
+    "wordCount": article.content?.length || 0
+  }
+
+  try {
+    const jsonString = JSON.stringify(structuredData).replace(/</g, '\\u003c')
+    return (
+      <Script
+        id={`article-structured-data-${article.slug}`}
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: jsonString }}
+      />
+    )
+  } catch (error) {
+    console.error('Invalid JSON in ArticleStructuredData:', error)
+    return null
+  }
+}
+
 interface ArticlePageProps {
   params: { slug: string }
 }
@@ -105,7 +150,28 @@ export async function generateMetadata({ params }: ArticlePageProps): Promise<Me
   }
 }
 
-export const dynamic = 'force-dynamic'
+// Enable ISR - regenerate every 30 minutes
+export const revalidate = 1800
+
+// Generate static params for published articles
+export async function generateStaticParams() {
+  try {
+    if (!supabase) return []
+    
+    const { data: articles } = await supabase
+      .from('articles')
+      .select('slug')
+      .eq('status', 'published')
+      .limit(50) // Generate top 50 articles at build time
+    
+    return articles?.map((article) => ({
+      slug: article.slug,
+    })) || []
+  } catch (error) {
+    console.error('Error generating static params:', error)
+    return []
+  }
+}
 
 export default async function ArticlePage({ params }: { params: { slug: string } }) {
   const { slug } = params
@@ -189,6 +255,9 @@ export default async function ArticlePage({ params }: { params: { slug: string }
             })
           }}
         />
+        
+        {/* Article JSON-LD */}
+        <ArticleStructuredData article={article} />
         
         <div className="container-custom py-16">
           <Breadcrumb items={breadcrumbItems} />
