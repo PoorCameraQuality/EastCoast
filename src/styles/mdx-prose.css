@@ -1,77 +1,63 @@
-/* Base article body */
+/* Readability defaults */
 .article-prose {
-  /* Use typography defaults, then tweak below */
+  max-width: 70ch;              /* comfortable measure */
 }
 
-/* Headings: a bit tighter and bolder */
-.article-prose :where(h1, h2, h3, h4) {
-  line-height: 1.2;
-  font-weight: 700;
-}
-
-/* Paragraph size/line-height for readability */
+/* Body text */
 .article-prose p {
-  line-height: 1.75;
-  font-size: 1.05rem;
+  font-size: 1.125rem;          /* ~18px */
+  line-height: 1.85;
+  margin: 0.9rem 0 1.1rem;
+  color: rgba(255,255,255,0.92);
 }
 
-/* Lists: more breathing room */
-.article-prose ul, 
-.article-prose ol {
+/* Headings spacing */
+.article-prose h2 { font-size: 1.5rem; margin: 1.6rem 0 0.8rem; }
+.article-prose h3 { font-size: 1.25rem; margin: 1.4rem 0 0.6rem; }
+
+/* Lists */
+.article-prose ul, .article-prose ol {
   padding-left: 1.25rem;
   margin: 0.6rem 0 1rem;
 }
+.article-prose li { margin: 0.25rem 0; }
 
-/* --- TABLES (Dark Mode Friendly) --- */
+/* Blockquote */
+.article-prose blockquote {
+  border-left: 3px solid rgba(255,255,255,0.22);
+  padding-left: 1rem;
+  color: rgba(255,255,255,0.86);
+}
+
+/* Tables */
+.article-prose .table-wrap { overflow-x: auto; }
 .article-prose table {
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
-  font-size: 0.975rem;
-  line-height: 1.6;
-  border-radius: 0.75rem;
-  overflow: hidden;             /* clip rounded corners */
   border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 0.75rem;
   box-shadow: 0 4px 18px rgba(0,0,0,0.25);
 }
-
-/* Header row */
 .article-prose thead th {
   background: rgba(255,255,255,0.06);
+  color: rgba(255,255,255,0.95);
   font-weight: 700;
-  text-align: left;
-  padding: 0.85rem 0.9rem;
-  border-bottom: 1px solid rgba(255,255,255,0.12);
-  color: rgba(255,255,255,0.92);
-  vertical-align: middle;
-}
-
-/* Cells */
-.article-prose td {
   padding: 0.8rem 0.9rem;
+  border-bottom: 1px solid rgba(255,255,255,0.12);
+}
+.article-prose td {
+  padding: 0.75rem 0.9rem;
   border-bottom: 1px solid rgba(255,255,255,0.08);
-  color: rgba(255,255,255,0.9);
+  vertical-align: top;
 }
-
-/* Zebra striping for long tables */
-.article-prose tbody tr:nth-child(odd) td {
-  background: rgba(255,255,255,0.03);
-}
-
-/* Row hover */
-.article-prose tbody tr:hover td {
-  background: rgba(255,255,255,0.06);
-}
+.article-prose tbody tr:nth-child(odd) td { background: rgba(255,255,255,0.03); }
+.article-prose tbody tr:hover td { background: rgba(255,255,255,0.06); }
 
 /* Make links pop a bit more in dark mode */
 .article-prose a {
   text-decoration: underline;
   text-underline-offset: 3px;
-}
-
-/* Small screens: make tables scrollable horizontally */
-.article-prose .table-wrap {
-  overflow-x: auto;
 }
 
 /* Code/inline code contrast if you have any */
