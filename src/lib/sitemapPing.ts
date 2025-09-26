@@ -14,7 +14,7 @@ interface PingResult {
  * Call this function whenever new content is published to the database
  */
 export async function pingSitemapToSearchEngines(): Promise<PingResult[]> {
-  const sitemapUrl = 'https://eastcoastkinkevents.com/sitemap.xml'
+  const sitemapUrl = 'https://www.eastcoastkinkevents.com/sitemap.xml'
   const results: PingResult[] = []
 
   // Google Search Console ping

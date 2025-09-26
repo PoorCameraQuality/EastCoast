@@ -248,9 +248,9 @@ export default async function ArticlePage({ params }: { params: { slug: string }
               "@context": "https://schema.org",
               "@type": "BreadcrumbList",
               "itemListElement": [
-                {"@type": "ListItem", position: 1, name: 'Home', item: 'https://eastcoastkinkevents.com/'},
-                {"@type": "ListItem", position: 2, name: 'Education', item: 'https://eastcoastkinkevents.com/education'},
-                {"@type": "ListItem", position: 3, name: article.title, item: `https://eastcoastkinkevents.com/education/${article.slug}`}
+                {"@type": "ListItem", position: 1, name: 'Home', item: 'https://www.eastcoastkinkevents.com/'},
+                {"@type": "ListItem", position: 2, name: 'Education', item: 'https://www.eastcoastkinkevents.com/education'},
+                {"@type": "ListItem", position: 3, name: article.title, item: `https://www.eastcoastkinkevents.com/education/${article.slug}`}
               ]
             })
           }}

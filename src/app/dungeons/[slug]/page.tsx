@@ -93,19 +93,19 @@ export default function DungeonPage({ params }: { params: { slug: string } }) {
                 "@type": "ListItem",
                 position: 1,
                 name: 'Home',
-                item: 'https://eastcoastkinkevents.com/'
+                item: 'https://www.eastcoastkinkevents.com/'
               },
               {
                 "@type": "ListItem",
                 position: 2,
                 name: 'Dungeons',
-                item: 'https://eastcoastkinkevents.com/dungeons'
+                item: 'https://www.eastcoastkinkevents.com/dungeons'
               },
               {
                 "@type": "ListItem",
                 position: 3,
                 name: dungeon.name,
-                item: `https://eastcoastkinkevents.com/dungeons/${encodeURIComponent(dungeon.slug)}`
+                item: `https://www.eastcoastkinkevents.com/dungeons/${encodeURIComponent(dungeon.slug)}`
               }
             ]
           }).replace(/</g, '\\u003c')

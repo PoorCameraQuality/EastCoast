@@ -405,6 +405,37 @@ const nextConfig = {
         destination: '/education',
         permanent: true,
       },
+      // Fix trailing slash issues for main pages
+      {
+        source: '/privacy/',
+        destination: '/privacy',
+        permanent: true,
+      },
+      {
+        source: '/calendar/',
+        destination: '/calendar',
+        permanent: true,
+      },
+      {
+        source: '/contact/',
+        destination: '/contact',
+        permanent: true,
+      },
+      {
+        source: '/about/',
+        destination: '/about',
+        permanent: true,
+      },
+      {
+        source: '/guidelines/',
+        destination: '/guidelines',
+        permanent: true,
+      },
+      {
+        source: '/terms/',
+        destination: '/terms',
+        permanent: true,
+      },
       // Redirect old giving page
       {
         source: '/giving-page-1-1',
