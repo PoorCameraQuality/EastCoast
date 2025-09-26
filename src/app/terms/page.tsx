@@ -14,16 +14,16 @@ export const metadata: Metadata = {
     },
   },
   alternates: {
-    canonical: 'https://eastcoastkinkevents.com/terms',
+    canonical: 'https://www.eastcoastkinkevents.com/terms',
   },
   openGraph: {
     title: 'Terms of Service - East Coast Kink Events',
     description: 'Read our terms of service and understand the rules and guidelines for using our platform.',
     type: 'website',
-    url: 'https://eastcoastkinkevents.com/terms',
+    url: 'https://www.eastcoastkinkevents.com/terms',
     images: [
       {
-        url: 'https://eastcoastkinkevents.com/og-image.png',
+        url: 'https://www.eastcoastkinkevents.com/og-image.png',
         width: 1200,
         height: 630,
         alt: 'Terms of Service - East Coast Kink Events',
@@ -34,7 +34,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Terms of Service - East Coast Kink Events',
     description: 'Read our terms of service and understand the rules and guidelines.',
-    images: ['https://eastcoastkinkevents.com/og-image.png'],
+    images: ['https://www.eastcoastkinkevents.com/og-image.png'],
   },
 }
 

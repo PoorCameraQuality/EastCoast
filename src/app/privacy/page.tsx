@@ -6,16 +6,16 @@ export const metadata: Metadata = {
   description: 'Learn about how we collect, use, and protect your personal information on East Coast Kink Events.',
   keywords: 'privacy policy, data protection, personal information, kink events, BDSM events',
   alternates: {
-    canonical: 'https://eastcoastkinkevents.com/privacy',
+    canonical: 'https://www.eastcoastkinkevents.com/privacy',
   },
   openGraph: {
     title: 'Privacy Policy - East Coast Kink Events',
     description: 'Learn about how we collect, use, and protect your personal information.',
     type: 'website',
-    url: 'https://eastcoastkinkevents.com/privacy',
+    url: 'https://www.eastcoastkinkevents.com/privacy',
     images: [
       {
-        url: 'https://eastcoastkinkevents.com/og-image.png',
+        url: 'https://www.eastcoastkinkevents.com/og-image.png',
         width: 1200,
         height: 630,
         alt: 'Privacy Policy - East Coast Kink Events',
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Privacy Policy - East Coast Kink Events',
     description: 'Learn about how we collect, use, and protect your personal information.',
-    images: ['https://eastcoastkinkevents.com/og-image.png'],
+    images: ['https://www.eastcoastkinkevents.com/og-image.png'],
   },
 }
 

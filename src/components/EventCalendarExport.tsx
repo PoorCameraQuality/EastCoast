@@ -26,7 +26,7 @@ export default function EventCalendarExport({ event }: EventCalendarExportProps)
       return date.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '')
     }
     
-    const googleCalendarUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(event.name)}&dates=${formatDate(startDate)}/${formatDate(endDate)}&details=${encodeURIComponent(`${event.name} - ${event.date.display}\nLocation: ${event.location.city}, ${event.location.state}\n\nMore info: https://eastcoastkinkevents.com/events/${event.slug}`)}&location=${encodeURIComponent(`${event.location.city}, ${event.location.state}`)}`
+    const googleCalendarUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(event.name)}&dates=${formatDate(startDate)}/${formatDate(endDate)}&details=${encodeURIComponent(`${event.name} - ${event.date.display}\nLocation: ${event.location.city}, ${event.location.state}\n\nMore info: https://www.eastcoastkinkevents.com/events/${event.slug}`)}&location=${encodeURIComponent(`${event.location.city}, ${event.location.state}`)}`
     
     window.open(googleCalendarUrl, '_blank')
   }
@@ -49,9 +49,9 @@ export default function EventCalendarExport({ event }: EventCalendarExportProps)
       `DTSTART:${formatDateForICal(startDate)}`,
       `DTEND:${formatDateForICal(endDate)}`,
       `SUMMARY:${event.name}`,
-      `DESCRIPTION:${event.name} - ${event.date.display}\\nLocation: ${event.location.city}, ${event.location.state}\\n\\nMore info: https://eastcoastkinkevents.com/events/${event.slug}`,
+      `DESCRIPTION:${event.name} - ${event.date.display}\\nLocation: ${event.location.city}, ${event.location.state}\\n\\nMore info: https://www.eastcoastkinkevents.com/events/${event.slug}`,
       `LOCATION:${event.location.city}, ${event.location.state}`,
-      `URL:https://eastcoastkinkevents.com/events/${event.slug}`,
+      `URL:https://www.eastcoastkinkevents.com/events/${event.slug}`,
       'END:VEVENT',
       'END:VCALENDAR'
     ].join('\r\n')
@@ -84,9 +84,9 @@ export default function EventCalendarExport({ event }: EventCalendarExportProps)
       `DTSTART:${formatDateForICal(startDate)}`,
       `DTEND:${formatDateForICal(endDate)}`,
       `SUMMARY:${event.name}`,
-      `DESCRIPTION:${event.name} - ${event.date.display}\\nLocation: ${event.location.city}, ${event.location.state}\\n\\nMore info: https://eastcoastkinkevents.com/events/${event.slug}`,
+      `DESCRIPTION:${event.name} - ${event.date.display}\\nLocation: ${event.location.city}, ${event.location.state}\\n\\nMore info: https://www.eastcoastkinkevents.com/events/${event.slug}`,
       `LOCATION:${event.location.city}, ${event.location.state}`,
-      `URL:https://eastcoastkinkevents.com/events/${event.slug}`,
+      `URL:https://www.eastcoastkinkevents.com/events/${event.slug}`,
       'END:VEVENT',
       'END:VCALENDAR'
     ].join('\r\n')

@@ -140,7 +140,7 @@ export default function CalendarClient({ allEvents }: CalendarClientProps) {
       return date.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '')
     }
     
-    const googleCalendarUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(event.name)}&dates=${formatDate(startDate)}/${formatDate(endDate)}&details=${encodeURIComponent(`${event.name} - ${event.date.display}\nLocation: ${event.location.city}, ${event.location.state}\n\nMore info: https://eastcoastkinkevents.com/events/${event.slug}`)}&location=${encodeURIComponent(`${event.location.city}, ${event.location.state}`)}`
+    const googleCalendarUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(event.name)}&dates=${formatDate(startDate)}/${formatDate(endDate)}&details=${encodeURIComponent(`${event.name} - ${event.date.display}\nLocation: ${event.location.city}, ${event.location.state}\n\nMore info: https://www.eastcoastkinkevents.com/events/${event.slug}`)}&location=${encodeURIComponent(`${event.location.city}, ${event.location.state}`)}`
     
     window.open(googleCalendarUrl, '_blank')
   }
@@ -164,9 +164,9 @@ export default function CalendarClient({ allEvents }: CalendarClientProps) {
       `DTSTART:${formatDateForICal(startDate)}`,
       `DTEND:${formatDateForICal(endDate)}`,
       `SUMMARY:${event.name}`,
-      `DESCRIPTION:${event.name} - ${event.date.display}\\nLocation: ${event.location.city}, ${event.location.state}\\n\\nMore info: https://eastcoastkinkevents.com/events/${event.slug}`,
+      `DESCRIPTION:${event.name} - ${event.date.display}\\nLocation: ${event.location.city}, ${event.location.state}\\n\\nMore info: https://www.eastcoastkinkevents.com/events/${event.slug}`,
       `LOCATION:${event.location.city}, ${event.location.state}`,
-      `URL:https://eastcoastkinkevents.com/events/${event.slug}`,
+      `URL:https://www.eastcoastkinkevents.com/events/${event.slug}`,
       'END:VEVENT',
       'END:VCALENDAR'
     ].join('\r\n')
@@ -196,7 +196,7 @@ export default function CalendarClient({ allEvents }: CalendarClientProps) {
       `${event.name} - ${event.date.display} (${event.location.city}, ${event.location.state})`
     ).join('\n')
     
-    const googleCalendarUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(`East Coast Kink Events - ${startDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}`)}&dates=${formatDate(startDate)}/${formatDate(endDate)}&details=${encodeURIComponent(`Events for ${startDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}:\n\n${eventList}\n\nView all events: https://eastcoastkinkevents.com/calendar`)}`
+    const googleCalendarUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(`East Coast Kink Events - ${startDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}`)}&dates=${formatDate(startDate)}/${formatDate(endDate)}&details=${encodeURIComponent(`Events for ${startDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}:\n\n${eventList}\n\nView all events: https://www.eastcoastkinkevents.com/calendar`)}`
     
     window.open(googleCalendarUrl, '_blank')
   }
@@ -228,9 +228,9 @@ export default function CalendarClient({ allEvents }: CalendarClientProps) {
         `DTSTART:${formatDateForICal(eventStart)}`,
         `DTEND:${formatDateForICal(eventEnd)}`,
         `SUMMARY:${event.name}`,
-        `DESCRIPTION:${event.name} - ${event.date.display}\\nLocation: ${event.location.city}, ${event.location.state}\\n\\nMore info: https://eastcoastkinkevents.com/events/${event.slug}`,
+        `DESCRIPTION:${event.name} - ${event.date.display}\\nLocation: ${event.location.city}, ${event.location.state}\\n\\nMore info: https://www.eastcoastkinkevents.com/events/${event.slug}`,
         `LOCATION:${event.location.city}, ${event.location.state}`,
-        `URL:https://eastcoastkinkevents.com/events/${event.slug}`,
+        `URL:https://www.eastcoastkinkevents.com/events/${event.slug}`,
         'END:VEVENT'
       )
     })
@@ -266,9 +266,9 @@ export default function CalendarClient({ allEvents }: CalendarClientProps) {
       `DTSTART:${formatDateForICal(startDate)}`,
       `DTEND:${formatDateForICal(endDate)}`,
       `SUMMARY:${event.name}`,
-      `DESCRIPTION:${event.name} - ${event.date.display}\\nLocation: ${event.location.city}, ${event.location.state}\\n\\nMore info: https://eastcoastkinkevents.com/events/${event.slug}`,
+      `DESCRIPTION:${event.name} - ${event.date.display}\\nLocation: ${event.location.city}, ${event.location.state}\\n\\nMore info: https://www.eastcoastkinkevents.com/events/${event.slug}`,
       `LOCATION:${event.location.city}, ${event.location.state}`,
-      `URL:https://eastcoastkinkevents.com/events/${event.slug}`,
+      `URL:https://www.eastcoastkinkevents.com/events/${event.slug}`,
       'END:VEVENT',
       'END:VCALENDAR'
     ].join('\r\n')
@@ -322,9 +322,9 @@ export default function CalendarClient({ allEvents }: CalendarClientProps) {
         `DTSTART:${formatDateForICal(eventStart)}`,
         `DTEND:${formatDateForICal(eventEnd)}`,
         `SUMMARY:${event.name}`,
-        `DESCRIPTION:${event.name} - ${event.date.display}\\nLocation: ${event.location.city}, ${event.location.state}\\n\\nMore info: https://eastcoastkinkevents.com/events/${event.slug}`,
+        `DESCRIPTION:${event.name} - ${event.date.display}\\nLocation: ${event.location.city}, ${event.location.state}\\n\\nMore info: https://www.eastcoastkinkevents.com/events/${event.slug}`,
         `LOCATION:${event.location.city}, ${event.location.state}`,
-        `URL:https://eastcoastkinkevents.com/events/${event.slug}`,
+        `URL:https://www.eastcoastkinkevents.com/events/${event.slug}`,
         'END:VEVENT'
       )
     })

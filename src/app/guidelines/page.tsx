@@ -6,16 +6,16 @@ export const metadata: Metadata = {
   description: 'Learn about our community guidelines for creating a safe, inclusive, and respectful environment for all kink enthusiasts.',
   keywords: 'community guidelines, safety, inclusivity, consent, kink community, BDSM guidelines',
   alternates: {
-    canonical: 'https://eastcoastkinkevents.com/guidelines',
+    canonical: 'https://www.eastcoastkinkevents.com/guidelines',
   },
   openGraph: {
     title: 'Community Guidelines - East Coast Kink Events',
     description: 'Learn about our community guidelines for creating a safe, inclusive, and respectful environment for all kink enthusiasts.',
     type: 'website',
-    url: 'https://eastcoastkinkevents.com/guidelines',
+    url: 'https://www.eastcoastkinkevents.com/guidelines',
     images: [
       {
-        url: 'https://eastcoastkinkevents.com/og-image.png',
+        url: 'https://www.eastcoastkinkevents.com/og-image.png',
         width: 1200,
         height: 630,
         alt: 'Community Guidelines - East Coast Kink Events',
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Community Guidelines - East Coast Kink Events',
     description: 'Learn about our community guidelines for creating a safe, inclusive environment.',
-    images: ['https://eastcoastkinkevents.com/og-image.png'],
+    images: ['https://www.eastcoastkinkevents.com/og-image.png'],
   },
 }
 
