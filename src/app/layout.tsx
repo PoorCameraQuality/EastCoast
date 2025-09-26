@@ -38,9 +38,9 @@ export const metadata: Metadata = {
   authors: [{ name: 'East Coast Kink Events' }],
   creator: 'East Coast Kink Events',
   publisher: 'East Coast Kink Events',
-  metadataBase: new URL('https://eastcoastkinkevents.com'),
+  metadataBase: new URL('https://www.eastcoastkinkevents.com'),
   alternates: {
-    canonical: 'https://eastcoastkinkevents.com',
+    canonical: 'https://www.eastcoastkinkevents.com',
   },
   icons: {
     icon: [
@@ -53,7 +53,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: 'https://eastcoastkinkevents.com',
+    url: 'https://www.eastcoastkinkevents.com',
     siteName: 'East Coast Kink Events',
     title: 'East Coast Kink Events - Discover BDSM Events & Dungeons',
     description: 'Find kink events, BDSM dungeons, and educational resources across the East Coast. Connect with workshops, conferences, and community events in a safe, inclusive environment.',

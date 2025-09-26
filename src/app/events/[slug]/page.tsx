@@ -30,7 +30,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
       description: seo.description,
       images: seo.openGraph.images,
       type: 'website',
-      url: `https://eastcoastkinkevents.com/events/${params.slug}`,
+      url: `https://www.eastcoastkinkevents.com/events/${params.slug}`,
       siteName: 'East Coast Kink Events',
     },
     twitter: {
@@ -40,7 +40,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
       images: seo.openGraph.images,
     },
     alternates: {
-      canonical: `https://eastcoastkinkevents.com/events/${params.slug}`,
+      canonical: `https://www.eastcoastkinkevents.com/events/${params.slug}`,
     },
   }
 }
@@ -91,9 +91,9 @@ export default function EventPage({ params }: { params: { slug: string } }) {
             "@context": "https://schema.org",
             "@type": "BreadcrumbList",
             "itemListElement": [
-              {"@type": "ListItem", position: 1, name: 'Home', item: 'https://eastcoastkinkevents.com/'},
-              {"@type": "ListItem", position: 2, name: 'Events', item: 'https://eastcoastkinkevents.com/events'},
-              {"@type": "ListItem", position: 3, name: event.name, item: `https://eastcoastkinkevents.com/events/${event.slug}`}
+              {"@type": "ListItem", position: 1, name: 'Home', item: 'https://www.eastcoastkinkevents.com/'},
+              {"@type": "ListItem", position: 2, name: 'Events', item: 'https://www.eastcoastkinkevents.com/events'},
+              {"@type": "ListItem", position: 3, name: event.name, item: `https://www.eastcoastkinkevents.com/events/${event.slug}`}
             ]
           })
         }}

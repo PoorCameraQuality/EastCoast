@@ -4,7 +4,7 @@ import { getAllArticles } from '@/data/education'
 import { supabase } from '@/lib/supabase'
 
 export default async function sitemap() {
-  const baseUrl = 'https://eastcoastkinkevents.com'
+  const baseUrl = 'https://www.eastcoastkinkevents.com'
   
   // Get all events, dungeons, and articles
   const events = getAllEvents()

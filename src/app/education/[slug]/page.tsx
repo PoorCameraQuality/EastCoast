@@ -26,14 +26,14 @@ function ArticleStructuredData({ article }: { article: Article }) {
     "publisher": {
       "@type": "Organization",
       "name": "East Coast Kink Events",
-      "url": "https://eastcoastkinkevents.com"
+      "url": "https://www.eastcoastkinkevents.com"
     },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": `https://eastcoastkinkevents.com/education/${article.slug}`
+      "@id": `https://www.eastcoastkinkevents.com/education/${article.slug}`
     },
-    "url": `https://eastcoastkinkevents.com/education/${article.slug}`,
-    "image": "https://eastcoastkinkevents.com/og-image.png",
+    "url": `https://www.eastcoastkinkevents.com/education/${article.slug}`,
+    "image": "https://www.eastcoastkinkevents.com/og-image.png",
     "keywords": article.focus_keywords || article.tags,
     "articleSection": article.category,
     "wordCount": article.content?.length || 0
@@ -127,11 +127,11 @@ export async function generateMetadata({ params }: ArticlePageProps): Promise<Me
       title: title,
       description: description,
       type: 'article',
-      url: `https://eastcoastkinkevents.com/education/${article.slug}`,
+      url: `https://www.eastcoastkinkevents.com/education/${article.slug}`,
       siteName: 'East Coast Kink Events',
       images: [
         {
-          url: 'https://eastcoastkinkevents.com/og-image.png',
+          url: 'https://www.eastcoastkinkevents.com/og-image.png',
           width: 1200,
           height: 630,
           alt: `${title} - East Coast Kink Events`,
@@ -142,10 +142,10 @@ export async function generateMetadata({ params }: ArticlePageProps): Promise<Me
       card: 'summary_large_image',
       title: title,
       description: description,
-      images: ['https://eastcoastkinkevents.com/og-image.png'],
+      images: ['https://www.eastcoastkinkevents.com/og-image.png'],
     },
     alternates: {
-      canonical: `https://eastcoastkinkevents.com/education/${article.slug}`,
+      canonical: `https://www.eastcoastkinkevents.com/education/${article.slug}`,
     },
   }
 }

@@ -30,7 +30,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
       description: seo.description,
       images: seo.openGraph.images,
       type: 'website',
-      url: `https://eastcoastkinkevents.com/dungeons/${params.slug}`,
+      url: `https://www.eastcoastkinkevents.com/dungeons/${params.slug}`,
       siteName: 'East Coast Kink Events',
     },
     twitter: {
@@ -40,7 +40,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
       images: seo.openGraph.images,
     },
     alternates: {
-      canonical: `https://eastcoastkinkevents.com/dungeons/${params.slug}`,
+      canonical: `https://www.eastcoastkinkevents.com/dungeons/${params.slug}`,
     },
   }
 }
