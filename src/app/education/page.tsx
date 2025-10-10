@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import EducationPageClient from './EducationPageClient'
+import { BASE_URL } from '@/lib/seo'
 
 export const metadata: Metadata = {
   title: 'Educational Resources - East Coast Kink Events',
@@ -15,7 +16,7 @@ export const metadata: Metadata = {
     'community building'
   ],
   alternates: {
-    canonical: 'https://eastcoastkinkevents.com/education',
+    canonical: `${BASE_URL}/education`,
   },
   openGraph: {
     type: 'website',

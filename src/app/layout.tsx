@@ -127,12 +127,12 @@ export default function RootLayout({
             {/* ErrorTracker still disabled - had problematic click listeners */}
             {/* <ErrorTracker /> */}
             <SafeTrackingWrapper>
-              <AgeVerification />
               <Header />
               <main id="main-content" role="main" tabIndex={-1}>
                 {children}
               </main>
               <Footer />
+              <AgeVerification />
               <BackToTop />
             </SafeTrackingWrapper>
           </GA4Provider>

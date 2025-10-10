@@ -1,14 +1,13 @@
 import { Metadata } from 'next'
 import LoginPageClient from './LoginPageClient'
+import { BASE_URL } from '@/lib/seo'
 
 export const metadata: Metadata = {
   title: 'Admin Login - East Coast Kink Events',
   description: 'Admin login portal for East Coast Kink Events management.',
   robots: { index: false, follow: false },
   keywords: 'admin login, website management, kink events admin',
-  alternates: {
-    canonical: 'https://eastcoastkinkevents.com/login',
-  },
+  alternates: { canonical: `${BASE_URL}/login` },
   openGraph: {
     title: 'Admin Login - East Coast Kink Events',
     description: 'Admin login portal for East Coast Kink Events management.',

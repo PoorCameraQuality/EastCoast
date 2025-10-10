@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import Breadcrumb from '@/components/Breadcrumb'
 import FAQ from '@/components/FAQ'
+import { BASE_URL } from '@/lib/seo'
 
 export const metadata: Metadata = {
   title: 'About - East Coast Kink Events',
@@ -16,7 +17,7 @@ export const metadata: Metadata = {
     },
   },
   alternates: {
-    canonical: 'https://eastcoastkinkevents.com/about',
+    canonical: `${BASE_URL}/about`,
   },
   openGraph: {
     title: 'About - East Coast Kink Events',

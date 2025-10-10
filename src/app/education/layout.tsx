@@ -1,4 +1,5 @@
 import { Metadata } from 'next'
+import { BASE_URL } from '@/lib/seo'
 
 export const metadata: Metadata = {
   title: 'Education | East Coast Kink Events',
@@ -26,7 +27,7 @@ export const metadata: Metadata = {
     images: ['https://eastcoastkinkevents.com/og-image.png'],
   },
   alternates: {
-    canonical: 'https://eastcoastkinkevents.com/education',
+    canonical: `${BASE_URL}/education`,
   },
 }
 

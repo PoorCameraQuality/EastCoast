@@ -1,13 +1,14 @@
 import { Metadata } from 'next'
 import Breadcrumb from '@/components/Breadcrumb'
 import ArticleSubmissionForm from '@/components/education/ArticleSubmissionForm'
+import { BASE_URL } from '@/lib/seo'
 
 export const metadata: Metadata = {
   title: 'Submit Article - Kink Education | East Coast Kink Events',
   description: 'Submit your educational article for review and potential publication on our kink education platform.',
   keywords: 'submit article, kink education, BDSM education, community contribution',
   alternates: {
-    canonical: 'https://eastcoastkinkevents.com/education/submit',
+    canonical: `${BASE_URL}/education/submit`,
   },
   openGraph: {
     title: 'Submit Article - Kink Education | East Coast Kink Events',

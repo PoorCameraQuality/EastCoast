@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  trailingSlash: true,
+  // Use a single trailing slash policy to avoid redirect chains
+  trailingSlash: false,
   images: {
     unoptimized: true
   },
@@ -486,6 +487,7 @@ const nextConfig = {
       {
         source: '/(.*)',
         headers: [
+          { key: 'X-Robots-Tag', value: 'index, follow' },
           {
             key: 'X-Frame-Options',
             value: 'DENY'

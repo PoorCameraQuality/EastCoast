@@ -6,6 +6,7 @@ import DungeonLogo from '@/components/DungeonLogo'
 import Breadcrumb from '@/components/Breadcrumb'
 import Search from '@/components/Search'
 import DungeonsPageClient from './DungeonsPageClient'
+import { BASE_URL } from '@/lib/seo'
 
 export const metadata: Metadata = {
   title: 'BDSM Dungeons - East Coast Kink Events',
@@ -21,7 +22,7 @@ export const metadata: Metadata = {
     'inclusive environments'
   ],
   alternates: {
-    canonical: 'https://eastcoastkinkevents.com/dungeons',
+    canonical: `${BASE_URL}/dungeons`,
   },
   openGraph: {
     type: 'website',

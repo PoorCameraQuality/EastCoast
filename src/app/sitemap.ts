@@ -77,7 +77,7 @@ export default async function sitemap() {
   // Combine all article URLs
   const allArticleUrls = [...staticArticleUrls, ...databaseArticleUrls]
 
-  return [
+  const urls = [
     // Main pages with high priority
     {
       url: baseUrl,
@@ -178,27 +178,15 @@ export default async function sitemap() {
         canonical: `${baseUrl}/education/submit`,
       },
     },
-    {
-      url: `${baseUrl}/login`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly' as const,
-      priority: 0.3,
-      alternates: {
-        canonical: `${baseUrl}/login`,
-      },
-    },
-    {
-      url: `${baseUrl}/unauthorized`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly' as const,
-      priority: 0.2,
-      alternates: {
-        canonical: `${baseUrl}/unauthorized`,
-      },
-    },
+    // Removed: login and unauthorized from sitemap to avoid noindex conflicts
     // Dynamic content pages
     ...eventUrls,
     ...dungeonUrls,
     ...allArticleUrls,
   ]
+
+  // Exclude utility routes
+  return urls.filter(item => {
+    try { return item.url && !item.url.endsWith('/login') && !item.url.endsWith('/unauthorized') } catch { return true }
+  })
 } 

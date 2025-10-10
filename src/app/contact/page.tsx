@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { ContactPageStructuredData } from '@/components/StructuredData'
 import Breadcrumb from '@/components/Breadcrumb'
 import ContactForm from '@/components/ContactForm'
+import { BASE_URL } from '@/lib/seo'
 
 // Generate metadata for SEO
 export const metadata: Metadata = {
@@ -17,7 +18,7 @@ export const metadata: Metadata = {
     },
   },
   alternates: {
-    canonical: 'https://eastcoastkinkevents.com/contact',
+    canonical: `${BASE_URL}/contact`,
   },
   openGraph: {
     title: 'Contact Us - East Coast Kink Events',
