@@ -34,14 +34,11 @@ Disallow: /debug
 Disallow: /_next/
 Disallow: /api/
 
-# Allow important pages
+# Allow important pages (no trailing slashes to match trailingSlash: false)
 Allow: /
 Allow: /events
-Allow: /events/
 Allow: /dungeons
-Allow: /dungeons/
 Allow: /education
-Allow: /education/
 Allow: /calendar
 Allow: /about
 Allow: /contact

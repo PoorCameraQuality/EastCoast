@@ -1,5 +1,6 @@
 import { Metadata } from 'next'
 import { getEventBySlug, generateEventSEO } from '@/data/events'
+import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import EventLogo from '@/components/EventLogo'
 import { EventStructuredData } from '@/components/StructuredData'
@@ -60,19 +61,7 @@ export default function EventPage({ params }: { params: { slug: string } }) {
   const event = getEventBySlug(params.slug)
 
   if (!event) {
-    return (
-      <div className="min-h-screen bg-black">
-        <div className="container-custom py-16">
-          <div className="text-center">
-            <h1 className="text-4xl font-serif font-bold text-white mb-4">Event Not Found</h1>
-            <p className="text-subtle mb-8">The requested event could not be found.</p>
-            <Link href="/events" className="btn-primary">
-              Browse All Events
-            </Link>
-          </div>
-        </div>
-      </div>
-    )
+    notFound()
   }
 
   const breadcrumbItems = [

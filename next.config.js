@@ -191,207 +191,56 @@ const nextConfig = {
         destination: '/events/dungeons-geekdoms',
         permanent: true,
       },
-      // Fix trailing slash issues for events
+      // Redirect old dungeon URLs (trailingSlash: false handles / automatically)
       {
-        source: '/events/kinkycon-summer-co-op/',
-        destination: '/events/kinkycon-summer-co-op',
-        permanent: true,
-      },
-      {
-        source: '/events/dungeons-and-geekdoms/',
-        destination: '/events/dungeons-geekdoms',
-        permanent: true,
-      },
-      // Redirect old dungeon URLs
-      {
-        source: '/dungeons/ascendcommunity',
+        source: '/dungeons/ascendcommunity/:path*',
         destination: '/dungeons/ascend-community',
         permanent: true,
       },
       {
-        source: '/dungeons/theowlsnest',
+        source: '/dungeons/theowlsnest/:path*',
         destination: '/dungeons/the-nest-philadelphia-poconos',
         permanent: true,
       },
       {
-        source: '/dungeons/theowlsnest/',
-        destination: '/dungeons/the-nest-philadelphia-poconos',
-        permanent: true,
-      },
-      {
-        source: '/dungeons/the-baltimore-playhouse',
+        source: '/dungeons/the-baltimore-playhouse/:path*',
         destination: '/dungeons/baltimore-playhouse',
         permanent: true,
       },
       {
-        source: '/dungeons/the-baltimore-playhouse/',
-        destination: '/dungeons/baltimore-playhouse',
-        permanent: true,
-      },
-      {
-        source: '/dungeons/honeypotdungeon',
+        source: '/dungeons/honeypotdungeon/:path*',
         destination: '/dungeons/the-honey-pot-arundel-county',
         permanent: true,
       },
       {
-        source: '/dungeons/honeypotdungeon/',
-        destination: '/dungeons/the-honey-pot-arundel-county',
-        permanent: true,
-      },
-      {
-        source: '/dungeons/ohiosmart',
+        source: '/dungeons/ohiosmart/:path*',
         destination: '/dungeons/ohiosmart-dungeon-cleveland',
         permanent: true,
       },
       {
-        source: '/dungeons/sarasotadarktemple',
+        source: '/dungeons/sarasotadarktemple/:path*',
         destination: '/dungeons/sarasota-dark-temple',
         permanent: true,
       },
       {
-        source: '/dungeons/sarasotadarktemple/',
-        destination: '/dungeons/sarasota-dark-temple',
-        permanent: true,
-      },
-      {
-        source: '/dungeons/theaphroditegroup',
+        source: '/dungeons/theaphroditegroup/:path*',
         destination: '/dungeons/the-aphrodite-group',
         permanent: true,
       },
       {
-        source: '/dungeons/theaphroditegroup/',
-        destination: '/dungeons/the-aphrodite-group',
-        permanent: true,
-      },
-      {
-        source: '/dungeons/thecrubible',
+        source: '/dungeons/thecrubible/:path*',
         destination: '/dungeons/the-crucible-washington-dc',
         permanent: true,
       },
       {
-        source: '/dungeons/thecrubible/',
-        destination: '/dungeons/the-crucible-washington-dc',
-        permanent: true,
-      },
-      {
-        source: '/dungeons/thewoodshed',
+        source: '/dungeons/thewoodshed/:path*',
         destination: '/dungeons/the-woodshed-orlando-florida',
         permanent: true,
       },
+      // Fix event URL typo (typo correction only - trailing slashes handled automatically)
       {
-        source: '/dungeons/thewoodshed/',
-        destination: '/dungeons/the-woodshed-orlando-florida',
-        permanent: true,
-      },
-      // Fix event URL typo
-      {
-        source: '/events/costal-carolina-fetish-fair',
+        source: '/events/costal-carolina-fetish-fair/:path*',
         destination: '/events/coastal-carolina-fetish-fair',
-        permanent: true,
-      },
-      {
-        source: '/events/costal-carolina-fetish-fair/',
-        destination: '/events/coastal-carolina-fetish-fair',
-        permanent: true,
-      },
-      // Fix trailing slash issues for events
-      {
-        source: '/events/naughty-gras/',
-        destination: '/events/naughty-gras',
-        permanent: true,
-      },
-      {
-        source: '/events/naughty-noel/',
-        destination: '/events/naughty-noel',
-        permanent: true,
-      },
-      {
-        source: '/events/coastal-carolina-fetish-fair/',
-        destination: '/events/coastal-carolina-fetish-fair',
-        permanent: true,
-      },
-      {
-        source: '/events/exploration-into-kink/',
-        destination: '/events/exploration-into-kink',
-        permanent: true,
-      },
-      {
-        source: '/events/ohio-smart-fetish-flea/',
-        destination: '/events/ohio-smart-fetish-flea',
-        permanent: true,
-      },
-      {
-        source: '/events/kinky-kollege/',
-        destination: '/events/kinky-kollege',
-        permanent: true,
-      },
-      {
-        source: '/events/cruciblecon/',
-        destination: '/events/cruciblecon',
-        permanent: true,
-      },
-      {
-        source: '/events/master-slave-conference-msc/',
-        destination: '/events/master-slave-conference-msc',
-        permanent: true,
-      },
-      // Fix trailing slash for privacy page
-      {
-        source: '/privacy/',
-        destination: '/privacy',
-        permanent: true,
-      },
-      // Fix trailing slash for education page
-      {
-        source: '/education/',
-        destination: '/education',
-        permanent: true,
-      },
-      // Fix trailing slash issues for more events
-      {
-        source: '/events/dark-odyssey-summer-camp/',
-        destination: '/events/dark-odyssey-summer-camp',
-        permanent: true,
-      },
-      {
-        source: '/events/summer-michigan-rope-conference-smirc/',
-        destination: '/events/summer-michigan-rope-conference-smirc',
-        permanent: true,
-      },
-      {
-        source: '/events/fornucopia/',
-        destination: '/events/fornucopia',
-        permanent: true,
-      },
-      // Fix trailing slash issues for dungeons
-      {
-        source: '/dungeons/ascend-hudson-valley-community/',
-        destination: '/dungeons/ascend-hudson-valley-community',
-        permanent: true,
-      },
-      {
-        source: '/dungeons/the-aphrodite-group/',
-        destination: '/dungeons/the-aphrodite-group',
-        permanent: true,
-      },
-      {
-        source: '/dungeons/the-honey-pot-arundel-county/',
-        destination: '/dungeons/the-honey-pot-arundel-county',
-        permanent: true,
-      },
-      {
-        source: '/dungeons/the-nest-philadelphia-poconos/',
-        destination: '/dungeons/the-nest-philadelphia-poconos',
-        permanent: true,
-      },
-      {
-        source: '/dungeons/ohiosmart-dungeon-cleveland/',
-        destination: '/dungeons/ohiosmart-dungeon-cleveland',
-        permanent: true,
-      },
-      {
-        source: '/dungeons/sarasota-dark-temple/',
-        destination: '/dungeons/sarasota-dark-temple',
         permanent: true,
       },
       // Fix AMP format parameter for old education URLs
@@ -404,37 +253,6 @@ const nextConfig = {
       {
         source: '/education/nipple-play-beginners-guide',
         destination: '/education',
-        permanent: true,
-      },
-      // Fix trailing slash issues for main pages
-      {
-        source: '/privacy/',
-        destination: '/privacy',
-        permanent: true,
-      },
-      {
-        source: '/calendar/',
-        destination: '/calendar',
-        permanent: true,
-      },
-      {
-        source: '/contact/',
-        destination: '/contact',
-        permanent: true,
-      },
-      {
-        source: '/about/',
-        destination: '/about',
-        permanent: true,
-      },
-      {
-        source: '/guidelines/',
-        destination: '/guidelines',
-        permanent: true,
-      },
-      {
-        source: '/terms/',
-        destination: '/terms',
         permanent: true,
       },
       // Redirect old giving page

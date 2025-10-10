@@ -1,5 +1,6 @@
 import { Metadata } from 'next'
 import { getDungeonBySlug, generateDungeonSEO } from '@/data/dungeons'
+import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import DungeonLogo from '@/components/DungeonLogo'
 import { DungeonStructuredData } from '@/components/StructuredData'
@@ -7,6 +8,7 @@ import Breadcrumb from '@/components/Breadcrumb'
 import RelatedContent from '@/components/RelatedContent'
 import Script from 'next/script'
 import Image from 'next/image'
+import { BASE_URL } from '@/lib/seo'
 
 // Generate metadata for SEO
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
@@ -30,7 +32,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
       description: seo.description,
       images: seo.openGraph.images,
       type: 'website',
-      url: `https://www.eastcoastkinkevents.com/dungeons/${params.slug}`,
+      url: `${BASE_URL}/dungeons/${params.slug}`,
       siteName: 'East Coast Kink Events',
     },
     twitter: {
@@ -40,7 +42,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
       images: seo.openGraph.images,
     },
     alternates: {
-      canonical: `https://www.eastcoastkinkevents.com/dungeons/${params.slug}`,
+      canonical: `${BASE_URL}/dungeons/${params.slug}`,
     },
   }
 }
@@ -57,19 +59,7 @@ export default function DungeonPage({ params }: { params: { slug: string } }) {
   const dungeon = getDungeonBySlug(params.slug)
 
   if (!dungeon) {
-    return (
-      <div className="min-h-screen bg-black">
-        <div className="container-custom py-16">
-          <div className="text-center">
-            <h1 className="text-4xl font-serif font-bold text-white mb-4">Dungeon Not Found</h1>
-            <p className="text-subtle mb-8">The requested dungeon could not be found.</p>
-            <Link href="/dungeons" className="btn-primary">
-              Browse All Dungeons
-            </Link>
-          </div>
-        </div>
-      </div>
-    )
+    notFound()
   }
 
   const breadcrumbItems = [
@@ -93,19 +83,19 @@ export default function DungeonPage({ params }: { params: { slug: string } }) {
                 "@type": "ListItem",
                 position: 1,
                 name: 'Home',
-                item: 'https://www.eastcoastkinkevents.com/'
+                item: `${BASE_URL}/`
               },
               {
                 "@type": "ListItem",
                 position: 2,
                 name: 'Dungeons',
-                item: 'https://www.eastcoastkinkevents.com/dungeons'
+                item: `${BASE_URL}/dungeons`
               },
               {
                 "@type": "ListItem",
                 position: 3,
                 name: dungeon.name,
-                item: `https://www.eastcoastkinkevents.com/dungeons/${encodeURIComponent(dungeon.slug)}`
+                item: `${BASE_URL}/dungeons/${encodeURIComponent(dungeon.slug)}`
               }
             ]
           }).replace(/</g, '\\u003c')

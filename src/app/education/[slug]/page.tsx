@@ -8,6 +8,7 @@ import { stripFirstH1 } from '@/lib/markdown'
 import ContinueYourJourney from '@/components/education/ContinueYourJourney'
 import Markdown from '@/components/Markdown'
 import { normalizeMarkdown } from '@/lib/normalizeMarkdown'
+import { BASE_URL } from '@/lib/seo'
 
 // Article JSON-LD structured data
 function ArticleStructuredData({ article }: { article: Article }) {
@@ -30,9 +31,9 @@ function ArticleStructuredData({ article }: { article: Article }) {
     },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": `https://www.eastcoastkinkevents.com/education/${article.slug}`
+      "@id": `${BASE_URL}/education/${article.slug}`
     },
-    "url": `https://www.eastcoastkinkevents.com/education/${article.slug}`,
+    "url": `${BASE_URL}/education/${article.slug}`,
     "image": "https://www.eastcoastkinkevents.com/og-image.png",
     "keywords": article.focus_keywords || article.tags,
     "articleSection": article.category,
@@ -127,11 +128,11 @@ export async function generateMetadata({ params }: ArticlePageProps): Promise<Me
       title: title,
       description: description,
       type: 'article',
-      url: `https://www.eastcoastkinkevents.com/education/${article.slug}`,
+      url: `${BASE_URL}/education/${article.slug}`,
       siteName: 'East Coast Kink Events',
       images: [
         {
-          url: 'https://www.eastcoastkinkevents.com/og-image.png',
+          url: `${BASE_URL}/og-image.png`,
           width: 1200,
           height: 630,
           alt: `${title} - East Coast Kink Events`,
@@ -142,10 +143,10 @@ export async function generateMetadata({ params }: ArticlePageProps): Promise<Me
       card: 'summary_large_image',
       title: title,
       description: description,
-      images: ['https://www.eastcoastkinkevents.com/og-image.png'],
+      images: [`${BASE_URL}/og-image.png`],
     },
     alternates: {
-      canonical: `https://www.eastcoastkinkevents.com/education/${article.slug}`,
+      canonical: `${BASE_URL}/education/${article.slug}`,
     },
   }
 }
