@@ -7,6 +7,7 @@ import Breadcrumb from '@/components/Breadcrumb'
 import RelatedContent from '@/components/RelatedContent'
 import Script from 'next/script'
 import EventCalendarExport from '@/components/EventCalendarExport'
+import { BASE_URL } from '@/lib/seo'
 
 // Generate metadata for SEO
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
@@ -30,7 +31,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
       description: seo.description,
       images: seo.openGraph.images,
       type: 'website',
-      url: `https://www.eastcoastkinkevents.com/events/${params.slug}`,
+      url: `${BASE_URL}/events/${params.slug}`,
       siteName: 'East Coast Kink Events',
     },
     twitter: {
@@ -40,7 +41,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
       images: seo.openGraph.images,
     },
     alternates: {
-      canonical: `https://www.eastcoastkinkevents.com/events/${params.slug}`,
+      canonical: `${BASE_URL}/events/${params.slug}`,
     },
   }
 }
@@ -91,9 +92,9 @@ export default function EventPage({ params }: { params: { slug: string } }) {
             "@context": "https://schema.org",
             "@type": "BreadcrumbList",
             "itemListElement": [
-              {"@type": "ListItem", position: 1, name: 'Home', item: 'https://www.eastcoastkinkevents.com/'},
-              {"@type": "ListItem", position: 2, name: 'Events', item: 'https://www.eastcoastkinkevents.com/events'},
-              {"@type": "ListItem", position: 3, name: event.name, item: `https://www.eastcoastkinkevents.com/events/${event.slug}`}
+              {"@type": "ListItem", position: 1, name: 'Home', item: `${BASE_URL}/`},
+              {"@type": "ListItem", position: 2, name: 'Events', item: `${BASE_URL}/events`},
+              {"@type": "ListItem", position: 3, name: event.name, item: `${BASE_URL}/events/${event.slug}`}
             ]
           })
         }}

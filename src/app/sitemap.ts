@@ -28,8 +28,12 @@ export default async function sitemap() {
     console.warn('Failed to fetch database articles for sitemap:', error)
   }
   
+  // Filter to only include upcoming/current events (past events waste crawl budget)
+  const now = new Date()
+  const upcomingEvents = events.filter(event => new Date(event.date.end) >= now)
+  
   // Generate event URLs with enhanced metadata
-  const eventUrls = events.map((event) => ({
+  const eventUrls = upcomingEvents.map((event) => ({
     url: `${baseUrl}/events/${event.slug}`,
     lastModified: new Date(event.date.start),
     changeFrequency: 'monthly' as const,
