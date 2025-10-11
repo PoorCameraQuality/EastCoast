@@ -5,7 +5,7 @@ export default function Footer() {
   return (
     <footer className="relative bg-gradient-to-b from-dark-950 to-black border-t border-dark-700/50">
       {/* Background decoration */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(74,123,183,0.1),transparent_50%)]"></div>
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_30%,rgba(74,123,183,0.05),transparent_30%)]"></div>
       
       <div className="container-custom py-12 relative">
         {/* Main footer content */}
