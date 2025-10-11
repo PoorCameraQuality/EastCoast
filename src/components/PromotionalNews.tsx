@@ -5,6 +5,28 @@ import Image from 'next/image'
 import { getSupabaseClient } from '@/lib/supabaseClient'
 import type { PromotionalNews } from '@/types/promotional'
 
+// Map event slugs to logo filenames
+const EVENT_LOGOS: Record<string, string> = {
+  'primal-arts': '/images/primalarts.png',
+  'dark-odyssey': '/images/darkodyssey.png',
+  'frolicon': '/images/frolicon.png',
+  'camp-crucible': '/images/campcrucible.png',
+  'beyond-leather': '/images/beyond-leather-logo.png',
+  'charmed': '/images/charmed.png',
+  'coastal-carolina': '/images/CoastalCarolina.PNG',
+  'dungeons-geekdoms': '/images/dungeonsgeekdoms.png',
+  'fet-camp': '/images/fetcamp.png',
+  'fornucopia': '/images/fornucopia.png',
+  'kinky-kollege': '/images/kinkykollege.png',
+  'naughty-gras': '/images/naughtygras.png',
+  'naughty-nawlins': '/images/naughtynawlins.png',
+  'naughty-noel': '/images/naughtynoel.jpg',
+  'ohio-smart': '/images/ohiosmart.png',
+  'tes-fest': '/images/tesfest.png',
+  'tethered-together': '/images/tethered.png',
+  'twisted-tryst': '/images/twistedtyrst.png',
+}
+
 export default function PromotionalNews() {
   const [items, setItems] = useState<PromotionalNews[]>([])
   const [dismissedIds, setDismissedIds] = useState<Set<string>>(new Set())
@@ -193,18 +215,26 @@ function PromotionalCard({
         </h3>
       </div>
 
-      {/* Image if available */}
-      {item.image_url && (
-        <div className="mb-3 rounded-lg overflow-hidden relative h-32">
-          <Image 
-            src={item.image_url} 
-            alt={item.title}
-            fill
-            className="object-cover"
-            sizes="320px"
-          />
-        </div>
-      )}
+      {/* Image if available - auto-detect event logo or use custom image */}
+      {(() => {
+        const imageUrl = item.event_slug && EVENT_LOGOS[item.event_slug] 
+          ? EVENT_LOGOS[item.event_slug] 
+          : item.image_url
+        
+        if (!imageUrl) return null
+        
+        return (
+          <div className="mb-3 rounded-lg overflow-hidden relative h-20 bg-white/10 flex items-center justify-center p-2">
+            <Image 
+              src={imageUrl} 
+              alt={item.title}
+              fill
+              className="object-contain"
+              sizes="320px"
+            />
+          </div>
+        )
+      })()}
 
       {/* Description */}
       <div className="text-sm text-white/90 leading-relaxed mb-3 whitespace-pre-wrap">

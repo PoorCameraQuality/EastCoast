@@ -7,6 +7,7 @@ export interface PromotionalNews {
   link_url?: string | null
   link_text?: string | null
   image_url?: string | null
+  event_slug?: string | null
   start_date: string // ISO 8601 timestamp
   end_date: string // ISO 8601 timestamp
   priority: number

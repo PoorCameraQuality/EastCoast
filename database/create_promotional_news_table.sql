@@ -9,6 +9,7 @@ CREATE TABLE IF NOT EXISTS promotional_news (
   link_url VARCHAR(500),
   link_text VARCHAR(100),
   image_url VARCHAR(500),
+  event_slug VARCHAR(200),
   start_date TIMESTAMPTZ NOT NULL,
   end_date TIMESTAMPTZ NOT NULL,
   priority INTEGER DEFAULT 5,
@@ -59,6 +60,7 @@ COMMENT ON COLUMN promotional_news.description IS 'Full promotional content, sup
 COMMENT ON COLUMN promotional_news.link_url IS 'Optional URL for call-to-action button';
 COMMENT ON COLUMN promotional_news.link_text IS 'Optional button text (e.g., "Apply Now", "Learn More")';
 COMMENT ON COLUMN promotional_news.image_url IS 'Optional promotional image URL';
+COMMENT ON COLUMN promotional_news.event_slug IS 'Optional event slug to auto-display event logo (e.g., "primal-arts", "dark-odyssey")';
 COMMENT ON COLUMN promotional_news.start_date IS 'When to start displaying this item';
 COMMENT ON COLUMN promotional_news.end_date IS 'When to stop displaying this item';
 COMMENT ON COLUMN promotional_news.priority IS 'Display order: higher numbers show first (1=low, 5=medium, 10=high)';
