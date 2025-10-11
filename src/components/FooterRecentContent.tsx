@@ -96,20 +96,20 @@ export default function FooterRecentContent() {
 
   return (
     <div>
-      <h3 className="text-lg font-serif font-semibold text-white mb-6 flex items-center">
+      <h3 className="text-lg font-serif font-semibold text-white mb-4 flex items-center">
         <span className="w-8 h-px bg-primary-500 mr-3"></span>
         Recent Updates
       </h3>
       
-      <div className="space-y-8">
+      <div className="space-y-5">
         {/* Recent Events */}
         {content.recentEvents.length > 0 && (
           <div>
-            <h4 className="text-base font-semibold text-primary-300 mb-4 flex items-center">
+            <h4 className="text-sm font-semibold text-primary-300 mb-3 flex items-center">
               <span className="mr-2">🎪</span>
               Upcoming Events
             </h4>
-            <ul className="space-y-3">
+            <ul className="space-y-2">
               {content.recentEvents.map((event) => (
                 <li key={event.slug}>
                   <Link 
@@ -126,7 +126,7 @@ export default function FooterRecentContent() {
                 </li>
               ))}
             </ul>
-            <Link href="/events" className="text-sm text-primary-400 hover:text-primary-300 transition-colors mt-3 inline-block">
+            <Link href="/events" className="text-xs text-primary-400 hover:text-primary-300 transition-colors mt-2 inline-block">
               View all events →
             </Link>
           </div>
@@ -135,11 +135,11 @@ export default function FooterRecentContent() {
         {/* Recent Articles */}
         {content.recentArticles.length > 0 && (
           <div>
-            <h4 className="text-base font-semibold text-primary-300 mb-4 flex items-center">
+            <h4 className="text-sm font-semibold text-primary-300 mb-3 flex items-center">
               <span className="mr-2">📚</span>
               Latest Articles
             </h4>
-            <ul className="space-y-3">
+            <ul className="space-y-2">
               {content.recentArticles.map((article) => (
                 <li key={article.id}>
                   <Link 
@@ -159,7 +159,7 @@ export default function FooterRecentContent() {
                 </li>
               ))}
             </ul>
-            <Link href="/education" className="text-sm text-primary-400 hover:text-primary-300 transition-colors mt-3 inline-block">
+            <Link href="/education" className="text-xs text-primary-400 hover:text-primary-300 transition-colors mt-2 inline-block">
               View all articles →
             </Link>
           </div>
@@ -168,11 +168,11 @@ export default function FooterRecentContent() {
         {/* Featured Dungeons */}
         {content.featuredDungeons.length > 0 && (
           <div>
-            <h4 className="text-base font-semibold text-primary-300 mb-4 flex items-center">
+            <h4 className="text-sm font-semibold text-primary-300 mb-3 flex items-center">
               <span className="mr-2">🏰</span>
               Featured Dungeons
             </h4>
-            <ul className="space-y-3">
+            <ul className="space-y-2">
               {content.featuredDungeons.map((dungeon) => (
                 <li key={dungeon.slug}>
                   <Link 
@@ -189,7 +189,7 @@ export default function FooterRecentContent() {
                 </li>
               ))}
             </ul>
-            <Link href="/dungeons" className="text-sm text-primary-400 hover:text-primary-300 transition-colors mt-3 inline-block">
+            <Link href="/dungeons" className="text-xs text-primary-400 hover:text-primary-300 transition-colors mt-2 inline-block">
               View all dungeons →
             </Link>
           </div>

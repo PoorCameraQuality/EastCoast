@@ -7,12 +7,12 @@ export default function Footer() {
       {/* Background decoration */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(74,123,183,0.1),transparent_50%)]"></div>
       
-      <div className="container-custom py-20 relative">
+      <div className="container-custom py-12 relative">
         {/* Main footer content */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-12 lg:gap-16">
+        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8 lg:gap-12">
           {/* Brand section */}
           <div className="lg:col-span-1 xl:col-span-1">
-            <div className="flex items-center space-x-3 mb-8">
+            <div className="flex items-center space-x-3 mb-6">
               <div className="relative">
                 <div className="w-14 h-14 bg-gradient-to-br from-primary-500 to-primary-700 rounded-xl flex items-center justify-center shadow-lg">
                   <span className="text-white font-serif font-bold text-2xl">EC</span>
@@ -29,7 +29,7 @@ export default function Footer() {
               </div>
             </div>
             
-            <p className="text-gray-300 mb-8 leading-relaxed">
+            <p className="text-gray-300 mb-6 leading-relaxed">
               Connecting kink communities across the East Coast. Find events, make friends, and explore safely with discretion and elegance.
             </p>
             
@@ -54,12 +54,12 @@ export default function Footer() {
           {/* Links and Resources Section */}
           <div className="lg:col-span-1 xl:col-span-1">
             {/* Quick Links */}
-            <div className="mb-8">
-              <h3 className="text-lg font-serif font-semibold text-white mb-6 flex items-center">
+            <div className="mb-6">
+              <h3 className="text-lg font-serif font-semibold text-white mb-4 flex items-center">
                 <span className="w-8 h-px bg-primary-500 mr-3"></span>
                 Quick Links
               </h3>
-              <ul className="space-y-4">
+              <ul className="space-y-3">
                 {[
                   { href: '/events', label: 'Browse Events', icon: '🎪' },
                   { href: '/calendar', label: 'Event Calendar', icon: '📅' },
@@ -81,11 +81,11 @@ export default function Footer() {
 
             {/* Resources */}
             <div>
-              <h3 className="text-lg font-serif font-semibold text-white mb-6 flex items-center">
+              <h3 className="text-lg font-serif font-semibold text-white mb-4 flex items-center">
                 <span className="w-8 h-px bg-primary-500 mr-3"></span>
                 Resources
               </h3>
-              <ul className="space-y-4">
+              <ul className="space-y-3">
                 {[
                   { href: '/dungeons', label: 'Dungeons', icon: '🏰' },
                   { href: '/education', label: 'Education', icon: '📚' },
@@ -112,12 +112,12 @@ export default function Footer() {
             <FooterRecentContent />
             
             {/* Legal Links */}
-            <div className="mt-8">
-              <h3 className="text-lg font-serif font-semibold text-white mb-6 flex items-center">
+            <div className="mt-6">
+              <h3 className="text-lg font-serif font-semibold text-white mb-4 flex items-center">
                 <span className="w-8 h-px bg-primary-500 mr-3"></span>
                 Legal
               </h3>
-              <ul className="space-y-4">
+              <ul className="space-y-3">
                 {[
                   { href: '/privacy', label: 'Privacy Policy', icon: '🔒' },
                   { href: '/terms', label: 'Terms of Service', icon: '📄' },
@@ -137,8 +137,8 @@ export default function Footer() {
             </div>
 
             {/* Stay Connected */}
-            <div className="mt-8">
-              <h3 className="text-lg font-serif font-semibold text-white mb-6 flex items-center">
+            <div className="mt-6">
+              <h3 className="text-lg font-serif font-semibold text-white mb-4 flex items-center">
                 <span className="w-8 h-px bg-primary-500 mr-3"></span>
                 Stay Connected
               </h3>
@@ -158,9 +158,9 @@ export default function Footer() {
         </div>
 
         {/* Bottom section */}
-        <div className="border-t border-dark-700/50 mt-16 pt-8">
+        <div className="border-t border-dark-700/50 mt-12 pt-6">
           {/* Disclaimer */}
-          <div className="mb-8 p-6 bg-dark-900/50 border border-dark-700/50 rounded-xl backdrop-blur-sm">
+          <div className="mb-6 p-4 bg-dark-900/50 border border-dark-700/50 rounded-xl backdrop-blur-sm">
             <h4 className="text-sm font-semibold text-white mb-3 flex items-center">
               <span className="w-4 h-px bg-primary-500 mr-2"></span>
               Important Disclaimer
