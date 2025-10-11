@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import Script from 'next/script'
+import { BASE_URL } from '@/lib/seo'
 
 interface BreadcrumbItem {
   label: string
