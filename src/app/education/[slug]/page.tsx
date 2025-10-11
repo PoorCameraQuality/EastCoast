@@ -27,14 +27,14 @@ function ArticleStructuredData({ article }: { article: Article }) {
     "publisher": {
       "@type": "Organization",
       "name": "East Coast Kink Events",
-      "url": "https://www.eastcoastkinkevents.com"
+      "url": BASE_URL
     },
     "mainEntityOfPage": {
       "@type": "WebPage",
       "@id": `${BASE_URL}/education/${article.slug}`
     },
     "url": `${BASE_URL}/education/${article.slug}`,
-    "image": "https://www.eastcoastkinkevents.com/og-image.png",
+    "image": `${BASE_URL}/og-image.png`,
     "keywords": article.focus_keywords || article.tags,
     "articleSection": article.category,
     "wordCount": article.content?.length || 0
@@ -248,11 +248,11 @@ export default async function ArticlePage({ params }: { params: { slug: string }
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "BreadcrumbList",
-              "itemListElement": [
-                {"@type": "ListItem", position: 1, name: 'Home', item: 'https://www.eastcoastkinkevents.com/'},
-                {"@type": "ListItem", position: 2, name: 'Education', item: 'https://www.eastcoastkinkevents.com/education'},
-                {"@type": "ListItem", position: 3, name: article.title, item: `https://www.eastcoastkinkevents.com/education/${article.slug}`}
-              ]
+            "itemListElement": [
+              {"@type": "ListItem", position: 1, name: 'Home', item: `${BASE_URL}/`},
+              {"@type": "ListItem", position: 2, name: 'Education', item: `${BASE_URL}/education`},
+              {"@type": "ListItem", position: 3, name: article.title, item: `${BASE_URL}/education/${article.slug}`}
+            ]
             })
           }}
         />

@@ -1,5 +1,6 @@
 import Script from 'next/script'
 import { getAllEvents } from '@/data/events'
+import { BASE_URL } from '@/lib/seo'
 
 interface EventStructuredDataProps {
   event: {
@@ -64,13 +65,13 @@ export function EventStructuredData({ event }: EventStructuredDataProps) {
     "organizer": {
       "@type": "Organization",
       "name": "East Coast Kink Events",
-      "url": "https://www.eastcoastkinkevents.com"
+      "url": BASE_URL
     },
-    "url": `https://www.eastcoastkinkevents.com/events/${event.slug}`,
-    "image": event.logo ? [`https://www.eastcoastkinkevents.com${event.logo}`] : [`https://www.eastcoastkinkevents.com/og-image.png`],
+    "url": `${BASE_URL}/events/${event.slug}`,
+    "image": event.logo ? [`${BASE_URL}${event.logo}`] : [`${BASE_URL}/og-image.png`],
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": `https://www.eastcoastkinkevents.com/events/${event.slug}`
+      "@id": `${BASE_URL}/events/${event.slug}`
     },
     "inLanguage": "en-US",
     "isAccessibleForFree": false,
@@ -121,8 +122,8 @@ export function DungeonStructuredData({ dungeon }: { dungeon: any }) {
     "@type": "LocalBusiness",
     "name": dungeon.name,
     "description": dungeon.excerpt,
-    "url": `https://www.eastcoastkinkevents.com/dungeons/${dungeon.slug}`,
-    "image": dungeon.logo ? [`https://www.eastcoastkinkevents.com${dungeon.logo}`] : undefined,
+    "url": `${BASE_URL}/dungeons/${dungeon.slug}`,
+    "image": dungeon.logo ? [`${BASE_URL}${dungeon.logo}`] : undefined,
     "telephone": dungeon.phone || undefined,
     "email": dungeon.email || undefined,
     "address": {
@@ -224,7 +225,7 @@ export function EventListStructuredData() {
     "@type": "ItemList",
     "name": "East Coast Kink Events",
     "description": "Browse all upcoming kink events across the East Coast",
-    "url": "https://www.eastcoastkinkevents.com/events",
+    "url": `${BASE_URL}/events`,
     "numberOfItems": itemListElement.length,
     "itemListElement": itemListElement
   }
@@ -252,15 +253,15 @@ export function OrganizationStructuredData() {
     "@type": "Organization",
     "name": "East Coast Kink Events",
     "description": "Discover and connect with kink events across the East Coast",
-    "url": "https://www.eastcoastkinkevents.com",
-    "logo": "https://www.eastcoastkinkevents.com/og-image.png",
+    "url": BASE_URL,
+    "logo": `${BASE_URL}/og-image.png`,
     "sameAs": [
       "https://discord.gg/xcnGGyGsmT"
     ],
     "contactPoint": {
       "@type": "ContactPoint",
       "contactType": "customer service",
-      "url": "https://www.eastcoastkinkevents.com/contact",
+      "url": `${BASE_URL}/contact`,
       "availableLanguage": "English"
     },
     "areaServed": {
@@ -322,7 +323,7 @@ export function CalendarStructuredData() {
     "@type": "WebPage",
     "name": "Event Calendar - East Coast Kink Events",
     "description": "Browse upcoming kink events by month with our interactive calendar. Find BDSM events, conferences, and workshops across the East Coast.",
-    "url": "https://www.eastcoastkinkevents.com/calendar",
+    "url": `${BASE_URL}/calendar`,
     "mainEntity": {
       "@type": "ItemList",
       "name": "East Coast Kink Events Calendar",
@@ -355,7 +356,7 @@ export function ContactPageStructuredData() {
     "@type": "ContactPage",
     "name": "Contact Us - East Coast Kink Events",
     "description": "Get in touch with East Coast Kink Events. Add your event or dungeon, provide feedback, or contact site administration.",
-    "url": "https://www.eastcoastkinkevents.com/contact",
+    "url": `${BASE_URL}/contact`,
     "mainEntity": {
       "@type": "Organization",
       "name": "East Coast Kink Events",
@@ -370,7 +371,7 @@ export function ContactPageStructuredData() {
       "@type": "CommunicateAction",
       "target": {
         "@type": "EntryPoint",
-        "urlTemplate": "https://www.eastcoastkinkevents.com/contact"
+        "urlTemplate": `${BASE_URL}/contact`
       }
     }
   }
@@ -398,7 +399,7 @@ export function EducationStructuredData() {
     "@type": "WebPage",
     "name": "Kink Education - East Coast Kink Events",
     "description": "Comprehensive kink education resources including safety guides, negotiation techniques, aftercare essentials, and community guidelines for responsible BDSM practice.",
-    "url": "https://www.eastcoastkinkevents.com/education",
+    "url": `${BASE_URL}/education`,
     "mainEntity": {
       "@type": "ItemList",
       "name": "Kink Education Articles",
@@ -411,7 +412,7 @@ export function EducationStructuredData() {
           "item": {
             "@type": "Article",
             "name": "SSC vs RACK: Understanding Kink Safety Frameworks",
-            "url": "https://www.eastcoastkinkevents.com/education/ssc-vs-rack-kink-safety-frameworks",
+            "url": `${BASE_URL}/education/ssc-vs-rack-kink-safety-frameworks`,
             "author": {
               "@type": "Person",
               "name": "Dr. Sarah Chen"
@@ -428,7 +429,7 @@ export function EducationStructuredData() {
           "item": {
             "@type": "Article",
             "name": "Negotiation 101: Building Consent in BDSM Relationships",
-            "url": "https://www.eastcoastkinkevents.com/education/negotiation-101-building-consent-bdsm-relationships",
+            "url": `${BASE_URL}/education/negotiation-101-building-consent-bdsm-relationships`,
             "author": {
               "@type": "Person",
               "name": "Marcus Rodriguez"
@@ -445,7 +446,7 @@ export function EducationStructuredData() {
           "item": {
             "@type": "Article",
             "name": "Aftercare Essentials: Supporting Your Partner After Play",
-            "url": "https://www.eastcoastkinkevents.com/education/aftercare-essentials-supporting-partner-after-play",
+            "url": `${BASE_URL}/education/aftercare-essentials-supporting-partner-after-play`,
             "author": {
               "@type": "Person",
               "name": "Dr. Emily Watson"
@@ -483,7 +484,7 @@ export function HomepageStructuredData() {
     "@type": "WebPage",
     "name": "East Coast Kink Events - Discover BDSM Events & Dungeons",
     "description": "Find kink events, BDSM dungeons, and educational resources across the East Coast. Connect with workshops, conferences, and community events in a safe, inclusive environment.",
-    "url": "https://www.eastcoastkinkevents.com",
+    "url": BASE_URL,
     "mainEntity": {
       "@type": "ItemList",
       "name": "Featured Kink Events",
