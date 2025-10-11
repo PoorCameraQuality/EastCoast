@@ -9,9 +9,9 @@ export default function Footer() {
       
       <div className="container-custom py-20 relative">
         {/* Main footer content */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
+        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-12 lg:gap-16">
           {/* Brand section */}
-          <div className="lg:col-span-4">
+          <div className="lg:col-span-1 xl:col-span-1">
             <div className="flex items-center space-x-3 mb-8">
               <div className="relative">
                 <div className="w-14 h-14 bg-gradient-to-br from-primary-500 to-primary-700 rounded-xl flex items-center justify-center shadow-lg">
@@ -29,7 +29,7 @@ export default function Footer() {
               </div>
             </div>
             
-            <p className="text-gray-300 mb-8 leading-relaxed max-w-md">
+            <p className="text-gray-300 mb-8 leading-relaxed">
               Connecting kink communities across the East Coast. Find events, make friends, and explore safely with discretion and elegance.
             </p>
             
@@ -48,101 +48,103 @@ export default function Footer() {
                 </svg>
                 <div className="absolute inset-0 bg-gradient-to-br from-primary-400/10 to-primary-600/10 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               </a>
-              
-              {/* Add more social links here if needed */}
             </div>
           </div>
 
-          {/* Quick Links */}
-          <div className="lg:col-span-1">
-            <h3 className="text-lg font-serif font-semibold text-white mb-6 flex items-center">
-              <span className="w-8 h-px bg-primary-500 mr-3"></span>
-              Quick Links
-            </h3>
-            <ul className="space-y-3">
-              {[
-                { href: '/events', label: 'Browse Events', icon: '🎪' },
-                { href: '/calendar', label: 'Event Calendar', icon: '📅' },
-                { href: '/events', label: 'Add Event', icon: '➕' },
-                { href: '/about', label: 'About Us', icon: 'ℹ️' }
-              ].map((link) => (
-                <li key={link.href}>
-                  <Link 
-                    href={link.href} 
-                    className="flex items-center space-x-2 text-gray-300 hover:text-primary-300 transition-colors duration-300 group"
-                  >
-                    <span className="text-sm opacity-60 group-hover:opacity-100 transition-opacity duration-300">{link.icon}</span>
-                    <span className="font-medium">{link.label}</span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
+          {/* Links and Resources Section */}
+          <div className="lg:col-span-1 xl:col-span-1">
+            {/* Quick Links */}
+            <div className="mb-8">
+              <h3 className="text-lg font-serif font-semibold text-white mb-6 flex items-center">
+                <span className="w-8 h-px bg-primary-500 mr-3"></span>
+                Quick Links
+              </h3>
+              <ul className="space-y-4">
+                {[
+                  { href: '/events', label: 'Browse Events', icon: '🎪' },
+                  { href: '/calendar', label: 'Event Calendar', icon: '📅' },
+                  { href: '/events', label: 'Add Event', icon: '➕' },
+                  { href: '/about', label: 'About Us', icon: 'ℹ️' }
+                ].map((link) => (
+                  <li key={link.href}>
+                    <Link 
+                      href={link.href} 
+                      className="flex items-center space-x-3 text-gray-300 hover:text-primary-300 transition-colors duration-300 group"
+                    >
+                      <span className="text-base opacity-60 group-hover:opacity-100 transition-opacity duration-300">{link.icon}</span>
+                      <span className="font-medium text-base">{link.label}</span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Resources */}
+            <div>
+              <h3 className="text-lg font-serif font-semibold text-white mb-6 flex items-center">
+                <span className="w-8 h-px bg-primary-500 mr-3"></span>
+                Resources
+              </h3>
+              <ul className="space-y-4">
+                {[
+                  { href: '/dungeons', label: 'Dungeons', icon: '🏰' },
+                  { href: '/education', label: 'Education', icon: '📚' },
+                  { href: '/guidelines', label: 'Guidelines', icon: '📋' },
+                  { href: '/contact', label: 'Contact', icon: '📧' }
+                ].map((link) => (
+                  <li key={link.href}>
+                    <Link 
+                      href={link.href} 
+                      className="flex items-center space-x-3 text-gray-300 hover:text-primary-300 transition-colors duration-300 group"
+                    >
+                      <span className="text-base opacity-60 group-hover:opacity-100 transition-opacity duration-300">{link.icon}</span>
+                      <span className="font-medium text-base">{link.label}</span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
 
-          {/* Recent Content */}
-          <FooterRecentContent />
+          {/* Recent Content and Legal */}
+          <div className="lg:col-span-1 xl:col-span-1">
+            {/* Recent Content */}
+            <FooterRecentContent />
+            
+            {/* Legal Links */}
+            <div className="mt-8">
+              <h3 className="text-lg font-serif font-semibold text-white mb-6 flex items-center">
+                <span className="w-8 h-px bg-primary-500 mr-3"></span>
+                Legal
+              </h3>
+              <ul className="space-y-4">
+                {[
+                  { href: '/privacy', label: 'Privacy Policy', icon: '🔒' },
+                  { href: '/terms', label: 'Terms of Service', icon: '📄' },
+                  { href: '/guidelines', label: 'Community Guidelines', icon: '🤝' }
+                ].map((link) => (
+                  <li key={link.href}>
+                    <Link 
+                      href={link.href} 
+                      className="flex items-center space-x-3 text-gray-300 hover:text-primary-300 transition-colors duration-300 group"
+                    >
+                      <span className="text-base opacity-60 group-hover:opacity-100 transition-opacity duration-300">{link.icon}</span>
+                      <span className="font-medium text-base">{link.label}</span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
 
-          {/* Resources */}
-          <div className="lg:col-span-2">
-            <h3 className="text-lg font-serif font-semibold text-white mb-6 flex items-center">
-              <span className="w-8 h-px bg-primary-500 mr-3"></span>
-              Resources
-            </h3>
-            <ul className="space-y-3">
-              {[
-                { href: '/dungeons', label: 'Dungeons', icon: '🏰' },
-                { href: '/education', label: 'Education', icon: '📚' },
-                { href: '/guidelines', label: 'Guidelines', icon: '📋' },
-                { href: '/contact', label: 'Contact', icon: '📧' }
-              ].map((link) => (
-                <li key={link.href}>
-                  <Link 
-                    href={link.href} 
-                    className="flex items-center space-x-2 text-gray-300 hover:text-primary-300 transition-colors duration-300 group"
-                  >
-                    <span className="text-sm opacity-60 group-hover:opacity-100 transition-opacity duration-300">{link.icon}</span>
-                    <span className="font-medium">{link.label}</span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Legal */}
-          <div className="lg:col-span-2">
-            <h3 className="text-lg font-serif font-semibold text-white mb-6 flex items-center">
-              <span className="w-8 h-px bg-primary-500 mr-3"></span>
-              Legal
-            </h3>
-            <ul className="space-y-3">
-              {[
-                { href: '/privacy', label: 'Privacy Policy', icon: '🔒' },
-                { href: '/terms', label: 'Terms of Service', icon: '📄' },
-                { href: '/guidelines', label: 'Community Guidelines', icon: '🤝' }
-              ].map((link) => (
-                <li key={link.href}>
-                  <Link 
-                    href={link.href} 
-                    className="flex items-center space-x-2 text-gray-300 hover:text-primary-300 transition-colors duration-300 group"
-                  >
-                    <span className="text-sm opacity-60 group-hover:opacity-100 transition-opacity duration-300">{link.icon}</span>
-                    <span className="font-medium">{link.label}</span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Newsletter signup placeholder */}
-          <div className="lg:col-span-2">
-            <h3 className="text-lg font-serif font-semibold text-white mb-6 flex items-center">
-              <span className="w-8 h-px bg-primary-500 mr-3"></span>
-              Stay Connected
-            </h3>
-            <p className="text-gray-300 text-sm mb-4">
-              Join our community for updates and event notifications.
-            </p>
-            <div className="flex items-center space-x-2">
+            {/* Stay Connected */}
+            <div className="mt-8">
+              <h3 className="text-lg font-serif font-semibold text-white mb-6 flex items-center">
+                <span className="w-8 h-px bg-primary-500 mr-3"></span>
+                Stay Connected
+              </h3>
+              <p className="text-gray-300 mb-4 leading-relaxed">
+                Join our community for updates and event notifications.
+              </p>
               <a 
                 href="https://discord.gg/xcnGGyGsmT" 
                 target="_blank" 
