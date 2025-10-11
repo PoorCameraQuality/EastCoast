@@ -177,9 +177,9 @@ INSERT INTO promotional_news (
 - No manual intervention needed
 
 ### User Dismissal
-- Tracked in browser localStorage
-- Per-item dismissal (key: `dismissed-promo-{id}`)
-- Persists across sessions
+- Tracked in browser sessionStorage
+- Per-item dismissal during current session
+- Reappears on next visit (when user reopens browser)
 
 ---
 
@@ -201,7 +201,8 @@ INSERT INTO promotional_news (
 3. **Clear dismissal:**
    ```javascript
    // In browser console:
-   localStorage.removeItem('dismissed-promos')
+   sessionStorage.removeItem('dismissed-promos')
+   // Or simply close and reopen browser
    ```
 
 ### "Build warnings about Supabase"

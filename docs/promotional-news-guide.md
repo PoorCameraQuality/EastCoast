@@ -315,7 +315,8 @@ WHERE id = 'your-item-uuid';
 
 ## 🛡️ User Privacy & Behavior
 
-- **Dismissal:** Users can dismiss items; tracked in localStorage
+- **Dismissal:** Users can dismiss items during their session; promotional news reappears on next visit
+- **Session-based:** Uses sessionStorage (dismissals reset when browser closes or new session starts)
 - **No tracking:** No analytics on who sees what
 - **Auto-expiration:** Items disappear automatically after end_date
 - **Non-intrusive:** Fixed position doesn't block content
@@ -332,7 +333,7 @@ WHERE id = 'your-item-uuid';
 ### Item not appearing on site
 - Check dates: `start_date <= NOW() AND end_date >= NOW()`
 - Verify priority: Higher priority items show first
-- Check if user dismissed it (clear localStorage)
+- Check if user dismissed it (clear sessionStorage or close/reopen browser)
 - Confirm RLS policies allow public reads
 
 ### Description has weird characters

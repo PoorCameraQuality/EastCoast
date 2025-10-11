@@ -12,8 +12,8 @@ export default function PromotionalNews() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    // Load dismissed items from localStorage
-    const dismissed = localStorage.getItem('dismissed-promos')
+    // Load dismissed items from sessionStorage (resets on new browser session)
+    const dismissed = sessionStorage.getItem('dismissed-promos')
     if (dismissed) {
       setDismissedIds(new Set(JSON.parse(dismissed)))
     }
@@ -57,7 +57,8 @@ export default function PromotionalNews() {
     const newDismissed = new Set(dismissedIds)
     newDismissed.add(id)
     setDismissedIds(newDismissed)
-    localStorage.setItem('dismissed-promos', JSON.stringify(Array.from(newDismissed)))
+    // Use sessionStorage so dismissals reset on new browser session (new visit)
+    sessionStorage.setItem('dismissed-promos', JSON.stringify(Array.from(newDismissed)))
   }
 
   const toggleExpand = (id: string) => {
