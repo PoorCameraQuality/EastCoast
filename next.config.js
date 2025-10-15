@@ -38,6 +38,48 @@ const nextConfig = {
         destination: 'https://www.eastcoastkinkevents.com/:path*',
         permanent: true,
       },
+
+      // Normalize section roots - remove trailing slashes
+      { source: '/events/', destination: '/events', permanent: true },
+      { source: '/dungeons/', destination: '/dungeons', permanent: true },
+      { source: '/education/', destination: '/education', permanent: true },
+
+      // Explicit trailing slash removal for detail pages
+      { source: '/events/:slug/', destination: '/events/:slug', permanent: true },
+      { source: '/dungeons/:slug/', destination: '/dungeons/:slug', permanent: true },
+      { source: '/education/:slug/', destination: '/education/:slug', permanent: true },
+
+      // Strip AMP format parameter
+      {
+        source: '/:path*',
+        has: [{ type: 'query', key: 'format', value: 'amp' }],
+        destination: '/:path*',
+        permanent: true,
+      },
+
+      // Map category query parameters to events page
+      {
+        source: '/',
+        has: [{ type: 'query', key: 'category', value: 'Events' }],
+        destination: '/events',
+        permanent: true,
+      },
+      {
+        source: '/',
+        has: [{ type: 'query', key: 'category', value: 'Indoor+Kink+Events' }],
+        destination: '/events',
+        permanent: true,
+      },
+      {
+        source: '/',
+        has: [{ type: 'query', key: 'category', value: 'Outdoor+Events' }],
+        destination: '/events',
+        permanent: true,
+      },
+
+      // Privacy URL consistency
+      { source: '/privacy-policy', destination: '/privacy', permanent: true },
+      { source: '/privacy/', destination: '/privacy', permanent: true },
       // Redirect old kinkeventcalendar URLs to new events structure
       {
         source: '/kinkeventcalendar/:slug',

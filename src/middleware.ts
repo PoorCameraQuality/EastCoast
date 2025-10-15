@@ -22,10 +22,50 @@ export async function middleware(req: NextRequest) {
     return NextResponse.next()
   }
 
+  // Normalize URL: force www and lowercase paths
+  const host = req.headers.get('host') || ''
+  const lowerPath = pathname.toLowerCase()
+
+  // Force www (backup to next.config.js redirect)
+  if (host === 'eastcoastkinkevents.com') {
+    url.host = 'www.eastcoastkinkevents.com'
+    return NextResponse.redirect(url, 308)
+  }
+
+  // Force lowercase paths for consistency
+  if (pathname !== lowerPath) {
+    url.pathname = lowerPath
+    return NextResponse.redirect(url, 308)
+  }
+
+  // Strip unwanted query parameters
+  const allowedParams = new Set(['page', 'q'])
+  let paramsChanged = false
+  const keysToDelete: string[] = []
+  url.searchParams.forEach((value, key) => {
+    if (!allowedParams.has(key) && key !== 'format' && key !== 'category') {
+      keysToDelete.push(key)
+    }
+  })
+  keysToDelete.forEach(key => {
+    url.searchParams.delete(key)
+    paramsChanged = true
+  })
+  if (paramsChanged) {
+    return NextResponse.redirect(url, 308)
+  }
+
   // Check for required environment variables
   if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
     console.log('⚠️ MIDDLEWARE: Missing Supabase environment variables - continuing without auth')
     return NextResponse.next()
+  }
+
+  // Set crawl-friendly headers for public pages
+  if (!pathname.startsWith('/admin') && !pathname.startsWith('/api') && !pathname.startsWith('/login')) {
+    const response = NextResponse.next()
+    response.headers.set('X-Robots-Tag', 'index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1')
+    return response
   }
 
   // Only protect admin routes
@@ -84,6 +124,6 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/((?!_next/static|_next/image|favicon.ico|api/auth).*)'],
+  matcher: ['/((?!_next/static|_next/image|favicon.ico|api/auth|sitemap.xml|robots.txt).*)'],
 }
 

@@ -111,7 +111,7 @@ export default function Footer() {
           </p>
           <ul className="flex flex-wrap gap-x-6 gap-y-2 text-xs">
             <li>
-              <Link href="/sitemap" className="hover:text-white">
+              <Link href="/sitemap.xml" className="hover:text-white">
                 Sitemap
               </Link>
             </li>

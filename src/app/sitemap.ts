@@ -121,39 +121,12 @@ export default async function sitemap() {
       },
     },
     {
-      url: `${baseUrl}/calendar`,
-      lastModified: new Date(),
-      changeFrequency: 'daily' as const,
-      priority: 0.8,
-      alternates: {
-        canonical: `${baseUrl}/calendar`,
-      },
-    },
-    {
       url: `${baseUrl}/about`,
       lastModified: new Date(),
       changeFrequency: 'monthly' as const,
       priority: 0.7,
       alternates: {
         canonical: `${baseUrl}/about`,
-      },
-    },
-    {
-      url: `${baseUrl}/contact`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly' as const,
-      priority: 0.6,
-      alternates: {
-        canonical: `${baseUrl}/contact`,
-      },
-    },
-    {
-      url: `${baseUrl}/guidelines`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly' as const,
-      priority: 0.5,
-      alternates: {
-        canonical: `${baseUrl}/guidelines`,
       },
     },
     {
@@ -174,24 +147,22 @@ export default async function sitemap() {
         canonical: `${baseUrl}/terms`,
       },
     },
-    {
-      url: `${baseUrl}/education/submit`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly' as const,
-      priority: 0.4,
-      alternates: {
-        canonical: `${baseUrl}/education/submit`,
-      },
-    },
-    // Removed: login and unauthorized from sitemap to avoid noindex conflicts
     // Dynamic content pages
     ...eventUrls,
     ...dungeonUrls,
     ...allArticleUrls,
   ]
 
-  // Exclude utility routes
+  // Exclude utility routes (noindex pages)
   return urls.filter(item => {
-    try { return item.url && !item.url.endsWith('/login') && !item.url.endsWith('/unauthorized') } catch { return true }
+    try { 
+      return item.url && 
+        !item.url.endsWith('/login') && 
+        !item.url.endsWith('/unauthorized') &&
+        !item.url.endsWith('/contact') &&
+        !item.url.endsWith('/guidelines') &&
+        !item.url.endsWith('/calendar') &&
+        !item.url.endsWith('/education/submit')
+    } catch { return true }
   })
 } 

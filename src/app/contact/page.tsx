@@ -10,10 +10,10 @@ export const metadata: Metadata = {
   description: 'Get in touch with East Coast Kink Events. Add your event or dungeon, provide feedback, or contact site administration.',
   keywords: 'contact, add event, add dungeon, feedback, kink events, BDSM events, east coast',
   robots: {
-    index: true,
+    index: false,
     follow: true,
     googleBot: {
-      index: true,
+      index: false,
       follow: true,
     },
   },

@@ -10,17 +10,6 @@
       "has": [
         {
           "type": "query",
-          "key": "category"
-        }
-      ],
-      "destination": "/events/",
-      "permanent": true
-    },
-    {
-      "source": "/",
-      "has": [
-        {
-          "type": "query",
           "key": "format",
           "value": "amp"
         }
