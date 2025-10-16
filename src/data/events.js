@@ -67,21 +67,22 @@ export const events = [
     }
   },
   {
-    "name": "Kink Down South Weekend",
+    "name": "Kink Down South Weekend 2026",
     "slug": "kink-down-south-weekend",
     "date": {
       "start": "2026-08-07",
       "end": "2026-08-09",
-      "display": "Aug 7-9, 2026"
+      "display": "Dates TBA - August 2026 (Expected)"
     },
+    "status": "tba",
     "location": {
       "city": "Atlanta",
       "state": "GA",
       "region": "Southeastern, Georgia"
     },
     "category": "Outdoor Event",
-    "excerpt": "Kink Down South Weekend is the South's only large-scale outdoor kink festival, bringing together fetish enthusiasts for a weekend of liberation, exploration, and community. Inspired by legendary events like Folsom Street Fair, this transformative experience features classes, demos, live performances, DJ sets, and socials in a massive 20,000 sq. ft. industrial space.",
-    "longDescription": "Inspired by legendary events like Folsom Street Fair, Off Sunset Festival, and Darklands, Kink Down South Weekend is the South's only large-scale outdoor kink festival, bringing together fetish enthusiasts for a weekend of liberation, exploration, and community.\n\nKink Down South Weekend is more than an event—it's a declaration of resilience, visibility, and unapologetic joy. This is where we elevate our community, turning our heroes into legends and our culture into a movement. This is where we reclaim our space, not just to exist—but to thrive, to play, and to own our freedom.\n\nFreedom in Fetish isn't just a theme—it's our mission.\n\nNew for Aug 7-9, 2026! NEW VENUE, BIGGER EXPERIENCE! – We're moving to a massive 20,000 sq. ft. industrial space in Midtown, giving you more room to explore, connect, and play! Classes & Demos at the Host Hotel! – Learn, engage, and experience kink education in a dedicated space tailored for discovery and skill-building. Expanded Masterclass Schedule! – More in-depth, high-level workshops from industry-leading educators to elevate your experience. More Socials & Meetups! – Whether you're new to the scene or a seasoned player, we're bringing you more ways to mix, mingle, and make connections.\n\nWeekend Schedule:\nFriday 8/1: VIP Reception at Sonesta Select Atlanta Midtown, followed by SMUT kickoff party at Heretic with DJ Cosmonique and DJ Mike Bradley.\nSaturday 8/2: Classes and demos at the host hotel (9:30 AM - 2:00 PM), main festival at Guardian Works (12:00 PM - 8:00 PM), and L.O.A.D. party at Atlanta Eagle with Eddie Martinez.\nSunday 8/3: Classes and demos at the host hotel (10:00 AM - 2:00 PM), main festival at Guardian Works (12:00 PM - 8:00 PM).\n\nThis is where KDS Weekend comes alive. Explore our massive festival space filled with Masterclasses, kink-forward vendors, live performances, DJ sets, socials, and more. Whether you're here to learn, shop, cruise, or connect, the main festival is your playground for pleasure, exploration, and community. Come curious—leave electrified.",
+    "excerpt": "Kink Down South Weekend is the South's only large-scale outdoor kink festival, bringing together fetish enthusiasts for a weekend of liberation, exploration, and community. Inspired by legendary events like Folsom Street Fair, this transformative experience features classes, demos, live performances, DJ sets, and socials in a massive 20,000 sq. ft. industrial space. NOTE: 2026 dates not yet officially announced by organizer - check website for updates.",
+    "longDescription": "Inspired by legendary events like Folsom Street Fair, Off Sunset Festival, and Darklands, Kink Down South Weekend is the South's only large-scale outdoor kink festival, bringing together fetish enthusiasts for a weekend of liberation, exploration, and community.\n\n**IMPORTANT: 2026 dates have not been officially announced yet. The dates shown are based on previous year patterns. Please check the official website for confirmed 2026 dates and registration information.**\n\nKink Down South Weekend is more than an event—it's a declaration of resilience, visibility, and unapologetic joy. This is where we elevate our community, turning our heroes into legends and our culture into a movement. This is where we reclaim our space, not just to exist—but to thrive, to play, and to own our freedom.\n\nFreedom in Fetish isn't just a theme—it's our mission.\n\nExpect classes and demos, a massive 20,000 sq. ft. industrial venue in Midtown, masterclass workshops, kink-forward vendors, live performances, DJ sets, socials, and more. Whether you're here to learn, shop, cruise, or connect, the main festival is your playground for pleasure, exploration, and community. Come curious—leave electrified.",
     "website": "https://kinkdownsouth.com/",
     "logo": "https://www.kinkdownsouth.com/wp-content/uploads/2025/03/KDS-hero_16x9-1536x864.jpg",
     "features": [
@@ -168,12 +169,12 @@ export const events = [
     }
   },
   {
-    "name": "The Master/slave Conference MsC",
+    "name": "The Master/slave Conference MsC 2026",
     "slug": "master-slave-conference-msc",
     "date": {
-      "start": "2025-08-28",
-      "end": "2025-09-01",
-      "display": "Aug 28-Sep 1, 2025"
+      "start": "2026-09-03",
+      "end": "2026-09-07",
+      "display": "Sep 3-7, 2026 (Labor Day Weekend)"
     },
     "location": {
       "city": "Washington DC",
@@ -272,12 +273,12 @@ export const events = [
     }
   },
   {
-    "name": "Kinky Kollege",
+    "name": "Kinky Kollege: Homecoming 2026",
     "slug": "kinky-kollege",
     "date": {
-      "start": "2025-10-17",
-      "end": "2025-10-19",
-      "display": "Oct 17-19, 2025"
+      "start": "2026-10-16",
+      "end": "2026-10-18",
+      "display": "Oct 16-18, 2026"
     },
     "location": {
       "city": "Chicago",
@@ -285,8 +286,8 @@ export const events = [
       "region": "Eastern, Illinois"
     },
     "category": "Indoor Event",
-    "excerpt": "Kinky Kollege is a premier weekend-long education event near Chicago's O'Hare Airport featuring top alternative lifestyle educators, a massive 15,000 sq ft play space, and a robust vendor market.",
-    "longDescription": "Join Kinky Kollege for an unforgettable weekend of learning, play, and community. Enjoy accredited classes for all experience levels, from beginner to advanced edge players, with some sessions offering hands-on lab time and professional coaching. Explore a massive 15,000 sq ft playspace, shop the vendor market, and connect with like-minded attendees in a welcoming atmosphere.",
+    "excerpt": "Kinky Kollege: Homecoming 2026 is a premier weekend-long education event near Chicago's O'Hare Airport featuring top alternative lifestyle educators, a massive 15,000 sq ft play space, and a robust vendor market.",
+    "longDescription": "Join Kinky Kollege: Homecoming 2026 for an unforgettable weekend of learning, play, and community. Enjoy accredited classes for all experience levels, from beginner to advanced edge players, with some sessions offering hands-on lab time and professional coaching. Explore a massive 15,000 sq ft playspace, shop the vendor market, and connect with like-minded attendees in a welcoming atmosphere. Kinky Kollege also hosts Spring Break in March - check their website for details.",
     "website": "https://kinkykollege.com/",
     "logo": "/images/kinkykollege.png",
     "features": [
@@ -310,19 +311,19 @@ export const events = [
     "name": "Ohio SMART Fetish Flea",
     "slug": "ohio-smart-fetish-flea",
     "date": {
-      "start": "2025-10-17",
-      "end": "2025-10-19",
-      "display": "Oct 17-19, 2025"
+      "start": "2026-10-16",
+      "end": "2026-10-18",
+      "display": "Oct 16-18, 2026"
     },
     "location": {
-      "city": "Columbus",
+      "city": "Cleveland",
       "state": "OH",
-      "region": "Central, Ohio"
+      "region": "Northern, Ohio"
     },
     "category": "Indoor Event",
     "excerpt": "Fetish Flea is a multi-day OhioSMART event featuring vendors, educational classes, socials, special activities, a clothing/gear swap, raffle baskets, and two play parties.",
     "longDescription": "Enjoy a full weekend experience with vending, education, socials, yoga, raffle baskets supporting NCSF, a clothing/gear swap, and two play parties. Shopping is free for non-ticketed guests with on-site ID check and waiver. Volunteers earn discounted passes, and the event offers secured, well-lit parking. See the website for the full schedule and registration.",
-    "website": "https://ohiosmart.org/Fetish-Flea-2025",
+    "website": "https://ohiosmart.org/",
     "logo": "/images/ohiosmart.png",
     "features": [
       "Vendor Hall",
@@ -340,21 +341,22 @@ export const events = [
     }
   },
   {
-    "name": "Exploration Into Kink (EiK)",
+    "name": "Exploration Into Kink (EiK) 2026",
     "slug": "exploration-into-kink",
     "date": {
-      "start": "2025-11-14",
-      "end": "2025-11-16",
-      "display": "Nov 14-16, 2025"
+      "start": "2026-11-14",
+      "end": "2026-11-16",
+      "display": "Dates TBA - November 2026 (Expected)"
     },
+    "status": "tba",
     "location": {
       "city": "St Louis Metro Area",
       "state": "MO",
       "region": "Eastern, Missouri"
     },
     "category": "Indoor Event",
-    "excerpt": "Join us for a hotel takeover weekend in the St Louis metro area featuring outstanding educational classes, vendor bazaar, cigar social, clothing-optional indoor pool, play parties, and midnight buffets.",
-    "longDescription": "Welcome Explorers! Join us Nov 14-16, 2025 for a hotel takeover weekend in the St Louis metro area. Meet and socialize with kinksters while immersing yourself for an entire weekend of exploration and education. From the moment you pass through the registration curtains, till it is time to checkout… the hotel is ours.\n\nDuring Exploration Into Kink, or EiK, you can enjoy our outstanding educational classes, the vendor bazaar, BeBe's cigar social, Exploration Emporium, clothing optional indoor swimming pool, Friday and Saturday night play parties, Friday and Saturday midnight buffets, and much more!\n\nOur goal is to build and grow the kink community through a weekend focused on consent, diversity, education, exploration, inclusivity, and integrity.",
+    "excerpt": "Join us for a hotel takeover weekend in the St Louis metro area featuring outstanding educational classes, vendor bazaar, cigar social, clothing-optional indoor pool, play parties, and midnight buffets. NOTE: 2026 dates not yet officially announced by organizer - check website for updates.",
+    "longDescription": "Welcome Explorers! Join us for a hotel takeover weekend in the St Louis metro area. **IMPORTANT: 2026 dates have not been officially announced yet. Please check the official website for confirmed 2026 dates and registration information.** Meet and socialize with kinksters while immersing yourself for an entire weekend of exploration and education. From the moment you pass through the registration curtains, till it is time to checkout… the hotel is ours.\n\nDuring Exploration Into Kink, or EiK, you can enjoy our outstanding educational classes, the vendor bazaar, BeBe's cigar social, Exploration Emporium, clothing optional indoor swimming pool, Friday and Saturday night play parties, Friday and Saturday midnight buffets, and much more!\n\nOur goal is to build and grow the kink community through a weekend focused on consent, diversity, education, exploration, inclusivity, and integrity.",
     "website": "https://www.explorationintokink.com/",
     "logo": "/images/eik.jpg",
     "features": [
@@ -382,21 +384,22 @@ export const events = [
     }
   },
   {
-    "name": "Coastal Carolina Fetish Fair",
+    "name": "Coastal Carolina Fetish Fair 2026",
     "slug": "coastal-carolina-fetish-fair",
     "date": {
-      "start": "2025-11-19",
-      "end": "2025-11-24",
-      "display": "Nov 19-24, 2025"
+      "start": "2026-11-19",
+      "end": "2026-11-24",
+      "display": "Dates TBA - November 2026 (Expected)"
     },
+    "status": "tba",
     "location": {
       "city": "Myrtle Beach",
       "state": "SC",
       "region": "North Eastern, South Carolina"
     },
     "category": "Indoor Event",
-    "excerpt": "A vendor-focused weekend featuring top toymakers, BDSM vendors, specialty service providers, and educational opportunities — shop, learn, and connect with fellow kinksters at The Ellie Beach Resort Myrtle Beach.",
-    "longDescription": "Have a blast with other kinksters while exploring a curated vendor fair with the best toymakers, BDSM vendors, and specialty service providers. Enjoy education, friends, and fun across a weekend designed for discovering lifestyle products and meeting favorite craftsmen and presenters.\n\nWe have a room block reserved at The Ellie Beach Resort Myrtle Beach, Tapestry by Hilton for Nov 19-24, 2025 through Nov 19-24, 2025. Booking your room is simple, just select \"Book a Room\" to receive your group's preferred rate. Book by Nov 19-24, 2025 to secure your spot.",
+    "excerpt": "A vendor-focused weekend featuring top toymakers, BDSM vendors, specialty service providers, and educational opportunities — shop, learn, and connect with fellow kinksters at The Ellie Beach Resort Myrtle Beach. NOTE: 2026 dates not yet officially announced by organizer - check website for updates.",
+    "longDescription": "Have a blast with other kinksters while exploring a curated vendor fair with the best toymakers, BDSM vendors, and specialty service providers. Enjoy education, friends, and fun across a weekend designed for discovering lifestyle products and meeting favorite craftsmen and presenters.\n\n**IMPORTANT: 2026 dates have not been officially announced yet. The dates shown are based on previous year patterns. Please check the official website for confirmed 2026 dates and registration information.**",
     "website": "https://coastalcarolinafetishfair.com/",
     "hotel": "The Ellie Beach Resort Myrtle Beach, Tapestry by Hilton",
     "bookingDeadline": "October 20, 2025",
@@ -425,9 +428,9 @@ export const events = [
     "name": "Naughty Noel",
     "slug": "naughty-noel",
     "date": {
-      "start": "2025-12-04",
-      "end": "2025-12-07",
-      "display": "Dec 4-7, 2025"
+      "start": "2026-12-03",
+      "end": "2026-12-06",
+      "display": "Dec 3-6, 2026"
     },
     "location": {
       "city": "Gettysburg",
@@ -437,7 +440,7 @@ export const events = [
     "category": "Indoor Event",
     "excerpt": "Naughty Noel is a winter kink conference featuring a private two-hotel takeover in Gettysburg, PA with education, playspaces, festive parties, and holiday shopping.",
     "longDescription": "Naughty Noel is a winter kink conference organized by Studio 58 Events, held the first weekend in December each year (Thursday to Sunday) with registration opening July 1st. This private two-hotel takeover in Gettysburg, PA offers optional add-on nights from Tuesday through Sunday.\n\nOur Naughty Noel Annual Event keeps getting better each year! Spend four days exploring your own personal development and relationship practices. Our event is designed for adults who want to enjoy meaningful connections among alternative lifestyle and LGBTQIA+ folks in a friendly, inclusive atmosphere.\n\nMake new friends; nurture your existing friendships; renew your connections with your partner(s); learn new skills; and enjoy festive activities. Naughty Noel will offer excellent education; festive socializing parties; playspaces; holiday shopping and product demonstrations; indoor pool; and the unforgettable opportunity to mingle with like-minded adults.\n\nNaughty Noel begins on Thursday and concludes on Sunday. Socializing, access to indoor pool, and a pre-event munch will begin Wednesday; programming will begin Thursday at noon and conclude Sunday at 1PM. A significant portion of attendees arrive on Wednesday or Thursday, with some folks arriving Friday for the weekend.",
-    "website": "https://studio58events.com/naughty-noel-2025/",
+    "website": "https://studio58events.com/naughty-noel-2026/",
     "organizer": "Studio 58 Events",
     "registrationOpens": "July 1st each year",
     "hotel": "Private Two-Hotel Takeover in Gettysburg, PA",
@@ -522,9 +525,9 @@ export const events = [
     "name": "Naughty Gras",
     "slug": "naughty-gras",
     "date": {
-      "start": "2026-03-26",
-      "end": "2026-03-29",
-      "display": "Mar 26-29, 2026"
+      "start": "2026-02-27",
+      "end": "2026-03-02",
+      "display": "Feb 27-Mar 2, 2026"
     },
     "location": {
       "city": "Gettysburg",
@@ -634,9 +637,9 @@ export const events = [
     "name": "Dark Odyssey Winter Fire",
     "slug": "dark-odyssey-winter-fire",
     "date": {
-      "start": "2025-01-24",
-      "end": "2025-01-26",
-      "display": "Jan 24-26, 2025"
+      "start": "2026-02-13",
+      "end": "2026-02-16",
+      "display": "Feb 13-16, 2026"
     },
     "location": {
       "city": "Washington DC",
@@ -674,9 +677,9 @@ export const events = [
     "name": "Twisted Tryst",
     "slug": "twisted-tryst",
     "date": {
-      "start": "2025-06-13",
-      "end": "2025-06-15",
-      "display": "Jun 13-15, 2025"
+      "start": "2026-06-10",
+      "end": "2026-06-14",
+      "display": "Jun 10-14, 2026"
     },
     "location": {
       "city": "Western",
@@ -707,9 +710,9 @@ export const events = [
     "name": "Camp Crucible",
     "slug": "camp-crucible",
     "date": {
-      "start": "2025-05-23",
-      "end": "2025-05-25",
-      "display": "May 23-25, 2025"
+      "start": "2026-05-23",
+      "end": "2026-05-31",
+      "display": "May 23-31, 2026"
     },
     "location": {
       "city": "Darlington",
@@ -744,8 +747,8 @@ export const events = [
     "slug": "frolicon",
     "date": {
       "start": "2026-05-14",
-      "end": "2026-05-14",
-      "display": "May 14, 2026"
+      "end": "2026-05-17",
+      "display": "May 14-17, 2026"
     },
     "location": {
       "city": "Atlanta",
@@ -849,9 +852,9 @@ export const events = [
     "name": "THE Beltane",
     "slug": "beltane",
     "date": {
-      "start": "2026-04-30",
-      "end": "2026-05-04",
-      "display": "Apr 30-May 4, 2026"
+      "start": "2026-04-29",
+      "end": "2026-05-03",
+      "display": "Apr 29-May 3, 2026"
     },
     "location": {
       "city": "Darlington",
@@ -859,8 +862,8 @@ export const events = [
       "region": "North Eastern, Maryland"
     },
     "category": "Outdoor Event",
-    "excerpt": "THE Beltane Apr 30-May 4, 2026 in Darlington, MD featuring big poles festooned with ribbons, naked revelry, bonfire activities, and a 10,000 sq ft sex-positive dungeon.",
-    "longDescription": "THE Beltane Apr 30-May 4, 2026 • Darlington, MD\n\nIs THE Beltane for you? If you're into some or all of the following, you may have just found an amazing event that's perfect for you:\n\n• big poles festooned with ribbons\n• naked people frolicking around them\n• drumming and dancing and sexing (if you like) around a bonfire\n• intimate conversations with interesting people\n• classes about sex, intimacy, kink, etc\n• rituals and woo, both serious and light-hearted\n• a 10,000 sq ft sex-positive dungeon with excellent equipment\n\nAnd we do it all on a beautiful, clothing-optional campground with cabins that have hot water and electricity in a magical spot where eagles soar overhead and the sounds of lovemaking echo across the land.\n\nWe believe the best events are smaller and more intimate. Our small class sizes help everyone learn better and have a more customized experience. The pace of our event is chill and relaxing and lends itself to more community building. You will have lots of time to make new friends and deepen old relationships.\n\nCome join us!",
+    "excerpt": "THE Beltane Apr 29-May 3, 2026 in Darlington, MD featuring big poles festooned with ribbons, naked revelry, bonfire activities, and a 10,000 sq ft sex-positive dungeon.",
+    "longDescription": "THE Beltane Apr 29-May 3, 2026 • Darlington, MD\n\nIs THE Beltane for you? If you're into some or all of the following, you may have just found an amazing event that's perfect for you:\n\n• big poles festooned with ribbons\n• naked people frolicking around them\n• drumming and dancing and sexing (if you like) around a bonfire\n• intimate conversations with interesting people\n• classes about sex, intimacy, kink, etc\n• rituals and woo, both serious and light-hearted\n• a 10,000 sq ft sex-positive dungeon with excellent equipment\n\nAnd we do it all on a beautiful, clothing-optional campground with cabins that have hot water and electricity in a magical spot where eagles soar overhead and the sounds of lovemaking echo across the land.\n\nWe believe the best events are smaller and more intimate. Our small class sizes help everyone learn better and have a more customized experience. The pace of our event is chill and relaxing and lends itself to more community building. You will have lots of time to make new friends and deepen old relationships.\n\nCome join us!",
     "website": "https://www.turtlehilleventco.com/the-beltane.html",
     "logo": "/images/beltane.png",
     "features": [
@@ -888,7 +891,7 @@ export const events = [
     ],
     "seo": {
       "title": "THE Beltane 2026 - Darlington MD BDSM & Kink Community Event | East Coast Kink Events",
-      "description": "THE Beltane Apr 30-May 4, 2026 in Darlington, MD featuring big poles festooned with ribbons, naked revelry, bonfire activities, and a 10,000 sq ft sex-positive dungeon.",
+      "description": "THE Beltane Apr 29-May 3, 2026 in Darlington, MD featuring big poles festooned with ribbons, naked revelry, bonfire activities, and a 10,000 sq ft sex-positive dungeon.",
       "keywords": "THE Beltane 2026, Darlington, Maryland, BDSM event, kink community, sex-positive dungeon, clothing-optional campground, ritual, bonfire, drumming, dancing, ribbons"
     }
   },
@@ -968,9 +971,9 @@ export const events = [
     "name": "Rochester Erotic Arts Festival",
     "slug": "rochester-erotic-arts-festival",
     "date": {
-      "start": "2025-04-11",
-      "end": "2025-04-13",
-      "display": "Apr 11-13, 2025"
+      "start": "2026-04-10",
+      "end": "2026-04-12",
+      "display": "Apr 10-12, 2026"
     },
     "location": {
       "city": "Auburn",
@@ -979,7 +982,7 @@ export const events = [
     },
     "category": "Indoor Event",
     "excerpt": "Hotel Take-Over! With Pool! Edgy, hot and beautiful erotic art featuring performances from aerial dance to burlesque, unique shopping, classes in art/dance/sex ed, and ASL interpreters available all weekend.",
-    "longDescription": "REAF 2025 will be held Apr 11-13, 2025 at the Holiday Inn, 75 North St., Auburn NY. This is a complete hotel take-over event with pool access. No one will be admitted to the hotel without a REAF pass. You do NOT have to have a hotel room to attend this event.\n\nRegistration opens at 3 pm on Friday and 8 am on Saturday. YOUR REAF PASS MUST BE VISIBLE ON YOUR UPPER BODY AT ALL TIMES WHEN YOU ARE IN THE HOTEL.\n\nEnjoy performances ranging from classy aerial dance to bawdy burlesque, unique shopping for clothing, jewelry, sex toys, and classes in art, dance, and sex ed for adventurous adults. Sign Language (ASL) Interpreters are available all weekend!\n\nWe have a fabulous weekend of late night parties for Swing and BDSM Lifestyle fun! Be sure to read our Playroom Details for eligibility requirements before adding playroom passes to your order.\n\nTicketing for Passes and Hotel Rooms opens Apr 11-13, 2025at 12 noon. Ticket sales will close on Apr 11-13, 2025. NO PASSES at the door! Holiday Inn rooms may only be ordered through the REAF ticketing system.",
+    "longDescription": "REAF 2026 will be held Apr 10-12, 2026 at the Holiday Inn, 75 North St., Auburn NY. This is a complete hotel take-over event with pool access. No one will be admitted to the hotel without a REAF pass. You do NOT have to have a hotel room to attend this event.\n\nRegistration opens at 3 pm on Friday and 8 am on Saturday. YOUR REAF PASS MUST BE VISIBLE ON YOUR UPPER BODY AT ALL TIMES WHEN YOU ARE IN THE HOTEL.\n\nEnjoy performances ranging from classy aerial dance to bawdy burlesque, unique shopping for clothing, jewelry, sex toys, and classes in art, dance, and sex ed for adventurous adults. Sign Language (ASL) Interpreters are available all weekend!\n\nWe have a fabulous weekend of late night parties for Swing and BDSM Lifestyle fun! Be sure to read our Playroom Details for eligibility requirements before adding playroom passes to your order.\n\nTicketing for Passes and Hotel Rooms opens Jan 8 at 10 am. Ticket sales will close on April 1 at midnight. NO PASSES at the door! Holiday Inn rooms may only be ordered through the REAF ticketing system.",
     "website": "https://www.rochestereroticartfest.org/",
     "hotel": "Holiday Inn, 75 North St., Auburn NY",
     "contact": {
@@ -1014,9 +1017,9 @@ export const events = [
       "Adventurous Adults Welcome"
     ],
     "seo": {
-      "title": "Rochester Erotic Arts Festival 2025 - Auburn NY Hotel Takeover | East Coast Kink Events",
+      "title": "Rochester Erotic Arts Festival 2026 - Auburn NY Hotel Takeover | East Coast Kink Events",
       "description": "Hotel Take-Over! With Pool! Edgy, hot and beautiful erotic art featuring performances from aerial dance to burlesque, unique shopping, classes in art/dance/sex ed, and ASL interpreters available all weekend.",
-      "keywords": "Rochester Erotic Arts Festival, REAF 2025, Auburn, New York, hotel takeover, erotic art, aerial dance, burlesque, sex education, ASL interpreters"
+      "keywords": "Rochester Erotic Arts Festival, REAF 2026, Auburn, New York, hotel takeover, erotic art, aerial dance, burlesque, sex education, ASL interpreters"
     }
   },
   {
@@ -1097,9 +1100,9 @@ export const events = [
     "name": "Charmed",
     "slug": "charmed",
     "date": {
-      "start": "2025-01-23",
-      "end": "2025-01-26",
-      "display": "Jan 23-26, 2025"
+      "start": "2026-01-15",
+      "end": "2026-01-18",
+      "display": "Jan 15-18, 2026"
     },
     "location": {
       "city": "Philadelphia",
@@ -1107,8 +1110,8 @@ export const events = [
       "region": "Southeast, Pennsylvania"
     },
     "category": "Indoor Event",
-    "excerpt": "Charmed! has been setting the standard for in-person, erotic, and recreational hypnosis conventions since Jan 23-26, 2025. Attendees visit us from all over the world to take part in a multifaceted schedule that includes classes on basic education, recreational demonstrations, and erotic experiences.",
-    "longDescription": "Charmed! has been setting the standard for in-person, erotic, and recreational hypnosis conventions since Jan 23-26, 2025. Attendees visit us from all over the world to take part in a multifaceted schedule that includes classes on basic education, recreational demonstrations, and erotic experiences. Charmed! provides a safe and welcoming environment in which attendees can feel free to explore their interests and make connections in the larger recreational/erotic hypnosis community.\n\nJoin us for an immersive weekend of exploration and discovery in the fascinating world of erotic and recreational hypnosis. Our carefully curated program offers something for everyone, from complete beginners to experienced practitioners. Learn from world-renowned experts who share their knowledge, techniques, and insights in an atmosphere of mutual respect and curiosity.\n\nExperience the magic of hypnosis through hands-on demonstrations, interactive workshops, and engaging presentations. Discover new techniques, refine your skills, and explore the boundaries of consciousness and pleasure. Whether you're interested in the science behind hypnosis, the art of induction, or the sensual applications of trance states, our comprehensive programming has you covered.\n\nNetwork with like-minded individuals from around the globe, share experiences, and build lasting connections within our vibrant community. From structured learning sessions to informal social gatherings, Charmed! creates the perfect environment for growth, exploration, and connection. Join us for an unforgettable weekend where fantasy meets reality and the impossible becomes possible.",
+    "excerpt": "Charmed! has been setting the standard for in-person, erotic, and recreational hypnosis conventions since Jan 15-18, 2026. Attendees visit us from all over the world to take part in a multifaceted schedule that includes classes on basic education, recreational demonstrations, and erotic experiences.",
+    "longDescription": "Charmed! has been setting the standard for in-person, erotic, and recreational hypnosis conventions since Jan 15-18, 2026. Attendees visit us from all over the world to take part in a multifaceted schedule that includes classes on basic education, recreational demonstrations, and erotic experiences. Charmed! provides a safe and welcoming environment in which attendees can feel free to explore their interests and make connections in the larger recreational/erotic hypnosis community.\n\nJoin us for an immersive weekend of exploration and discovery in the fascinating world of erotic and recreational hypnosis. Our carefully curated program offers something for everyone, from complete beginners to experienced practitioners. Learn from world-renowned experts who share their knowledge, techniques, and insights in an atmosphere of mutual respect and curiosity.\n\nExperience the magic of hypnosis through hands-on demonstrations, interactive workshops, and engaging presentations. Discover new techniques, refine your skills, and explore the boundaries of consciousness and pleasure. Whether you're interested in the science behind hypnosis, the art of induction, or the sensual applications of trance states, our comprehensive programming has you covered.\n\nNetwork with like-minded individuals from around the globe, share experiences, and build lasting connections within our vibrant community. From structured learning sessions to informal social gatherings, Charmed! creates the perfect environment for growth, exploration, and connection. Join us for an unforgettable weekend where fantasy meets reality and the impossible becomes possible.",
     "website": "https://charmedhypno.org/",
     "logo": "/images/charmed.png",
     "features": [
@@ -1124,7 +1127,7 @@ export const events = [
     ],
     "seo": {
       "title": "Charmed - Philadelphia Erotic & Recreational Hypnosis Convention | East Coast Kink Events",
-      "description": "Charmed! has been setting the standard for in-person, erotic, and recreational hypnosis conventions since Jan 23-26, 2025. Join us for classes, demonstrations, and erotic experiences in a safe, welcoming environment.",
+      "description": "Charmed! has been setting the standard for in-person, erotic, and recreational hypnosis conventions since Jan 15-18, 2026. Join us for classes, demonstrations, and erotic experiences in a safe, welcoming environment.",
       "keywords": "Charmed, Philadelphia, erotic hypnosis, recreational hypnosis, hypnosis convention, Pennsylvania, hypnosis education"
     }
   },
@@ -1172,9 +1175,9 @@ export const events = [
     "name": "Naughty Knowledge",
     "slug": "naughty-knowledge",
     "date": {
-      "start": "2025-07-31",
-      "end": "2025-08-03",
-      "display": "Jul 31-Aug 3, 2025"
+      "start": "2026-08-06",
+      "end": "2026-08-09",
+      "display": "Aug 6-9, 2026"
     },
     "location": {
       "city": "Gettysburg",
@@ -1182,9 +1185,9 @@ export const events = [
       "region": "South Central, Pennsylvania"
     },
     "category": "Indoor Event",
-    "excerpt": "Come join Studio 58 to head back to school at Naughty Knowledge 2025, a Private Hotel Takeover Event in Gettysburg PA featuring education, skill sharing, playing, and partying.",
-    "longDescription": "Come join Studio 58 to head back to school at Naughty Knowledge 2025, Jul 31-Aug 3, 2025, as a Private Hotel Takeover Event in Gettysburg PA. Spend 3-days exploring your own personal development and relationship practices. Our event is designed for adults who want to enjoy meaningful connections among alternative lifestyle and LGBTQIA+ folks in a friendly, inclusive atmosphere.\n\nNaughty Knowledge is designed for newcomers, swinks, swingers, experienced kinksters and even brand-new folks who may be kinky in the bedroom but want to know more about safe and consensual BDSM. This will be a fun event with education galore, skill sharing, playing, and partying.\n\nNaughty Knowledge begins on a Thursday at 9AM and concludes on Sunday at 11 AM. Socializing, access to indoor pool, and outdoor courtyard. Arrive as early as you can! A significant portion of attendees arrive on Thursday + some folks arrive early on Wednesday for longer weekend.",
-    "website": "https://studio58events.com/naughty-knowledge-2/",
+    "excerpt": "Come join Studio 58 to head back to school at Naughty Knowledge 2026, a Private Hotel Takeover Event in Gettysburg PA featuring education, skill sharing, playing, and partying.",
+    "longDescription": "Come join Studio 58 to head back to school at Naughty Knowledge 2026, Aug 6-9, 2026, as a Private Hotel Takeover Event in Gettysburg PA. Spend 3-days exploring your own personal development and relationship practices. Our event is designed for adults who want to enjoy meaningful connections among alternative lifestyle and LGBTQIA+ folks in a friendly, inclusive atmosphere.\n\nNaughty Knowledge is designed for newcomers, swinks, swingers, experienced kinksters and even brand-new folks who may be kinky in the bedroom but want to know more about safe and consensual BDSM. This will be a fun event with education galore, skill sharing, playing, and partying.\n\nNaughty Knowledge begins on a Thursday at 9AM and concludes on Sunday at 11 AM. Socializing, access to indoor pool, and outdoor courtyard. Arrive as early as you can! A significant portion of attendees arrive on Thursday + some folks arrive early on Wednesday for longer weekend.",
+    "website": "https://studio58events.com/naughty-knowledge-2026/",
     "organizer": "Studio 58 Events",
     "hotel": "Private Hotel Takeover in Gettysburg, PA",
     "registrationOpens": "April 1st at 8PM each year",
@@ -1224,9 +1227,9 @@ export const events = [
       "Fetlife Community Page"
     ],
     "seo": {
-      "title": "Naughty Knowledge 2025 - Gettysburg PA Hotel Takeover Education Event | East Coast Kink Events",
-      "description": "Come join Studio 58 to head back to school at Naughty Knowledge 2025, a Private Hotel Takeover Event in Gettysburg PA featuring education, skill sharing, playing, and partying.",
-      "keywords": "Naughty Knowledge 2025, Gettysburg, Pennsylvania, Studio 58 Events, hotel takeover, BDSM education, skill sharing, alternative lifestyle, LGBTQIA+"
+      "title": "Naughty Knowledge 2026 - Gettysburg PA Hotel Takeover Education Event | East Coast Kink Events",
+      "description": "Come join Studio 58 to head back to school at Naughty Knowledge 2026, a Private Hotel Takeover Event in Gettysburg PA featuring education, skill sharing, playing, and partying.",
+      "keywords": "Naughty Knowledge 2026, Gettysburg, Pennsylvania, Studio 58 Events, hotel takeover, BDSM education, skill sharing, alternative lifestyle, LGBTQIA+"
     }
   },
   {
@@ -1390,9 +1393,9 @@ export const events = [
     "name": "Naughty in N'Awlins",
     "slug": "naughty-nawlins",
     "date": {
-      "start": "2025-07-09",
-      "end": "2025-07-13",
-      "display": "Jul 9-13, 2025"
+      "start": "2026-07-08",
+      "end": "2026-07-12",
+      "display": "Jul 8-12, 2026"
     },
     "location": {
       "city": "New Orleans",
@@ -1428,9 +1431,9 @@ export const events = [
     "name": "TESFest",
     "slug": "tesfest",
     "date": {
-      "start": "2025-07-03",
-      "end": "2025-07-06",
-      "display": "Jul 3-6, 2025"
+      "start": "2026-07-02",
+      "end": "2026-07-05",
+      "display": "Jul 2-5, 2026"
     },
     "location": {
       "city": "Piscataway",
