@@ -9,8 +9,17 @@ import Search from '@/components/Search'
 import DungeonSubmissionForm from '@/components/dungeons/DungeonSubmissionForm'
 import { useState } from 'react'
 
+// Dedupe utility to prevent duplicate dungeons from rendering
+function dedupeBySlug<T extends { slug: string; name: string }>(items: T[]): T[] {
+  const map = new Map<string, T>()
+  items.forEach(item => map.set(item.slug, item))
+  // Return deduped items with stable sort by name
+  return Array.from(map.values()).sort((a, b) => a.name.localeCompare(b.name))
+}
+
 export default function DungeonsPageClient() {
-  const allDungeons = getAllDungeons()
+  // Dedupe and sort dungeons to prevent any duplication issues
+  const allDungeons = dedupeBySlug(getAllDungeons())
   const allEvents = getAllEvents()
   const [showSubmitForm, setShowSubmitForm] = useState(false)
 

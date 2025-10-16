@@ -82,7 +82,7 @@ export default function Footer() {
             <Section title="Quick Links">
               <L href="/events">Browse Events</L>
               <L href="/events#calendar">Event Calendar</L>
-              <L href="/events/add">Add Event</L>
+              <L href="/contact?subject=Event%20Submission">Add Event</L>
               <L href="/about">About Us</L>
             </Section>
 
@@ -96,7 +96,7 @@ export default function Footer() {
             <Section title="Legal">
               <L href="/privacy">Privacy Policy</L>
               <L href="/terms">Terms of Service</L>
-              <L href="/community-guidelines">Community Guidelines</L>
+              <L href="/guidelines">Community Guidelines</L>
             </Section>
           </nav>
         </div>

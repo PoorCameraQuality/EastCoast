@@ -12,21 +12,31 @@ export default async function sitemap() {
   const dungeons = getAllDungeons()
   const staticArticles = getAllArticles()
   
-  // Get database articles from Supabase
+  // Get database articles from Supabase with timeout and fallback
   let databaseArticles: any[] = []
   try {
     if (supabase) {
-      const { data, error } = await supabase
+      // Add timeout to prevent sitemap from hanging
+      const timeoutPromise = new Promise<null>((_, reject) => {
+        setTimeout(() => reject(new Error('Supabase fetch timeout')), 1500)
+      })
+      
+      const fetchPromise = supabase
         .from('articles')
         .select('slug, publish_date, last_updated')
         .eq('status', 'published')
       
+      const { data, error } = await Promise.race([fetchPromise, timeoutPromise]) as any
+      
       if (data && !error) {
         databaseArticles = data
+      } else {
+        console.warn('Sitemap: Failed to fetch DB articles, continuing with static only:', error)
       }
     }
   } catch (error) {
-    console.warn('Failed to fetch database articles for sitemap:', error)
+    console.error('Sitemap: Supabase fetch failed or timed out, continuing with static content only:', error)
+    // Continue with empty databaseArticles array - sitemap still works with static content
   }
   
   // Filter to only include upcoming/current events (past events waste crawl budget)
