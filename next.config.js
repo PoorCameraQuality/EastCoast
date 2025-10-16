@@ -80,6 +80,10 @@ const nextConfig = {
       // Privacy URL consistency
       { source: '/privacy-policy', destination: '/privacy', permanent: true },
       { source: '/privacy/', destination: '/privacy', permanent: true },
+      
+      // Temporary redirect for Add Event until form is built
+      { source: '/events/add', destination: '/contact?subject=Event%20Submission', permanent: false },
+      
       // Redirect old kinkeventcalendar URLs to new events structure
       {
         source: '/kinkeventcalendar/:slug',
