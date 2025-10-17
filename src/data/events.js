@@ -67,6 +67,56 @@ export const events = [
     }
   },
   {
+    "name": "Elevation Rope 2026",
+    "slug": "elevation-rope-2026",
+    "date": {
+      "start": "2026-07-16",
+      "end": "2026-07-21",
+      "display": "Jul 16-21, 2026"
+    },
+    "location": {
+      "city": "Horse Shoe",
+      "state": "NC",
+      "region": "Southeastern, North Carolina"
+    },
+    "category": "Conference",
+    "excerpt": "Elevation Rope is a premier rope bondage conference held annually in the Southeast United States, offering an immersive educational experience set against the scenic backdrop of the Blue Ridge Mountains in Western North Carolina. The event is hosted at Deerfields Retreat in Horse Shoe, NC, and spans five nights and four days, combining intensive rope education with themed evenings, performances, and play parties.",
+    "longDescription": "Elevation Rope is a premier rope bondage conference held annually in the Southeast United States, offering an immersive educational experience set against the scenic backdrop of the Blue Ridge Mountains in Western North Carolina. The event is hosted at Deerfields Retreat in Horse Shoe, NC, and spans five nights and four days, combining intensive rope education with themed evenings, performances, and play parties.\n\n**Event Highlights:**\n\n**Comprehensive Education** - Classes range from beginner to masterclass levels, covering various aspects of rope bondage, shibari, and kink. Learn from experienced instructors in an immersive environment that blends education with recreation.\n\n**Immersive Environment** - The retreat offers a unique adult summer camp experience, combining intensive learning with outdoor recreation and community building in a stunning natural setting.\n\n**Evening Activities** - Participants can enjoy themed nights, evocative performances, and play parties that create a vibrant and inclusive community atmosphere.\n\n**Outdoor Recreation** - Opportunities to explore the private lake, hike backcountry trails, and connect with nature on the 940-acre retreat property.\n\n**Venue Highlights:**\n\n**Scenic Setting** - Situated on a 940-acre retreat bordering national forest, providing a tranquil and picturesque environment perfect for learning and relaxation.\n\n**Private Facilities** - Access to a private lake and numerous hiking trails for outdoor activities and recreation between educational sessions.\n\n**Registration & Tickets:**\n\n**Registration Opens** - January 2026\n\n**Ticket Information** - Details on ticket pricing and packages will be available upon registration opening. Early registration is recommended as this intimate event has limited capacity.\n\n**Core Values & Community Guidelines:**\n\n**Inclusivity** - Elevation Rope is dedicated to fostering a safe, inclusive, and respectful environment for all participants regardless of experience level or background.\n\n**Consent Culture** - Emphasis on clear communication and mutual respect in all interactions, creating a foundation of trust and safety for all attendees.\n\n**Community Engagement** - Encouragement of active participation and connection among attendees, fostering lasting relationships within the rope community.\n\n**Stay Connected:**\n\n**Mailing List** - Join the Elevation Rope mailing list for updates and announcements about registration, instructors, and event details.\n\n**Contact** - For inquiries, reach out through the contact page on the official website.\n\nWhether you're new to rope bondage or looking to elevate your skills to the next level, Elevation Rope offers an unparalleled educational experience in one of the most beautiful settings in the Southeast. Join us for five days of intensive learning, community building, and personal growth in the heart of the Blue Ridge Mountains.",
+    "website": "https://www.elevationrope.com/",
+    "organizer": "Elevation Rope",
+    "venue": "Deerfields Retreat, Horse Shoe, NC",
+    "ageRequirement": "18+",
+    "registrationOpens": "January 2026",
+    "logo": "/images/elevation-rope-logo.jpg",
+    "features": [
+      "Comprehensive Rope Education (Beginner to Masterclass)",
+      "5-Night 4-Day Immersive Experience",
+      "Scenic Blue Ridge Mountains Setting",
+      "940-Acre Retreat with Private Lake",
+      "Themed Evenings and Performances",
+      "Play Parties and Social Events",
+      "Outdoor Recreation and Hiking",
+      "Intimate Learning Environment",
+      "Experienced Instructor Lineup",
+      "Community Building Focus",
+      "Inclusive and Safe Environment",
+      "Consent Culture Emphasis",
+      "Adult Summer Camp Experience",
+      "Limited Capacity Event",
+      "National Forest Access",
+      "Backcountry Trail System",
+      "Educational Workshops",
+      "Networking Opportunities",
+      "Beautiful Natural Setting",
+      "Professional Development"
+    ],
+    "seo": {
+      "title": "Elevation Rope 2026 - Premier Rope Bondage Conference in North Carolina | East Coast Kink Events",
+      "description": "Join Elevation Rope 2026 in Horse Shoe, NC for an immersive 5-day rope bondage conference featuring comprehensive education, scenic Blue Ridge Mountains setting, and community building at Deerfields Retreat.",
+      "keywords": "Elevation Rope, rope bondage conference, shibari, North Carolina, Blue Ridge Mountains, Deerfields Retreat, Horse Shoe NC, rope education, BDSM conference, kink education, rope workshop"
+    }
+  },
+  {
     "name": "Kink Down South Weekend 2026",
     "slug": "kink-down-south-weekend",
     "date": {
