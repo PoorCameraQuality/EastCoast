@@ -27,7 +27,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: 'https://eastcoastkinkevents.com/dungeons',
+    url: 'https://www.eastcoastkinkevents.com/dungeons',
     siteName: 'East Coast Kink Events',
     title: 'BDSM Dungeons - East Coast Kink Events',
     description: 'Discover BDSM dungeons and kink spaces across the East Coast. Find private sessions, workshops, and community events.',

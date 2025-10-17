@@ -2,9 +2,8 @@
 const nextConfig = {
   // Use a single trailing slash policy to avoid redirect chains
   trailingSlash: false,
-  images: {
-    unoptimized: true
-  },
+  // Enable Next.js image optimization for better Core Web Vitals
+  // (remove unoptimized:true)
 
   env: {
     DISABLE_VERCEL_FEEDBACK: 'true'

@@ -18,9 +18,15 @@ function esc(s: string) {
 }
 
 // Simple XML builder for sitemap with safety hardening
-function xml(urls: { loc: string; lastmod?: string }[]) {
+type UrlEntry = { loc: string; lastmod?: string; changefreq?: string; priority?: number }
+function xml(urls: UrlEntry[]) {
   const body = urls
-    .map(u => `<url><loc>${esc(u.loc)}</loc>${u.lastmod ? `<lastmod>${u.lastmod}</lastmod>` : ""}</url>`)
+    .map(u => {
+      const lastmod = u.lastmod ? `<lastmod>${u.lastmod}</lastmod>` : ""
+      const changefreq = u.changefreq ? `<changefreq>${u.changefreq}</changefreq>` : ""
+      const priority = typeof u.priority === 'number' ? `<priority>${u.priority.toFixed(1)}</priority>` : ""
+      return `<url><loc>${esc(u.loc)}</loc>${lastmod}${changefreq}${priority}</url>`
+    })
     .join("")
   return `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${body}</urlset>`
@@ -32,15 +38,16 @@ export async function GET() {
     "Cache-Control": "public, max-age=600, s-maxage=600, stale-while-revalidate=86400"
   }
 
-  // Core URLs always present
-  const core = [
-    { loc: `${BASE}/`, lastmod: new Date().toISOString().slice(0, 10) },
-    { loc: `${BASE}/events` },
-    { loc: `${BASE}/dungeons` },
-    { loc: `${BASE}/education` },
-    { loc: `${BASE}/calendar` },
-    { loc: `${BASE}/guidelines` },
-    { loc: `${BASE}/states` }
+  // Core URLs always present (with sensible defaults)
+  const today = new Date().toISOString().slice(0, 10)
+  const core: UrlEntry[] = [
+    { loc: `${BASE}/`, lastmod: today, changefreq: 'daily', priority: 1.0 },
+    { loc: `${BASE}/events`, changefreq: 'weekly', priority: 0.8 },
+    { loc: `${BASE}/dungeons`, changefreq: 'weekly', priority: 0.8 },
+    { loc: `${BASE}/education`, changefreq: 'monthly', priority: 0.6 },
+    { loc: `${BASE}/calendar`, changefreq: 'daily', priority: 0.7 },
+    { loc: `${BASE}/guidelines`, changefreq: 'monthly', priority: 0.5 },
+    { loc: `${BASE}/states`, changefreq: 'monthly', priority: 0.5 }
   ]
   
   // Add all state hub pages
@@ -60,14 +67,29 @@ export async function GET() {
 
     clearTimeout(timer)
 
-    const eventUrls = Array.isArray(events)
-      ? events.map((e: any) => ({ loc: `${BASE}/events/${e.slug}`, lastmod: e.updated?.slice(0, 10) }))
+    const eventUrls: UrlEntry[] = Array.isArray(events)
+      ? events.map((e: any) => ({
+          loc: `${BASE}/events/${e.slug}`,
+          lastmod: e.updated?.slice(0, 10),
+          changefreq: 'weekly',
+          priority: 0.8
+        }))
       : []
-    const dungeonUrls = Array.isArray(dungeons)
-      ? dungeons.map((d: any) => ({ loc: `${BASE}/dungeons/${d.slug}`, lastmod: d.updated?.slice(0, 10) }))
+    const dungeonUrls: UrlEntry[] = Array.isArray(dungeons)
+      ? dungeons.map((d: any) => ({
+          loc: `${BASE}/dungeons/${d.slug}`,
+          lastmod: d.updated?.slice(0, 10),
+          changefreq: 'monthly',
+          priority: 0.6
+        }))
       : []
-    const articleUrls = Array.isArray(articles)
-      ? articles.map((a: any) => ({ loc: `${BASE}/education/${a.slug}`, lastmod: a.updated?.slice(0, 10) }))
+    const articleUrls: UrlEntry[] = Array.isArray(articles)
+      ? articles.map((a: any) => ({
+          loc: `${BASE}/education/${a.slug}`,
+          lastmod: a.updated?.slice(0, 10),
+          changefreq: 'monthly',
+          priority: 0.5
+        }))
       : []
 
     const body = xml([...core, ...stateUrls, ...eventUrls, ...dungeonUrls, ...articleUrls])

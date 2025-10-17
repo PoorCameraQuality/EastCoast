@@ -8,11 +8,13 @@ export async function GET() {
     const { dungeons } = await import("@/data/dungeons")
     
     // Map to sitemap format with null for updated (static content)
+    const today = new Date().toISOString()
     const rows = (dungeons || [])
       .filter(dungeon => dungeon.slug) // Only include dungeons with valid slugs
       .map(dungeon => ({
         slug: dungeon.slug,
-        updated: null // Dungeons are static content, no update dates
+        // Use a deterministic lastmod: if dungeon has updated field use it, otherwise today
+        updated: (dungeon as any).updated_at || (dungeon as any).updated || today
       }))
     
     return NextResponse.json(rows, { status: 200 })
