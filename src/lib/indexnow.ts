@@ -1,120 +1,154 @@
 /**
- * IndexNow utility for notifying Bing and other search engines of new/updated content
- * https://www.indexnow.org/
+ * IndexNow utility functions for submitting URLs to search engines
  */
 
-const INDEXNOW_KEY = '33ef4629d0fdd1a995f5370f99e77d6b9cc217f6ef0dfc1ee2ee966846fea864'
-const HOST = 'www.eastcoastkinkevents.com'
-const KEY_LOCATION = `https://${HOST}/${INDEXNOW_KEY}.txt`
+const INDEXNOW_API_URL = "https://api.indexnow.org/indexnow"
+const INDEXNOW_KEY = "0050cb815778482eafc98bbf0849daad"
+const KEY_LOCATION = "https://www.eastcoastkinkevents.com/0050cb815778482eafc98bbf0849daad.txt"
+const BASE_URL = "https://www.eastcoastkinkevents.com"
 
-export interface IndexNowResponse {
-  success: boolean
+interface IndexNowResponse {
+  status: number
+  statusText: string
+  submittedCount: number
+  skippedCount?: number
+  urls?: string[]
   error?: string
 }
 
 /**
- * Notify IndexNow API of a single URL update
+ * Submit URLs to IndexNow API
  */
-export async function notifyIndexNow(url: string): Promise<IndexNowResponse> {
+export async function submitToIndexNow(urls: string[]): Promise<IndexNowResponse> {
   try {
-    // Only notify in production
-    if (process.env.NODE_ENV !== 'production') {
-      console.log('[IndexNow] Skipping notification in development:', url)
-      return { success: true }
+    // Validate and filter URLs
+    const validUrls = urls
+      .filter(url => {
+        try {
+          const urlObj = new URL(url)
+          return urlObj.hostname === "www.eastcoastkinkevents.com"
+        } catch {
+          return false
+        }
+      })
+      .slice(0, 10000) // IndexNow limit
+
+    if (validUrls.length === 0) {
+      return {
+        status: 422,
+        statusText: "No valid URLs",
+        submittedCount: 0,
+        error: "No valid URLs for this domain found"
+      }
     }
 
-    const response = await fetch('https://api.indexnow.org/indexnow', {
-      method: 'POST',
+    const requestBody = {
+      host: "www.eastcoastkinkevents.com",
+      key: INDEXNOW_KEY,
+      keyLocation: KEY_LOCATION,
+      urlList: validUrls
+    }
+
+    const response = await fetch(INDEXNOW_API_URL, {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json; charset=utf-8',
+        "Content-Type": "application/json; charset=utf-8",
       },
-      body: JSON.stringify({
-        host: HOST,
-        key: INDEXNOW_KEY,
-        keyLocation: KEY_LOCATION,
-        urlList: [url]
-      }),
+      body: JSON.stringify(requestBody)
     })
 
-    if (response.ok || response.status === 202) {
-      console.log('[IndexNow] Successfully notified:', url)
-      return { success: true }
-    } else {
-      const errorText = await response.text()
-      console.error('[IndexNow] Failed to notify:', response.status, errorText)
-      return { success: false, error: `HTTP ${response.status}: ${errorText}` }
+    const result: IndexNowResponse = {
+      status: response.status,
+      statusText: response.statusText,
+      submittedCount: validUrls.length,
+      skippedCount: urls.length - validUrls.length,
+      urls: validUrls
     }
+
+    if (!response.ok) {
+      result.error = `HTTP ${response.status}: ${response.statusText}`
+    }
+
+    return result
+
   } catch (error) {
-    console.error('[IndexNow] Error notifying:', error)
-    return { success: false, error: error instanceof Error ? error.message : 'Unknown error' }
+    console.error('[IndexNow] Error submitting URLs:', error)
+    return {
+      status: 500,
+      statusText: "Internal Server Error",
+      submittedCount: 0,
+      error: error instanceof Error ? error.message : "Unknown error"
+    }
   }
 }
 
 /**
- * Notify IndexNow API of multiple URL updates
+ * Submit a single URL to IndexNow
  */
-export async function notifyIndexNowBatch(urls: string[]): Promise<IndexNowResponse> {
+export async function submitUrlToIndexNow(url: string): Promise<IndexNowResponse> {
+  return submitToIndexNow([url])
+}
+
+/**
+ * Generate URLs for sitemap submission
+ */
+export function generateSitemapUrls(): string[] {
+  const stateSlugs = [
+    "new-york", "pennsylvania", "new-jersey", "maryland", "delaware",
+    "virginia", "north-carolina", "south-carolina", "georgia", "florida",
+    "maine", "vermont", "new-hampshire", "massachusetts", "rhode-island",
+    "connecticut", "washington-dc"
+  ]
+
+  const coreUrls = [
+    `${BASE_URL}/`,
+    `${BASE_URL}/events`,
+    `${BASE_URL}/dungeons`,
+    `${BASE_URL}/education`,
+    `${BASE_URL}/calendar`,
+    `${BASE_URL}/guidelines`,
+    `${BASE_URL}/states`
+  ]
+
+  const stateUrls = stateSlugs.map(slug => `${BASE_URL}/states/${slug}`)
+
+  return [...coreUrls, ...stateUrls]
+}
+
+/**
+ * Submit sitemap URLs to IndexNow
+ */
+export async function submitSitemapToIndexNow(): Promise<IndexNowResponse> {
+  const urls = generateSitemapUrls()
+  return submitToIndexNow(urls)
+}
+
+/**
+ * Submit all content URLs (events, dungeons, articles) to IndexNow
+ */
+export async function submitContentToIndexNow(): Promise<IndexNowResponse> {
   try {
-    // Only notify in production
-    if (process.env.NODE_ENV !== 'production') {
-      console.log('[IndexNow] Skipping batch notification in development:', urls.length, 'URLs')
-      return { success: true }
-    }
+    // Get URLs from our sitemap APIs
+    const [events, dungeons, articles] = await Promise.all([
+      fetch(`${BASE_URL}/api/sitemap/events`).then(r => r.ok ? r.json() : []),
+      fetch(`${BASE_URL}/api/sitemap/dungeons`).then(r => r.ok ? r.json() : []),
+      fetch(`${BASE_URL}/api/sitemap/articles`).then(r => r.ok ? r.json() : [])
+    ])
 
-    // IndexNow supports up to 10,000 URLs per request
-    if (urls.length > 10000) {
-      console.warn('[IndexNow] Too many URLs, truncating to 10,000')
-      urls = urls.slice(0, 10000)
-    }
+    const eventUrls = (events || []).map((e: any) => `${BASE_URL}/events/${e.slug}`)
+    const dungeonUrls = (dungeons || []).map((d: any) => `${BASE_URL}/dungeons/${d.slug}`)
+    const articleUrls = (articles || []).map((a: any) => `${BASE_URL}/education/${a.slug}`)
 
-    const response = await fetch('https://api.indexnow.org/indexnow', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json; charset=utf-8',
-      },
-      body: JSON.stringify({
-        host: HOST,
-        key: INDEXNOW_KEY,
-        keyLocation: KEY_LOCATION,
-        urlList: urls
-      }),
-    })
-
-    if (response.ok || response.status === 202) {
-      console.log('[IndexNow] Successfully notified batch:', urls.length, 'URLs')
-      return { success: true }
-    } else {
-      const errorText = await response.text()
-      console.error('[IndexNow] Failed to notify batch:', response.status, errorText)
-      return { success: false, error: `HTTP ${response.status}: ${errorText}` }
-    }
+    const allUrls = [...eventUrls, ...dungeonUrls, ...articleUrls]
+    
+    return submitToIndexNow(allUrls)
   } catch (error) {
-    console.error('[IndexNow] Error notifying batch:', error)
-    return { success: false, error: error instanceof Error ? error.message : 'Unknown error' }
+    console.error('[IndexNow] Error getting content URLs:', error)
+    return {
+      status: 500,
+      statusText: "Internal Server Error",
+      submittedCount: 0,
+      error: error instanceof Error ? error.message : "Unknown error"
+    }
   }
 }
-
-/**
- * Helper to notify about a new event
- */
-export async function notifyNewEvent(eventSlug: string): Promise<IndexNowResponse> {
-  const url = `https://${HOST}/events/${eventSlug}`
-  return notifyIndexNow(url)
-}
-
-/**
- * Helper to notify about a new dungeon
- */
-export async function notifyNewDungeon(dungeonSlug: string): Promise<IndexNowResponse> {
-  const url = `https://${HOST}/dungeons/${dungeonSlug}`
-  return notifyIndexNow(url)
-}
-
-/**
- * Helper to notify about a new education article
- */
-export async function notifyNewArticle(articleSlug: string): Promise<IndexNowResponse> {
-  const url = `https://${HOST}/education/${articleSlug}`
-  return notifyIndexNow(url)
-}
-

@@ -1,80 +1,96 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { safePingSitemap } from '@/lib/sitemapPing'
+import { NextRequest, NextResponse } from "next/server"
+import { submitSitemapToIndexNow, submitContentToIndexNow } from "@/lib/indexnow"
+
+export const runtime = "nodejs"
 
 /**
- * Webhook endpoint for triggering sitemap pings
- * Can be called from:
- * - Database triggers (Supabase Edge Functions)
- * - External scripts
- * - Manual operations
- * - Bulk imports
+ * Ping search engines about sitemap updates and submit URLs via IndexNow
  */
-
 export async function POST(request: NextRequest) {
   try {
-    // Optional: Add authentication for security
-    const authHeader = request.headers.get('authorization')
-    const expectedToken = process.env.SITEMAP_WEBHOOK_TOKEN
+    const { searchEngines = true, indexNow = true } = await request.json().catch(() => ({}))
     
-    // If token is configured, require it
-    if (expectedToken && authHeader !== `Bearer ${expectedToken}`) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      )
-    }
-
-    // Get request body for logging (optional)
-    let body = null
-    try {
-      body = await request.json()
-    } catch {
-      // Body is optional - could be a simple ping
-    }
-
-    // Log the ping request for monitoring
-    console.log('Sitemap ping triggered:', {
+    const results = {
       timestamp: new Date().toISOString(),
-      source: body?.source || 'unknown',
-      contentType: body?.contentType || 'unknown',
-      userAgent: request.headers.get('user-agent'),
-      ip: request.headers.get('x-forwarded-for') || 'unknown'
-    })
+      sitemapPings: {} as Record<string, any>,
+      indexNow: {} as any
+    }
 
-    // Ping search engines
-    await safePingSitemap()
+    // Ping search engines about sitemap
+    if (searchEngines) {
+      const sitemapUrl = "https://www.eastcoastkinkevents.com/sitemap.xml"
+      
+      const pingUrls = [
+        `https://www.google.com/ping?sitemap=${encodeURIComponent(sitemapUrl)}`,
+        `https://www.bing.com/ping?sitemap=${encodeURIComponent(sitemapUrl)}`
+      ]
 
-    return NextResponse.json({
-      success: true,
-      message: 'Sitemap ping initiated',
-      timestamp: new Date().toISOString()
-    })
+      for (const pingUrl of pingUrls) {
+        try {
+          const response = await fetch(pingUrl, { 
+            method: "GET",
+            headers: { "User-Agent": "EastCoastKinkEvents/1.0" }
+          })
+          
+          const engine = pingUrl.includes("google") ? "google" : "bing"
+          results.sitemapPings[engine] = {
+            status: response.status,
+            statusText: response.statusText,
+            success: response.ok
+          }
+        } catch (error) {
+          const engine = pingUrl.includes("google") ? "google" : "bing"
+          results.sitemapPings[engine] = {
+            status: 500,
+            statusText: "Error",
+            success: false,
+            error: error instanceof Error ? error.message : "Unknown error"
+          }
+        }
+      }
+    }
+
+    // Submit URLs via IndexNow
+    if (indexNow) {
+      try {
+        // Submit core sitemap URLs
+        const sitemapResult = await submitSitemapToIndexNow()
+        
+        // Submit content URLs (events, dungeons, articles)
+        const contentResult = await submitContentToIndexNow()
+        
+        results.indexNow = {
+          sitemap: sitemapResult,
+          content: contentResult,
+          totalSubmitted: sitemapResult.submittedCount + contentResult.submittedCount
+        }
+      } catch (error) {
+        results.indexNow = {
+          error: error instanceof Error ? error.message : "Unknown error"
+        }
+      }
+    }
+
+    return NextResponse.json(results, { status: 200 })
 
   } catch (error) {
-    console.error('Sitemap ping webhook error:', error)
+    console.error('[Sitemap Ping] Error:', error)
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { 
+        error: "Internal server error",
+        timestamp: new Date().toISOString()
+      },
       { status: 500 }
     )
   }
 }
 
-// Allow GET requests for simple pings (no auth required for GET)
+/**
+ * GET endpoint for manual sitemap ping
+ */
 export async function GET() {
-  try {
-    console.log('Sitemap ping triggered via GET request')
-    await safePingSitemap()
-    
-    return NextResponse.json({
-      success: true,
-      message: 'Sitemap ping initiated via GET',
-      timestamp: new Date().toISOString()
-    })
-  } catch (error) {
-    console.error('Sitemap ping GET error:', error)
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    )
-  }
+  return POST(new NextRequest("http://localhost", { 
+    method: "POST",
+    body: JSON.stringify({ searchEngines: true, indexNow: true })
+  }))
 }
