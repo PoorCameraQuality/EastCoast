@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useCallback } from 'react'
 import { usePathname } from 'next/navigation'
 
 // Declare gtag function for TypeScript
@@ -19,7 +19,7 @@ export default function useEnhancedGA4() {
   const pathname = usePathname()
 
   // Track page views with enhanced parameters
-  const trackPageView = (page_path?: string, page_title?: string, additionalParams?: Record<string, any>) => {
+  const trackPageView = useCallback((page_path?: string, page_title?: string, additionalParams?: Record<string, any>) => {
     if (typeof window !== 'undefined' && window.gtag) {
       window.gtag('event', 'page_view', {
         page_path: page_path || pathname,
@@ -29,7 +29,7 @@ export default function useEnhancedGA4() {
         ...additionalParams
       })
     }
-  }
+  }, [pathname])
 
   // Track internal link clicks
   const trackInternalLinkClick = (linkData: {
@@ -380,7 +380,7 @@ export default function useEnhancedGA4() {
   // Auto-track page views on route changes
   useEffect(() => {
     trackPageView()
-  }, [pathname])
+  }, [pathname, trackPageView])
 
   return {
     trackPageView,
