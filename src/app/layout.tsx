@@ -86,7 +86,8 @@ export const metadata: Metadata = {
     },
   },
   verification: {
-    google: 'your-google-verification-code', // TODO: Replace with actual code from Google Search Console
+    // Read from env at build time; set NEXT_PUBLIC_GSC_VERIFICATION in env
+    google: process.env.NEXT_PUBLIC_GSC_VERIFICATION || 'your-google-verification-code',
     yandex: 'd38c7affece1bb23',
   },
 };
