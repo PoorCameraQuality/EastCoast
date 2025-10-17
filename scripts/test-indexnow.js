@@ -67,27 +67,48 @@ async function testIndexNow() {
     console.log(`   ❌ Error testing bulk URLs: ${error.message}`)
   }
 
-  // Test 4: Test sitemap ping
-  console.log("\n4. Testing sitemap ping...")
+  // Test 4: Test IndexNow ping (updated for new API)
+  console.log("\n4. Testing IndexNow ping...")
   try {
     const response = await fetch(`${BASE_URL}/api/sitemap/ping`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ searchEngines: true, indexNow: true })
+      body: JSON.stringify({ indexNow: true, includeContent: true })
     })
     
     const result = await response.json()
     
-    if (response.ok) {
-      console.log(`   ✅ Sitemap ping successful`)
-      console.log(`   📊 Google: ${result.sitemapPings.google?.success ? '✅' : '❌'} (${result.sitemapPings.google?.status})`)
-      console.log(`   📊 Bing: ${result.sitemapPings.bing?.success ? '✅' : '❌'} (${result.sitemapPings.bing?.status})`)
-      console.log(`   📊 IndexNow: ${result.indexNow.totalSubmitted || 0} URLs submitted`)
+    if (response.ok && result.indexNow.success) {
+      console.log(`   ✅ IndexNow ping successful`)
+      console.log(`   📊 Core URLs: ${result.indexNow.sitemap.submittedCount}`)
+      console.log(`   📊 Content URLs: ${result.indexNow.content?.submittedCount || 0}`)
+      console.log(`   📊 Total: ${result.indexNow.totalSubmitted} URLs submitted`)
+      if (result.note) {
+        console.log(`   ℹ️  ${result.note}`)
+      }
     } else {
-      console.log(`   ❌ Sitemap ping failed: ${result.error}`)
+      console.log(`   ❌ IndexNow ping failed: ${result.error || result.indexNow?.error}`)
     }
   } catch (error) {
-    console.log(`   ❌ Error testing sitemap ping: ${error.message}`)
+    console.log(`   ❌ Error testing IndexNow ping: ${error.message}`)
+  }
+
+  // Test 5: Test status endpoint
+  console.log("\n5. Testing status endpoint...")
+  try {
+    const response = await fetch(`${BASE_URL}/api/indexnow/status`)
+    const result = await response.json()
+    
+    if (response.ok) {
+      console.log(`   ✅ Status endpoint accessible`)
+      console.log(`   📊 Key file: ${result.health.keyFileAccessible ? '✅' : '❌'}`)
+      console.log(`   📊 Status: ${result.health.status}`)
+      console.log(`   📊 API configured: ${result.health.apiConfigured ? '✅' : '❌'}`)
+    } else {
+      console.log(`   ❌ Status endpoint failed: ${result.error}`)
+    }
+  } catch (error) {
+    console.log(`   ❌ Error testing status: ${error.message}`)
   }
 
   console.log("\n🎉 IndexNow testing complete!")

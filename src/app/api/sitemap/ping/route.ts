@@ -4,69 +4,45 @@ import { submitSitemapToIndexNow, submitContentToIndexNow } from "@/lib/indexnow
 export const runtime = "nodejs"
 
 /**
- * Ping search engines about sitemap updates and submit URLs via IndexNow
+ * Submit URLs via IndexNow (Google/Bing sitemap ping endpoints are deprecated)
+ * 
+ * Note: Google deprecated /ping?sitemap= endpoint (returns 404)
+ * Bing removed anonymous sitemap pings (returns 410)
+ * Use Search Console for Google and IndexNow for both engines
  */
 export async function POST(request: NextRequest) {
   try {
-    const { searchEngines = true, indexNow = true } = await request.json().catch(() => ({}))
+    const { indexNow = true, includeContent = true } = await request.json().catch(() => ({}))
     
     const results = {
       timestamp: new Date().toISOString(),
-      sitemapPings: {} as Record<string, any>,
-      indexNow: {} as any
-    }
-
-    // Ping search engines about sitemap
-    if (searchEngines) {
-      const sitemapUrl = "https://www.eastcoastkinkevents.com/sitemap.xml"
-      
-      const pingUrls = [
-        `https://www.google.com/ping?sitemap=${encodeURIComponent(sitemapUrl)}`,
-        `https://www.bing.com/ping?sitemap=${encodeURIComponent(sitemapUrl)}`
-      ]
-
-      for (const pingUrl of pingUrls) {
-        try {
-          const response = await fetch(pingUrl, { 
-            method: "GET",
-            headers: { "User-Agent": "EastCoastKinkEvents/1.0" }
-          })
-          
-          const engine = pingUrl.includes("google") ? "google" : "bing"
-          results.sitemapPings[engine] = {
-            status: response.status,
-            statusText: response.statusText,
-            success: response.ok
-          }
-        } catch (error) {
-          const engine = pingUrl.includes("google") ? "google" : "bing"
-          results.sitemapPings[engine] = {
-            status: 500,
-            statusText: "Error",
-            success: false,
-            error: error instanceof Error ? error.message : "Unknown error"
-          }
-        }
-      }
+      indexNow: {} as any,
+      note: "Google/Bing sitemap ping endpoints are deprecated. Use Search Console for Google and IndexNow for both engines."
     }
 
     // Submit URLs via IndexNow
     if (indexNow) {
       try {
-        // Submit core sitemap URLs
+        // Submit core sitemap URLs (always include these)
         const sitemapResult = await submitSitemapToIndexNow()
         
-        // Submit content URLs (events, dungeons, articles)
-        const contentResult = await submitContentToIndexNow()
+        let contentResult = { submittedCount: 0, status: 200, statusText: "Skipped" }
+        
+        // Optionally submit content URLs (events, dungeons, articles)
+        if (includeContent) {
+          contentResult = await submitContentToIndexNow()
+        }
         
         results.indexNow = {
           sitemap: sitemapResult,
-          content: contentResult,
-          totalSubmitted: sitemapResult.submittedCount + contentResult.submittedCount
+          content: includeContent ? contentResult : null,
+          totalSubmitted: sitemapResult.submittedCount + contentResult.submittedCount,
+          success: sitemapResult.status === 200
         }
       } catch (error) {
         results.indexNow = {
-          error: error instanceof Error ? error.message : "Unknown error"
+          error: error instanceof Error ? error.message : "Unknown error",
+          success: false
         }
       }
     }
@@ -74,7 +50,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(results, { status: 200 })
 
   } catch (error) {
-    console.error('[Sitemap Ping] Error:', error)
+    console.error('[IndexNow Ping] Error:', error)
     return NextResponse.json(
       { 
         error: "Internal server error",
