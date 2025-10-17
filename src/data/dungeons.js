@@ -287,12 +287,18 @@ export const getDungeonsByLocation = (state) => {
 };
 
 export const generateDungeonSEO = (dungeon) => {
+  // Import SEO helpers dynamically to avoid circular dependencies
+  const { generateDungeonTitle } = require('@/lib/seo-helpers')
+  
+  // Generate optimized title (≤60 chars)
+  const optimizedTitle = generateDungeonTitle(dungeon)
+  
   return {
-    title: dungeon.seo.title,
+    title: optimizedTitle,
     description: dungeon.seo.description,
     keywords: dungeon.seo.keywords,
     openGraph: {
-      title: dungeon.seo.title,
+      title: optimizedTitle,
       description: dungeon.seo.description,
       images: dungeon.logo ? [`https://eastcoastkinkevents.com${dungeon.logo}`] : ['https://eastcoastkinkevents.com/og-image.png'],
       type: 'website'

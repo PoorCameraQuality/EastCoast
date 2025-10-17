@@ -1566,12 +1566,18 @@ export const getEventsByLocation = (state) => {
 };
 
 export const generateEventSEO = (event) => {
+  // Import SEO helpers dynamically to avoid circular dependencies
+  const { generateEventTitle } = require('@/lib/seo-helpers')
+  
+  // Generate optimized title (≤60 chars)
+  const optimizedTitle = generateEventTitle(event)
+  
   return {
-    title: `${event.name} - ${event.date.display} | East Coast Kink Events`,
+    title: optimizedTitle,
     description: event.excerpt,
     keywords: event.seo?.keywords || `${event.name}, ${event.location.city}, ${event.location.state}, kink events, BDSM`,
     openGraph: {
-      title: event.seo?.title || `${event.name} - ${event.date.display}`,
+      title: optimizedTitle,
       description: event.seo?.description || event.excerpt,
       images: [
         {

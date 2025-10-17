@@ -55,6 +55,7 @@ export default function Header() {
             {[
               { href: '/events', label: 'Events' },
               { href: '/dungeons', label: 'Dungeons' },
+              { href: '/states', label: 'States' },
               { href: '/education', label: 'Education' },
               { href: '/calendar', label: 'Calendar' },
               { href: '/about', label: 'About' },
@@ -118,6 +119,7 @@ export default function Header() {
               {[
                 { href: '/events', label: 'Events', icon: '🎪' },
                 { href: '/dungeons', label: 'Dungeons', icon: '🏰' },
+                { href: '/states', label: 'States', icon: '🗺️' },
                 { href: '/education', label: 'Education', icon: '📚' },
                 { href: '/calendar', label: 'Calendar', icon: '📅' },
                 { href: '/about', label: 'About', icon: 'ℹ️' },

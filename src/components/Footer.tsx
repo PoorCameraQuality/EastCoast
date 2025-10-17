@@ -81,6 +81,7 @@ export default function Footer() {
           >
             <Section title="Quick Links">
               <L href="/events">Browse Events</L>
+              <L href="/states">Browse by State</L>
               <L href="/events#calendar">Event Calendar</L>
               <L href="/contact?subject=Event%20Submission">Add Event</L>
               <L href="/about">About Us</L>

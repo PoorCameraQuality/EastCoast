@@ -50,7 +50,7 @@ export default function Hero() {
           </p>
 
           {/* Quick navigation cards - Enhanced glassy design */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mb-8 max-w-4xl mx-auto animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-3 md:gap-4 mb-8 max-w-5xl mx-auto animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
             <Link 
               href="/events" 
               className="group backdrop-blur-xl bg-white/10 rounded-2xl p-4 md:p-6 border border-white/20 hover:border-white/40 transition-all duration-500 hover:scale-105 hover:bg-white/15 shadow-2xl hover:shadow-primary-500/20"
@@ -64,6 +64,13 @@ export default function Hero() {
             >
               <div className="text-2xl md:text-3xl font-bold text-white mb-1">Dungeons</div>
               <div className="text-xs md:text-sm text-gray-300">Play Spaces & Venues</div>
+            </Link>
+            <Link 
+              href="/states" 
+              className="group backdrop-blur-xl bg-white/10 rounded-2xl p-4 md:p-6 border border-white/20 hover:border-white/40 transition-all duration-500 hover:scale-105 hover:bg-white/15 shadow-2xl hover:shadow-green-500/20"
+            >
+              <div className="text-2xl md:text-3xl font-bold text-white mb-1">States</div>
+              <div className="text-xs md:text-sm text-gray-300">Browse by Location</div>
             </Link>
             <Link 
               href="/education" 
