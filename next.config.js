@@ -2,8 +2,14 @@
 const nextConfig = {
   // Use a single trailing slash policy to avoid redirect chains
   trailingSlash: false,
-  // Enable Next.js image optimization for better Core Web Vitals
-  // (remove unoptimized:true)
+  // Enable Next.js image optimization for remote logos
+  images: {
+    remotePatterns: [
+      { protocol: 'https', hostname: 'images.squarespace-cdn.com' },
+      { protocol: 'https', hostname: 'kicevents.com' },
+      { protocol: 'https', hostname: 'www.kicevents.com' },
+    ],
+  },
 
   env: {
     DISABLE_VERCEL_FEEDBACK: 'true'
