@@ -1,6 +1,7 @@
 "use client"
 import Script from 'next/script'
 import { useEffect, Suspense } from 'react'
+import { initWebVitals } from '@/lib/web-vitals'
 import { usePathname, useSearchParams } from 'next/navigation'
 
 interface GoogleAnalyticsProps {
@@ -21,6 +22,8 @@ function GoogleAnalyticsInner({ GA_MEASUREMENT_ID }: GoogleAnalyticsProps) {
         page_path: url,
       })
     }
+    // Initialize Core Web Vitals once per mount
+    initWebVitals()
   }, [pathname, searchParams, GA_ID])
 
   return (
