@@ -428,9 +428,9 @@ export const events = [
     "name": "Naughty Noel",
     "slug": "naughty-noel",
     "date": {
-      "start": "2026-12-03",
-      "end": "2026-12-06",
-      "display": "Dec 3-6, 2026"
+      "start": "2025-12-03",
+      "end": "2025-12-06",
+      "display": "Dec 3-6, 2025"
     },
     "location": {
       "city": "Gettysburg",

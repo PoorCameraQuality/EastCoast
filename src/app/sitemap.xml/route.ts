@@ -12,14 +12,15 @@ const STATE_SLUGS = [
   "connecticut","washington-dc"
 ]
 
+// XML escaping function for safety
+function esc(s: string) {
+  return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+}
+
 // Simple XML builder for sitemap with safety hardening
 function xml(urls: { loc: string; lastmod?: string }[]) {
   const body = urls
-    .map(u => {
-      // XML safety: escape & to &amp; in case URLs contain query strings
-      const safeLoc = u.loc.replace(/&/g, '&amp;')
-      return `<url><loc>${safeLoc}</loc>${u.lastmod ? `<lastmod>${u.lastmod}</lastmod>` : ""}</url>`
-    })
+    .map(u => `<url><loc>${esc(u.loc)}</loc>${u.lastmod ? `<lastmod>${u.lastmod}</lastmod>` : ""}</url>`)
     .join("")
   return `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${body}</urlset>`
