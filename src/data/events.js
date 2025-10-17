@@ -341,22 +341,22 @@ export const events = [
     }
   },
   {
-    "name": "Exploration Into Kink (EiK) 2026",
+    "name": "Exploration Into Kink (EiK) 2025",
     "slug": "exploration-into-kink",
     "date": {
-      "start": "2026-11-14",
-      "end": "2026-11-16",
-      "display": "Dates TBA - November 2026 (Expected)"
+      "start": "2025-11-14",
+      "end": "2025-11-16",
+      "display": "November 14-16, 2025"
     },
-    "status": "tba",
+    "status": "published",
     "location": {
       "city": "St Louis Metro Area",
       "state": "MO",
       "region": "Eastern, Missouri"
     },
     "category": "Indoor Event",
-    "excerpt": "Join us for a hotel takeover weekend in the St Louis metro area featuring outstanding educational classes, vendor bazaar, cigar social, clothing-optional indoor pool, play parties, and midnight buffets. NOTE: 2026 dates not yet officially announced by organizer - check website for updates.",
-    "longDescription": "Welcome Explorers! Join us for a hotel takeover weekend in the St Louis metro area. **IMPORTANT: 2026 dates have not been officially announced yet. Please check the official website for confirmed 2026 dates and registration information.** Meet and socialize with kinksters while immersing yourself for an entire weekend of exploration and education. From the moment you pass through the registration curtains, till it is time to checkout… the hotel is ours.\n\nDuring Exploration Into Kink, or EiK, you can enjoy our outstanding educational classes, the vendor bazaar, BeBe's cigar social, Exploration Emporium, clothing optional indoor swimming pool, Friday and Saturday night play parties, Friday and Saturday midnight buffets, and much more!\n\nOur goal is to build and grow the kink community through a weekend focused on consent, diversity, education, exploration, inclusivity, and integrity.",
+    "excerpt": "Join us for a hotel takeover weekend in the St Louis metro area featuring outstanding educational classes, vendor bazaar, cigar social, clothing-optional indoor pool, play parties, and midnight buffets. November 14-16, 2025.",
+    "longDescription": "Welcome Explorers! Join us for a hotel takeover weekend in the St Louis metro area November 14-16, 2025. Meet and socialize with kinksters while immersing yourself for an entire weekend of exploration and education. From the moment you pass through the registration curtains, till it is time to checkout… the hotel is ours.\n\nDuring Exploration Into Kink, or EiK, you can enjoy our outstanding educational classes, the vendor bazaar, BeBe's cigar social, Exploration Emporium, clothing optional indoor swimming pool, Friday and Saturday night play parties, Friday and Saturday midnight buffets, and much more!\n\nOur goal is to build and grow the kink community through a weekend focused on consent, diversity, education, exploration, inclusivity, and integrity.",
     "website": "https://www.explorationintokink.com/",
     "logo": "/images/eik.jpg",
     "features": [
@@ -378,9 +378,9 @@ export const events = [
       "Weekend Immersion Experience"
     ],
     "seo": {
-      "title": "Exploration Into Kink (EiK) - St Louis Metro Hotel Takeover | East Coast Kink Events",
-      "description": "Join us for a hotel takeover weekend in the St Louis metro area featuring outstanding educational classes, vendor bazaar, cigar social, clothing-optional indoor pool, play parties, and midnight buffets.",
-      "keywords": "Exploration Into Kink, EiK, St Louis metro, Missouri, BDSM education, hotel takeover, vendor bazaar, play parties"
+      "title": "Exploration Into Kink (EiK) 2025 - St Louis Metro Hotel Takeover | East Coast Kink Events",
+      "description": "Join us for a hotel takeover weekend in the St Louis metro area November 14-16, 2025, featuring outstanding educational classes, vendor bazaar, cigar social, clothing-optional indoor pool, play parties, and midnight buffets.",
+      "keywords": "Exploration Into Kink, EiK 2025, St Louis metro, Missouri, BDSM education, hotel takeover, vendor bazaar, play parties, November 2025"
     }
   },
   {
