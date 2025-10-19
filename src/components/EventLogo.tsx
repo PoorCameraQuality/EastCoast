@@ -62,7 +62,7 @@ export default function EventLogo({ src, alt, size = 'medium', className = '' }:
         alt={alt || `Logo for ${alt || "event"}`}
         width={200}
         height={200}
-        sizes="100vw"
+        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
         className={`object-contain rounded-xl ${image}`}
         onError={handleImageError}
         style={{ width: 'auto', height: 'auto' }}

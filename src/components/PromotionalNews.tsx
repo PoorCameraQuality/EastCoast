@@ -102,7 +102,7 @@ export default function PromotionalNews() {
   return (
     <>
       {/* Desktop: Fixed sidebar on right */}
-      <div className="hidden lg:block fixed right-6 top-24 z-40 w-80 max-h-[calc(100vh-200px)] overflow-y-auto space-y-4">
+      <div className="hidden lg:block fixed right-6 top-24 z-40 w-80 max-h-[calc(100vh-200px)] overflow-y-auto space-y-4" style={{ minHeight: '200px' }}>
         {visibleItems.map((item, index) => (
           <PromotionalCard
             key={item.id}
@@ -116,7 +116,7 @@ export default function PromotionalNews() {
       </div>
 
       {/* Mobile: Stacked banners below header */}
-      <div className="lg:hidden fixed top-16 left-0 right-0 z-40 bg-black/95 backdrop-blur-lg border-b border-white/10">
+      <div className="lg:hidden fixed top-16 left-0 right-0 z-40 bg-black/95 backdrop-blur-lg border-b border-white/10" style={{ minHeight: '120px' }}>
         <div className="container-custom py-3 space-y-3 max-h-[50vh] overflow-y-auto">
           {visibleItems.map((item, index) => (
             <PromotionalCard
