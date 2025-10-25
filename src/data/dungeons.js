@@ -271,6 +271,31 @@ export const dungeons = [
       "description": "CPI is a Tennessee non-profit, membership organization whose mission is to provide and maintain a self-sustainable, vision-driven, and ever-upgrading interaction space for the BDSM/Fetish/Kink community of Nashville, Middle Tennessee, and beyond.",
       "keywords": "The Mark, CPI, Nashville, Tennessee, BDSM dungeon, kink community, non-profit, membership organization, Middle Tennessee, 6000 sqft, ADA accessible, safe sane consensual"
     }
+  },
+  {
+    "name": "The_LODGE brought to you by Lifestyle America Social Club Inc.",
+    "slug": "the-lodge-dover-plains",
+    "location": {
+      "city": "Dover Plains",
+      "state": "NY",
+      "address": "Dover Plains, NY"
+    },
+    "category": "BDSM Dungeon",
+    "excerpt": "Welcome to Lifestyle America Social Club Inc. - Where Connection, Growth, and Celebration Come Together. We exist to bridge generational gaps and create a space where connection, learning, and growth are at the heart of everything we do.",
+    "description": {
+      "long": "Welcome to Lifestyle America Social Club Inc.\nWhere Connection, Growth, and Celebration Come Together\n\nOur Purpose\nWe exist to bridge generational gaps and create a space where connection, learning, and growth are at the heart of everything we do. Through vibrant discussions, idea-sharing, and meet-ups, we cultivate an environment where authentic relationships thrive. Whether you're a seasoned member or new to the scene, there's always room for you here.\n\nOur Mission\nInclusivity is the name of the game. We aim to build a community where everyone can grow, share their stories, and connect—without fear of judgment. We celebrate diversity, encourage personal growth, and promote mutual respect. By doing so, we're forging connections that transcend boundaries and honor individuality in every form.\n\nOur Events\nFrom laid-back munches to immersive educational workshops and unforgettable parties, we offer a delicious mix of events designed to help you connect, learn, and grow—no matter where you are on your journey. Each event is crafted to be an inclusive, safe space where you can kick back, meet like-minded individuals, and expand your horizons. We pride ourselves on creating spaces that aren't just about fun, but about fostering respect, joy, and open-mindedness. Whether you're a curious newbie or a seasoned pro, there's always something here for you to enjoy and explore. Let's celebrate individuality and create some seriously unforgettable memories together!\n\nMember Values\nAs a member, you gain access to exclusive spaces meant for deep connections. We believe trust, discretion, and consent are the backbone of our community, and we ask all members to uphold these values. Together, we're building a community where everyone can thrive, be their authentic selves, and feel respected.\n\nBe Part of Our Journey\nAt Lifestyle America Social Club Inc., we're not just a group—we're a community. A community built on respect, shared aspirations, and the desire to grow together. Whether you're here to learn, meet new people, or celebrate with friends, you're always welcome to be part of our journey. Let's make something extraordinary happen—together.\n\nImportant Note\nFor the safety and comfort of our members, we carefully manage access to our community spaces. Please note that we love anyone following us to keep up with what's going on with events but we only accept Friend requests from vetted active members. If you're interested in joining, we encourage you to follow us for updates on upcoming munches, events, and other opportunities to engage. For more details, visit our website and start your journey with us today!\n\n@LASC-TNG\nFor those between 18-35, join our LASC-TNG Group. This dedicated space is all about connecting, building friendships, and celebrating shared journeys with others in your age range. We can't wait to welcome you into this fun, supportive group!\n\nLASC-HVLC\nInterested in becoming a member? Check out our Membership Application on the website. Better yet—come to one of our munches, get vetted, and dive into the heart of what makes us great!\n\nFollow Us\nStay connected through our Private Facebook Group (Hudson Valley Lifestyle Club). Answer the questions, accept the rules, and you're in! Or join our Discord Server to stay in the loop on events, munches, and everything else.\n\nWe look forward to seeing you at our next event, meeting, or just online. Keep in touch, stay involved, and let's continue building a space filled with respect, growth, and unforgettable experiences. Cheers to what's next!"
+    },
+    "contact": {
+      "email": "lifestyleamerica1129@gmail.com"
+    },
+    "website": "http://lasc-hvlc.com",
+    "logo": "/images/HVLC.png",
+    "images": [],
+    "seo": {
+      "title": "The_LODGE - Dover Plains NY BDSM Dungeon | East Coast Kink Events",
+      "description": "Welcome to Lifestyle America Social Club Inc. - Where Connection, Growth, and Celebration Come Together. We exist to bridge generational gaps and create a space where connection, learning, and growth are at the heart of everything we do.",
+      "keywords": "The_LODGE, Lifestyle America Social Club, Dover Plains, New York, BDSM dungeon, kink community, LASC-HVLC, Hudson Valley, social club, inclusive community"
+    }
   }
 ];
 
