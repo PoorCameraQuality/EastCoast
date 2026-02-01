@@ -191,9 +191,9 @@ export const dungeons = [
       "address": "Rochester, NY"
     },
     "category": "BDSM Dungeon",
-    "excerpt": "Discover The Aphrodite Group (TAG), Rochester, NY's premier upscale BDSM club. TAG is a thriving community of enthusiasts with a passion for kink, BDSM, and fetishes, welcoming everyone 18 and older.",
+    "excerpt": "The Aphrodite Group (TAG) is a PRIVATE, WOMAN-OWNED, members-only adult social club, learning facility, and event space in Rochester, NY centered on consensual BDSM play, education, and special events in a respectful, sex-positive community.",
     "description": {
-      "long": "Discover The Aphrodite Group (TAG), Rochester, NY's premier upscale BDSM club. TAG is a thriving community of enthusiasts with a passion for kink, BDSM, and fetishes, welcoming everyone 18 and older.\n\nAt TAG, we celebrate diversity and support our members in their journey to safely explore their desires. Whether you're a seasoned player or new to the scene, you'll find a welcoming atmosphere and a wealth of resources to enhance your experience.\n\nJoin us to:\n\nDive into the vibrant BDSM and kink community in Rochester and Western NY\n\nMake new friends at our exciting socials, play parties, and events\n\nEnjoy our state-of-the-art dungeon, available for play or private rentals\n\nOur facility boasts an expansive open play area for those who love an audience, as well as intimate private spaces for more secluded scenes. You'll find an array of BDSM furniture, a comfortable social area, a fully-equipped kitchen, and private bathrooms.\n\nConveniently located near Buffalo, Syracuse, and the Finger Lakes, The Aphrodite Group is your luxurious destination for exploring kink and BDSM. Experience the finest in Rochester, NY—join TAG today!"
+      "long": "TAG is a PRIVATE, WOMAN-OWNED, members-only adult social club, learning facility, and event space built with passion, purpose, and community in mind.\n\nWhat We're About\nAt TAG, we center consensual BDSM play, education, and special events in a respectful, supportive, and sex-positive environment.\n\nLet's be crystal clear:\n\nNOT a sex club (but we're proud to be sex-positive)\n\nNOT a hook-up joint (but we hope you connect with amazing people)\n\nNOT a service provider (no money is exchanged for services here)\n\nNOT a matchmaking service (but our events are full of kindred spirits)\n\nWe ARE a vetted, intentional, vibrant community for adults who take their kink and connection seriously.\n\nTHE LARGEST DEDICATED BDSM EVENT SPACE in Rochester & Western NY.\n\nHow to Join\nJoin us by attending one of our vetting socials."
     },
     "contact": {
       "email": "info@theaphroditegroup.net",
@@ -204,8 +204,8 @@ export const dungeons = [
     "images": [],
     "seo": {
       "title": "The Aphrodite Group - Rochester NY Premier BDSM Club | East Coast Kink Events",
-      "description": "Discover The Aphrodite Group (TAG), Rochester, NY's premier upscale BDSM club. TAG is a thriving community of enthusiasts with a passion for kink, BDSM, and fetishes, welcoming everyone 18 and older.",
-      "keywords": "The Aphrodite Group, TAG, Rochester, New York, BDSM club, kink community, upscale dungeon, Western NY"
+      "description": "The Aphrodite Group (TAG) is a private, woman-owned, members-only adult social club, learning facility, and event space in Rochester, NY centered on consensual BDSM play, education, and special events.",
+      "keywords": "The Aphrodite Group, TAG, Rochester, New York, BDSM dungeon, members-only, woman-owned, BDSM education, kink community, event space, Western NY"
     }
   },
   {
