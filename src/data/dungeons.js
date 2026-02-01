@@ -193,19 +193,19 @@ export const dungeons = [
     "category": "BDSM Dungeon",
     "excerpt": "The Aphrodite Group (TAG) is a PRIVATE, WOMAN-OWNED, members-only adult social club, learning facility, and event space in Rochester, NY centered on consensual BDSM play, education, and special events in a respectful, sex-positive community.",
     "description": {
-      "long": "TAG is a PRIVATE, WOMAN-OWNED, members-only adult social club, learning facility, and event space built with passion, purpose, and community in mind.\n\nWhat We're About\nAt TAG, we center consensual BDSM play, education, and special events in a respectful, supportive, and sex-positive environment.\n\nLet's be crystal clear:\n\nNOT a sex club (but we're proud to be sex-positive)\n\nNOT a hook-up joint (but we hope you connect with amazing people)\n\nNOT a service provider (no money is exchanged for services here)\n\nNOT a matchmaking service (but our events are full of kindred spirits)\n\nWe ARE a vetted, intentional, vibrant community for adults who take their kink and connection seriously.\n\nTHE LARGEST DEDICATED BDSM EVENT SPACE in Rochester & Western NY.\n\nHow to Join\nJoin us by attending one of our vetting socials."
+      "long": "TAG is a PRIVATE, WOMAN-OWNED, members-only adult social club, learning facility, and event space built with passion, purpose, and community in mind.\n\nWhat We're About\nAt TAG, we center consensual BDSM play, education, and special events in a respectful, supportive, and sex-positive environment.\n\nLet's be crystal clear:\n\nNOT a sex club (but we're proud to be sex-positive)\n\nNOT a hook-up joint (but we hope you connect with amazing people)\n\nNOT a service provider (no money is exchanged for services here)\n\nNOT a matchmaking service (but our events are full of kindred spirits)\n\nWe ARE a vetted, intentional, vibrant community for adults who take their kink and connection seriously.\n\nTHE LARGEST DEDICATED BDSM EVENT SPACE in Rochester & Western NY.\n\nHow to Join\nJoin us by attending one of our vetting socials.\n\nMembership Plans (members only; vetted and approved members can purchase online or in person)\n\nSingle entry: $35 (one party, one night)\n\nStar Plan: $30/month (1 party)\n\nPurple Plan: $55/month (2 parties and 1 workshop)\n\nRed Plan: $80/month (3+ parties and all workshops)\n\nVIP (for 2): $100 (exclusive room for the night)\n\nAdd a party / TAG a friend: $25\n\nDetails: https://www.theaphroditegroup.org/pricing-plans/list"
     },
     "contact": {
-      "email": "info@theaphroditegroup.net",
-      "phone": "(585) 555-0123"
+      "email": "TAGinfo@TheAphroditegroup.org",
+      "phone": "585-204-0181 (text only)"
     },
-    "website": "https://theaphroditegroup.net/",
+    "website": "https://www.theaphroditegroup.org/",
     "logo": "/images/aphrodite.PNG",
     "images": [],
     "seo": {
       "title": "The Aphrodite Group - Rochester NY Premier BDSM Club | East Coast Kink Events",
-      "description": "The Aphrodite Group (TAG) is a private, woman-owned, members-only adult social club, learning facility, and event space in Rochester, NY centered on consensual BDSM play, education, and special events.",
-      "keywords": "The Aphrodite Group, TAG, Rochester, New York, BDSM dungeon, members-only, woman-owned, BDSM education, kink community, event space, Western NY"
+      "description": "The Aphrodite Group (TAG) is a private, woman-owned, members-only adult social club, learning facility, and event space in Rochester, NY centered on consensual BDSM play, education, and special events. Attend a vetting social to join.",
+      "keywords": "The Aphrodite Group, TAG, Rochester, New York, BDSM dungeon, members-only, woman-owned, BDSM education, kink community, event space, Western NY, vetting social, membership"
     }
   },
   {
