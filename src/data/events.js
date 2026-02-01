@@ -1,6 +1,43 @@
 // Events data with SEO optimization
 export const events = [
   {
+    "name": "Indy Rope Expo 2024",
+    "slug": "indy-rope-expo-2024",
+    "date": {
+      "start": "2024-02-06",
+      "end": "2024-02-08",
+      "display": "Feb 6-8, 2024"
+    },
+    "location": {
+      "city": "Indianapolis",
+      "state": "IN",
+      "region": "Midwest, Indiana"
+    },
+    "category": "Indoor Event",
+    "excerpt": "Indy Rope Expo (IRE) is a premier shibari event in Indianapolis featuring nationally recognized presenters, classes for all skill levels, play parties, performances, and kink vendors at SubSpace Indy.",
+    "longDescription": "Experience the Art of Shibari at Indy Rope Expo (IRE) in Indianapolis, IN, from February 6-8, 2024. Indy Rope Expo is a shibari-focused event brought to you by Rope Daddy Studios.\n\n**Event Highlights:**\n\n**Internationally Acclaimed Presenters** - Learn from nationally recognized presenters.\n\n**Classes for All Levels** - From beginner to advanced, classes are designed to support a range of skill levels.\n\n**Play Parties & Performances** - Play parties on February 6 and 7, featuring performances.\n\n**Kink Vendors & Raffle** - Vendors on-site, plus a kink raffle on February 7.\n\n**Private Classes** - One-on-one instruction available via private class signups.\n\n**Venue: SubSpace Indy** - Indiana's premier kink venue (exact location provided upon registration).\n\n**Advanced Registration Required** - No ticket sales will be available at the door.",
+    "website": "https://www.indyropeexpo.com/",
+    "organizer": "Rope Daddy Studios",
+    "venue": "SubSpace Indy",
+    "logo": "/images/indyrope.PNG",
+    "features": [
+      "Shibari / Rope Bondage Education",
+      "Nationally Recognized Presenters",
+      "Classes (Beginner to Advanced)",
+      "Play Parties (Feb 6 and Feb 7)",
+      "Performances",
+      "Kink Vendors",
+      "Kink Raffle (Feb 7)",
+      "Private Classes",
+      "Advance Registration Required (No Door Sales)"
+    ],
+    "seo": {
+      "title": "Indy Rope Expo 2024 - Indianapolis Shibari Event | East Coast Kink Events",
+      "description": "Indy Rope Expo (IRE) is a premier shibari event in Indianapolis, IN (Feb 6-8, 2024) with classes for all levels, play parties, performances, and kink vendors at SubSpace Indy.",
+      "keywords": "Indy Rope Expo, IRE 2024, Indianapolis shibari, rope bondage event, SubSpace Indy, Rope Daddy Studios, kink vendors, play party"
+    }
+  },
+  {
     "name": "Mid-Atlantic Leather Weekend 2026",
     "slug": "mid-atlantic-leather-weekend-2026",
     "date": {
