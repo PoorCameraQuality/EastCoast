@@ -12,6 +12,7 @@ import GoogleAnalytics from '@/components/GoogleAnalytics'
 import VercelFeedbackBlocker from '@/components/VercelFeedbackBlocker'
 import ErrorTracker from '@/components/ErrorTracker'
 import SafeTrackingWrapper from '@/components/SafeTrackingWrapper'
+import { Analytics } from '@vercel/analytics/next'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -138,6 +139,7 @@ export default function RootLayout({
             </SafeTrackingWrapper>
           </GA4Provider>
         </AuthProvider>
+        <Analytics />
       </body>
     </html>
   );
