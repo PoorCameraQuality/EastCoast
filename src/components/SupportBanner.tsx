@@ -3,6 +3,8 @@
 import { useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import VendorImage from '@/components/vendors/VendorImage'
+import { getVendorBySlug } from '@/data/vendors'
 
 const DISMISS_KEY = 'ecke_support_banner_dismissed_at'
 const SHOW_AFTER_MS = 12000
@@ -23,6 +25,7 @@ export default function SupportBanner() {
   const pathname = usePathname()
   const [visible, setVisible] = useState(false)
   const [ready, setReady] = useState(false)
+  const sponsorVendor = getVendorBySlug('floggin-farmers')
 
   const isSuppressedRoute = useMemo(() => {
     if (!pathname) return true
@@ -82,28 +85,74 @@ export default function SupportBanner() {
   return (
     <div className="fixed inset-x-0 bottom-0 z-[60] p-4">
       <div className="mx-auto max-w-4xl rounded-2xl border border-white/10 bg-black/95 backdrop-blur-xl shadow-2xl">
-        <div className="p-4 md:p-5 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-          <div className="min-w-0">
-            <p className="text-sm font-semibold text-white">
-              Help keep East Coast Kink Events self-funded.
-            </p>
-            <p className="text-sm text-gray-300 mt-1 leading-relaxed">
-              Supporter tier ($25/mo) gets sticky placement while people browse. Sponsorships available via Discord: <span className="text-gray-200 font-semibold">Brax117</span>.
-            </p>
+        <div className="p-4 md:p-5 flex flex-col gap-4">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+            <div className="min-w-0">
+              <p className="text-sm font-semibold text-white">
+                Help keep East Coast Kink Events community funded.
+              </p>
+              <p className="text-xs text-gray-300 mt-1 leading-relaxed">
+                Supporter tier ($25/mo) gets sticky placement while people browse. Sponsorships available via Discord: <span className="text-gray-200 font-semibold">Brax117</span>.
+              </p>
+            </div>
+            <div className="flex flex-wrap gap-2 flex-shrink-0 text-xs">
+              <Link href="/support" className="btn-outline px-3 py-1.5 text-xs" aria-label="Learn how to support this site">
+                Learn more
+              </Link>
+              <button
+                type="button"
+                onClick={dismiss}
+                className="btn-outline px-3 py-1.5 text-xs"
+                aria-label="Dismiss support message"
+              >
+                Not now
+              </button>
+            </div>
           </div>
-          <div className="flex flex-col sm:flex-row gap-3 flex-shrink-0">
-            <Link href="/support" className="btn-primary text-center" aria-label="Learn how to support this site">
-              Learn more
-            </Link>
-            <button
-              type="button"
-              onClick={dismiss}
-              className="btn-outline text-center"
-              aria-label="Dismiss support message"
-            >
-              Not now
-            </button>
-          </div>
+
+          {sponsorVendor ? (
+            <div className="relative overflow-visible rounded-2xl border border-amber-300/40 bg-black/70 p-4 vendor-sponsor-glitter">
+              <span className="sponsor-spotlight-label">
+                Keep this site community funded
+              </span>
+              <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+                <VendorImage
+                  src={sponsorVendor.logo125Url}
+                  alt={`${sponsorVendor.name} logo`}
+                  size={48}
+                  className="flex-shrink-0"
+                />
+                <div className="min-w-0 flex-1">
+                  <p className="text-xs uppercase tracking-[0.2em] text-amber-200/90">
+                    Sponsor spotlight
+                  </p>
+                  <p className="text-base font-serif font-semibold text-white mt-1">
+                    <Link href={`/vendors/${sponsorVendor.slug}`} className="underline underline-offset-4 decoration-amber-200/40 hover:decoration-amber-200/80">
+                      {sponsorVendor.name}
+                    </Link>
+                  </p>
+                  <p className="text-xs text-gray-200 mt-1">
+                    Sponsor for February: Floggin Farmers. Reach out to Brax if you would like to support the site for a month.
+                  </p>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  <Link href={`/vendors/${sponsorVendor.slug}`} className="btn-primary px-3 py-1.5 text-xs">
+                    View Sponsor
+                  </Link>
+                  {sponsorVendor.websiteUrl ? (
+                    <a
+                      href={sponsorVendor.websiteUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="btn-outline px-3 py-1.5 text-xs"
+                    >
+                      Visit Shop
+                    </a>
+                  ) : null}
+                </div>
+              </div>
+            </div>
+          ) : null}
         </div>
       </div>
     </div>

@@ -1,6 +1,8 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import Breadcrumb from '@/components/Breadcrumb'
+import VendorImage from '@/components/vendors/VendorImage'
+import { getVendorBySlug } from '@/data/vendors'
 import { BASE_URL } from '@/lib/seo'
 
 export const metadata: Metadata = {
@@ -24,6 +26,7 @@ export default function SupportPage() {
     { label: 'Home', href: '/' },
     { label: 'Support', href: '/support', current: true },
   ]
+  const sponsorVendor = getVendorBySlug('floggin-farmers')
 
   return (
     <div className="min-h-screen bg-black">
@@ -40,6 +43,52 @@ export default function SupportPage() {
               supporting it helps keep everything online and improving.
             </p>
           </header>
+
+          {sponsorVendor ? (
+            <section className="mb-8">
+              <div className="relative overflow-visible rounded-2xl border border-amber-300/40 bg-black/70 p-5 vendor-sponsor-glitter">
+                <span className="sponsor-spotlight-label">
+                  Keep this site community funded
+                </span>
+                <div className="flex flex-col md:flex-row md:items-center gap-6">
+                  <VendorImage
+                    src={sponsorVendor.logo125Url}
+                    alt={`${sponsorVendor.name} logo`}
+                    size={125}
+                    className="flex-shrink-0"
+                  />
+                  <div className="min-w-0 flex-1">
+                    <p className="text-xs uppercase tracking-[0.2em] text-amber-200/90">
+                      Sponsor spotlight
+                    </p>
+                    <h2 className="text-3xl font-serif font-semibold text-white mt-2">
+                      <Link href={`/vendors/${sponsorVendor.slug}`} className="underline underline-offset-4 decoration-amber-200/40 hover:decoration-amber-200/80">
+                        {sponsorVendor.name}
+                      </Link>
+                    </h2>
+                    <p className="text-sm text-gray-200 mt-2 leading-relaxed">
+                      Sponsor for February: Floggin Farmers. Reach out to Brax if you would like to support the site for a month.
+                    </p>
+                    <div className="mt-4 flex flex-wrap gap-3">
+                      <Link href={`/vendors/${sponsorVendor.slug}`} className="btn-primary px-3 py-1.5 text-sm">
+                        View Sponsor
+                      </Link>
+                      {sponsorVendor.websiteUrl ? (
+                        <a
+                          href={sponsorVendor.websiteUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="btn-outline px-3 py-1.5 text-sm"
+                        >
+                          Visit Shop
+                        </a>
+                      ) : null}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+          ) : null}
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <section className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl p-6">
