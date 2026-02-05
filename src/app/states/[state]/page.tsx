@@ -5,6 +5,7 @@ import Link from 'next/link'
 import EventCard from '@/components/EventCard'
 import DungeonLogo from '@/components/DungeonLogo'
 import Breadcrumb from '@/components/Breadcrumb'
+import SupportCTAInline from '@/components/SupportCTAInline'
 import { BASE_URL } from '@/lib/seo'
 import { notFound } from 'next/navigation'
 
@@ -115,7 +116,8 @@ export default function StatePage({ params }: PageProps) {
     <div className="min-h-screen bg-black">
       <div className="container-custom py-16">
         <Breadcrumb items={breadcrumbItems} />
-        
+        <SupportCTAInline contextLabel="States" />
+
         {/* Hero Section */}
         <div className="mb-12">
           <h1 className="text-4xl md:text-6xl font-serif font-bold text-white mb-4">

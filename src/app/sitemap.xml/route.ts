@@ -38,16 +38,24 @@ export async function GET() {
     "Cache-Control": "public, max-age=600, s-maxage=600, stale-while-revalidate=86400"
   }
 
-  // Core URLs always present (with sensible defaults)
+  // Core URLs always present (with sensible defaults) – matches fallback coverage
   const today = new Date().toISOString().slice(0, 10)
   const core: UrlEntry[] = [
     { loc: `${BASE}/`, lastmod: today, changefreq: 'daily', priority: 1.0 },
+    { loc: `${BASE}/about`, changefreq: 'monthly', priority: 0.5 },
+    { loc: `${BASE}/accessibility`, changefreq: 'monthly', priority: 0.4 },
+    { loc: `${BASE}/contact`, changefreq: 'monthly', priority: 0.5 },
+    { loc: `${BASE}/privacy`, changefreq: 'monthly', priority: 0.3 },
+    { loc: `${BASE}/terms`, changefreq: 'monthly', priority: 0.3 },
+    { loc: `${BASE}/support`, changefreq: 'monthly', priority: 0.5 },
+    { loc: `${BASE}/report`, changefreq: 'monthly', priority: 0.4 },
     { loc: `${BASE}/events`, changefreq: 'weekly', priority: 0.8 },
     { loc: `${BASE}/dungeons`, changefreq: 'weekly', priority: 0.8 },
     { loc: `${BASE}/education`, changefreq: 'monthly', priority: 0.6 },
     { loc: `${BASE}/calendar`, changefreq: 'daily', priority: 0.7 },
     { loc: `${BASE}/guidelines`, changefreq: 'monthly', priority: 0.5 },
-    { loc: `${BASE}/states`, changefreq: 'monthly', priority: 0.5 }
+    { loc: `${BASE}/states`, changefreq: 'monthly', priority: 0.5 },
+    { loc: `${BASE}/vendors`, changefreq: 'weekly', priority: 0.7 }
   ]
   
   // Add all state hub pages

@@ -3,6 +3,7 @@ import { getAllEvents } from '@/data/events'
 import { getAllDungeons } from '@/data/dungeons'
 import Link from 'next/link'
 import Breadcrumb from '@/components/Breadcrumb'
+import SupportCTAInline from '@/components/SupportCTAInline'
 import { BASE_URL } from '@/lib/seo'
 import { CONTACT_US_LABEL } from '@/lib/submissionContact'
 
@@ -86,7 +87,8 @@ export default function StatesIndexPage() {
     <div className="min-h-screen bg-black">
       <div className="container-custom py-16">
         <Breadcrumb items={breadcrumbItems} />
-        
+        <SupportCTAInline contextLabel="States" />
+
         {/* Hero Section */}
         <div className="mb-12 text-center">
           <h1 className="text-4xl md:text-6xl font-serif font-bold text-white mb-4">

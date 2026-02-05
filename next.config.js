@@ -56,6 +56,25 @@ const nextConfig = {
       { source: '/dungeons/:slug/', destination: '/dungeons/:slug', permanent: true },
       { source: '/education/:slug/', destination: '/education/:slug', permanent: true },
 
+      // Event URL canonicalization: redirect year-based event slugs to year-agnostic URLs (SEO)
+      { source: '/events/indy-rope-expo-2026', destination: '/events/indy-rope-expo', permanent: true },
+      { source: '/events/claw-26', destination: '/events/claw', permanent: true },
+      { source: '/events/imslbb-2026', destination: '/events/imslbb', permanent: true },
+      { source: '/events/hugs-and-kisses-2026', destination: '/events/hugs-and-kisses', permanent: true },
+      { source: '/events/tes-fest-2026', destination: '/events/tes-fest', permanent: true },
+      { source: '/events/ropecraft-chicago-2026', destination: '/events/ropecraft-chicago', permanent: true },
+      { source: '/events/kink-odyssey-spring-2026', destination: '/events/kink-odyssey-spring', permanent: true },
+      { source: '/events/fetish-con-2026', destination: '/events/fetish-con', permanent: true },
+      { source: '/events/domcon-new-orleans-2026', destination: '/events/domcon-new-orleans', permanent: true },
+      { source: '/events/women-of-drummer-2026', destination: '/events/women-of-drummer', permanent: true },
+      { source: '/events/maul-20th-anniversary-weekend-2026', destination: '/events/maul-20th-anniversary-weekend', permanent: true },
+      { source: '/events/rehoboth-beach-leather-weekend-2025', destination: '/events/rehoboth-beach-leather-weekend', permanent: true },
+      { source: '/events/nepah-2026', destination: '/events/nepah', permanent: true },
+      { source: '/events/fire-island-leather-weekend-2026', destination: '/events/fire-island-leather-weekend', permanent: true },
+      { source: '/events/mid-atlantic-leather-weekend-2026', destination: '/events/mid-atlantic-leather-weekend', permanent: true },
+      { source: '/events/elevation-rope-2026', destination: '/events/elevation-rope', permanent: true },
+      { source: '/events/cure-2026', destination: '/events/cure', permanent: true },
+
       // Strip AMP format parameter
       {
         source: '/:path*',

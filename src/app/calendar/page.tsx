@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { Metadata } from 'next'
 import { CalendarStructuredData } from '@/components/StructuredData'
 import Breadcrumb from '@/components/Breadcrumb'
+import SupportCTAInline from '@/components/SupportCTAInline'
 import CalendarClient from '@/components/CalendarClient'
 
 // Generate metadata for SEO
@@ -55,6 +56,7 @@ export default function CalendarPage() {
       <CalendarStructuredData />
       <div className="container-custom py-16">
         <Breadcrumb items={breadcrumbItems} />
+        <SupportCTAInline contextLabel="Calendar" />
         <CalendarClient allEvents={eventsList} />
       </div>
     </main>

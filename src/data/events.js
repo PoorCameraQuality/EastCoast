@@ -2,7 +2,7 @@
 export const events = [
   {
     "name": "Indy Rope Expo 2026",
-    "slug": "indy-rope-expo-2026",
+    "slug": "indy-rope-expo",
     "date": {
       "start": "2026-02-06",
       "end": "2026-02-08",
@@ -39,7 +39,7 @@ export const events = [
   },
   {
     "name": "CLAW 26",
-    "slug": "claw-26",
+    "slug": "claw",
     "date": {
       "start": "2026-04-02",
       "end": "2026-04-05",
@@ -54,7 +54,7 @@ export const events = [
     "excerpt": "CLAW 26 is a 21+ leather and kink weekend in Columbus, OH featuring a full Hyatt Regency hotel buyout, a 118-booth VendorMart, 150+ classes, two BDSM dungeons, and dozens of socials and signature events.",
     "longDescription": "CLAW 26 takes over the Hyatt Regency Columbus from April 2-5, 2026 for a full-property leather and kink weekend. This nonprofit-run event welcomes thousands of attendees for education, socializing, and nightlife in a hotel that becomes a temporary leather village.\n\n**Event Highlights:**\n\n**VendorMart** - 118-booth marketplace with vendors, gear, and fetish wear.\n\n**Skills & Education** - 150+ classes and workshops across a wide range of interests and experience levels.\n\n**Play Spaces** - Two BDSM dungeons and dedicated play areas.\n\n**Socials & Mixers** - Dozens of gatherings and themed events throughout the weekend.\n\n**Signature Experiences** - International Leather Family Dinner, World Famous Cigar Deck, Fetish Speed Dating, Pet/Pup Moshes, Silent Auctions, Kinky Art Show, Leather Game Shows, Drag Brunch & Bingo, Bound & Beautiful, and Kinky Kabaret.\n\n**Hotel & Registration:**\n\n**Host Hotel Buyout** - The Hyatt Regency Columbus is reserved for CLAW attendees from Thursday evening through Monday morning.\n\n**CLAW Package Required** - A valid CLAW registration package is required to book at the host hotel.\n\n**Age Requirement:** CLAW 26 is a 21+ only event.",
     "website": "https://clawinfo.org/",
-    "logo": "/images/placeholder-logo.svg",
+    "logo": "/images/claw-26.svg",
     "organizer": "CLAW Corp",
     "venue": "Hyatt Regency Columbus",
     "hotel": "Hyatt Regency Columbus, OH",
@@ -86,7 +86,7 @@ export const events = [
   },
   {
     "name": "International Ms. Leather & International Ms. Bootblack (IMsLBB) 2026",
-    "slug": "imslbb-2026",
+    "slug": "imslbb",
     "date": {
       "start": "2026-04-23",
       "end": "2026-04-26",
@@ -101,7 +101,7 @@ export const events = [
     "excerpt": "IMsLBB 2026 is the International Ms. Leather & International Ms. Bootblack contest weekend in Piscataway, NJ with a full hotel takeover, community programming, and contests.",
     "longDescription": "IMsLBB 2026 runs April 23-26, 2026 in Piscataway, NJ at the Holiday Inn Piscataway - Somerset. This annual event features a complete hotel takeover alongside the International Ms. Leather and International Ms. Bootblack contests, plus community programming throughout the weekend.\n\n**Venue:** Holiday Inn Piscataway - Somerset, an IHG Hotel, 21 Kingsbridge Road, Piscataway, NJ 08854.\n\nCheck the official site for schedule, registration, and accessibility updates.",
     "website": "https://www.imslbb.com/",
-    "logo": "/images/placeholder-logo.svg",
+    "logo": "/images/imslbb-2026.jpg",
     "organizer": "IMsLBB",
     "venue": "Holiday Inn Piscataway - Somerset",
     "hotel": "Holiday Inn Piscataway - Somerset, 21 Kingsbridge Road, Piscataway, NJ 08854",
@@ -121,7 +121,7 @@ export const events = [
   },
   {
     "name": "Hugs & Kisses 2026",
-    "slug": "hugs-and-kisses-2026",
+    "slug": "hugs-and-kisses",
     "date": {
       "start": "2026-02-06",
       "end": "2026-02-08",
@@ -136,7 +136,7 @@ export const events = [
     "excerpt": "Hugs & Kisses 2026 is a full hotel takeover with leather workshops, play spaces, and a Grand Gala.",
     "longDescription": "Hugs & Kisses 2026 runs February 6-8, 2026. This full hotel takeover features leather workshops, play spaces, and a Grand Gala. Visit the official event page for venue and registration details.",
     "website": "https://keystoneleathercontest.com/events",
-    "logo": "/images/placeholder-logo.svg",
+    "logo": "/images/hugs and kisses.PNG",
     "organizer": "Keystone Leather Contest",
     "features": [
       "Full Hotel Takeover",
@@ -152,7 +152,7 @@ export const events = [
   },
   {
     "name": "TES Fest 2026",
-    "slug": "tes-fest-2026",
+    "slug": "tes-fest",
     "date": {
       "start": "2026-07-02",
       "end": "2026-07-05",
@@ -188,7 +188,7 @@ export const events = [
   },
   {
     "name": "Ropecraft Chicago 2026",
-    "slug": "ropecraft-chicago-2026",
+    "slug": "ropecraft-chicago",
     "date": {
       "start": "2026-05-22",
       "end": "2026-05-25",
@@ -203,7 +203,7 @@ export const events = [
     "excerpt": "Ropecraft Chicago 2026 is a Memorial Day weekend rope-focused kink convention with classes across shibari, western bondage, power exchange, and play, plus nightly parties and community-focused spaces.",
     "longDescription": "Ropecraft Chicago 2026 returns to the Windy City on May 22-25, 2026 for a rope-focused kink convention built around inclusive education, play, and community connection.\n\n**Event Highlights:**\n\n**Comprehensive Rope Education** - Classes for tops, bottoms, and switches across shibari, western bondage, kinbaku, solo tying, and more.\n\n**Ropenspace** - A facilitated, peer-to-peer learning space using Open Space Technology with instructors in attendance.\n\n**Playspace & Parties** - State-of-the-art playspace with parties every night and dedicated practice areas.\n\n**Community & Connection** - Catered meet-and-greet, special interest group support, and dedicated peer support resources.\n\n**Vendor Bazaar & Art Opportunities** - Vendor bazaar plus art display opportunities and special events throughout the weekend.\n\n**Registration & Hotel:**\n\n**Registration Opens** - January 1, 2026 for event tickets.\n\n**Hotel Room Bookings** - Expected to open by January 7, 2026.\n\nRopecraft is designed to be \"knot-for everyone\"—welcoming rope enthusiasts of all experience levels in a sex-positive, consent-centered environment.",
     "website": "https://ropecraft.net/",
-    "logo": "/images/placeholder-logo.svg",
+    "logo": "/images/ropecraft-chicago-2026.png",
     "organizer": "Ropecraft",
     "registrationOpens": "January 1, 2026",
     "hotel": "Chicago hotel info via registration (opens by January 7, 2026)",
@@ -230,7 +230,7 @@ export const events = [
   },
   {
     "name": "Kink Odyssey - Spring 2026",
-    "slug": "kink-odyssey-spring-2026",
+    "slug": "kink-odyssey-spring",
     "date": {
       "start": "2026-05-27",
       "end": "2026-05-31",
@@ -245,7 +245,7 @@ export const events = [
     "excerpt": "Kink Odyssey - Spring is a five-day BDSM exploration retreat at Easton Mountain in Greenwich, NY with experiential workshops, facilitated play parties, and community connection for both newcomers and veterans.",
     "longDescription": "Kink Odyssey - Spring runs May 27-31, 2026 at Easton Mountain Retreat Center in Greenwich, NY. This immersive retreat blends experiential kink workshops with time for connection, practice, and facilitated dungeon play in a welcoming community.\n\n**Event Highlights:**\n\n**Facilitated Play Parties** - Evening play parties led by dungeon masters with opening circles to help participants connect.\n\n**Experiential Workshops** - Hands-on learning across a variety of kink topics including rope bondage, flogging, mummification, puppy play, and more.\n\n**Community Circle & Agreements** - Opening session focused on safety, etiquette, and negotiation skills.\n\n**Optional Small-Group Check-ins** - Daily groups for reflection, support, and deeper connection.\n\n**Fetish-Friendly Atmosphere** - Bring your leather, rubber, boots, and toys for a weekend of exploration.\n\n**Rates & Accommodations:**\n\n**All-Inclusive Retreat** - Rates include workshops, housing, three meals per day, snacks, and access to campus amenities like trails and sauna.",
     "website": "https://www.eastonmountain.org/events/kink-26-spring",
-    "logo": "/images/placeholder-logo.svg",
+    "logo": "/images/kink-odyssey-spring-2026.jpg",
     "organizer": "Easton Mountain Retreat",
     "venue": "Easton Mountain Retreat Center",
     "hotel": "Easton Mountain Retreat Center, 391 Herrington Hill Road, Greenwich, NY 12834",
@@ -269,7 +269,7 @@ export const events = [
   },
   {
     "name": "Fetish Con XXIV",
-    "slug": "fetish-con-2026",
+    "slug": "fetish-con",
     "date": {
       "start": "2026-08-06",
       "end": "2026-08-09",
@@ -284,7 +284,7 @@ export const events = [
     "excerpt": "Fetish Con XXIV is a four-day fetish trade show and convention in St. Petersburg, FL featuring workshops on consent and kink safety, a massive vendor marketplace, live demos, networking, and signature events.",
     "longDescription": "Fetish Con XXIV runs August 6-9, 2026 at the Hilton St. Petersburg Bayfront. One of the world’s most recognized fetish conventions, Fetish Con brings together creators, performers, educators, businesses, and fans for four days of community, education, art, and celebration.\n\n**Event Highlights:**\n\n**Education & Workshops** - Consent and kink safety sessions, plus a full schedule of kinky classes.\n\n**Vendor Marketplace** - Latex, corsets, shoes, rope, toys, and more from a wide range of vendors.\n\n**Live Demonstrations & Networking** - Industry-focused programming and community connections.\n\n**Signature Events** - Bondage Battle VI, George Perez Superheroine Showdown XVIII, The Twisted Dungeon, Pervy Pool Parties, and the Fetish Ball & Bash.\n\n**Official Venue:** Hilton St. Petersburg Bayfront, 333 1st Street S, Saint Petersburg, FL 33701.",
     "website": "https://fetishcon.com/",
-    "logo": "/images/placeholder-logo.svg",
+    "logo": "/images/fetish-con-2026.png",
     "organizer": "XIX Events, LLC",
     "venue": "Hilton St. Petersburg Bayfront",
     "hotel": "Hilton St. Petersburg Bayfront, 333 1st Street S, Saint Petersburg, FL 33701",
@@ -309,7 +309,7 @@ export const events = [
   },
   {
     "name": "DomCon New Orleans 2026",
-    "slug": "domcon-new-orleans-2026",
+    "slug": "domcon-new-orleans",
     "date": {
       "start": "2026-09-30",
       "end": "2026-10-04",
@@ -324,7 +324,7 @@ export const events = [
     "excerpt": "DomCon New Orleans 2026 is a BDSM and fetish convention with education, socials, and community programming in New Orleans, LA.",
     "longDescription": "DomCon New Orleans 2026 runs September 30 - October 4, 2026. This BDSM and fetish convention features classes, workshops, social events, and community programming for attendees and industry guests.\n\nCheck the official DomCon site for hotel, registration, and schedule updates.",
     "website": "https://www.domcon.com/",
-    "logo": "/images/placeholder-logo.svg",
+    "logo": "/images/domcon-new-orleans-2026.png",
     "organizer": "DomCon",
     "venue": "New Orleans, LA",
     "features": [
@@ -342,7 +342,7 @@ export const events = [
   },
   {
     "name": "Women of Drummer 2026",
-    "slug": "women-of-drummer-2026",
+    "slug": "women-of-drummer",
     "date": {
       "start": "2026-09-17",
       "end": "2026-09-20",
@@ -357,7 +357,7 @@ export const events = [
     "excerpt": "Women of Drummer 2026 is a four-day leather community gathering for women, non-binary folx, and friends featuring connection, play, and celebration in Northeast Maryland.",
     "longDescription": "Women of Drummer 2026 takes place September 17-20, 2026 in Northeast Maryland. This four-day leather community gathering celebrates women’s leather culture with opportunities to connect, play, and share in community.\n\nDetails for programming, venues, and ticketing are posted on the official site.",
     "website": "https://www.womenofdrummer.com/",
-    "logo": "/images/placeholder-logo.svg",
+    "logo": "/images/women-of-drummer-2026.png",
     "organizer": "Women of Drummer",
     "features": [
       "Four-Day Leather Community Gathering",
@@ -374,7 +374,7 @@ export const events = [
   },
   {
     "name": "MAUL 20th Anniversary Weekend",
-    "slug": "maul-20th-anniversary-weekend-2026",
+    "slug": "maul-20th-anniversary-weekend",
     "date": {
       "start": "2026-09-18",
       "end": "2026-09-18",
@@ -389,7 +389,7 @@ export const events = [
     "excerpt": "MAUL’s 20th Anniversary Weekend celebrates two decades of Mid-Atlantic Uniform League legacy, pride, and community in Providence, RI.",
     "longDescription": "Join Mid-Atlantic Uniform League (MAUL) for its 20th Anniversary Weekend in Providence, RI on September 18, 2026. The event celebrates twenty years of legacy, pride, and community for uniform and leather enthusiasts.\n\nSee the official MAUL event page for schedule and venue updates.",
     "website": "https://www.uniformleague.org/",
-    "logo": "/images/placeholder-logo.svg",
+    "logo": "/images/maul.PNG",
     "organizer": "Mid-Atlantic Uniform League (MAUL)",
     "features": [
       "20th Anniversary Celebration",
@@ -405,7 +405,7 @@ export const events = [
   },
   {
     "name": "Rehoboth Beach Leather Weekend 2025",
-    "slug": "rehoboth-beach-leather-weekend-2025",
+    "slug": "rehoboth-beach-leather-weekend",
     "date": {
       "start": "2025-10-03",
       "end": "2025-10-05",
@@ -420,7 +420,7 @@ export const events = [
     "excerpt": "Rehoboth Beach Leather Weekend 2025 is a multi-day leather celebration at Aqua Bar & Grill with socials, a harness dance, and the Rehoboth Leather contest weekend.",
     "longDescription": "Rehoboth Beach Leather Weekend 2025 takes place October 3-5, 2025 in Rehoboth Beach, DE at Aqua Bar & Grill. The weekend features a Friday Meat & Greet, a Harness Dance, contestant interviews, the Rehoboth Leather contest, and a Sunday closing beer bust.\n\nCheck the official site for the full schedule and updates.",
     "website": "https://rehobothbeachleather.com/",
-    "logo": "/images/placeholder-logo.svg",
+    "logo": "/images/rehoboth-beach-leather-weekend-2025.jpg",
     "organizer": "Rehoboth Beach Leather Weekend",
     "venue": "Aqua Bar & Grill",
     "features": [
@@ -439,7 +439,7 @@ export const events = [
   },
   {
     "name": "NEPAH 2026 (Northeast Pet & Handler Weekend)",
-    "slug": "nepah-2026",
+    "slug": "nepah",
     "date": {
       "start": "2025-10-10",
       "end": "2025-10-12",
@@ -454,7 +454,7 @@ export const events = [
     "excerpt": "NEPAH 2026 is the Northeast Pet & Handler Weekend in Philadelphia, PA with community events, contests, and pet/handler programming. Dates are listed as Oct 10-12, 2025 on the official site.",
     "longDescription": "NEPAH 2026 (Northeast Pet & Handler Weekend) takes place in Philadelphia, PA with community gatherings, contests, and pet/handler-focused programming. The official site lists dates as October 10-12, 2025 with the 2026 event branding.\n\n**Location:** 254 South 12th Street, Philadelphia, PA 19107.",
     "website": "https://www.nepah.org/",
-    "logo": "/images/placeholder-logo.svg",
+    "logo": "/images/nepah-2026.png",
     "organizer": "NEPAH",
     "venue": "Philadelphia, PA",
     "features": [
@@ -472,7 +472,7 @@ export const events = [
   },
   {
     "name": "Fire Island Leather Weekend 2026",
-    "slug": "fire-island-leather-weekend-2026",
+    "slug": "fire-island-leather-weekend",
     "date": {
       "start": "2026-05-15",
       "end": "2026-05-17",
@@ -487,7 +487,7 @@ export const events = [
     "excerpt": "Fire Island Leather Weekend 2026 is a premier NYC-area leather weekend hosted by Excelsior MC on Fire Island, supporting LGBTQ+ nonprofits with parties, socials, and community events.",
     "longDescription": "Fire Island Leather Weekend 2026 runs May 15-17, 2026 on Fire Island, NY. Hosted by Excelsior MC, this premier leather weekend features parties and community events that support LGBTQ+ nonprofits on Fire Island.\n\n**Theme:** AREA 51: Deep Probe Ahead.\n\n**Tickets:** Early Bird tickets available through January 31, 2026.",
     "website": "https://www.excelsiormc.com/fire-island-leather-weekend",
-    "logo": "/images/placeholder-logo.svg",
+    "logo": "/images/fire-island-leather-weekend-2026.png",
     "organizer": "Excelsior MC",
     "venue": "Fire Island, NY",
     "features": [
@@ -506,7 +506,7 @@ export const events = [
   },
   {
     "name": "Mid-Atlantic Leather Weekend 2026",
-    "slug": "mid-atlantic-leather-weekend-2026",
+    "slug": "mid-atlantic-leather-weekend",
     "date": {
       "start": "2026-01-16",
       "end": "2026-01-19",
@@ -572,7 +572,7 @@ export const events = [
   },
   {
     "name": "Elevation Rope 2026",
-    "slug": "elevation-rope-2026",
+    "slug": "elevation-rope",
     "date": {
       "start": "2026-07-16",
       "end": "2026-07-21",
@@ -1171,7 +1171,7 @@ export const events = [
   },
   {
     "name": "CURE 2026",
-    "slug": "cure-2026",
+    "slug": "cure",
     "date": {
       "start": "2026-01-09",
       "end": "2026-01-11",
