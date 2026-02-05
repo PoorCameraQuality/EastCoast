@@ -47,7 +47,7 @@ export default function CalendarPage() {
   const eventsList = getAllEvents()
   const breadcrumbItems = [
     { label: 'Home', href: '/' },
-    { label: 'Calendar', current: true }
+    { label: 'Calendar', href: '/calendar', current: true }
   ]
 
   return (

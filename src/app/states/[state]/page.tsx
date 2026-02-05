@@ -100,7 +100,7 @@ export default function StatePage({ params }: PageProps) {
   const breadcrumbItems = [
     { label: 'Home', href: '/' },
     { label: 'States', href: '/states' },
-    { label: stateInfo.name, current: true }
+    { label: stateInfo.name, href: `/states/${params.state}`, current: true }
   ]
 
   return (

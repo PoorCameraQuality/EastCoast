@@ -1,11 +1,12 @@
 import { Metadata } from 'next'
 import Breadcrumb from '@/components/Breadcrumb'
-import ArticleSubmissionForm from '@/components/education/ArticleSubmissionForm'
 import { BASE_URL } from '@/lib/seo'
+import Link from 'next/link'
+import { CONTACT_US_LABEL } from '@/lib/submissionContact'
 
 export const metadata: Metadata = {
   title: 'Submit Article - Kink Education | East Coast Kink Events',
-  description: 'Submit your educational article for review and potential publication on our kink education platform.',
+  description: 'To submit an educational article, please contact us.',
   keywords: 'submit article, kink education, BDSM education, community contribution',
   alternates: {
     canonical: `${BASE_URL}/education/submit`,
@@ -36,7 +37,7 @@ export default function SubmitArticlePage() {
   const breadcrumbItems = [
     { label: 'Home', href: '/' },
     { label: 'Education', href: '/education' },
-    { label: 'Submit Article', current: true }
+    { label: 'Submit Article', href: '/education/submit', current: true }
   ]
 
   return (
@@ -51,7 +52,7 @@ export default function SubmitArticlePage() {
               Submit an Article
             </h1>
             <p className="text-lg text-subtle max-w-3xl mx-auto">
-              Share your knowledge and contribute to the kink community through educational content.
+              Article submissions are currently handled through Discord.
             </p>
           </div>
 
@@ -101,8 +102,15 @@ export default function SubmitArticlePage() {
             </div>
           </div>
 
-          {/* Submission Form */}
-          <ArticleSubmissionForm />
+          {/* Submission instructions */}
+          <div className="card-elegant">
+            <h2 className="text-2xl font-serif font-semibold text-white mb-4">
+              How to submit
+            </h2>
+            <Link href="/contact" className="btn-primary inline-flex justify-center" aria-label="Contact us">
+              {CONTACT_US_LABEL}
+            </Link>
+          </div>
         </div>
       </div>
     </div>

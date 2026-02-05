@@ -81,7 +81,7 @@ export default function EventsPageNumber({ params }: PageProps) {
   const breadcrumbItems = [
     { label: 'Home', href: '/' },
     { label: 'Events', href: '/events' },
-    { label: `Page ${pageNum}`, current: true }
+    { label: `Page ${pageNum}`, href: `/events/page/${pageNum}`, current: true }
   ]
 
   return (

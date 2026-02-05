@@ -44,7 +44,7 @@ export const metadata: Metadata = {
 export default function AboutPage() {
   const breadcrumbItems = [
     { label: 'Home', href: '/' },
-    { label: 'About', current: true }
+    { label: 'About', href: '/about', current: true }
   ]
 
   const structuredData = {

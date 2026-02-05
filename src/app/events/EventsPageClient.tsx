@@ -9,15 +9,14 @@ import { useSearchParams } from 'next/navigation'
 import { EventListStructuredData } from '@/components/StructuredData'
 import Breadcrumb from '@/components/Breadcrumb'
 import Search from '@/components/Search'
-import EventSubmissionForm from '@/components/events/EventSubmissionForm'
+import { CONTACT_US_LABEL } from '@/lib/submissionContact'
+import SupportCTAInline from '@/components/SupportCTAInline'
 
 export default function EventsPageClient() {
   const allEvents = getAllEvents()
   const allDungeons = getAllDungeons()
   const categories = useMemo(() => ['Outdoor Events', 'Indoor Events'], [])
   const [selectedCategory, setSelectedCategory] = useState('All Events')
-  const [showSubmitForm, setShowSubmitForm] = useState(false)
-  const [formSubmitted, setFormSubmitted] = useState(false)
   const searchParams = useSearchParams()
 
   // Handle URL parameters for filtering
@@ -98,18 +97,10 @@ export default function EventsPageClient() {
 
   const breadcrumbItems = [
     { label: 'Home', href: '/' },
-    { label: 'Events', current: true }
+    { label: 'Events', href: '/events', current: true }
   ]
 
-  const handleFormSubmission = () => {
-    setFormSubmitted(true)
-    setShowSubmitForm(false)
-  }
-
-  const handleCancelSubmission = () => {
-    setShowSubmitForm(false)
-    setFormSubmitted(false)
-  }
+  // Event submissions route through /contact.
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-black via-dark-900 to-black relative overflow-hidden">
@@ -124,6 +115,7 @@ export default function EventsPageClient() {
       <EventListStructuredData />
       <div className="container-custom py-16 relative z-10">
         <Breadcrumb items={breadcrumbItems} />
+        <SupportCTAInline contextLabel="Events" />
         
         {/* Enhanced Header Section */}
         <div className="text-center mb-16">
@@ -148,39 +140,17 @@ export default function EventsPageClient() {
             </div>
           </div>
 
-          {/* Enhanced Submit Event Button */}
-          {!formSubmitted && (
-            <div className="mb-8">
-              <button
-                onClick={() => setShowSubmitForm(!showSubmitForm)}
-                className="group inline-block bg-gradient-to-r from-primary-600 via-blue-600 to-primary-700 text-white font-bold py-4 px-8 rounded-full hover:from-primary-700 hover:via-blue-700 hover:to-primary-800 transition-all duration-300 shadow-xl hover:shadow-primary-500/25 hover:scale-105"
-              >
-                <span className="flex items-center gap-2 justify-center group-hover:translate-x-1 transition-transform">
-                  {showSubmitForm ? 'Cancel Submission' : 'Submit Your Event'}
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                  </svg>
-                </span>
-              </button>
-            </div>
-          )}
-
-          {/* Enhanced Success Message */}
-          {formSubmitted && (
-            <div className="mb-8">
-              <div className="backdrop-blur-xl bg-green-500/20 border border-green-500/50 rounded-2xl p-4 max-w-md mx-auto shadow-2xl">
-                <p className="text-green-400 font-medium">Event submitted successfully! Thank you for your submission.</p>
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* Enhanced Submit Event Form */}
-        {showSubmitForm && (
-          <div className="mb-16 backdrop-blur-xl bg-white/10 border border-white/20 rounded-2xl p-8 shadow-2xl">
-            <EventSubmissionForm onSubmissionComplete={handleFormSubmission} />
+          {/* Event submission guidance */}
+          <div className="mb-8">
+            <Link
+              href="/contact"
+              className="inline-flex items-center justify-center px-6 py-3 rounded-full bg-primary-600/15 border border-primary-500/25 text-primary-200 hover:bg-primary-600/25 hover:border-primary-400/35 transition"
+              aria-label="Contact us"
+            >
+              {CONTACT_US_LABEL}
+            </Link>
           </div>
-        )}
+        </div>
 
         {/* Enhanced Filter Section */}
         <div className="mb-12">

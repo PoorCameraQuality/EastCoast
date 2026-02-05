@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import UserMenu from './auth/UserMenu'
+import { CONTACT_US_LABEL } from '@/lib/submissionContact'
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -55,11 +56,11 @@ export default function Header() {
             {[
               { href: '/events', label: 'Events' },
               { href: '/dungeons', label: 'Dungeons' },
-              { href: '/states', label: 'States' },
               { href: '/education', label: 'Education' },
+              { href: '/vendors', label: 'Vendors' },
               { href: '/calendar', label: 'Calendar' },
-              { href: '/about', label: 'About' },
-              { href: '/contact', label: 'Contact' }
+              { href: '/states', label: 'States' },
+              { href: '/support', label: 'Support' },
             ].map((link) => (
               <Link
                 key={link.href}
@@ -78,9 +79,13 @@ export default function Header() {
             ))}
             
             <div className="mx-2 w-px h-6 bg-dark-600"></div>
-            
-            <Link href="/events" className="btn-outline text-sm px-5 py-2" role="button" aria-label="Add your event for listing">
-              Add Event
+
+            <Link
+              href="/contact"
+              className="btn-outline text-sm px-5 py-2 whitespace-nowrap"
+              aria-label="Contact us"
+            >
+              {CONTACT_US_LABEL}
             </Link>
             
             <div className="ml-2">
@@ -119,9 +124,11 @@ export default function Header() {
               {[
                 { href: '/events', label: 'Events', icon: '🎪' },
                 { href: '/dungeons', label: 'Dungeons', icon: '🏰' },
-                { href: '/states', label: 'States', icon: '🗺️' },
                 { href: '/education', label: 'Education', icon: '📚' },
+                { href: '/vendors', label: 'Vendors', icon: '🛍️' },
                 { href: '/calendar', label: 'Calendar', icon: '📅' },
+                { href: '/states', label: 'States', icon: '🗺️' },
+                { href: '/support', label: 'Support', icon: '❤️' },
                 { href: '/about', label: 'About', icon: 'ℹ️' },
                 { href: '/contact', label: 'Contact', icon: '📧' }
               ].map((link) => (
@@ -142,8 +149,12 @@ export default function Header() {
             
             <div className="mt-6 pt-6 border-t border-dark-700/50">
               <div className="flex justify-center space-x-4">
-                <Link href="/events" className="btn-outline w-full text-center" role="button" aria-label="Add your event for listing">
-                  Add Event
+                <Link
+                  href="/contact"
+                  className="btn-outline w-full text-center"
+                  aria-label="Contact us"
+                >
+                  {CONTACT_US_LABEL}
                 </Link>
                 <div className="w-32">
                   <UserMenu />

@@ -296,6 +296,94 @@ export const dungeons = [
       "description": "Welcome to Lifestyle America Social Club Inc. - Where Connection, Growth, and Celebration Come Together. We exist to bridge generational gaps and create a space where connection, learning, and growth are at the heart of everything we do.",
       "keywords": "The_LODGE, Lifestyle America Social Club, Dover Plains, New York, BDSM dungeon, kink community, LASC-HVLC, Hudson Valley, social club, inclusive community"
     }
+  },
+  {
+    "name": "The Aviary Philly",
+    "slug": "the-aviary-philly",
+    "location": {
+      "city": "Philadelphia",
+      "state": "PA",
+      "address": "Philadelphia, PA"
+    },
+    "category": "Kink Club",
+    "excerpt": "Details coming soon.",
+    "description": {
+      "long": "Details coming soon."
+    },
+    "website": "https://theaviaryphilly.com/",
+    "logo": "/images/theaviary.jpg",
+    "images": [],
+    "seo": {
+      "title": "The Aviary Philly | East Coast Kink Events",
+      "description": "Details coming soon.",
+      "keywords": "The Aviary Philly, Philadelphia, kink club"
+    }
+  },
+  {
+    "name": "PLEASUREcation Party",
+    "slug": "pleasurecation-party",
+    "location": {
+      "city": "Philadelphia",
+      "state": "PA",
+      "address": "Philadelphia, PA"
+    },
+    "category": "BDSM/Swinger Party",
+    "excerpt": "BDSM/Swinger sex-positive dance and play party held on the first Friday of each month.",
+    "description": {
+      "long": "PLEASUREcation Party is a BDSM/Swinger sex-positive dance and play party held on the first Friday of each month. Dress to impress with fetish, leather, latex, bondage gear, club-wear, lingerie, suits, all black, or the month's theme. Creator and host Kati Kill has worked in the adult industry since the early 2000s and has been part of the Pleasure Garden Club since 2005."
+    },
+    "website": "https://pleasurecationparty.com/",
+    "logo": "/images/pleasurecation-party.jpg",
+    "images": [],
+    "seo": {
+      "title": "PLEASUREcation Party | East Coast Kink Events",
+      "description": "BDSM/Swinger sex-positive dance and play party held on the first Friday of each month.",
+      "keywords": "PLEASUREcation Party, Philadelphia, BDSM party, swinger party, sex-positive"
+    }
+  },
+  {
+    "name": "Saints & Sinners",
+    "slug": "saints-and-sinners-philadelphia",
+    "location": {
+      "city": "Philadelphia",
+      "state": "PA",
+      "address": "Philadelphia and NE Philadelphia, PA"
+    },
+    "category": "Swingers Club",
+    "excerpt": "Adult playground for swingers with playrooms, lounge areas, common areas, and dance floors in Philadelphia.",
+    "description": {
+      "long": "Saints & Sinners is an adult playground for swingers with playrooms, lounge areas, common areas, and dance floors. The club hosts recurring events for Philadelphia and NE Philadelphia. Membership options are available for single females, couples, and single males."
+    },
+    "website": "https://saintsandsinnersclubs.com/",
+    "logo": "/images/sinners.jpg",
+    "images": [],
+    "seo": {
+      "title": "Saints & Sinners - Philadelphia PA Swingers Club | East Coast Kink Events",
+      "description": "Adult playground for swingers with playrooms, lounge areas, common areas, and dance floors in Philadelphia.",
+      "keywords": "Saints & Sinners, Philadelphia swingers club, adult playground, lifestyle party"
+    }
+  },
+  {
+    "name": "The Korral",
+    "slug": "the-korral",
+    "location": {
+      "city": "Spring Grove",
+      "state": "PA",
+      "address": "5932 Colonial Valley Rd, Spring Grove, PA 17362"
+    },
+    "category": "Private Members Club",
+    "excerpt": "Private members-only, sex-positive club offering monthly Kink Nights focused on education, safer play, and consent-first practices.",
+    "description": {
+      "long": "The Korral is a private members-only, sex-positive club for open-minded adults in Spring Grove, PA.\n\nKink Night\nOnce a month on a Friday, the Korral hosts a Kink Night focused on education and a safe space to play and explore. It is not a traditional party night. The dancefloor is set with additional equipment, music is kept low, and there is no dancing. Each month typically focuses on one discipline with a demo and optional “tastings.” The following Sunday, the club may host a munch to continue the topic. Check the Events tab for details.\n\nSafety & consent guidelines\nConsent is always mandatory: “No” means no, “Maybe” means no, “IDK” means no, and only “Yes” means yes. No impact play is allowed in common areas (bar, dining room, store, selfie room, smoking room, quiet room, pool table room, locker rooms, or dance floor except on Kink Nights). Kink before you drink. Reserve rooms for one hour at a time and vacate between scenes. Keep noise minimal in hallways, especially the BDSM hallway. Do not engage with those actively scening. Wipe equipment before and after use. Aftercare supplies are available in the group room. Do not touch others’ implements without permission. Safety officers or the GM can call RED; all activity must stop immediately.\n\nVetting requirements (effective Jan 1, 2024)\nMembers must be vetted to participate in fire play (not wax play), rope suspension, hook suspension, mummification suspension, needle play, knife play, sounding, and Tesla wand (not violet wand). Vettings are scheduled during Kink Nights and require presenting your kit and a demo/scene. The Korral does not allow true CNC scenes.\n\nKink Intensives\nThe Korral hosts two Kink Intensives each year, in spring and fall.\n\nRooms available\nAfter Party Rooms are playrooms refreshed after closing, booked for a single night with check-in after 2am and check-out at 10am (continental breakfast included). Private Stay Rooms are reserved for the full weekend with 24/7 access, check-in Friday at 7pm and check-out Sunday at 10am (continental breakfast on Saturday and Sunday)."
+    },
+    "website": "https://thekorral.com/",
+    "logo": "/images/korral.png",
+    "images": [],
+    "seo": {
+      "title": "The Korral - Spring Grove PA Private Members Club | East Coast Kink Events",
+      "description": "Private members-only, sex-positive club in Spring Grove, PA with monthly Kink Nights focused on education, consent, and safer play.",
+      "keywords": "The Korral, Spring Grove, Pennsylvania, private members club, sex-positive, Kink Night, consent"
+    }
   }
 ];
 

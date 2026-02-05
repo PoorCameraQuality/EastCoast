@@ -5,6 +5,8 @@ import { supabase } from '@/lib/supabase'
 import ArticleCard from '@/components/education/ArticleCard'
 import Breadcrumb from '@/components/Breadcrumb'
 import Link from 'next/link'
+import { CONTACT_US_LABEL } from '@/lib/submissionContact'
+import SupportCTAInline from '@/components/SupportCTAInline'
 
 // Define the article type
 interface Article {
@@ -41,7 +43,7 @@ export default function EducationPageClient() {
 
   const breadcrumbItems = [
     { label: 'Home', href: '/' },
-    { label: 'Education', current: true }
+    { label: 'Education', href: '/education', current: true }
   ]
 
   useEffect(() => {
@@ -132,6 +134,7 @@ export default function EducationPageClient() {
 
       <div className="container mx-auto px-4 py-8 relative z-10">
         <Breadcrumb items={breadcrumbItems} />
+        <SupportCTAInline contextLabel="Education" />
         
         {/* Enhanced Header */}
         <div className="text-center mb-16">
@@ -203,8 +206,12 @@ export default function EducationPageClient() {
                 : `No articles found in the "${CATEGORIES.find(c => c.id === selectedCategory)?.name}" category.`
               }
             </p>
-            <Link href="/education/submit" className="btn-primary">
-              Submit an Article
+            <Link
+              href="/contact"
+              className="inline-flex items-center justify-center px-6 py-3 rounded-full bg-primary-600/20 border border-primary-500/30 text-primary-200 hover:bg-primary-600/30 hover:border-primary-400/40 transition"
+              aria-label="Contact us"
+            >
+              {CONTACT_US_LABEL}
             </Link>
           </div>
         )}
@@ -216,8 +223,12 @@ export default function EducationPageClient() {
             <p className="text-gray-300 mb-6">
               Have valuable insights to share with the community? Submit an educational article and help others learn and grow.
             </p>
-            <Link href="/education/submit" className="btn-primary">
-              Submit Article
+            <Link
+              href="/contact"
+              className="inline-flex items-center justify-center px-6 py-3 rounded-full bg-primary-600/20 border border-primary-500/30 text-primary-200 hover:bg-primary-600/30 hover:border-primary-400/40 transition"
+              aria-label="Contact us"
+            >
+              {CONTACT_US_LABEL}
             </Link>
           </div>
         </div>

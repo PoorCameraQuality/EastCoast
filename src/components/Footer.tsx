@@ -1,5 +1,8 @@
 // src/components/Footer.tsx
 import Link from "next/link";
+import { CONTACT_US_LABEL } from "@/lib/submissionContact";
+
+const DISCORD_INVITE_URL = "https://discord.gg/xcnGGyGsmT";
 
 const Section = ({
   title,
@@ -65,12 +68,30 @@ export default function Footer() {
             </p>
 
             <div className="mt-6">
-              <Link
-                href="/discord"
+              <a
+                href={DISCORD_INVITE_URL}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="inline-flex items-center rounded-lg bg-amber-400/90 px-3 py-2 text-sm font-medium text-black hover:bg-amber-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
+                aria-label="Join Discord (opens in a new tab)"
               >
                 Join Discord
-              </Link>
+              </a>
+            </div>
+
+            <div className="mt-6 rounded-xl border border-white/10 bg-white/5 p-4">
+              <p className="text-sm font-semibold text-slate-100">Support this site</p>
+              <p className="mt-1 text-sm leading-6 text-slate-300/90">
+                Supporter tier ($25/mo) gets sticky placement while people browse. Sponsorships available via Discord: <span className="text-slate-100 font-semibold">Brax117</span>.
+              </p>
+              <div className="mt-3">
+                <Link
+                  href="/support"
+                  className="inline-flex items-center rounded-lg bg-white/10 px-3 py-2 text-sm font-medium text-white hover:bg-white/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
+                >
+                  Learn more
+                </Link>
+              </div>
             </div>
           </div>
 
@@ -79,19 +100,20 @@ export default function Footer() {
             className="md:col-span-8 grid grid-cols-2 gap-8 sm:grid-cols-3"
             aria-label="Footer"
           >
-            <Section title="Quick Links">
-              <L href="/events">Browse Events</L>
-              <L href="/states">Browse by State</L>
-              <L href="/events#calendar">Event Calendar</L>
-              <L href="/contact?subject=Event%20Submission">Add Event</L>
-              <L href="/about">About Us</L>
-            </Section>
-
-            <Section title="Resources">
+            <Section title="Explore">
+              <L href="/events">Events</L>
               <L href="/dungeons">Dungeons</L>
               <L href="/education">Education</L>
+              <L href="/vendors">Vendors</L>
+              <L href="/calendar">Calendar</L>
+              <L href="/states">States</L>
+            </Section>
+
+            <Section title="Community">
+              <L href="/contact">{CONTACT_US_LABEL}</L>
+              <L href="/about">About</L>
               <L href="/guidelines">Guidelines</L>
-              <L href="/contact">Contact</L>
+              <L href="/support">Support this site</L>
             </Section>
 
             <Section title="Legal">

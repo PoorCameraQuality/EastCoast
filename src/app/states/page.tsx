@@ -4,6 +4,7 @@ import { getAllDungeons } from '@/data/dungeons'
 import Link from 'next/link'
 import Breadcrumb from '@/components/Breadcrumb'
 import { BASE_URL } from '@/lib/seo'
+import { CONTACT_US_LABEL } from '@/lib/submissionContact'
 
 export const metadata: Metadata = {
   title: 'Kink Events by State | East Coast Kink Events',
@@ -68,7 +69,7 @@ export default function StatesIndexPage() {
 
   const breadcrumbItems = [
     { label: 'Home', href: '/' },
-    { label: 'States', current: true }
+    { label: 'States', href: '/states', current: true }
   ]
 
   return (
@@ -162,17 +163,11 @@ export default function StatesIndexPage() {
             We focus on East Coast locations, but expand nationwide. Help us grow by submitting events and dungeons in your area.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link 
-              href="/contact?subject=Event%20Submission"
-              className="btn-primary"
-            >
-              Submit an Event
+            <Link href="/contact" className="btn-primary" aria-label="Contact us">
+              {CONTACT_US_LABEL}
             </Link>
-            <Link 
-              href="/contact?subject=Dungeon%20Submission"
-              className="btn-outline"
-            >
-              Submit a Dungeon
+            <Link href="/contact" className="btn-outline" aria-label="Contact us">
+              {CONTACT_US_LABEL}
             </Link>
           </div>
         </section>

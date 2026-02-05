@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { useGoogleAnalytics } from '@/components/GoogleAnalytics'
 import DynamicStats from '@/components/DynamicStats'
+import { CONTACT_US_LABEL } from '@/lib/submissionContact'
 
 export default function Hero() {
   const { trackEvent } = useGoogleAnalytics()
@@ -10,7 +11,7 @@ export default function Hero() {
   // Note: Data fetching is now handled by DynamicStats component
 
   return (
-    <section className="relative min-h-screen bg-gradient-to-br from-black via-dark-900 to-black overflow-hidden" role="banner" aria-label="Hero section">
+    <section className="relative bg-gradient-to-br from-black via-dark-900 to-black overflow-hidden" role="banner" aria-label="Hero section">
       {/* Subtle background elements with blue spectrum */}
       <div className="absolute inset-0 opacity-10">
         <div className="absolute top-20 left-10 w-32 h-32 bg-gradient-to-r from-primary-400 to-primary-600 rounded-full blur-3xl animate-pulse"></div>
@@ -29,8 +30,8 @@ export default function Hero() {
       </div>
 
       {/* Content */}
-      <div className="relative z-10 container-custom h-screen flex items-center justify-center">
-        <div className="max-w-6xl mx-auto text-center px-4">
+      <div className="relative z-10 container-custom">
+        <div className="max-w-6xl mx-auto text-center px-4 pt-16 pb-14 md:pt-24 md:pb-20">
           {/* Main title with animated text */}
           <div className="mb-6">
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-serif font-bold text-white leading-tight">
@@ -46,47 +47,8 @@ export default function Hero() {
 
           {/* Subtitle */}
           <p className="text-lg md:text-xl lg:text-2xl mb-8 text-gray-300 max-w-3xl mx-auto leading-relaxed animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
-            Connect with your community. Find events, dungeons, and educational resources near you.
+            Connect with your community. Find events, dungeons, educational resources, and vendors—built for privacy, discretion, and inclusion.
           </p>
-
-          {/* Quick navigation cards - Enhanced glassy design */}
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-3 md:gap-4 mb-8 max-w-5xl mx-auto animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
-            <Link 
-              href="/events" 
-              className="group backdrop-blur-xl bg-white/10 rounded-2xl p-4 md:p-6 border border-white/20 hover:border-white/40 transition-all duration-500 hover:scale-105 hover:bg-white/15 shadow-2xl hover:shadow-primary-500/20"
-            >
-              <div className="text-2xl md:text-3xl font-bold text-white mb-1">Events</div>
-              <div className="text-xs md:text-sm text-gray-300">Conferences, Workshops & More</div>
-            </Link>
-            <Link 
-              href="/dungeons" 
-              className="group backdrop-blur-xl bg-white/10 rounded-2xl p-4 md:p-6 border border-white/20 hover:border-white/40 transition-all duration-500 hover:scale-105 hover:bg-white/15 shadow-2xl hover:shadow-blue-500/20"
-            >
-              <div className="text-2xl md:text-3xl font-bold text-white mb-1">Dungeons</div>
-              <div className="text-xs md:text-sm text-gray-300">Play Spaces & Venues</div>
-            </Link>
-            <Link 
-              href="/states" 
-              className="group backdrop-blur-xl bg-white/10 rounded-2xl p-4 md:p-6 border border-white/20 hover:border-white/40 transition-all duration-500 hover:scale-105 hover:bg-white/15 shadow-2xl hover:shadow-green-500/20"
-            >
-              <div className="text-2xl md:text-3xl font-bold text-white mb-1">States</div>
-              <div className="text-xs md:text-sm text-gray-300">Browse by Location</div>
-            </Link>
-            <Link 
-              href="/education" 
-              className="group backdrop-blur-xl bg-white/10 rounded-2xl p-4 md:p-6 border border-white/20 hover:border-white/40 transition-all duration-500 hover:scale-105 hover:bg-white/15 shadow-2xl hover:shadow-primary-500/20"
-            >
-              <div className="text-2xl md:text-3xl font-bold text-white mb-1">Education</div>
-              <div className="text-xs md:text-sm text-gray-300">Resources & Articles</div>
-            </Link>
-            <Link 
-              href="/events" 
-              className="group backdrop-blur-xl bg-white/10 rounded-2xl p-4 md:p-6 border border-white/20 hover:border-white/40 transition-all duration-500 hover:scale-105 hover:bg-white/15 shadow-2xl hover:shadow-blue-500/20"
-            >
-              <div className="text-2xl md:text-3xl font-bold text-white mb-1">Submit</div>
-              <div className="text-xs md:text-sm text-gray-300">Add Your Event</div>
-            </Link>
-          </div>
 
           {/* Action buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8 animate-fade-in-up" style={{ animationDelay: '0.5s' }}>
@@ -120,17 +82,19 @@ export default function Hero() {
             </Link>
           </div>
 
+          <div className="animate-fade-in-up mb-8" style={{ animationDelay: '0.55s' }}>
+            <Link
+              href="/contact"
+              className="text-gray-300 hover:text-white underline underline-offset-4 decoration-white/20 hover:decoration-white/50 transition-colors"
+              aria-label="Contact us"
+            >
+              {CONTACT_US_LABEL}
+            </Link>
+          </div>
+
           {/* Dynamic Stats - Enhanced with recent content */}
           <div className="animate-fade-in-up" style={{ animationDelay: '0.6s' }}>
             <DynamicStats />
-          </div>
-
-
-          {/* Scroll indicator */}
-          <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
-            <div className="w-6 h-10 border-2 border-white/40 rounded-full flex justify-center backdrop-blur-xl bg-white/10">
-              <div className="w-1 h-3 bg-white/80 rounded-full mt-2 animate-pulse"></div>
-            </div>
           </div>
         </div>
       </div>

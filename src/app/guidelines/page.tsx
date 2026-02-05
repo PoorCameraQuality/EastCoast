@@ -37,7 +37,7 @@ export const metadata: Metadata = {
 export default function GuidelinesPage() {
   const breadcrumbItems = [
     { label: 'Home', href: '/' },
-    { label: 'Guidelines', current: true }
+    { label: 'Guidelines', href: '/guidelines', current: true }
   ]
 
   // Server-generated date to avoid hydration mismatch

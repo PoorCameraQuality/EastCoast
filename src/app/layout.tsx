@@ -5,6 +5,7 @@ import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import AgeVerification from '@/components/AgeVerification'
 import BackToTop from '@/components/BackToTop'
+import SupportBanner from '@/components/SupportBanner'
 import { AuthProvider } from "@/contexts/AuthProvider";
 import { GA4Provider } from "@/contexts/GA4Provider";
 import { WebsiteStructuredData, OrganizationStructuredData } from '@/components/StructuredData'
@@ -12,6 +13,8 @@ import GoogleAnalytics from '@/components/GoogleAnalytics'
 import VercelFeedbackBlocker from '@/components/VercelFeedbackBlocker'
 import ErrorTracker from '@/components/ErrorTracker'
 import SafeTrackingWrapper from '@/components/SafeTrackingWrapper'
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -129,6 +132,7 @@ export default function RootLayout({
             {/* <ErrorTracker /> */}
             <SafeTrackingWrapper>
               <Header />
+              <SupportBanner />
               <main id="main-content" role="main" tabIndex={-1}>
                 {children}
               </main>
@@ -136,6 +140,8 @@ export default function RootLayout({
               <AgeVerification />
               <BackToTop />
             </SafeTrackingWrapper>
+            <Analytics />
+            <SpeedInsights />
           </GA4Provider>
         </AuthProvider>
       </body>

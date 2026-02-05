@@ -67,7 +67,7 @@ export default function UnifiedAdminDashboard({ user, isAdmin: isAdminProp }: Un
   const breadcrumbItems = [
     { label: 'Home', href: '/' },
     { label: 'Admin', href: '/admin' },
-    { label: 'Dashboard', current: true }
+    { label: 'Dashboard', href: '/admin/dashboard', current: true }
   ]
 
   // Create content form states

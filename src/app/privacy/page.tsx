@@ -33,7 +33,7 @@ export const metadata: Metadata = {
 export default function PrivacyPage() {
   const breadcrumbItems = [
     { label: 'Home', href: '/' },
-    { label: 'Privacy', current: true }
+    { label: 'Privacy', href: '/privacy', current: true }
   ]
 
   // Server-generated date to avoid hydration mismatch

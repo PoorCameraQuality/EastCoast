@@ -1,6 +1,7 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
 import { BASE_URL } from '@/lib/seo'
+import Breadcrumb from '@/components/Breadcrumb'
 
 export const metadata: Metadata = {
   title: 'Accessibility | East Coast Kink Events',
@@ -12,10 +13,16 @@ export const metadata: Metadata = {
 }
 
 export default function AccessibilityPage() {
+  const breadcrumbItems = [
+    { label: 'Home', href: '/' },
+    { label: 'Accessibility', href: '/accessibility', current: true },
+  ]
+
   return (
     <div className="min-h-screen bg-black">
       <div className="container-custom py-16">
         <div className="max-w-4xl mx-auto">
+          <Breadcrumb items={breadcrumbItems} />
           <h1 className="text-4xl md:text-5xl font-serif font-bold text-white mb-8">
             Accessibility Statement
           </h1>

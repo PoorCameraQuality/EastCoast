@@ -6,7 +6,6 @@ import EventLogo from '@/components/EventLogo'
 import { EventStructuredData } from '@/components/StructuredData'
 import Breadcrumb from '@/components/Breadcrumb'
 import RelatedContent from '@/components/RelatedContent'
-import Script from 'next/script'
 import EventCalendarExport from '@/components/EventCalendarExport'
 import { BASE_URL } from '@/lib/seo'
 
@@ -67,27 +66,11 @@ export default function EventPage({ params }: { params: { slug: string } }) {
   const breadcrumbItems = [
     { label: 'Home', href: '/' },
     { label: 'Events', href: '/events' },
-    { label: event.name, current: true }
+    { label: event.name, href: `/events/${event.slug}`, current: true }
   ]
 
   return (
     <div className="min-h-screen bg-black">
-      {/* Breadcrumb JSON-LD */}
-      <Script
-        id={`breadcrumb-structured-data-${event.slug}`}
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "BreadcrumbList",
-            "itemListElement": [
-              {"@type": "ListItem", position: 1, name: 'Home', item: `${BASE_URL}/`},
-              {"@type": "ListItem", position: 2, name: 'Events', item: `${BASE_URL}/events`},
-              {"@type": "ListItem", position: 3, name: event.name, item: `${BASE_URL}/events/${event.slug}`}
-            ]
-          })
-        }}
-      />
       <EventStructuredData event={event} />
       
       <EnhancedEventLayout event={event} breadcrumbItems={breadcrumbItems} />

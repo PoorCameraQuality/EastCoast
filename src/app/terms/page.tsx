@@ -41,7 +41,7 @@ export const metadata: Metadata = {
 export default function TermsPage() {
   const breadcrumbItems = [
     { label: 'Home', href: '/' },
-    { label: 'Terms', current: true }
+    { label: 'Terms', href: '/terms', current: true }
   ]
 
   // Server-generated date to avoid hydration mismatch

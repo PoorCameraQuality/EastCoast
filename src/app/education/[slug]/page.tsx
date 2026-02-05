@@ -6,6 +6,7 @@ import Breadcrumb from '@/components/Breadcrumb'
 import Script from 'next/script'
 import { stripFirstH1 } from '@/lib/markdown'
 import ContinueYourJourney from '@/components/education/ContinueYourJourney'
+import { CONTACT_US_LABEL } from '@/lib/submissionContact'
 import Markdown from '@/components/Markdown'
 import { normalizeMarkdown } from '@/lib/normalizeMarkdown'
 import { BASE_URL } from '@/lib/seo'
@@ -235,28 +236,11 @@ export default async function ArticlePage({ params }: { params: { slug: string }
     const breadcrumbItems = [
       { label: 'Home', href: '/' },
       { label: 'Education', href: '/education' },
-      { label: article.title, current: true }
+      { label: article.title, href: `/education/${article.slug}`, current: true }
     ]
 
     return (
       <div className="min-h-screen bg-black">
-        {/* Breadcrumb JSON-LD */}
-        <Script
-          id={`breadcrumb-structured-data-${article.slug}`}
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "BreadcrumbList",
-            "itemListElement": [
-              {"@type": "ListItem", position: 1, name: 'Home', item: `${BASE_URL}/`},
-              {"@type": "ListItem", position: 2, name: 'Education', item: `${BASE_URL}/education`},
-              {"@type": "ListItem", position: 3, name: article.title, item: `${BASE_URL}/education/${article.slug}`}
-            ]
-            })
-          }}
-        />
-        
         {/* Article JSON-LD */}
         <ArticleStructuredData article={article} />
         
@@ -391,8 +375,8 @@ export default async function ArticlePage({ params }: { params: { slug: string }
                 <Link href="/education" className="btn-primary">
                   Browse All Articles
                 </Link>
-                <Link href="/education/submit" className="btn-outline">
-                  Submit Your Article
+                <Link href="/contact" className="btn-outline" aria-label="Contact us">
+                  {CONTACT_US_LABEL}
                 </Link>
               </div>
             </div>

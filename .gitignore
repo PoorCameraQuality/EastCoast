@@ -41,3 +41,9 @@ next-env.d.ts
 
 # OS
 Thumbs.db 
+
+# Cursor / agent scratch
+.cursor_tmp/
+
+# Image/temp artifacts
+public/images/*.tmp

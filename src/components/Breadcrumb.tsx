@@ -4,7 +4,7 @@ import { BASE_URL } from '@/lib/seo'
 
 interface BreadcrumbItem {
   label: string
-  href?: string
+  href: string
   current?: boolean
 }
 
@@ -21,7 +21,7 @@ export default function Breadcrumb({ items }: BreadcrumbProps) {
       "@type": "ListItem",
       "position": index + 1,
       "name": item.label,
-      ...(item.href ? { "item": `${BASE_URL}${item.href}` } : {})
+      "item": `${BASE_URL}${item.href}`,
     }))
   }
 
@@ -30,20 +30,23 @@ export default function Breadcrumb({ items }: BreadcrumbProps) {
       <Script
         id="breadcrumb-structured-data"
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData).replace(/</g, '\\u003c') }}
       />
       <nav aria-label="Breadcrumb" className="text-sm text-gray-300 flex gap-2">
-        {items.map((item, index) => (
-          <span key={index}>
+        {items.map((item, index) => {
+          const isLast = index === items.length - 1
+          return (
+          <span key={index} className="flex items-center gap-2">
             {item.current ? (
               <span aria-current="page" className="text-yellow-400">{item.label}</span>
             ) : (
-              <a href={item.href} className="hover:underline focus:outline-none focus:ring-2 focus:ring-yellow-400">
+              <Link href={item.href} className="hover:underline focus:outline-none focus:ring-2 focus:ring-yellow-400">
                 {item.label}
-              </a>
+              </Link>
             )}
+            {!isLast ? <span className="text-gray-500">/</span> : null}
           </span>
-        ))}
+        )})}
       </nav>
     </>
   )

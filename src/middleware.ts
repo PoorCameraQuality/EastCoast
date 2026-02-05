@@ -39,7 +39,7 @@ export async function middleware(req: NextRequest) {
   }
 
   // Strip unwanted query parameters
-  const allowedParams = new Set(['page', 'q'])
+  const allowedParams = new Set(['page', 'q', 'tag'])
   let paramsChanged = false
   const keysToDelete: string[] = []
   url.searchParams.forEach((value, key) => {

@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import Link from 'next/link'
+import { CONTACT_US_LABEL } from '@/lib/submissionContact'
 import { supabase } from '@/lib/supabase'
 
 interface Article {
@@ -192,11 +193,12 @@ export default function ContinueYourJourney({ currentArticle }: ContinueYourJour
             >
               Browse All Articles
             </Link>
-            <Link 
-              href="/education/submit" 
-              className="inline-flex items-center justify-center px-4 py-2 bg-dark-700 text-gray-300 rounded-lg hover:bg-dark-600 transition-colors border border-dark-600"
+            <Link
+              href="/contact"
+              className="inline-flex items-center justify-center px-4 py-2 bg-dark-700 text-gray-300 rounded-lg border border-dark-600 hover:bg-dark-600 transition-colors"
+              aria-label="Contact us"
             >
-              Submit Article
+              {CONTACT_US_LABEL}
             </Link>
           </div>
         </div>
