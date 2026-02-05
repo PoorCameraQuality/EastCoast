@@ -33,7 +33,6 @@ export const vendors = [
   {
     name: 'Dodson Designs',
     slug: 'dodson-designs',
-    isHidden: true,
     location: 'Denver, PA • USA',
     description:
       'Bespoke, heirloom-quality leather accessories and apparel—handcrafted with meticulous attention to detail.',
@@ -64,6 +63,19 @@ export const vendors = [
       'handmade-leather',
       'custom-commission-vendor',
     ],
+    isPaid: false,
+  },
+  {
+    name: 'Free-to-be Boudoir',
+    slug: 'free-to-be-boudoir',
+    location: 'Online',
+    description:
+      'Boudoir photography and kink event coverage under the Free-to-be Boudoir brand.',
+    story:
+      'Free-to-be Boudoir provides photography services for kink events. Photographer details and additional background are available on their about page.',
+    websiteUrl: 'https://waterfirephotography85.mypixieset.com/',
+    logo125Url: '/images/f2b.PNG',
+    tagSlugs: ['photography-content'],
     isPaid: false,
   },
   {

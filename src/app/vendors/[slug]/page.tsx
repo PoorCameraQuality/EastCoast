@@ -1,9 +1,67 @@
 import Link from 'next/link'
+import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { getVendorBySlug } from '@/data/vendors'
 import { getVendorPaidImage125Url } from '@/lib/vendorFiltering'
+import { BASE_URL } from '@/lib/seo'
 import VendorImage from '@/components/vendors/VendorImage'
 import Breadcrumb from '@/components/Breadcrumb'
+import { VendorStructuredData } from '@/components/StructuredData'
+
+/**
+ * Generates metadata for vendor detail pages using the vendor logo as OG image.
+ */
+export async function generateMetadata({
+  params,
+}: {
+  params: { slug: string }
+}): Promise<Metadata> {
+  const vendor = getVendorBySlug(params.slug)
+
+  if (!vendor) {
+    return {
+      title: 'Vendor Not Found',
+      description: 'The requested vendor could not be found.',
+    }
+  }
+
+  const rawLogoUrl = vendor.logo125Url
+  const logoUrl = rawLogoUrl
+    ? rawLogoUrl.startsWith('http')
+      ? rawLogoUrl
+      : `${BASE_URL}${rawLogoUrl}`
+    : `${BASE_URL}/og-image.png`
+  const description = vendor.description || vendor.story || 'Vendor listing'
+
+  return {
+    title: `${vendor.name} | East Coast Kink Events`,
+    description,
+    openGraph: {
+      title: vendor.name,
+      description,
+      images: [
+        {
+          url: logoUrl,
+          width: 1200,
+          height: 630,
+          alt: `${vendor.name} logo`,
+        },
+      ],
+      type: 'website',
+      url: `${BASE_URL}/vendors/${vendor.slug}`,
+      siteName: 'East Coast Kink Events',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: vendor.name,
+      description,
+      images: [logoUrl],
+    },
+    alternates: {
+      canonical: `${BASE_URL}/vendors/${vendor.slug}`,
+    },
+  }
+}
 
 export default function VendorDetailPage({
   params,
@@ -36,6 +94,7 @@ export default function VendorDetailPage({
     <section className="section-padding bg-gradient-to-br from-black via-dark-950 to-black">
       <div className="container-custom">
         <div className="max-w-3xl mx-auto">
+          <VendorStructuredData vendor={vendor} />
           <div className="mb-6">
             <Breadcrumb items={breadcrumbItems} />
             <Link href="/vendors" className="text-gray-300 hover:text-white underline underline-offset-4 decoration-white/20 hover:decoration-white/50">

@@ -998,7 +998,7 @@ export const events = [
     "organizer": "Studio 58 Events",
     "registrationOpens": "July 1st each year",
     "hotel": "Private Two-Hotel Takeover in Gettysburg, PA",
-    "logo": "/images/naughtynoel.jpg",
+    "logo": "https://studio58events.com/wp-content/uploads/2021/04/FINAL-KINK-Studio-58-1-1024x637.jpg",
     "features": [
       "Winter Kink Conference",
       "Private Two-Hotel Takeover",
@@ -1079,9 +1079,9 @@ export const events = [
     "name": "Naughty Gras",
     "slug": "naughty-gras",
     "date": {
-      "start": "2026-02-27",
-      "end": "2026-03-02",
-      "display": "Feb 27-Mar 2, 2026"
+      "start": "2026-03-26",
+      "end": "2026-03-29",
+      "display": "Mar 26-29, 2026"
     },
     "location": {
       "city": "Gettysburg",
@@ -1089,12 +1089,12 @@ export const events = [
       "region": "South Central, Pennsylvania"
     },
     "category": "Indoor Event",
-    "excerpt": "A 2-hotel takeover conference celebrating kinky Mardi Gras in Gettysburg, PA with educational classes, social activities, and French Quarter atmosphere.",
-    "longDescription": "Join us for Naughty Gras each spring in Gettysburg, PA. We will recreate New Orleans' French Quarter across our host hotels where the sights and sounds of kinky Mardi Gras will echo all weekend. This glamorous event will be a high-energy, festive, 4-day party for our Studio 58 friends and their partners.\n\nOur Programming Team will have a full fun-filled schedule, with Educational Classes and Social Activities for your Enjoyment. The event features a 2-hotel takeover with Host Hotel 1 arranged around a pool atrium decorated Bourbon Street-style, and Host Hotel 2 containing our main playspace. The two hotels are connected with a closed-in walkway.\n\nRegistration options include 4-Day VIP Weekend Bundle with Friday and Saturday dinners, T-shirt, and special Mardi Gras beads & gift bag, or 4-Day Standard Weekend Ticket with add-on options for dinners, T-shirts, and volunteer opportunities.",
-    "website": "https://studio58events.com/naughty-gras-2026/",
+    "excerpt": "A 2-hotel takeover conference in Gettysburg, PA celebrating kinky Mardi Gras with educational classes, social activities, and French Quarter atmosphere.",
+    "longDescription": "Join us for Naughty Gras in Gettysburg, PA, March 26-29, 2026. We will recreate New Orleans’ French Quarter across our host hotels where the sights and sounds of kinky Mardi Gras will echo all weekend. This glamorous event is a high-energy, festive, 4-day party for Studio 58 friends and their partners.\n\nOur programming team will have a full fun-filled schedule with educational classes and social activities. The event features a 2-hotel takeover: Host Hotel 1 is arranged around a pool atrium decorated Bourbon Street-style with poolside and balcony rooms plus a satellite playspace around the indoor pool, and Host Hotel 2 contains the main playspace. The two hotels are connected with a closed-in walkway.\n\nRegistration includes a 4-Day VIP Weekend Bundle with Friday and Saturday dinners, a Naughty Gras T-shirt, special Mardi Gras beads, and a gift bag, or a 4-Day Standard Weekend Ticket. Add-ons are available for dinners and T-shirts, and volunteer opportunities are offered. Hotel rooms are purchased separately through the event’s room reservation system (do not call the hotel directly).",
+    "website": "https://studio58events.com/naughty-gras-2025/",
     "organizer": "Studio 58 Events",
     "hotel": "2-Hotel Takeover in Gettysburg, PA",
-    "logo": "/images/naughtynawlins.png",
+    "logo": "https://studio58events.com/wp-content/uploads/2021/04/FINAL-KINK-Studio-58-1-1024x637.jpg",
     "features": [
       "2-Hotel Takeover Conference",
       "Gettysburg, PA Location",
@@ -1102,7 +1102,7 @@ export const events = [
       "French Quarter Atmosphere",
       "Educational Classes",
       "Social Activities",
-      "4-Day Weekend Event",
+      "Mar 26-29, 2026",
       "VIP Weekend Bundle Available",
       "Friday & Saturday Dinners",
       "Naughty Gras T-Shirt",
@@ -1115,6 +1115,7 @@ export const events = [
       "Connected Hotels via Walkway",
       "Room Rates Include Breakfast Buffet",
       "Parking & All Taxes Included",
+      "Hotel Rooms Purchased Separately",
       "Add-On Night Options Available",
       "Volunteer Opportunities",
       "Studio 58 Events Organized"
@@ -1123,6 +1124,49 @@ export const events = [
       "title": "Naughty Gras 2026 - Gettysburg PA Mardi Gras BDSM Conference | East Coast Kink Events",
       "description": "A 2-hotel takeover conference celebrating kinky Mardi Gras in Gettysburg, PA with educational classes, social activities, and French Quarter atmosphere.",
       "keywords": "Naughty Gras 2026, Gettysburg, Pennsylvania, Mardi Gras, BDSM conference, 2-hotel takeover, Studio 58 Events"
+    }
+  },
+  {
+    "name": "Naughty N'at",
+    "slug": "naughty-nat",
+    "date": {
+      "start": "2026-05-28",
+      "end": "2026-05-31",
+      "display": "May 28-31, 2026"
+    },
+    "location": {
+      "city": "Pittsburgh",
+      "state": "PA",
+      "region": "Western, Pennsylvania"
+    },
+    "category": "Indoor Event",
+    "excerpt": "Studio 58’s intimate Pittsburgh hotel event with kink classes, themed nights, vendors, and skyline views.",
+    "longDescription": "Naughty N’at is Studio 58’s first hotel event in Pittsburgh, PA. This smaller, sexier twist on the traditional takeover brings three nights of kink classes, playful adventures, and deliciously naughty activities set against the city skyline.\n\nThe weekend kicks off on Thursday as everyone gets settled in with opening-night fun. Friday is a cozy, themed day of pajamas and lingerie with on-site vendors carrying kinky gear, toys, and accessories. Saturday shifts into full-throttle glamour with a Steampunk Prom experience that runs all day and night.\n\nRegistration includes a 3-Day Standard Weekend Ticket (Thursday 11 AM to Sunday 11 AM). Registration opens February 1, 2026 and attendance is limited to 250 people. Hotel rooms are booked through the event’s reservation system (do not call the hotel directly). Room rates include one registration, breakfast, parking, and all taxes and fees, with add-on nights available.",
+    "website": "https://studio58events.com/what-is-naughty-nat/",
+    "organizer": "Studio 58 Events",
+    "hotel": "Pittsburgh, PA Hotel Event",
+    "logo": "https://studio58events.com/wp-content/uploads/2021/04/FINAL-KINK-Studio-58-1-1024x637.jpg",
+    "features": [
+      "Pittsburgh, PA Location",
+      "City Lights Skyline Views",
+      "Three-Night Hotel Event",
+      "Thursday Opening Night",
+      "Friday Pajamas & Lingerie Theme",
+      "Saturday Steampunk Prom",
+      "On-Site Vendors",
+      "3-Day Standard Weekend Ticket",
+      "Thursday 11 AM to Sunday 11 AM",
+      "Registration Opens Feb 1, 2026",
+      "Limited to 250 Attendees",
+      "Hotel Rooms Include One Registration",
+      "Breakfast, Parking, and Taxes Included",
+      "Add-On Nights Available",
+      "Studio 58 Events Organized"
+    ],
+    "seo": {
+      "title": "Naughty N'at - Pittsburgh PA Studio 58 Hotel Event | East Coast Kink Events",
+      "description": "Studio 58’s intimate Pittsburgh hotel event with kink classes, themed nights, vendors, and skyline views.",
+      "keywords": "Naughty N'at, Pittsburgh, Pennsylvania, Studio 58 Events, hotel event, kink classes, vendors, Steampunk Prom"
     }
   },
   {
@@ -1748,7 +1792,7 @@ export const events = [
     "contact": {
       "email": "michelle@studio58events.com"
     },
-    "logo": "https://studio58events.com/wp-content/uploads/Knowledge_Header-300x201.png",
+    "logo": "https://studio58events.com/wp-content/uploads/2021/04/FINAL-KINK-Studio-58-1-1024x637.jpg",
     "features": [
       "Private Hotel Takeover Event",
       "Gettysburg, PA Location",
@@ -2122,9 +2166,16 @@ export const getEventsByLocation = (state) => {
 export const generateEventSEO = (event) => {
   // Import SEO helpers dynamically to avoid circular dependencies
   const { generateEventTitle } = require('@/lib/seo-helpers');
+  const { BASE_URL } = require('@/lib/seo');
 
   // Generate optimized title (≤60 chars)
   const optimizedTitle = generateEventTitle(event);
+  const rawLogoUrl = event.logo;
+  const logoUrl = rawLogoUrl
+    ? rawLogoUrl.startsWith('http')
+      ? rawLogoUrl
+      : `${BASE_URL}${rawLogoUrl}`
+    : `${BASE_URL}/images/og-image.png`;
 
   return {
     title: optimizedTitle,
@@ -2135,14 +2186,14 @@ export const generateEventSEO = (event) => {
       description: event.seo?.description || event.excerpt,
       images: [
         {
-          url: event.logo || '/images/og-image.png',
+          url: logoUrl,
           width: 1200,
           height: 630,
           alt: event.name
         }
       ],
       type: 'website',
-      url: `https://eastcoastkinkevents.com/events/${event.slug}`,
+      url: `${BASE_URL}/events/${event.slug}`,
       siteName: 'East Coast Kink Events'
     }
   };

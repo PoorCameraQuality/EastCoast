@@ -1,11 +1,21 @@
 import Link from 'next/link'
+import { getAllEvents } from '@/data/events'
+import { getAllDungeons } from '@/data/dungeons'
+import { articles } from '@/data/education'
+import { getAllVendors } from '@/data/vendors'
 
 type HubCard = {
   title: string
   description: string
   href: string
   cta: string
+  count: number
+  countLabel: string
   accentClassName: string
+}
+
+const formatCountLabel = (count: number, singularLabel: string) => {
+  return `${count} ${count === 1 ? singularLabel : `${singularLabel}s`}`
 }
 
 const HUB_CARDS: HubCard[] = [
@@ -14,6 +24,8 @@ const HUB_CARDS: HubCard[] = [
     description: 'Find conferences, workshops, and gatherings.',
     href: '/events',
     cta: 'Browse Events',
+    count: getAllEvents().length,
+    countLabel: 'event',
     accentClassName: 'from-primary-500/15 to-blue-500/10'
   },
   {
@@ -21,6 +33,8 @@ const HUB_CARDS: HubCard[] = [
     description: 'Explore vetted venues and community spaces.',
     href: '/dungeons',
     cta: 'Explore Spaces',
+    count: getAllDungeons().length,
+    countLabel: 'space',
     accentClassName: 'from-blue-500/15 to-primary-500/10'
   },
   {
@@ -28,6 +42,8 @@ const HUB_CARDS: HubCard[] = [
     description: 'Safety guides, articles, and resources.',
     href: '/education',
     cta: 'Start Learning',
+    count: articles.length,
+    countLabel: 'article',
     accentClassName: 'from-primary-500/10 to-blue-500/15'
   },
   {
@@ -35,6 +51,8 @@ const HUB_CARDS: HubCard[] = [
     description: 'Browse gear, apparel, and artisan shops.',
     href: '/vendors',
     cta: 'Browse Vendors',
+    count: getAllVendors().length,
+    countLabel: 'vendor',
     accentClassName: 'from-blue-500/10 to-primary-500/15'
   },
 ]
@@ -62,9 +80,14 @@ export default function HubCategoryGrid() {
             >
               <div className={`absolute inset-0 bg-gradient-to-br ${card.accentClassName} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
               <div className="relative z-10">
-                <h3 className="text-2xl md:text-3xl font-serif font-semibold text-white mb-3 group-hover:text-primary-300 transition-colors duration-300">
-                  {card.title}
-                </h3>
+                <div className="flex flex-wrap items-center gap-3 mb-3">
+                  <h3 className="text-2xl md:text-3xl font-serif font-semibold text-white group-hover:text-primary-300 transition-colors duration-300">
+                    {card.title}
+                  </h3>
+                  <span className="text-xs font-semibold uppercase tracking-[0.2em] text-primary-200/80 bg-white/10 border border-white/10 rounded-full px-3 py-1">
+                    {formatCountLabel(card.count, card.countLabel)}
+                  </span>
+                </div>
                 <p className="text-gray-400 leading-relaxed mb-6">
                   {card.description}
                 </p>

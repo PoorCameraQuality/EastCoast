@@ -172,6 +172,49 @@ export function DungeonStructuredData({ dungeon }: { dungeon: any }) {
   }
 }
 
+/**
+ * Vendor structured data using LocalBusiness schema.
+ */
+export function VendorStructuredData({ vendor }: { vendor: any }) {
+  const rawLogoUrl = vendor.logo125Url
+  const logoUrl = rawLogoUrl
+    ? rawLogoUrl.startsWith('http')
+      ? rawLogoUrl
+      : `${BASE_URL}${rawLogoUrl}`
+    : undefined
+
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "name": vendor.name,
+    "description": vendor.description || vendor.story || 'Vendor listing',
+    "url": `${BASE_URL}/vendors/${vendor.slug}`,
+    "image": logoUrl ? [logoUrl] : undefined,
+    "address": vendor.location
+      ? {
+          "@type": "PostalAddress",
+          "addressLocality": vendor.location,
+          "addressCountry": "US",
+        }
+      : undefined,
+    "sameAs": vendor.websiteUrl ? [vendor.websiteUrl] : undefined,
+  }
+
+  try {
+    const jsonString = escapeHtmlInJson(structuredData)
+    return (
+      <Script
+        id={`vendor-structured-data-${vendor.slug}`}
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: jsonString }}
+      />
+    )
+  } catch (error) {
+    console.error('Invalid JSON in VendorStructuredData:', error)
+    return null
+  }
+}
+
 export function WebsiteStructuredData() {
   const structuredData = {
     "@context": "https://schema.org",
