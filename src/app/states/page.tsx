@@ -33,6 +33,8 @@ const EAST_COAST_STATES = {
   'south-carolina': { name: 'South Carolina', abbr: 'SC', region: 'South', emoji: '🌴' },
   'georgia': { name: 'Georgia', abbr: 'GA', region: 'South', emoji: '🍑' },
   'florida': { name: 'Florida', abbr: 'FL', region: 'South', emoji: '🌞' },
+  'tennessee': { name: 'Tennessee', abbr: 'TN', region: 'South', emoji: '🎸' },
+  'louisiana': { name: 'Louisiana', abbr: 'LA', region: 'South', emoji: '🎷' },
   'maine': { name: 'Maine', abbr: 'ME', region: 'New England', emoji: '🦞' },
   'vermont': { name: 'Vermont', abbr: 'VT', region: 'New England', emoji: '🍁' },
   'new-hampshire': { name: 'New Hampshire', abbr: 'NH', region: 'New England', emoji: '⛰️' },
@@ -40,6 +42,12 @@ const EAST_COAST_STATES = {
   'rhode-island': { name: 'Rhode Island', abbr: 'RI', region: 'New England', emoji: '⚓' },
   'connecticut': { name: 'Connecticut', abbr: 'CT', region: 'New England', emoji: '🌳' },
   'washington-dc': { name: 'Washington DC', abbr: 'DC', region: 'Mid-Atlantic', emoji: '🏛️' },
+  'ohio': { name: 'Ohio', abbr: 'OH', region: 'Midwest', emoji: '🌰' },
+  'michigan': { name: 'Michigan', abbr: 'MI', region: 'Midwest', emoji: '🧤' },
+  'illinois': { name: 'Illinois', abbr: 'IL', region: 'Midwest', emoji: '🌽' },
+  'indiana': { name: 'Indiana', abbr: 'IN', region: 'Midwest', emoji: '🏁' },
+  'missouri': { name: 'Missouri', abbr: 'MO', region: 'Midwest', emoji: '🧭' },
+  'colorado': { name: 'Colorado', abbr: 'CO', region: 'Mountain West', emoji: '🏔️' },
 } as const
 
 export default function StatesIndexPage() {
@@ -65,6 +73,8 @@ export default function StatesIndexPage() {
     'Mid-Atlantic': stateStats.filter(s => s.info.region === 'Mid-Atlantic'),
     'Northeast': stateStats.filter(s => s.info.region === 'Northeast'),
     'South': stateStats.filter(s => s.info.region === 'South'),
+    'Midwest': stateStats.filter(s => s.info.region === 'Midwest'),
+    'Mountain West': stateStats.filter(s => s.info.region === 'Mountain West'),
   }
 
   const breadcrumbItems = [

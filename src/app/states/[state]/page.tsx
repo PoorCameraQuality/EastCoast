@@ -20,6 +20,8 @@ const EAST_COAST_STATES = {
   'south-carolina': { name: 'South Carolina', abbr: 'SC', region: 'South' },
   'georgia': { name: 'Georgia', abbr: 'GA', region: 'South' },
   'florida': { name: 'Florida', abbr: 'FL', region: 'South' },
+  'tennessee': { name: 'Tennessee', abbr: 'TN', region: 'South' },
+  'louisiana': { name: 'Louisiana', abbr: 'LA', region: 'South' },
   'maine': { name: 'Maine', abbr: 'ME', region: 'New England' },
   'vermont': { name: 'Vermont', abbr: 'VT', region: 'New England' },
   'new-hampshire': { name: 'New Hampshire', abbr: 'NH', region: 'New England' },
@@ -27,6 +29,12 @@ const EAST_COAST_STATES = {
   'rhode-island': { name: 'Rhode Island', abbr: 'RI', region: 'New England' },
   'connecticut': { name: 'Connecticut', abbr: 'CT', region: 'New England' },
   'washington-dc': { name: 'Washington DC', abbr: 'DC', region: 'Mid-Atlantic' },
+  'ohio': { name: 'Ohio', abbr: 'OH', region: 'Midwest' },
+  'michigan': { name: 'Michigan', abbr: 'MI', region: 'Midwest' },
+  'illinois': { name: 'Illinois', abbr: 'IL', region: 'Midwest' },
+  'indiana': { name: 'Indiana', abbr: 'IN', region: 'Midwest' },
+  'missouri': { name: 'Missouri', abbr: 'MO', region: 'Midwest' },
+  'colorado': { name: 'Colorado', abbr: 'CO', region: 'Mountain West' },
 } as const
 
 type StateSlug = keyof typeof EAST_COAST_STATES
