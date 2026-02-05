@@ -711,7 +711,7 @@ export const events = [
     ],
     "socialMedia": {
       "instagram": "Available",
-      "fetlife": "Available", 
+      "fetlife": "Available",
       "discord": "Available"
     },
     "seo": {
@@ -986,18 +986,18 @@ export const events = [
     "name": "New England Erotic Hypnosis (un)Conference",
     "slug": "neehu",
     "date": {
-      "start": "2025-04-25",
-      "end": "2025-04-29",
-      "display": "Apr 25-29, 2025"
+      "start": "2026-04-02",
+      "end": "2026-04-06",
+      "display": "Apr 2-6, 2026"
     },
     "location": {
-      "city": "Boston Area",
-      "state": "MA",
+      "city": "Nashua",
+      "state": "NH",
       "region": "New England"
     },
     "category": "Indoor Event",
-    "excerpt": "Join us for a long weekend of hypnokinky fun with a science twist! Thursday will be an exploratorium style somewhat planned in advance unconference with some show-and-tell, and various things to experience. Friday through Sunday will be a more traditional style conference, with classes during the day and a play party in our hotel-based dungeon at night.",
-    "longDescription": "Join us for a long weekend of hypnokinky fun with a science twist! Thursday will be an exploratorium style somewhat planned in advance unconference with some show-and-tell, and various things to experience. Bring your fun hypno toys, tech-oriented BDSM gadgets (IE TENS, violet wand, remote controlled toys…) and share your knowledge and experience!\n\nFriday through Sunday will be a more traditional style conference, with classes during the day and a play party in our hotel-based dungeon at night.\n\nYour registration includes:\n• Classes, with Guests of Honor including Neuromancer28\n• 4 nights of play party in our well-equipped dungeon\n• Social events such as speed trance\n• Online/hybrid conference\n• Vendors!\n• Quiet/downtime space with coloring books and other art supplies\n• Consent team\n\nFor more info, we have an 18+ Discord server where you can ask questions and engage with people prior to the event! Highly recommend joining the Discord Server ASAP to stay up to date with the event!",
+    "excerpt": "NEEHU 17 runs Apr 2-6, 2026 in Nashua, NH. Join us for a long weekend of hypnokinky fun with a science twist, including an exploratorium-style unconference and a traditional conference with classes and play parties.",
+    "longDescription": "NEEHU 17 runs Apr 2-6, 2026 in Nashua, NH. Join us for a long weekend of hypnokinky fun with a science twist! Thursday will be an exploratorium style somewhat planned in advance unconference with some show-and-tell, and various things to experience. Bring your fun hypno toys, tech-oriented BDSM gadgets (IE TENS, violet wand, remote controlled toys…) and share your knowledge and experience!\n\nFriday through Sunday will be a more traditional style conference, with classes during the day and a play party in our hotel-based dungeon at night.\n\nYour registration includes:\n• Classes, with Guests of Honor including Neuromancer28\n• 4 nights of play party in our well-equipped dungeon\n• Social events such as speed trance\n• Online/hybrid conference\n• Vendors!\n• Quiet/downtime space with coloring books and other art supplies\n• Consent team\n\nFor more info, we have an 18+ Discord server where you can ask questions and engage with people prior to the event! Highly recommend joining the Discord Server ASAP to stay up to date with the event!",
     "website": "https://www.neehu.org/",
     "logo": "/images/neehu.png",
     "features": [
@@ -1015,7 +1015,7 @@ export const events = [
       "Discord Community"
     ],
     "seo": {
-      "title": "New England Erotic Hypnosis (un)Conference - NEHU 2025 | East Coast Kink Events",
+      "title": "New England Erotic Hypnosis (un)Conference - NEHU Apr 2-6, 2026 | East Coast Kink Events",
       "description": "Join us for a long weekend of hypnokinky fun with a science twist! Features exploratorium style unconference, classes, play parties, and a hotel-based dungeon in New England.",
       "keywords": "New England Erotic Hypnosis, NEHU, hypnokinky, unconference, New England, hypnosis conference, BDSM, kink event"
     }
@@ -1361,9 +1361,9 @@ export const events = [
     "name": "Whips and Wine",
     "slug": "whips-and-wine",
     "date": {
-      "start": "2025-07-18",
-      "end": "2025-07-20",
-      "display": "Jul 18-20, 2025"
+      "start": "2026-07-17",
+      "end": "2026-07-19",
+      "display": "Jul 17-19, 2026"
     },
     "location": {
       "city": "Eastern Pennsylvania",
@@ -1372,7 +1372,7 @@ export const events = [
     },
     "category": "Outdoor Event",
     "excerpt": "A 3-day camping and kink event with classes, demos, vendors, activities, and a full game area — including axe throwing, an airsoft range, and more.",
-    "longDescription": "Join us for a three-day camping and kink event hosted at an expansive campground. Enjoy engaging classes, demos, vendors, and a dedicated game area featuring axe throwing, an airsoft range, and more. A fun, community-focused weekend of playful exploration.",
+    "longDescription": "Join us for a three-day camping and kink event hosted at an expansive campground. Starts Friday, Jul 17, 2026 at 5:00 PM and runs until Sunday, Jul 19, 2026 at 11:00 AM. Enjoy engaging classes, demos, vendors, and a dedicated game area featuring axe throwing, an airsoft range, and more. A fun, community-focused weekend of playful exploration.",
     "website": "https://fetlife.com/events/1439241",
     "logo": "/images/whiipsandwine.PNG",
     "features": [
@@ -1654,11 +1654,11 @@ export const getEventsByLocation = (state) => {
 
 export const generateEventSEO = (event) => {
   // Import SEO helpers dynamically to avoid circular dependencies
-  const { generateEventTitle } = require('@/lib/seo-helpers')
-  
+  const { generateEventTitle } = require('@/lib/seo-helpers');
+
   // Generate optimized title (≤60 chars)
-  const optimizedTitle = generateEventTitle(event)
-  
+  const optimizedTitle = generateEventTitle(event);
+
   return {
     title: optimizedTitle,
     description: event.excerpt,

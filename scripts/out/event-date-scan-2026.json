@@ -1,0 +1,847 @@
+{
+  "year": 2026,
+  "minScore": 7,
+  "apply": true,
+  "results": [
+    {
+      "slug": "beltane",
+      "name": "THE Beltane",
+      "website": "https://www.turtlehilleventco.com/the-beltane.html",
+      "ok": true,
+      "status": 200,
+      "contentType": "text/html; charset=UTF-8",
+      "current": {
+        "start": "2026-04-29",
+        "end": "2026-05-03",
+        "display": "Apr 29-May 3, 2026"
+      },
+      "decision": {
+        "reason": "ok",
+        "best": {
+          "score": 8,
+          "range": {
+            "start": "2026-04-29",
+            "end": "2026-05-03"
+          },
+          "evidence": [
+            "April 29-May 3, 2026"
+          ]
+        },
+        "top": null,
+        "runnerUp": null
+      },
+      "update": null
+    },
+    {
+      "slug": "beyond-leather-international-power-exchange-contest",
+      "name": "Beyond Leather - International Power Exchange® Contest",
+      "website": "https://beyondleather.net/wp/?agreecheck=on",
+      "ok": true,
+      "status": 200,
+      "contentType": "text/html; charset=UTF-8",
+      "current": {
+        "start": "2026-04-30",
+        "end": "2026-05-03",
+        "display": "Apr 30 - May 3, 2026"
+      },
+      "decision": {
+        "reason": "ok",
+        "best": {
+          "score": 8,
+          "range": {
+            "start": "2026-04-30",
+            "end": "2026-05-03"
+          },
+          "evidence": [
+            "APRIL 30-MAY 3, 2026"
+          ]
+        },
+        "top": null,
+        "runnerUp": null
+      },
+      "update": null
+    },
+    {
+      "slug": "camp-crucible",
+      "name": "Camp Crucible",
+      "website": "https://www.campcrucible.com/",
+      "ok": true,
+      "status": 200,
+      "contentType": "text/html; charset=UTF-8",
+      "current": {
+        "start": "2026-05-23",
+        "end": "2026-05-31",
+        "display": "May 23-31, 2026"
+      },
+      "decision": {
+        "reason": "no_candidates",
+        "best": null,
+        "top": null,
+        "runnerUp": null
+      },
+      "update": null
+    },
+    {
+      "slug": "charmed",
+      "name": "Charmed",
+      "website": "https://charmedhypno.org/",
+      "ok": true,
+      "status": 200,
+      "contentType": "text/html; charset=UTF-8",
+      "current": {
+        "start": "2026-01-15",
+        "end": "2026-01-18",
+        "display": "Jan 15-18, 2026"
+      },
+      "decision": {
+        "reason": "ambiguous",
+        "best": null,
+        "top": {
+          "score": 8,
+          "range": {
+            "start": "2026-01-15",
+            "end": "2026-01-18"
+          },
+          "evidence": [
+            "January 15-18, 2026",
+            "January 15-18, 2026"
+          ]
+        },
+        "runnerUp": {
+          "score": 8,
+          "range": {
+            "start": "2026-01-01",
+            "end": "2026-01-01"
+          },
+          "evidence": [
+            "January 1, 2026"
+          ]
+        }
+      },
+      "update": null
+    },
+    {
+      "slug": "coastal-carolina-fetish-fair",
+      "name": "Coastal Carolina Fetish Fair 2026",
+      "website": "https://coastalcarolinafetishfair.com/",
+      "ok": true,
+      "status": 200,
+      "contentType": "text/html;charset=utf-8",
+      "current": {
+        "start": "2026-11-19",
+        "end": "2026-11-24",
+        "display": "Dates TBA - November 2026 (Expected)"
+      },
+      "decision": {
+        "reason": "no_candidates",
+        "best": null,
+        "top": null,
+        "runnerUp": null
+      },
+      "update": null
+    },
+    {
+      "slug": "cruciblecon",
+      "name": "CrucibleCon",
+      "website": "https://www.cruciblecon.com/",
+      "ok": true,
+      "status": 200,
+      "contentType": "text/html; charset=UTF-8",
+      "current": {
+        "start": "2025-09-19",
+        "end": "2025-09-21",
+        "display": "Sep 19-21, 2025"
+      },
+      "decision": {
+        "reason": "no_candidates",
+        "best": null,
+        "top": null,
+        "runnerUp": null
+      },
+      "update": null
+    },
+    {
+      "slug": "cure-2026",
+      "name": "CURE 2026",
+      "website": "https://kicevents.com/cure",
+      "ok": true,
+      "status": 200,
+      "contentType": "text/html; charset=utf-8",
+      "current": {
+        "start": "2026-01-09",
+        "end": "2026-01-11",
+        "display": "Jan 9-11, 2026"
+      },
+      "decision": {
+        "reason": "no_candidates",
+        "best": null,
+        "top": null,
+        "runnerUp": null
+      },
+      "update": null
+    },
+    {
+      "slug": "dark-odyssey-fusion",
+      "name": "Dark Odyssey Fusion",
+      "website": "https://darkodyssey.com/fusion/",
+      "ok": true,
+      "status": 200,
+      "contentType": "text/html; charset=UTF-8",
+      "current": {
+        "start": "2026-06-23",
+        "end": "2026-06-29",
+        "display": "Jun 23-29, 2026"
+      },
+      "decision": {
+        "reason": "no_candidates",
+        "best": null,
+        "top": null,
+        "runnerUp": null
+      },
+      "update": null
+    },
+    {
+      "slug": "dark-odyssey-summer-camp",
+      "name": "Dark Odyssey Summer Camp",
+      "website": "https://darkodyssey.com/summerfest/",
+      "ok": true,
+      "status": 200,
+      "contentType": "text/html; charset=UTF-8",
+      "current": {
+        "start": "2026-09-01",
+        "end": "2026-09-07",
+        "display": "Sep 1-7, 2026"
+      },
+      "decision": {
+        "reason": "no_candidates",
+        "best": null,
+        "top": null,
+        "runnerUp": null
+      },
+      "update": null
+    },
+    {
+      "slug": "dark-odyssey-winter-fire",
+      "name": "Dark Odyssey Winter Fire",
+      "website": "https://darkodyssey.com/winterfire/",
+      "ok": true,
+      "status": 200,
+      "contentType": "text/html; charset=UTF-8",
+      "current": {
+        "start": "2026-02-13",
+        "end": "2026-02-16",
+        "display": "Feb 13-16, 2026"
+      },
+      "decision": {
+        "reason": "ok",
+        "best": {
+          "score": 8,
+          "range": {
+            "start": "2026-02-13",
+            "end": "2026-02-16"
+          },
+          "evidence": [
+            "February 13-16, 2026",
+            "February 13–16, 2026"
+          ]
+        },
+        "top": null,
+        "runnerUp": null
+      },
+      "update": null
+    },
+    {
+      "slug": "dungeons-geekdoms",
+      "name": "Dungeons & Geekdoms",
+      "website": "https://tempestgatherings.com/",
+      "ok": true,
+      "status": 200,
+      "contentType": "text/html",
+      "current": {
+        "start": "2026-03-12",
+        "end": "2026-03-15",
+        "display": "Mar 12-15, 2026"
+      },
+      "decision": {
+        "reason": "ok",
+        "best": {
+          "score": 8,
+          "range": {
+            "start": "2026-03-12",
+            "end": "2026-03-15"
+          },
+          "evidence": [
+            "March 12-15, 2026",
+            "March 12-15, 2026"
+          ]
+        },
+        "top": null,
+        "runnerUp": null
+      },
+      "update": null
+    },
+    {
+      "slug": "elevation-rope-2026",
+      "name": "Elevation Rope 2026",
+      "website": "https://www.elevationrope.com/",
+      "ok": true,
+      "status": 200,
+      "contentType": "text/html; charset=UTF-8",
+      "current": {
+        "start": "2026-07-16",
+        "end": "2026-07-21",
+        "display": "Jul 16-21, 2026"
+      },
+      "decision": {
+        "reason": "no_candidates",
+        "best": null,
+        "top": null,
+        "runnerUp": null
+      },
+      "update": null
+    },
+    {
+      "slug": "exploration-into-kink",
+      "name": "Exploration Into Kink (EiK) 2025",
+      "website": "https://www.explorationintokink.com/",
+      "ok": true,
+      "status": 200,
+      "contentType": "text/html;charset=utf-8",
+      "current": {
+        "start": "2025-11-14",
+        "end": "2025-11-16",
+        "display": "November 14-16, 2025"
+      },
+      "decision": {
+        "reason": "no_candidates",
+        "best": null,
+        "top": null,
+        "runnerUp": null
+      },
+      "update": null
+    },
+    {
+      "slug": "fetcamp",
+      "name": "FetCamp",
+      "website": "https://www.fetcamp.com/",
+      "ok": true,
+      "status": 200,
+      "contentType": "text/html; charset=UTF-8",
+      "current": {
+        "start": "2026-07-17",
+        "end": "2026-07-19",
+        "display": "Jul 17-19, 2026"
+      },
+      "decision": {
+        "reason": "no_candidates",
+        "best": null,
+        "top": null,
+        "runnerUp": null
+      },
+      "update": null
+    },
+    {
+      "slug": "fornucopia",
+      "name": "FORNUCOPIA",
+      "website": "https://www.fornucopiaevent.com/",
+      "ok": true,
+      "status": 200,
+      "contentType": "text/html;charset=utf-8",
+      "current": {
+        "start": "2025-10-02",
+        "end": "2025-10-05",
+        "display": "Oct 2-5, 2025"
+      },
+      "decision": {
+        "reason": "no_candidates",
+        "best": null,
+        "top": null,
+        "runnerUp": null
+      },
+      "update": null
+    },
+    {
+      "slug": "frolicon",
+      "name": "Frolicon",
+      "website": "https://frolicon.com/",
+      "ok": true,
+      "status": 200,
+      "contentType": "text/html; charset=UTF-8",
+      "current": {
+        "start": "2026-05-14",
+        "end": "2026-05-17",
+        "display": "May 14-17, 2026"
+      },
+      "decision": {
+        "reason": "no_candidates",
+        "best": null,
+        "top": null,
+        "runnerUp": null
+      },
+      "update": null
+    },
+    {
+      "slug": "indy-rope-expo-2026",
+      "name": "Indy Rope Expo 2026",
+      "website": "https://www.indyropeexpo.com/",
+      "ok": true,
+      "status": 200,
+      "contentType": "text/html; charset=UTF-8",
+      "current": {
+        "start": "2026-02-06",
+        "end": "2026-02-08",
+        "display": "Feb 6-8, 2026"
+      },
+      "decision": {
+        "reason": "no_candidates",
+        "best": null,
+        "top": null,
+        "runnerUp": null
+      },
+      "update": null
+    },
+    {
+      "slug": "kink-down-south-weekend",
+      "name": "Kink Down South Weekend 2026",
+      "website": "https://kinkdownsouth.com/",
+      "ok": true,
+      "status": 200,
+      "contentType": "text/html; charset=UTF-8",
+      "current": {
+        "start": "2026-08-07",
+        "end": "2026-08-09",
+        "display": "Dates TBA - August 2026 (Expected)"
+      },
+      "decision": {
+        "reason": "ambiguous",
+        "best": null,
+        "top": {
+          "score": 8,
+          "range": {
+            "start": "2026-02-11",
+            "end": "2026-02-11"
+          },
+          "evidence": [
+            "February 11, 2026"
+          ]
+        },
+        "runnerUp": {
+          "score": 8,
+          "range": {
+            "start": "2026-03-21",
+            "end": "2026-03-21"
+          },
+          "evidence": [
+            "March 21, 2026"
+          ]
+        }
+      },
+      "update": null
+    },
+    {
+      "slug": "kinky-kollege",
+      "name": "Kinky Kollege: Homecoming 2026",
+      "website": "https://kinkykollege.com/",
+      "ok": true,
+      "status": 200,
+      "contentType": "text/html; charset=UTF-8",
+      "current": {
+        "start": "2026-10-16",
+        "end": "2026-10-18",
+        "display": "Oct 16-18, 2026"
+      },
+      "decision": {
+        "reason": "no_candidates",
+        "best": null,
+        "top": null,
+        "runnerUp": null
+      },
+      "update": null
+    },
+    {
+      "slug": "kinkycon",
+      "name": "KinkyCon",
+      "website": "https://kinkycon.com/",
+      "ok": true,
+      "status": 200,
+      "contentType": "text/html",
+      "current": {
+        "start": "2026-07-10",
+        "end": "2026-07-12",
+        "display": "Jul 10-12, 2026"
+      },
+      "decision": {
+        "reason": "no_candidates",
+        "best": null,
+        "top": null,
+        "runnerUp": null
+      },
+      "update": null
+    },
+    {
+      "slug": "kinkycon-summer-coop",
+      "name": "KinkyCon Summer CO-OP",
+      "website": "https://kc.gotomyevent.com/",
+      "ok": true,
+      "status": 200,
+      "contentType": "text/html",
+      "current": {
+        "start": "2025-07-25",
+        "end": "2025-07-27",
+        "display": "Jul 25-27, 2025"
+      },
+      "decision": {
+        "reason": "no_candidates",
+        "best": null,
+        "top": null,
+        "runnerUp": null
+      },
+      "update": null
+    },
+    {
+      "slug": "master-slave-conference-msc",
+      "name": "The Master/slave Conference MsC 2026",
+      "website": "https://masterslaveconference.org/",
+      "ok": true,
+      "status": 200,
+      "contentType": "text/html; charset=utf-8",
+      "current": {
+        "start": "2026-09-03",
+        "end": "2026-09-07",
+        "display": "Sep 3-7, 2026 (Labor Day Weekend)"
+      },
+      "decision": {
+        "reason": "ambiguous",
+        "best": null,
+        "top": {
+          "score": 8,
+          "range": {
+            "start": "2026-09-03",
+            "end": "2026-09-03"
+          },
+          "evidence": [
+            "September 03, 2026",
+            "September 03, 2026"
+          ]
+        },
+        "runnerUp": {
+          "score": 8,
+          "range": {
+            "start": "2026-09-07",
+            "end": "2026-09-07"
+          },
+          "evidence": [
+            "September 07, 2026",
+            "September 07, 2026"
+          ]
+        }
+      },
+      "update": null
+    },
+    {
+      "slug": "mid-atlantic-leather-weekend-2026",
+      "name": "Mid-Atlantic Leather Weekend 2026",
+      "website": "https://www.leatherweekend.org/",
+      "ok": true,
+      "status": 200,
+      "contentType": "text/html;charset=utf-8",
+      "current": {
+        "start": "2026-01-16",
+        "end": "2026-01-19",
+        "display": "Jan 16-19, 2026"
+      },
+      "decision": {
+        "reason": "no_candidates",
+        "best": null,
+        "top": null,
+        "runnerUp": null
+      },
+      "update": null
+    },
+    {
+      "slug": "naughty-gras",
+      "name": "Naughty Gras",
+      "website": "https://studio58events.com/naughty-gras-2026/",
+      "ok": false,
+      "error": "HTTP 404",
+      "status": 404
+    },
+    {
+      "slug": "naughty-knowledge",
+      "name": "Naughty Knowledge",
+      "website": "https://studio58events.com/naughty-knowledge-2026/",
+      "ok": false,
+      "error": "HTTP 404",
+      "status": 404
+    },
+    {
+      "slug": "naughty-nawlins",
+      "name": "Naughty in N'Awlins",
+      "website": "https://www.naughty-events.com/cover-naughty-nawlins",
+      "ok": true,
+      "status": 200,
+      "contentType": "text/html;charset=utf-8",
+      "current": {
+        "start": "2026-07-08",
+        "end": "2026-07-12",
+        "display": "Jul 8-12, 2026"
+      },
+      "decision": {
+        "reason": "ok",
+        "best": {
+          "score": 8,
+          "range": {
+            "start": "2026-07-08",
+            "end": "2026-07-12"
+          },
+          "evidence": [
+            "JuLY 8-12, 2026",
+            "JuLY 8-12, 2026",
+            "JuLY 8-12, 2026"
+          ]
+        },
+        "top": null,
+        "runnerUp": null
+      },
+      "update": null
+    },
+    {
+      "slug": "naughty-noel",
+      "name": "Naughty Noel",
+      "website": "https://studio58events.com/naughty-noel-2026/",
+      "ok": false,
+      "error": "HTTP 404",
+      "status": 404
+    },
+    {
+      "slug": "neehu",
+      "name": "New England Erotic Hypnosis (un)Conference",
+      "website": "https://www.neehu.org/",
+      "ok": true,
+      "status": 200,
+      "contentType": "text/html; charset=UTF-8",
+      "current": {
+        "start": "2025-04-25",
+        "end": "2025-04-29",
+        "display": "Apr 25-29, 2025"
+      },
+      "decision": {
+        "reason": "ok",
+        "best": {
+          "score": 8,
+          "range": {
+            "start": "2026-04-02",
+            "end": "2026-04-06"
+          },
+          "evidence": [
+            "April 2-6, 2026",
+            "April 2-6, 2026",
+            "April 2-6, 2026",
+            "April 2-6, 2026"
+          ]
+        },
+        "top": null,
+        "runnerUp": null
+      },
+      "update": {
+        "start": "2026-04-02",
+        "end": "2026-04-06",
+        "display": "Apr 2-6, 2026"
+      }
+    },
+    {
+      "slug": "ohio-smart-fetish-flea",
+      "name": "Ohio SMART Fetish Flea",
+      "website": "https://ohiosmart.org/",
+      "ok": true,
+      "status": 200,
+      "contentType": "text/html; charset=utf-8",
+      "current": {
+        "start": "2026-10-16",
+        "end": "2026-10-18",
+        "display": "Oct 16-18, 2026"
+      },
+      "decision": {
+        "reason": "ambiguous",
+        "best": null,
+        "top": {
+          "score": 8,
+          "range": {
+            "start": "2026-02-06",
+            "end": "2026-02-06"
+          },
+          "evidence": [
+            "February 06, 2026"
+          ]
+        },
+        "runnerUp": {
+          "score": 8,
+          "range": {
+            "start": "2026-02-08",
+            "end": "2026-02-08"
+          },
+          "evidence": [
+            "February 08, 2026"
+          ]
+        }
+      },
+      "update": null
+    },
+    {
+      "slug": "primal-arts-festival",
+      "name": "Primal Arts Festival",
+      "website": "https://smsprimalarts.com/",
+      "ok": true,
+      "status": 200,
+      "contentType": "text/html;charset=utf-8",
+      "current": {
+        "start": "2026-05-07",
+        "end": "2026-05-11",
+        "display": "May 7-11, 2026"
+      },
+      "decision": {
+        "reason": "no_candidates",
+        "best": null,
+        "top": null,
+        "runnerUp": null
+      },
+      "update": null
+    },
+    {
+      "slug": "rendezvous",
+      "name": "Rendezvous",
+      "website": "https://rendezvous.com/",
+      "ok": false,
+      "error": "fetch failed",
+      "status": null
+    },
+    {
+      "slug": "rochester-erotic-arts-festival",
+      "name": "Rochester Erotic Arts Festival",
+      "website": "https://www.rochestereroticartfest.org/",
+      "ok": true,
+      "status": 200,
+      "contentType": "text/html",
+      "current": {
+        "start": "2026-04-10",
+        "end": "2026-04-12",
+        "display": "Apr 10-12, 2026"
+      },
+      "decision": {
+        "reason": "ok",
+        "best": {
+          "score": 11,
+          "range": {
+            "start": "2026-04-10",
+            "end": "2026-04-12"
+          },
+          "evidence": [
+            "April 10-12, 2026",
+            "April 10-12, 2026",
+            "April 10-12, 2026",
+            "April 10-12, 2026"
+          ]
+        },
+        "top": null,
+        "runnerUp": null
+      },
+      "update": null
+    },
+    {
+      "slug": "rochester-kink",
+      "name": "Rochester Kink",
+      "website": "https://rochesterkink.com/",
+      "ok": false,
+      "error": "fetch failed",
+      "status": null
+    },
+    {
+      "slug": "summer-michigan-rope-conference-smirc",
+      "name": "The Summer Michigan Rope Conference SMIRC",
+      "website": "https://www.smirc.net/",
+      "ok": true,
+      "status": 200,
+      "contentType": "text/html; charset=UTF-8",
+      "current": {
+        "start": "2025-08-15",
+        "end": "2025-08-17",
+        "display": "Aug 15-17, 2025"
+      },
+      "decision": {
+        "reason": "no_candidates",
+        "best": null,
+        "top": null,
+        "runnerUp": null
+      },
+      "update": null
+    },
+    {
+      "slug": "tesfest",
+      "name": "TESFest",
+      "website": "https://www.tesfest.org/",
+      "ok": true,
+      "status": 200,
+      "contentType": "text/html; charset=UTF-8",
+      "current": {
+        "start": "2026-07-02",
+        "end": "2026-07-05",
+        "display": "Jul 2-5, 2026"
+      },
+      "decision": {
+        "reason": "no_candidates",
+        "best": null,
+        "top": null,
+        "runnerUp": null
+      },
+      "update": null
+    },
+    {
+      "slug": "tethered",
+      "name": "Tethered Together",
+      "website": "https://tetheredtogether.net/",
+      "ok": true,
+      "status": 200,
+      "contentType": "text/html; charset=UTF-8",
+      "current": {
+        "start": "2026-02-27",
+        "end": "2026-03-02",
+        "display": "Feb 27-Mar 2, 2026"
+      },
+      "decision": {
+        "reason": "no_candidates",
+        "best": null,
+        "top": null,
+        "runnerUp": null
+      },
+      "update": null
+    },
+    {
+      "slug": "twisted-tryst",
+      "name": "Twisted Tryst",
+      "website": "https://www.twistedtryst.com/",
+      "ok": true,
+      "status": 200,
+      "contentType": "text/html; charset=utf-8",
+      "current": {
+        "start": "2026-06-10",
+        "end": "2026-06-14",
+        "display": "Jun 10-14, 2026"
+      },
+      "decision": {
+        "reason": "no_candidates",
+        "best": null,
+        "top": null,
+        "runnerUp": null
+      },
+      "update": null
+    },
+    {
+      "slug": "whips-and-wine",
+      "name": "Whips and Wine",
+      "website": "https://fetlife.com/events/1439241",
+      "ok": false,
+      "error": "HTTP 403",
+      "status": 403
+    }
+  ]
+}

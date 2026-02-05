@@ -306,17 +306,20 @@ export const dungeons = [
       "address": "Philadelphia, PA"
     },
     "category": "Kink Club",
-    "excerpt": "Details coming soon.",
+    "excerpt": "Improvisational interactive theater night in Philadelphia with dedicated rooms for socializing, learning, play, and aftercare.",
     "description": {
-      "long": "Details coming soon."
+      "long": "Our Rooms\nFront Room/Social Area:\nThis is the first room you will see when you enter into our event. In this room, once you sign in at the front desk, you will see a relaxed open area without any active play going on. This room is where you can purchase refreshments, use the coat check, patronize our rotating selection of vendors, and hang out, relax, and chat with friends.\n\nThe Newbie Room:\nThe Newbie Room, despite its name, is not just for Newbies. Anyone who wants to learn a new skill, brush up, practice, or generally learn more is welcome. We have a wonderful team of skilled and experienced practitioners who are more than happy to share their time and experience with you.\n\nThe Main Room:\nThis is where most of the action happens. We have many play stations set up around the room, as well as several house tops who are happy to both play with people, and to teach their craft. Feel free to wander, explore, and have a good time.\n\nThe Playground:\nThe playground is a relaxing place where you can sit, color, enter a blanket fort, or have storytime! If you have not tried it, it's highly recommended, and very refreshing.\n\nThe Aftercare Room:\nOnce you're done, and need to relax and rejuvenate, head down the hallway on the first floor and rest on a sofa, beanbag chair, or regular chair, or just sprawl out on the floor. This is a quiet room specifically for relaxation when one is finished a scene.\n\nOther rooms:\nThere are two other rooms that are currently unavailable while our venue goes through renovations.\nThe Gallery - Will Return Soon.\n\nWhat is The Aviary?\nThe Aviary is an improvisational interactive theater night focusing on ontological deconstruction of the political theory concepts of Contract and Domination, as put forth by Carole Pateman and Charles Mills. It often utilizes concepts that involve fetish, as well as BDSM.\n\nRules Of Play\nPrior to admittance, all attendees must read and sign a form indicating that they have read, understood, and agreed to follow the rules of the event. Attendees must also present a current, valid photo ID, and their proof of vaccination. All attendees must sign the admission form every time they attend the event. Failure to comply with the event rules is grounds for your immediate removal from the event, either temporarily or permanently, without a refund of the cost of admittance.\n\nContact Us\ncontact@theaviaryphilly.com"
+    },
+    "contact": {
+      "email": "contact@theaviaryphilly.com"
     },
     "website": "https://theaviaryphilly.com/",
     "logo": "/images/theaviary.jpg",
     "images": [],
     "seo": {
       "title": "The Aviary Philly | East Coast Kink Events",
-      "description": "Details coming soon.",
-      "keywords": "The Aviary Philly, Philadelphia, kink club"
+      "description": "The Aviary is an improvisational interactive theater night in Philadelphia with rooms for socializing, learning, play, a playground, and aftercare, plus clear rules of play.",
+      "keywords": "The Aviary Philly, Philadelphia, kink club, improvisational theater, BDSM, aftercare room, newbie room"
     }
   },
   {
