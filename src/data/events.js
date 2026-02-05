@@ -331,9 +331,9 @@ export const events = [
     "name": "FORNUCOPIA",
     "slug": "fornucopia",
     "date": {
-      "start": "2025-10-02",
-      "end": "2025-10-05",
-      "display": "Oct 2-5, 2025"
+      "start": "2026-10-01",
+      "end": "2026-10-04",
+      "display": "Oct 1-4, 2026"
     },
     "location": {
       "city": "Darlington",
@@ -341,8 +341,8 @@ export const events = [
       "region": "North Eastern, Maryland"
     },
     "category": "Outdoor Event",
-    "excerpt": "Fornucopia is a beloved East Coast campground event focused on community, connection, education, and entertainment — a welcoming weekend open to all skill levels.",
-    "longDescription": "Get ready for a weekend of excitement while you connect with like-minded individuals at one of the most beloved campgrounds on the East Coast. Open to all skill levels, Fornucopia blends education, entertainment, and the freedom to have fun. More than an event, it's a community gathering designed to help you make memories that last a lifetime.",
+    "excerpt": "Fornucopia returns Oct 1-4, 2026 for a beloved East Coast campground weekend focused on community, connection, education, and entertainment.",
+    "longDescription": "Get ready for a weekend of excitement while you connect with like-minded individuals at one of the most beloved campgrounds on the East Coast. Open to all skill levels, Fornucopia blends education, entertainment, and the freedom to have fun. More than an event, it's a community gathering designed to help you make memories that last a lifetime. Tentative 2026 schedule runs Oct 1-4 with check-in on Thursday and classes, meals, and social/play space throughout the weekend.",
     "website": "https://www.fornucopiaevent.com/",
     "logo": "/images/fornucopia.png",
     "features": [
@@ -354,9 +354,9 @@ export const events = [
       "Memorable Experiences"
     ],
     "seo": {
-      "title": "FORNUCOPIA - Maryland BDSM Community Camp Event | East Coast Kink Events",
-      "description": "Fornucopia in Darlington, MD offers a community-focused weekend with education, entertainment, and inclusive fun at a beloved East Coast campground.",
-      "keywords": "Fornucopia, Maryland, BDSM camp, community event, education, entertainment"
+      "title": "FORNUCOPIA Oct 1-4, 2026 - Maryland BDSM Camp Event | East Coast Kink Events",
+      "description": "Fornucopia in Darlington, MD runs Oct 1-4, 2026 with a community-focused weekend of education, entertainment, and inclusive fun at a beloved East Coast campground.",
+      "keywords": "Fornucopia, Maryland, BDSM camp, community event, education, entertainment, 2026"
     }
   },
   {
