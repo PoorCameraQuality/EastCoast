@@ -8,6 +8,8 @@ const nextConfig = {
       { protocol: 'https', hostname: 'images.squarespace-cdn.com' },
       { protocol: 'https', hostname: 'kicevents.com' },
       { protocol: 'https', hostname: 'www.kicevents.com' },
+      { protocol: 'https', hostname: 'studio58events.com' },
+      { protocol: 'https', hostname: 'www.kinkdownsouth.com' },
     ],
   },
 
