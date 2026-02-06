@@ -1,12 +1,6 @@
 import { Metadata } from 'next'
-import { getAllEvents, getEventsByCategory } from '@/data/events'
-import { getAllDungeons } from '@/data/dungeons'
-import Link from 'next/link'
-import EventLogo from '@/components/EventLogo'
-import { EventListStructuredData } from '@/components/StructuredData'
-import Breadcrumb from '@/components/Breadcrumb'
-import Search from '@/components/Search'
 import EventsPageClient from './EventsPageClient'
+import EventsPageSkeleton from '@/components/events/EventsPageSkeleton'
 import { Suspense } from 'react'
 
 export const metadata: Metadata = {
@@ -51,15 +45,7 @@ export const metadata: Metadata = {
 
 export default function EventsPage() {
   return (
-    <Suspense fallback={
-      <div className="min-h-screen bg-gradient-to-br from-black via-dark-900 to-black relative overflow-hidden">
-        <div className="container mx-auto px-4 py-8">
-          <div className="flex justify-center items-center min-h-[60vh]">
-            <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary-500"></div>
-          </div>
-        </div>
-      </div>
-    }>
+    <Suspense fallback={<EventsPageSkeleton />}>
       <EventsPageClient />
     </Suspense>
   )

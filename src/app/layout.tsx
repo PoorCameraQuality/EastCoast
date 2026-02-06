@@ -16,7 +16,7 @@ import SafeTrackingWrapper from '@/components/SafeTrackingWrapper'
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 
-const inter = Inter({ subsets: ['latin'] })
+const inter = Inter({ subsets: ['latin'], display: 'optional' })
 
 export const metadata: Metadata = {
   title: {
