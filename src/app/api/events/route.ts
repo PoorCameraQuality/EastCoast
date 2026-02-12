@@ -6,10 +6,7 @@ import { supabase } from '@/lib/supabase'
 
 // Missing logo files that need to be created:
 // - ohiosmart.png (Ohio SMART Fetish Flea)
-// - kinkycon.png (KinkyCon)
 // - whipsandwine.png (Whips and Wine) 
-// - rendezvous.png (Rendezvous)
-
 export async function POST(request: NextRequest) {
   try {
     // Apply rate limiting for form submissions

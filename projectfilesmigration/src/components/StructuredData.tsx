@@ -123,8 +123,8 @@ export function DungeonStructuredData({ dungeon }: { dungeon: any }) {
     "description": dungeon.excerpt,
     "url": `${BASE_URL}/dungeons/${dungeon.slug}`,
     "image": dungeon.logo ? [`${BASE_URL}${dungeon.logo}`] : undefined,
-    "telephone": dungeon.phone || undefined,
-    "email": dungeon.email || undefined,
+    "telephone": dungeon.contact?.phone || dungeon.phone || undefined,
+    "email": dungeon.contact?.email || dungeon.email || undefined,
     "address": {
       "@type": "PostalAddress",
       "addressLocality": dungeon.location.city,

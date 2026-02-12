@@ -22,7 +22,7 @@ const EVENT_LOGOS: Record<string, string> = {
   'naughty-nawlins': '/images/naughtynawlins.png',
   'naughty-noel': '/images/naughtynoel.jpg',
   'ohio-smart': '/images/ohiosmart.png',
-  'tes-fest': '/images/tesfest.png',
+  'tesfest': '/images/tesfest.png',
   'tethered-together': '/images/tethered.png',
   'twisted-tryst': '/images/twistedtyrst.png',
 }

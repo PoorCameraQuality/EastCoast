@@ -8,8 +8,6 @@ import { supabase } from '@/lib/supabase'
 // - ohiosmart.png (Ohio SMART Fetish Flea)
 // - kinkycon.png (KinkyCon)
 // - whipsandwine.png (Whips and Wine) 
-// - rendezvous.png (Rendezvous)
-
 export async function POST(request: NextRequest) {
   try {
     // Apply rate limiting for form submissions

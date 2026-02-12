@@ -8,6 +8,31 @@ import RelatedContent from '@/components/RelatedContent'
 import DungeonImage from '@/components/dungeons/DungeonImage'
 import { BASE_URL } from '@/lib/seo'
 
+/** Converts schema.org openingHours (e.g. "Fr 20:00-02:00, Sa 20:00-02:00") to human-readable format. */
+function formatHours(hours: string): string {
+  const dayMap: Record<string, string> = {
+    Mo: 'Monday', Tu: 'Tuesday', We: 'Wednesday', Th: 'Thursday',
+    Fr: 'Friday', Sa: 'Saturday', Su: 'Sunday'
+  }
+  const parts = hours.split(',').map((s) => s.trim())
+  return parts
+    .map((part) => {
+      const match = part.match(/^([A-Za-z]{2})\s+(\d{2}):(\d{2})-(\d{2}):(\d{2})$/)
+      if (!match) return part
+      const [, day, startH, startM, endH, endM] = match
+      const dayName = dayMap[day as keyof typeof dayMap] || day
+      const fmt = (h: string, m: string) => {
+        const hour = parseInt(h, 10)
+        const mins = `:${m}`
+        if (hour === 0) return `12${mins} am`
+        if (hour === 12) return `12${mins} pm`
+        return hour > 12 ? `${hour - 12}${mins} pm` : `${hour}${mins} am`
+      }
+      return `${dayName} ${fmt(startH, startM)} – ${fmt(endH, endM)}`
+    })
+    .join('\n')
+}
+
 // Generate metadata for SEO
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
   const dungeon = getDungeonBySlug(params.slug)
@@ -120,6 +145,100 @@ export default function DungeonPage({ params }: { params: { slug: string } }) {
                   <p className="text-xs text-gray-500 mt-1">{dungeon.location.address}</p>
                 ) : null}
               </div>
+
+              {(dungeon.contact?.phone || dungeon.contact?.email) ? (
+                <div>
+                  <h3 className="text-lg font-semibold text-white">Contact</h3>
+                  {dungeon.contact?.phone ? (
+                    <a
+                      href={`tel:${dungeon.contact.phone.replace(/\D/g, '')}`}
+                      className="block text-sm text-gray-300 hover:text-white transition-colors"
+                      aria-label={`Call ${dungeon.name}`}
+                    >
+                      {dungeon.contact.phone}
+                    </a>
+                  ) : null}
+                  {dungeon.contact?.email ? (
+                    <a
+                      href={`mailto:${dungeon.contact.email}`}
+                      className="block text-sm text-gray-300 hover:text-white transition-colors mt-1 break-all"
+                      aria-label={`Email ${dungeon.name}`}
+                    >
+                      {dungeon.contact.email}
+                    </a>
+                  ) : null}
+                </div>
+              ) : null}
+
+              {dungeon.hours ? (
+                <div>
+                  <h3 className="text-lg font-semibold text-white">Hours</h3>
+                  <p className="text-sm text-gray-300 whitespace-pre-line">{formatHours(dungeon.hours)}</p>
+                </div>
+              ) : null}
+
+              {dungeon.socialMedia && Object.keys(dungeon.socialMedia).length > 0 ? (
+                <div>
+                  <h3 className="text-lg font-semibold text-white">Follow</h3>
+                  <div className="flex gap-3 mt-2">
+                    {dungeon.socialMedia.fetlife ? (
+                      <a
+                        href={dungeon.socialMedia.fetlife}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-sm text-gray-300 hover:text-white transition-colors"
+                        aria-label={`${dungeon.name} on FetLife`}
+                      >
+                        FetLife
+                      </a>
+                    ) : null}
+                    {dungeon.socialMedia.facebook ? (
+                      <a
+                        href={dungeon.socialMedia.facebook}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-sm text-gray-300 hover:text-white transition-colors"
+                        aria-label={`${dungeon.name} on Facebook`}
+                      >
+                        Facebook
+                      </a>
+                    ) : null}
+                    {dungeon.socialMedia.instagram ? (
+                      <a
+                        href={dungeon.socialMedia.instagram}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-sm text-gray-300 hover:text-white transition-colors"
+                        aria-label={`${dungeon.name} on Instagram`}
+                      >
+                        Instagram
+                      </a>
+                    ) : null}
+                    {dungeon.socialMedia.twitter ? (
+                      <a
+                        href={dungeon.socialMedia.twitter}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-sm text-gray-300 hover:text-white transition-colors"
+                        aria-label={`${dungeon.name} on Twitter`}
+                      >
+                        Twitter
+                      </a>
+                    ) : null}
+                    {dungeon.socialMedia.youtube ? (
+                      <a
+                        href={dungeon.socialMedia.youtube}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-sm text-gray-300 hover:text-white transition-colors"
+                        aria-label={`${dungeon.name} on YouTube`}
+                      >
+                        YouTube
+                      </a>
+                    ) : null}
+                  </div>
+                </div>
+              ) : null}
 
               {dungeon.website ? (
                 <a
