@@ -435,7 +435,33 @@ export function ContactPageStructuredData() {
 }
 
 // New component for education page structured data
-export function EducationStructuredData() {
+interface ArticleForSchema {
+  slug: string
+  title: string
+  author_name?: string
+}
+
+export function EducationStructuredData({ articles = [] }: { articles?: ArticleForSchema[] }) {
+  const itemListElement = articles.slice(0, 50).map((article, idx) => ({
+    "@type": "ListItem" as const,
+    position: idx + 1,
+    item: {
+      "@type": "Article" as const,
+      name: article.title,
+      url: `${BASE_URL}/education/${article.slug}`,
+      ...(article.author_name && {
+        author: {
+          "@type": "Person" as const,
+          name: article.author_name
+        }
+      }),
+      publisher: {
+        "@type": "Organization" as const,
+        name: "East Coast Kink Events"
+      }
+    }
+  }))
+
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "WebPage",
@@ -446,60 +472,8 @@ export function EducationStructuredData() {
       "@type": "ItemList",
       "name": "Kink Education Articles",
       "description": "Educational articles and resources for the kink community",
-      "numberOfItems": 3,
-      "itemListElement": [
-        {
-          "@type": "ListItem",
-          "position": 1,
-          "item": {
-            "@type": "Article",
-            "name": "SSC vs RACK: Understanding Kink Safety Frameworks",
-            "url": `${BASE_URL}/education/ssc-vs-rack-kink-safety-frameworks`,
-            "author": {
-              "@type": "Person",
-              "name": "Dr. Sarah Chen"
-            },
-            "publisher": {
-              "@type": "Organization",
-              "name": "East Coast Kink Events"
-            }
-          }
-        },
-        {
-          "@type": "ListItem",
-          "position": 2,
-          "item": {
-            "@type": "Article",
-            "name": "Negotiation 101: Building Consent in BDSM Relationships",
-            "url": `${BASE_URL}/education/negotiation-101-building-consent-bdsm-relationships`,
-            "author": {
-              "@type": "Person",
-              "name": "Marcus Rodriguez"
-            },
-            "publisher": {
-              "@type": "Organization",
-              "name": "East Coast Kink Events"
-            }
-          }
-        },
-        {
-          "@type": "ListItem",
-          "position": 3,
-          "item": {
-            "@type": "Article",
-            "name": "Aftercare Essentials: Supporting Your Partner After Play",
-            "url": `${BASE_URL}/education/aftercare-essentials-supporting-partner-after-play`,
-            "author": {
-              "@type": "Person",
-              "name": "Dr. Emily Watson"
-            },
-            "publisher": {
-              "@type": "Organization",
-              "name": "East Coast Kink Events"
-            }
-          }
-        }
-      ]
+      "numberOfItems": itemListElement.length,
+      "itemListElement": itemListElement
     }
   }
 

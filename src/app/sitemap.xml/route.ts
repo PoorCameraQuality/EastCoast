@@ -1,10 +1,12 @@
 import { NextResponse } from "next/server"
 import { readFile } from "node:fs/promises"
 import path from "node:path"
+import { supabase } from "@/lib/supabase"
 
 export const runtime = "nodejs"
 
 const BASE = "https://www.eastcoastkinkevents.com"
+const EVENTS_PER_PAGE = 20
 const STATE_SLUGS = [
   "new-york","pennsylvania","new-jersey","maryland","delaware",
   "virginia","north-carolina","south-carolina","georgia","florida",
@@ -48,7 +50,6 @@ async function getSitemapData() {
     ])
     const allEvents = getAllEvents?.() || []
     const allDungeons = getAllDungeons?.() || []
-    const allArticles = getAllArticles?.() || []
     const allVendors = getAllVendors?.() || []
 
     events = allEvents
@@ -57,12 +58,31 @@ async function getSitemapData() {
     dungeons = allDungeons
       .filter((d: any) => d?.slug)
       .map((d: any) => ({ slug: d.slug, updated: (d as any).updated_at || (d as any).updated || today }))
-    articles = allArticles
-      .filter((a: any) => a?.slug && a?.status === 'published')
-      .map((a: any) => ({ slug: a.slug, updated: (a.lastUpdated || a.publish_date || a.publishDate || '').toString().slice(0, 10) }))
     vendors = (allVendors || [])
       .filter((v: any) => v?.slug)
       .map((v: any) => ({ slug: v.slug }))
+
+    // Fetch articles from Supabase first (26+ articles); fallback to static education.js if Supabase returns empty
+    const client = supabase
+    if (client) {
+      const { data: supabaseArticles, error } = await client
+        .from('articles')
+        .select('slug, publish_date, last_updated, updated_at')
+        .eq('status', 'published')
+        .order('publish_date', { ascending: false })
+      if (!error && supabaseArticles?.length) {
+        articles = supabaseArticles.map((a: any) => ({
+          slug: a.slug,
+          updated: (a.last_updated || a.updated_at || a.publish_date || '').toString().slice(0, 10)
+        }))
+      }
+    }
+    if (articles.length === 0) {
+      const staticArticles = getAllArticles?.() || []
+      articles = staticArticles
+        .filter((a: any) => a?.slug && a?.status === 'published')
+        .map((a: any) => ({ slug: a.slug, updated: (a.lastUpdated || a.publishDate || '').toString().slice(0, 10) }))
+    }
   } catch (err) {
     console.error('[Sitemap] Error loading data:', err)
   }
@@ -111,6 +131,19 @@ export async function GET() {
       changefreq: 'weekly' as const,
       priority: 0.8
     }))
+
+    // Add paginated event listing URLs
+    const { getAllEvents } = await import("@/data/events")
+    const allEvents = getAllEvents?.() || []
+    const now = new Date()
+    const upcomingCount = allEvents.filter((e: any) => new Date(e.date?.end) >= now).length
+    const totalEventPages = Math.max(1, Math.ceil(upcomingCount / EVENTS_PER_PAGE))
+    const eventPageUrls: UrlEntry[] = Array.from({ length: totalEventPages }, (_, i) => ({
+      loc: `${BASE}/events/page/${i + 1}`,
+      lastmod: today,
+      changefreq: 'weekly' as const,
+      priority: 0.7
+    }))
     const dungeonUrls: UrlEntry[] = dungeons.map((d) => ({
       loc: `${BASE}/dungeons/${d.slug}`,
       lastmod: d.updated?.slice(0, 10),
@@ -130,7 +163,7 @@ export async function GET() {
       priority: 0.5
     }))
 
-    const body = xml([...core, ...stateUrls, ...eventUrls, ...dungeonUrls, ...articleUrls, ...vendorUrls])
+    const body = xml([...core, ...stateUrls, ...eventUrls, ...eventPageUrls, ...dungeonUrls, ...articleUrls, ...vendorUrls])
     return new NextResponse(body, { status: 200, headers })
   } catch {
     try {

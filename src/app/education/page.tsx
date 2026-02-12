@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import EducationPageClient from './EducationPageClient'
+import { EducationStructuredData } from '@/components/StructuredData'
 import { BASE_URL } from '@/lib/seo'
 import { supabase } from '@/lib/supabase'
 
@@ -62,6 +63,16 @@ async function getArticles() {
 
 export default async function EducationPage() {
   const initialArticles = await getArticles()
-  return <EducationPageClient initialArticles={initialArticles} />
+  const articlesForSchema = initialArticles.map((a: any) => ({
+    slug: a.slug,
+    title: a.title,
+    author_name: a.author_name
+  }))
+  return (
+    <>
+      <EducationStructuredData articles={articlesForSchema} />
+      <EducationPageClient initialArticles={initialArticles} />
+    </>
+  )
 }
 
