@@ -1,0 +1,759 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap');
+@import '../styles/mdx-prose.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  body {
+    @apply text-gray-100 bg-black font-sans;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-serif;
+  }
+  
+  /* Accessible focus outline for keyboard navigation only */
+  a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+    outline: 2px solid #fbbf24; /* amber-400 for visibility */
+    outline-offset: 2px;
+    transition: outline 0.15s ease-out;
+  }
+  
+  /* Remove focus outline on mouse clicks */
+  a:focus:not(:focus-visible), button:focus:not(:focus-visible), input:focus:not(:focus-visible), 
+  select:focus:not(:focus-visible), textarea:focus:not(:focus-visible) {
+    outline: none;
+  }
+  
+  /* Improve default link contrast */
+  a {
+    color: #facc15; /* yellow-400 */
+  }
+  
+  /* Ensure visited links still meet contrast requirements */
+  a:visited {
+    color: #eab308; /* yellow-500 */
+  }
+  
+  /* Focus states for interactive elements with proper contrast */
+  button:focus-visible,
+  input:focus-visible,
+  textarea:focus-visible,
+  select:focus-visible,
+  a:focus-visible,
+  [tabindex]:focus-visible {
+    outline: 2px solid #4A7CFF;
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+  
+  /* Ensure focus states are visible on all interactive elements */
+  .btn-primary:focus-visible,
+  .btn-secondary:focus-visible,
+  .btn-outline:focus-visible {
+    outline: 2px solid #4A7CFF;
+    outline-offset: 2px;
+    box-shadow: 0 0 0 4px rgba(74, 124, 255, 0.2);
+  }
+  
+  /* High contrast focus for form inputs */
+  input:focus-visible,
+  textarea:focus-visible,
+  select:focus-visible {
+    outline: 2px solid #4A7CFF;
+    outline-offset: 2px;
+    border-color: #4A7CFF;
+  }
+  
+  /* Focus styles for links */
+  a:focus-visible {
+    outline: 2px solid #4A7CFF;
+    outline-offset: 2px;
+    text-decoration: underline;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-primary-600 hover:bg-primary-700 text-white font-medium py-3 px-6 rounded-none transition-all duration-300 border-2 border-primary-600 hover:border-primary-700;
+  }
+  
+  .btn-secondary {
+    @apply bg-dark-800 hover:bg-dark-700 text-white font-medium py-3 px-6 rounded-none transition-all duration-300 border-2 border-dark-600 hover:border-dark-500;
+  }
+  
+  .btn-outline {
+    @apply bg-transparent hover:bg-primary-600 text-primary-600 hover:text-white font-medium py-3 px-6 rounded-none transition-all duration-300 border-2 border-primary-600;
+  }
+  
+  .card {
+    @apply bg-dark-900 border border-dark-700 shadow-dark hover:shadow-elegant-lg transition-all duration-300;
+  }
+  
+  .card-elegant {
+    @apply bg-dark-900 border-0 shadow-dark hover:shadow-elegant-lg transition-all duration-300 p-8;
+  }
+  
+  .container-custom {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+  
+  .section-padding {
+    @apply py-16 lg:py-24;
+  }
+  
+  .text-elegant {
+    @apply font-serif text-white;
+  }
+  
+  .text-subtle {
+    @apply text-gray-400 font-light;
+  }
+  
+  .border-elegant {
+    @apply border-dark-700;
+  }
+  
+  .hover-lift {
+    @apply hover:-translate-y-1 transition-transform duration-300;
+  }
+
+  /* New hero animations */
+  .animate-fade-in-up {
+    animation: fadeInUp 0.8s ease-out forwards;
+  }
+
+  .animate-fade-in-up.delay-300 {
+    animation-delay: 0.3s;
+  }
+
+  .animate-fade-in-up.delay-500 {
+    animation-delay: 0.5s;
+  }
+
+  .animate-fade-in-up.delay-700 {
+    animation-delay: 0.7s;
+  }
+
+  .animate-gradient-x {
+    background-size: 200% 200%;
+    animation: gradientX 3s ease-in-out infinite;
+  }
+
+  /* Discord/community CTA: soft purple-tinted glow (always visible, becomes very bright on hover) */
+  .discord-glow {
+    position: relative;
+    /* purple hue base */
+    box-shadow:
+      0 0 16px rgba(124, 58, 237, 0.50),
+      0 0 36px rgba(124, 58, 237, 0.30),
+      0 0 56px rgba(124, 58, 237, 0.20);
+    transition: box-shadow 200ms ease, transform 200ms ease;
+  }
+  .discord-glow:hover,
+  .discord-glow:focus-visible {
+    /* very bright on hover */
+    box-shadow:
+      0 0 36px rgba(124, 58, 237, 0.95),
+      0 0 90px rgba(124, 58, 237, 0.70),
+      0 0 140px rgba(124, 58, 237, 0.50);
+    transform: translateY(-1px);
+    /* vibrant appearance */
+    filter: saturate(1.25) brightness(1.05);
+  }
+
+  /* On hover: convert button-style Discord CTAs to purple */
+  .discord-glow.btn-primary:hover,
+  .discord-glow.btn-primary:focus-visible,
+  .discord-glow.btn-secondary:hover,
+  .discord-glow.btn-secondary:focus-visible,
+  .discord-glow.btn-outline:hover,
+  .discord-glow.btn-outline:focus-visible {
+    background-color: #7C3AED !important; /* violet-600 */
+    border-color: #7C3AED !important;
+    color: #ffffff !important;
+  }
+
+  /* On hover: text-style Discord links turn purple if not buttons */
+  .discord-glow:hover:not(.btn-primary):not(.btn-secondary):not(.btn-outline),
+  .discord-glow:focus-visible:not(.btn-primary):not(.btn-secondary):not(.btn-outline) {
+    color: #C084FC !important; /* violet-400 */
+  }
+  .discord-glow::after {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: 2px;
+    background: radial-gradient(120px 10px at 8% -18%, rgba(124, 58, 237, 0.30), transparent 70%),
+                radial-gradient(90px 8px at 92% 118%, rgba(124, 58, 237, 0.24), transparent 70%);
+    pointer-events: none;
+  }
+
+  /* Subtle glow on hover/focus for all primary buttons */
+  .btn-primary:hover,
+  .btn-primary:focus-visible,
+  .btn-secondary:hover,
+  .btn-secondary:focus-visible,
+  .btn-outline:hover,
+  .btn-outline:focus-visible {
+    box-shadow: 0 0 12px rgba(74, 123, 183, 0.35), 0 0 24px rgba(54, 75, 154, 0.25);
+  }
+
+  /* Card blue glow on hover/focus (non-destructive: uses filter so it doesn't override existing shadows) */
+  .card:hover,
+  .card:focus-within,
+  .card-elegant:hover,
+  .card-elegant:focus-within {
+    filter: drop-shadow(0 0 12px rgba(74, 123, 183, 0.35)) drop-shadow(0 0 24px rgba(54, 75, 154, 0.25));
+  }
+  
+  .bg-gradient-dark {
+    @apply bg-gradient-to-br from-black via-dark-900 to-dark-800;
+  }
+
+  /* Paid vendor card border: subtle gold sparkle (motion-safe only) */
+  .vendor-paid-sparkle {
+    position: relative;
+    /* Fallback so the paid state is always visible even if masking isn't supported */
+    border-color: rgba(251, 191, 36, 0.28) !important; /* amber-400 */
+    box-shadow:
+      0 0 0 1px rgba(251, 191, 36, 0.10),
+      0 0 34px rgba(234, 179, 8, 0.16);
+  }
+  .vendor-paid-sparkle::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 1rem; /* matches rounded-2xl */
+    padding: 1px;
+    background:
+      linear-gradient(135deg, rgba(251,191,36,0.55), rgba(234,179,8,0.22), rgba(251,191,36,0.40)),
+      radial-gradient(12px 12px at 18% 22%, rgba(252,211,77,0.52), transparent 62%),
+      radial-gradient(14px 14px at 82% 30%, rgba(252,211,77,0.44), transparent 62%),
+      radial-gradient(10px 10px at 72% 78%, rgba(252,211,77,0.40), transparent 62%),
+      radial-gradient(11px 11px at 28% 84%, rgba(252,211,77,0.38), transparent 62%),
+      radial-gradient(9px 9px at 55% 18%, rgba(252,211,77,0.34), transparent 62%),
+      radial-gradient(8px 8px at 46% 88%, rgba(252,211,77,0.30), transparent 62%);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+    opacity: 0.92;
+  }
+  .vendor-paid-sparkle:hover::before,
+  .vendor-paid-sparkle:focus-within::before {
+    opacity: 1;
+  }
+  .vendor-paid-sparkle:hover,
+  .vendor-paid-sparkle:focus-within {
+    box-shadow:
+      0 0 0 1px rgba(251, 191, 36, 0.22),
+      0 0 52px rgba(234, 179, 8, 0.22);
+  }
+
+  /* Optional subtle twinkle layer for paid cards (motion-safe) */
+  .vendor-paid-sparkle::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 1rem;
+    pointer-events: none;
+    opacity: 0;
+    background:
+      radial-gradient(2px 2px at 22% 26%, rgba(255, 255, 255, 0.85), transparent 70%),
+      radial-gradient(2px 2px at 78% 34%, rgba(255, 255, 255, 0.75), transparent 70%),
+      radial-gradient(2px 2px at 66% 74%, rgba(255, 255, 255, 0.70), transparent 70%),
+      radial-gradient(2px 2px at 32% 82%, rgba(255, 255, 255, 0.65), transparent 70%),
+      radial-gradient(2px 2px at 54% 20%, rgba(255, 255, 255, 0.60), transparent 70%);
+    mix-blend-mode: screen;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .vendor-paid-sparkle::before {
+      animation: vendorSparkleShift 5s ease-in-out infinite;
+      background-size: 180% 180%;
+    }
+    .vendor-paid-sparkle::after {
+      animation: vendorSparkleTwinkle 2.8s ease-in-out infinite;
+      opacity: 0.45;
+    }
+  }
+  @keyframes vendorSparkleShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+  @keyframes vendorSparkleTwinkle {
+    0% { opacity: 0.10; transform: translateY(0); }
+    40% { opacity: 0.55; transform: translateY(-1px); }
+    70% { opacity: 0.25; transform: translateY(0); }
+    100% { opacity: 0.10; transform: translateY(0); }
+  }
+
+  /* Sponsor spotlight: soft gold border, sparkles move/twinkle inside */
+  .vendor-sponsor-glitter {
+    position: relative;
+    border-width: 1px;
+    border-color: rgba(251, 191, 36, 0.42) !important;
+    box-shadow:
+      0 0 0 1px rgba(251, 191, 36, 0.2),
+      0 0 36px rgba(234, 179, 8, 0.28),
+      0 0 80px rgba(250, 204, 21, 0.12);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .vendor-sponsor-glitter {
+      animation: sponsorBorderPulse 2.8s ease-in-out infinite;
+    }
+  }
+  .vendor-sponsor-glitter::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 1rem;
+    padding: 1px;
+    background:
+      linear-gradient(135deg, rgba(255,221,102,0.5), rgba(234,179,8,0.2), rgba(255,221,102,0.42)),
+      radial-gradient(14px 14px at 12% 18%, rgba(255,236,179,0.58), transparent 65%),
+      radial-gradient(16px 16px at 88% 24%, rgba(255,236,179,0.54), transparent 65%),
+      radial-gradient(12px 12px at 76% 78%, rgba(255,236,179,0.5), transparent 65%),
+      radial-gradient(12px 12px at 26% 84%, rgba(255,236,179,0.48), transparent 65%),
+      radial-gradient(10px 10px at 54% 14%, rgba(255,236,179,0.48), transparent 65%);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .vendor-sponsor-glitter::before {
+      animation: vendorSparkleShift 3.2s ease-in-out infinite;
+      background-size: 220% 220%;
+    }
+  }
+  .vendor-sponsor-glitter::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 1rem;
+    pointer-events: none;
+    background:
+      radial-gradient(5px 5px at 18% 22%, rgba(255, 255, 255, 1), transparent 60%),
+      radial-gradient(5px 5px at 78% 28%, rgba(255, 255, 255, 0.98), transparent 60%),
+      radial-gradient(5px 5px at 70% 78%, rgba(255, 255, 255, 0.96), transparent 60%),
+      radial-gradient(5px 5px at 34% 82%, rgba(255, 255, 255, 0.94), transparent 60%),
+      radial-gradient(4px 4px at 52% 16%, rgba(255, 255, 255, 0.96), transparent 60%),
+      radial-gradient(4px 4px at 8% 50%, rgba(255, 255, 255, 0.9), transparent 60%),
+      radial-gradient(4px 4px at 92% 60%, rgba(255, 255, 255, 0.9), transparent 60%);
+    mix-blend-mode: screen;
+    opacity: 0.78;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .vendor-sponsor-glitter::after {
+      animation: sponsorSparkleDrift 5s ease-in-out infinite, sponsorSparkleTwinkle 2.6s ease-in-out infinite;
+    }
+  }
+  @keyframes sponsorSparkleDrift {
+    0%, 100% { transform: translate(2px, 1px); }
+    25% { transform: translate(-1px, 3px); }
+    50% { transform: translate(-3px, -2px); }
+    75% { transform: translate(1px, -1px); }
+    100% { transform: translate(2px, 1px); }
+  }
+  @keyframes sponsorSparkleTwinkle {
+    0%, 100% { opacity: 0.7; }
+    50% { opacity: 0.88; }
+  }
+
+  .sponsor-spotlight-label {
+    position: absolute;
+    top: 0;
+    left: 1.25rem;
+    z-index: 2;
+    display: inline-flex;
+    align-items: center;
+    border-radius: 9999px;
+    border: 1px solid rgba(251, 191, 36, 0.58);
+    background: rgba(2, 6, 23, 0.95);
+    padding: 0.3rem 0.7rem;
+    font-size: 0.65rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(253, 230, 138, 0.88);
+    box-shadow: 0 0 14px rgba(251, 191, 36, 0.26);
+    transform: translateY(-50%);
+  }
+
+  @keyframes sponsorBorderPulse {
+    0%, 100% {
+      border-color: rgba(251, 191, 36, 0.38);
+      box-shadow:
+        0 0 0 1px rgba(251, 191, 36, 0.16),
+        0 0 32px rgba(234, 179, 8, 0.24),
+        0 0 70px rgba(250, 204, 21, 0.1);
+    }
+    50% {
+      border-color: rgba(251, 191, 36, 0.55);
+      box-shadow:
+        0 0 0 1px rgba(251, 191, 36, 0.28),
+        0 0 42px rgba(234, 179, 8, 0.36),
+        0 0 88px rgba(250, 204, 21, 0.16);
+    }
+  }
+
+  .vendor-supporter-badge {
+    @apply inline-flex items-center gap-2 rounded-full border border-amber-400/30 bg-amber-400/10 px-3 py-1 text-xs font-semibold text-amber-200;
+  }
+  
+  /* Animation classes for popups */
+  .animate-in {
+    animation: fadeIn 0.3s ease-out;
+  }
+  
+  .slide-in-from-right {
+    animation: slideInFromRight 0.3s ease-out;
+  }
+
+  .animate-slide-in-right {
+    animation: slideInRight 0.5s ease-out forwards;
+    opacity: 0;
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  
+  @keyframes slideInFromRight {
+    from {
+      opacity: 0;
+      transform: translateX(100%);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes slideInRight {
+    from {
+      opacity: 0;
+      transform: translateX(2rem);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes gradientX {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+}
+
+/* Custom styles for rich text editor */
+.rich-text-editor .ProseMirror {
+  outline: none;
+  min-height: 400px;
+}
+
+/* Admin mode button styles */
+  .admin-mode-button {
+    background: linear-gradient(45deg, #00ff00, #00cc00, #00ff00);
+    background-size: 200% 200%;
+    animation: neonGlow 2s ease-in-out infinite alternate;
+    box-shadow: 0 0 20px rgba(0, 255, 0, 0.5), 0 0 40px rgba(0, 255, 0, 0.3);
+  }
+
+  /* Login modal positioning */
+  .login-modal-overlay {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    z-index: 9999 !important;
+    min-height: 100vh !important;
+    padding: 1rem !important;
+    background-color: rgba(0, 0, 0, 0.5) !important;
+  }
+
+  .login-modal-content {
+    position: relative !important;
+    max-width: 28rem !important;
+    width: 100% !important;
+    max-height: 90vh !important;
+    overflow: auto !important;
+    background: transparent !important;
+    margin: auto !important;
+    transform: translateY(-10px) !important; /* Slight upward adjustment */
+  }
+
+  /* Ensure modal is visible on all screen sizes */
+  @media (max-height: 600px) {
+    .login-modal-overlay {
+      align-items: flex-start !important;
+      padding-top: 2rem !important;
+    }
+    
+    .login-modal-content {
+      transform: none !important;
+      margin-top: 0 !important;
+    }
+  }
+
+@keyframes neonGlow {
+  0% {
+    background-position: 0% 50%;
+    box-shadow: 0 0 20px rgba(0, 255, 0, 0.5), 0 0 40px rgba(0, 255, 0, 0.3);
+  }
+  100% {
+    background-position: 100% 50%;
+    box-shadow: 0 0 30px rgba(0, 255, 0, 0.7), 0 0 60px rgba(0, 255, 0, 0.5);
+  }
+}
+
+.rich-text-editor .ProseMirror p {
+  margin-bottom: 1rem;
+}
+
+.rich-text-editor .ProseMirror h1 {
+  font-size: 2rem;
+  font-weight: bold;
+  color: white;
+  margin-bottom: 1rem;
+  margin-top: 1.5rem;
+}
+
+.rich-text-editor .ProseMirror h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: white;
+  margin-bottom: 0.75rem;
+  margin-top: 1.25rem;
+}
+
+.rich-text-editor .ProseMirror h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: white;
+  margin-bottom: 0.5rem;
+  margin-top: 1rem;
+}
+
+.rich-text-editor .ProseMirror ul,
+.rich-text-editor .ProseMirror ol {
+  margin-bottom: 1rem;
+  padding-left: 1.5rem;
+}
+
+.rich-text-editor .ProseMirror li {
+  margin-bottom: 0.25rem;
+}
+
+.rich-text-editor .ProseMirror blockquote {
+  border-left: 4px solid #6366f1;
+  padding-left: 1rem;
+  margin: 1rem 0;
+  font-style: italic;
+  color: #9ca3af;
+}
+
+.rich-text-editor .ProseMirror code {
+  background-color: #374151;
+  padding: 0.125rem 0.25rem;
+  border-radius: 0.25rem;
+  font-family: monospace;
+  font-size: 0.875rem;
+}
+
+.rich-text-editor .ProseMirror pre {
+  background-color: #1f2937;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  overflow-x: auto;
+  margin: 1rem 0;
+}
+
+.rich-text-editor .ProseMirror pre code {
+  background: none;
+  padding: 0;
+}
+
+.rich-text-editor .ProseMirror table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1rem 0;
+}
+
+.rich-text-editor .ProseMirror th,
+.rich-text-editor .ProseMirror td {
+  border: 1px solid #4b5563;
+  padding: 0.5rem;
+  text-align: left;
+}
+
+.rich-text-editor .ProseMirror th {
+  background-color: #374151;
+  font-weight: 600;
+  color: white;
+}
+
+.rich-text-editor .ProseMirror td {
+  color: #d1d5db;
+}
+
+.rich-text-editor .ProseMirror a {
+  color: #6366f1;
+  text-decoration: underline;
+}
+
+.rich-text-editor .ProseMirror a:hover {
+  color: #4f46e5;
+}
+
+.rich-text-editor .ProseMirror img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.5rem;
+  margin: 1rem 0;
+}
+
+/* Article content styles */
+.prose h1 {
+  font-size: 2rem;
+  font-weight: bold;
+  color: white;
+  margin-bottom: 1rem;
+  margin-top: 1.5rem;
+}
+
+.prose h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: white;
+  margin-bottom: 0.75rem;
+  margin-top: 1.25rem;
+}
+
+.prose h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: white;
+  margin-bottom: 0.5rem;
+  margin-top: 1rem;
+}
+
+.prose p {
+  margin-bottom: 1rem;
+  color: #d1d5db;
+}
+
+.prose ul,
+.prose ol {
+  margin-bottom: 1rem;
+  padding-left: 1.5rem;
+  color: #d1d5db;
+}
+
+.prose li {
+  margin-bottom: 0.25rem;
+}
+
+.prose blockquote {
+  border-left: 4px solid #6366f1;
+  padding-left: 1rem;
+  margin: 1rem 0;
+  font-style: italic;
+  color: #9ca3af;
+}
+
+.prose code {
+  background-color: #374151;
+  padding: 0.125rem 0.25rem;
+  border-radius: 0.25rem;
+  font-family: monospace;
+  font-size: 0.875rem;
+  color: #e5e7eb;
+}
+
+.prose pre {
+  background-color: #1f2937;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  overflow-x: auto;
+  margin: 1rem 0;
+}
+
+.prose pre code {
+  background: none;
+  padding: 0;
+}
+
+.prose table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1rem 0;
+}
+
+.prose th,
+.prose td {
+  border: 1px solid #4b5563;
+  padding: 0.5rem;
+  text-align: left;
+}
+
+.prose th {
+  background-color: #374151;
+  font-weight: 600;
+  color: white;
+}
+
+.prose td {
+  color: #d1d5db;
+}
+
+.prose a {
+  color: #6366f1;
+  text-decoration: underline;
+}
+
+.prose a:hover {
+  color: #4f46e5;
+}
+
+.prose img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.5rem;
+  margin: 1rem 0;
+}
+

@@ -9,6 +9,7 @@ When working with education articles in the Supabase database, always use the co
 | Database Column | Type | Description |
 |----------------|------|-------------|
 | `id` | uuid | Primary key (auto-generated) |
+| `submission_id` | uuid | Optional; links to submissions table if article came from a submission |
 | `slug` | text | URL-friendly article identifier |
 | `title` | text | Article title |
 | `excerpt` | text | Short description/summary |
