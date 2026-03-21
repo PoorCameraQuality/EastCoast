@@ -116,21 +116,21 @@ export default function EventsPageClient({ allEvents, allDungeons }: Props) {
   return (
     <div className="min-h-screen bg-gradient-to-br from-black via-dark-900 to-black relative overflow-hidden">
       {/* Subtle background elements with blue spectrum */}
-      <div className="absolute inset-0 opacity-5">
-        <div className="absolute top-20 left-10 w-32 h-32 bg-gradient-to-r from-primary-400 to-primary-600 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-40 right-20 w-24 h-24 bg-gradient-to-r from-blue-400 to-cyan-400 rounded-full blur-2xl animate-pulse delay-1000"></div>
-        <div className="absolute top-40 right-1/4 w-40 h-40 bg-gradient-to-r from-primary-300 to-blue-400 rounded-full blur-3xl animate-pulse delay-500"></div>
-        <div className="absolute bottom-20 left-1/3 w-20 h-20 bg-gradient-to-r from-blue-400 to-primary-500 rounded-full blur-xl animate-pulse delay-1500"></div>
+      <div className="absolute inset-0 opacity-5 motion-reduce:opacity-0 pointer-events-none" aria-hidden>
+        <div className="absolute top-20 left-10 w-32 h-32 bg-gradient-to-r from-primary-400 to-primary-600 rounded-full blur-3xl animate-pulse motion-reduce:animate-none"></div>
+        <div className="absolute bottom-40 right-20 w-24 h-24 bg-gradient-to-r from-blue-400 to-cyan-400 rounded-full blur-2xl animate-pulse delay-1000 motion-reduce:animate-none"></div>
+        <div className="absolute top-40 right-1/4 w-40 h-40 bg-gradient-to-r from-primary-300 to-blue-400 rounded-full blur-3xl animate-pulse delay-500 motion-reduce:animate-none"></div>
+        <div className="absolute bottom-20 left-1/3 w-20 h-20 bg-gradient-to-r from-blue-400 to-primary-500 rounded-full blur-xl animate-pulse delay-1500 motion-reduce:animate-none"></div>
       </div>
 
       <EventListStructuredData />
-      <div className="container-custom py-16 relative z-10">
+      <div className="container-custom py-8 md:py-16 relative z-10">
         <Breadcrumb items={breadcrumbItems} />
         <SupportCTAInline contextLabel="Events" />
         
         {/* Enhanced Header Section */}
-        <div className="text-center mb-16">
-          <h1 className="text-4xl md:text-6xl font-serif font-bold text-white mb-6 relative">
+        <div className="text-center mb-10 md:mb-16">
+          <h1 className="text-3xl sm:text-4xl md:text-6xl font-serif font-bold text-white mb-6 relative">
             <span className="inline-block bg-gradient-to-r from-primary-300 via-blue-400 to-primary-500 bg-clip-text text-transparent">
               All Events
             </span>
@@ -155,7 +155,7 @@ export default function EventsPageClient({ allEvents, allDungeons }: Props) {
           <div className="mb-8">
             <Link
               href="/contact"
-              className="inline-flex items-center justify-center px-6 py-3 rounded-full bg-primary-600/15 border border-primary-500/25 text-primary-200 hover:bg-primary-600/25 hover:border-primary-400/35 transition"
+              className="inline-flex min-h-touch items-center justify-center px-6 py-3 rounded-full bg-primary-600/15 border border-primary-500/25 text-primary-200 hover:bg-primary-600/25 hover:border-primary-400/35 transition-colors"
               aria-label="Contact us"
             >
               {CONTACT_US_LABEL}
@@ -164,12 +164,17 @@ export default function EventsPageClient({ allEvents, allDungeons }: Props) {
         </div>
 
         {/* Enhanced Filter Section */}
-        <div className="mb-12">
-          <div className="flex flex-wrap gap-4 justify-center">
+        <div className="mb-10 md:mb-12">
+          <div
+            className="flex flex-nowrap md:flex-wrap gap-3 md:gap-4 justify-start md:justify-center overflow-x-auto pb-2 -mx-4 px-4 md:mx-0 md:px-0 md:overflow-visible snap-x snap-mandatory"
+            role="toolbar"
+            aria-label="Filter events by category"
+          >
             <button 
               key="all-events"
+              type="button"
               onClick={() => setSelectedCategory('All Events')}
-              className={`group inline-block px-6 py-3 rounded-full font-bold transition-all duration-300 shadow-xl hover:scale-105 ${
+              className={`group inline-flex shrink-0 snap-start min-h-touch items-center px-5 md:px-6 py-3 rounded-full font-bold transition-colors duration-300 shadow-xl md:hover:scale-105 motion-reduce:md:hover:scale-100 ${
                 selectedCategory === 'All Events' 
                   ? 'bg-gradient-to-r from-primary-600 via-blue-600 to-primary-700 text-white hover:from-primary-700 hover:via-blue-700 hover:to-primary-800 hover:shadow-primary-500/25' 
                   : 'bg-white/10 backdrop-blur-xl border border-white/20 text-white hover:bg-white/20 hover:shadow-white/25'
@@ -186,9 +191,10 @@ export default function EventsPageClient({ allEvents, allDungeons }: Props) {
             </button>
             {categories.map((category) => (
               <button 
-                key={category} 
+                key={category}
+                type="button"
                 onClick={() => setSelectedCategory(category)}
-                className={`group inline-block px-6 py-3 rounded-full font-bold transition-all duration-300 shadow-xl hover:scale-105 ${
+                className={`group inline-flex shrink-0 snap-start min-h-touch items-center px-5 md:px-6 py-3 rounded-full font-bold transition-colors duration-300 shadow-xl md:hover:scale-105 motion-reduce:md:hover:scale-100 ${
                   selectedCategory === category 
                     ? 'bg-gradient-to-r from-primary-600 via-blue-600 to-primary-700 text-white hover:from-primary-700 hover:via-blue-700 hover:to-primary-800 hover:shadow-primary-500/25' 
                     : 'bg-white/10 backdrop-blur-xl border border-white/20 text-white hover:bg-white/20 hover:shadow-white/25'
@@ -509,8 +515,8 @@ export default function EventsPageClient({ allEvents, allDungeons }: Props) {
 
         {/* Enhanced No Events Message */}
         {upcomingEvents.length === 0 && pastEvents.length === 0 && (
-          <div className="text-center py-16">
-            <div className="max-w-md mx-auto backdrop-blur-xl bg-white/10 border border-white/20 rounded-2xl p-8 shadow-2xl">
+          <div className="text-center py-8 md:py-16">
+            <div className="max-w-md mx-auto backdrop-blur-xl bg-white/10 border border-white/20 rounded-2xl p-6 sm:p-8 shadow-2xl">
               <div className="w-24 h-24 bg-gradient-to-r from-gray-600 to-slate-600 rounded-full flex items-center justify-center mx-auto mb-6">
                 <svg className="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />

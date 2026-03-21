@@ -13,7 +13,7 @@ export default function EventsPageSkeleton() {
         <div className="absolute bottom-20 left-1/3 w-20 h-20 bg-gradient-to-r from-blue-400 to-primary-500 rounded-full blur-xl animate-pulse delay-1500"></div>
       </div>
 
-      <div className="container-custom py-16 relative z-10">
+      <div className="container-custom py-8 md:py-16 relative z-10">
         {/* Breadcrumb placeholder */}
         <nav aria-label="Breadcrumb" className="text-sm text-gray-300 flex gap-2 mb-4">
           <span className="h-4 w-16 bg-white/10 rounded animate-pulse" />

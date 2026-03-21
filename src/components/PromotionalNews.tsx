@@ -115,9 +115,9 @@ export default function PromotionalNews() {
         ))}
       </div>
 
-      {/* Mobile: Stacked banners below header */}
-      <div className="lg:hidden fixed top-16 left-0 right-0 z-40 bg-black/95 backdrop-blur-lg border-b border-white/10" style={{ minHeight: '120px' }}>
-        <div className="container-custom py-3 space-y-3 max-h-[50vh] overflow-y-auto">
+      {/* Mobile: compact strip below header — lower z than modals/drawers; scrollable so chrome stays short */}
+      <div className="lg:hidden fixed top-16 left-0 right-0 z-30 bg-black/95 backdrop-blur-lg border-b border-white/10 shadow-lg">
+        <div className="container-custom py-2 space-y-2 max-h-[min(40vh,14rem)] overflow-y-auto overscroll-contain">
           {visibleItems.map((item, index) => (
             <PromotionalCard
               key={item.id}
@@ -196,18 +196,19 @@ function PromotionalCard({
     >
       {/* Dismiss button */}
       <button
+        type="button"
         onClick={onDismiss}
-        className="absolute top-2 right-2 text-white/70 hover:text-white transition-colors p-1 hover:bg-white/10 rounded-full"
+        className="absolute top-2 right-2 text-white/70 hover:text-white transition-colors min-h-touch min-w-touch inline-flex items-center justify-center hover:bg-white/10 rounded-full"
         aria-label="Dismiss"
       >
-        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
         </svg>
       </button>
 
       {/* Header with icon */}
       <div className="flex items-start gap-3 mb-3 pr-6">
-        <div className="text-white/90 flex-shrink-0 mt-1">
+        <div className="text-white/90 flex-shrink-0 mt-1" aria-hidden>
           {getIcon(item.priority)}
         </div>
         <h3 className="text-lg font-bold text-white leading-tight">
@@ -244,8 +245,9 @@ function PromotionalCard({
       {/* Read more/less toggle */}
       {shouldTruncate && (
         <button
+          type="button"
           onClick={onToggleExpand}
-          className="text-xs text-white/80 hover:text-white underline mb-3 font-medium"
+          className="text-xs text-white/80 hover:text-white underline mb-3 font-medium min-h-touch py-1"
         >
           {isExpanded ? 'Show less' : 'Read more'}
         </button>
@@ -257,10 +259,10 @@ function PromotionalCard({
           href={item.link_url}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center justify-center px-4 py-2 bg-white/20 hover:bg-white/30 text-white font-semibold rounded-full transition-all duration-300 hover:scale-105 border border-white/30 text-sm w-full"
+          className="inline-flex items-center justify-center min-h-touch px-4 py-2 bg-white/20 hover:bg-white/30 text-white font-semibold rounded-full transition-colors duration-300 border border-white/30 text-sm w-full"
         >
           {item.link_text || 'Learn More'}
-          <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-4 h-4 ml-2 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
           </svg>
         </a>

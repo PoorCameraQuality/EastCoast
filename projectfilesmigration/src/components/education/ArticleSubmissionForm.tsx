@@ -108,7 +108,8 @@ export default function ArticleSubmissionForm() {
           </p>
           <button
             onClick={() => setSubmitSuccess(false)}
-            className="btn-primary"
+            type="button"
+            className="btn-primary min-h-touch inline-flex items-center justify-center px-6 py-2.5"
           >
             Submit Another Article
           </button>

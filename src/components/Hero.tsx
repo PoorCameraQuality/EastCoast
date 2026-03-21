@@ -54,7 +54,7 @@ export default function Hero() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8 animate-fade-in-up" style={{ animationDelay: '0.5s' }}>
             <Link 
               href="/events" 
-              className="group relative inline-flex items-center justify-center px-6 md:px-8 py-3 md:py-4 backdrop-blur-xl bg-gradient-to-r from-primary-600/80 to-blue-600/80 text-white font-semibold rounded-full shadow-2xl hover:shadow-primary-500/25 transition-all duration-300 hover:scale-105 min-w-[180px] md:min-w-[200px] overflow-hidden border border-white/20 hover:border-white/40"
+              className="group relative inline-flex items-center justify-center min-h-touch px-6 md:px-8 py-3 md:py-4 backdrop-blur-xl bg-gradient-to-r from-primary-600/80 to-blue-600/80 text-white font-semibold rounded-full shadow-2xl hover:shadow-primary-500/25 transition-all duration-300 md:hover:scale-105 motion-reduce:hover:scale-100 min-w-[180px] md:min-w-[200px] overflow-hidden border border-white/20 hover:border-white/40"
             >
               <span className="relative z-10 flex items-center gap-2">
                 Browse Events
@@ -69,7 +69,7 @@ export default function Hero() {
               href="https://discord.gg/xcnGGyGsmT" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="group relative inline-flex items-center justify-center px-6 md:px-8 py-3 md:py-4 backdrop-blur-xl bg-gradient-to-r from-blue-600/80 to-primary-600/80 text-white font-semibold rounded-full shadow-2xl hover:shadow-blue-500/25 transition-all duration-300 hover:scale-105 min-w-[180px] md:min-w-[200px] overflow-hidden border border-white/20 hover:border-white/40"
+              className="group relative inline-flex items-center justify-center min-h-touch px-6 md:px-8 py-3 md:py-4 backdrop-blur-xl bg-gradient-to-r from-blue-600/80 to-primary-600/80 text-white font-semibold rounded-full shadow-2xl hover:shadow-blue-500/25 transition-all duration-300 md:hover:scale-105 motion-reduce:hover:scale-100 min-w-[180px] md:min-w-[200px] overflow-hidden border border-white/20 hover:border-white/40"
               onClick={() => trackEvent('click', 'social', 'discord', 1)}
             >
               <span className="relative z-10 flex items-center gap-2">
@@ -85,7 +85,7 @@ export default function Hero() {
           <div className="animate-fade-in-up mb-8" style={{ animationDelay: '0.55s' }}>
             <Link
               href="/contact"
-              className="text-gray-300 hover:text-white underline underline-offset-4 decoration-white/20 hover:decoration-white/50 transition-colors"
+              className="inline-flex min-h-touch items-center justify-center text-gray-300 hover:text-white underline underline-offset-4 decoration-white/20 hover:decoration-white/50 transition-colors"
               aria-label="Contact us"
             >
               {CONTACT_US_LABEL}

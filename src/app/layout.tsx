@@ -1,6 +1,6 @@
 import "./globals.css";
 import type { Metadata } from "next";
-import { Inter } from 'next/font/google'
+import { Inter, Playfair_Display } from 'next/font/google'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import AgeVerification from '@/components/AgeVerification'
@@ -16,7 +16,17 @@ import SafeTrackingWrapper from '@/components/SafeTrackingWrapper'
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 
-const inter = Inter({ subsets: ['latin'], display: 'optional' })
+const inter = Inter({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-ecke-sans',
+})
+
+const playfair = Playfair_Display({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-ecke-serif',
+})
 
 export const metadata: Metadata = {
   title: {
@@ -108,12 +118,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="bg-black text-white">
-      <body className="antialiased">
+    <html lang="en" className={`bg-black text-white ${inter.variable} ${playfair.variable}`}>
+      <body className="antialiased font-sans">
         {/* Skip to content link for keyboard users */}
         <a
           href="#main-content"
-          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:bg-primary-600 focus:text-white focus:px-4 focus:py-2 focus:rounded focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-offset-2 focus:ring-offset-black"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:bg-primary-600 focus:text-white focus:px-4 focus:py-2 focus:rounded focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-offset-2 focus:ring-offset-black"
         >
           Skip to main content
         </a>
@@ -133,7 +143,12 @@ export default function RootLayout({
             <SafeTrackingWrapper>
               <Header />
               <SupportBanner />
-              <main id="main-content" role="main" tabIndex={-1}>
+              <main
+                id="main-content"
+                role="main"
+                tabIndex={-1}
+                className="pb-[env(safe-area-inset-bottom)] outline-none"
+              >
                 {children}
               </main>
               <Footer />

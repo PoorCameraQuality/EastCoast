@@ -128,8 +128,9 @@ export default function EventCalendarExport({ event }: EventCalendarExportProps)
       </p>
       <div className="flex flex-col sm:flex-row gap-3">
         <button
+          type="button"
           onClick={exportToGoogleCalendar}
-          className="group inline-block bg-gradient-to-r from-blue-500 to-blue-600 text-white font-bold py-2 px-4 rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-300 shadow-lg hover:shadow-blue-500/25 hover:scale-105 text-sm flex items-center justify-center gap-2"
+          className="group inline-flex min-h-touch items-center justify-center gap-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-bold py-2 px-4 rounded-lg hover:from-blue-600 hover:to-blue-700 transition-colors duration-300 shadow-lg md:hover:scale-105 motion-reduce:md:hover:scale-100 text-sm"
         >
           <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
             <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/>
@@ -138,8 +139,9 @@ export default function EventCalendarExport({ event }: EventCalendarExportProps)
         </button>
         
         <button
+          type="button"
           onClick={addToAppleCalendar}
-          className="group inline-block bg-gradient-to-r from-gray-800 to-gray-900 text-white font-bold py-2 px-4 rounded-lg hover:from-gray-700 hover:to-gray-800 transition-all duration-300 shadow-lg hover:shadow-gray-500/25 hover:scale-105 text-sm flex items-center justify-center gap-2"
+          className="group inline-flex min-h-touch items-center justify-center gap-2 bg-gradient-to-r from-gray-800 to-gray-900 text-white font-bold py-2 px-4 rounded-lg hover:from-gray-700 hover:to-gray-800 transition-colors duration-300 shadow-lg md:hover:scale-105 motion-reduce:md:hover:scale-100 text-sm"
         >
           <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
             <path d="M18.71 19.5c-.83 1.24-1.71 2.5-3.05 2.47-1.34-.03-1.74-.79-3.27-.79-1.53 0-2 .77-3.27.79-1.34.03-2.22-1.23-3.05-2.47C5.04 17.68 4 15.33 4 13c0-5.52 4.48-10 10-10s10 4.48 10 10c0 2.33-1.04 4.68-5.29 6.5z"/>
@@ -148,8 +150,9 @@ export default function EventCalendarExport({ event }: EventCalendarExportProps)
         </button>
         
         <button
+          type="button"
           onClick={exportToICal}
-          className="group inline-block bg-gradient-to-r from-green-500 to-green-600 text-white font-bold py-2 px-4 rounded-lg hover:from-green-600 hover:to-green-700 transition-all duration-300 shadow-lg hover:shadow-green-500/25 hover:scale-105 text-sm flex items-center justify-center gap-2"
+          className="group inline-flex min-h-touch items-center justify-center gap-2 bg-gradient-to-r from-green-500 to-green-600 text-white font-bold py-2 px-4 rounded-lg hover:from-green-600 hover:to-green-700 transition-colors duration-300 shadow-lg md:hover:scale-105 motion-reduce:md:hover:scale-100 text-sm"
         >
           <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
             <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>

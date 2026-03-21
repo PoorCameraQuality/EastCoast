@@ -363,56 +363,60 @@ export default function CalendarClient({ allEvents }: CalendarClientProps) {
   return (
     <div className="max-w-6xl mx-auto">
       {/* Header */}
-      <div className="text-center mb-12">
-        <h1 className="text-4xl font-serif font-bold text-white mb-4">
+      <div className="text-center mb-8 md:mb-12">
+        <h1 className="text-3xl sm:text-4xl font-serif font-bold text-white mb-4">
           Event Calendar
         </h1>
-        <p className="text-lg text-subtle max-w-3xl mx-auto">
+        <p className="text-base md:text-lg text-subtle max-w-3xl mx-auto px-1">
           Browse upcoming kink events by month. Click on any date to see event details.
         </p>
       </div>
 
       {/* Calendar Header with Export Options */}
-      <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
-        <div className="flex items-center space-x-4">
+      <div className="flex flex-col lg:flex-row justify-between items-stretch lg:items-center gap-4">
+        <div className="flex flex-wrap items-center gap-2 sm:gap-4">
           <button
+            type="button"
             onClick={goToPreviousMonth}
-            className="p-2 rounded-lg bg-dark-700 hover:bg-dark-600 text-white transition-colors"
+            className="min-h-touch min-w-touch inline-flex items-center justify-center rounded-lg bg-dark-700 hover:bg-dark-600 text-white transition-colors"
             aria-label="Previous month"
           >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
           </button>
           
-          <h2 className="text-2xl md:text-3xl font-serif font-bold text-white">
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-serif font-bold text-white min-w-0 flex-1 text-center sm:flex-none sm:text-left">
             {currentDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
           </h2>
           
           <button
+            type="button"
             onClick={goToNextMonth}
-            className="p-2 rounded-lg bg-dark-700 hover:bg-dark-600 text-white transition-colors"
+            className="min-h-touch min-w-touch inline-flex items-center justify-center rounded-lg bg-dark-700 hover:bg-dark-600 text-white transition-colors"
             aria-label="Next month"
           >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
             </svg>
           </button>
           
           <button
+            type="button"
             onClick={goToToday}
-            className="px-4 py-2 rounded-lg bg-primary-600 hover:bg-primary-700 text-white font-medium transition-colors"
+            className="min-h-touch px-4 py-2 rounded-lg bg-primary-600 hover:bg-primary-700 text-white font-medium transition-colors w-full sm:w-auto"
           >
             Today
           </button>
         </div>
 
         {/* Export Buttons */}
-        <div className="flex flex-wrap gap-3">
+        <div className="flex flex-wrap gap-2 sm:gap-3">
           <button
+            type="button"
             onClick={exportMonthToGoogleCalendar}
             disabled={monthEvents.length === 0}
-            className="group inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 disabled:from-gray-600 disabled:to-gray-700 disabled:cursor-not-allowed text-white font-medium transition-all duration-300 shadow-lg hover:shadow-blue-500/25 hover:scale-105 disabled:hover:scale-100"
+            className="group inline-flex min-h-touch items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 disabled:from-gray-600 disabled:to-gray-700 disabled:cursor-not-allowed text-white font-medium transition-colors duration-300 shadow-lg hover:shadow-blue-500/25 md:hover:scale-105 motion-reduce:md:hover:scale-100 disabled:hover:scale-100"
             title="Add all month events to Google Calendar"
           >
             <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
@@ -423,9 +427,10 @@ export default function CalendarClient({ allEvents }: CalendarClientProps) {
           </button>
           
           <button
+            type="button"
             onClick={addMonthToAppleCalendar}
             disabled={monthEvents.length === 0}
-            className="group inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-gray-800 to-gray-900 hover:from-gray-700 hover:to-gray-800 disabled:from-gray-600 disabled:to-gray-700 disabled:cursor-not-allowed text-white font-medium transition-all duration-300 shadow-lg hover:shadow-gray-500/25 hover:scale-105 disabled:hover:scale-100"
+            className="group inline-flex min-h-touch items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-gray-800 to-gray-900 hover:from-gray-700 hover:to-gray-800 disabled:from-gray-600 disabled:to-gray-700 disabled:cursor-not-allowed text-white font-medium transition-colors duration-300 shadow-lg hover:shadow-gray-500/25 md:hover:scale-105 motion-reduce:md:hover:scale-100 disabled:hover:scale-100"
             title="Add all month events to Apple Calendar"
           >
             <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
@@ -436,9 +441,10 @@ export default function CalendarClient({ allEvents }: CalendarClientProps) {
           </button>
           
           <button
+            type="button"
             onClick={exportMonthToICal}
             disabled={monthEvents.length === 0}
-            className="group inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 disabled:from-gray-600 disabled:to-gray-700 disabled:cursor-not-allowed text-white font-medium transition-all duration-300 shadow-lg hover:shadow-green-500/25 hover:scale-105 disabled:hover:scale-100"
+            className="group inline-flex min-h-touch items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 disabled:from-gray-600 disabled:to-gray-700 disabled:cursor-not-allowed text-white font-medium transition-colors duration-300 shadow-lg hover:shadow-green-500/25 md:hover:scale-105 motion-reduce:md:hover:scale-100 disabled:hover:scale-100"
             title="Download all month events as iCal file"
           >
             <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
@@ -450,8 +456,9 @@ export default function CalendarClient({ allEvents }: CalendarClientProps) {
         </div>
       </div>
 
-      {/* Calendar Grid */}
-      <div className="card-elegant">
+      {/* Calendar Grid — horizontal scroll on narrow viewports */}
+      <div className="card-elegant overflow-x-auto -mx-2 px-2 sm:mx-0 sm:px-0 touch-pan-x">
+        <div className="min-w-[36rem] sm:min-w-0">
         {/* Day Headers */}
         <div className="grid grid-cols-7 gap-1 mb-2">
           {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => (
@@ -473,7 +480,7 @@ export default function CalendarClient({ allEvents }: CalendarClientProps) {
               <div
                 key={index}
                 aria-label={`${date.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}${events.length > 0 ? ` - ${events.length} event${events.length > 1 ? 's' : ''}` : ''}`}
-                className={`min-h-32 p-2 border border-dark-600 ${
+                className={`min-h-[7.5rem] sm:min-h-32 p-2 border border-dark-600 ${
                   isCurrentMonth ? 'bg-dark-800' : 'bg-dark-900'
                 } ${isPast ? 'opacity-50' : ''}`}
               >
@@ -496,7 +503,7 @@ export default function CalendarClient({ allEvents }: CalendarClientProps) {
                       <div key={`${event.slug}-${eventIndex}`} className="space-y-1">
                         <Link
                           href={`/events/${event.slug}`}
-                          className={`block p-1 rounded text-xs text-white hover:opacity-80 transition-opacity ${
+                          className={`block min-h-touch sm:min-h-0 py-2 sm:py-1 px-1 rounded text-xs text-white hover:opacity-80 transition-opacity ${
                             getCategoryColor(event.category, isPastEventItem)
                           } ${isPastEventItem ? 'opacity-60' : ''}`}
                           title={`${event.name} - ${event.date.display}`}
@@ -510,11 +517,13 @@ export default function CalendarClient({ allEvents }: CalendarClientProps) {
                         </Link>
                         
                         {/* Export buttons for each event */}
-                        <div className="flex gap-1.5">
+                        <div className="flex flex-wrap gap-1.5">
                           <button
+                            type="button"
                             onClick={() => exportToGoogleCalendar(event)}
-                            className="w-5 h-5 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 rounded-md text-white text-xs flex items-center justify-center transition-all duration-200 hover:scale-110 shadow-sm hover:shadow-blue-500/25"
+                            className="min-h-touch min-w-touch sm:min-h-0 sm:min-w-0 sm:h-5 sm:w-5 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 rounded-md text-white text-xs inline-flex items-center justify-center transition-colors duration-200 shadow-sm hover:shadow-blue-500/25"
                             title={`Add ${event.name} to Google Calendar`}
+                            aria-label={`Add ${event.name} to Google Calendar`}
                           >
                             <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
                               <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/>
@@ -522,9 +531,11 @@ export default function CalendarClient({ allEvents }: CalendarClientProps) {
                           </button>
                           
                           <button
+                            type="button"
                             onClick={() => addToAppleCalendar(event)}
-                            className="w-5 h-5 bg-gradient-to-r from-gray-700 to-gray-800 hover:from-gray-600 hover:to-gray-700 rounded-md text-white text-xs flex items-center justify-center transition-all duration-200 hover:scale-110 shadow-sm hover:shadow-gray-500/25"
+                            className="min-h-touch min-w-touch sm:min-h-0 sm:min-w-0 sm:h-5 sm:w-5 bg-gradient-to-r from-gray-700 to-gray-800 hover:from-gray-600 hover:to-gray-700 rounded-md text-white text-xs inline-flex items-center justify-center transition-colors duration-200 shadow-sm hover:shadow-gray-500/25"
                             title={`Add ${event.name} to Apple Calendar`}
+                            aria-label={`Add ${event.name} to Apple Calendar`}
                           >
                             <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
                               <path d="M18.71 19.5c-.83 1.24-1.71 2.5-3.05 2.47-1.34-.03-1.74-.79-3.27-.79-1.53 0-2 .77-3.27.79-1.34.03-2.22-1.23-3.05-2.47C5.04 17.68 4 15.33 4 13c0-5.52 4.48-10 10-10s10 4.48 10 10c0 2.33-1.04 4.68-5.29 6.5z"/>
@@ -532,9 +543,11 @@ export default function CalendarClient({ allEvents }: CalendarClientProps) {
                           </button>
                           
                           <button
+                            type="button"
                             onClick={() => exportToICal(event)}
-                            className="w-5 h-5 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 rounded-md text-white text-xs flex items-center justify-center transition-all duration-200 hover:scale-110 shadow-sm hover:shadow-green-500/25"
+                            className="min-h-touch min-w-touch sm:min-h-0 sm:min-w-0 sm:h-5 sm:w-5 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 rounded-md text-white text-xs inline-flex items-center justify-center transition-colors duration-200 shadow-sm hover:shadow-green-500/25"
                             title={`Download ${event.name} as iCal file`}
+                            aria-label={`Download ${event.name} as calendar file`}
                           >
                             <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
                               <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
@@ -548,6 +561,7 @@ export default function CalendarClient({ allEvents }: CalendarClientProps) {
               </div>
             )
           })}
+        </div>
         </div>
       </div>
 

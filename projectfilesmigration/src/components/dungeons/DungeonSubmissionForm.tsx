@@ -250,7 +250,7 @@ export default function DungeonSubmissionForm() {
           <button
             type="submit"
             disabled={isSubmitting || !formData.agreeToTerms}
-            className="w-full btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full min-h-touch btn-primary disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center justify-center"
           >
             {isSubmitting ? 'Submitting...' : 'Submit Dungeon'}
           </button>

@@ -160,40 +160,40 @@ function EnhancedEventLayout({ event, breadcrumbItems }: { event: any, breadcrum
       {/* Compact Hero Section */}
       <section className="relative bg-gradient-to-br from-black via-gray-900 to-black">
         {/* Animated background elements */}
-        <div className="absolute inset-0 opacity-20">
+        <div className="absolute inset-0 opacity-20 motion-reduce:opacity-0 pointer-events-none" aria-hidden>
           {event.slug === 'primal-arts-festival' ? (
             <>
-              <div className="absolute top-4 left-4 w-16 h-16 bg-red-500 rounded-full blur-2xl animate-pulse"></div>
-              <div className="absolute top-20 right-8 w-12 h-12 bg-orange-500 rounded-full blur-xl animate-pulse delay-1000"></div>
-              <div className="absolute bottom-4 left-1/4 w-20 h-20 bg-yellow-500 rounded-full blur-2xl animate-pulse delay-500"></div>
+              <div className="absolute top-4 left-4 w-16 h-16 bg-red-500 rounded-full blur-2xl animate-pulse motion-reduce:animate-none"></div>
+              <div className="absolute top-20 right-8 w-12 h-12 bg-orange-500 rounded-full blur-xl animate-pulse delay-1000 motion-reduce:animate-none"></div>
+              <div className="absolute bottom-4 left-1/4 w-20 h-20 bg-yellow-500 rounded-full blur-2xl animate-pulse delay-500 motion-reduce:animate-none"></div>
             </>
           ) : event.slug === 'dark-odyssey-summer-camp' ? (
             <>
-              <div className="absolute top-4 left-4 w-16 h-16 bg-blue-500 rounded-full blur-2xl animate-pulse"></div>
-              <div className="absolute top-20 right-8 w-12 h-12 bg-purple-500 rounded-full blur-xl animate-pulse delay-1000"></div>
-              <div className="absolute bottom-4 left-1/4 w-20 h-20 bg-indigo-500 rounded-full blur-2xl animate-pulse delay-500"></div>
+              <div className="absolute top-4 left-4 w-16 h-16 bg-blue-500 rounded-full blur-2xl animate-pulse motion-reduce:animate-none"></div>
+              <div className="absolute top-20 right-8 w-12 h-12 bg-purple-500 rounded-full blur-xl animate-pulse delay-1000 motion-reduce:animate-none"></div>
+              <div className="absolute bottom-4 left-1/4 w-20 h-20 bg-indigo-500 rounded-full blur-2xl animate-pulse delay-500 motion-reduce:animate-none"></div>
             </>
           ) : (
             // Dynamic background based on color scheme
             <>
-              <div className={`absolute top-4 left-4 w-16 h-16 bg-gradient-to-r ${colors.primary} rounded-full blur-2xl animate-pulse`}></div>
-              <div className={`absolute top-20 right-8 w-12 h-12 bg-gradient-to-r ${colors.secondary} rounded-full blur-xl animate-pulse delay-1000`}></div>
-              <div className={`absolute bottom-4 left-1/4 w-20 h-20 bg-gradient-to-r ${colors.tertiary} rounded-full blur-2xl animate-pulse delay-500`}></div>
+              <div className={`absolute top-4 left-4 w-16 h-16 bg-gradient-to-r ${colors.primary} rounded-full blur-2xl animate-pulse motion-reduce:animate-none`}></div>
+              <div className={`absolute top-20 right-8 w-12 h-12 bg-gradient-to-r ${colors.secondary} rounded-full blur-xl animate-pulse delay-1000 motion-reduce:animate-none`}></div>
+              <div className={`absolute bottom-4 left-1/4 w-20 h-20 bg-gradient-to-r ${colors.tertiary} rounded-full blur-2xl animate-pulse delay-500 motion-reduce:animate-none`}></div>
             </>
           )}
         </div>
         
-        <div className="container-custom py-8 relative z-10">
+        <div className="container-custom py-6 md:py-8 relative z-10">
           <Breadcrumb items={breadcrumbItems} />
           
           <div className="max-w-6xl mx-auto">
             {/* Header Row */}
-            <div className="flex flex-col lg:flex-row items-center justify-between gap-6 mb-8">
+            <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-6 mb-8">
               {/* Logo and Title */}
-              <div className="flex items-center gap-6">
+              <div className="flex flex-col sm:flex-row items-center sm:items-start text-center sm:text-left gap-6">
                 {event.logo && (
-                  <div className="relative group">
-                    <div className={`absolute inset-0 bg-gradient-to-r ${colors.accent} rounded-2xl blur-lg opacity-50 group-hover:opacity-75 transition-opacity`}></div>
+                  <div className="relative group shrink-0">
+                    <div className={`absolute inset-0 bg-gradient-to-r ${colors.accent} rounded-2xl blur-lg opacity-50 group-hover:opacity-75 transition-opacity motion-reduce:transition-none`}></div>
                     <EventLogo 
                       src={event.logo} 
                       alt={`${event.name} — BDSM convention in ${event.location.city}, ${event.location.state}`}
@@ -202,22 +202,22 @@ function EnhancedEventLayout({ event, breadcrumbItems }: { event: any, breadcrum
                     />
                   </div>
                 )}
-                <div>
-                  <h1 className="text-4xl md:text-5xl font-serif font-bold text-white leading-tight">
+                <div className="min-w-0">
+                  <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-white leading-tight">
                     {event.name.split(' ').map((word: string, index: number) => (
                       <span key={index} className={`inline-block ${colors.hover} transition-colors duration-300`}>
                         {word}{' '}
                       </span>
                     ))}
                   </h1>
-                  <div className="flex flex-wrap gap-3 mt-2">
-                    <span className="bg-black/30 backdrop-blur-sm px-3 py-1 rounded-full border border-white/20 text-white text-sm">
+                  <div className="flex flex-wrap gap-2 sm:gap-3 mt-3 justify-center sm:justify-start">
+                    <span className="inline-flex items-center min-h-touch px-3 py-1 rounded-full border border-white/20 bg-black/30 backdrop-blur-sm text-white text-sm">
                       {event.date.display}
                     </span>
-                    <span className="bg-black/30 backdrop-blur-sm px-3 py-1 rounded-full border border-white/20 text-white text-sm">
+                    <span className="inline-flex items-center min-h-touch px-3 py-1 rounded-full border border-white/20 bg-black/30 backdrop-blur-sm text-white text-sm">
                       {event.location.city}, {event.location.state}
                     </span>
-                    <span className="bg-black/30 backdrop-blur-sm px-3 py-1 rounded-full border border-white/20 text-white text-sm">
+                    <span className="inline-flex items-center min-h-touch px-3 py-1 rounded-full border border-white/20 bg-black/30 backdrop-blur-sm text-white text-sm">
                       {event.category}
                     </span>
                   </div>
@@ -229,11 +229,11 @@ function EnhancedEventLayout({ event, breadcrumbItems }: { event: any, breadcrum
                 href={event.website} 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className={`group inline-block bg-gradient-to-r ${colors.accent} text-black font-bold py-3 px-6 rounded-full ${colors.buttonHover} transition-all duration-300 shadow-xl hover:shadow-red-500/25 hover:scale-105 whitespace-nowrap`}
+                className={`group inline-flex w-full sm:w-auto min-h-touch items-center justify-center bg-gradient-to-r ${colors.accent} text-black font-bold py-3 px-6 rounded-full ${colors.buttonHover} transition-colors duration-300 shadow-xl md:hover:scale-105 motion-reduce:md:hover:scale-100 whitespace-nowrap`}
               >
                 <span className="flex items-center gap-2">
                   Visit Website
-                  <svg className="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-4 h-4 transition-transform group-hover:translate-x-1 motion-reduce:transition-none" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                   </svg>
                 </span>
@@ -244,7 +244,7 @@ function EnhancedEventLayout({ event, breadcrumbItems }: { event: any, breadcrum
       </section>
 
       {/* Compact Content Section */}
-      <section className="py-8 bg-gradient-to-b from-gray-900 to-black">
+      <section className="py-6 md:py-8 bg-gradient-to-b from-gray-900 to-black">
         <div className="container-custom">
           <div className="max-w-6xl mx-auto">
             {/* Two Column Layout */}
@@ -253,9 +253,9 @@ function EnhancedEventLayout({ event, breadcrumbItems }: { event: any, breadcrum
               {/* Left Column - About & Features */}
               <div className="space-y-6">
                 {/* About Section */}
-                <div className="bg-gradient-to-br from-gray-900 to-black border border-gray-700 rounded-2xl p-6">
-                  <h2 className="text-2xl font-serif font-bold text-white mb-4 flex items-center gap-3">
-                    <div className={`w-8 h-8 bg-gradient-to-r ${colors.primary} rounded-lg flex items-center justify-center`}>
+                <div className="bg-gradient-to-br from-gray-900 to-black border border-gray-700 rounded-2xl p-4 sm:p-6">
+                  <h2 className="text-xl sm:text-2xl font-serif font-bold text-white mb-4 flex items-center gap-3">
+                    <div className={`w-8 h-8 shrink-0 bg-gradient-to-r ${colors.primary} rounded-lg flex items-center justify-center`} aria-hidden>
                       <svg className="w-4 h-4 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                       </svg>
@@ -274,9 +274,9 @@ function EnhancedEventLayout({ event, breadcrumbItems }: { event: any, breadcrum
 
                 {/* Features Section */}
                 {event.features && event.features.length > 0 && (
-                  <div className="bg-gradient-to-br from-gray-900 to-black border border-gray-700 rounded-2xl p-6">
-                    <h2 className="text-2xl font-serif font-bold text-white mb-4 flex items-center gap-3">
-                      <div className={`w-8 h-8 bg-gradient-to-r ${colors.secondary} rounded-lg flex items-center justify-center`}>
+                  <div className="bg-gradient-to-br from-gray-900 to-black border border-gray-700 rounded-2xl p-4 sm:p-6">
+                    <h2 className="text-xl sm:text-2xl font-serif font-bold text-white mb-4 flex items-center gap-3">
+                      <div className={`w-8 h-8 shrink-0 bg-gradient-to-r ${colors.secondary} rounded-lg flex items-center justify-center`} aria-hidden>
                         <svg className="w-4 h-4 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
@@ -286,7 +286,7 @@ function EnhancedEventLayout({ event, breadcrumbItems }: { event: any, breadcrum
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       {event.features.map((feature: string, index: number) => (
                         <div key={index} className="flex items-center gap-3 group">
-                          <div className={`flex-shrink-0 w-6 h-6 bg-gradient-to-r ${colors.primary} rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform`}>
+                          <div className={`flex-shrink-0 w-6 h-6 bg-gradient-to-r ${colors.primary} rounded-lg flex items-center justify-center md:group-hover:scale-110 transition-transform motion-reduce:transition-none motion-reduce:md:group-hover:scale-100`}>
                             <span className="text-black font-bold text-xs">{index + 1}</span>
                           </div>
                           <span className={`text-gray-300 text-sm ${colors.hover} transition-colors`}>{feature}</span>
@@ -355,9 +355,9 @@ function EnhancedEventLayout({ event, breadcrumbItems }: { event: any, breadcrum
                 <EventCalendarExport event={event} />
 
                 {/* Discord Community */}
-                <div className="bg-gradient-to-br from-gray-900 to-black border border-gray-700 rounded-2xl p-6">
-                  <h2 className="text-xl font-serif font-bold text-white mb-3 flex items-center gap-3">
-                    <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-blue-500 rounded-lg flex items-center justify-center">
+                <div className="bg-gradient-to-br from-gray-900 to-black border border-gray-700 rounded-2xl p-4 sm:p-6">
+                  <h2 className="text-lg sm:text-xl font-serif font-bold text-white mb-3 flex items-center gap-3">
+                    <div className="w-8 h-8 shrink-0 bg-gradient-to-r from-purple-500 to-blue-500 rounded-lg flex items-center justify-center" aria-hidden>
                       <svg className="w-4 h-4 text-black" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515a.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0a12.64 12.64 0 0 0-.617-1.25a.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057a19.9 19.9 0 0 0 5.993 3.03a.078.078 0 0 0 .084-.028a14.09 14.09 0 0 0 1.226-1.994a.076.076 0 0 0-.041-.106a13.107 13.107 0 0 1-1.872-.892a.077.077 0 0 1-.008-.128a10.2 10.2 0 0 0 .372-.292a.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127a12.299 12.299 0 0 1-1.873.892a.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028a19.839 19.839 0 0 0 6.002-3.03a.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419c0-1.333.956-2.419 2.157-2.419c1.21 0 2.176 1.096 2.157 2.42c0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419c0-1.333.955-2.419 2.157-2.419c1.21 0 2.176 1.096 2.157 2.42c0 1.333-.946 2.418-2.157 2.418z"/>
                       </svg>
@@ -371,11 +371,11 @@ function EnhancedEventLayout({ event, breadcrumbItems }: { event: any, breadcrum
                     href="https://discord.gg/xcnGGyGsmT" 
                     target="_blank" 
                     rel="noopener noreferrer"
-                    className="group inline-block bg-gradient-to-r from-purple-500 to-blue-500 text-white font-bold py-2 px-4 rounded-lg hover:from-purple-600 hover:to-blue-600 transition-all duration-300 shadow-lg hover:shadow-purple-500/25 hover:scale-105 text-sm"
+                    className="group inline-flex min-h-touch items-center justify-center bg-gradient-to-r from-purple-500 to-blue-500 text-white font-bold py-2 px-4 rounded-lg hover:from-purple-600 hover:to-blue-600 transition-colors duration-300 shadow-lg md:hover:scale-105 motion-reduce:md:hover:scale-100 text-sm"
                   >
                     <span className="flex items-center gap-2">
                       Join Discord
-                      <svg className="w-3 h-3 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="w-3 h-3 transition-transform group-hover:translate-x-1 motion-reduce:transition-none" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                       </svg>
                     </span>

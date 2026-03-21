@@ -78,7 +78,7 @@ export default function HubCategoryGrid() {
             <Link
               key={card.href}
               href={card.href}
-              className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl p-6 md:p-8 transition-all duration-500 hover:scale-[1.02] hover:border-white/25 focus-visible:outline-none"
+              className="group relative flex min-h-touch flex-col justify-center overflow-hidden rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl p-6 md:p-8 transition-[border-color,transform] duration-300 hover:scale-[1.01] hover:border-white/25 focus-visible:outline-none motion-reduce:transition-none motion-reduce:hover:scale-100"
               aria-label={`${card.title}: ${card.cta}`}
             >
               <div className={`absolute inset-0 bg-gradient-to-br ${card.accentClassName} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
@@ -96,7 +96,7 @@ export default function HubCategoryGrid() {
                 </p>
                 <div className="inline-flex items-center gap-2 text-primary-300 font-semibold">
                   <span>{card.cta}</span>
-                  <svg className="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-4 h-4 transition-transform group-hover:translate-x-1 motion-reduce:transition-none" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                   </svg>
                 </div>

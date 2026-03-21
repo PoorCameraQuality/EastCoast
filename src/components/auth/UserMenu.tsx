@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { supabase } from '@/lib/supabase'
 import { getCurrentUser } from '@/lib/auth'
 import LoginForm from './LoginForm'
@@ -11,6 +11,24 @@ export default function UserMenu() {
   const [loading, setLoading] = useState(true)
   const [showLogin, setShowLogin] = useState(false)
   const [logoutLoading, setLogoutLoading] = useState(false)
+  const loginTriggerRef = useRef<HTMLButtonElement>(null)
+
+  const closeLogin = useCallback(() => {
+    setShowLogin(false)
+    queueMicrotask(() => loginTriggerRef.current?.focus())
+  }, [])
+
+  useEffect(() => {
+    if (!showLogin) return
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        e.preventDefault()
+        closeLogin()
+      }
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [showLogin, closeLogin])
 
   useEffect(() => {
     // If Supabase is not configured, skip auth functionality
@@ -114,13 +132,25 @@ export default function UserMenu() {
 
   if (showLogin) {
     return (
-      <div className="login-modal-overlay">
-        <div className="login-modal-content">
+      <div
+        className="login-modal-overlay"
+        role="presentation"
+        onClick={closeLogin}
+      >
+        <div
+          className="login-modal-content"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Sign in"
+          onClick={(e) => e.stopPropagation()}
+        >
           <button
-            onClick={() => setShowLogin(false)}
-            className="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
+            type="button"
+            onClick={closeLogin}
+            aria-label="Close login dialog"
+            className="absolute top-4 right-4 min-h-touch min-w-touch flex items-center justify-center text-gray-400 hover:text-white rounded-md focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-400"
           >
-            ✕
+            <span aria-hidden="true">×</span>
           </button>
           <LoginForm />
         </div>
@@ -148,8 +178,10 @@ export default function UserMenu() {
   return (
     <div className="flex items-center space-x-4">
       <button
+        ref={loginTriggerRef}
+        type="button"
         onClick={() => setShowLogin(true)}
-        className="text-primary-500 hover:text-primary-400 transition-colors"
+        className="text-primary-500 hover:text-primary-400 transition-colors min-h-touch px-1"
       >
         Login
       </button>

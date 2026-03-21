@@ -30,8 +30,8 @@ export default function DungeonsPageClient({ allDungeons, allEvents }: Props) {
           <Breadcrumb items={breadcrumbItems} />
           <SupportCTAInline contextLabel="Dungeons" />
 
-          <div className="text-center mt-6 mb-10">
-            <h1 className="text-4xl md:text-5xl font-serif font-semibold text-white">
+          <div className="text-center mt-4 md:mt-6 mb-8 md:mb-10">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif font-semibold text-white">
               Dungeons & Clubs
             </h1>
             <p className="text-gray-400 mt-3 max-w-2xl mx-auto">
@@ -51,8 +51,9 @@ export default function DungeonsPageClient({ allDungeons, allEvents }: Props) {
 
           <div className="flex justify-center mt-6">
             <button
+              type="button"
               onClick={() => setShowSubmitForm(!showSubmitForm)}
-              className="btn-outline px-6 py-3"
+              className="btn-outline px-6 py-3 min-h-touch w-full max-w-md sm:w-auto"
               aria-expanded={showSubmitForm}
               aria-controls="dungeon-submission-form"
             >

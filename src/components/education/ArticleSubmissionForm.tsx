@@ -108,7 +108,8 @@ export default function ArticleSubmissionForm() {
           </p>
           <button
             onClick={() => setSubmitSuccess(false)}
-            className="btn-primary"
+            type="button"
+            className="btn-primary min-h-touch inline-flex items-center justify-center px-6 py-2.5"
           >
             Submit Another Article
           </button>
@@ -132,30 +133,32 @@ export default function ArticleSubmissionForm() {
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label className="block text-white text-sm font-medium mb-2">
+              <label htmlFor="article-submission-author-name" className="block text-white text-sm font-medium mb-2">
                 Author Name *
               </label>
               <input
+                id="article-submission-author-name"
                 type="text"
                 name="authorName"
                 value={formData.authorName}
                 onChange={handleInputChange}
-                className="w-full px-4 py-3 bg-dark-700 text-white border border-dark-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors"
+                className="w-full px-4 py-3 bg-dark-700 text-white border border-dark-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors min-h-touch"
                 placeholder="Enter your full name"
                 required
               />
             </div>
             
             <div>
-              <label className="block text-white text-sm font-medium mb-2">
+              <label htmlFor="article-submission-author-email" className="block text-white text-sm font-medium mb-2">
                 Email Address *
               </label>
               <input
+                id="article-submission-author-email"
                 type="email"
                 name="authorEmail"
                 value={formData.authorEmail}
                 onChange={handleInputChange}
-                className="w-full px-4 py-3 bg-dark-700 text-white border border-dark-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors"
+                className="w-full px-4 py-3 bg-dark-700 text-white border border-dark-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors min-h-touch"
                 placeholder="your.email@example.com"
                 required
               />
@@ -163,24 +166,26 @@ export default function ArticleSubmissionForm() {
           </div>
           
           <div>
-            <label className="block text-white text-sm font-medium mb-2">
+            <label htmlFor="article-submission-credentials" className="block text-white text-sm font-medium mb-2">
               Credentials/Qualifications
             </label>
             <input
+              id="article-submission-credentials"
               type="text"
               name="authorCredentials"
               value={formData.authorCredentials}
               onChange={handleInputChange}
-              className="w-full px-4 py-3 bg-dark-700 text-white border border-dark-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors"
+              className="w-full px-4 py-3 bg-dark-700 text-white border border-dark-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors min-h-touch"
               placeholder="e.g., BDSM Educator, Therapist, Community Leader, etc."
             />
           </div>
           
           <div>
-            <label className="block text-white text-sm font-medium mb-2">
+            <label htmlFor="article-submission-bio" className="block text-white text-sm font-medium mb-2">
               Author Bio *
             </label>
             <textarea
+              id="article-submission-bio"
               name="authorBio"
               value={formData.authorBio}
               onChange={handleInputChange}
@@ -199,25 +204,27 @@ export default function ArticleSubmissionForm() {
           </h3>
           
           <div>
-            <label className="block text-white text-sm font-medium mb-2">
+            <label htmlFor="article-submission-title" className="block text-white text-sm font-medium mb-2">
               Article Title *
             </label>
             <input
+              id="article-submission-title"
               type="text"
               name="articleTitle"
               value={formData.articleTitle}
               onChange={handleInputChange}
-              className="w-full px-4 py-3 bg-dark-700 text-white border border-dark-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors"
+              className="w-full px-4 py-3 bg-dark-700 text-white border border-dark-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors min-h-touch"
               placeholder="Enter a compelling title for your article..."
               required
             />
           </div>
           
           <div>
-            <label className="block text-white text-sm font-medium mb-2">
+            <label htmlFor="article-submission-excerpt" className="block text-white text-sm font-medium mb-2">
               Article Excerpt *
             </label>
             <textarea
+              id="article-submission-excerpt"
               name="articleExcerpt"
               value={formData.articleExcerpt}
               onChange={handleInputChange}
@@ -230,14 +237,15 @@ export default function ArticleSubmissionForm() {
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label className="block text-white text-sm font-medium mb-2">
+              <label htmlFor="article-submission-category" className="block text-white text-sm font-medium mb-2">
                 Article Category *
               </label>
               <select
+                id="article-submission-category"
                 name="articleCategory"
                 value={formData.articleCategory}
                 onChange={handleInputChange}
-                className="w-full px-4 py-3 bg-dark-700 text-white border border-dark-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors"
+                className="w-full px-4 py-3 bg-dark-700 text-white border border-dark-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors min-h-touch"
                 required
               >
                 <option value="">Select a category</option>
@@ -250,15 +258,16 @@ export default function ArticleSubmissionForm() {
             </div>
             
             <div>
-              <label className="block text-white text-sm font-medium mb-2">
+              <label htmlFor="article-submission-tags" className="block text-white text-sm font-medium mb-2">
                 Article Tags
               </label>
               <input
+                id="article-submission-tags"
                 type="text"
                 name="articleTags"
                 value={formData.articleTags}
                 onChange={handleInputChange}
-                className="w-full px-4 py-3 bg-dark-700 text-white border border-dark-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors"
+                className="w-full px-4 py-3 bg-dark-700 text-white border border-dark-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors min-h-touch"
                 placeholder="Enter tags separated by commas (e.g., consent, negotiation, safety)"
               />
             </div>
@@ -272,13 +281,17 @@ export default function ArticleSubmissionForm() {
           </h3>
           
           <div>
-            <div className="flex justify-between items-center text-sm text-subtle mb-2">
+            <label htmlFor="article-submission-body" className="sr-only">
+              Article body (minimum 500 words)
+            </label>
+            <div className="flex flex-col gap-2 sm:flex-row sm:justify-between sm:items-center text-sm text-subtle mb-2">
               <span>Use the toolbar above to format your content. You can add images, links, tables, and more.</span>
-              <span className={`font-medium ${wordCount < 500 ? 'text-red-400' : 'text-green-400'}`}>
+              <span className={`font-medium shrink-0 ${wordCount < 500 ? 'text-red-400' : 'text-green-400'}`}>
                 Word count: {wordCount} (Minimum: 500)
               </span>
             </div>
             <RichTextEditor
+              id="article-submission-body"
               content={formData.articleContent}
               onChange={handleContentChange}
               placeholder="Start writing your article... Use the toolbar above to format your content with headings, bold text, links, images, tables, and more."
@@ -288,14 +301,15 @@ export default function ArticleSubmissionForm() {
 
         {/* Contact Method */}
         <div>
-          <label className="block text-white text-sm font-medium mb-2">
+          <label htmlFor="article-submission-contact-method" className="block text-white text-sm font-medium mb-2">
             Preferred Contact Method
           </label>
           <select
+            id="article-submission-contact-method"
             name="contactMethod"
             value={formData.contactMethod}
             onChange={handleInputChange}
-            className="w-full px-4 py-3 bg-dark-700 text-white border border-dark-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors"
+            className="w-full px-4 py-3 bg-dark-700 text-white border border-dark-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors min-h-touch"
           >
             <option value="">Select contact method</option>
             <option value="email">Email</option>
@@ -307,16 +321,17 @@ export default function ArticleSubmissionForm() {
 
         {/* Terms Agreement */}
         <div className="space-y-4">
-          <div className="flex items-start">
+          <div className="flex items-start gap-3">
             <input
+              id="article-submission-agree-terms"
               type="checkbox"
               name="agreeToTerms"
               checked={formData.agreeToTerms}
               onChange={handleInputChange}
-              className="mt-1 h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-600 rounded bg-dark-700"
+              className="mt-1 h-5 w-5 min-h-touch min-w-touch text-primary-600 focus:ring-primary-500 border-gray-600 rounded bg-dark-700"
               required
             />
-            <label className="ml-3 text-sm text-subtle">
+            <label htmlFor="article-submission-agree-terms" className="text-sm text-subtle">
               I agree to the{' '}
               <a href="/terms" className="text-primary-400 hover:text-primary-300 underline">
                 Terms and Conditions
@@ -338,10 +353,10 @@ export default function ArticleSubmissionForm() {
           <button
             type="submit"
             disabled={isSubmitting || wordCount < 500 || !formData.agreeToTerms}
-            className={`px-8 py-3 rounded-lg font-medium transition-all duration-300 ${
+            className={`min-h-touch px-8 py-3 rounded-lg font-medium transition-colors duration-300 ${
               isSubmitting || wordCount < 500 || !formData.agreeToTerms
                 ? 'bg-gray-600 text-gray-400 cursor-not-allowed'
-                : 'bg-primary-600 hover:bg-primary-500 text-white hover:shadow-lg transform hover:scale-105'
+                : 'bg-primary-600 hover:bg-primary-500 text-white hover:shadow-lg'
             }`}
           >
             {isSubmitting ? 'Submitting...' : 'Submit Article'}

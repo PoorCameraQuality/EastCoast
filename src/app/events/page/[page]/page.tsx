@@ -60,15 +60,15 @@ export default function EventsPageNumber({ params }: PageProps) {
   if (pageNum > totalPages && totalPages > 0) {
     return (
       <div className="min-h-screen bg-black">
-        <div className="container-custom py-16">
+        <div className="container-custom py-8 md:py-16">
           <div className="text-center">
-            <h1 className="text-4xl font-serif font-bold text-white mb-4">Page Not Found</h1>
+            <h1 className="text-3xl sm:text-4xl font-serif font-bold text-white mb-4">Page Not Found</h1>
             <p className="text-gray-300 mb-6">
               There are only {totalPages} pages of events.
             </p>
             <Link 
               href={`/events/page/${totalPages}`}
-              className="text-primary-400 hover:text-primary-300"
+              className="inline-flex min-h-touch items-center justify-center text-primary-400 hover:text-primary-300"
             >
               Go to last page →
             </Link>
@@ -86,11 +86,11 @@ export default function EventsPageNumber({ params }: PageProps) {
 
   return (
     <div className="min-h-screen bg-black">
-      <div className="container-custom py-16">
+      <div className="container-custom py-8 md:py-16">
         <Breadcrumb items={breadcrumbItems} />
         
         <div className="mb-8">
-          <h1 className="text-4xl md:text-5xl font-serif font-bold text-white mb-4">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-white mb-4">
             Upcoming Events - Page {pageNum}
           </h1>
           <p className="text-gray-300">
@@ -113,7 +113,7 @@ export default function EventsPageNumber({ params }: PageProps) {
 
         {/* Pagination Controls */}
         <nav 
-          className="flex items-center justify-center gap-4 mt-12"
+          className="flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center justify-center gap-3 sm:gap-4 mt-12"
           aria-label="Pagination"
         >
           {pageNum > 1 && (
@@ -121,14 +121,14 @@ export default function EventsPageNumber({ params }: PageProps) {
               <Link
                 href={pageNum === 2 ? '/events' : `/events/page/${pageNum - 1}`}
                 rel="prev"
-                className="px-6 py-3 bg-gradient-to-r from-primary-600 to-blue-600 text-white font-medium rounded-full hover:from-primary-700 hover:to-blue-700 transition-all duration-300 shadow-lg"
+                className="btn-primary inline-flex min-h-touch items-center justify-center px-6 py-2.5 text-sm"
               >
                 ← Previous
               </Link>
             </>
           )}
 
-          <span className="text-gray-300 font-medium">
+          <span className="text-gray-300 font-medium text-center py-2">
             Page {pageNum} of {totalPages}
           </span>
 
@@ -136,7 +136,7 @@ export default function EventsPageNumber({ params }: PageProps) {
             <Link
               href={`/events/page/${pageNum + 1}`}
               rel="next"
-              className="px-6 py-3 bg-gradient-to-r from-primary-600 to-blue-600 text-white font-medium rounded-full hover:from-primary-700 hover:to-blue-700 transition-all duration-300 shadow-lg"
+              className="btn-primary inline-flex min-h-touch items-center justify-center px-6 py-2.5 text-sm"
             >
               Next →
             </Link>
@@ -147,7 +147,7 @@ export default function EventsPageNumber({ params }: PageProps) {
         <div className="text-center mt-12">
           <Link 
             href="/events"
-            className="text-primary-400 hover:text-primary-300 transition-colors"
+            className="inline-flex min-h-touch items-center justify-center text-primary-400 hover:text-primary-300 transition-colors"
           >
             View all events (no pagination) →
           </Link>

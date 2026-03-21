@@ -502,7 +502,8 @@ export default function UnifiedAdminDashboard({ user, isAdmin: isAdminProp }: Un
             </div>
             <button 
               onClick={() => window.location.href = '/'}
-              className="btn-outline"
+              type="button"
+              className="btn-outline min-h-touch inline-flex items-center justify-center"
             >
               ← Back to Home
             </button>
@@ -512,7 +513,7 @@ export default function UnifiedAdminDashboard({ user, isAdmin: isAdminProp }: Un
           <div className="flex gap-4 mb-6">
             <button
               onClick={() => setActiveSection('overview')}
-              className={`px-6 py-3 rounded-lg font-medium transition-colors ${
+              className={`min-h-touch inline-flex items-center justify-center px-6 py-3 rounded-lg font-medium transition-colors ${
                 activeSection === 'overview'
                   ? 'bg-primary-500 text-white'
                   : 'bg-dark-700 text-gray-300 hover:bg-dark-600'
@@ -522,7 +523,7 @@ export default function UnifiedAdminDashboard({ user, isAdmin: isAdminProp }: Un
             </button>
             <button
               onClick={() => setActiveSection('submissions')}
-              className={`px-6 py-3 rounded-lg font-medium transition-colors ${
+              className={`min-h-touch inline-flex items-center justify-center px-6 py-3 rounded-lg font-medium transition-colors ${
                 activeSection === 'submissions'
                   ? 'bg-primary-500 text-white'
                   : 'bg-dark-700 text-gray-300 hover:bg-dark-600'
@@ -532,7 +533,7 @@ export default function UnifiedAdminDashboard({ user, isAdmin: isAdminProp }: Un
             </button>
             <button
               onClick={() => setActiveSection('create-content')}
-              className={`px-6 py-3 rounded-lg font-medium transition-colors ${
+              className={`min-h-touch inline-flex items-center justify-center px-6 py-3 rounded-lg font-medium transition-colors ${
                 activeSection === 'create-content'
                   ? 'bg-primary-500 text-white'
                   : 'bg-dark-700 text-gray-300 hover:bg-dark-600'
@@ -744,7 +745,7 @@ export default function UnifiedAdminDashboard({ user, isAdmin: isAdminProp }: Un
                 <button
                   key={type}
                   onClick={() => setContentType(type)}
-                  className={`px-6 py-3 rounded-lg font-medium transition-colors ${
+                  className={`min-h-touch inline-flex items-center justify-center px-6 py-3 rounded-lg font-medium transition-colors ${
                     contentType === type
                       ? 'bg-primary-500 text-white'
                       : 'bg-dark-700 text-gray-300 hover:bg-dark-600'
@@ -1122,7 +1123,7 @@ export default function UnifiedAdminDashboard({ user, isAdmin: isAdminProp }: Un
 
         {/* Submission Detail Modal */}
         {selectedSubmission && (
-          <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4">
+          <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 z-[var(--z-ecke-modal)]">
             <div className="bg-dark-800 rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto">
               <div className="p-6">
                 <div className="flex items-center justify-between mb-6">

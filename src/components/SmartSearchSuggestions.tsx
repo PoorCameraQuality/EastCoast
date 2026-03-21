@@ -166,7 +166,7 @@ export default function SmartSearchSuggestions({ searchQuery, maxSuggestions = 5
 
   if (loading) {
     return (
-      <div className="absolute top-full left-0 right-0 mt-2 bg-dark-800 border border-dark-600 rounded-lg shadow-xl z-50">
+      <div className="absolute top-full left-0 right-0 mt-2 bg-dark-800 border border-dark-600 rounded-lg shadow-xl z-[55]">
         <div className="p-4">
           <div className="flex items-center space-x-3">
             <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary-500"></div>
@@ -209,7 +209,7 @@ export default function SmartSearchSuggestions({ searchQuery, maxSuggestions = 5
   }
 
   return (
-    <div className="absolute top-full left-0 right-0 mt-2 bg-dark-800 border border-dark-600 rounded-lg shadow-xl z-50 max-h-80 overflow-y-auto">
+    <div className="absolute top-full left-0 right-0 mt-2 bg-dark-800 border border-dark-600 rounded-lg shadow-xl z-[55] max-h-80 overflow-y-auto">
       <div className="p-2">
         <div className="text-xs text-gray-400 px-3 py-2 border-b border-dark-600">
           Smart Suggestions
@@ -219,6 +219,7 @@ export default function SmartSearchSuggestions({ searchQuery, maxSuggestions = 5
             key={`${suggestion.type}-${suggestion.id}`}
             href={getHref(suggestion)}
             className="block p-3 hover:bg-dark-700 rounded-lg transition-colors group"
+            onMouseDown={(e) => e.preventDefault()}
             onClick={() => {
               // Safe tracking - use setTimeout to avoid blocking navigation
               setTimeout(() => {

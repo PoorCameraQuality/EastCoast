@@ -55,7 +55,7 @@ export default function FAQ({ items, title = "Frequently Asked Questions" }: FAQ
                 onClick={() => toggleItem(index)}
                 aria-expanded={openItems.includes(index)}
                 aria-controls={`faq-answer-${index}`}
-                className="w-full px-6 py-4 text-left flex justify-between items-center hover:bg-dark-700 transition-colors"
+                className="w-full min-h-touch px-6 py-4 text-left flex justify-between items-center gap-3 hover:bg-dark-700 transition-colors"
               >
                 <span className="text-white font-medium">{item.question}</span>
                 <svg

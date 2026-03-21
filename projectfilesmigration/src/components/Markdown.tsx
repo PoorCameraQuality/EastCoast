@@ -34,7 +34,7 @@ const rehypeWrapTables = () => (tree: any) => {
 
 export default function Markdown({ content }: { content: string }) {
   return (
-    <div className="prose prose-invert article-prose max-w-3xl lg:max-w-4xl">
+    <div className="prose prose-invert article-prose max-w-3xl lg:max-w-4xl w-full min-w-0 text-base sm:text-[1.0625rem] leading-relaxed">
       <ReactMarkdown
         remarkPlugins={[remarkGfm, remarkBreaks]}
         rehypePlugins={[rehypeRaw, [rehypeSanitize, sanitizeSchema], rehypeWrapTables]}

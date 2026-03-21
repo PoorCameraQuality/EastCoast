@@ -124,6 +124,10 @@ export default function Search({ events, dungeons, placeholder = "Search events 
     }
   }
 
+  const suggestionsOpen = searchFocused && query.length >= 2
+  const resultsOpen = results.length > 0
+  const listboxOpen = suggestionsOpen || resultsOpen
+
   return (
     <>
       <script
@@ -131,7 +135,7 @@ export default function Search({ events, dungeons, placeholder = "Search events 
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData).replace(/</g, '\\u003c') }}
       />
-      <div className="relative">
+      <div className="relative z-[55]">
         <div className="relative">
           <input
             type="text"
@@ -143,10 +147,12 @@ export default function Search({ events, dungeons, placeholder = "Search events 
               setTimeout(() => setSearchFocused(false), 200)
             }}
             placeholder={placeholder}
+            role="combobox"
             aria-label="Search events and dungeons"
-            aria-expanded={results.length > 0}
-            aria-controls="search-results"
-            className="w-full px-4 py-3 bg-dark-700 text-white border border-dark-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+            aria-autocomplete="list"
+            aria-expanded={listboxOpen}
+            aria-controls="search-smart-suggestions search-results"
+            className="w-full min-h-touch px-4 py-3 bg-dark-700 text-white border border-dark-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
           />
           {isSearching && (
             <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
@@ -155,18 +161,22 @@ export default function Search({ events, dungeons, placeholder = "Search events 
           )}
         </div>
 
-        {/* Smart Search Suggestions */}
-        {searchFocused && query.length >= 2 && (
-          <SmartSearchSuggestions searchQuery={query} />
-        )}
+        {/* Smart Search Suggestions — container always in DOM for combobox aria-controls */}
+        <div id="search-smart-suggestions" hidden={!suggestionsOpen}>
+          {suggestionsOpen ? <SmartSearchSuggestions searchQuery={query} /> : null}
+        </div>
 
-        {results.length > 0 && (
-          <div id="search-results" className="absolute top-full left-0 right-0 mt-2 bg-dark-800 border border-dark-600 rounded-lg shadow-xl z-50 max-h-96 overflow-y-auto">
+        <div
+          id="search-results"
+          hidden={!resultsOpen}
+          className="absolute top-full left-0 right-0 mt-2 bg-dark-800 border border-dark-600 rounded-lg shadow-xl max-h-96 overflow-y-auto"
+        >
             {results.map((result, index) => (
               <Link
                 key={`${result.type}-${result.slug}`}
                 href={`/${result.type}s/${result.slug}`}
                 className="block p-4 hover:bg-dark-700 transition-colors border-b border-dark-600 last:border-b-0"
+                onMouseDown={(e) => e.preventDefault()}
                 onClick={() => {
                   // Safe tracking - use setTimeout to avoid blocking navigation
                   setTimeout(() => {
@@ -222,7 +232,8 @@ export default function Search({ events, dungeons, placeholder = "Search events 
                       </span>
                     </div>
                     <p className="text-sm text-subtle">
-                      📍 {result.location.city}, {result.location.state}
+                      <span className="sr-only">Location: </span>
+                      {result.location.city}, {result.location.state}
                     </p>
                     {result.date && (
                       <p className="text-sm text-subtle">{result.date.display}</p>
@@ -234,8 +245,7 @@ export default function Search({ events, dungeons, placeholder = "Search events 
                 </div>
               </Link>
             ))}
-          </div>
-        )}
+        </div>
       </div>
     </>
   )

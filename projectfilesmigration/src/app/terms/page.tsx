@@ -53,16 +53,16 @@ export default function TermsPage() {
 
   return (
     <main className="min-h-screen bg-black">
-      <div className="container-custom py-16">
+      <div className="container-custom py-8 md:py-16">
         <div className="max-w-4xl mx-auto">
           <Breadcrumb items={breadcrumbItems} />
           
           {/* Header */}
-          <div className="text-center mb-16">
-            <h1 className="text-4xl md:text-6xl font-serif font-bold text-white mb-6">
+          <div className="text-center mb-10 md:mb-16">
+            <h1 className="text-3xl sm:text-4xl md:text-6xl font-serif font-bold text-white mb-4 md:mb-6">
               Terms of Service
             </h1>
-            <p className="text-lg text-subtle max-w-3xl mx-auto">
+            <p className="text-base sm:text-lg text-subtle max-w-3xl mx-auto leading-relaxed px-1">
               Please read these terms carefully before using our services.
             </p>
           </div>

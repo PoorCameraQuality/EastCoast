@@ -107,47 +107,51 @@ export default function DungeonSubmissionForm() {
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label className="block text-white font-medium mb-2">Dungeon Name *</label>
+              <label htmlFor="dungeon-submission-name" className="block text-white font-medium mb-2">Dungeon Name *</label>
               <input
+                id="dungeon-submission-name"
                 type="text"
                 name="dungeonName"
                 value={formData.dungeonName}
                 onChange={handleInputChange}
-                className="w-full bg-dark-700 border border-dark-600 rounded-lg px-4 py-3 text-white focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-colors"
+                className="w-full bg-dark-700 border border-dark-600 rounded-lg px-4 py-3 text-white focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-colors min-h-touch"
                 placeholder="Enter dungeon name"
                 required
               />
             </div>
             <div>
-              <label className="block text-white font-medium mb-2">Dungeon Location *</label>
+              <label htmlFor="dungeon-submission-location" className="block text-white font-medium mb-2">Dungeon Location *</label>
               <input
+                id="dungeon-submission-location"
                 type="text"
                 name="dungeonLocation"
                 value={formData.dungeonLocation}
                 onChange={handleInputChange}
-                className="w-full bg-dark-700 border border-dark-600 rounded-lg px-4 py-3 text-white focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-colors"
+                className="w-full bg-dark-700 border border-dark-600 rounded-lg px-4 py-3 text-white focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-colors min-h-touch"
                 placeholder="City, State"
                 required
               />
             </div>
             <div>
-              <label className="block text-white font-medium mb-2">Dungeon Website</label>
+              <label htmlFor="dungeon-submission-website" className="block text-white font-medium mb-2">Dungeon Website</label>
               <input
+                id="dungeon-submission-website"
                 type="url"
                 name="dungeonWebsite"
                 value={formData.dungeonWebsite}
                 onChange={handleInputChange}
-                className="w-full bg-dark-700 border border-dark-600 rounded-lg px-4 py-3 text-white focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-colors"
+                className="w-full bg-dark-700 border border-dark-600 rounded-lg px-4 py-3 text-white focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-colors min-h-touch"
                 placeholder="https://example.com"
               />
             </div>
             <div>
-              <label className="block text-white font-medium mb-2">Dungeon Category *</label>
+              <label htmlFor="dungeon-submission-category" className="block text-white font-medium mb-2">Dungeon Category *</label>
               <select
+                id="dungeon-submission-category"
                 name="dungeonCategory"
                 value={formData.dungeonCategory}
                 onChange={handleInputChange}
-                className="w-full bg-dark-700 border border-dark-600 rounded-lg px-4 py-3 text-white focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-colors"
+                className="w-full bg-dark-700 border border-dark-600 rounded-lg px-4 py-3 text-white focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-colors min-h-touch"
                 required
               >
                 <option value="">Select Category</option>
@@ -160,20 +164,22 @@ export default function DungeonSubmissionForm() {
               </select>
             </div>
             <div>
-              <label className="block text-white font-medium mb-2">Dungeon Tags</label>
+              <label htmlFor="dungeon-submission-tags" className="block text-white font-medium mb-2">Dungeon Tags</label>
               <input
+                id="dungeon-submission-tags"
                 type="text"
                 name="dungeonTags"
                 value={formData.dungeonTags}
                 onChange={handleInputChange}
-                className="w-full bg-dark-700 border border-dark-600 rounded-lg px-4 py-3 text-white focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-colors"
+                className="w-full bg-dark-700 border border-dark-600 rounded-lg px-4 py-3 text-white focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-colors min-h-touch"
                 placeholder="Comma-separated tags (e.g., rope, impact, suspension)"
               />
             </div>
           </div>
           <div className="mt-6">
-            <label className="block text-white font-medium mb-2">Dungeon Description *</label>
+            <label htmlFor="dungeon-submission-description" className="block text-white font-medium mb-2">Dungeon Description *</label>
             <textarea
+              id="dungeon-submission-description"
               name="dungeonDescription"
               value={formData.dungeonDescription}
               onChange={handleInputChange}
@@ -191,25 +197,27 @@ export default function DungeonSubmissionForm() {
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label className="block text-white font-medium mb-2">Owner Name *</label>
+              <label htmlFor="dungeon-submission-owner-name" className="block text-white font-medium mb-2">Owner Name *</label>
               <input
+                id="dungeon-submission-owner-name"
                 type="text"
                 name="ownerName"
                 value={formData.ownerName}
                 onChange={handleInputChange}
-                className="w-full bg-dark-700 border border-dark-600 rounded-lg px-4 py-3 text-white focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-colors"
+                className="w-full bg-dark-700 border border-dark-600 rounded-lg px-4 py-3 text-white focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-colors min-h-touch"
                 placeholder="Your name or organization name"
                 required
               />
             </div>
             <div>
-              <label className="block text-white font-medium mb-2">Owner Email *</label>
+              <label htmlFor="dungeon-submission-owner-email" className="block text-white font-medium mb-2">Owner Email *</label>
               <input
+                id="dungeon-submission-owner-email"
                 type="email"
                 name="ownerEmail"
                 value={formData.ownerEmail}
                 onChange={handleInputChange}
-                className="w-full bg-dark-700 border border-dark-600 rounded-lg px-4 py-3 text-white focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-colors"
+                className="w-full bg-dark-700 border border-dark-600 rounded-lg px-4 py-3 text-white focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-colors min-h-touch"
                 placeholder="your@email.com"
                 required
               />
@@ -221,14 +229,15 @@ export default function DungeonSubmissionForm() {
         <div className="space-y-6">
           <div className="flex items-start space-x-3">
             <input
+              id="dungeon-submission-agree-terms"
               type="checkbox"
               name="agreeToTerms"
               checked={formData.agreeToTerms}
               onChange={handleInputChange}
-              className="w-5 h-5 text-primary-500 bg-dark-700 border-dark-600 rounded focus:ring-primary-500 mt-1"
+              className="w-5 h-5 min-h-touch min-w-touch text-primary-500 bg-dark-700 border-dark-600 rounded focus:ring-primary-500 mt-1"
               required
             />
-            <label className="text-gray-300 text-sm">
+            <label htmlFor="dungeon-submission-agree-terms" className="text-gray-300 text-sm">
               I agree to the{' '}
               <Link href="/terms" className="text-primary-400 hover:text-primary-300 underline">
                 Terms of Service
@@ -250,7 +259,7 @@ export default function DungeonSubmissionForm() {
           <button
             type="submit"
             disabled={isSubmitting || !formData.agreeToTerms}
-            className="w-full btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full min-h-touch btn-primary disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center justify-center"
           >
             {isSubmitting ? 'Submitting...' : 'Submit Dungeon'}
           </button>

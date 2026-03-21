@@ -119,58 +119,63 @@ export default function EventSubmissionForm({ onSubmissionComplete }: EventSubmi
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label className="block text-white font-medium mb-2">Event Name *</label>
+              <label htmlFor="event-submission-name" className="block text-white font-medium mb-2">Event Name *</label>
               <input
+                id="event-submission-name"
                 type="text"
                 name="eventName"
                 value={formData.eventName}
                 onChange={handleInputChange}
-                className="w-full bg-dark-700 border border-dark-600 rounded-lg px-4 py-3 text-white focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-colors"
+                className="w-full bg-dark-700 border border-dark-600 rounded-lg px-4 py-3 text-white focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-colors min-h-touch"
                 placeholder="Enter event name"
                 required
               />
             </div>
             <div>
-              <label className="block text-white font-medium mb-2">Event Date *</label>
+              <label htmlFor="event-submission-date" className="block text-white font-medium mb-2">Event Date *</label>
               <input
+                id="event-submission-date"
                 type="date"
                 name="eventDate"
                 value={formData.eventDate}
                 onChange={handleInputChange}
-                className="w-full bg-dark-700 border border-dark-600 rounded-lg px-4 py-3 text-white focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-colors"
+                className="w-full bg-dark-700 border border-dark-600 rounded-lg px-4 py-3 text-white focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-colors min-h-touch"
                 required
               />
             </div>
             <div>
-              <label className="block text-white font-medium mb-2">Event Location *</label>
+              <label htmlFor="event-submission-location" className="block text-white font-medium mb-2">Event Location *</label>
               <input
+                id="event-submission-location"
                 type="text"
                 name="eventLocation"
                 value={formData.eventLocation}
                 onChange={handleInputChange}
-                className="w-full bg-dark-700 border border-dark-600 rounded-lg px-4 py-3 text-white focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-colors"
+                className="w-full bg-dark-700 border border-dark-600 rounded-lg px-4 py-3 text-white focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-colors min-h-touch"
                 placeholder="City, State"
                 required
               />
             </div>
             <div>
-              <label className="block text-white font-medium mb-2">Event Website</label>
+              <label htmlFor="event-submission-website" className="block text-white font-medium mb-2">Event Website</label>
               <input
+                id="event-submission-website"
                 type="url"
                 name="eventWebsite"
                 value={formData.eventWebsite}
                 onChange={handleInputChange}
-                className="w-full bg-dark-700 border border-dark-600 rounded-lg px-4 py-3 text-white focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-colors"
+                className="w-full bg-dark-700 border border-dark-600 rounded-lg px-4 py-3 text-white focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-colors min-h-touch"
                 placeholder="https://example.com"
               />
             </div>
             <div>
-              <label className="block text-white font-medium mb-2">Event Category *</label>
+              <label htmlFor="event-submission-category" className="block text-white font-medium mb-2">Event Category *</label>
               <select
+                id="event-submission-category"
                 name="eventCategory"
                 value={formData.eventCategory}
                 onChange={handleInputChange}
-                className="w-full bg-dark-700 border border-dark-600 rounded-lg px-4 py-3 text-white focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-colors"
+                className="w-full bg-dark-700 border border-dark-600 rounded-lg px-4 py-3 text-white focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-colors min-h-touch"
                 required
               >
                 <option value="">Select Category</option>
@@ -207,20 +212,22 @@ export default function EventSubmissionForm({ onSubmissionComplete }: EventSubmi
               </div>
             </div>
             <div>
-              <label className="block text-white font-medium mb-2">Event Tags</label>
+              <label htmlFor="event-submission-tags" className="block text-white font-medium mb-2">Event Tags</label>
               <input
+                id="event-submission-tags"
                 type="text"
                 name="eventTags"
                 value={formData.eventTags}
                 onChange={handleInputChange}
-                className="w-full bg-dark-700 border border-dark-600 rounded-lg px-4 py-3 text-white focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-colors"
+                className="w-full bg-dark-700 border border-dark-600 rounded-lg px-4 py-3 text-white focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-colors min-h-touch"
                 placeholder="Comma-separated tags (e.g., beginners, rope, impact)"
               />
             </div>
           </div>
           <div className="mt-6">
-            <label className="block text-white font-medium mb-2">Event Description *</label>
+            <label htmlFor="event-submission-description" className="block text-white font-medium mb-2">Event Description *</label>
             <textarea
+              id="event-submission-description"
               name="eventDescription"
               value={formData.eventDescription}
               onChange={handleInputChange}
@@ -238,25 +245,27 @@ export default function EventSubmissionForm({ onSubmissionComplete }: EventSubmi
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label className="block text-white font-medium mb-2">Organizer Name *</label>
+              <label htmlFor="event-submission-organizer-name" className="block text-white font-medium mb-2">Organizer Name *</label>
               <input
+                id="event-submission-organizer-name"
                 type="text"
                 name="organizerName"
                 value={formData.organizerName}
                 onChange={handleInputChange}
-                className="w-full bg-dark-700 border border-dark-600 rounded-lg px-4 py-3 text-white focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-colors"
+                className="w-full bg-dark-700 border border-dark-600 rounded-lg px-4 py-3 text-white focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-colors min-h-touch"
                 placeholder="Your name or organization name"
                 required
               />
             </div>
             <div>
-              <label className="block text-white font-medium mb-2">Organizer Email *</label>
+              <label htmlFor="event-submission-organizer-email" className="block text-white font-medium mb-2">Organizer Email *</label>
               <input
+                id="event-submission-organizer-email"
                 type="email"
                 name="organizerEmail"
                 value={formData.organizerEmail}
                 onChange={handleInputChange}
-                className="w-full bg-dark-700 border border-dark-600 rounded-lg px-4 py-3 text-white focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-colors"
+                className="w-full bg-dark-700 border border-dark-600 rounded-lg px-4 py-3 text-white focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-colors min-h-touch"
                 placeholder="your@email.com"
                 required
               />
@@ -268,14 +277,15 @@ export default function EventSubmissionForm({ onSubmissionComplete }: EventSubmi
         <div className="space-y-6">
           <div className="flex items-start space-x-3">
             <input
+              id="event-submission-agree-terms"
               type="checkbox"
               name="agreeToTerms"
               checked={formData.agreeToTerms}
               onChange={handleInputChange}
-              className="w-5 h-5 text-primary-500 bg-dark-700 border-dark-600 rounded focus:ring-primary-500 mt-1"
+              className="w-5 h-5 min-h-touch min-w-touch text-primary-500 bg-dark-700 border-dark-600 rounded focus:ring-primary-500 mt-1"
               required
             />
-            <label className="text-gray-300 text-sm">
+            <label htmlFor="event-submission-agree-terms" className="text-gray-300 text-sm">
               I agree to the{' '}
               <Link href="/terms" className="text-primary-400 hover:text-primary-300 underline">
                 Terms of Service
@@ -297,7 +307,7 @@ export default function EventSubmissionForm({ onSubmissionComplete }: EventSubmi
           <button
             type="submit"
             disabled={isSubmitting || !formData.agreeToTerms}
-            className="w-full btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full min-h-touch btn-primary disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center justify-center"
           >
             {isSubmitting ? 'Submitting...' : 'Submit Event'}
           </button>

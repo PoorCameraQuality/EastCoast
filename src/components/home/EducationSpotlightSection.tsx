@@ -17,7 +17,7 @@ export default function EducationSpotlightSection() {
               Guides and resources focused on safety, communication, and community norms.
             </p>
           </div>
-          <Link href="/education" className="btn-outline text-sm px-5 py-2 whitespace-nowrap" aria-label="Browse education resources">
+          <Link href="/education" className="btn-outline text-sm px-5 py-2 whitespace-nowrap min-h-touch inline-flex items-center justify-center w-full sm:w-auto md:w-auto" aria-label="Browse education resources">
             Browse Education
           </Link>
         </div>
@@ -30,7 +30,7 @@ export default function EducationSpotlightSection() {
               className="group"
               aria-label={`Read article: ${article.title}`}
             >
-              <article className="relative h-full overflow-hidden rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl p-6 transition-all duration-500 hover:scale-[1.02] hover:border-primary-400/25 hover:shadow-elegant-lg">
+              <article className="relative h-full overflow-hidden rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl p-5 sm:p-6 transition-colors duration-500 md:hover:scale-[1.02] motion-reduce:md:hover:scale-100 hover:border-primary-400/25 hover:shadow-elegant-lg min-h-touch flex flex-col">
                 <div className="absolute inset-0 bg-gradient-to-br from-blue-500/8 via-transparent to-primary-500/8 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                 <div className="relative z-10">
                   <h3 className="text-xl font-serif font-semibold text-white mb-2 line-clamp-2 group-hover:text-primary-300 transition-colors duration-300">
@@ -45,7 +45,7 @@ export default function EducationSpotlightSection() {
                   </p>
                   <div className="mt-4 inline-flex items-center gap-2 text-primary-300 font-semibold">
                     <span>Read More</span>
-                    <svg className="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-4 h-4 shrink-0 transition-transform group-hover:translate-x-1 motion-reduce:transition-none" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                     </svg>
                   </div>

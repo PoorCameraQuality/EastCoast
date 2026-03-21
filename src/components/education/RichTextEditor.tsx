@@ -9,9 +9,11 @@ interface RichTextEditorProps {
   content: string
   onChange: (content: string) => void
   placeholder?: string
+  /** Associates the editor surface with a `<label htmlFor="...">` for accessibility */
+  id?: string
 }
 
-export default function RichTextEditor({ content, onChange, placeholder = 'Start writing your article...' }: RichTextEditorProps) {
+export default function RichTextEditor({ content, onChange, placeholder = 'Start writing your article...', id }: RichTextEditorProps) {
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
@@ -39,10 +41,11 @@ export default function RichTextEditor({ content, onChange, placeholder = 'Start
       attributes: {
         class: 'prose prose-invert max-w-none focus:outline-none min-h-[400px] p-4',
         placeholder,
+        ...(id ? { id } : {}),
       },
     },
     immediatelyRender: false,
-  })
+  }, [id])
 
   if (!editor) {
     return <div className="border border-gray-700 rounded-lg bg-black p-4 min-h-[400px]">Loading editor...</div>

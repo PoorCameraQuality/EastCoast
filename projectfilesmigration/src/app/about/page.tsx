@@ -96,25 +96,25 @@ export default function AboutPage() {
         <div className="absolute bottom-20 left-1/3 w-20 h-20 bg-gradient-to-r from-blue-400 to-primary-500 rounded-full blur-xl animate-pulse delay-1500"></div>
       </div>
 
-      <div className="container-custom py-16 relative z-10">
+      <div className="container-custom py-8 md:py-16 relative z-10">
         <div className="max-w-4xl mx-auto">
           <Breadcrumb items={breadcrumbItems} />
           
           {/* Enhanced Header */}
-          <div className="text-center mb-16">
-            <h1 className="text-4xl md:text-6xl font-serif font-bold text-white mb-6 relative">
+          <div className="text-center mb-10 md:mb-16">
+            <h1 className="text-3xl sm:text-4xl md:text-6xl font-serif font-bold text-white mb-4 md:mb-6 relative">
               <span className="inline-block bg-gradient-to-r from-primary-300 via-blue-400 to-primary-500 bg-clip-text text-transparent">
                 About East Coast Kink Events
               </span>
               <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-48 h-1 bg-gradient-to-r from-primary-400 to-blue-400 rounded-full"></div>
             </h1>
-            <p className="text-xl text-gray-400 max-w-3xl mx-auto leading-relaxed">
+            <p className="text-base sm:text-lg md:text-xl text-gray-400 max-w-3xl mx-auto leading-relaxed px-1">
               Connecting the kink community through transparency, safety, and authentic experiences
             </p>
           </div>
 
           {/* Enhanced Mission Statement */}
-          <div className="backdrop-blur-xl bg-white/10 border border-white/20 rounded-2xl p-8 mb-12 shadow-2xl">
+          <div className="backdrop-blur-xl bg-white/10 border border-white/20 rounded-2xl p-6 sm:p-8 mb-10 md:mb-12 shadow-2xl">
             <h2 className="text-3xl font-serif font-bold text-white mb-6 flex items-center gap-3">
               <div className="w-8 h-8 bg-gradient-to-r from-primary-600 to-blue-600 rounded-lg flex items-center justify-center">
                 <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -131,8 +131,8 @@ export default function AboutPage() {
           </div>
 
           {/* Enhanced Services Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
-            <div className="backdrop-blur-xl bg-white/10 border border-white/20 rounded-2xl p-8 shadow-xl hover:shadow-primary-500/25 transition-all duration-300 hover:scale-[1.02]">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 mb-10 md:mb-16">
+            <div className="backdrop-blur-xl bg-white/10 border border-white/20 rounded-2xl p-6 sm:p-8 shadow-xl hover:shadow-primary-500/25 transition-all duration-300 md:hover:scale-[1.02] motion-reduce:md:hover:scale-100">
               <h3 className="text-2xl font-serif font-bold text-white mb-4 flex items-center gap-3">
                 <div className="w-8 h-8 bg-gradient-to-r from-primary-600 to-blue-600 rounded-lg flex items-center justify-center">
                   <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -146,7 +146,7 @@ export default function AboutPage() {
               </p>
             </div>
             
-            <div className="backdrop-blur-xl bg-white/10 border border-white/20 rounded-2xl p-8 shadow-xl hover:shadow-primary-500/25 transition-all duration-300 hover:scale-[1.02]">
+            <div className="backdrop-blur-xl bg-white/10 border border-white/20 rounded-2xl p-6 sm:p-8 shadow-xl hover:shadow-primary-500/25 transition-all duration-300 md:hover:scale-[1.02] motion-reduce:md:hover:scale-100">
               <h3 className="text-2xl font-serif font-bold text-white mb-4 flex items-center gap-3">
                 <div className="w-8 h-8 bg-gradient-to-r from-primary-600 to-blue-600 rounded-lg flex items-center justify-center">
                   <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -160,7 +160,7 @@ export default function AboutPage() {
               </p>
             </div>
             
-            <div className="backdrop-blur-xl bg-white/10 border border-white/20 rounded-2xl p-8 shadow-xl hover:shadow-primary-500/25 transition-all duration-300 hover:scale-[1.02]">
+            <div className="backdrop-blur-xl bg-white/10 border border-white/20 rounded-2xl p-6 sm:p-8 shadow-xl hover:shadow-primary-500/25 transition-all duration-300 md:hover:scale-[1.02] motion-reduce:md:hover:scale-100">
               <h3 className="text-2xl font-serif font-bold text-white mb-4 flex items-center gap-3">
                 <div className="w-8 h-8 bg-gradient-to-r from-primary-600 to-blue-600 rounded-lg flex items-center justify-center">
                   <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -174,7 +174,7 @@ export default function AboutPage() {
               </p>
             </div>
             
-            <div className="backdrop-blur-xl bg-white/10 border border-white/20 rounded-2xl p-8 shadow-xl hover:shadow-primary-500/25 transition-all duration-300 hover:scale-[1.02]">
+            <div className="backdrop-blur-xl bg-white/10 border border-white/20 rounded-2xl p-6 sm:p-8 shadow-xl hover:shadow-primary-500/25 transition-all duration-300 md:hover:scale-[1.02] motion-reduce:md:hover:scale-100">
               <h3 className="text-2xl font-serif font-bold text-white mb-4 flex items-center gap-3">
                 <div className="w-8 h-8 bg-gradient-to-r from-primary-600 to-blue-600 rounded-lg flex items-center justify-center">
                   <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -190,7 +190,7 @@ export default function AboutPage() {
           </div>
 
           {/* Enhanced Values */}
-          <div className="backdrop-blur-xl bg-white/10 border border-white/20 rounded-2xl p-8 mb-12 shadow-2xl">
+          <div className="backdrop-blur-xl bg-white/10 border border-white/20 rounded-2xl p-6 sm:p-8 mb-10 md:mb-12 shadow-2xl">
             <h2 className="text-3xl font-serif font-bold text-white mb-8 text-center">
               <span className="inline-block bg-gradient-to-r from-primary-300 via-blue-400 to-primary-500 bg-clip-text text-transparent">
                 Our Values
@@ -228,7 +228,7 @@ export default function AboutPage() {
           </div>
 
           {/* Enhanced FAQ */}
-          <div className="backdrop-blur-xl bg-white/10 border border-white/20 rounded-2xl p-8 shadow-2xl">
+          <div className="backdrop-blur-xl bg-white/10 border border-white/20 rounded-2xl p-6 sm:p-8 shadow-2xl">
             <h2 className="text-3xl font-serif font-bold text-white mb-8 text-center">
               <span className="inline-block bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400 bg-clip-text text-transparent">
                 Frequently Asked Questions

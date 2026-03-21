@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import type { VendorTag, VendorTagGroup } from '@/data/vendorTaxonomy'
 
 type Props = {
@@ -18,7 +18,7 @@ function Chip({ label, onRemove }: { label: string; onRemove: () => void }) {
     <button
       type="button"
       onClick={onRemove}
-      className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-2 text-xs font-semibold text-gray-300 hover:text-white hover:border-white/25 transition"
+      className="inline-flex min-h-touch items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-2 text-xs font-semibold text-gray-300 hover:text-white hover:border-white/25 transition-colors"
       aria-label={`Remove filter ${label}`}
     >
       <span className="max-w-[180px] truncate">{label}</span>
@@ -38,7 +38,7 @@ function GroupAccordion({
 }) {
   return (
     <details className="group rounded-xl border border-white/10 bg-white/5 overflow-hidden" open={defaultOpen}>
-      <summary className="cursor-pointer select-none px-4 py-3 text-sm font-semibold text-white flex items-center justify-between">
+      <summary className="cursor-pointer select-none min-h-touch px-4 py-3 text-sm font-semibold text-white flex items-center justify-between">
         <span>{title}</span>
         <svg
           className="w-4 h-4 text-gray-400 transition-transform duration-200 group-open:rotate-180"
@@ -65,12 +65,12 @@ function TagRow({
   onToggle: () => void
 }) {
   return (
-    <label className="flex items-center gap-3 py-2 text-sm text-gray-300 hover:text-white cursor-pointer">
+    <label className="flex items-center gap-3 min-h-touch py-2 text-sm text-gray-300 hover:text-white cursor-pointer">
       <input
         type="checkbox"
         checked={checked}
         onChange={onToggle}
-        className="h-4 w-4 accent-primary-600"
+        className="h-5 w-5 shrink-0 accent-primary-600"
       />
       <span className="min-w-0 flex-1 truncate">{tag.name}</span>
     </label>
@@ -88,6 +88,26 @@ export default function VendorFilters({
 }: Props) {
   const [query, setQuery] = useState('')
   const [mobileOpen, setMobileOpen] = useState(false)
+  const mobileFiltersTriggerRef = useRef<HTMLButtonElement>(null)
+  const mobileCloseButtonRef = useRef<HTMLButtonElement>(null)
+
+  useEffect(() => {
+    if (!mobileOpen) return
+    mobileCloseButtonRef.current?.focus()
+  }, [mobileOpen])
+
+  useEffect(() => {
+    if (!mobileOpen) return
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        e.preventDefault()
+        setMobileOpen(false)
+        mobileFiltersTriggerRef.current?.focus()
+      }
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [mobileOpen])
 
   const selectedSet = useMemo(() => new Set(selectedTagSlugs), [selectedTagSlugs])
   const availableSet = useMemo(() => new Set(availableTagSlugs || []), [availableTagSlugs])
@@ -140,7 +160,7 @@ export default function VendorFilters({
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Search tags..."
-          className="w-full rounded-xl border border-white/10 bg-black/40 px-3 py-2 text-sm text-white placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-400/30"
+          className="w-full min-h-touch rounded-xl border border-white/10 bg-black/40 px-3 py-2 text-sm text-white placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-400/30"
         />
       </div>
 
@@ -183,16 +203,17 @@ export default function VendorFilters({
       {/* Mobile button */}
       <div className="md:hidden flex items-center justify-between gap-3 mb-4">
         <button
+          ref={mobileFiltersTriggerRef}
           type="button"
           onClick={() => setMobileOpen(true)}
-          className="btn-outline py-2 px-4 text-sm"
+          className="btn-outline py-2 px-4 text-sm min-h-touch"
           aria-haspopup="dialog"
           aria-expanded={mobileOpen}
         >
           Filters {selectedTagSlugs.length > 0 ? `(${selectedTagSlugs.length})` : ''}
         </button>
         {selectedTagSlugs.length > 0 ? (
-          <button type="button" className="text-sm text-gray-300 underline underline-offset-4" onClick={onClearAll}>
+          <button type="button" className="text-sm min-h-touch px-2 text-gray-300 underline underline-offset-4" onClick={onClearAll}>
             Clear
           </button>
         ) : null}
@@ -205,12 +226,32 @@ export default function VendorFilters({
 
       {/* Mobile drawer */}
       {mobileOpen ? (
-        <div className="fixed inset-0 z-50" role="dialog" aria-modal="true" aria-label="Vendor filters">
-          <div className="absolute inset-0 bg-black/60" onClick={() => setMobileOpen(false)} />
+        <div
+          className="fixed inset-0 z-[var(--z-ecke-drawer)]"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Vendor filters"
+        >
+          <div
+            className="absolute inset-0 bg-black/60"
+            onClick={() => {
+              setMobileOpen(false)
+              mobileFiltersTriggerRef.current?.focus()
+            }}
+            aria-hidden="true"
+          />
           <div className="absolute right-0 top-0 h-full w-[92%] max-w-md bg-black border-l border-white/10 p-5 overflow-auto">
             <div className="flex items-center justify-between mb-4">
               <div className="text-lg font-serif font-semibold text-white">Filters</div>
-              <button type="button" onClick={() => setMobileOpen(false)} className="text-gray-300 hover:text-white">
+              <button
+                ref={mobileCloseButtonRef}
+                type="button"
+                onClick={() => {
+                  setMobileOpen(false)
+                  mobileFiltersTriggerRef.current?.focus()
+                }}
+                className="min-h-touch min-w-touch px-2 text-gray-300 hover:text-white"
+              >
                 Close
               </button>
             </div>

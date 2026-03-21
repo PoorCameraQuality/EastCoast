@@ -100,12 +100,12 @@ export default function DungeonPage({ params }: { params: { slug: string } }) {
           <Breadcrumb items={breadcrumbItems} />
 
           <div className="mt-4">
-            <Link href="/dungeons" className="btn-outline inline-flex items-center px-4 py-2 text-sm">
+            <Link href="/dungeons" className="btn-outline inline-flex min-h-touch items-center justify-center px-4 py-2 text-sm w-full sm:w-auto">
               Back to Dungeons
             </Link>
           </div>
 
-          <div className="mt-6 flex flex-col lg:flex-row gap-6 items-start">
+          <div className="mt-6 flex flex-col sm:flex-row gap-6 items-center sm:items-start text-center sm:text-left">
             <DungeonImage
               src={dungeon.logo}
               alt={`${dungeon.name} — BDSM dungeon in ${dungeon.location.city}, ${dungeon.location.state}`}
@@ -113,7 +113,7 @@ export default function DungeonPage({ params }: { params: { slug: string } }) {
               className="flex-shrink-0"
             />
             <div>
-              <h1 className="text-4xl md:text-5xl font-serif font-semibold text-white">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif font-semibold text-white">
                 {dungeon.name}
               </h1>
               <p className="text-gray-400 mt-2">
@@ -128,14 +128,14 @@ export default function DungeonPage({ params }: { params: { slug: string } }) {
           </div>
 
           <div className="mt-10 grid grid-cols-1 lg:grid-cols-[2fr,1fr] gap-6">
-            <article className="card-elegant p-6">
+            <article className="card-elegant p-4 sm:p-6">
               <h2 className="text-2xl font-serif font-semibold text-white">About this space</h2>
               <p className="text-gray-300 mt-4 whitespace-pre-line leading-relaxed">
                 {dungeon.description?.long || dungeon.excerpt || 'Details coming soon.'}
               </p>
             </article>
 
-            <aside className="card-elegant p-6 space-y-4">
+            <aside className="card-elegant p-4 sm:p-6 space-y-4">
               <div>
                 <h3 className="text-lg font-semibold text-white">Location</h3>
                 <p className="text-sm text-gray-300">
@@ -152,7 +152,7 @@ export default function DungeonPage({ params }: { params: { slug: string } }) {
                   {dungeon.contact?.phone ? (
                     <a
                       href={`tel:${dungeon.contact.phone.replace(/\D/g, '')}`}
-                      className="block text-sm text-gray-300 hover:text-white transition-colors"
+                      className="inline-flex min-h-touch items-center text-sm text-gray-300 hover:text-white transition-colors"
                       aria-label={`Call ${dungeon.name}`}
                     >
                       {dungeon.contact.phone}
@@ -161,7 +161,7 @@ export default function DungeonPage({ params }: { params: { slug: string } }) {
                   {dungeon.contact?.email ? (
                     <a
                       href={`mailto:${dungeon.contact.email}`}
-                      className="block text-sm text-gray-300 hover:text-white transition-colors mt-1 break-all"
+                      className="inline-flex min-h-touch items-center text-sm text-gray-300 hover:text-white transition-colors mt-1 break-all"
                       aria-label={`Email ${dungeon.name}`}
                     >
                       {dungeon.contact.email}
@@ -180,13 +180,13 @@ export default function DungeonPage({ params }: { params: { slug: string } }) {
               {dungeon.socialMedia && Object.keys(dungeon.socialMedia).length > 0 ? (
                 <div>
                   <h3 className="text-lg font-semibold text-white">Follow</h3>
-                  <div className="flex gap-3 mt-2">
+                  <div className="flex flex-wrap gap-2 mt-2">
                     {dungeon.socialMedia.fetlife ? (
                       <a
                         href={dungeon.socialMedia.fetlife}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-sm text-gray-300 hover:text-white transition-colors"
+                        className="inline-flex min-h-touch items-center px-2 text-sm text-gray-300 hover:text-white transition-colors"
                         aria-label={`${dungeon.name} on FetLife`}
                       >
                         FetLife
@@ -197,7 +197,7 @@ export default function DungeonPage({ params }: { params: { slug: string } }) {
                         href={dungeon.socialMedia.facebook}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-sm text-gray-300 hover:text-white transition-colors"
+                        className="inline-flex min-h-touch items-center px-2 text-sm text-gray-300 hover:text-white transition-colors"
                         aria-label={`${dungeon.name} on Facebook`}
                       >
                         Facebook
@@ -208,7 +208,7 @@ export default function DungeonPage({ params }: { params: { slug: string } }) {
                         href={dungeon.socialMedia.instagram}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-sm text-gray-300 hover:text-white transition-colors"
+                        className="inline-flex min-h-touch items-center px-2 text-sm text-gray-300 hover:text-white transition-colors"
                         aria-label={`${dungeon.name} on Instagram`}
                       >
                         Instagram
@@ -219,7 +219,7 @@ export default function DungeonPage({ params }: { params: { slug: string } }) {
                         href={dungeon.socialMedia.twitter}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-sm text-gray-300 hover:text-white transition-colors"
+                        className="inline-flex min-h-touch items-center px-2 text-sm text-gray-300 hover:text-white transition-colors"
                         aria-label={`${dungeon.name} on Twitter`}
                       >
                         Twitter
@@ -230,7 +230,7 @@ export default function DungeonPage({ params }: { params: { slug: string } }) {
                         href={dungeon.socialMedia.youtube}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-sm text-gray-300 hover:text-white transition-colors"
+                        className="inline-flex min-h-touch items-center px-2 text-sm text-gray-300 hover:text-white transition-colors"
                         aria-label={`${dungeon.name} on YouTube`}
                       >
                         YouTube
@@ -245,7 +245,7 @@ export default function DungeonPage({ params }: { params: { slug: string } }) {
                   href={dungeon.website}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="btn-primary inline-flex items-center justify-center px-4 py-2 text-sm w-full"
+                  className="btn-primary inline-flex min-h-touch items-center justify-center px-4 py-2 text-sm w-full"
                   aria-label={`Visit ${dungeon.name} website (opens in a new tab)`}
                 >
                   Visit Website
@@ -254,7 +254,7 @@ export default function DungeonPage({ params }: { params: { slug: string } }) {
 
               <Link
                 href="/contact"
-                className="btn-outline inline-flex items-center justify-center px-4 py-2 text-sm w-full"
+                className="btn-outline inline-flex min-h-touch items-center justify-center px-4 py-2 text-sm w-full"
               >
                 Contact Us
               </Link>

@@ -130,18 +130,18 @@ export default function StatePage({ params }: PageProps) {
 
   return (
     <div className="min-h-screen bg-black">
-      <div className="container-custom py-16">
+      <div className="container-custom py-8 md:py-16">
         <Breadcrumb items={breadcrumbItems} />
         <SupportCTAInline contextLabel="States" />
 
         {/* Hero Section */}
-        <div className="mb-12">
-          <h1 className="text-4xl md:text-6xl font-serif font-bold text-white mb-4">
+        <div className="mb-10 md:mb-12">
+          <h1 className="text-3xl sm:text-4xl md:text-6xl font-serif font-bold text-white mb-4">
             <span className="bg-gradient-to-r from-primary-400 via-blue-400 to-primary-500 bg-clip-text text-transparent">
               {stateInfo.name}
             </span>
           </h1>
-          <p className="text-xl text-gray-300 mb-2">
+          <p className="text-lg md:text-xl text-gray-300 mb-2">
             Kink Events & BDSM Community
           </p>
           <p className="text-gray-400">
@@ -173,7 +173,7 @@ export default function StatePage({ params }: PageProps) {
               </p>
               <Link 
                 href="/events"
-                className="text-primary-400 hover:text-primary-300 transition-colors"
+                className="inline-flex min-h-touch items-center text-primary-400 hover:text-primary-300 transition-colors"
               >
                 View all events →
               </Link>
@@ -196,7 +196,7 @@ export default function StatePage({ params }: PageProps) {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {stateDungeons.map((dungeon) => (
                 <Link key={dungeon.slug} href={`/dungeons/${dungeon.slug}`}>
-                  <div className="card-elegant hover:scale-105 transition-all duration-300 cursor-pointer h-full">
+                  <div className="card-elegant md:hover:scale-105 transition-transform duration-300 motion-reduce:md:hover:scale-100 cursor-pointer h-full">
                     {dungeon.logo && (
                       <div className="mb-4">
                         <DungeonLogo 
@@ -227,7 +227,7 @@ export default function StatePage({ params }: PageProps) {
               </p>
               <Link 
                 href="/dungeons"
-                className="text-primary-400 hover:text-primary-300 transition-colors"
+                className="inline-flex min-h-touch items-center text-primary-400 hover:text-primary-300 transition-colors"
               >
                 View all dungeons →
               </Link>
@@ -247,7 +247,7 @@ export default function StatePage({ params }: PageProps) {
                 <Link 
                   key={slug}
                   href={`/states/${slug}`}
-                  className="card-elegant text-center hover:scale-105 transition-all duration-300"
+                  className="card-elegant text-center md:hover:scale-105 transition-transform duration-300 motion-reduce:md:hover:scale-100 min-h-touch flex flex-col justify-center"
                 >
                   <p className="text-white font-semibold">{info.name}</p>
                   <p className="text-xs text-gray-400 mt-1">{info.abbr}</p>

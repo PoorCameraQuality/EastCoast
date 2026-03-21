@@ -230,9 +230,9 @@ export default function ArticlePageClient({ article, breadcrumbItems }: ArticleP
   if (isEditing) {
     return (
       <div className="min-h-screen bg-black">
-        <div className="container-custom py-16">
+        <div className="container-custom py-8 md:py-16">
           <div className="max-w-4xl mx-auto">
-            <h1 className="text-3xl font-bold text-white mb-8">Edit Article</h1>
+            <h1 className="text-2xl sm:text-3xl font-bold text-white mb-8">Edit Article</h1>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
               <div>
@@ -421,7 +421,7 @@ export default function ArticlePageClient({ article, breadcrumbItems }: ArticleP
       <ArticleStructuredData article={article} />
       <ReadingProgress />
       
-      <div className="container-custom py-16">
+      <div className="container-custom py-8 md:py-16">
         <div className="max-w-4xl mx-auto">
           {/* Article Header */}
           <div className="mb-12">

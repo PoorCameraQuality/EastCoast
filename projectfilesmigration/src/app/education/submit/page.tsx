@@ -42,16 +42,16 @@ export default function SubmitArticlePage() {
 
   return (
     <div className="min-h-screen bg-black">
-      <div className="container-custom py-16">
+      <div className="container-custom py-8 md:py-16">
         <Breadcrumb items={breadcrumbItems} />
         
         <div className="max-w-4xl mx-auto">
           {/* Header */}
-          <div className="text-center mb-12">
-            <h1 className="text-4xl md:text-5xl font-serif font-bold text-white mb-6">
+          <div className="text-center mb-8 md:mb-12">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-white mb-4 md:mb-6">
               Submit an Article
             </h1>
-            <p className="text-lg text-subtle max-w-3xl mx-auto">
+            <p className="text-base sm:text-lg text-subtle max-w-3xl mx-auto leading-relaxed px-1">
               Article submissions are currently handled through Discord.
             </p>
           </div>
@@ -107,7 +107,11 @@ export default function SubmitArticlePage() {
             <h2 className="text-2xl font-serif font-semibold text-white mb-4">
               How to submit
             </h2>
-            <Link href="/contact" className="btn-primary inline-flex justify-center" aria-label="Contact us">
+            <Link
+              href="/contact"
+              className="btn-primary inline-flex min-h-touch w-full sm:w-auto items-center justify-center px-6 py-2.5 text-sm"
+              aria-label="Contact us"
+            >
               {CONTACT_US_LABEL}
             </Link>
           </div>

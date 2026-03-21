@@ -83,7 +83,7 @@ export default function SupportBanner() {
   if (!visible) return null
 
   return (
-    <div className="fixed inset-x-0 bottom-0 z-[60] p-4">
+    <div className="fixed inset-x-0 bottom-0 z-[60] p-4 pb-[max(1rem,env(safe-area-inset-bottom))]">
       <div className="mx-auto max-w-4xl rounded-2xl border border-white/10 bg-black/95 backdrop-blur-xl shadow-2xl">
         <div className="p-4 md:p-5 flex flex-col gap-4">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
@@ -96,13 +96,13 @@ export default function SupportBanner() {
               </p>
             </div>
             <div className="flex flex-wrap gap-2 flex-shrink-0 text-xs">
-              <Link href="/support" className="btn-outline px-3 py-1.5 text-xs" aria-label="Learn how to support this site">
+              <Link href="/support" className="btn-outline px-3 py-2 text-xs min-h-touch inline-flex items-center justify-center" aria-label="Learn how to support this site">
                 Learn more
               </Link>
               <button
                 type="button"
                 onClick={dismiss}
-                className="btn-outline px-3 py-1.5 text-xs"
+                className="btn-outline px-3 py-2 text-xs min-h-touch inline-flex items-center justify-center"
                 aria-label="Dismiss support message"
               >
                 Not now
@@ -136,7 +136,7 @@ export default function SupportBanner() {
                   </p>
                 </div>
                 <div className="flex flex-wrap gap-2">
-                  <Link href={`/vendors/${sponsorVendor.slug}`} className="btn-primary px-3 py-1.5 text-xs">
+                  <Link href={`/vendors/${sponsorVendor.slug}`} className="btn-primary px-3 py-2 text-xs min-h-touch inline-flex items-center justify-center">
                     View Sponsor
                   </Link>
                   {sponsorVendor.websiteUrl ? (
@@ -144,7 +144,7 @@ export default function SupportBanner() {
                       href={sponsorVendor.websiteUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="btn-outline px-3 py-1.5 text-xs"
+                      className="btn-outline px-3 py-2 text-xs min-h-touch inline-flex items-center justify-center"
                     >
                       Visit Shop
                     </a>

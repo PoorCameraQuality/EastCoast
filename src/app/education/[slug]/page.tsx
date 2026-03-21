@@ -209,11 +209,6 @@ export default async function ArticlePage({ params }: { params: { slug: string }
     // Process content for markdown rendering
     const processedContent = normalizeMarkdown(article.content || "")
     
-    // Debug: Log content info
-    console.log('Article content length:', article.content?.length || 0)
-    console.log('Processed content length:', processedContent.length)
-    console.log('First 200 chars of processed content:', processedContent.substring(0, 200))
-
     // Get category color
     const getCategoryColor = (category: string) => {
       switch (category) {
@@ -243,33 +238,72 @@ export default async function ArticlePage({ params }: { params: { slug: string }
         {/* Article JSON-LD */}
         <ArticleStructuredData article={article} />
         
-        <div className="container-custom py-16">
+        <div className="container-custom py-8 md:py-16">
           <Breadcrumb items={breadcrumbItems} />
           
-          <div className="mb-12">
-            <div className="flex items-center justify-between mb-6">
-              <Link href="/education" className="text-primary-400 hover:text-primary-300 transition-colors">
+          <div className="mb-10 md:mb-12">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-6">
+              <Link href="/education" className="inline-flex min-h-touch items-center text-primary-400 hover:text-primary-300 transition-colors order-2 sm:order-1">
                 ← Back to Education
               </Link>
-              <span className={`inline-block text-white text-sm font-medium px-4 py-2 rounded-full ${getCategoryColor(article.category)} shadow-lg`}>
+              <span className={`inline-flex min-h-touch items-center text-white text-sm font-medium px-4 py-2 rounded-full ${getCategoryColor(article.category)} shadow-lg order-1 sm:order-2 self-start`}>
                 {article.category}
               </span>
             </div>
             
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-              {/* Article Info Sidebar */}
-              <div className="lg:col-span-1">
-                <div className="card-elegant sticky top-8">
-                  {/* Author Info */}
+              {/* Article content first on mobile (reading path) */}
+              <div className="lg:col-span-2 order-1 lg:order-none">
+                <div className="card-elegant px-4 sm:px-6 lg:px-8">
+                  <header className="mb-8">
+                    <div className="flex items-center gap-3 mb-4">
+                      {article.featured && (
+                        <span className="inline-flex min-h-touch items-center px-3 py-1 rounded-full text-xs font-medium bg-gradient-to-r from-yellow-500 to-yellow-600 text-black shadow-lg animate-pulse motion-reduce:animate-none">
+                          <span aria-hidden>⭐ </span>Featured Article
+                        </span>
+                      )}
+                    </div>
+                    
+                    <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-white mb-6 leading-tight">
+                      {article.title}
+                    </h1>
+                    
+                    <p className="text-lg md:text-xl text-subtle leading-relaxed mb-6">
+                      {article.excerpt}
+                    </p>
+                    
+                    {articleTags.length > 0 && (
+                      <div className="flex flex-wrap gap-2">
+                        {articleTags.map((tag, index) => (
+                          <span
+                            key={index}
+                            className="inline-flex min-h-touch items-center px-3 py-1 rounded-full text-sm bg-dark-700 text-gray-300 border border-dark-600 hover:border-primary-500 transition-colors"
+                          >
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                  </header>
+
+                  <section className="mt-8">
+                    <Markdown content={processedContent} />
+                  </section>
+                </div>
+              </div>
+
+              {/* Author / meta sidebar after article on mobile */}
+              <div className="lg:col-span-1 order-2 lg:order-none">
+                <div className="card-elegant lg:sticky lg:top-8 p-4 sm:p-6">
                   <div className="mb-6">
                     <h3 className="text-lg font-serif font-semibold text-white mb-4">About the Author</h3>
                     <div className="flex items-center gap-4 mb-4">
-                      <div className="w-12 h-12 bg-gradient-to-br from-primary-500 to-primary-600 rounded-full flex items-center justify-center">
+                      <div className="w-12 h-12 shrink-0 bg-gradient-to-br from-primary-500 to-primary-600 rounded-full flex items-center justify-center" aria-hidden>
                         <span className="text-white font-bold text-lg">
                           {article.author_name.charAt(0).toUpperCase()}
                         </span>
                       </div>
-                      <div>
+                      <div className="min-w-0">
                         <div className="font-medium text-white">{article.author_name}</div>
                         {article.author_credentials && (
                           <div className="text-sm text-gray-400">{article.author_credentials}</div>
@@ -281,7 +315,6 @@ export default async function ArticlePage({ params }: { params: { slug: string }
                     )}
                   </div>
                   
-                  {/* Article Meta */}
                   <div className="mt-8 border-t border-dark-600 pt-6 space-y-4 text-sm text-muted-foreground">
                     <div>
                       <span className="font-medium text-white">Category:</span>
@@ -302,49 +335,6 @@ export default async function ArticlePage({ params }: { params: { slug: string }
                       })}</p>
                     </div>
                   </div>
-                </div>
-              </div>
-              
-              {/* Article Content */}
-              <div className="lg:col-span-2">
-                <div className="card-elegant px-4 sm:px-6 lg:px-8">
-                  {/* Article Header */}
-                  <header className="mb-8">
-                    <div className="flex items-center gap-3 mb-4">
-                      {article.featured && (
-                        <span className="px-3 py-1 rounded-full text-xs font-medium bg-gradient-to-r from-yellow-500 to-yellow-600 text-black shadow-lg animate-pulse">
-                          ⭐ Featured Article
-                        </span>
-                      )}
-                    </div>
-                    
-                    <h1 className="text-4xl md:text-5xl font-serif font-bold text-white mb-6 leading-tight">
-                      {article.title}
-                    </h1>
-                    
-                    <p className="text-xl text-subtle leading-relaxed mb-6">
-                      {article.excerpt}
-                    </p>
-                    
-                    {/* Tags Section */}
-                    {articleTags.length > 0 && (
-                      <div className="flex flex-wrap gap-2">
-                        {articleTags.map((tag, index) => (
-                          <span
-                            key={index}
-                            className="px-3 py-1 rounded-full text-sm bg-dark-700 text-gray-300 border border-dark-600 hover:border-primary-500 transition-colors"
-                          >
-                            {tag}
-                          </span>
-                        ))}
-                      </div>
-                    )}
-                  </header>
-
-                  {/* Article Content */}
-                  <section className="mt-8">
-                    <Markdown content={processedContent} />
-                  </section>
                 </div>
               </div>
             </div>
@@ -371,10 +361,10 @@ export default async function ArticlePage({ params }: { params: { slug: string }
                 Learn from experts and share your knowledge with the community.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Link href="/education" className="btn-primary">
+                <Link href="/education" className="btn-primary min-h-touch inline-flex items-center justify-center">
                   Browse All Articles
                 </Link>
-                <Link href="/contact" className="btn-outline" aria-label="Contact us">
+                <Link href="/contact" className="btn-outline min-h-touch inline-flex items-center justify-center" aria-label="Contact us">
                   {CONTACT_US_LABEL}
                 </Link>
               </div>

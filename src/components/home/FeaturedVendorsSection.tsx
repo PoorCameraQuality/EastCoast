@@ -96,18 +96,21 @@ export default function FeaturedVendorsSection() {
               A growing list of makers and shops to help you discover gear, apparel, and more.
             </p>
           </div>
-          <Link href="/vendors" className="btn-outline text-sm px-5 py-2 whitespace-nowrap" aria-label="Browse vendors marketplace">
+          <Link href="/vendors" className="btn-outline text-sm px-5 py-2 whitespace-nowrap min-h-touch inline-flex items-center justify-center w-full sm:w-auto md:w-auto" aria-label="Browse vendors marketplace">
             Browse Vendors
           </Link>
         </div>
 
         {/* Popular filters (links into the real filter UI) */}
-        <div className="flex flex-wrap gap-2 mb-8" aria-label="Popular vendor filters">
+        <div
+          className="flex flex-nowrap sm:flex-wrap gap-2 mb-8 overflow-x-auto pb-2 -mx-1 px-1 snap-x snap-mandatory"
+          aria-label="Popular vendor filters"
+        >
           {popularFilters.map((f) => (
             <Link
               key={f.tag}
               href={`/vendors?tag=${encodeURIComponent(f.tag)}`}
-              className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs font-semibold text-gray-300 hover:text-white hover:border-white/25 transition"
+              className="shrink-0 snap-start inline-flex min-h-touch items-center rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs font-semibold text-gray-300 hover:text-white hover:border-white/25 transition-colors"
               aria-label={`Filter vendors by ${f.label}`}
             >
               {f.label}
@@ -153,7 +156,7 @@ export default function FeaturedVendorsSection() {
 
                     <div className="mt-4 inline-flex items-center gap-2 text-primary-300 font-semibold">
                       <span>View Vendor</span>
-                      <svg className="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="w-4 h-4 shrink-0 transition-transform group-hover:translate-x-1 motion-reduce:transition-none" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                       </svg>
                     </div>
@@ -173,7 +176,7 @@ export default function FeaturedVendorsSection() {
               className="group"
               aria-label={`View vendor: ${vendor.name}`}
             >
-              <article className={`relative h-full overflow-hidden rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl p-6 transition-all duration-500 hover:scale-[1.02] hover:border-primary-400/25 hover:shadow-elegant-lg ${vendor.isPaid ? 'vendor-paid-sparkle' : ''}`}>
+              <article className={`relative h-full overflow-hidden rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl p-6 transition-colors duration-500 md:hover:scale-[1.02] motion-reduce:md:hover:scale-100 hover:border-primary-400/25 hover:shadow-elegant-lg ${vendor.isPaid ? 'vendor-paid-sparkle' : ''}`}>
                 <div className="absolute inset-0 bg-gradient-to-br from-primary-500/8 via-transparent to-blue-500/8 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                 <div className="relative z-10">
                   <div className="flex items-center gap-3 mb-4">

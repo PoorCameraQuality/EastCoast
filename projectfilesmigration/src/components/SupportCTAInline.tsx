@@ -52,8 +52,8 @@ export default function SupportCTAInline({ contextLabel }: Props) {
                     {sponsorVendor.description}
                   </p>
                 ) : null}
-                <div className="mt-3 flex flex-wrap gap-2">
-                  <Link href={`/vendors/${sponsorVendor.slug}`} className="btn-primary px-3 py-1.5 text-xs">
+                <div className="mt-3 flex flex-col sm:flex-row gap-2 flex-wrap">
+                  <Link href={`/vendors/${sponsorVendor.slug}`} className="btn-primary px-3 py-2 text-xs min-h-touch inline-flex items-center justify-center w-full sm:w-auto">
                     View Sponsor
                   </Link>
                   {sponsorVendor.websiteUrl ? (
@@ -61,7 +61,7 @@ export default function SupportCTAInline({ contextLabel }: Props) {
                       href={sponsorVendor.websiteUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="btn-outline px-3 py-1.5 text-xs"
+                      className="btn-outline px-3 py-2 text-xs min-h-touch inline-flex items-center justify-center w-full sm:w-auto"
                     >
                       Visit Shop
                     </a>
@@ -87,11 +87,11 @@ export default function SupportCTAInline({ contextLabel }: Props) {
                 Help keep East Coast Kink Events online and improving.
               </p>
             </div>
-            <div className="flex flex-wrap gap-2">
-              <Link href="/support" className="btn-primary px-3 py-1.5 text-xs">
+            <div className="flex flex-col sm:flex-row gap-2 flex-wrap">
+              <Link href="/support" className="btn-primary px-3 py-2 text-xs min-h-touch inline-flex items-center justify-center w-full sm:w-auto">
                 Learn more
               </Link>
-              <Link href={SPONSOR_CONTACT_HREF} className="btn-outline px-3 py-1.5 text-xs">
+              <Link href={SPONSOR_CONTACT_HREF} className="btn-outline px-3 py-2 text-xs min-h-touch inline-flex items-center justify-center w-full sm:w-auto">
                 Contact for sponsorship
               </Link>
             </div>

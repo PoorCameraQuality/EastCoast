@@ -51,12 +51,12 @@ export default function ContactPage() {
   return (
     <main className="min-h-screen bg-gradient-to-br from-black via-dark-900 to-black relative overflow-hidden">
       <ContactPageStructuredData />
-      <div className="container-custom py-16 relative z-10">
+      <div className="container-custom py-8 md:py-16 relative z-10">
         <div className="max-w-4xl mx-auto">
           <Breadcrumb items={breadcrumbItems} />
 
-          <div className="mt-10 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl p-8 text-center shadow-dark">
-            <p className="text-lg text-gray-200">{CONTACT_DISCORD_SENTENCE}</p>
+          <div className="mt-6 md:mt-10 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl p-6 sm:p-8 text-center shadow-dark">
+            <p className="text-base sm:text-lg text-gray-200 leading-relaxed px-1">{CONTACT_DISCORD_SENTENCE}</p>
           </div>
         </div>
       </div>

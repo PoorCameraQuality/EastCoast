@@ -17,7 +17,7 @@ export default function FeaturedDungeonsSection() {
               Explore community spaces and venues across the region.
             </p>
           </div>
-          <Link href="/dungeons" className="btn-outline text-sm px-5 py-2 whitespace-nowrap" aria-label="View all dungeons and spaces">
+          <Link href="/dungeons" className="btn-outline text-sm px-5 py-2 whitespace-nowrap min-h-touch inline-flex items-center justify-center w-full sm:w-auto md:w-auto" aria-label="View all dungeons and spaces">
             View All Spaces
           </Link>
         </div>
@@ -51,7 +51,7 @@ export default function FeaturedDungeonsSection() {
                     </p>
                     <div className="mt-4 inline-flex items-center gap-2 text-primary-300 font-semibold">
                       <span>View Listing</span>
-                      <svg className="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="w-4 h-4 shrink-0 transition-transform group-hover:translate-x-1 motion-reduce:transition-none" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                       </svg>
                     </div>
@@ -71,7 +71,7 @@ export default function FeaturedDungeonsSection() {
               className="group"
               aria-label={`View listing: ${dungeon.name}`}
             >
-              <article className="relative h-full overflow-hidden rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl p-6 transition-all duration-500 hover:scale-[1.02] hover:border-primary-400/25 hover:shadow-elegant-lg">
+              <article className="relative h-full overflow-hidden rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl p-6 transition-colors duration-500 md:hover:scale-[1.02] motion-reduce:md:hover:scale-100 hover:border-primary-400/25 hover:shadow-elegant-lg">
                 <div className="absolute inset-0 bg-gradient-to-br from-blue-500/8 via-transparent to-primary-500/8 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                 <div className="relative z-10">
                   <div className="flex items-center gap-3 mb-4">

@@ -124,7 +124,7 @@ export default function RelatedContent({ currentEvent, currentDungeon, maxItems 
 
   if (loading) {
     return (
-      <div className="mt-12 p-6 bg-dark-900/50 border border-dark-700 rounded-2xl animate-pulse">
+      <div className="mt-12 p-6 bg-dark-900/50 border border-dark-700 rounded-2xl animate-pulse motion-reduce:animate-none">
         <div className="h-6 bg-dark-700 rounded w-1/3 mb-4"></div>
         <div className="space-y-3">
           {[1, 2, 3].map((i) => (
@@ -140,8 +140,8 @@ export default function RelatedContent({ currentEvent, currentDungeon, maxItems 
   }
 
   return (
-    <div className="mt-12 p-6 bg-dark-900/50 border border-dark-700 rounded-2xl">
-      <h2 className="text-2xl font-serif font-bold text-white mb-6">
+    <div className="mt-12 p-4 sm:p-6 bg-dark-900/50 border border-dark-700 rounded-2xl">
+      <h2 className="text-xl sm:text-2xl font-serif font-bold text-white mb-6">
         Related Content
       </h2>
       
@@ -157,9 +157,9 @@ export default function RelatedContent({ currentEvent, currentDungeon, maxItems 
                 href={`/events/${event.slug}`}
                 prefetch={true}
                 aria-label={`View ${event.name || 'Event'} details`}
-                className="block p-4 bg-dark-800 border border-dark-600 rounded-lg hover:border-primary-500/50 transition-all duration-300 hover:scale-105"
+                className="flex min-h-touch items-center p-4 bg-dark-800 border border-dark-600 rounded-lg hover:border-primary-500/50 transition-colors duration-300 md:hover:scale-[1.02] motion-reduce:md:hover:scale-100"
               >
-                <div className="flex items-center space-x-3">
+                <div className="flex items-center gap-3 min-w-0 w-full">
                   {event.logo && (
                     <EventLogo 
                       src={event.logo}
@@ -197,9 +197,9 @@ export default function RelatedContent({ currentEvent, currentDungeon, maxItems 
                 href={`/dungeons/${dungeon.slug}`}
                 prefetch={true}
                 aria-label={`View ${dungeon.name || 'Dungeon'} details`}
-                className="block p-4 bg-dark-800 border border-dark-600 rounded-lg hover:border-primary-500/50 transition-all duration-300 hover:scale-105"
+                className="flex min-h-touch items-center p-4 bg-dark-800 border border-dark-600 rounded-lg hover:border-primary-500/50 transition-colors duration-300 md:hover:scale-[1.02] motion-reduce:md:hover:scale-100"
               >
-                <div className="flex items-center space-x-3">
+                <div className="flex items-center gap-3 min-w-0 w-full">
                   {dungeon.logo && (
                     <DungeonLogo 
                       src={dungeon.logo}
@@ -228,8 +228,8 @@ export default function RelatedContent({ currentEvent, currentDungeon, maxItems 
       {/* Related Education Articles */}
       {relatedArticles.length > 0 && (
         <div className="mt-8">
-          <h3 className="text-lg font-semibold text-primary-300 mb-4 flex items-center">
-            <span className="mr-2">📚</span>
+          <h3 className="text-lg font-semibold text-primary-300 mb-4 flex items-center gap-2">
+            <span className="text-base" aria-hidden>📚</span>
             Educational Resources
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -239,7 +239,7 @@ export default function RelatedContent({ currentEvent, currentDungeon, maxItems 
                 href={`/education/${article.slug}`}
                 prefetch={true}
                 aria-label={`Read ${article.title} article`}
-                className="block p-4 bg-dark-800 border border-dark-600 rounded-lg hover:border-primary-500/50 transition-all duration-300 hover:scale-105"
+                className="flex min-h-touch flex-col justify-center p-4 bg-dark-800 border border-dark-600 rounded-lg hover:border-primary-500/50 transition-colors duration-300 md:hover:scale-[1.02] motion-reduce:md:hover:scale-100"
               >
                 <div className="flex-1 min-w-0">
                   <h4 className="text-white font-medium text-sm line-clamp-2 mb-2">
@@ -261,7 +261,7 @@ export default function RelatedContent({ currentEvent, currentDungeon, maxItems 
             ))}
           </div>
           <div className="mt-4 text-center">
-            <Link href="/education" className="text-primary-400 hover:text-primary-300 text-sm font-medium transition-colors">
+            <Link href="/education" className="inline-flex min-h-touch items-center justify-center text-primary-400 hover:text-primary-300 text-sm font-medium transition-colors px-2">
               View all educational resources →
             </Link>
           </div>

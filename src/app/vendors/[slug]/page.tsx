@@ -97,18 +97,18 @@ export default function VendorDetailPage({
           <VendorStructuredData vendor={vendor} />
           <div className="mb-6">
             <Breadcrumb items={breadcrumbItems} />
-            <Link href="/vendors" className="text-gray-300 hover:text-white underline underline-offset-4 decoration-white/20 hover:decoration-white/50">
+            <Link href="/vendors" className="inline-flex min-h-touch items-center text-gray-300 hover:text-white underline underline-offset-4 decoration-white/20 hover:decoration-white/50 transition-colors">
               ← Back to Vendors
             </Link>
           </div>
 
-          <header className={`rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl p-8 shadow-dark ${vendor.isPaid ? 'vendor-paid-sparkle' : ''}`}>
+          <header className={`rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl p-5 sm:p-8 shadow-dark ${vendor.isPaid ? 'vendor-paid-sparkle' : ''}`}>
             <div className="flex flex-col md:flex-row md:items-start gap-6">
               <VendorImage src={vendor.logo125Url} alt={`${vendor.name} logo`} size={125} />
 
               <div className="flex-1 min-w-0">
                 <div className="flex flex-wrap items-center gap-3 mb-3">
-                  <h1 className="text-4xl md:text-5xl font-serif font-bold text-white">
+                  <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-white">
                     {vendor.name}
                   </h1>
                   {vendor.isPaid ? (
@@ -136,7 +136,7 @@ export default function VendorDetailPage({
                   href={vendor.websiteUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="btn-primary text-center"
+                  className="btn-primary text-center min-h-touch inline-flex items-center justify-center"
                   aria-label="Visit vendor website (opens in a new tab)"
                 >
                   Visit Website
@@ -144,7 +144,7 @@ export default function VendorDetailPage({
               ) : null}
               <Link
                 href="/contact?subject=Vendor%20Inquiry"
-                className="btn-outline text-center"
+                className="btn-outline text-center min-h-touch inline-flex items-center justify-center"
                 aria-label="Contact us about this vendor"
               >
                 Contact

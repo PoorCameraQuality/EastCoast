@@ -3,8 +3,8 @@ export default function AboutSection() {
     <section className="section-padding bg-black">
       <div className="container-custom">
         <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-serif font-bold text-white mb-6">
+          <div className="text-center mb-10 md:mb-16">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-white mb-6">
               About East Coast Kink Events
             </h2>
             <p className="text-lg text-subtle">
@@ -36,19 +36,19 @@ export default function AboutSection() {
               </h3>
               <div className="space-y-4 text-subtle">
                 <div className="flex items-start gap-3">
-                  <div className="w-6 h-6 bg-gradient-to-r from-primary-500 to-blue-500 rounded-full flex-shrink-0 mt-1"></div>
+                  <div className="w-6 h-6 bg-gradient-to-r from-primary-500 to-blue-500 rounded-full flex-shrink-0 mt-1" aria-hidden />
                   <p>Curate and maintain a comprehensive directory of BDSM events and dungeons</p>
                 </div>
                 <div className="flex items-start gap-3">
-                  <div className="w-6 h-6 bg-gradient-to-r from-primary-500 to-blue-500 rounded-full flex-shrink-0 mt-1"></div>
+                  <div className="w-6 h-6 bg-gradient-to-r from-primary-500 to-blue-500 rounded-full flex-shrink-0 mt-1" aria-hidden />
                   <p>Provide educational resources and safety guidelines</p>
                 </div>
                 <div className="flex items-start gap-3">
-                  <div className="w-6 h-6 bg-gradient-to-r from-primary-500 to-blue-500 rounded-full flex-shrink-0 mt-1"></div>
+                  <div className="w-6 h-6 bg-gradient-to-r from-primary-500 to-blue-500 rounded-full flex-shrink-0 mt-1" aria-hidden />
                   <p>Foster community connections through Discord and events</p>
                 </div>
                 <div className="flex items-start gap-3">
-                  <div className="w-6 h-6 bg-gradient-to-r from-primary-500 to-blue-500 rounded-full flex-shrink-0 mt-1"></div>
+                  <div className="w-6 h-6 bg-gradient-to-r from-primary-500 to-blue-500 rounded-full flex-shrink-0 mt-1" aria-hidden />
                   <p>Ensure transparency and safety in all listings</p>
                 </div>
               </div>
@@ -67,10 +67,10 @@ export default function AboutSection() {
                 href="https://discord.gg/xcnGGyGsmT" 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="btn-primary inline-flex items-center gap-2 discord-glow"
+                className="btn-primary min-h-touch inline-flex items-center justify-center gap-2 discord-glow"
               >
                 Join Discord Community
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                 </svg>
               </a>

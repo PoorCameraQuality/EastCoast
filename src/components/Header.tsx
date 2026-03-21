@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import UserMenu from './auth/UserMenu'
@@ -21,11 +21,25 @@ export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
   const pathname = usePathname()
+  const mobileMenuButtonRef = useRef<HTMLButtonElement>(null)
 
   // Auto-close mobile menu when route changes
   useEffect(() => {
     setIsMenuOpen(false)
   }, [pathname])
+
+  useEffect(() => {
+    if (!isMenuOpen) return
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        e.preventDefault()
+        setIsMenuOpen(false)
+        mobileMenuButtonRef.current?.focus()
+      }
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [isMenuOpen])
 
   // Handle scroll effect
   useEffect(() => {
@@ -85,7 +99,7 @@ export default function Header() {
 
             <Link
               href="/contact"
-              className="btn-outline text-sm px-5 py-2 whitespace-nowrap"
+              className="btn-outline text-sm px-5 py-2 whitespace-nowrap min-h-touch inline-flex items-center justify-center"
               aria-label="Contact us"
             >
               {CONTACT_US_LABEL}
@@ -98,8 +112,12 @@ export default function Header() {
 
           {/* Mobile menu button */}
           <button
+            ref={mobileMenuButtonRef}
+            type="button"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             aria-label="Toggle mobile navigation menu"
+            aria-expanded={isMenuOpen}
+            aria-controls="ecke-mobile-nav"
             className="lg:hidden relative p-3 rounded-lg text-gray-300 hover:text-white hover:bg-dark-800/50 transition-all duration-300 group"
           >
             <div className={`w-6 h-6 flex flex-col justify-center items-center transition-all duration-300 ${
@@ -119,36 +137,40 @@ export default function Header() {
         </div>
 
         {/* Mobile Navigation */}
-        <div className={`lg:hidden overflow-hidden transition-all duration-500 ease-in-out ${
-          isMenuOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
-        }`}>
-          <div className="py-6 border-t border-dark-700/50 bg-black/50 backdrop-blur-sm">
-            <nav className="grid grid-cols-2 gap-4" role="navigation">
+        <div
+          id="ecke-mobile-nav"
+          aria-hidden={!isMenuOpen}
+          className={`lg:hidden overflow-hidden transition-all duration-300 ease-in-out ${
+            isMenuOpen ? 'max-h-[min(85vh,28rem)] opacity-100' : 'max-h-0 opacity-0 pointer-events-none'
+          }`}
+        >
+          <div className="py-4 border-t border-dark-700/50 bg-black/80 backdrop-blur-md max-h-[min(80vh,26rem)] overflow-y-auto overscroll-contain">
+            <nav className="grid grid-cols-2 gap-3 sm:gap-4" role="navigation">
               {[...NAV_LINKS, { href: '/contact', label: 'Contact' }].map((link) => (
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={`flex flex-col items-center p-4 rounded-xl transition-all duration-300 ${
+                  className={`flex min-h-touch items-center justify-center px-3 py-3 rounded-xl text-center transition-all duration-300 ${
                     pathname === link.href
                       ? 'bg-primary-600/20 border border-primary-600/30 text-primary-300'
-                      : 'text-gray-300 hover:text-white hover:bg-dark-800/50'
+                      : 'text-gray-300 hover:text-white hover:bg-dark-800/50 border border-transparent'
                   }`}
                 >
-                  <span className="text-sm font-medium">{link.label}</span>
+                  <span className="text-sm font-medium leading-tight">{link.label}</span>
                 </Link>
               ))}
             </nav>
             
-            <div className="mt-6 pt-6 border-t border-dark-700/50">
-              <div className="flex justify-center space-x-4">
+            <div className="mt-4 pt-4 border-t border-dark-700/50">
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-stretch">
                 <Link
                   href="/contact"
-                  className="btn-outline w-full text-center"
+                  className="btn-outline flex-1 text-center justify-center min-h-touch inline-flex items-center"
                   aria-label="Contact us"
                 >
                   {CONTACT_US_LABEL}
                 </Link>
-                <div className="w-32">
+                <div className="flex-1 min-w-0 flex justify-center sm:justify-stretch [&>*]:w-full sm:[&>*]:max-w-none">
                   <UserMenu />
                 </div>
               </div>

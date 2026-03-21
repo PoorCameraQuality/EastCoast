@@ -30,7 +30,7 @@ export default function SupportPage() {
 
   return (
     <div className="min-h-screen bg-black">
-      <div className="container-custom py-16">
+      <div className="container-custom py-8 md:py-16">
         <div className="max-w-4xl mx-auto">
           <Breadcrumb items={breadcrumbItems} />
 
@@ -69,8 +69,11 @@ export default function SupportPage() {
                     <p className="text-sm text-gray-200 mt-2 leading-relaxed">
                       Featured site sponsor. Reach out to Brax if you would like to support the site for a month.
                     </p>
-                    <div className="mt-4 flex flex-wrap gap-3">
-                      <Link href={`/vendors/${sponsorVendor.slug}`} className="btn-primary px-3 py-1.5 text-sm">
+                    <div className="mt-4 flex flex-col sm:flex-row gap-2 sm:gap-3 flex-wrap">
+                      <Link
+                        href={`/vendors/${sponsorVendor.slug}`}
+                        className="btn-primary px-3 py-2 text-sm min-h-touch inline-flex items-center justify-center w-full sm:w-auto"
+                      >
                         View Sponsor
                       </Link>
                       {sponsorVendor.websiteUrl ? (
@@ -78,7 +81,7 @@ export default function SupportPage() {
                           href={sponsorVendor.websiteUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="btn-outline px-3 py-1.5 text-sm"
+                          className="btn-outline px-3 py-2 text-sm min-h-touch inline-flex items-center justify-center w-full sm:w-auto"
                         >
                           Visit Shop
                         </a>
@@ -106,7 +109,7 @@ export default function SupportPage() {
               </ul>
               <Link
                 href="/contact?subject=Supporter%20Tier%20($25%2Fmo)"
-                className="btn-primary inline-flex items-center justify-center w-full"
+                className="btn-primary inline-flex items-center justify-center w-full min-h-touch py-2.5 text-sm"
               >
                 Request Supporter Tier
               </Link>
@@ -133,14 +136,14 @@ export default function SupportPage() {
                   href="https://discord.com"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="btn-outline inline-flex items-center justify-center w-full"
+                  className="btn-outline inline-flex items-center justify-center w-full min-h-touch py-2.5 text-sm"
                   aria-label="Open Discord (opens in a new tab)"
                 >
                   Open Discord
                 </a>
                 <Link
                   href="/contact?subject=Website%20Sponsorship%20(Discord%20Brax117)"
-                  className="btn-secondary inline-flex items-center justify-center w-full"
+                  className="btn-secondary inline-flex items-center justify-center w-full min-h-touch py-2.5 text-sm"
                 >
                   Contact for Sponsorship
                 </Link>

@@ -85,7 +85,7 @@ export default function Header() {
 
             <Link
               href="/contact"
-              className="btn-outline text-sm px-5 py-2 whitespace-nowrap"
+              className="btn-outline text-sm px-5 py-2 whitespace-nowrap min-h-touch inline-flex items-center justify-center"
               aria-label="Contact us"
             >
               {CONTACT_US_LABEL}
@@ -128,7 +128,7 @@ export default function Header() {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={`flex flex-col items-center p-4 rounded-xl transition-all duration-300 ${
+                  className={`flex min-h-touch flex-col items-center justify-center p-4 rounded-xl transition-all duration-300 ${
                     pathname === link.href
                       ? 'bg-primary-600/20 border border-primary-600/30 text-primary-300'
                       : 'text-gray-300 hover:text-white hover:bg-dark-800/50'
@@ -143,7 +143,7 @@ export default function Header() {
               <div className="flex justify-center space-x-4">
                 <Link
                   href="/contact"
-                  className="btn-outline w-full text-center"
+                  className="btn-outline w-full text-center min-h-touch inline-flex items-center justify-center"
                   aria-label="Contact us"
                 >
                   {CONTACT_US_LABEL}

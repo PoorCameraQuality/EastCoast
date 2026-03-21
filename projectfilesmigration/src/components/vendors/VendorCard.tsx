@@ -15,20 +15,20 @@ export default function VendorCard({ vendor, selectedTagSlugs }: VendorCardProps
 
   return (
     <article
-      className={`relative overflow-hidden rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl p-6 transition-all duration-500 hover:shadow-elegant-lg ${
+      className={`relative overflow-hidden rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl p-4 sm:p-6 transition-shadow duration-300 md:hover:shadow-elegant-lg motion-reduce:transition-none ${
         vendor.isPaid ? 'vendor-paid-sparkle' : ''
       }`}
       aria-label={vendor.name}
     >
-      <div className="flex items-start gap-4">
+      <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 sm:gap-4">
         <VendorImage
           src={vendor.logo125Url}
           alt={`${vendor.name} — kink vendor and BDSM gear`}
           size={125}
-          className="flex-shrink-0"
+          className="shrink-0 sm:mx-0"
         />
 
-        <div className="min-w-0 flex-1">
+        <div className="min-w-0 flex-1 w-full text-center sm:text-left">
           <div className="flex flex-wrap items-center gap-2 mb-2">
             <h3 className="text-xl font-serif font-semibold text-white line-clamp-1">
               {vendor.name}
@@ -52,24 +52,24 @@ export default function VendorCard({ vendor, selectedTagSlugs }: VendorCardProps
             </p>
           ) : null}
 
-          <div className="mt-4 flex flex-col sm:flex-row gap-3">
+          <div className="mt-4 flex flex-col sm:flex-row gap-3 sm:justify-start">
             {vendor.websiteUrl ? (
               <a
                 href={vendor.websiteUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="btn-primary text-center py-2 px-4 text-sm"
+                className="btn-primary inline-flex min-h-touch w-full sm:w-auto items-center justify-center px-4 py-2 text-sm"
                 aria-label={`Visit ${vendor.name} shop (opens in a new tab)`}
               >
                 Visit Shop
               </a>
             ) : (
-              <Link href={`/vendors/${vendor.slug}`} className="btn-primary text-center py-2 px-4 text-sm">
+              <Link href={`/vendors/${vendor.slug}`} className="btn-primary inline-flex min-h-touch w-full sm:w-auto items-center justify-center px-4 py-2 text-sm">
                 View Vendor
               </Link>
             )}
 
-            <Link href={`/vendors/${vendor.slug}`} className="btn-outline text-center py-2 px-4 text-sm">
+            <Link href={`/vendors/${vendor.slug}`} className="btn-outline inline-flex min-h-touch w-full sm:w-auto items-center justify-center px-4 py-2 text-sm">
               Details
             </Link>
           </div>

@@ -20,10 +20,10 @@ export default function ReportPage() {
 
   return (
     <div className="min-h-screen bg-black">
-      <div className="container-custom py-16">
+      <div className="container-custom py-8 md:py-16">
         <div className="max-w-4xl mx-auto">
           <Breadcrumb items={breadcrumbItems} />
-          <h1 className="text-4xl md:text-5xl font-serif font-bold text-white mb-8">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-white mb-6 md:mb-8">
             Report a Problem
           </h1>
           
@@ -38,28 +38,28 @@ export default function ReportPage() {
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                 <div className="p-4 bg-gradient-to-br from-red-900/20 to-red-800/20 border border-red-500/30 rounded-lg">
-                  <h3 className="text-lg font-semibold text-white mb-2">🚨 Safety Concerns</h3>
+                  <h3 className="text-lg font-semibold text-white mb-2"><span aria-hidden="true">🚨</span> Safety concerns</h3>
                   <p className="text-gray-300 text-sm">
                     Community conduct violations, harassment, or safety issues
                   </p>
                 </div>
 
                 <div className="p-4 bg-gradient-to-br from-yellow-900/20 to-yellow-800/20 border border-yellow-500/30 rounded-lg">
-                  <h3 className="text-lg font-semibold text-white mb-2">⚠️ Content Issues</h3>
+                  <h3 className="text-lg font-semibold text-white mb-2"><span aria-hidden="true">⚠️</span> Content issues</h3>
                   <p className="text-gray-300 text-sm">
                     Inaccurate event information, outdated listings, or inappropriate content
                   </p>
                 </div>
 
                 <div className="p-4 bg-gradient-to-br from-blue-900/20 to-blue-800/20 border border-blue-500/30 rounded-lg">
-                  <h3 className="text-lg font-semibold text-white mb-2">🔧 Technical Problems</h3>
+                  <h3 className="text-lg font-semibold text-white mb-2"><span aria-hidden="true">🔧</span> Technical problems</h3>
                   <p className="text-gray-300 text-sm">
                     Broken links, display issues, or functionality bugs
                   </p>
                 </div>
 
                 <div className="p-4 bg-gradient-to-br from-purple-900/20 to-purple-800/20 border border-purple-500/30 rounded-lg">
-                  <h3 className="text-lg font-semibold text-white mb-2">📝 Content Errors</h3>
+                  <h3 className="text-lg font-semibold text-white mb-2"><span aria-hidden="true">📝</span> Content errors</h3>
                   <p className="text-gray-300 text-sm">
                     Spelling mistakes, broken formatting, or missing information
                   </p>
@@ -87,7 +87,7 @@ export default function ReportPage() {
                 </p>
                 <Link 
                   href="/contact?subject=Report%20a%20Problem"
-                  className="inline-block bg-gradient-to-r from-primary-600 to-blue-600 text-white font-bold py-3 px-6 rounded-full hover:from-primary-700 hover:to-blue-700 transition-all duration-300 shadow-lg hover:shadow-primary-500/25"
+                  className="btn-primary inline-flex min-h-touch w-full sm:w-auto items-center justify-center px-6 py-2.5 text-sm"
                 >
                   Contact Us
                 </Link>
@@ -110,7 +110,7 @@ export default function ReportPage() {
           <div className="mt-8">
             <Link 
               href="/"
-              className="text-primary-400 hover:text-primary-300 transition-colors inline-flex items-center gap-2"
+              className="text-primary-400 hover:text-primary-300 transition-colors inline-flex items-center gap-2 min-h-touch"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />

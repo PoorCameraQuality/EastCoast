@@ -80,7 +80,7 @@ export default function VendorsPageClient({ vendors, tagGroups, tags, tagsBySlug
           <div className="mb-8 md:mb-10">
             <Breadcrumb items={breadcrumbItems} />
             <SupportCTAInline contextLabel="Vendors" />
-            <h1 className="text-4xl md:text-5xl font-serif font-bold text-white mb-4">Vendors</h1>
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-white mb-4">Vendors</h1>
             <p className="text-gray-300 leading-relaxed max-w-3xl">
               Discover makers, shops, and educators across multiple dimensions.
             </p>
@@ -104,7 +104,7 @@ export default function VendorsPageClient({ vendors, tagGroups, tags, tagsBySlug
                 <div className="text-sm text-gray-400">
                   Showing <span className="text-white font-semibold">{filtered.length}</span> vendor{filtered.length === 1 ? '' : 's'}
                 </div>
-                <Link href="/contact" className="text-sm text-gray-300 hover:text-white underline underline-offset-4 decoration-white/20 hover:decoration-white/50 transition-colors" aria-label="Contact us">
+                <Link href="/contact" className="inline-flex min-h-touch items-center text-sm text-gray-300 hover:text-white underline underline-offset-4 decoration-white/20 hover:decoration-white/50 transition-colors" aria-label="Contact us">
                   {CONTACT_US_LABEL}
                 </Link>
               </div>

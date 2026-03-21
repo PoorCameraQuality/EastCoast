@@ -20,10 +20,10 @@ export default function AccessibilityPage() {
 
   return (
     <div className="min-h-screen bg-black">
-      <div className="container-custom py-16">
+      <div className="container-custom py-8 md:py-16">
         <div className="max-w-4xl mx-auto">
           <Breadcrumb items={breadcrumbItems} />
-          <h1 className="text-4xl md:text-5xl font-serif font-bold text-white mb-8">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-white mb-6 md:mb-8">
             Accessibility Statement
           </h1>
           
@@ -62,7 +62,7 @@ export default function AccessibilityPage() {
                 </p>
                 <Link 
                   href="/contact"
-                  className="inline-block bg-gradient-to-r from-primary-600 to-blue-600 text-white font-bold py-3 px-6 rounded-full hover:from-primary-700 hover:to-blue-700 transition-all duration-300 shadow-lg hover:shadow-primary-500/25"
+                  className="btn-primary inline-flex min-h-touch w-full sm:w-auto items-center justify-center px-6 py-2.5 text-sm"
                 >
                   Contact Us
                 </Link>
@@ -78,7 +78,7 @@ export default function AccessibilityPage() {
           <div className="mt-8">
             <Link 
               href="/"
-              className="text-primary-400 hover:text-primary-300 transition-colors inline-flex items-center gap-2"
+              className="text-primary-400 hover:text-primary-300 transition-colors inline-flex items-center gap-2 min-h-touch"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />

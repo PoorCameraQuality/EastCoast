@@ -5,7 +5,7 @@ This repo powers the `eastcoastkinkevents.com` Next.js site: Events, Dungeons, S
 ### Runtime and tooling
 
 - **Node.js**: `20.x` (see `package.json` -> `engines`)
-- **Next.js**: `14.2.15`
+- **Next.js**: `14.2.35` (see `package.json`)
 - **React**: `18.3.x`
 - **TypeScript**: `5.9.x`
 - **Styling**: Tailwind CSS `3.4.x`
@@ -19,6 +19,17 @@ This repo powers the `eastcoastkinkevents.com` Next.js site: Events, Dungeons, S
 - `src/lib/`: Shared utilities (Supabase clients, auth helpers, validation, SEO, IndexNow).
 - `public/`: Static assets (logos, OG image, IndexNow key file, sitemap fallback).
 - `scripts/`: Node scripts for maintenance (dates cleanup/validation, indexing utilities).
+
+### Mobile-first UI uplift
+
+- **Principles:** `docs/MOBILE_FIRST_PRINCIPLES.md`
+- **Parallel agent / merge waves:** `docs/PARALLEL_AGENT_WORKFLOW.md`
+- **QA & rollout:** `docs/MOBILE_QA_ROLLOUT.md`
+- **Shared primitives:** `src/components/ui/` (`Button`, `Card`, `Input`, `Field`, `Badge`)
+- **Layout conventions:** `.card-elegant` uses responsive padding (`p-6 sm:p-8`); primary marketing and legal routes use `container-custom py-8 md:py-16` with scaled headings on small viewports; interactive targets use `min-h-touch` / `min-w-touch` (`44px`) from `tailwind.config.js`.
+- **Z-index / overlays:** CSS variables `--z-ecke-drawer` (70) and `--z-ecke-modal` (80) in `src/app/globals.css` stack vendor filter drawer and blocking modals above the support banner (`z-[60]`). Skip link uses `focus:z-[100]`; back-to-top uses `z-[65]` so it stays tappable above the banner. Login overlay remains `.login-modal-overlay` at 9999.
+- **Escape / dismissal:** Mobile nav ([`Header.tsx`](src/components/Header.tsx)), vendor filter drawer ([`VendorFilters.tsx`](src/components/vendors/VendorFilters.tsx)), and login popover ([`UserMenu.tsx`](src/components/auth/UserMenu.tsx)) close on Escape; login also closes on backdrop click with focus return to the Login trigger.
+- **Search combobox:** Result links use `onMouseDown={(e) => e.preventDefault()}` to reduce blur-before-click races; search root uses `z-[55]` so panels sit above in-page chrome.
 
 ### Data sources
 

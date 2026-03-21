@@ -60,7 +60,7 @@ export default function AgeVerification() {
   return (
     <>
       {showModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4">
+        <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 z-[var(--z-ecke-modal)]">
           <div className="bg-dark-800 border border-dark-600 rounded-lg p-8 max-w-md w-full">
             <div className="text-center">
               <h2 className="text-2xl font-bold text-white mb-4">

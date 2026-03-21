@@ -31,7 +31,7 @@ export default function UnauthorizedPage() {
           <div className="space-y-4">
             <Link 
               href="/" 
-              className="btn-primary block w-full"
+              className="btn-primary flex w-full min-h-touch items-center justify-center"
               aria-label="Return to home page"
             >
               Return to Home
@@ -39,7 +39,7 @@ export default function UnauthorizedPage() {
             
             <Link 
               href="/contact" 
-              className="btn-secondary block w-full"
+              className="btn-secondary flex w-full min-h-touch items-center justify-center"
               aria-label="Contact support for assistance"
             >
               Contact Support

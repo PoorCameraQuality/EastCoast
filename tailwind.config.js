@@ -39,8 +39,14 @@ module.exports = {
         },
       },
       fontFamily: {
-        sans: ['Inter', 'system-ui', 'sans-serif'],
-        serif: ['Playfair Display', 'Georgia', 'serif'],
+        sans: ['var(--font-ecke-sans)', 'system-ui', 'sans-serif'],
+        serif: ['var(--font-ecke-serif)', 'Georgia', 'serif'],
+      },
+      minHeight: {
+        touch: '44px',
+      },
+      minWidth: {
+        touch: '44px',
       },
       boxShadow: {
         'elegant': '0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2)',

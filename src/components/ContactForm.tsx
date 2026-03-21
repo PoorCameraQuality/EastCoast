@@ -126,7 +126,10 @@ export default function ContactForm({ 'aria-label': ariaLabel }: ContactFormProp
       </h1>
       
       {showPopup && (
-        <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4" aria-live="polite">
+        <div
+          className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 z-[var(--z-ecke-modal)]"
+          aria-live="polite"
+        >
           <div className="backdrop-blur-xl bg-white/10 border border-white/20 rounded-2xl p-6 max-w-xl w-full shadow-2xl">
             <div className="flex items-start">
               <div className="flex-shrink-0">

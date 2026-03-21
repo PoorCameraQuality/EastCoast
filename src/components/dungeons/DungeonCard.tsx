@@ -19,7 +19,7 @@ export default function DungeonCard({ dungeon }: DungeonCardProps) {
   const preview = dungeon.excerpt || dungeon.description?.long || ''
 
   return (
-    <article className="card-elegant p-6 flex flex-col gap-4" aria-label={dungeon.name}>
+    <article className="card-elegant p-4 sm:p-6 flex flex-col gap-4" aria-label={dungeon.name}>
       <div className="flex items-start gap-4">
         <DungeonImage
           src={dungeon.logo}
@@ -54,7 +54,7 @@ export default function DungeonCard({ dungeon }: DungeonCardProps) {
       <div className="mt-auto">
         <Link
           href={`/dungeons/${dungeon.slug}`}
-          className="btn-primary inline-flex items-center justify-center px-4 py-2 text-sm"
+          className="btn-primary min-h-touch inline-flex items-center justify-center px-4 py-2 text-sm w-full sm:w-auto"
           aria-label={`View listing for ${dungeon.name}`}
         >
           View Listing
