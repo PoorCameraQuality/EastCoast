@@ -32,6 +32,17 @@ function escapeHtmlInJson(data: any): string {
   return JSON.stringify(data).replace(/</g, '\\u003c')
 }
 
+// Encode path segments for valid URLs (handles spaces, special chars)
+function encodeUrlPath(path: string): string {
+  return path.split('/').map(segment => encodeURIComponent(segment)).join('/')
+}
+
+function buildImageUrl(logo: string | null | undefined, fallback: string): string[] {
+  if (!logo) return [fallback]
+  const fullUrl = logo.startsWith('http') ? logo : `${BASE_URL}${encodeUrlPath(logo)}`
+  return [fullUrl]
+}
+
 export function EventStructuredData({ event }: EventStructuredDataProps) {
   // Determine country code (support US/CA based on state/region hints)
   const addressCountry = ((): string => {
@@ -67,7 +78,7 @@ export function EventStructuredData({ event }: EventStructuredDataProps) {
       "url": BASE_URL
     },
     "url": `${BASE_URL}/events/${event.slug}`,
-    "image": event.logo ? [`${BASE_URL}${event.logo}`] : [`${BASE_URL}/og-image.png`],
+    "image": buildImageUrl(event.logo, `${BASE_URL}/images/placeholder-logo.svg`),
     "mainEntityOfPage": {
       "@type": "WebPage",
       "@id": `${BASE_URL}/events/${event.slug}`
@@ -122,7 +133,7 @@ export function DungeonStructuredData({ dungeon }: { dungeon: any }) {
     "name": dungeon.name,
     "description": dungeon.excerpt,
     "url": `${BASE_URL}/dungeons/${dungeon.slug}`,
-    "image": dungeon.logo ? [`${BASE_URL}${dungeon.logo}`] : undefined,
+    "image": dungeon.logo ? buildImageUrl(dungeon.logo, `${BASE_URL}/images/placeholder-logo.svg`) : undefined,
     "telephone": dungeon.contact?.phone || dungeon.phone || undefined,
     "email": dungeon.contact?.email || dungeon.email || undefined,
     "address": {
@@ -179,7 +190,7 @@ export function VendorStructuredData({ vendor }: { vendor: any }) {
   const logoUrl = rawLogoUrl
     ? rawLogoUrl.startsWith('http')
       ? rawLogoUrl
-      : `${BASE_URL}${rawLogoUrl}`
+      : `${BASE_URL}${encodeUrlPath(rawLogoUrl)}`
     : undefined
 
   const structuredData = {
@@ -296,7 +307,7 @@ export function OrganizationStructuredData() {
     "name": "East Coast Kink Events",
     "description": "Discover and connect with kink events across the East Coast",
     "url": BASE_URL,
-    "logo": `${BASE_URL}/og-image.png`,
+    "logo": `${BASE_URL}/images/placeholder-logo.svg`,
     "sameAs": [
       "https://discord.gg/xcnGGyGsmT"
     ],

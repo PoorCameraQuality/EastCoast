@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import VendorImage from '@/components/vendors/VendorImage'
-import { getVendorBySlug } from '@/data/vendors'
+import { getSiteSponsorVendor } from '@/data/vendors'
 
 const DISMISS_KEY = 'ecke_support_banner_dismissed_at'
 const SHOW_AFTER_MS = 12000
@@ -25,7 +25,7 @@ export default function SupportBanner() {
   const pathname = usePathname()
   const [visible, setVisible] = useState(false)
   const [ready, setReady] = useState(false)
-  const sponsorVendor = getVendorBySlug('floggin-farmers')
+  const sponsorVendor = getSiteSponsorVendor()
 
   const isSuppressedRoute = useMemo(() => {
     if (!pathname) return true
@@ -132,7 +132,7 @@ export default function SupportBanner() {
                     </Link>
                   </p>
                   <p className="text-xs text-gray-200 mt-1">
-                    Sponsor for February: Floggin Farmers. Reach out to Brax if you would like to support the site for a month.
+                    Featured site sponsor. Reach out to Brax if you would like to support the site for a month.
                   </p>
                 </div>
                 <div className="flex flex-wrap gap-2">

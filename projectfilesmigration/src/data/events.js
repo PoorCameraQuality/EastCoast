@@ -52,12 +52,12 @@ export const events = [
     },
     "category": "Indoor Event",
     "excerpt": "CLAW 26 is a 21+ leather and kink weekend in Columbus, OH featuring a full Hyatt Regency hotel buyout, a 118-booth VendorMart, 150+ classes, two BDSM dungeons, and dozens of socials and signature events.",
-    "longDescription": "CLAW 26 takes over the Hyatt Regency Columbus from April 2-5, 2026 for a full-property leather and kink weekend. This nonprofit-run event welcomes thousands of attendees for education, socializing, and nightlife in a hotel that becomes a temporary leather village.\n\n**Event Highlights:**\n\n**VendorMart** - 118-booth marketplace with vendors, gear, and fetish wear.\n\n**Skills & Education** - 150+ classes and workshops across a wide range of interests and experience levels.\n\n**Play Spaces** - Two BDSM dungeons and dedicated play areas.\n\n**Socials & Mixers** - Dozens of gatherings and themed events throughout the weekend.\n\n**Signature Experiences** - International Leather Family Dinner, World Famous Cigar Deck, Fetish Speed Dating, Pet/Pup Moshes, Silent Auctions, Kinky Art Show, Leather Game Shows, Drag Brunch & Bingo, Bound & Beautiful, and Kinky Kabaret.\n\n**Hotel & Registration:**\n\n**Host Hotel Buyout** - The Hyatt Regency Columbus is reserved for CLAW attendees from Thursday evening through Monday morning.\n\n**CLAW Package Required** - A valid CLAW registration package is required to book at the host hotel.\n\n**Age Requirement:** CLAW 26 is a 21+ only event.",
+    "longDescription": "CLAW 26 takes over the Hyatt Regency Columbus (350 N. High St., Columbus, OH 43215) from April 2-5, 2026 for a full-property leather and kink weekend. Founded in 2002, CLAW Corp is a 501(c)(3) nonprofit that welcomes thousands of attendees for education, socializing, and nightlife in a hotel that becomes a temporary leather village.\n\n**Event Highlights:**\n\n**VendorMart** - 118-booth marketplace in the Regency Ballroom (16,000 sq ft) with vendors, gear, and fetish wear. Hours: Fri 11am–8pm, Sat 10am–6pm, Sun 11am–5pm.\n\n**Skills & Education** - 150+ classes and workshops across a wide range of interests and experience levels; CEUs through CARAS. Art show in partnership with Tom of Finland Foundation.\n\n**Play Spaces** - Two BDSM dungeons and dedicated play areas.\n\n**Socials & Mixers** - Dozens of gatherings and themed events throughout the weekend.\n\n**Signature Experiences** - International Leather Family Dinner, World Famous Cigar Deck, Fetish Speed Dating, Pet/Pup Moshes, Silent Auctions, Kinky Art Show, Leather Game Shows, Drag Brunch & Bingo, Bound & Beautiful, and Kinky Kabaret.\n\n**Hotel & Registration:**\n\n**Host Hotel Buyout** - The Hyatt Regency Columbus is reserved for CLAW attendees from Thursday evening through Monday morning.\n\n**CLAW Package Required** - A valid CLAW registration package is required to book at the host hotel. Overflow hotel room block is available when the host hotel is full.\n\n**Age Requirement:** CLAW 26 is a 21+ only event.",
     "website": "https://clawinfo.org/",
     "logo": "/images/claw-26.svg",
     "organizer": "CLAW Corp",
     "venue": "Hyatt Regency Columbus",
-    "hotel": "Hyatt Regency Columbus, OH",
+    "hotel": "Hyatt Regency Columbus, 350 N. High St., Columbus, OH 43215",
     "ageRequirement": "21+ only",
     "features": [
       "Full Property Hotel Buyout (Hyatt Regency Columbus)",
@@ -76,7 +76,11 @@ export const events = [
       "Drag Brunch & Bingo",
       "Bound & Beautiful",
       "Kinky Kabaret",
-      "CLAW Package Required for Host Hotel"
+      "CLAW Package Required for Host Hotel",
+      "Overflow Hotel Available",
+      "501(c)(3) Nonprofit Since 2002",
+      "Tom of Finland Foundation Art Show",
+      "CEUs Through CARAS"
     ],
     "seo": {
       "title": "CLAW 26 - Columbus Leather & Kink Weekend | East Coast Kink Events",
@@ -99,7 +103,7 @@ export const events = [
     },
     "category": "Contest Weekend",
     "excerpt": "IMsLBB 2026 is the International Ms. Leather & International Ms. Bootblack contest weekend in Piscataway, NJ with a full hotel takeover, community programming, and contests.",
-    "longDescription": "IMsLBB 2026 runs April 23-26, 2026 in Piscataway, NJ at the Holiday Inn Piscataway - Somerset. This annual event features a complete hotel takeover alongside the International Ms. Leather and International Ms. Bootblack contests, plus community programming throughout the weekend.\n\n**Venue:** Holiday Inn Piscataway - Somerset, an IHG Hotel, 21 Kingsbridge Road, Piscataway, NJ 08854.\n\nCheck the official site for schedule, registration, and accessibility updates.",
+    "longDescription": "IMsLBB 2026 runs April 23-26, 2026 in Piscataway, NJ at the Holiday Inn Piscataway - Somerset. This annual event features a complete hotel takeover alongside the International Ms. Leather and International Ms. Bootblack contests, plus community programming throughout the weekend.\n\n**Venue:** Holiday Inn Piscataway - Somerset, an IHG Hotel, 21 Kingsbridge Road, Piscataway, NJ 08854. Hotel is closed to the public—attendees and staff only.\n\n**Registration:** EventBrite. Every attendee must complete 2 hours of volunteer time. Onsite registration Thu 1pm–10pm, Fri 8am–10pm, Sat 8am–9pm, Sun 9am–1pm. Host hotel is sold out; waitlist available.\n\n**Programming:** Classes all weekend in ballroom, classroom, courtyard, and pool—all with ASL interpreters, livestream on Zoom and website. Main indoor playspace, outdoor playspace, pool, and quiet low sensory space. Vendors Fri–Sun. Scholarships available. Accessibility form and resources on the official site.",
     "website": "https://www.imslbb.com/",
     "logo": "/images/imslbb-2026.jpg",
     "organizer": "IMsLBB",
@@ -111,6 +115,14 @@ export const events = [
       "Complete Hotel Takeover",
       "Community Programming",
       "Weekend-Long Events and Socials",
+      "Host Hotel Sold Out - Waitlist Available",
+      "2 Hours Volunteer Required",
+      "ASL Interpreters for All Classes",
+      "Indoor & Outdoor Playspaces",
+      "Pool",
+      "Quiet Low Sensory Space",
+      "Vendors",
+      "Scholarships Available",
       "Accessible Venue Information on Site"
     ],
     "seo": {
@@ -128,15 +140,17 @@ export const events = [
       "display": "Feb 6-8, 2026"
     },
     "location": {
-      "city": "Easton",
+      "city": "Whitehall",
       "state": "PA",
-      "region": "Eastern, Pennsylvania"
+      "region": "Eastern, Pennsylvania (Lehigh Valley)"
     },
     "category": "Weekend Event",
-    "excerpt": "Hugs & Kisses 2026 is a full hotel takeover with leather workshops, play spaces, and a Grand Gala.",
-    "longDescription": "Hugs & Kisses 2026 runs February 6-8, 2026. This full hotel takeover features leather workshops, play spaces, and a Grand Gala. Visit the official event page for venue and registration details.",
+    "venue": "Ramada by Wyndham Allentown/Bethlehem (full hotel buyout)",
+    "hotel": "Ramada by Wyndham Allentown/Bethlehem, Whitehall, PA (Allentown–Bethlehem area)",
+    "excerpt": "Hugs & Kisses / Keystone Leather Gala 2026 is a full hotel takeover in the Allentown–Bethlehem area with leather workshops, play spaces, and a Grand Gala.",
+    "longDescription": "Hugs & Kisses 2026 runs February 6-8, 2026 at the Ramada by Wyndham Allentown/Bethlehem (full hotel buyout), serving the Allentown–Bethlehem / Whitehall, PA area. This full hotel takeover features leather workshops, play spaces, and a Grand Gala. Visit the official Keystone Leather Contest event page for registration details.",
     "website": "https://keystoneleathercontest.com/events",
-    "logo": "/images/hugs and kisses.PNG",
+    "logo": "/images/hugs-and-kisses.PNG",
     "organizer": "Keystone Leather Contest",
     "features": [
       "Full Hotel Takeover",
@@ -146,8 +160,8 @@ export const events = [
     ],
     "seo": {
       "title": "Hugs & Kisses 2026 - Keystone Leather Contest Event | East Coast Kink Events",
-      "description": "Hugs & Kisses 2026 (Feb 6-8) is a full hotel takeover featuring leather workshops, play spaces, and a Grand Gala.",
-      "keywords": "Hugs & Kisses 2026, Keystone Leather Contest, Pennsylvania leather event, leather workshops, play spaces, Grand Gala"
+      "description": "Hugs & Kisses 2026 (Feb 6-8) is a full hotel takeover in Whitehall / Allentown–Bethlehem, PA featuring leather workshops, play spaces, and a Grand Gala.",
+      "keywords": "Hugs & Kisses 2026, Keystone Leather Contest, Whitehall PA, Allentown, Bethlehem, Ramada, leather workshops, play spaces, Grand Gala"
     }
   },
   {
@@ -165,7 +179,7 @@ export const events = [
     },
     "category": "Conference",
     "excerpt": "Ropecraft Chicago 2026 is a Memorial Day weekend rope-focused kink convention with classes across shibari, western bondage, power exchange, and play, plus nightly parties and community-focused spaces.",
-    "longDescription": "Ropecraft Chicago 2026 returns to the Windy City on May 22-25, 2026 for a rope-focused kink convention built around inclusive education, play, and community connection.\n\n**Event Highlights:**\n\n**Comprehensive Rope Education** - Classes for tops, bottoms, and switches across shibari, western bondage, kinbaku, solo tying, and more.\n\n**Ropenspace** - A facilitated, peer-to-peer learning space using Open Space Technology with instructors in attendance.\n\n**Playspace & Parties** - State-of-the-art playspace with parties every night and dedicated practice areas.\n\n**Community & Connection** - Catered meet-and-greet, special interest group support, and dedicated peer support resources.\n\n**Vendor Bazaar & Art Opportunities** - Vendor bazaar plus art display opportunities and special events throughout the weekend.\n\n**Registration & Hotel:**\n\n**Registration Opens** - January 1, 2026 for event tickets.\n\n**Hotel Room Bookings** - Expected to open by January 7, 2026.\n\nRopecraft is designed to be \"knot-for everyone\"—welcoming rope enthusiasts of all experience levels in a sex-positive, consent-centered environment.",
+    "longDescription": "Ropecraft Chicago 2026 returns to the Windy City on May 22-25, 2026 for a rope-focused kink convention built around inclusive education, play, and community connection.\n\n**Event Highlights:**\n\n**Comprehensive Rope Education** - Classes for tops, bottoms, and switches across shibari, western bondage, kinbaku, solo tying, health & wellness, and more.\n\n**Ropenspace** - A facilitated, peer-to-peer learning space using Open Space Technology with instructors in attendance.\n\n**Playspace & Parties** - State-of-the-art playspace with parties every night, dedicated practice areas, and self suspension space.\n\n**The Flow Erotic Cabaret** - Saturday night performance (aerial, dance, rope, variety).\n\n**Community & Connection** - Catered meet-and-greet, special interest group support, and dedicated peer support resources.\n\n**Vendor Bazaar & Art Opportunities** - Vendor bazaar plus art display opportunities and special events throughout the weekend. Closing ceremony giveaways.\n\n**Registration & Hotel:**\n\n**Registration Opens** - January 1, 2026 for event tickets.\n\n**Hotel Room Bookings** - Expected to open by January 7, 2026.\n\nRopecraft is designed to be \"knot-for everyone\"—welcoming rope enthusiasts of all experience levels in a sex-positive, consent-centered environment.",
     "website": "https://ropecraft.net/",
     "logo": "/images/ropecraft-chicago-2026.png",
     "organizer": "Ropecraft",
@@ -184,7 +198,11 @@ export const events = [
       "Peer Support Team",
       "Special Interest Group Support",
       "Vendor Bazaar",
-      "Art Display Opportunities"
+      "Art Display Opportunities",
+      "The Flow Erotic Cabaret",
+      "Self Suspension Space",
+      "Health & Wellness Track",
+      "Closing Ceremony Giveaways"
     ],
     "seo": {
       "title": "Ropecraft Chicago 2026 - Memorial Day Rope Convention | East Coast Kink Events",
@@ -207,12 +225,16 @@ export const events = [
     },
     "category": "Retreat",
     "excerpt": "Kink Odyssey - Spring is a five-day BDSM exploration retreat at Easton Mountain in Greenwich, NY with experiential workshops, facilitated play parties, and community connection for both newcomers and veterans.",
-    "longDescription": "Kink Odyssey - Spring runs May 27-31, 2026 at Easton Mountain Retreat Center in Greenwich, NY. This immersive retreat blends experiential kink workshops with time for connection, practice, and facilitated dungeon play in a welcoming community.\n\n**Event Highlights:**\n\n**Facilitated Play Parties** - Evening play parties led by dungeon masters with opening circles to help participants connect.\n\n**Experiential Workshops** - Hands-on learning across a variety of kink topics including rope bondage, flogging, mummification, puppy play, and more.\n\n**Community Circle & Agreements** - Opening session focused on safety, etiquette, and negotiation skills.\n\n**Optional Small-Group Check-ins** - Daily groups for reflection, support, and deeper connection.\n\n**Fetish-Friendly Atmosphere** - Bring your leather, rubber, boots, and toys for a weekend of exploration.\n\n**Rates & Accommodations:**\n\n**All-Inclusive Retreat** - Rates include workshops, housing, three meals per day, snacks, and access to campus amenities like trails and sauna.",
+    "longDescription": "Kink Odyssey - Spring runs May 27-31, 2026 at Easton Mountain Retreat Center in Greenwich, NY. This immersive retreat blends experiential kink workshops with time for connection, practice, and facilitated dungeon play in a welcoming community.\n\n**Event Highlights:**\n\n**Facilitated Play Parties** - Evening play parties led by dungeon masters with opening circles to help participants connect.\n\n**Experiential Workshops** - Hands-on learning across a variety of kink topics including rope bondage, flogging, mummification, puppy play, and more.\n\n**Community Circle & Agreements** - Opening session focused on safety, etiquette, and negotiation skills.\n\n**Optional Small-Group Check-ins** - Daily groups for reflection, support, and deeper connection.\n\n**Opening Night 'Tasting' Demos** - Stations to preview and choose your desired experiences.\n\n**Free Unfacilitated Play** - Dedicated space for free play when not in use for workshops.\n\n**Fetish-Friendly Atmosphere** - Bring your leather, rubber, boots, and toys for a weekend of exploration.\n\n**Rates & Accommodations:**\n\n**All-Inclusive Retreat** - Rates start at $595 per person and include workshops, housing, three meals per day, snacks, 24/7 tea & coffee, and access to sauna, pond, hiking trails, temple, and more. Tent camping, glamping, cabins, bunkhouse, and guest house options available.",
     "website": "https://www.eastonmountain.org/events/kink-26-spring",
     "logo": "/images/kink-odyssey-spring-2026.jpg",
     "organizer": "Easton Mountain Retreat",
     "venue": "Easton Mountain Retreat Center",
     "hotel": "Easton Mountain Retreat Center, 391 Herrington Hill Road, Greenwich, NY 12834",
+    "contact": {
+      "email": "info@eastonmountain.org",
+      "phone": "(518) 692-8023"
+    },
     "features": [
       "Five-Day BDSM Exploration Retreat",
       "Facilitated Evening Play Parties",
@@ -223,7 +245,11 @@ export const events = [
       "Fetish-Friendly Atmosphere",
       "All-Inclusive Meals and Lodging",
       "Access to Sauna, Trails, and Campus Amenities",
-      "Newcomer-Friendly and Veteran-Welcoming"
+      "Newcomer-Friendly and Veteran-Welcoming",
+      "Opening Night Tasting Demos",
+      "Free Unfacilitated Play",
+      "Rates from $595",
+      "Pond & Temple"
     ],
     "seo": {
       "title": "Kink Odyssey - Spring 2026 - Easton Mountain Retreat | East Coast Kink Events",
@@ -246,8 +272,12 @@ export const events = [
     },
     "category": "Convention",
     "excerpt": "Fetish Con XXIV is a four-day fetish trade show and convention in St. Petersburg, FL featuring workshops on consent and kink safety, a massive vendor marketplace, live demos, networking, and signature events.",
-    "longDescription": "Fetish Con XXIV runs August 6-9, 2026 at the Hilton St. Petersburg Bayfront. One of the world’s most recognized fetish conventions, Fetish Con brings together creators, performers, educators, businesses, and fans for four days of community, education, art, and celebration.\n\n**Event Highlights:**\n\n**Education & Workshops** - Consent and kink safety sessions, plus a full schedule of kinky classes.\n\n**Vendor Marketplace** - Latex, corsets, shoes, rope, toys, and more from a wide range of vendors.\n\n**Live Demonstrations & Networking** - Industry-focused programming and community connections.\n\n**Signature Events** - Bondage Battle VI, George Perez Superheroine Showdown XVIII, The Twisted Dungeon, Pervy Pool Parties, and the Fetish Ball & Bash.\n\n**Official Venue:** Hilton St. Petersburg Bayfront, 333 1st Street S, Saint Petersburg, FL 33701.",
+    "longDescription": "Fetish Con™ (aka FETCON™)—the original fetish trade show, 24 years running—runs August 6-9, 2026 at the Hilton St. Petersburg Bayfront. One of the world’s most recognized fetish conventions, Fetish Con brings together creators, performers, educators, businesses, and fans for four days of community, education, art, and celebration.\n\n**Event Highlights:**\n\n**Education & Workshops** - Consent and kink safety sessions, plus a full schedule of kinky classes. B2B Thursday FACTalks for industry networking.\n\n**Vendor Marketplace** - Latex, corsets, shoes, rope, toys, and more from a wide range of vendors.\n\n**Live Demonstrations & Networking** - Industry-focused programming and community connections.\n\n**Signature Events** - 6th Annual Bondage Battle, 18th Annual George Pérez Superheroine Showdown, The Twisted Dungeon, Pervy Pool Parties, wild after-parties every night, and the 24th Annual Fetish Ball & Bash. Plus The Oasis @ Fetish Con, Kinky [RED] Carpet, and Fetish Con Friends Meet Up.\n\n**Official Venue:** Hilton St. Petersburg Bayfront, 333 1st Street S, Saint Petersburg, FL 33701.",
     "website": "https://fetishcon.com/",
+    "contact": {
+      "email": "fetishconhelp@gmail.com",
+      "phone": "(727) 537-9890"
+    },
     "logo": "/images/fetish-con-2026.png",
     "organizer": "XIX Events, LLC",
     "venue": "Hilton St. Petersburg Bayfront",
@@ -263,12 +293,17 @@ export const events = [
       "George Perez Superheroine Showdown XVIII",
       "The Twisted Dungeon",
       "Pervy Pool Parties",
-      "Fetish Ball & Bash"
+      "Fetish Ball & Bash",
+      "24 Years Running",
+      "Wild After-Parties Every Night",
+      "B2B Thursday FACTalks",
+      "The Oasis @ Fetish Con",
+      "Kinky [RED] Carpet"
     ],
     "seo": {
       "title": "Fetish Con XXIV 2026 - St. Petersburg Fetish Convention | East Coast Kink Events",
       "description": "Fetish Con XXIV (Aug 6-9, 2026) is a premier fetish trade show and convention in St. Petersburg, FL with workshops, vendors, demos, and signature events.",
-      "keywords": "Fetish Con 2026, Fetish Con XXIV, St. Petersburg FL, fetish convention, kink workshops, vendor marketplace, Twisted Dungeon"
+      "keywords": "Fetish Con 2026, Fetish Con XXIV, FETCON, XIX Events, St. Petersburg FL, fetish convention, fetish trade show, kink workshops, vendor marketplace, Twisted Dungeon"
     }
   },
   {
@@ -393,12 +428,13 @@ export const events = [
     }
   },
   {
-    "name": "Rehoboth Beach Leather Weekend 2025",
+    "name": "Rehoboth Beach Leather Weekend 2026 (TBA)",
     "slug": "rehoboth-beach-leather-weekend",
+    "status": "tba",
     "date": {
-      "start": "2025-10-03",
-      "end": "2025-10-05",
-      "display": "Oct 3-5, 2025"
+      "start": "2026-10-01",
+      "end": "2026-10-31",
+      "display": "2026 dates TBA (typically fall)"
     },
     "location": {
       "city": "Rehoboth Beach",
@@ -406,8 +442,8 @@ export const events = [
       "region": "Mid-Atlantic, Delaware"
     },
     "category": "Weekend Event",
-    "excerpt": "Rehoboth Beach Leather Weekend 2025 is a multi-day leather celebration at Aqua Bar & Grill with socials, a harness dance, and the Rehoboth Leather contest weekend.",
-    "longDescription": "Rehoboth Beach Leather Weekend 2025 takes place October 3-5, 2025 in Rehoboth Beach, DE at Aqua Bar & Grill. The weekend features a Friday Meat & Greet, a Harness Dance, contestant interviews, the Rehoboth Leather contest, and a Sunday closing beer bust.\n\nCheck the official site for the full schedule and updates.",
+    "excerpt": "Rehoboth Beach Leather Weekend is a multi-day leather celebration at Aqua Bar & Grill with socials, a harness dance, and the Rehoboth Leather contest. The 2025 weekend has passed; the organizer had not published 2026 dates on the public site as of our review—check rehobothbeachleather.com.",
+    "longDescription": "Rehoboth Beach Leather Weekend centers Aqua Bar & Grill in Rehoboth Beach, DE with socials, a harness dance, contestant interviews, the Rehoboth Leather contest, and closing events.\n\n**2026:** Dates were not yet listed publicly when we last checked. Confirm the next edition on the official site before making travel plans.",
     "website": "https://rehobothbeachleather.com/",
     "logo": "/images/rehoboth-beach-leather-weekend-2025.jpg",
     "organizer": "Rehoboth Beach Leather Weekend",
@@ -421,9 +457,9 @@ export const events = [
       "Aqua Bar & Grill Host Venue"
     ],
     "seo": {
-      "title": "Rehoboth Beach Leather Weekend 2025 - Rehoboth Beach DE | East Coast Kink Events",
-      "description": "Rehoboth Beach Leather Weekend 2025 (Oct 3-5) features socials, a harness dance, and the Rehoboth Leather contest weekend at Aqua Bar & Grill.",
-      "keywords": "Rehoboth Beach Leather Weekend 2025, Rehoboth Beach DE, Aqua Bar & Grill, leather weekend, harness dance, Rehoboth Leather contest"
+      "title": "Rehoboth Beach Leather Weekend - Rehoboth Beach DE | East Coast Kink Events",
+      "description": "Rehoboth Beach Leather Weekend at Aqua Bar & Grill—socials, harness dance, and Rehoboth Leather contest. Confirm upcoming dates on the official site.",
+      "keywords": "Rehoboth Beach Leather Weekend, Rehoboth Beach DE, Aqua Bar & Grill, leather weekend, harness dance, Rehoboth Leather contest"
     }
   },
   {
@@ -473,24 +509,30 @@ export const events = [
       "display": "May 15-17, 2026"
     },
     "location": {
-      "city": "Fire Island",
+      "city": "Cherry Grove",
       "state": "NY",
       "region": "Northeastern, New York"
     },
     "category": "Weekend Event",
     "excerpt": "Fire Island Leather Weekend 2026 is a premier NYC-area leather weekend hosted by Excelsior MC on Fire Island, supporting LGBTQ+ nonprofits with parties, socials, and community events.",
-    "longDescription": "Fire Island Leather Weekend 2026 runs May 15-17, 2026 on Fire Island, NY. Hosted by Excelsior MC, this premier leather weekend features parties and community events that support LGBTQ+ nonprofits on Fire Island.\n\n**Theme:** AREA 51: Deep Probe Ahead.\n\n**Tickets:** Early Bird tickets available through January 31, 2026.",
+    "longDescription": "Fire Island Leather Weekend 2026 runs May 15-17, 2026 in Cherry Grove, Fire Island, NY. Hosted by Excelsior MC (50th Anniversary), this premier leather weekend features parties and community events that support LGBTQ+ nonprofits on Fire Island.\n\n**Theme:** Lust for Life AREA 51: Deep Probe Ahead. The Run Pass includes meals, cocktail parties, events, and a commemorative run pin ($210–$230). Early Bird tickets through January 31, 2026.\n\n**Host Hotel:** Belvedere Guest House. Additional lodging at Cherry Grove Inn or house rentals.\n\n**Mr. Fire Island Leather Contest:** Saturday, May 16, at Arts Project of Cherry Grove (free for Run participants). Application deadline May 8, 2026.\n\n**Charity Beneficiaries:** New Alternatives (LGBTQ+ homeless youth), Arts Project of Cherry Grove, Fire Island Artist Residency.",
     "website": "https://www.excelsiormc.com/fire-island-leather-weekend",
     "logo": "/images/fire-island-leather-weekend-2026.png",
     "organizer": "Excelsior MC",
-    "venue": "Fire Island, NY",
+    "venue": "Cherry Grove, Fire Island",
+    "hotel": "Belvedere Guest House, Cherry Grove",
     "features": [
       "Premier NYC-Area Leather Weekend",
       "Hosted by Excelsior MC",
       "Supports Fire Island LGBTQ+ Nonprofits",
       "Weekend Parties and Socials",
       "Theme: AREA 51: Deep Probe Ahead",
-      "Early Bird Tickets Through Jan 31, 2026"
+      "Early Bird Tickets Through Jan 31, 2026",
+      "Cherry Grove, Fire Island",
+      "Belvedere Guest House",
+      "Lust for Life Run Pass",
+      "Mr. Fire Island Leather Contest",
+      "Charity Beneficiaries (New Alternatives, Arts Project, FIAR)"
     ],
     "seo": {
       "title": "Fire Island Leather Weekend 2026 - Excelsior MC | East Coast Kink Events",
@@ -579,12 +621,12 @@ export const events = [
     },
     "category": "Conference",
     "excerpt": "Elevation Rope is a premier rope bondage conference held annually in the Southeast United States, offering an immersive educational experience set against the scenic backdrop of the Blue Ridge Mountains in Western North Carolina. The event is hosted at Deerfields Retreat in Horse Shoe, NC, and spans five nights and four days, combining intensive rope education with themed evenings, performances, and play parties.",
-    "longDescription": "Elevation Rope is a premier rope bondage conference held annually in the Southeast United States, offering an immersive educational experience set against the scenic backdrop of the Blue Ridge Mountains in Western North Carolina. The event is hosted at Deerfields Retreat in Horse Shoe, NC, and spans five nights and four days, combining intensive rope education with themed evenings, performances, and play parties.\n\n**Event Highlights:**\n\n**Comprehensive Education** - Classes range from beginner to masterclass levels, covering various aspects of rope bondage, shibari, and kink. Learn from experienced instructors in an immersive environment that blends education with recreation.\n\n**Immersive Environment** - The retreat offers a unique adult summer camp experience, combining intensive learning with outdoor recreation and community building in a stunning natural setting.\n\n**Evening Activities** - Participants can enjoy themed nights, evocative performances, and play parties that create a vibrant and inclusive community atmosphere.\n\n**Outdoor Recreation** - Opportunities to explore the private lake, hike backcountry trails, and connect with nature on the 940-acre retreat property.\n\n**Venue Highlights:**\n\n**Scenic Setting** - Situated on a 940-acre retreat bordering national forest, providing a tranquil and picturesque environment perfect for learning and relaxation.\n\n**Private Facilities** - Access to a private lake and numerous hiking trails for outdoor activities and recreation between educational sessions.\n\n**Registration & Tickets:**\n\n**Registration Opens** - January 2026\n\n**Ticket Information** - Details on ticket pricing and packages will be available upon registration opening. Early registration is recommended as this intimate event has limited capacity.\n\n**Core Values & Community Guidelines:**\n\n**Inclusivity** - Elevation Rope is dedicated to fostering a safe, inclusive, and respectful environment for all participants regardless of experience level or background.\n\n**Consent Culture** - Emphasis on clear communication and mutual respect in all interactions, creating a foundation of trust and safety for all attendees.\n\n**Community Engagement** - Encouragement of active participation and connection among attendees, fostering lasting relationships within the rope community.\n\n**Stay Connected:**\n\n**Mailing List** - Join the Elevation Rope mailing list for updates and announcements about registration, instructors, and event details.\n\n**Contact** - For inquiries, reach out through the contact page on the official website.\n\nWhether you're new to rope bondage or looking to elevate your skills to the next level, Elevation Rope offers an unparalleled educational experience in one of the most beautiful settings in the Southeast. Join us for five days of intensive learning, community building, and personal growth in the heart of the Blue Ridge Mountains.",
+    "longDescription": "Elevation Rope is a premier rope bondage conference held annually in the Southeast United States, offering an immersive educational experience set against the scenic backdrop of the Blue Ridge Mountains in Western North Carolina. The event is hosted at Deerfields Retreat in Horse Shoe, NC, and spans five nights and four days (optional early arrival July 16; main conference July 17–21), combining intensive rope education with themed evenings, performances, and play parties. Registration opens February 6, 2026.\n\n**Event Highlights:**\n\n**Comprehensive Education** - Classes range from beginner to masterclass levels, covering various aspects of rope bondage, shibari, and kink. Learn from experienced instructors in an immersive environment that blends education with recreation.\n\n**Immersive Environment** - The retreat offers a unique adult summer camp experience, combining intensive learning with outdoor recreation and community building in a stunning natural setting.\n\n**Evening Activities** - Participants can enjoy themed nights, evocative performances, and play parties that create a vibrant and inclusive community atmosphere.\n\n**Outdoor Recreation** - Opportunities to explore the private lake, hike backcountry trails, and connect with nature on the 940-acre retreat property.\n\n**Venue Highlights:**\n\n**Scenic Setting** - Situated on a 940-acre retreat bordering national forest, providing a tranquil and picturesque environment perfect for learning and relaxation.\n\n**Private Facilities** - Access to a private lake and numerous hiking trails for outdoor activities and recreation between educational sessions.\n\n**Registration & Tickets:**\n\n**Registration Opens** - February 6, 2026\n\n**Ticket Information** - Details on ticket pricing and packages will be available upon registration opening. Early registration is recommended as this intimate event has limited capacity.\n\n**Core Values & Community Guidelines:**\n\n**Inclusivity** - Elevation Rope is dedicated to fostering a safe, inclusive, and respectful environment for all participants regardless of experience level or background.\n\n**Consent Culture** - Emphasis on clear communication and mutual respect in all interactions, creating a foundation of trust and safety for all attendees.\n\n**Community Engagement** - Encouragement of active participation and connection among attendees, fostering lasting relationships within the rope community.\n\n**Stay Connected:**\n\n**Mailing List** - Join the Elevation Rope mailing list for updates and announcements about registration, instructors, and event details.\n\n**Contact** - For inquiries, reach out through the contact page on the official website.\n\nWhether you're new to rope bondage or looking to elevate your skills to the next level, Elevation Rope offers an unparalleled educational experience in one of the most beautiful settings in the Southeast. Join us for five days of intensive learning, community building, and personal growth in the heart of the Blue Ridge Mountains.",
     "website": "https://www.elevationrope.com/",
     "organizer": "Elevation Rope",
     "venue": "Deerfields Retreat, Horse Shoe, NC",
     "ageRequirement": "18+",
-    "registrationOpens": "January 2026",
+    "registrationOpens": "February 6, 2026",
     "logo": "/images/elevation-rope-logo.jpg",
     "features": [
       "Comprehensive Rope Education (Beginner to Masterclass)",
@@ -601,6 +643,8 @@ export const events = [
       "Consent Culture Emphasis",
       "Adult Summer Camp Experience",
       "Limited Capacity Event",
+      "Registration Opens Feb 6, 2026",
+      "Optional Early Arrival July 16",
       "National Forest Access",
       "Backcountry Trail System",
       "Educational Workshops",
@@ -618,24 +662,24 @@ export const events = [
     "name": "Kink Down South Weekend 2026",
     "slug": "kink-down-south-weekend",
     "date": {
-      "start": "2026-08-07",
-      "end": "2026-08-09",
-      "display": "Dates TBA - August 2026 (Expected)"
+      "start": "2026-08-14",
+      "end": "2026-08-16",
+      "display": "Aug 14-16, 2026"
     },
-    "status": "tba",
     "location": {
       "city": "Atlanta",
       "state": "GA",
       "region": "Southeastern, Georgia"
     },
+    "venue": "535 Means Street NW (~30,000 sq. ft. industrial space), Atlanta",
     "category": "Outdoor Event",
-    "excerpt": "Kink Down South Weekend is the South's only large-scale outdoor kink festival, bringing together fetish enthusiasts for a weekend of liberation, exploration, and community. Inspired by legendary events like Folsom Street Fair, this transformative experience features classes, demos, live performances, DJ sets, and socials in a massive 20,000 sq. ft. industrial space. NOTE: 2026 dates not yet officially announced by organizer - check website for updates.",
-    "longDescription": "Inspired by legendary events like Folsom Street Fair, Off Sunset Festival, and Darklands, Kink Down South Weekend is the South's only large-scale outdoor kink festival, bringing together fetish enthusiasts for a weekend of liberation, exploration, and community.\n\n**IMPORTANT: 2026 dates have not been officially announced yet. The dates shown are based on previous year patterns. Please check the official website for confirmed 2026 dates and registration information.**\n\nKink Down South Weekend is more than an event—it's a declaration of resilience, visibility, and unapologetic joy. This is where we elevate our community, turning our heroes into legends and our culture into a movement. This is where we reclaim our space, not just to exist—but to thrive, to play, and to own our freedom.\n\nFreedom in Fetish isn't just a theme—it's our mission.\n\nExpect classes and demos, a massive 20,000 sq. ft. industrial venue in Midtown, masterclass workshops, kink-forward vendors, live performances, DJ sets, socials, and more. Whether you're here to learn, shop, cruise, or connect, the main festival is your playground for pleasure, exploration, and community. Come curious—leave electrified.",
-    "website": "https://kinkdownsouth.com/",
+    "excerpt": "Kink Down South Weekend is the South's large-scale kink festival in Atlanta: Aug 14–16, 2026. Classes, demos, live performances, DJ sets, and socials in a massive industrial venue—see kinkdownsouth.com/weekend/ for details.",
+    "longDescription": "Inspired by legendary events like Folsom Street Fair, Off Sunset Festival, and Darklands, Kink Down South Weekend brings fetish enthusiasts together for a weekend of liberation, exploration, and community in Atlanta, GA.\n\n**2026 festival:** Aug 14–16, 2026 (per the official /weekend/ page). Expect classes and demos, a large industrial venue on Means Street, masterclass workshops, kink-forward vendors, live performances, DJ sets, socials, and more. Whether you're here to learn, shop, cruise, or connect, the main festival is your playground for pleasure, exploration, and community.\n\nFreedom in Fetish isn't just a theme—it's our mission.",
+    "website": "https://kinkdownsouth.com/weekend/",
     "logo": "https://www.kinkdownsouth.com/wp-content/uploads/2025/03/KDS-hero_16x9-1536x864.jpg",
     "features": [
       "Large-Scale Outdoor Kink Festival",
-      "20,000 sq. ft. Industrial Venue",
+      "Large Industrial Venue (Means St., Atlanta)",
       "Classes and Demos at Host Hotel",
       "Live Performances and DJ Sets",
       "Kink-Forward Vendor Marketplace",
@@ -654,10 +698,11 @@ export const events = [
   {
     "name": "The Summer Michigan Rope Conference SMIRC",
     "slug": "summer-michigan-rope-conference-smirc",
+    "status": "tba",
     "date": {
-      "start": "2025-08-15",
-      "end": "2025-08-17",
-      "display": "Aug 15-17, 2025"
+      "start": "2026-08-14",
+      "end": "2026-08-16",
+      "display": "2026 dates TBA (check smirc.net)"
     },
     "location": {
       "city": "Troy",
@@ -665,7 +710,7 @@ export const events = [
       "region": "Southeast, Michigan"
     },
     "category": "Indoor Event",
-    "excerpt": "The Summer Michigan Rope Conference (SMIRC) takes place from Aug 15-17, 2025, at the Wingate Hotel in Troy, MI. This premier event features top presenters from the US and Canada, offering a weekend of intensive rope education in a welcoming and supportive environment. Pack your rope, a snazzy outfit for the Saturday night play party, and an open mind for an unforgettable weekend in the Great Lakes state. Attendees can enjoy hands-on practice sessions, community connection opportunities, and a variety of classes designed to enhance rope skills and knowledge. Limited tickets ensure a personal experience, so early registration is advised. Join for a weekend of learning, laughter, and engagement at this transformative rope education event.",
+    "excerpt": "The Summer Michigan Rope Conference (SMIRC) is Troy, MI’s weekend of intensive rope education with top presenters. The public site last highlighted SMIRC 2025; check smirc.net for the next announced dates and venue.",
     "longDescription": "Join Us for 2 Days of Classes and Fun at the Summer Michigan Rope Conference! Pack your rope, a snazzy outfit for the Saturday night play party, and an open mind for an unforgettable weekend in the Great Lakes state.\n\nWhat to Expect:\n\nClasses and Workshops: Attend a variety of classes designed to enhance your rope skills and knowledge.\n\nHands-On Practice: Try out new techniques on your own and refine your craft.\n\nCommunity Connection: Meet new people and explore together in a welcoming and supportive environment.\n\nDon't Miss Out: Tickets will sell out fast, so secure yours before it's too late!\n\nEmbrace the adventure and join us for an exciting weekend of learning and play at the Summer Michigan Rope Conference.",
     "website": "https://www.smirc.net/",
     "logo": "/images/smirc.jpg",
@@ -696,8 +741,8 @@ export const events = [
       "region": "NorthEastern, Maryland"
     },
     "category": "Outdoor Event",
-    "excerpt": "Join Dark Odyssey's Summer Camp from Sep 1-7, 20262025to Sep 1-7, 2026, in Northern Maryland. This seven-day transformative event blends kink and BDSM with spiritual exploration, offering workshops, massive play spaces, and special events in a unique, inclusive environment. Enjoy a vibrant community atmosphere with diverse accommodations, meal plans, and a welcoming mix of kinksters, queers, and swingers. Create your own erotic vacation where you can learn, play, and connect with like-minded individuals. Experience this week-long journey of self-discovery and community building in a safe, supportive space designed for exploration and growth.",
-    "longDescription": "Experience Dark Odyssey's Summer Camp from Sep 1-7, 20262025to Sep 1-7, 2026, in Northern Maryland. This week-long event blends kink and BDSM with spiritual exploration, offering workshops, massive play spaces, and special events. Enjoy a vibrant community atmosphere with diverse accommodations, meal plans, and a welcoming mix of kinksters, queers, and swingers. Create your own erotic vacation in a unique, inclusive environment where you can learn, play, and connect with like-minded individuals. Don't miss out on this transformative experience!",
+    "excerpt": "Join Dark Odyssey's Summer Camp from Sep 1-7, 2026, in Northern Maryland. This seven-day transformative event blends kink and BDSM with spiritual exploration, offering workshops, massive play spaces, and special events in a unique, inclusive environment. Enjoy a vibrant community atmosphere with diverse accommodations, meal plans, and a welcoming mix of kinksters, queers, and swingers. Create your own erotic vacation where you can learn, play, and connect with like-minded individuals. Experience this week-long journey of self-discovery and community building in a safe, supportive space designed for exploration and growth.",
+    "longDescription": "Experience Dark Odyssey's Summer Camp from Sep 1-7, 2026, in Northern Maryland. This week-long event blends kink and BDSM with spiritual exploration, offering workshops, massive play spaces, and special events. Enjoy a vibrant community atmosphere with diverse accommodations, meal plans, and a welcoming mix of kinksters, queers, and swingers. Create your own erotic vacation in a unique, inclusive environment where you can learn, play, and connect with like-minded individuals. Don't miss out on this transformative experience!",
     "website": "https://darkodyssey.com/summerfest/",
     "logo": "/images/darkodyssey.png",
     "features": [
@@ -730,17 +775,23 @@ export const events = [
       "region": "Central, District of Columbia"
     },
     "category": "Indoor Event",
+    "organizer": "MTTA Inc. (501(c)(3) educational nonprofit)",
+    "registrationOpens": "March 1, 2026",
     "excerpt": "Join us for an unforgettable kink and BDSM event at the Master slave Conference! Dive into 120 educational opportunities, including classes, panels, and intensives. Enjoy plenary events like the Meet & Greet Reception, Keynote Speaker, and Master/slave Contest. Explore exhibits from the Leather Library and Archives, shop at the Fetish Marketplace, and enjoy entertainment from cigar parties to dance shows. Connect in the Reconnecting Lounge or seek spiritual support in the Sanctuary. Secure your tickets now for this enriching experience!",
-    "longDescription": "Join us for an unforgettable kink and BDSM event at the Master slave Conference! Dive into 120 educational opportunities, including classes, panels, and intensives. Enjoy plenary events like the Meet & Greet Reception, Keynote Speaker, and Master/slave Contest. Explore exhibits from the Leather Library and Archives, shop at the Fetish Marketplace, and enjoy entertainment from cigar parties to dance shows. Connect in the Reconnecting Lounge or seek spiritual support in the Sanctuary. Secure your tickets now for this enriching experience!\n\nExperience the pinnacle of authority-based relationship education at the Master/slave Conference, where knowledge meets community in the heart of Washington, DC. Our comprehensive program offers an unparalleled opportunity to dive deep into the complexities of Master/slave dynamics through 120 carefully curated educational opportunities. From foundational classes for beginners to advanced intensives for experienced practitioners, every session is designed to expand your understanding and enhance your relationships.\n\nImmerse yourself in our diverse programming that spans the full spectrum of authority-based relationships. Attend thought-provoking panels led by community leaders and experts, participate in hands-on intensives that allow for deep exploration of specific topics, and engage in meaningful discussions that challenge your perspectives and expand your knowledge. Our educational offerings cover everything from basic concepts to advanced techniques, ensuring there's something valuable for everyone regardless of experience level.\n\nCelebrate excellence at our signature Master/slave Contest, where couples from across the community showcase their relationships and compete for recognition. This prestigious event highlights the beauty and complexity of authority-based relationships while providing inspiration and guidance for others on similar paths. Witness the dedication, communication, and mutual respect that define successful Master/slave dynamics.\n\nExplore our rich heritage through the Leather Library and Archives exhibits, where you can connect with the history and traditions that have shaped our community. Browse the extensive collection of literature, artifacts, and memorabilia that tell the story of our movement and its evolution over time. This living history serves as both education and inspiration for future generations.\n\nIndulge your desires at the Fetish Marketplace, where you'll find an extensive selection of toys, clothing, equipment, and accessories from the best vendors in the community. Whether you're shopping for practical items or indulging in luxury purchases, our marketplace offers something for every taste and budget. Connect with vendors who understand your needs and can provide expert guidance on their products.\n\nFind your perfect balance of social connection and spiritual support throughout the weekend. The Reconnecting Lounge provides a comfortable space to network, share experiences, and build lasting friendships with like-minded individuals. For those seeking spiritual nourishment, our Sanctuary offers a peaceful retreat for reflection, meditation, and spiritual support in a judgment-free environment.\n\nEntertainment options abound, from sophisticated cigar parties that encourage networking and conversation to high-energy dance shows that celebrate the joy and passion of our community. Every evening brings new opportunities to socialize, relax, and enjoy the vibrant atmosphere that makes the Master/slave Conference so special.\n\nJoin us for five days of education, celebration, and community building in the nation's capital. Whether you're exploring authority-based relationships for the first time or you're a seasoned practitioner, the Master/slave Conference offers an enriching experience that will enhance your journey and strengthen your connections within our community.",
+    "longDescription": "Rooted in Tradition—the Master/slave Conference MsC is the largest gathering of Masters and slaves. Produced by MTTA Inc., a 501(c)(3) educational nonprofit. Registration opens March 1st. The 2026 program features 60 workshops, 6 intensives, 12 panels, 12 roundtables, 12 conversations, and 12 service stations, plus 15+ special events including the Reconnecting Dinner, Formal Leather Banquet, Our Traditions Live! & Awards, and the Northeast Master/slave Contest.\n\nJoin us for an unforgettable kink and BDSM event at the Master slave Conference! Dive into 120 educational opportunities, including classes, panels, and intensives. Enjoy plenary events like the Meet & Greet Reception, Keynote Speaker, and Master/slave Contest. Explore exhibits from the Leather Library and Archives, shop at the Fetish Marketplace, and enjoy entertainment from cigar parties to dance shows. Connect in the Reconnecting Lounge or seek spiritual support in the Sanctuary. Secure your tickets now for this enriching experience!\n\nExperience the pinnacle of authority-based relationship education at the Master/slave Conference, where knowledge meets community in the heart of Washington, DC. Our comprehensive program offers an unparalleled opportunity to dive deep into the complexities of Master/slave dynamics through 120 carefully curated educational opportunities. From foundational classes for beginners to advanced intensives for experienced practitioners, every session is designed to expand your understanding and enhance your relationships.\n\nImmerse yourself in our diverse programming that spans the full spectrum of authority-based relationships. Attend thought-provoking panels led by community leaders and experts, participate in hands-on intensives that allow for deep exploration of specific topics, and engage in meaningful discussions that challenge your perspectives and expand your knowledge. Our educational offerings cover everything from basic concepts to advanced techniques, ensuring there's something valuable for everyone regardless of experience level.\n\nCelebrate excellence at our signature Master/slave Contest, where couples from across the community showcase their relationships and compete for recognition. This prestigious event highlights the beauty and complexity of authority-based relationships while providing inspiration and guidance for others on similar paths. Witness the dedication, communication, and mutual respect that define successful Master/slave dynamics.\n\nExplore our rich heritage through the Leather Library and Archives exhibits, where you can connect with the history and traditions that have shaped our community. Browse the extensive collection of literature, artifacts, and memorabilia that tell the story of our movement and its evolution over time. This living history serves as both education and inspiration for future generations.\n\nIndulge your desires at the Fetish Marketplace, where you'll find an extensive selection of toys, clothing, equipment, and accessories from the best vendors in the community. Whether you're shopping for practical items or indulging in luxury purchases, our marketplace offers something for every taste and budget. Connect with vendors who understand your needs and can provide expert guidance on their products.\n\nFind your perfect balance of social connection and spiritual support throughout the weekend. The Reconnecting Lounge provides a comfortable space to network, share experiences, and build lasting friendships with like-minded individuals. For those seeking spiritual nourishment, our Sanctuary offers a peaceful retreat for reflection, meditation, and spiritual support in a judgment-free environment.\n\nEntertainment options abound, from sophisticated cigar parties that encourage networking and conversation to high-energy dance shows that celebrate the joy and passion of our community. Every evening brings new opportunities to socialize, relax, and enjoy the vibrant atmosphere that makes the Master/slave Conference so special.\n\nJoin us for five days of education, celebration, and community building in the nation's capital. Whether you're exploring authority-based relationships for the first time or you're a seasoned practitioner, the Master/slave Conference offers an enriching experience that will enhance your journey and strengthen your connections within our community.",
     "website": "https://masterslaveconference.org/",
     "logo": "/images/masterslaveconference.jpg",
     "features": [
       "120 Educational Opportunities",
-      "Classes, Panels & Intensives",
-      "Master/slave Contest",
+      "Registration Opens March 1st",
+      "MTTA Inc. (501(c)(3) Nonprofit)",
+      "60 Workshops, 6 Intensives, 12 Panels",
+      "Northeast Master/slave Contest",
+      "Formal Leather Banquet",
+      "Reconnecting Dinner",
+      "Titleholders Buffet Dinner",
       "Leather Library & Archives",
       "Fetish Marketplace",
-      "Plenary Events",
       "Meet & Greet Reception",
       "Keynote Speaker",
       "Reconnecting Lounge",
@@ -753,17 +804,18 @@ export const events = [
     ],
     "seo": {
       "title": "The Master/slave Conference MsC - Washington DC BDSM Education | East Coast Kink Events",
-      "description": "Join the Master/slave Conference MsC in Washington, DC from Aug 28-Sep 1, 2025. Experience 120 educational opportunities, the Master/slave Contest, Leather Library exhibits, and more.",
-      "keywords": "Master slave conference, MsC, Washington DC, BDSM education, authority-based relationships, Master/slave Contest, Fetish Marketplace, Leather Library"
+      "description": "Join the Master/slave Conference MsC in Washington, DC from Sep 3-7, 2026 (Labor Day Weekend). Experience 120 educational opportunities, the Northeast Master/slave Contest, Leather Library exhibits, and more.",
+      "keywords": "Master slave conference, MsC, Washington DC, BDSM education, authority-based relationships, Northeast Master slave Contest, Fetish Marketplace, Leather Library, MTTA, Labor Day"
     }
   },
   {
     "name": "CrucibleCon",
     "slug": "cruciblecon",
+    "status": "tba",
     "date": {
-      "start": "2025-09-19",
-      "end": "2025-09-21",
-      "display": "Sep 19-21, 2025"
+      "start": "2026-09-18",
+      "end": "2026-09-20",
+      "display": "2026 dates TBA (typically September, Northern NJ)"
     },
     "location": {
       "city": "Northern New Jersey",
@@ -771,8 +823,8 @@ export const events = [
       "region": "Northern, New Jersey"
     },
     "category": "Indoor Event",
-    "excerpt": "CrucibleCon is a 3-day hotel conference featuring top educators, a renowned playspace, engaging meet & greets, an exceptional vendor market, and a beloved game room experience.",
-    "longDescription": "Experience a weekend with some of the most respected names in the community. Enjoy top-notch educational workshops, explore your desires in Crucible's incredible playspace, network at meet & greets, shop from exceptional vendors, and relax with a dedicated game room managed by Heliosphere. A memorable weekend of learning, exploration, and community.",
+    "excerpt": "CrucibleCon is a 3-day hotel conference in Northern New Jersey featuring top educators, a renowned playspace, meet & greets, vendor market, and game room. Official site: 2026 dates to be announced.",
+    "longDescription": "Experience a weekend with some of the most respected names in the community. Enjoy top-notch educational workshops, explore your desires in Crucible's incredible playspace, network at meet & greets, shop from exceptional vendors, and relax with a dedicated game room managed by Heliosphere. The organizers have announced that 2026 information is coming—check cruciblecon.com for the next edition.",
     "website": "https://www.cruciblecon.com/",
     "logo": "/images/campcrucible.png",
     "features": [
@@ -784,7 +836,7 @@ export const events = [
     ],
     "seo": {
       "title": "CrucibleCon - New Jersey BDSM Conference | East Coast Kink Events",
-      "description": "CrucibleCon delivers a 3-day hotel conference with workshops, a dedicated playspace, vendor market, meet & greets, and a game room in Northern New Jersey.",
+      "description": "CrucibleCon—3-day hotel conference in Northern NJ with workshops, playspace, vendor market, meet & greets, and game room. Next dates TBA on cruciblecon.com.",
       "keywords": "CrucibleCon, New Jersey, BDSM conference, workshops, playspace, vendor market"
     }
   },
@@ -918,11 +970,10 @@ export const events = [
     "name": "Exploration Into Kink (EiK) 2026",
     "slug": "exploration-into-kink",
     "date": {
-      "start": "2026-11-13",
-      "end": "2026-11-15",
-      "display": "Dates TBA - November 2026 (Expected)"
+      "start": "2026-11-06",
+      "end": "2026-11-08",
+      "display": "Nov 6-8, 2026"
     },
-    "status": "tba",
     "location": {
       "city": "St Louis Metro Area",
       "state": "MO",
@@ -933,8 +984,8 @@ export const events = [
     "contact": {
       "email": "papabearexploration@outlook.com"
     },
-    "excerpt": "Hotel takeover weekend in the St Louis metro area featuring 30+ educational classes, vendor bazaar, BeBe's cigar social (benefits NCSF), Exploration Emporium, clothing-optional indoor pool, 3 dungeons, play parties, midnight buffets. November 2026—dates TBA pending hotel contract.",
-    "longDescription": "Welcome Explorers! Join us in November 2026 for a hotel takeover weekend in the St Louis metro area. Dates are pending hotel negotiations and contracts. Check the official website for updates.\n\nMeet and socialize with kinksters while immersing yourself for an entire weekend of exploration and education. From the moment you pass through the registration curtains till checkout—the hotel is ours. Hosted by Papa Bear Exploration.\n\nDuring Exploration Into Kink, or EiK, enjoy 30+ outstanding educational classes, the vendor bazaar, BeBe's cigar social (benefiting NCSF), charity auction, Exploration Emporium, clothing-optional indoor swimming pool, play parties across 3 dungeons (7500+ sq ft total), Friday and Saturday midnight buffets, and more. Our goal is to build and grow the kink community through a weekend focused on consent, diversity, education, exploration, inclusivity, and integrity.",
+    "excerpt": "Hotel takeover weekend in the St Louis metro area Nov 6–8, 2026 featuring 30+ educational classes, vendor bazaar, BeBe's cigar social (benefits NCSF), Exploration Emporium, clothing-optional indoor pool, 3 dungeons, play parties, and midnight buffets.",
+    "longDescription": "Welcome Explorers! Join us Nov 6–8, 2026 for a hotel takeover weekend in the St Louis metro area (per the official EiK site; final hotel details may still be updated).\n\nMeet and socialize with kinksters while immersing yourself for an entire weekend of exploration and education. From the moment you pass through the registration curtains till checkout—the hotel is ours. Hosted by Papa Bear Exploration.\n\nDuring Exploration Into Kink, or EiK, enjoy 30+ outstanding educational classes, the vendor bazaar, BeBe's cigar social (benefiting NCSF), charity auction, Exploration Emporium, clothing-optional indoor swimming pool, play parties across 3 dungeons (7500+ sq ft total), Friday and Saturday midnight buffets, and more. Our goal is to build and grow the kink community through a weekend focused on consent, diversity, education, exploration, inclusivity, and integrity.",
     "website": "https://www.explorationintokink.com/",
     "logo": "/images/eik.jpg",
     "features": [
@@ -955,17 +1006,17 @@ export const events = [
     ],
     "seo": {
       "title": "Exploration Into Kink (EiK) 2026 - St Louis Metro Hotel Takeover | East Coast Kink Events",
-      "description": "EiK 2026 hotel takeover in St Louis metro. Papa Bear Exploration presents 30+ classes, vendor bazaar, cigar social, 3 dungeons, play parties, midnight buffets. Dates TBA November 2026.",
-      "keywords": "Exploration Into Kink, EiK 2026, Papa Bear Exploration, St Louis metro, Missouri, BDSM education, hotel takeover, vendor bazaar, play parties, November 2026"
+      "description": "EiK 2026 hotel takeover in St Louis metro Nov 6-8. Papa Bear Exploration presents 30+ classes, vendor bazaar, cigar social, 3 dungeons, play parties, midnight buffets.",
+      "keywords": "Exploration Into Kink, EiK 2026, Papa Bear Exploration, St Louis metro, Missouri, BDSM education, hotel takeover, vendor bazaar, play parties, November 2026, Nov 6-8"
     }
   },
   {
     "name": "Coastal Carolina Fetish Fair 2026",
     "slug": "coastal-carolina-fetish-fair",
     "date": {
-      "start": "2026-11-19",
-      "end": "2026-11-24",
-      "display": "Dates TBA - November 2026 (Expected)"
+      "start": "2026-11-01",
+      "end": "2026-11-30",
+      "display": "Dates TBA - November 2026 (check organizer site)"
     },
     "status": "tba",
     "location": {
@@ -974,11 +1025,10 @@ export const events = [
       "region": "North Eastern, South Carolina"
     },
     "category": "Indoor Event",
-    "excerpt": "ECKE recommends Coastal Carolina Fetish Fair for Myrtle Beach–bound kinksters who want to shop top toymakers, meet BDSM vendors, and attend workshops in one weekend. The Ellie Beach Resort hosts with room blocks. 2026 dates not yet officially announced—check the organizer's site for updates.",
-    "longDescription": "Have a blast with other kinksters while exploring a curated vendor fair with the best toymakers, BDSM vendors, and specialty service providers. Enjoy education, friends, and fun across a weekend designed for discovering lifestyle products and meeting favorite craftsmen and presenters.\n\n**IMPORTANT: 2026 dates have not been officially announced yet. The dates shown are based on previous year patterns. Please check the official website for confirmed 2026 dates and registration information.**",
+    "excerpt": "ECKE recommends Coastal Carolina Fetish Fair for Myrtle Beach–bound kinksters who want to shop top toymakers, meet BDSM vendors, and attend workshops in one weekend. Public marketing has not yet published confirmed 2026 dates—check coastalcarolinafetishfair.com.",
+    "longDescription": "Have a blast with other kinksters while exploring a curated vendor fair with the best toymakers, BDSM vendors, and specialty service providers. Enjoy education, friends, and fun across a weekend designed for discovering lifestyle products and meeting favorite craftsmen and presenters.\n\n**IMPORTANT: 2026 dates have not been officially published on the public site as of our last review. Placeholder month window only; confirm dates and hotel on the organizer's website before booking.**",
     "website": "https://coastalcarolinafetishfair.com/",
-    "hotel": "The Ellie Beach Resort Myrtle Beach, Tapestry by Hilton",
-    "bookingDeadline": "October 20, 2025",
+    "hotel": "Typically The Ellie Beach Resort Myrtle Beach, Tapestry by Hilton (confirm year with organizer)",
     "logo": "/images/CoastalCarolina.PNG",
     "features": [
       "Vendor-Focused Weekend",
@@ -1001,12 +1051,12 @@ export const events = [
     }
   },
   {
-    "name": "Naughty Noel",
+    "name": "Naughty Noel 2026",
     "slug": "naughty-noel",
     "date": {
-      "start": "2025-12-03",
-      "end": "2025-12-06",
-      "display": "Dec 3-6, 2025"
+      "start": "2026-12-03",
+      "end": "2026-12-06",
+      "display": "Dec 3-6, 2026"
     },
     "location": {
       "city": "Gettysburg",
@@ -1016,7 +1066,7 @@ export const events = [
     "category": "Indoor Event",
     "excerpt": "Naughty Noel is a winter kink conference featuring a private two-hotel takeover in Gettysburg, PA with education, playspaces, festive parties, and holiday shopping.",
     "longDescription": "Naughty Noel is a winter kink conference organized by Studio 58 Events, held the first weekend in December each year (Thursday to Sunday) with registration opening July 1st. This private two-hotel takeover in Gettysburg, PA offers optional add-on nights from Tuesday through Sunday.\n\nOur Naughty Noel Annual Event keeps getting better each year! Spend four days exploring your own personal development and relationship practices. Our event is designed for adults who want to enjoy meaningful connections among alternative lifestyle and LGBTQIA+ folks in a friendly, inclusive atmosphere.\n\nMake new friends; nurture your existing friendships; renew your connections with your partner(s); learn new skills; and enjoy festive activities. Naughty Noel will offer excellent education; festive socializing parties; playspaces; holiday shopping and product demonstrations; indoor pool; and the unforgettable opportunity to mingle with like-minded adults.\n\nNaughty Noel begins on Thursday and concludes on Sunday. Socializing, access to indoor pool, and a pre-event munch will begin Wednesday; programming will begin Thursday at noon and conclude Sunday at 1PM. A significant portion of attendees arrive on Wednesday or Thursday, with some folks arriving Friday for the weekend.",
-    "website": "https://studio58events.com/naughty-noel-2026/",
+    "website": "https://studio58events.com/studio-58-event-schedule/",
     "organizer": "Studio 58 Events",
     "registrationOpens": "July 1st each year",
     "hotel": "Private Two-Hotel Takeover in Gettysburg, PA",
@@ -1165,10 +1215,13 @@ export const events = [
     },
     "category": "Indoor Event",
     "excerpt": "Studio 58’s intimate Pittsburgh hotel event with kink classes, themed nights, vendors, and skyline views.",
-    "longDescription": "Naughty N’at is Studio 58’s first hotel event in Pittsburgh, PA. This smaller, sexier twist on the traditional takeover brings three nights of kink classes, playful adventures, and deliciously naughty activities set against the city skyline.\n\nThe weekend kicks off on Thursday as everyone gets settled in with opening-night fun. Friday is a cozy, themed day of pajamas and lingerie with on-site vendors carrying kinky gear, toys, and accessories. Saturday shifts into full-throttle glamour with a Steampunk Prom experience that runs all day and night.\n\nRegistration includes a 3-Day Standard Weekend Ticket (Thursday 11 AM to Sunday 11 AM). Registration opens February 1, 2026 and attendance is limited to 250 people. Hotel rooms are booked through the event’s reservation system (do not call the hotel directly). Room rates include one registration, breakfast, parking, and all taxes and fees, with add-on nights available.",
+    "longDescription": "Naughty N’at (\"N’at\" is Pittsburghese for \"and that\") is Studio 58’s first hotel event in Pittsburgh, PA. This smaller, sexier twist on the traditional takeover brings three nights of kink classes, playful adventures, and deliciously naughty activities set against the city skyline. Smaller. Sexier. Still wicked.\n\nThe weekend kicks off on Thursday as everyone gets settled in with opening-night fun. Friday is a cozy, themed day of pajamas and lingerie with on-site vendors carrying kinky gear, toys, and accessories. Saturday shifts into full-throttle glamour with a Steampunk Prom experience that runs all day and night—corsets, goggles, gears, and sinful elegance take center stage.\n\n**Rates & Registration:**\n\nRegistration is $139 and includes a 3-Day Standard Weekend Ticket (Thursday 11 AM to Sunday 11 AM). Hotel rooms are booked through the event’s reservation system (do not call the hotel directly). Room rates include one registration, breakfast, parking, and all taxes and fees: King or Queen/Queen rooms $549 (2 nights Fri & Sat), Suites with Studio 58 equipment $649 (2 nights Fri & Sat), add-on nights $190/night. Registration opens February 1, 2026 and attendance is limited to 250 people.",
     "website": "https://studio58events.com/what-is-naughty-nat/",
     "organizer": "Studio 58 Events",
     "hotel": "Pittsburgh, PA Hotel Event",
+    "contact": {
+      "email": "sales@studio58events.com"
+    },
     "logo": "https://studio58events.com/wp-content/uploads/2021/04/FINAL-KINK-Studio-58-1-1024x637.jpg",
     "features": [
       "Pittsburgh, PA Location",
@@ -1185,12 +1238,15 @@ export const events = [
       "Hotel Rooms Include One Registration",
       "Breakfast, Parking, and Taxes Included",
       "Add-On Nights Available",
-      "Studio 58 Events Organized"
+      "Studio 58 Events Organized",
+      "Registration $139",
+      "King/Queen from $549, Suite $649 (2 nights)",
+      "Add-On Nights $190"
     ],
     "seo": {
       "title": "Naughty N'at - Pittsburgh PA Studio 58 Hotel Event | East Coast Kink Events",
       "description": "Studio 58’s intimate Pittsburgh hotel event with kink classes, themed nights, vendors, and skyline views.",
-      "keywords": "Naughty N'at, Pittsburgh, Pennsylvania, Studio 58 Events, hotel event, kink classes, vendors, Steampunk Prom"
+      "keywords": "Naughty N'at, Pittsburgh, Pennsylvania, Studio 58 Events, hotel event, kink classes, vendors, Steampunk Prom, City Lights, registration $139"
     }
   },
   {
@@ -1207,7 +1263,7 @@ export const events = [
       "region": "Central, Ohio"
     },
     "category": "Indoor Event",
-    "excerpt": "CURE 2026—Columbus' Ultimate Relationship Exploration—returns for its second year with a full hotel takeover! This immersive weekend event features alternative lifestyle education, fetish demonstrations, vendor showcases, and community building in a consent-focused, inclusive environment.",
+    "excerpt": "CURE 2026 (Jan 9–11, Columbus area) was KIC’s full-hotel takeover weekend; it has concluded—watch kicevents.com for a possible future CURE or other KIC weekends.",
     "longDescription": "We're thrilled to announce the return of CURE—Columbus' Ultimate Relationship Exploration—for its second year, and this time we're taking things to the next level with a full hotel takeover from the start! This immersive weekend event will take place January 9-11, 2026, at a private hotel location in Northern Columbus. The exact address will be shared with attendees after ticket purchase and registration confirmation.\n\nUnlike our monthly KIC events, this weekend-long experience gives you the chance to stay on-site and fully dive into everything the weekend has to offer. Book a room, attend classes, play, nap, and do it all again—no driving necessary, no leaving the space. It's your chance to explore kink, connection, and community in a fully immersive and supportive environment.\n\nWe're curating a dynamic lineup of presenters from across the country, offering a wide range of classes and workshops. From rope and impact to polyamorous relationships, power exchange, medical play, and safety topics, we're bringing in educators who reflect the diversity and depth of our community's interests.\n\nCURE 2026 will also feature a vendor market filled with kinky goods to explore. Whether you're shopping for rope, paddles, collars, gags, bratty stickers, or that one perfect toy you didn't know you needed, you'll find it here.\n\n**Consent Policy**: Consent is mandatory and defined as enthusiastic, clear-headed, mutual, informed, without manipulation or coercion. We maintain a strict 18+ policy for all content related to consensual adult sexuality.\n\n**Demonstrations & Education**: Experience fire play, electric play, corporal demonstrations, and educational workshops in a safe, supportive environment. Our programming focuses on alternative lifestyle education, community building, and inclusive practices.\n\nMark your calendars for January 9-11, 2026—CURE is back and bigger than ever.",
     "website": "https://kicevents.com/cure",
     "organizer": "KIC Events LLC (Kinky In Columbus)",
@@ -1269,7 +1325,7 @@ export const events = [
       "region": "Baltimore, Maryland"
     },
     "category": "Indoor Event",
-    "excerpt": "Imagine a vacation where you can explore the many facets of sexuality within a private, intimate community of like-minded individuals. Winter Fire offers a unique, immersive experience that brings together sexuality, spirituality, education, and play in a fun, supportive, non-judgmental, and diverse environment where fantasies become reality.",
+    "excerpt": "Dark Odyssey Winter Fire (Feb 13–16, 2026, Baltimore) was sold out on the public site—confirm future Winter Fire years on darkodyssey.com/winterfire/.",
     "longDescription": "Discover Winter Fire: An Unforgettable Journey\n\nImagine a vacation where you can explore the many facets of sexuality within a private, intimate community of like-minded individuals. Winter Fire offers a unique, immersive experience that brings together sexuality, spirituality, education, and play in a fun, supportive, non-judgmental, and diverse environment where fantasies become reality.\n\nBy day, enhance your relationship with expert-led workshops on sexual tips and techniques. Learn how to create, maintain, or reignite the erotic spark. Explore various partnering possibilities, including swinging, open relationships, threesomes, and polyamory. Whether you're brushing up on the basics or seeking hands-on experience in new BDSM skills like bondage, flogging, sensory deprivation, and Dominant/submissive dynamics, Winter Fire has you covered. Delve into spiritual journeys with teachings on Earth-based spirituality, Tantra, and paganism, all presented by top sex educators, relationship experts, BDSM masters, and spiritual teachers.\n\nAt night, be transported to a world where you can freely explore your inner desires in luxuriously equipped dungeons and sensual play spaces. These areas, transformed by our renowned ambiance team, provide the perfect setting for your erotic dreams. Enjoy performances by some of the most talented artists on the East Coast, engage in powerful rituals or Tantric journeys, or simply relax and socialize with old and new friends.\n\nWinter Fire is a weekend-long kinky takeover of a luxury hotel near the Inner Harbor in Baltimore, Maryland. DO's winter hotel event returns to a lovingly restored 1920's era hotel—larger than the usual DC venue—with extra space for workshops, play, and community. Join us this February for an adventure of play, discovery, and learning, where we will achieve ecstatic states of love, awareness, and personal sexuality.",
     "website": "https://darkodyssey.com/winterfire/",
     "logo": "/images/darkodyssey.png",
@@ -1299,18 +1355,18 @@ export const events = [
     "name": "Twisted Tryst",
     "slug": "twisted-tryst",
     "date": {
-      "start": "2026-06-10",
+      "start": "2026-06-11",
       "end": "2026-06-14",
-      "display": "Jun 10-14, 2026"
+      "display": "Jun 11-14, 2026"
     },
     "location": {
-      "city": "Western",
+      "city": "Athens",
       "state": "OH",
-      "region": "Western, Ohio"
+      "region": "Southeastern, Ohio"
     },
     "category": "Outdoor Event",
     "excerpt": "Tryst is an ever-evolving event that strives to break free of gender boundaries, foster a culture of consent, and bring the entire spectrum of sexuality and kink together to love, play and commune with one another.",
-    "longDescription": "Are you ready to fully immerse yourself in the exciting world of human sexuality? Twisted Tryst offers a unique chance to explore a weekend focused on learning, exploration, and embracing your wildest desires. Whether you come alone, with a partner, as part of a group, or identify with any sexual orientation, our event welcomes everyone with an adventurous spirit.\n\nHeld at a private campground each summer, we strive for immersion and total acceptance in an arena that allows for the most imaginative of play! We place high value on conduct and consent, and welcome all genders. Let your clothes and inhibitions fall away at Twisted Tryst as you connect with like-minded individuals in a safe, supportive environment designed for exploration and community building.",
+    "longDescription": "Twisted Tryst is the Midwest's best radically inclusive camping event. Whether you come alone, with a partner, as part of a group, or identify with any sexual orientation, our event welcomes everyone with an adventurous spirit. Tryst is not a home for racism, sexism, ageism, ableism, homophobia, transphobia, or other hatred—we value mutual respect and personal authenticity.\n\nHeld at a private campground 30 minutes outside Athens, OH each summer, we strive for immersion and total acceptance in an arena that allows for the most imaginative of play. Seminars span three educational areas: kink, sexuality, and spirituality, with plenty of time to practice what you've learned in our sheltered play space and acres of outdoor playground. Two themed party nights, camper-led socials, and room to plan your own events round out the weekend.\n\nRegistration opens Sunday, February 15, 2026 at 12pm EST. Let your clothes and inhibitions fall away at Twisted Tryst as you connect with like-minded individuals in a safe, supportive environment designed for exploration and community building.",
     "website": "https://www.twistedtryst.com/",
     "logo": "/images/twistedtyrst.png",
     "features": [
@@ -1320,12 +1376,18 @@ export const events = [
       "Immersive Experience",
       "All Sexual Orientations Welcome",
       "Community Building",
-      "Safe Exploration Space"
+      "Safe Exploration Space",
+      "Radically Inclusive",
+      "Registration Opens Feb 15, 2026",
+      "Seminars: Kink, Sexuality, Spirituality",
+      "Sheltered Play Space & Outdoor Playground",
+      "Two Themed Party Nights",
+      "Camper-Led Socials"
     ],
     "seo": {
       "title": "Twisted Tryst - Ohio Outdoor Kink Camp Event | East Coast Kink Events",
-      "description": "An ever-evolving outdoor event in Western, Ohio that breaks free of gender boundaries, fosters consent culture, and brings the entire spectrum of sexuality and kink together.",
-      "keywords": "Twisted Tryst, Ohio, outdoor kink event, gender-inclusive, consent culture, camping, BDSM"
+      "description": "Twisted Tryst (Jun 11-14, 2026) is the Midwest's radically inclusive camping event near Athens, OH with seminars in kink, sexuality, and spirituality, themed parties, and outdoor play.",
+      "keywords": "Twisted Tryst, Athens OH, Ohio, outdoor kink event, gender-inclusive, consent culture, radically inclusive, camping, BDSM"
     }
   },
   {
@@ -1343,8 +1405,13 @@ export const events = [
     },
     "category": "Outdoor Event",
     "excerpt": "Camp Crucible is the ultimate outdoor 24/7 fantasy vacation for those interested or involved in BDSM, sexuality, sensuality, human pony play, age play, education, exploration, relaxation, and socializing with old friends while meeting new ones.",
-    "longDescription": "Uncrowded and unhurried. 9 Days of hedonism. Explore the amazing possibilities with that much time, a set of fantastic playspaces, a gathering of wonderful kinky people, and a real environment we can call our own.\n\nCamp Crucible offers an immersive outdoor experience where you can fully embrace your desires in a safe, supportive environment. Whether you're into BDSM, sexuality, sensuality, human pony play, age play, education, exploration, or just relaxation, this event has something for everyone.\n\nConnect with old friends while meeting new ones in a welcoming community atmosphere. With fantastic playspaces and plenty of time to explore, Camp Crucible creates the perfect setting for your ultimate kink vacation.",
+    "longDescription": "**Clean Air, Dirty Living.** Uncrowded and unhurried. 9 Days of hedonism. Explore the amazing possibilities with that much time, a set of fantastic playspaces, a gathering of wonderful kinky people, and a real environment we can call our own.\n\nCamp Crucible offers an immersive outdoor experience where you can fully embrace your desires in a safe, supportive environment. Whether you're into BDSM, sexuality, sensuality, human pony play, age play, education, exploration, or just relaxation, this event has something for everyone.\n\n**Venue:** 200-acre campground in Northern Maryland. Lake, cabins, dining hall, dungeons, swimming pool. Near I-95 and Amtrak. Cabins included in registration.\n\n**Playspaces:** Upper Dungeon (gymnasium with Triple Tower suspension rig, grappling, wax, fire, medical play), Lower Dungeon (pavilion with mats, crosses, slings), and the Great Outdoors. Pool available 24 hours. Late-night snack every night.\n\n**Programming:** Pony Camp (Lucky Fucker Pony Show, Rodeo, Carousel, trail rides), Kidz Kamp, Puppies/Pet Players/Furries. Vendors and Swap-N-Shop. Registration is open; lodging, meals, classes, and parties included. Full Monty ~$1,250, Half Session ~$730.",
     "website": "https://www.campcrucible.com/",
+    "venue": "200-acre campground, Northern Maryland",
+    "hotel": "Cabins included in registration",
+    "contact": {
+      "email": "info@campcrucible.com"
+    },
     "logo": "/images/campcrucible.png",
     "features": [
       "24/7 Fantasy Vacation",
@@ -1356,7 +1423,19 @@ export const events = [
       "Education & Exploration",
       "Relaxation & Socializing",
       "Uncrowded Environment",
-      "Community Building"
+      "Community Building",
+      "Clean Air, Dirty Living",
+      "200-Acre Campground",
+      "Pool (24 Hours)",
+      "24-Hour Dungeons",
+      "Upper & Lower Dungeons",
+      "Pony Camp",
+      "Kidz Kamp",
+      "Puppies / Pet Players / Furries",
+      "Vendors & Swap-N-Shop",
+      "Meals Included",
+      "Late-Night Snack",
+      "Full Monty & Half Session Options"
     ],
     "seo": {
       "title": "Camp Crucible - Maryland Outdoor 24/7 Fantasy Vacation | East Coast Kink Events",
@@ -1379,9 +1458,12 @@ export const events = [
     },
     "category": "Indoor Event",
     "excerpt": "Atlanta's Frolicon draws 2,500+ attendees each May for a weekend where geek culture meets kink. ECKE recommends it for Georgia enthusiasts who want gaming, burlesque, costuming, and LGBTQIA programming—plus parties and workshops—all under one downtown roof.",
-    "longDescription": "Atlanta's Frolicon draws 2,500+ attendees each May for a weekend where geek culture meets kink. ECKE recommends it for Georgia enthusiasts who want gaming, burlesque, costuming, and LGBTQIA programming—plus parties and workshops—all under one downtown roof.\n\nProgramming includes erotica and sci-fi/fantasy authors, photography, dance, polyamory, psychology, and more. The event prides itself on a safe and comfortable environment where you can be yourself. Experience the perfect blend of geek culture and kink exploration in a welcoming, inclusive atmosphere that celebrates both communities.",
+    "longDescription": "Atlanta's Frolicon draws 2,500+ attendees each May for a weekend where geek culture meets kink. ECKE recommends it for Georgia enthusiasts who want gaming, burlesque, costuming, and LGBTQIA programming—plus parties and workshops—all under one downtown roof.\n\nProgramming includes erotica and sci-fi/fantasy authors, photography, dance, polyamory, psychology, and more. Main programming features adult hypnosis, circus sideshows, standup and improv comedy, costume contests, lip sync battles, dancing, and the Music Midway. The Kink track offers 70+ classes and workshops plus a 6,000 sq ft fully equipped playroom. Think Track covers LGBTQ, Costuming, Ink (writers), and Polyamory. Art Show and vendor marketplace. The event prides itself on a safe and comfortable environment where you can be yourself. Follow the official Facebook page for the latest updates.",
     "website": "https://frolicon.com/",
-    "contact": "chrissie.frolicon@gmail.com",
+    "organizer": "HerdingCats, LLC",
+    "contact": {
+      "email": "chrissie.frolicon@gmail.com"
+    },
     "logo": "/images/frolicon.png",
     "features": [
       "Geek and Kink Culture Fusion",
@@ -1398,7 +1480,15 @@ export const events = [
       "Dance Events",
       "Polyamory Discussions",
       "Psychology Sessions",
-      "Safe and Comfortable Environment"
+      "Safe and Comfortable Environment",
+      "6,000 sq ft Playroom",
+      "70+ Classes & Workshops",
+      "Art Show",
+      "Think Track (LGBTQ, Costuming, Ink, Polyamory)",
+      "Adult Hypnosis Show",
+      "Circus Sideshows",
+      "Costume Contests",
+      "Music Midway"
     ],
     "seo": {
       "title": "Frolicon 2026 - Where Nerdy Meets Naughty | East Coast Kink Events",
@@ -1421,11 +1511,16 @@ export const events = [
     },
     "category": "Outdoor Event",
     "excerpt": "Primal Arts Fest returns to Darlington, Maryland May 7th through 11th, 2026 connecting body and spirit, provoking spiritual evolution, and embracing the sacred and the profane.",
-    "longDescription": "Primal Arts Fest returns to Darlington, Maryland May 7th through 11th, 2026 connecting body and spirit, provoking spiritual evolution, and embracing the sacred and the profane.\n\nWe want to offer you an unforgettable experience where you can explore your deepest desires, indulge in your wildest curiosities, and showcase your primal self. Primal Arts Fest provides a venue to celebrate some of the most ancient and revered forms of art and expression. We offer a safe and conscientious community space where individuals can learn from and engage with one another in activities such as fire performance, music, tattoo, scarification, suspension, ordeal work, sacred sexuality, kink, and more.\n\nAcross history and different cultures, there has been a universal human curiosity to gain a deeper comprehension of life and the world we share. This pursuit has led people from all walks of life to explore the nature of their relationships – with themselves, their bodies, others, and their most intimate longings.\n\nThis is a 21+ clothing optional, sex and kink positive event. Registration is not yet open. Join the Mailing List for updates on early bird rates and limited all inclusive options.",
-    "website": "https://smsprimalarts.com/",
+    "longDescription": "Primal Arts Fest returns to Darlington, Maryland May 7th through 11th, 2026 connecting body and spirit, provoking spiritual evolution, and embracing the sacred and the profane.\n\nWe want to offer you an unforgettable experience where you can explore your deepest desires, indulge in your wildest curiosities, and showcase your primal self. Primal Arts Fest provides a venue to celebrate some of the most ancient and revered forms of art and expression. We offer a safe and conscientious community space where individuals can learn from and engage with one another in activities such as fire performance, music, tattoo, scarification, suspension, ordeal work, sacred sexuality, kink, and more.\n\nAcross history and different cultures, there has been a universal human curiosity to gain a deeper comprehension of life and the world we share. This pursuit has led people from all walks of life to explore the nature of their relationships – with themselves, their bodies, others, and their most intimate longings.\n\nThis is a 21+ clothing optional, sex and kink positive event. Registration is now open. Standard rates end April 15, 2026. Join the mailing list for pre-sale pricing and limited All-Inclusive packages.\n\n**Venue:** 200-acre private campground in Darlington, MD (address shared with registered attendees).",
+    "website": "https://www.primalartsfest.com/",
+    "venue": "200-acre private campground",
+    "hotel": "200-acre private campground, Darlington, MD (address shared with registrants)",
+    "contact": {
+      "email": "primalartsfirefest@gmail.com"
+    },
     "ageRequirement": "21+ only",
     "clothingPolicy": "Clothing optional",
-    "registrationStatus": "Not yet open - Join mailing list for updates",
+    "registrationStatus": "Registration is now open. Standard rates end April 15, 2026.",
     "logo": "/images/primalarts.png",
     "features": [
       "Darlington, Maryland Location",
@@ -1462,7 +1557,10 @@ export const events = [
       "Inclusive Community",
       "No Discrimination Policy",
       "Pagan & Spiritual Focus",
-      "Drum Circles Welcome"
+      "Drum Circles Welcome",
+      "Elemental Retreat",
+      "RiTL Recovery Meetings",
+      "Pool"
     ],
     "seo": {
       "title": "Primal Arts Festival 2026 - Darlington MD Ancient Arts & Kink Celebration | East Coast Kink Events",
@@ -1485,8 +1583,10 @@ export const events = [
     },
     "category": "Outdoor Event",
     "excerpt": "THE Beltane Apr 29-May 3, 2026 in Darlington, MD featuring big poles festooned with ribbons, naked revelry, bonfire activities, and a 10,000 sq ft sex-positive dungeon.",
-    "longDescription": "THE Beltane Apr 29-May 3, 2026 • Darlington, MD\n\nIs THE Beltane for you? If you're into some or all of the following, you may have just found an amazing event that's perfect for you:\n\n• big poles festooned with ribbons\n• naked people frolicking around them\n• drumming and dancing and sexing (if you like) around a bonfire\n• intimate conversations with interesting people\n• classes about sex, intimacy, kink, etc\n• rituals and woo, both serious and light-hearted\n• a 10,000 sq ft sex-positive dungeon with excellent equipment\n\nAnd we do it all on a beautiful, clothing-optional campground with cabins that have hot water and electricity in a magical spot where eagles soar overhead and the sounds of lovemaking echo across the land.\n\nWe believe the best events are smaller and more intimate. Our small class sizes help everyone learn better and have a more customized experience. The pace of our event is chill and relaxing and lends itself to more community building. You will have lots of time to make new friends and deepen old relationships.\n\nCome join us!",
-    "website": "https://www.turtlehilleventco.com/the-beltane.html",
+    "longDescription": "THE Beltane Apr 29-May 3, 2026 • Darlington, MD\n\nIs THE Beltane for you? If you're into some or all of the following, you may have just found an amazing event that's perfect for you:\n\n• big poles festooned with ribbons\n• naked people frolicking around them\n• drumming and dancing and sexing (if you like) around a bonfire\n• intimate conversations with interesting people\n• classes about sex, intimacy, kink, etc\n• rituals and woo, both serious and light-hearted\n• a 10,000 sq ft sex-positive dungeon with excellent equipment\n\nAnd we do it all on a beautiful, clothing-optional campground with cabins that have hot water and electricity in a magical spot where eagles soar overhead and the sounds of lovemaking echo across the land.\n\nWe believe the best events are smaller and more intimate. Our small class sizes help everyone learn better and have a more customized experience. The pace of our event is chill and relaxing and lends itself to more community building. You will have lots of time to make new friends and deepen old relationships.\n\n**Venue:** Ramblewood Retreat Center, 2564 Silver Rd, Darlington, MD 21034. 200 acres, 40 cabins with full bathrooms and hot water.\n\n**Registration:** RegFox. Registration does not include housing or food. Cabin bed $100; tent free; private rooms sold out; RV $50 (limited). Meals purchased separately from the on-site chef. 18+ event, 250+ attendees. Pool, vendors, and Coffee Club available.\n\nCome join us!",
+    "website": "https://www.turtlehilleventco.com/",
+    "venue": "Ramblewood Retreat Center",
+    "hotel": "Ramblewood Retreat Center, 2564 Silver Rd, Darlington, MD 21034",
     "logo": "/images/beltane.png",
     "features": [
       "Darlington, Maryland Location",
@@ -1509,7 +1609,12 @@ export const events = [
       "Community Building Focus",
       "Time for New Friends",
       "Deepen Old Relationships",
-      "Beautiful Natural Setting"
+      "Beautiful Natural Setting",
+      "Ramblewood Retreat Center",
+      "Pool",
+      "Vendors",
+      "250+ Attendees",
+      "Meals Purchased Separately"
     ],
     "seo": {
       "title": "THE Beltane 2026 - Darlington MD BDSM & Kink Community Event | East Coast Kink Events",
@@ -1531,8 +1636,8 @@ export const events = [
       "region": "New England"
     },
     "category": "Indoor Event",
-    "excerpt": "NEEHU 17 runs Apr 2-6, 2026 in Nashua, NH. Join us for a long weekend of hypnokinky fun with a science twist, including an exploratorium-style unconference and a traditional conference with classes and play parties.",
-    "longDescription": "NEEHU 17 runs Apr 2-6, 2026 in Nashua, NH. Join us for a long weekend of hypnokinky fun with a science twist! Thursday will be an exploratorium style somewhat planned in advance unconference with some show-and-tell, and various things to experience. Bring your fun hypno toys, tech-oriented BDSM gadgets (IE TENS, violet wand, remote controlled toys…) and share your knowledge and experience!\n\nFriday through Sunday will be a more traditional style conference, with classes during the day and a play party in our hotel-based dungeon at night.\n\nYour registration includes:\n• Classes, with Guests of Honor including Neuromancer28\n• 4 nights of play party in our well-equipped dungeon\n• Social events such as speed trance\n• Online/hybrid conference\n• Vendors!\n• Quiet/downtime space with coloring books and other art supplies\n• Consent team\n\nFor more info, we have an 18+ Discord server where you can ask questions and engage with people prior to the event! Highly recommend joining the Discord Server ASAP to stay up to date with the event!",
+    "excerpt": "NEEHU 17 runs Apr 2-6, 2026 in Nashua, NH. 2026 theme: RECURSION! Join us for a long weekend of hypnokinky fun with a science twist, including an exploratorium-style unconference and a traditional conference with classes and play parties.",
+    "longDescription": "NEEHU 17 runs Apr 2-6, 2026 in Nashua, NH. The 2026 theme is RECURSION! Join us for a long weekend of hypnokinky fun with a science twist! Thursday will be an exploratorium style somewhat planned in advance unconference with some show-and-tell, and various things to experience. Bring your fun hypno toys, tech-oriented BDSM gadgets (IE TENS, violet wand, remote controlled toys…) and share your knowledge and experience!\n\nFriday through Sunday will be a more traditional style conference, with classes during the day and a play party in our hotel-based dungeon at night.\n\nYour registration includes:\n• Classes, with Guests of Honor including Neuromancer28\n• 4 nights of play party in our well-equipped dungeon\n• Social events such as speed trance and meet & greets\n• Online/hybrid conference\n• Vendors!\n• Quiet/downtime space, art space, and board game room\n• Consent team\n• Ambassador program for new attendees\n• LGBTQIA+ community\n\n**Registration:** EventBrite. $110 Early (until Feb 1), $130 General (Feb 1–March 1), $150 Late (March 1–April 2). Hotel link sent when you register; hotel ~$145/night double occupancy. Private 8th floor room block available.\n\nNew attendees must attend a consent orientation (online or in person). This is a private 18+ event. For more info, join the Discord server—highly recommended to stay up to date!",
     "website": "https://www.neehu.org/",
     "logo": "/images/neehu.png",
     "features": [
@@ -1546,13 +1651,17 @@ export const events = [
       "Online/Hybrid Conference",
       "Vendors",
       "Quiet/Downtime Space",
+      "Art Space",
+      "Board Game Room",
       "Consent Team",
+      "Ambassador Program",
+      "LGBTQIA+ Community",
       "Discord Community"
     ],
     "seo": {
-      "title": "New England Erotic Hypnosis (un)Conference - NEHU Apr 2-6, 2026 | East Coast Kink Events",
+      "title": "New England Erotic Hypnosis (un)Conference - NEEHU 17 Apr 2-6, 2026 | East Coast Kink Events",
       "description": "Join us for a long weekend of hypnokinky fun with a science twist! Features exploratorium style unconference, classes, play parties, and a hotel-based dungeon in New England.",
-      "keywords": "New England Erotic Hypnosis, NEHU, hypnokinky, unconference, New England, hypnosis conference, BDSM, kink event"
+      "keywords": "New England Erotic Hypnosis, NEEHU, hypnokinky, unconference, New England, hypnosis conference, BDSM, kink event"
     }
   },
   {
@@ -1570,7 +1679,7 @@ export const events = [
     },
     "category": "Indoor Event",
     "excerpt": "Hotel Take-Over! With Pool! Edgy, hot and beautiful erotic art featuring performances from aerial dance to burlesque, unique shopping, classes in art/dance/sex ed, and ASL interpreters available all weekend.",
-    "longDescription": "REAF 2026 will be held Apr 10-12, 2026 at the Holiday Inn, 75 North St., Auburn NY. This is a complete hotel take-over event with pool access. No one will be admitted to the hotel without a REAF pass. You do NOT have to have a hotel room to attend this event.\n\nRegistration opens at 3 pm on Friday and 8 am on Saturday. YOUR REAF PASS MUST BE VISIBLE ON YOUR UPPER BODY AT ALL TIMES WHEN YOU ARE IN THE HOTEL.\n\nEnjoy performances ranging from classy aerial dance to bawdy burlesque, unique shopping for clothing, jewelry, sex toys, and classes in art, dance, and sex ed for adventurous adults. Sign Language (ASL) Interpreters are available all weekend!\n\nWe have a fabulous weekend of late night parties for Swing and BDSM Lifestyle fun! Be sure to read our Playroom Details for eligibility requirements before adding playroom passes to your order.\n\nTicketing for Passes and Hotel Rooms opens Jan 8 at 10 am. Ticket sales will close on April 1 at midnight. NO PASSES at the door! Holiday Inn rooms may only be ordered through the REAF ticketing system.",
+    "longDescription": "REAF 2026 will be held Apr 10-12, 2026 at the Holiday Inn, 75 North St., Auburn NY. This is a complete hotel take-over event with pool access. No one will be admitted to the hotel without a REAF pass. You do NOT have to have a hotel room to attend this event.\n\nRegistration opens at 3 pm on Friday and 8 am on Saturday. YOUR REAF PASS MUST BE VISIBLE ON YOUR UPPER BODY AT ALL TIMES WHEN YOU ARE IN THE HOTEL.\n\nEnjoy performances ranging from classy aerial dance to bawdy burlesque, unique shopping for clothing, jewelry, sex toys, and classes in art, dance, and sex ed for adventurous adults. Sign Language (ASL) Interpreters are available all weekend!\n\nWe have a fabulous weekend of late night parties for Swing and BDSM Lifestyle fun! Be sure to read our Playroom Details for eligibility requirements before adding playroom passes to your order.\n\nTicketing for Passes opens Jan 8 at 10 am. Ticket sales close April 1 at 11:30 pm. NO PASSES at the door! Holiday Inn rooms use a lottery system: enter Thu 1/8 10am–Sat 1/10 11:30pm; lottery winners get email Sun 1/11 with booking link; reserve by Wed 1/14. Overflow hotel links emailed to lottery participants Sun 1/11, posted for all attendees Thu 1/15.",
     "website": "https://www.rochestereroticartfest.org/",
     "hotel": "Holiday Inn, 75 North St., Auburn NY",
     "contact": {
@@ -1578,8 +1687,8 @@ export const events = [
       "phone": "315-677-9395"
     },
     "ticketing": {
-      "opens": "Jan 11 at 12 noon",
-      "closes": "April 2",
+      "opens": "Jan 8 at 10 am",
+      "closes": "April 1 at 11:30 pm",
       "noDoorPasses": true
     },
     "covidPolicy": "Up-to-date vax/boosters, daily rapid tests, and KN95 masks are strongly encouraged but not required for entry. If you feel ill, please stay home!",
@@ -1600,7 +1709,8 @@ export const events = [
       "Registration Friday 3pm & Saturday 8am",
       "Pass Must Be Visible at All Times",
       "No Hotel Room Required to Attend",
-      "Ticketing System for Hotel Rooms",
+      "Room Lottery for Hotel",
+      "Overflow Hotel Available",
       "COVID Safety Measures Encouraged",
       "Adventurous Adults Welcome"
     ],
@@ -1611,12 +1721,12 @@ export const events = [
     }
   },
   {
-    "name": "Tethered Together",
+    "name": "Tethered Together 2027",
     "slug": "tethered",
     "date": {
-      "start": "2026-02-27",
-      "end": "2026-03-02",
-      "display": "Feb 27-Mar 2, 2026"
+      "start": "2027-03-19",
+      "end": "2027-03-22",
+      "display": "Mar 19-22, 2027"
     },
     "location": {
       "city": "Stamford",
@@ -1624,8 +1734,8 @@ export const events = [
       "region": "Connecticut"
     },
     "category": "Indoor Event",
-    "excerpt": "Tethered Together is an event focused on rope bondage with additional programming in circus arts, kink, relationships, and body movement such as dance and yoga. Along with educational workshops, we host an assortment of quirky, magical, and fun attendee-led programming, art installations, and entertainment.",
-    "longDescription": "Tethered Together is an event focused on rope bondage with additional programming in circus arts, kink, relationships, and body movement such as dance and yoga. Along with educational workshops, we host an assortment of quirky, magical, and fun attendee-led programming, art installations, and entertainment. Our Feb 27-Mar 2, 2026 event runs from Friday afternoon on February 27th to Sunday, March 1st at the stroke of midnight, and we provide a fully equipped sex-positive dungeon on Friday, Saturday & Sunday nights.\n\nOur event is hosted at the Doubletree by Hilton Stamford in Stamford, CT—60,000 sq ft of dedicated event space, a 5-minute walk from the Stamford Train Station (NYC trains). Rooms available Thursday, Feb 26 through Monday, Mar 2.\n\nMany attendees choose to come in on Thursday evening to see the local sights, socialize with friends and help us get set up. Please see our website for up-to-date information on our event and for information on scheduling and how to get involved as it comes available!\n\nExperience the perfect blend of education, artistry, and community at Tethered Together. Our unique approach combines the technical precision of rope bondage with the grace and beauty of circus arts, creating an environment where both skills and creativity flourish. Whether you're a seasoned rigger or just beginning your journey, our diverse programming offers opportunities for growth, learning, and expression.\n\nImmerse yourself in a weekend of discovery where traditional rope techniques meet innovative approaches, where physical movement enhances sensual experience, and where relationships deepen through shared exploration. From intimate workshops to spectacular performances, from quiet contemplation to energetic celebration, Tethered Together creates a space where every aspect of your being can be engaged, challenged, and celebrated.\n\nJoin us for an unforgettable experience where bonds are formed, skills are honed, and the magic of human connection takes center stage.",
+    "excerpt": "Tethered Together is a rope-focused event with circus arts, kink, relationships, and movement programming in Stamford, CT. The next in-person weekend advertised on the official site is Mar 19–22, 2027.",
+    "longDescription": "Tethered Together is an event focused on rope bondage with additional programming in circus arts, kink, relationships, and body movement such as dance and yoga. Along with educational workshops, the organizers host attendee-led programming, art installations, and entertainment.\n\n**Next edition:** The public site lists **Tethered Together 2027** as **March 19–22, 2027** in Stamford, CT (verify lodging and schedule on tetheredtogether.net).\n\nThe event is hosted at the Doubletree by Hilton Stamford—large dedicated event space, a short walk from the Stamford Train Station (NYC trains).\n\nMany attendees arrive Thursday evening to socialize and help with setup. See the website for up-to-date scheduling and how to get involved.\n\nExperience the perfect blend of education, artistry, and community at Tethered Together. Our unique approach combines the technical precision of rope bondage with the grace and beauty of circus arts, creating an environment where both skills and creativity flourish. Whether you're a seasoned rigger or just beginning your journey, our diverse programming offers opportunities for growth, learning, and expression.\n\nImmerse yourself in a weekend of discovery where traditional rope techniques meet innovative approaches, where physical movement enhances sensual experience, and where relationships deepen through shared exploration. From intimate workshops to spectacular performances, from quiet contemplation to energetic celebration, Tethered Together creates a space where every aspect of your being can be engaged, challenged, and celebrated.\n\nJoin us for an unforgettable experience where bonds are formed, skills are honed, and the magic of human connection takes center stage.",
     "website": "https://tetheredtogether.net/",
     "logo": "/images/tethered.png",
     "features": [
@@ -1643,9 +1753,9 @@ export const events = [
       "Quirky & Magical Activities"
     ],
     "seo": {
-      "title": "Tethered Together - Connecticut Rope Bondage & Circus Arts Event | East Coast Kink Events",
-      "description": "Tethered Together is an event focused on rope bondage with additional programming in circus arts, kink, relationships, and body movement such as dance and yoga in Stamford, CT.",
-      "keywords": "Tethered Together, Connecticut, rope bondage, circus arts, kink, relationships, body movement, dance, yoga, Stamford"
+      "title": "Tethered Together 2027 - Connecticut Rope Bondage & Circus Arts Event | East Coast Kink Events",
+      "description": "Tethered Together in Stamford, CT—rope bondage, circus arts, kink, relationships, and movement. Next listed weekend Mar 19-22, 2027.",
+      "keywords": "Tethered Together 2027, Connecticut, rope bondage, circus arts, kink, relationships, body movement, dance, yoga, Stamford"
     }
   },
   {
@@ -1663,8 +1773,13 @@ export const events = [
     },
     "category": "Outdoor Event",
     "excerpt": "Join us for an intense weekend at Dark Odyssey Fusion, where kinksters, queers, swingers, spiritualists, the adventurous, and the perverted come together to fuse Sex, Kink, and Spirit. Experience the magic with a thousand fellow erotic explorers as we achieve ecstatic states of passion, desire, and transformation.",
-    "longDescription": "Join us for an intense weekend at Dark Odyssey Fusion, where kinksters, queers, swingers, spiritualists, the adventurous, and the perverted come together to fuse Sex, Kink, and Spirit. Experience the magic with a thousand fellow erotic explorers as we achieve ecstatic states of passion, desire, and transformation.\n\nA Magical Retreat: Our event takes place at the same enchanting retreat in Northern Maryland that has been Dark Odyssey's Summer home for years.\n\nUnleash Your Desires: Immerse yourself in a unique atmosphere where you can explore and celebrate your passions in a welcoming and inclusive community.\n\nDiscover the transformative power of fusion at Dark Odyssey Fusion, where the boundaries between physical pleasure, spiritual awakening, and personal growth blur into a seamless experience of pure ecstasy. This is not just an event—it's a journey of self-discovery, a celebration of diversity, and a testament to the power of authentic connection.\n\nExperience the magic of our carefully curated programming that bridges the gap between traditional kink practices and spiritual exploration. From intimate workshops that delve deep into the psyche to communal rituals that celebrate our shared humanity, every moment at Dark Odyssey Fusion is designed to awaken your senses and expand your consciousness.\n\nConnect with like-minded souls from across the spectrum of human experience, each bringing their unique perspective and energy to create a tapestry of diversity and inclusion. Whether you identify as queer, swinger, spiritualist, or simply adventurous, you'll find your tribe here among people who understand and celebrate your authentic self.\n\nAs the sun sets over our magical retreat, let the energy of a thousand passionate souls guide you into states of ecstasy you never imagined possible. This is where fantasy becomes reality, where desire meets destiny, and where the journey of transformation begins.",
+    "longDescription": "Join us for an intense weekend at Dark Odyssey Fusion, where kinksters, queers, swingers, spiritualists, the adventurous, and the perverted come together to fuse Sex, Kink, and Spirit. Experience the magic with a thousand fellow erotic explorers as we achieve ecstatic states of passion, desire, and transformation.\n\n**Venue & Amenities:** Our event takes place at a 200+ acre private retreat in Northern Maryland that has been Dark Odyssey's Summer home for years. The facility includes 40 cabins with 400 beds, a meal plan (breakfast, lunch, dinner), pool, dining hall, theater, and pavilion. Three well-equipped dungeons and the Sex-O-Rama playspace offer ample room for exploration. Educational tracks span Sex, Kink, and Spirit. Special events include the Saturday Night Show, Wasteland Dungeon Party, pool parties, The Exploratorium, Kinky State Fair, fire spin jams, bon fires, drumming, dancing, and Cigars Boots & Chocolate. The Pamporium offers spa services, and the Temple of Love, Sex & Transformation hosts rituals and sacred play.\n\n**Unleash Your Desires:** Immerse yourself in a unique atmosphere where you can explore and celebrate your passions in a welcoming and inclusive community.\n\nDiscover the transformative power of fusion at Dark Odyssey Fusion, where the boundaries between physical pleasure, spiritual awakening, and personal growth blur into a seamless experience of pure ecstasy. This is not just an event—it's a journey of self-discovery, a celebration of diversity, and a testament to the power of authentic connection.\n\nExperience the magic of our carefully curated programming that bridges the gap between traditional kink practices and spiritual exploration. From intimate workshops that delve deep into the psyche to communal rituals that celebrate our shared humanity, every moment at Dark Odyssey Fusion is designed to awaken your senses and expand your consciousness.\n\nConnect with like-minded souls from across the spectrum of human experience, each bringing their unique perspective and energy to create a tapestry of diversity and inclusion. Whether you identify as queer, swinger, spiritualist, or simply adventurous, you'll find your tribe here among people who understand and celebrate your authentic self.\n\nAs the sun sets over our magical retreat, let the energy of a thousand passionate souls guide you into states of ecstasy you never imagined possible. This is where fantasy becomes reality, where desire meets destiny, and where the journey of transformation begins.",
     "website": "https://darkodyssey.com/fusion/",
+    "organizer": "Dark Odyssey",
+    "venue": "200+ acre private retreat, Northern Maryland",
+    "contact": {
+      "email": "info@darkodyssey.com"
+    },
     "logo": "/images/darkodyssey.png",
     "features": [
       "Fusion of Sex, Kink, and Spirit",
@@ -1676,12 +1791,21 @@ export const events = [
       "Magical Atmosphere",
       "Passion Exploration",
       "Spiritual Connection",
-      "Adventure and Discovery"
+      "Adventure and Discovery",
+      "200+ Acre Private Facility",
+      "40 Cabins (400 Beds)",
+      "Meal Plan (Breakfast, Lunch, Dinner)",
+      "3 Dungeons & Sex-O-Rama Playspace",
+      "Educational Tracks: Sex + Kink + Spirit",
+      "Saturday Night Show & Wasteland Dungeon Party",
+      "Pool Parties, Exploratorium, Kinky State Fair",
+      "Pamporium Spa Services",
+      "Temple of Love, Sex & Transformation"
     ],
     "seo": {
       "title": "Dark Odyssey Fusion - Maryland Outdoor Sex, Kink & Spirit Event | East Coast Kink Events",
       "description": "Join us for an intense weekend at Dark Odyssey Fusion, where kinksters, queers, swingers, spiritualists, the adventurous, and the perverted come together to fuse Sex, Kink, and Spirit in Darlington, MD.",
-      "keywords": "Dark Odyssey Fusion, Maryland, outdoor event, sex kink spirit fusion, Darlington, erotic exploration, passion transformation"
+      "keywords": "Dark Odyssey Fusion, Maryland, Northern Maryland, outdoor event, sex kink spirit fusion, Darlington, Sex-O-Rama, camping, erotic exploration, passion transformation"
     }
   },
   {
@@ -1735,7 +1859,7 @@ export const events = [
     "category": "Indoor Event",
     "excerpt": "Come join Studio 58 to head back to school at Naughty Knowledge 2026, a Private Hotel Takeover Event in Gettysburg PA featuring education, skill sharing, playing, and partying.",
     "longDescription": "Come join Studio 58 to head back to school at Naughty Knowledge 2026, Aug 6-9, 2026, as a Private Hotel Takeover Event in Gettysburg PA. Spend 3-days exploring your own personal development and relationship practices. Our event is designed for adults who want to enjoy meaningful connections among alternative lifestyle and LGBTQIA+ folks in a friendly, inclusive atmosphere.\n\nNaughty Knowledge is designed for newcomers, swinks, swingers, experienced kinksters and even brand-new folks who may be kinky in the bedroom but want to know more about safe and consensual BDSM. This will be a fun event with education galore, skill sharing, playing, and partying.\n\nNaughty Knowledge begins on a Thursday at 9AM and concludes on Sunday at 11 AM. Studio 58 handles all hotel reservations—do not call the hotel directly. The hotel is arranged around an indoor pool and private courtyard with poolside, balcony, balcony suite, courtyard, and interior rooms. Socializing, access to indoor pool, and outdoor courtyard. Arrive as early as you can! A significant portion of attendees arrive on Thursday + some folks arrive early on Wednesday for longer weekend. Registration and rooms open April 1st at 8PM each year. VIP from $209, Regular from $129.",
-    "website": "https://studio58events.com/naughty-knowledge-2/",
+    "website": "https://studio58events.com/studio-58-event-schedule/",
     "organizer": "Studio 58 Events",
     "venue": "Hotel arranged around indoor pool and private courtyard",
     "hotel": "Studio 58 handles all hotel reservations (do not call hotel directly). Poolside, balcony, courtyard, and interior rooms. 2-3 night minimum.",
@@ -1784,21 +1908,22 @@ export const events = [
     }
   },
   {
-    "name": "KinkyCon Summer CO-OP",
+    "name": "KinkyCon Community Co-op 2025",
     "slug": "kinkycon-summer-coop",
     "date": {
-      "start": "2025-07-25",
-      "end": "2025-07-27",
-      "display": "Jul 25-27, 2025"
+      "start": "2025-07-19",
+      "end": "2025-07-19",
+      "display": "Jul 19, 2025 (one-day vending)"
     },
     "location": {
-      "city": "TBD",
+      "city": "Nashua",
       "state": "NH",
       "region": "New Hampshire"
     },
+    "venue": "2 Somerset Pkwy, Nashua, NH (per organizer ticketing page)",
     "category": "Indoor Event",
-    "excerpt": "Kinky Con is an annual conference celebrating the education and exploration of BDSM, polyamory, gender identity, alternative sexuality, and welcoming people of all ages (18+), race, sexual orientation, gender identity, and spiritual belief.",
-    "longDescription": "Kinky Con is an annual conference celebrating the education and exploration of BDSM, polyamory, gender identity, alternative sexuality, and welcoming people of all ages (18+), race, sexual orientation, gender identity, and spiritual belief. Each event has a unique energy, with varying classes, demos, vendors and other activities (silent auctions, raffles, socials).\n\nOur welcoming community comes together for education and exploration across a diverse range of topics and interests. Expect varying classes, demos, vendors, and activities like silent auctions, raffles, and socials.\n\nJoin us for an unforgettable weekend of learning, exploration, and embracing your wildest desires in a safe, supportive environment designed for exploration and community building. Whether you're brushing up on the basics or seeking advanced knowledge, our diverse programming has something for everyone.\n\nExperience the unique energy that makes each KinkyCon event special, with carefully curated programming that reflects the evolving needs and interests of our community. From hands-on workshops to thought-provoking discussions, from vendor showcases to social activities, every aspect of the weekend is designed to foster connection, learning, and personal growth.",
+    "excerpt": "KinkyCon Community Co-op is a one-day vending and community event on the KinkyCon calendar (2025 edition: Jul 19, Nashua, NH). For full multi-day KinkyCon conferences, see the organizer’s main site and calendar.",
+    "longDescription": "This listing tracks the **KinkyCon Community Co-op** format: a **single-day** vending-focused gathering (the 2025 instance was listed as **July 19, 2025** in Nashua, NH). It is distinct from the larger multi-day KinkyCon / Wicked Weekend events.\n\nCheck **kc.gotomyevent.com** and the organizer’s announcements for the next Co-op date and any 2026 programming.",
     "website": "https://kc.gotomyevent.com/",
     "logo": "/images/kinkycon.png",
     "features": [
@@ -1816,8 +1941,8 @@ export const events = [
       "Unique Event Energy"
     ],
     "seo": {
-      "title": "KinkyCon Summer CO-OP - New Hampshire BDSM Education Conference | East Coast Kink Events",
-      "description": "Kinky Con is an annual conference celebrating the education and exploration of BDSM, polyamory, gender identity, and alternative sexuality in a welcoming 18+ environment.",
+      "title": "KinkyCon Community Co-op - Nashua NH | East Coast Kink Events",
+      "description": "KinkyCon Community Co-op—one-day vending event on the KinkyCon calendar (2025: Jul 19, Nashua, NH). Confirm future dates on kc.gotomyevent.com.",
       "keywords": "KinkyCon, New Hampshire, BDSM education, polyamory, gender identity, alternative sexuality, vendors, demos, classes"
     }
   },
@@ -1935,12 +2060,19 @@ export const events = [
     "location": {
       "city": "New Orleans",
       "state": "LA",
-      "region": "Southeast, Louisiana"
+      "region": "Southeastern, Louisiana"
     },
     "category": "Indoor Event",
     "excerpt": "We bring in top entertainers to mesmerize you each evening with their talents. From world-renowned DJs that keep the music bumping all night long, to mind-blowing bands that make you sing along, to performers like aerialists, cirque performers, professional pole and gogo dancers, burlesque and boylesque.",
-    "longDescription": "We bring in top entertainers to mesmerize you each evening with their talents. From world-renowned DJs that keep the music bumping all night long, to mind-blowing bands that make you sing along, to performers like aerialists, cirque performers, professional pole and gogo dancers, burlesque and boylesque, the entertainment at Naughty N'awlins will elevate your experience and leave you wanting more.\n\nNaughty N'awlins hosts the world's biggest (and only) \"Sexual Freedom Parade.\" This is a truly unique and amazing opportunity worth experiencing. March with us as we stand up for Sexual Freedom! Make a sign, and join your Naughty friends as we make a statement throughout the French Quarter.\n\nYou have your choice between; the Astor Crowne Plaza Hotel on Bourbon St & Canal and the NOPSI Hotel just a few blocks away. Each hotel is a different experience and is sure to provide you with all the comforts and amenities you need in order to enjoy your time at Naughty N'awlins.\n\nExperience the magic of New Orleans like never before at Naughty N'Awlins, where the spirit of the Big Easy meets the passion of adult entertainment in perfect harmony. Our world-class lineup of entertainers represents the very best in their respective fields, bringing you performances that will leave you breathless and wanting more. From the pulsating rhythms of our internationally acclaimed DJs to the heart-stopping acrobatics of our cirque performers, every moment is designed to transport you to a world of pure entertainment bliss.\n\nImmerse yourself in the electric atmosphere of our Sexual Freedom Parade, a one-of-a-kind celebration that takes over the historic French Quarter in a display of unity, pride, and liberation. This isn't just a parade—it's a movement, a statement, and an unforgettable experience that you'll carry with you forever. March alongside hundreds of like-minded individuals as we make our voices heard and our presence felt in one of America's most iconic neighborhoods.\n\nChoose your adventure with our carefully curated hotel options, each offering its own unique character and amenities. The Astor Crowne Plaza puts you in the heart of the action on Bourbon Street, while the NOPSI Hotel offers a more sophisticated retreat just steps away. Both locations provide the perfect base for your Naughty N'Awlins experience, ensuring you have everything you need for comfort, convenience, and unforgettable memories.\n\nJoin us for a weekend where fantasy becomes reality, where entertainment reaches new heights, and where the spirit of New Orleans comes alive in ways you never imagined possible.",
+    "longDescription": "We bring in top entertainers to mesmerize you each evening with their talents. From world-renowned DJs that keep the music bumping all night long, to mind-blowing bands that make you sing along, to performers like aerialists, cirque performers, professional pole and gogo dancers, burlesque and boylesque, the entertainment at Naughty N'awlins will elevate your experience and leave you wanting more.\n\nNaughty N'awlins hosts the world's biggest (and only) \"Sexual Freedom Parade.\" This is a truly unique and amazing opportunity worth experiencing. March with us as we stand up for Sexual Freedom! Make a sign, and join your Naughty friends as we make a statement throughout the French Quarter.\n\n**Venue & Hotels:** Three hotels, 1,100 rooms per night—Astor Crowne Plaza (Bourbon St & Canal), NOPSI Hotel, and The Saint Hotel. Complete hotel takeover.\n\n**Tantra Center:** Over 25,000 sq ft of play space across two hotels—group rooms, private rooms, dark room, dungeons, singles room, semi-private rooms, toy room with sybian/MotoBunny/swing, bisexual room, and more.\n\n**Special Events:** Fetish Feast at NOPSI (candlelit BDSM-themed dinner); Drag & Burlesque Brunch at Astor Crowne Plaza (11am–1pm). 100+ classes and seminars.\n\n**2026 Theme Nights:** Bordello (July 8), Through The Looking Glass (July 9), Neon/Glow (July 10), Naughty Mardi Gras Ball (July 11).\n\n**Packages:** Wed–Sun $849 per couple; Thu–Sun $799 per couple. Over 1,500 couples (3,000+ attendees) expected.\n\nChoose your adventure with our carefully curated hotel options, each offering its own unique character and amenities. The Astor Crowne Plaza puts you in the heart of the action on Bourbon Street, while the NOPSI Hotel offers a more sophisticated retreat just steps away. Both locations provide the perfect base for your Naughty N'Awlins experience, ensuring you have everything you need for comfort, convenience, and unforgettable memories.\n\nExperience the magic of New Orleans like never before at Naughty N'Awlins, where the spirit of the Big Easy meets the passion of adult entertainment in perfect harmony. Our world-class lineup of entertainers represents the very best in their respective fields, bringing you performances that will leave you breathless and wanting more. From the pulsating rhythms of our internationally acclaimed DJs to the heart-stopping acrobatics of our cirque performers, every moment is designed to transport you to a world of pure entertainment bliss.\n\nImmerse yourself in the electric atmosphere of our Sexual Freedom Parade, a one-of-a-kind celebration that takes over the historic French Quarter in a display of unity, pride, and liberation. This isn't just a parade—it's a movement, a statement, and an unforgettable experience that you'll carry with you forever. March alongside hundreds of like-minded individuals as we make our voices heard and our presence felt in one of America's most iconic neighborhoods.\n\nJoin us for a weekend where fantasy becomes reality, where entertainment reaches new heights, and where the spirit of New Orleans comes alive in ways you never imagined possible.",
     "website": "https://www.naughty-events.com/cover-naughty-nawlins",
+    "organizer": "Naughty Events",
+    "venue": "3-hotel takeover: Astor Crowne Plaza, NOPSI Hotel, The Saint Hotel",
+    "hotel": "Astor Crowne Plaza (Bourbon & Canal), NOPSI Hotel, The Saint Hotel",
+    "contact": {
+      "email": "info@Naughty-Events.com",
+      "phone": "(504) 315-7647"
+    },
     "logo": "/images/naughtynawlins.png",
     "features": [
       "Top Entertainers",
@@ -1954,12 +2086,19 @@ export const events = [
       "Sexual Freedom Parade",
       "French Quarter March",
       "Astor Crowne Plaza Hotel",
-      "NOPSI Hotel"
+      "NOPSI Hotel",
+      "The Saint Hotel",
+      "25,000+ Sq Ft Tantra Center Play Space",
+      "Fetish Feast & Drag & Burlesque Brunch",
+      "100+ Classes and Seminars",
+      "2026 Theme Nights (Bordello, Through The Looking Glass, Neon/Glow, Mardi Gras)",
+      "Packages from $799 (Thu–Sun) or $849 (Wed–Sun)",
+      "1,500+ Couples (3,000+ Attendees)"
     ],
     "seo": {
       "title": "Naughty in N'Awlins - New Orleans Entertainment & Sexual Freedom Parade | East Coast Kink Events",
       "description": "Naughty in N'Awlins brings top entertainers including DJs, bands, aerialists, cirque performers, dancers, and hosts the world's biggest Sexual Freedom Parade in New Orleans.",
-      "keywords": "Naughty in N'Awlins, New Orleans, Louisiana, entertainment, Sexual Freedom Parade, French Quarter, DJs, performers, aerialists, burlesque"
+      "keywords": "Naughty in N'Awlins, Naughty Events, New Orleans, Louisiana, entertainment, Sexual Freedom Parade, French Quarter, Bourbon Street, hotel takeover, DJs, performers, aerialists, burlesque"
     }
   },
   {
@@ -2025,6 +2164,9 @@ export const events = [
     "website": "https://beyondleather.net/wp/?agreecheck=on",
     "organizer": "Beyond Leather",
     "hotel": "West Palm Beach, Florida (4-Star Hotel)",
+    "contact": {
+      "email": "beyondleather@gmail.com"
+    },
     "ageRequirement": "18+",
     "registrationOpens": "Registration Available Online",
     "logo": "/images/beyond-leather-logo.png",

@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import Breadcrumb from '@/components/Breadcrumb'
 import VendorImage from '@/components/vendors/VendorImage'
-import { getVendorBySlug } from '@/data/vendors'
+import { getSiteSponsorVendor } from '@/data/vendors'
 import { BASE_URL } from '@/lib/seo'
 
 export const metadata: Metadata = {
@@ -26,7 +26,7 @@ export default function SupportPage() {
     { label: 'Home', href: '/' },
     { label: 'Support', href: '/support', current: true },
   ]
-  const sponsorVendor = getVendorBySlug('floggin-farmers')
+  const sponsorVendor = getSiteSponsorVendor()
 
   return (
     <div className="min-h-screen bg-black">
@@ -67,7 +67,7 @@ export default function SupportPage() {
                       </Link>
                     </h2>
                     <p className="text-sm text-gray-200 mt-2 leading-relaxed">
-                      Sponsor for February: Floggin Farmers. Reach out to Brax if you would like to support the site for a month.
+                      Featured site sponsor. Reach out to Brax if you would like to support the site for a month.
                     </p>
                     <div className="mt-4 flex flex-wrap gap-3">
                       <Link href={`/vendors/${sponsorVendor.slug}`} className="btn-primary px-3 py-1.5 text-sm">
