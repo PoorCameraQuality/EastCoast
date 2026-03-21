@@ -22,7 +22,7 @@ export const vendors = [
       'woodworking',
       'custom-commission-vendor',
     ],
-    isPaid: true,
+    isPaid: false,
     productImage125ByTagSlug: {
       default: '/images/vendors/floggin-farmers/impact-implements-125.jpg',
       'impact-implements': '/images/vendors/floggin-farmers/impact-implements-125.jpg',
