@@ -2254,37 +2254,6 @@ export const events = [
     }
   },
   {
-    "name": "Sex Down South 2026",
-    "slug": "sex-down-south",
-    "date": {
-      "start": "2026-09-17",
-      "end": "2026-09-20",
-      "display": "Sep 17-20, 2026"
-    },
-    "location": {
-      "city": "Atlanta",
-      "state": "GA",
-      "region": "Southeast, Georgia"
-    },
-    "category": "Indoor Event",
-    "excerpt": "Sex Down South is a major sex-positive conference in Atlanta with workshops on sexuality, relationships, kink, and intimacy. National speakers and a Southeast-focused audience.",
-    "longDescription": "Sex Down South brings together educators and attendees for a long weekend focused on sex positivity, relationships, and personal growth. Programming typically spans multiple tracks; confirm schedules and venue details on the official site before you travel.",
-    "website": "https://www.sexdownsouth.com/",
-    "organizer": "Sex Down South",
-    "venue": "Atlanta, GA (see official site for venue)",
-    "logo": "/images/events/event-card-placeholder.svg",
-    "features": [
-      "Sex-positive education",
-      "Workshops and panels",
-      "Southeast community hub"
-    ],
-    "seo": {
-      "title": "Sex Down South 2026 - Atlanta Sex-Positive Conference | East Coast Kink Events",
-      "description": "Sex Down South 2026 in Atlanta, GA — a major sex-positive conference with workshops on intimacy, relationships, and kink-inclusive education.",
-      "keywords": "Sex Down South, Atlanta, Georgia, sex positive conference, kink education, Southeast"
-    }
-  },
-  {
     "name": "Southeast Leather Fest (SELF) 2026",
     "slug": "southeast-leather-fest",
     "date": {
@@ -2298,30 +2267,38 @@ export const events = [
       "region": "Southeast, Georgia"
     },
     "category": "Leather Event",
-    "excerpt": "SELF is a significant leather community weekend in Atlanta with workshops, socials, and contest programming serving the Southeast.",
-    "longDescription": "Southeast Leather Fest (SELF) gathers leather and kink communities for education, social events, and contests. Dates and venue are published on the official site—verify before booking travel.",
+    "excerpt": "SELF is Atlanta’s major Southeast Leather Fest—an adult educational, fundraising, and social leather/kink convention run as a domestic nonprofit, with workshops, intensives, contests, Bootblack Academy, remote SELF LIVE, and signature community programs.",
+    "longDescription": "**Southeast Leather Fest (SELF)** describes itself as an adult **educational, fundraising, and social** convention that supports consenting-adult lifestyles. The organization presents as a **domestic nonprofit** and welcomes a broad mix of orientations, identities, abilities, and community affiliations.\n\n**What to expect (from official copy):**\n\n- **Weekend programming** — exploration, socials, and community building across multiple days in Atlanta.\n- **Intensives** — deep-dive add-ons (topics such as energy work, vacuum beds, hook pull, M/s relationships, households, protocols, whips—offerings vary by year).\n- **Contests** — Friday & Saturday contest programming; voting for registered attendees is tied to signup during registration on years when that applies.\n- **BootBlack Academy** — structured bootblack training (101 / 201 / 301 style progression on the public site).\n- **SELF Connections** — programming for people attending alone.\n- **SELF LIVE** — remote access option; the site states proceeds support **scholarships**.\n- **The Gathering** — annual Women & Girls of Leather Gathering (see the current year’s event page for date/time).\n- **Volunteer opportunities** — openings listed for people who want to help run the event.\n- **Virgin raffle** — promotional program for bringing first-time SELF attendees (rules on the official registration portal).\n\n**Logistics:** registration, host hotel, and schedule details live at **seleatherfest.com**. Contact **opsasst@seleatherfest.com** for operational questions listed on the site footer. Social links include Facebook, Instagram, Bluesky, YouTube, and FetLife.",
     "website": "https://seleatherfest.com/",
     "organizer": "Southeast Leather Fest",
     "venue": "Atlanta, GA",
-    "logo": "/images/events/event-card-placeholder.svg",
+    "logo": "/images/events/brand-event-southeast-leather-fest.svg",
     "features": [
-      "Leather community",
-      "Workshops",
-      "Contests and socials"
+      "Nonprofit leather/kink convention",
+      "Workshops & social programming",
+      "Intensive add-on experiences",
+      "Leather title contests (Fri/Sat)",
+      "BootBlack Academy 101 / 201 / 301",
+      "SELF Connections (solo attendees)",
+      "SELF LIVE remote + scholarship support",
+      "Volunteer program",
+      "Women & Girls of Leather Gathering",
+      "Scholarship fundraising via SELF LIVE"
     ],
     "seo": {
       "title": "Southeast Leather Fest (SELF) 2026 - Atlanta | East Coast Kink Events",
-      "description": "SELF 2026 in Atlanta — Southeast leather weekend with workshops, socials, and contest programming.",
-      "keywords": "SELF, Southeast Leather Fest, Atlanta leather, leather community"
+      "description": "SELF 2026 — Southeast Leather Fest in Atlanta: nonprofit leather/kink convention with workshops, intensives, contests, Bootblack Academy, SELF LIVE, and community programs. seleatherfest.com.",
+      "keywords": "SELF, Southeast Leather Fest, Atlanta leather, leather contest, Bootblack Academy, nonprofit, kink education"
     }
   },
   {
     "name": "DC Fetish Ball",
     "slug": "dc-fetish-ball",
+    "status": "tba",
     "date": {
-      "start": "2026-06-15",
-      "end": "2026-06-15",
-      "display": "Jun 2026 (confirm date)"
+      "start": "2026-10-01",
+      "end": "2026-10-31",
+      "display": "Oct 2026 (exact date TBA—see dcfetishball.com)"
     },
     "location": {
       "city": "Washington",
@@ -2329,21 +2306,27 @@ export const events = [
       "region": "Mid-Atlantic"
     },
     "category": "Indoor Event",
-    "excerpt": "Large recurring Mid-Atlantic fetish ball produced by Metro Underground, with DJs, dungeon space, performances, and multiple levels of entertainment.",
-    "longDescription": "The DC Fetish Ball is one of the region’s best-known recurring fetish nights. Exact dates vary by year—check Metro Underground and the official fetish ball site for tickets and dress code.",
+    "excerpt": "DC’s flagship annual fetish ball—Richard A.D & Metro Underground at UltraBar (911 F St NW): three levels of DJs, fetish fashion, dungeon and play spaces, national talent, and a fundraiser for Metro Underground. 21+, strict dress code.",
+    "longDescription": "The **DC Fetish Ball** is presented as one of the region’s largest recurring fetish nights—a **fundraiser** benefiting **The Metro Underground** (see dcfetishball.com and themetrounderground.com). Recent official copy positions the ball as a **national-caliber** evening with high production value across **three levels** at **UltraBar — 911 F Street NW, Washington, DC**.\n\n**Typical format (from the public site):**\n\n- **Doors** — often **9pm**; **21+** only.\n- **Dress code** — fetish-forward looks (leather, latex, PVC, corsetry, formal goth/steampunk/club chic, etc.); **no** jeans, T-shirts, hoodies, or sportswear. “Dress to impress.”\n- **Main ballroom** — DJs, go-go dancers, featured fetish performance, regional **fetish fashion show**, and large-scale stage entertainment.\n- **Mezzanine** — lounge with bottle service overlooking the main floor.\n- **Second level** — social lounge and **play space** with dungeon equipment (Metro Events), variety/medical-style scene offerings, and dance areas (specific talent rotates annually).\n- **Third level (“Penthouse”)** — additional play-forward zones (rope/fire/edge-style offerings have appeared on schedules), DJs, and dance energy late night.\n- **Tickets** — presale via the official **Tickets** page; limited door tickets may be available; presales can guarantee entry if the venue hits capacity.\n- **Policies** — consent, photography, and FetLife disclaimer pages are linked from the site.\n\n**Dates move yearly** (recent editions have landed on **October** weekends, including references to Indigenous Peoples’ Day weekend). **Do not rely on placeholder calendar dates**—always confirm the next ball date on **dcfetishball.com**. Contact **RichardAD2000@gmail.com** for organizer inquiries listed on the site.",
     "website": "https://www.dcfetishball.com/",
     "organizer": "Metro Underground",
-    "venue": "Washington, DC",
-    "logo": "/images/events/event-card-placeholder.svg",
+    "venue": "UltraBar, 911 F St NW, Washington, DC",
+    "logo": "/images/events/brand-event-dc-fetish-ball.svg",
     "features": [
-      "Fetish ball",
-      "DJ and dance",
-      "Dungeon and performances"
+      "Annual flagship DC fetish ball (date varies—verify site)",
+      "21+ · 9pm doors · coat check",
+      "3-level UltraBar takeover (ballroom / mezzanine / play levels)",
+      "National & regional DJs and fetish stage acts",
+      "Regional fetish fashion show",
+      "Dungeon & variety play areas (lineup changes yearly)",
+      "Strict fetish dress code",
+      "Fundraiser for The Metro Underground",
+      "Presale & door tickets (capacity limits)"
     ],
     "seo": {
       "title": "DC Fetish Ball - Washington DC | East Coast Kink Events",
-      "description": "DC Fetish Ball — major Mid-Atlantic fetish event with Metro Underground. Confirm dates on the official site.",
-      "keywords": "DC Fetish Ball, Washington DC, Metro Underground, fetish ball"
+      "description": "DC Fetish Ball at UltraBar, Washington DC — Metro Underground’s major annual fetish ball: DJs, three levels, fashion and stage acts, play spaces. 21+. Confirm date on dcfetishball.com.",
+      "keywords": "DC Fetish Ball, Washington DC, UltraBar, Metro Underground, fetish ball, dungeon party, 21 plus"
     }
   },
   {
@@ -2360,21 +2343,27 @@ export const events = [
       "region": "New England"
     },
     "category": "Indoor Event",
-    "excerpt": "New England kink conference in Manchester, NH with workshops, vendor marketplace, and social programming.",
-    "longDescription": "Kinky Con brings together the New England kink community for a weekend of classes, shopping, and parties. Verify registration and hotel blocks on the official event site.",
+    "excerpt": "Kinky Con is New Hampshire’s long-running annual conference for BDSM education, poly and gender-diverse community, vendors, demos, silent auctions, raffles, and socials—typically anchored by the November “Wicked Weekend” in the Manchester area.",
+    "longDescription": "**Kinky Con** (KinkyCon) is an **annual conference** focused on **education and exploration** around **BDSM**, **polyamory**, **gender identity**, and **alternative sexuality**, open to adults **18+** across races, orientations, gender identities, and spiritual backgrounds (per the organization’s public homepage).\n\n**Format:** each edition has its own energy, but recurring elements include **classes**, **hands-on demos**, a **vendor marketplace**, **silent auctions**, **raffles**, and **socials**. The group also runs additional formats such as **Community Co-op** summer events in some years—see the portal for which ticketed weekend applies to your dates.\n\n**Operations:** registration, presenter proposals, and vendor applications are handled through the **gotomyevent** portal (**kc.gotomyevent.com**) and the public WordPress site (**kinkyconnh.com**). Accounts are required for many registration flows; signup is free. A **FetLife** group is linked from the public site for community discussion.\n\n**Location & timing:** programming is associated with **Manchester, NH** and surrounding New England attendance. **Verify the exact venue, hotel block, and schedule** for your year on the official event page before travel—details evolve between editions.",
     "website": "https://kc.gotomyevent.com/",
     "organizer": "Kinky Con",
-    "venue": "Manchester, NH",
-    "logo": "/images/events/event-card-placeholder.svg",
+    "venue": "Manchester, NH area (confirm venue each year)",
+    "logo": "/images/events/brand-event-kinky-con-nh.svg",
     "features": [
-      "New England region",
-      "Workshops",
-      "Vendors and socials"
+      "Annual 18+ BDSM & alternative sexuality conference",
+      "Workshops & live demos",
+      "Vendor marketplace",
+      "Silent auctions & raffles",
+      "Social programming",
+      "Poly & gender-inclusive framing",
+      "Presenter & vendor applications via gotomyevent",
+      "Public updates on kinkyconnh.com",
+      "FetLife community group (linked on site)"
     ],
     "seo": {
       "title": "Kinky Con 2026 - Manchester NH | East Coast Kink Events",
-      "description": "Kinky Con 2026 — New England kink conference in Manchester, NH with workshops and vendors.",
-      "keywords": "Kinky Con, Manchester NH, New England kink conference"
+      "description": "Kinky Con — New England BDSM & alternative sexuality conference: workshops, demos, vendors, auctions, socials. Registration via kc.gotomyevent.com; details on kinkyconnh.com.",
+      "keywords": "Kinky Con, Manchester NH, New England kink conference, BDSM education, polyamory, vendor marketplace"
     }
   },
   {
@@ -2391,21 +2380,27 @@ export const events = [
       "region": "Midwest, Illinois"
     },
     "category": "Contest Weekend",
-    "excerpt": "IML is the world’s largest leather contest weekend in Chicago over Memorial Day, with the International Mr. Leather competition, vendor market, and citywide events.",
-    "longDescription": "International Mr. Leather anchors Memorial Day weekend in Chicago with contests, the Leather Market, fundraisers, and community gatherings. Many attendees travel from the East Coast; confirm schedules on internationalmrleather.com.",
+    "excerpt": "IML is leather culture’s flagship Memorial Day weekend in Chicago—International Mr. Leather & International Mr. Bootblack contests, multi-day packages, Leather Market, and major parties (APEX, Victory Party, Black & Blue Ball) plus socials and add-ons.",
+    "longDescription": "**International Mr. Leather (IML)** is the signature **Memorial Day weekend** gathering in **Chicago**, built around the **International Mr. Leather** and **International Mr. Bootblack** contests, the **Leather Market**, and a dense schedule of **parties and socials**. Many attendees travel from across the U.S. and internationally; East Coast leather communities are strongly represented.\n\n**Programming highlights (from official ticket materials):**\n\n- **Contest & stage events** — reserved and general seating options for contest-related programming; **VIP** packages add perks such as premium seating and extra meet-and-greet access (see current year’s package list).\n- **Leather Market / vendor access** — weekend access to the **IML Leather Market**; single-day and weekend **vendor market passes** may be sold (timing and pickup details are published for each year—e.g. Congress Plaza guest services in recent cycles).\n- **Signature parties** — recurring branded nights such as **APEX**, **Victory Party**, and **Black & Blue Ball** (availability varies by ticket tier).\n- **Socials & add-ons** — optional add-ons such as **Spit Shine**, **Fisting Social**, **Bator Party**, **Recon Social**, and **MAFIA**-branded socials appear as à la carte items for qualifying packages.\n- **Accessibility** — official copy references **mobility-accessible** and **ASL** seating for contest-related venues; package selection flows ask patrons to choose appropriate options.\n- **Nonprofit tie-in** — the organization notes that proceeds support the **Leather Archives & Museum** in public footer messaging.\n\n**Tickets & policies:** sales run through linked partners (e.g. **wannago.show**, **sickening.events**—URLs change by year). Policies mention **name-change fees** after published cutoffs and **cancellation** rules. **Always confirm dates, venues, package contents, and pickup instructions** on **internationalmrleather.com** before purchase.\n\n**Contact:** **IML-Info@imrl.com** appears on the public site for inquiries.",
     "website": "https://www.internationalmrleather.com/",
     "organizer": "International Mr. Leather, Inc.",
-    "venue": "Chicago, IL",
-    "logo": "/images/events/event-card-placeholder.svg",
+    "venue": "Chicago, IL (multi-venue weekend; see official schedule)",
+    "logo": "/images/events/brand-event-iml.svg",
     "features": [
-      "International Mr. Leather contest",
-      "Leather Market",
-      "Memorial Day weekend"
+      "International Mr. Leather & IMBB contests",
+      "Memorial Day weekend (Chicago)",
+      "Leather Market & vendor hall access",
+      "Tiered weekend packages (VIP / General / Dance / Socials)",
+      "Major parties: APEX, Victory Party, Black & Blue Ball",
+      "Optional add-on socials (Spit Shine, Recon, etc.)",
+      "ASL & mobility seating options (contest venues)",
+      "Proceeds support Leather Archives & Museum (per site)",
+      "Ticket partners: wannago.show / sickening.events (year-specific)"
     ],
     "seo": {
       "title": "International Mr. Leather (IML) 2026 - Chicago | East Coast Kink Events",
-      "description": "IML 2026 in Chicago over Memorial Day — International Mr. Leather contest, vendor market, and leather community events.",
-      "keywords": "IML, International Mr. Leather, Chicago, leather contest, Memorial Day"
+      "description": "IML 2026 — International Mr. Leather weekend in Chicago: IML & IMBB contests, Leather Market, APEX & Victory parties, packages & add-ons. Details at internationalmrleather.com.",
+      "keywords": "IML, International Mr. Leather, Chicago, leather contest, Leather Market, Memorial Day, IMBB, leather community"
     }
   }
 ];

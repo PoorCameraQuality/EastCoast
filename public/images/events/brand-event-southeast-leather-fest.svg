@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200" role="img" aria-label="Southeast Leather Fest">
+  <defs>
+    <linearGradient id="self" x1="0" y1="1" x2="1" y2="0">
+      <stop offset="0%" stop-color="#0c0a09"/>
+      <stop offset="100%" stop-color="#292524"/>
+    </linearGradient>
+  </defs>
+  <rect width="200" height="200" rx="16" fill="url(#self)"/>
+  <text x="100" y="82" text-anchor="middle" fill="#fafaf9" font-family="Georgia,serif" font-size="36" font-weight="bold">SELF</text>
+  <text x="100" y="112" text-anchor="middle" fill="#a8a29e" font-family="system-ui,sans-serif" font-size="11">Southeast Leather Fest</text>
+  <text x="100" y="132" text-anchor="middle" fill="#78716c" font-family="system-ui,sans-serif" font-size="10">Atlanta</text>
+</svg>
