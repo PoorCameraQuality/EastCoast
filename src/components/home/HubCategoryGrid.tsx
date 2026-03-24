@@ -1,8 +1,5 @@
 import Link from 'next/link'
-import { getAllEvents } from '@/data/events'
-import { getAllDungeons } from '@/data/dungeons'
-import { articles } from '@/data/education'
-import { getAllVendors } from '@/data/vendors'
+import type { HubCategoryCounts } from '@/lib/homeHubCounts'
 
 type HubCard = {
   title: string
@@ -18,46 +15,49 @@ const formatCountLabel = (count: number, singularLabel: string) => {
   return `${count} ${count === 1 ? singularLabel : `${singularLabel}s`}`
 }
 
-const HUB_CARDS: HubCard[] = [
-  {
-    title: 'Events & Conventions',
-    description: 'Find conferences, workshops, and gatherings.',
-    href: '/events',
-    cta: 'Browse Events',
-    count: getAllEvents().length,
-    countLabel: 'event',
-    accentClassName: 'from-primary-500/15 to-blue-500/10'
-  },
-  {
-    title: 'Dungeons & Play Spaces',
-    description: 'Explore vetted venues and community spaces.',
-    href: '/dungeons',
-    cta: 'Explore Spaces',
-    count: getAllDungeons().length,
-    countLabel: 'space',
-    accentClassName: 'from-blue-500/15 to-primary-500/10'
-  },
-  {
-    title: 'Education & Learning',
-    description: 'Safety guides, articles, and resources.',
-    href: '/education',
-    cta: 'Start Learning',
-    count: articles.length,
-    countLabel: 'article',
-    accentClassName: 'from-primary-500/10 to-blue-500/15'
-  },
-  {
-    title: 'Vendor Marketplace',
-    description: 'Browse gear, apparel, and artisan shops.',
-    href: '/vendors',
-    cta: 'Browse Vendors',
-    count: getAllVendors().length,
-    countLabel: 'vendor',
-    accentClassName: 'from-blue-500/10 to-primary-500/15'
-  },
-]
+function buildHubCards(counts: HubCategoryCounts): HubCard[] {
+  return [
+    {
+      title: 'Events & Conventions',
+      description: 'Find conferences, workshops, and gatherings.',
+      href: '/events',
+      cta: 'Browse Events',
+      count: counts.events,
+      countLabel: 'event',
+      accentClassName: 'from-primary-500/15 to-blue-500/10',
+    },
+    {
+      title: 'Dungeons & Play Spaces',
+      description: 'Explore vetted venues and community spaces.',
+      href: '/dungeons',
+      cta: 'Explore Spaces',
+      count: counts.dungeons,
+      countLabel: 'space',
+      accentClassName: 'from-blue-500/15 to-primary-500/10',
+    },
+    {
+      title: 'Education & Learning',
+      description: 'Safety guides, articles, and resources.',
+      href: '/education',
+      cta: 'Start Learning',
+      count: counts.articles,
+      countLabel: 'article',
+      accentClassName: 'from-primary-500/10 to-blue-500/15',
+    },
+    {
+      title: 'Vendor Marketplace',
+      description: 'Browse gear, apparel, and artisan shops.',
+      href: '/vendors',
+      cta: 'Browse Vendors',
+      count: counts.vendors,
+      countLabel: 'vendor',
+      accentClassName: 'from-blue-500/10 to-primary-500/15',
+    },
+  ]
+}
 
-export default function HubCategoryGrid() {
+export default function HubCategoryGrid({ counts }: { counts: HubCategoryCounts }) {
+  const HUB_CARDS = buildHubCards(counts)
   return (
     <section className="section-padding bg-gradient-to-br from-black via-dark-950 to-black relative overflow-hidden" aria-labelledby="hub-title">
       <div className="container-custom relative z-10">

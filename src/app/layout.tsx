@@ -119,6 +119,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`bg-black text-white ${inter.variable} ${playfair.variable}`}>
+      <head>
+        <WebsiteStructuredData />
+        <OrganizationStructuredData />
+      </head>
       <body className="antialiased font-sans">
         {/* Skip to content link for keyboard users */}
         <a
@@ -130,8 +134,6 @@ export default function RootLayout({
         {process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID && (
           <GoogleAnalytics GA_MEASUREMENT_ID={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID} />
         )}
-        <WebsiteStructuredData />
-        <OrganizationStructuredData />
         {/* Vercel Feedback Blocker - prevents interference with authentication */}
         <VercelFeedbackBlocker />
         {/* AuthProvider at root so it never unmounts */}

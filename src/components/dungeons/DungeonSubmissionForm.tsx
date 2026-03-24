@@ -161,6 +161,7 @@ export default function DungeonSubmissionForm() {
                 <option value="Rental">Rental</option>
                 <option value="Educational">Educational</option>
                 <option value="Social">Social</option>
+                <option value="Open rental play space">Open rental play space</option>
               </select>
             </div>
             <div>

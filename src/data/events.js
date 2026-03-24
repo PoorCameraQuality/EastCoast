@@ -884,6 +884,45 @@ export const events = [
     }
   },
   {
+    "name": "Kinky Kollege: Spring Break 2026",
+    "slug": "kinky-kollege-spring-break-2026",
+    "date": {
+      "start": "2026-03-20",
+      "end": "2026-03-22",
+      "display": "Mar 20-22, 2026"
+    },
+    "location": {
+      "city": "Chicago",
+      "state": "IL",
+      "region": "Eastern, Illinois"
+    },
+    "category": "Indoor Event",
+    "organizer": "Leather SINS",
+    "ageRequirement": "18+",
+    "excerpt": "Kinky Kollege: Spring Break 2026 is the March edition of Leather SINS’ 3-day kink education weekend near Chicago O’Hare—classes, massive playspace, vendors, and community (same format as Homecoming). Dates verified on kinkykollege.com registration page.",
+    "longDescription": "Kinky Kollege: Spring Break 2026 runs March 20-22, 2026 (verified on the official Kinky Kollege membership/registration page). Like Homecoming, this is a three-day education and immersion event at a hotel and convention center near O’Hare International Airport, presented by Leather SINS (Social Interaction of the North Shore), NFP.\n\n**Highlights:** dozens of classes for all levels, large vendor presence, 15,000+ sq ft playspace with 75+ pieces of equipment, TAPAS-style hands-on stations, silent auction, professional portrait services, and scholarships. Profits benefit Leather SINS We Care Charities.\n\n**Registration:** Complete Leather SINS membership regulations and register via the official site and linked ticketing (Eventbrite events are linked from kinkykollege.com). 18+.",
+    "website": "https://kinkykollege.com/",
+    "logo": "/images/kinkykollege.png",
+    "features": [
+      "3-Day Education & Immersion",
+      "15,000+ sq ft Play Space",
+      "75+ Pieces of Equipment",
+      "Classes (Beginner to Advanced)",
+      "Vendor Hall",
+      "TAPAS Station",
+      "Silent Auction",
+      "Professional Photography",
+      "Scholarships Available",
+      "Near O’Hare Airport",
+      "Leather SINS We Care Charities"
+    ],
+    "seo": {
+      "title": "Kinky Kollege Spring Break 2026 - Chicago BDSM Education | East Coast Kink Events",
+      "description": "Kinky Kollege Spring Break 2026 (Mar 20-22, 2026) near O’Hare. Leather SINS presents 3 days of kink education, playspace, and vendors—dates per kinkykollege.com.",
+      "keywords": "Kinky Kollege, Spring Break 2026, Leather SINS, Chicago, O’Hare, BDSM education, kink convention, March 2026"
+    }
+  },
+  {
     "name": "Kinky Kollege: Homecoming 2026",
     "slug": "kinky-kollege",
     "date": {
@@ -2233,7 +2272,7 @@ export const events = [
     "website": "https://www.sexdownsouth.com/",
     "organizer": "Sex Down South",
     "venue": "Atlanta, GA (see official site for venue)",
-    "logo": "/images/og-image.png",
+    "logo": "/images/events/event-card-placeholder.svg",
     "features": [
       "Sex-positive education",
       "Workshops and panels",
@@ -2264,7 +2303,7 @@ export const events = [
     "website": "https://seleatherfest.com/",
     "organizer": "Southeast Leather Fest",
     "venue": "Atlanta, GA",
-    "logo": "/images/og-image.png",
+    "logo": "/images/events/event-card-placeholder.svg",
     "features": [
       "Leather community",
       "Workshops",
@@ -2295,7 +2334,7 @@ export const events = [
     "website": "https://www.dcfetishball.com/",
     "organizer": "Metro Underground",
     "venue": "Washington, DC",
-    "logo": "/images/og-image.png",
+    "logo": "/images/events/event-card-placeholder.svg",
     "features": [
       "Fetish ball",
       "DJ and dance",
@@ -2326,7 +2365,7 @@ export const events = [
     "website": "https://kc.gotomyevent.com/",
     "organizer": "Kinky Con",
     "venue": "Manchester, NH",
-    "logo": "/images/og-image.png",
+    "logo": "/images/events/event-card-placeholder.svg",
     "features": [
       "New England region",
       "Workshops",
@@ -2357,7 +2396,7 @@ export const events = [
     "website": "https://www.internationalmrleather.com/",
     "organizer": "International Mr. Leather, Inc.",
     "venue": "Chicago, IL",
-    "logo": "/images/og-image.png",
+    "logo": "/images/events/event-card-placeholder.svg",
     "features": [
       "International Mr. Leather contest",
       "Leather Market",

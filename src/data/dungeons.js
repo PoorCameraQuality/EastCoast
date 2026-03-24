@@ -446,7 +446,7 @@ export const dungeons = [
     },
     "contact": {},
     "website": "https://paddlesnyc.com/",
-    "logo": "/images/placeholder-logo.svg",
+    "logo": "/images/dungeons/brand-paddles-nyc.svg",
     "images": [],
     "seo": {
       "title": "Paddles - NYC Chelsea BDSM Club | East Coast Kink Events",
@@ -469,7 +469,7 @@ export const dungeons = [
     },
     "contact": {},
     "website": "https://www.tes.org/",
-    "logo": "/images/placeholder-logo.svg",
+    "logo": "/images/dungeons/brand-tes-nyc.svg",
     "images": [],
     "seo": {
       "title": "The Eulenspiegel Society (TES) - NYC | East Coast Kink Events",
@@ -492,7 +492,7 @@ export const dungeons = [
     },
     "contact": {},
     "website": "https://www.br.org/",
-    "logo": "/images/placeholder-logo.svg",
+    "logo": "/images/dungeons/brand-black-rose-dc.svg",
     "images": [],
     "seo": {
       "title": "Black Rose - Washington DC BDSM Education | East Coast Kink Events",
@@ -515,7 +515,7 @@ export const dungeons = [
     },
     "contact": {},
     "website": "https://www.themetrounderground.com/",
-    "logo": "/images/placeholder-logo.svg",
+    "logo": "/images/dungeons/brand-metro-underground-dc.svg",
     "images": [],
     "seo": {
       "title": "Metro Underground - DC Fetish Ball & Events | East Coast Kink Events",
@@ -538,12 +538,227 @@ export const dungeons = [
     },
     "contact": {},
     "website": "https://fetishfactory.com/",
-    "logo": "/images/placeholder-logo.svg",
+    "logo": "/images/dungeons/brand-fetish-factory-ftl.svg",
     "images": [],
     "seo": {
       "title": "Fetish Factory - Fort Lauderdale Fetish Events | East Coast Kink Events",
       "description": "Fetish Factory — South Florida fetish party producer and shop. See site for anniversary weekend and club nights.",
       "keywords": "Fetish Factory, Fort Lauderdale, South Florida fetish, kink events Florida"
+    }
+  },
+  {
+    "name": "New England Leather Alliance (NELA)",
+    "slug": "nela-new-england",
+    "location": {
+      "city": "Boston",
+      "state": "MA",
+      "address": "New England region (events across MA, NH, VT, RI, CT, ME)"
+    },
+    "category": "Community Organization",
+    "excerpt": "Regional leather and kink nonprofit serving New England—education, contests, and community gatherings. Not a brick-and-mortar dungeon; a hub for leather culture across the Northeast.",
+    "description": {
+      "long": "The New England Leather Alliance (NELA) supports leather, BDSM, and fetish communities across six states through contests, education, and social programming. Check nela.org for munches, weekend events, and how to get involved."
+    },
+    "contact": {},
+    "website": "https://nela.org/",
+    "logo": "/images/dungeons/brand-nela-new-england.svg",
+    "images": [],
+    "seo": {
+      "title": "NELA - New England Leather Alliance | East Coast Kink Events",
+      "description": "NELA — New England leather and kink nonprofit. Education, contests, and regional community across MA, NH, VT, RI, CT, ME.",
+      "keywords": "NELA, New England Leather Alliance, Boston leather, New England kink"
+    }
+  },
+  {
+    "name": "Deviance Tampa Bay",
+    "slug": "deviance-tampa-bay",
+    "location": {
+      "city": "Tampa",
+      "state": "FL",
+      "address": "Tampa Bay area, FL"
+    },
+    "category": "BDSM Dungeon",
+    "excerpt": "Deviance Tampa Bay is a 5,000+ sq ft community hub for kink, consent, and connection—open Friday and Saturday nights with membership, classes, and a well-equipped play space serving the Tampa Bay region.",
+    "description": {
+      "long": "Deviance Tampa Bay\n\nDeviance is a community-focused dungeon and education space in the Tampa Bay area. The venue describes itself as more than a dungeon: a hub where kink, consent, and connection are prioritized, with inclusive programming for newcomers and experienced players alike.\n\nThe facility includes classroom and community areas alongside a large play space with extensive equipment. Membership is positioned as an affordable path to regular access; special events run throughout the week—check the official calendar for hours, orientation, and RSVP details.\n\nAlcohol-free operation and consent-forward culture are emphasized on the public site. Visit deviancetampabay.com for membership, waivers, and event listings."
+    },
+    "contact": {},
+    "website": "https://deviancetampabay.com/",
+    "logo": "/images/dungeons/brand-deviance-tampa-bay.svg",
+    "images": [],
+    "seo": {
+      "title": "Deviance Tampa Bay - Florida BDSM Community Dungeon | East Coast Kink Events",
+      "description": "Deviance Tampa Bay — community kink hub in the Tampa Bay area with membership, education, and a large equipped play space.",
+      "keywords": "Deviance Tampa Bay, Tampa, Florida, BDSM dungeon, kink community, membership, Tampa Bay kink"
+    }
+  },
+  {
+    "name": "Galleria Domain 2",
+    "slug": "galleria-domain-2-chicago",
+    "location": {
+      "city": "Chicago",
+      "state": "IL",
+      "address": "Chicago, IL (members-only; address via club)"
+    },
+    "category": "BDSM Dungeon",
+    "excerpt": "Galleria Domain 2 (GD2) is a 501(c)(7) nonprofit private membership club in Chicago with 4,000+ sq ft of play space, social areas, and a library—open Friday through Sunday nights.",
+    "description": {
+      "long": "Galleria Domain 2 — Chicago, Illinois\n\nGalleria Domain 2 is a non-profit private membership club in Chicago. The club operates a 4,000+ square foot play space with multiple rooms of furniture, social areas, and a library. GD2 is open Friday, Saturday, and Sunday nights for members and qualified guests.\n\nAs a private, members-only environment, GD2 emphasizes safety, confidentiality, and community. Policies cover conduct, guests, photography, and standards of behavior—review galleriadomain.org for membership, visitor paths, and rules.\n\nMonthly educational programming and themed events are part of the club’s calendar. Alcohol-free operation and 18+ entry are reflected in published policies."
+    },
+    "contact": {},
+    "website": "https://galleriadomain.org/",
+    "logo": "/images/dungeons/brand-galleria-domain-2.svg",
+    "images": [],
+    "seo": {
+      "title": "Galleria Domain 2 - Chicago 501(c)7 BDSM Club | East Coast Kink Events",
+      "description": "Galleria Domain 2 (GD2) — Chicago nonprofit private membership kink club with 4,000+ sq ft play space. Policies and membership at galleriadomain.org.",
+      "keywords": "Galleria Domain 2, GD2, Chicago, Illinois, 501c7, BDSM club, private membership, Chicago dungeon"
+    }
+  },
+  {
+    "name": "The LoftNC",
+    "slug": "the-loftnc-gastonia-nc",
+    "location": {
+      "city": "Gastonia",
+      "state": "NC",
+      "address": "Gastonia, NC (see site for location details)"
+    },
+    "category": "BDSM Dungeon",
+    "excerpt": "The LoftNC is a private BDSM social club in Gastonia, North Carolina, offering education, recurring social events, and a member-focused dungeon experience in the Charlotte metro area.",
+    "description": {
+      "long": "The LoftNC — Gastonia, North Carolina\n\nThe LoftNC describes itself as a BDSM dungeon and social club serving the greater Charlotte region. The organization emphasizes education, social connection, and support for members who value responsibility, integrity, confidentiality, and mutual respect.\n\nRegular monthly programming plus special classes and events are listed on the public calendar. First-time attendees should review the site for waivers, COVID/event policies, and RSVP requirements.\n\nVisit loftnc.com for membership information, the event calendar, and contact options."
+    },
+    "contact": {},
+    "website": "https://loftnc.com/",
+    "logo": "/images/dungeons/brand-the-loftnc.svg",
+    "images": [],
+    "seo": {
+      "title": "The LoftNC - Gastonia NC BDSM Social Club | East Coast Kink Events",
+      "description": "The LoftNC — private BDSM dungeon and social club in Gastonia, NC near Charlotte. Education, social events, and member-focused play space.",
+      "keywords": "The LoftNC, Gastonia, North Carolina, Charlotte BDSM, dungeon, social club, kink community"
+    }
+  },
+  {
+    "name": "Oblige",
+    "slug": "oblige-detroit",
+    "location": {
+      "city": "Detroit",
+      "state": "MI",
+      "address": "Milwaukee Junction area, Detroit, MI (see site)"
+    },
+    "category": "BDSM Dungeon",
+    "excerpt": "Oblige is a 7,000 sq ft rope, kink, and art space in Detroit’s Milwaukee Junction—classes, rope jams, Performance & Play parties, munches, and equipped dungeon areas with community-forward programming.",
+    "description": {
+      "long": "Oblige — Detroit, Michigan\n\nOblige Rope, Kink, Art Boutique operates a large second-floor community space in Detroit’s Milwaukee Junction. Programming includes shibari and BDSM education, rope jams, Performance & Play events, munches, and themed weekend play nights.\n\nFacilities include rope and dungeon areas with multiple hard points and extensive furniture, plus social and retail/art elements as described on the public site. The venue highlights consent, inclusivity, and LGBTQIA+ welcoming policies.\n\nContact and schedules are maintained at obligerope.org."
+    },
+    "contact": {
+      "email": "obligerope@gmail.com"
+    },
+    "website": "https://www.obligerope.org/",
+    "logo": "/images/dungeons/brand-oblige-detroit.svg",
+    "images": [],
+    "seo": {
+      "title": "Oblige - Detroit Rope & Kink Community Space | East Coast Kink Events",
+      "description": "Oblige — Detroit rope, kink, and art boutique with classes, parties, and equipped dungeon and rope areas. obligerope.org.",
+      "keywords": "Oblige, Detroit, Michigan, shibari, BDSM dungeon, rope, kink education, Milwaukee Junction"
+    }
+  },
+  {
+    "name": "The Academy of Fetish Arts",
+    "slug": "academy-of-fetish-arts-cleveland",
+    "location": {
+      "city": "Cleveland",
+      "state": "OH",
+      "address": "2615 Lakeside Avenue, Building C, Cleveland, OH 44114"
+    },
+    "category": "BDSM Dungeon",
+    "excerpt": "The Academy of Fetish Arts is a large members-only playspace in Cleveland—6,500 sq ft with a main dungeon, themed rooms, social lounge, monitored parking, and regular Saturday parties and education for ages 19+.",
+    "description": {
+      "long": "The Academy of Fetish Arts — Cleveland, Ohio\n\nThe Academy of Fetish Arts operates one of Northeast Ohio’s largest inclusive BDSM and kink facilities as a private members-only social organization (19+). The building includes a main dungeon, multiple specialized playrooms, social lounge, and monitored parking.\n\nMembership and party dues are described on cle-afa.com, along with new-member orientation, event calendar, and FAQs. The venue hosts regular Saturday events, classes, and themed gatherings for diverse groups within the kink community.\n\nContact: info@cle-afa.com (as listed on the official site)."
+    },
+    "contact": {
+      "email": "info@cle-afa.com"
+    },
+    "website": "https://cle-afa.com/",
+    "logo": "/images/dungeons/brand-academy-fetish-arts-cleveland.svg",
+    "images": [],
+    "seo": {
+      "title": "The Academy of Fetish Arts - Cleveland BDSM Playspace | East Coast Kink Events",
+      "description": "The Academy of Fetish Arts — Cleveland members-only kink facility with 6,500 sq ft, main dungeon, themed rooms, and regular events. cle-afa.com.",
+      "keywords": "Academy of Fetish Arts, Cleveland, Ohio, BDSM dungeon, members only, Lakeside Avenue, Northeast Ohio kink"
+    }
+  },
+  {
+    "name": "The Emporium (Kink Haven)",
+    "slug": "the-emporium-kink-haven-connecticut",
+    "location": {
+      "city": "Connecticut",
+      "state": "CT",
+      "address": "Central Connecticut (The Studio; see site for event location details)"
+    },
+    "category": "Community Organization",
+    "excerpt": "The Emporium’s Kink Haven offers BDSM 101 and fetish education, munches, and play parties at The Studio—a Connecticut-based community space centered on safety, education, consent, and diversity.",
+    "description": {
+      "long": "The Emporium — Kink Haven (Connecticut)\n\nThe Emporium hosts Kink Haven programming built around safety, education, consent, and diversity. Offerings include BDSM 101 and related classes, community gatherings, munches, and flexible play-party space at a venue referred to on the site as The Studio, with central Connecticut access from New York and Massachusetts.\n\nThe organization is volunteer-led; contact info@the-emporium.org for schedules and event access. Published materials describe ongoing expansion of dungeon equipment and themed structures—confirm current amenities on the official site before visiting.\n\nThis listing reflects a community education and social model rather than a pro-session studio."
+    },
+    "contact": {
+      "email": "info@the-emporium.org"
+    },
+    "website": "https://www.the-emporium.org/",
+    "logo": "/images/dungeons/brand-the-emporium-kink-haven.svg",
+    "images": [],
+    "seo": {
+      "title": "The Emporium Kink Haven - Connecticut BDSM Education | East Coast Kink Events",
+      "description": "The Emporium — Kink Haven community classes, munches, and parties in central Connecticut. Safety, education, consent, diversity. the-emporium.org.",
+      "keywords": "The Emporium, Kink Haven, Connecticut, BDSM education, community, The Studio, CT kink"
+    }
+  },
+  {
+    "name": "The Chicago Rose",
+    "slug": "chicago-rose-club",
+    "location": {
+      "city": "Chicago",
+      "state": "IL",
+      "address": "6525 North Clark Street, Chicago, IL (Rogers Park)"
+    },
+    "category": "BDSM Dungeon",
+    "excerpt": "The Chicago Rose is a volunteer-run BDSM dungeon in Rogers Park—education nights, social and play weekends, consent-forward policies, and optional private rentals supporting a diverse Chicago kink community (18+).",
+    "description": {
+      "long": "The Chicago Rose — Chicago, Illinois\n\nThe Chicago Rose operates in Rogers Park as a diverse, volunteer-run BDSM dungeon and social space. Public-facing information highlights educational programming, social events, dungeon etiquette, mediation resources, and community support initiatives.\n\nTypical weekly patterns include weekday education and weekend evening play (see thechicagoroseclub.org for current hours, ID requirements, and BYOB policies where applicable). Private rentals for workshops and shoots are described as part of operations alongside community events.\n\nThe venue is not listed here as a pro-domme house; it is framed as a community dungeon with membership and volunteer involvement."
+    },
+    "contact": {},
+    "website": "https://www.thechicagoroseclub.org/",
+    "logo": "/images/dungeons/brand-chicago-rose-club.svg",
+    "images": [],
+    "seo": {
+      "title": "The Chicago Rose - Rogers Park BDSM Dungeon | East Coast Kink Events",
+      "description": "The Chicago Rose — volunteer-run BDSM dungeon in Chicago Rogers Park. Education, play events, community policies. thechicagoroseclub.org.",
+      "keywords": "Chicago Rose, Chicago, Illinois, Rogers Park, BDSM dungeon, volunteer, kink community"
+    }
+  },
+  {
+    "name": "LRA Chicago",
+    "slug": "lra-chicago",
+    "location": {
+      "city": "Chicago",
+      "state": "IL",
+      "address": "Chicago, IL (see site for location and tours)"
+    },
+    "category": "BDSM Dungeon",
+    "excerpt": "LRA Chicago is a volunteer-operated 501(c)(3) nonprofit with 2,500+ sq ft of dungeon space, a non-alcoholic social bar area, and regular public education events for adults 19+ exploring kink and relationships.",
+    "description": {
+      "long": "LRA Chicago — Chicago, Illinois\n\nLeather Rose Association (LRA) Chicago is described on its official site as Chicago’s oldest inclusive alternative-lifestyle organization, operated by volunteers as a 501(c)(3) nonprofit. The club provides education, social space, and support for adults interested in consensual kink and relationship dynamics.\n\nThe facility includes more than 2,500 square feet of play space plus a social area with a non-alcoholic bar. Educational events open to the public are listed on the calendar; membership paths support ongoing participation.\n\nGeneral inquiries: club-services@lra-chicago.org. Donations: donor-services@lra-chicago.org. Full details at lra-chicago.org."
+    },
+    "contact": {
+      "email": "club-services@lra-chicago.org"
+    },
+    "website": "https://lra-chicago.org/",
+    "logo": "/images/dungeons/brand-lra-chicago.svg",
+    "images": [],
+    "seo": {
+      "title": "LRA Chicago - 501(c)(3) BDSM Dungeon & Education | East Coast Kink Events",
+      "description": "LRA Chicago — nonprofit leather and kink community organization with dungeon space, education, and social programming. lra-chicago.org.",
+      "keywords": "LRA Chicago, Chicago, Illinois, 501c3, BDSM dungeon, leather, kink education, nonprofit"
     }
   }
 ];

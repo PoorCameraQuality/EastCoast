@@ -22,6 +22,19 @@ export async function middleware(req: NextRequest) {
     return NextResponse.next()
   }
 
+  // Legacy CMS paths: always consolidate under /events (case-insensitive; backup to next.config).
+  const pathLower = pathname.toLowerCase()
+  if (pathLower === '/kinkeventcalendar' || pathLower.startsWith('/kinkeventcalendar/')) {
+    const dest = req.nextUrl.clone()
+    if (pathLower === '/kinkeventcalendar') {
+      dest.pathname = '/events'
+    } else {
+      const slug = pathLower.slice('/kinkeventcalendar/'.length)
+      dest.pathname = slug ? `/events/${slug}` : '/events'
+    }
+    return NextResponse.redirect(dest, 308)
+  }
+
   // Normalize URL: force www and lowercase paths
   const host = req.headers.get('host') || ''
   const lowerPath = pathname.toLowerCase()

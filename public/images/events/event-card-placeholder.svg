@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="200" viewBox="0 0 400 200" role="img" aria-label="East Coast Kink Events event placeholder">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#1e3a5f"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="200" rx="14" fill="url(#bg)"/>
+  <rect x="2" y="2" width="396" height="196" rx="12" fill="none" stroke="#3b82f6" stroke-opacity="0.35" stroke-width="1"/>
+  <text x="200" y="88" text-anchor="middle" fill="#93c5fd" font-family="Georgia, 'Times New Roman', serif" font-size="20" font-weight="bold">East Coast Kink Events</text>
+  <text x="200" y="118" text-anchor="middle" fill="#64748b" font-family="system-ui, Segoe UI, sans-serif" font-size="13">Event card  logo pending</text>
+</svg>

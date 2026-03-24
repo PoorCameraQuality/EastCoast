@@ -47,3 +47,6 @@ Thumbs.db
 
 # Image/temp artifacts
 public/images/*.tmp
+
+# Local artifact: empty/locked partial download (listing uses brand-galleria-domain-2.svg)
+public/images/dungeons/galleria-domain-2.png
