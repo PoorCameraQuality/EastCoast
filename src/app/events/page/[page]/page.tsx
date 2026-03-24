@@ -13,16 +13,35 @@ interface PageProps {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const pageNum = Math.max(1, parseInt(params.page) || 1)
-  
+  const events = getAllEvents()
+  const now = new Date()
+  const upcomingEvents = events.filter((event) => new Date(event.date.end) >= now)
+  const totalPages = Math.max(1, Math.ceil(upcomingEvents.length / EVENTS_PER_PAGE))
+  const description = `Upcoming kink events — page ${pageNum} of ${totalPages}. Browse BDSM conferences and workshops across the East Coast.`
+
   return {
     title: `Events - Page ${pageNum} | East Coast Kink Events`,
-    description: `Browse kink events, BDSM conferences, and workshops across the East Coast. Page ${pageNum} of our event listings.`,
+    description: description.slice(0, 160),
     alternates: {
       canonical: `${BASE_URL}/events/page/${pageNum}`,
     },
     robots: {
       index: true,
       follow: true,
+    },
+    openGraph: {
+      title: `Events - Page ${pageNum}`,
+      description: description.slice(0, 200),
+      type: 'website',
+      url: `${BASE_URL}/events/page/${pageNum}`,
+      siteName: 'East Coast Kink Events',
+      images: [{ url: `${BASE_URL}/og-image.png`, width: 1200, height: 630, alt: 'East Coast Kink Events' }],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `Events - Page ${pageNum}`,
+      description: description.slice(0, 200),
+      images: [`${BASE_URL}/og-image.png`],
     },
   }
 }

@@ -27,6 +27,7 @@ When working with education articles in the Supabase database, always use the co
 | `seo_title` | text | Custom SEO title |
 | `meta_description` | text | Meta description for SEO |
 | `focus_keywords` | array | SEO focus keywords |
+| `og_image` | text | Optional Open Graph image URL (https or site path starting with `/`) |
 
 ### Common Mistakes to Avoid
 
@@ -62,6 +63,7 @@ interface Article {
   seo_title?: string
   meta_description?: string
   focus_keywords?: string[]
+  og_image?: string | null
 }
 ```
 
@@ -97,6 +99,11 @@ When adding new articles or updating existing ones:
 - `src/components/education/ArticleCard.tsx`
 - `src/app/education/[slug]/page.tsx`
 - Any new education-related components
+
+### Database migrations (Supabase)
+
+- Run [database/articles_add_og_image.sql](database/articles_add_og_image.sql) once to add the optional `og_image` column before using the admin “Social / OG image URL” field (inserts include `og_image` and will fail if the column is missing).
+- Review and apply [database/articles_rls_policies.sql](database/articles_rls_policies.sql) so `anon` can `SELECT` published rows only and `admin`/`moderator` profiles retain full access.
 
 ### Verification Checklist
 

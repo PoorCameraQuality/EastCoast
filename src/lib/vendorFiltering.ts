@@ -34,6 +34,20 @@ export function normalizeFilterMode(mode: string | null | undefined): VendorFilt
   return mode === 'and' ? 'and' : 'or'
 }
 
+/** Parse `tag` query keys from App Router `searchParams` (server or static). */
+export function getTagSlugsFromPageSearchParams(
+  searchParams: Record<string, string | string[] | undefined>
+): string[] {
+  const sp = new URLSearchParams()
+  const tag = searchParams.tag
+  if (Array.isArray(tag)) {
+    for (const t of tag) sp.append('tag', t)
+  } else if (typeof tag === 'string') {
+    sp.append('tag', tag)
+  }
+  return getSelectedTagSlugsFromSearchParams(sp)
+}
+
 export function getSelectedTagSlugsFromSearchParams(sp: URLSearchParams): string[] {
   // Preserves the order the user selected tags (URLSearchParams maintains insertion order).
   const raw = sp.getAll('tag').map((t) => t.trim()).filter(Boolean)

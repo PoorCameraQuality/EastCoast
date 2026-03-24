@@ -430,6 +430,121 @@ export const dungeons = [
       "description": "The Korral is a private members-only, sex-positive club in Spring Grove, PA. Fri/Sat 7pm–2am. Membership $50/year. Monthly Kink Nights, pool, 18 themed rooms, BDSM hallway.",
       "keywords": "The Korral, Spring Grove, Pennsylvania, private members club, sex-positive, Kink Night, consent, lifestyle club"
     }
+  },
+  {
+    "name": "Paddles",
+    "slug": "paddles-nyc",
+    "location": {
+      "city": "New York",
+      "state": "NY",
+      "address": "Chelsea, Manhattan, NY"
+    },
+    "category": "BDSM Dungeon",
+    "excerpt": "Long-running public BDSM play space in Manhattan with coed and men-only nights, equipment, and a street-accessible Chelsea location. Verify hours and policies on the venue website before visiting.",
+    "description": {
+      "long": "Paddles is one of New York City’s longest-running public BDSM venues. The club hosts themed nights and welcomes newcomers on select evenings. Dress codes, membership requirements, and photography rules apply—always read the latest information on paddlesnyc.com before you go."
+    },
+    "contact": {},
+    "website": "https://paddlesnyc.com/",
+    "logo": "/images/placeholder-logo.svg",
+    "images": [],
+    "seo": {
+      "title": "Paddles - NYC Chelsea BDSM Club | East Coast Kink Events",
+      "description": "Paddles — long-running Manhattan BDSM club in Chelsea. Check the official site for nights, pricing, and rules.",
+      "keywords": "Paddles, NYC, Chelsea, Manhattan dungeon, BDSM club New York"
+    }
+  },
+  {
+    "name": "The Eulenspiegel Society (TES)",
+    "slug": "tes-nyc",
+    "location": {
+      "city": "New York",
+      "state": "NY",
+      "address": "New York, NY"
+    },
+    "category": "Community Organization",
+    "excerpt": "Founded in 1971, TES is one of the oldest BDSM organizations in the US—munches, classes, workshops, and TES Fest in New Jersey.",
+    "description": {
+      "long": "The Eulenspiegel Society (TES) serves the New York metro area with education, discussion groups, and social events. Membership supports programming year-round; TES also produces TES Fest. Visit tes.org for calendars and volunteer opportunities."
+    },
+    "contact": {},
+    "website": "https://www.tes.org/",
+    "logo": "/images/placeholder-logo.svg",
+    "images": [],
+    "seo": {
+      "title": "The Eulenspiegel Society (TES) - NYC | East Coast Kink Events",
+      "description": "TES — historic NYC-based BDSM education organization since 1971. Munches, classes, and TES Fest.",
+      "keywords": "TES, Eulenspiegel Society, New York BDSM, munches, education"
+    }
+  },
+  {
+    "name": "Black Rose",
+    "slug": "black-rose-dc",
+    "location": {
+      "city": "Washington",
+      "state": "DC",
+      "address": "Washington, DC metro"
+    },
+    "category": "Community Organization",
+    "excerpt": "Large DC-area BDSM education and social nonprofit—classes, munches, and play parties since 1988.",
+    "description": {
+      "long": "Black Rose is a volunteer-run organization offering education, discussion, and social events for the Washington, DC kink community. Membership and event listings are published on br.org."
+    },
+    "contact": {},
+    "website": "https://www.br.org/",
+    "logo": "/images/placeholder-logo.svg",
+    "images": [],
+    "seo": {
+      "title": "Black Rose - Washington DC BDSM Education | East Coast Kink Events",
+      "description": "Black Rose — DC-area BDSM education and social organization with classes and community events since 1988.",
+      "keywords": "Black Rose, Washington DC, BDSM education, munches, DC kink"
+    }
+  },
+  {
+    "name": "Metro Underground / DC Fetish Ball",
+    "slug": "metro-underground-dc",
+    "location": {
+      "city": "Washington",
+      "state": "DC",
+      "address": "Washington, DC metro"
+    },
+    "category": "Venue & Producer",
+    "excerpt": "Producer of the DC Fetish Ball and related Mid-Atlantic nightlife—multi-level venue programming with dungeon and dance floors.",
+    "description": {
+      "long": "Metro Underground produces large-scale fetish and alternative events in the DC area, including the DC Fetish Ball. Event formats, ticketing, and venue addresses vary—follow themetrounderground.com and dcfetishball.com for current listings."
+    },
+    "contact": {},
+    "website": "https://www.themetrounderground.com/",
+    "logo": "/images/placeholder-logo.svg",
+    "images": [],
+    "seo": {
+      "title": "Metro Underground - DC Fetish Ball & Events | East Coast Kink Events",
+      "description": "Metro Underground — DC/Baltimore fetish events including DC Fetish Ball. Check official sites for dates and tickets.",
+      "keywords": "Metro Underground, DC Fetish Ball, Washington DC fetish, Mid-Atlantic kink events"
+    }
+  },
+  {
+    "name": "Fetish Factory",
+    "slug": "fetish-factory-ft-lauderdale",
+    "location": {
+      "city": "Fort Lauderdale",
+      "state": "FL",
+      "address": "Fort Lauderdale, FL"
+    },
+    "category": "Event Producer",
+    "excerpt": "South Florida fetish event producer—parties and the annual anniversary weekend serving the Florida kink and fetish scene.",
+    "description": {
+      "long": "Fetish Factory has produced fetish-forward nightlife and annual gatherings in South Florida for decades. Shop and event schedules are listed on fetishfactory.com."
+    },
+    "contact": {},
+    "website": "https://fetishfactory.com/",
+    "logo": "/images/placeholder-logo.svg",
+    "images": [],
+    "seo": {
+      "title": "Fetish Factory - Fort Lauderdale Fetish Events | East Coast Kink Events",
+      "description": "Fetish Factory — South Florida fetish party producer and shop. See site for anniversary weekend and club nights.",
+      "keywords": "Fetish Factory, Fort Lauderdale, South Florida fetish, kink events Florida"
+    }
   }
 ];
 

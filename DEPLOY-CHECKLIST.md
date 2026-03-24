@@ -79,6 +79,13 @@ curl -s https://staging.yoursite.com/robots.txt | grep "Sitemap:"
 # Expected: Sitemap: https://www.eastcoastkinkevents.com/sitemap.xml
 ```
 
+#### Google Search Console (articles / organic)
+- [ ] Property verified for `https://www.eastcoastkinkevents.com`
+- [ ] Submit sitemap: `https://www.eastcoastkinkevents.com/sitemap.xml` (Sitemaps report)
+- [ ] After deploy, use **URL Inspection** on `/education` and 2–3 article URLs; request indexing if needed
+- [ ] **Pages** report: watch “Crawled – currently not indexed” and fix coverage issues on `/education/*`
+- [ ] **Enhancements** (or Rich results / structured data): fix any Article/Breadcrumb errors reported
+
 #### Dungeons Deduplication
 ```bash
 # Count unique dungeons

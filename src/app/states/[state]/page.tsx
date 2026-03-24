@@ -85,9 +85,24 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     },
     openGraph: {
       title: `${stateInfo.name} Kink Events & Dungeons`,
-      description: `Find BDSM events and dungeons in ${stateInfo.name}`,
+      description: `Find BDSM events and dungeons in ${stateInfo.name}. ${eventCount} upcoming events and ${dungeonCount} dungeon listings in this directory (counts change as listings update).`,
       type: 'website',
       url: `${BASE_URL}/states/${params.state}`,
+      siteName: 'East Coast Kink Events',
+      images: [
+        {
+          url: `${BASE_URL}/og-image.png`,
+          width: 1200,
+          height: 630,
+          alt: `${stateInfo.name} — East Coast Kink Events`,
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${stateInfo.name} Kink Events & Dungeons`,
+      description: `Kink events and dungeons in ${stateInfo.name} (${stateInfo.abbr}).`,
+      images: [`${BASE_URL}/og-image.png`],
     },
   }
 }

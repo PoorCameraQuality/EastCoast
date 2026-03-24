@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { useMemo } from 'react'
-import { usePathname, useRouter, useSearchParams } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import type { VendorTag, VendorTagGroup } from '@/data/vendorTaxonomy'
 import VendorFilters from '@/components/vendors/VendorFilters'
 import VendorCard from '@/components/vendors/VendorCard'
@@ -11,7 +11,6 @@ import Breadcrumb from '@/components/Breadcrumb'
 import SupportCTAInline from '@/components/SupportCTAInline'
 import {
   filterVendorsBySelectedTags,
-  getSelectedTagSlugsFromSearchParams,
   type VendorRecord,
 } from '@/lib/vendorFiltering'
 
@@ -21,15 +20,20 @@ type Props = {
   tags: VendorTag[]
   tagsBySlug: Record<string, VendorTag>
   tagGroupsById: Record<string, VendorTagGroup>
+  /** From server-parsed `?tag=` — source of truth for SEO / crawlers. */
+  selectedTagSlugs: string[]
 }
 
-export default function VendorsPageClient({ vendors, tagGroups, tags, tagsBySlug, tagGroupsById }: Props) {
+export default function VendorsPageClient({
+  vendors,
+  tagGroups,
+  tags,
+  tagsBySlug,
+  tagGroupsById,
+  selectedTagSlugs,
+}: Props) {
   const router = useRouter()
   const pathname = usePathname()
-  const sp = useSearchParams()
-
-  const spString = sp.toString()
-  const selectedTagSlugs = useMemo(() => getSelectedTagSlugsFromSearchParams(new URLSearchParams(spString)), [spString])
 
   const availableTagSlugs = useMemo(() => {
     const set = new Set<string>()

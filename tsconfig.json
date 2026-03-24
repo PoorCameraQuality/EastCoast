@@ -39,6 +39,7 @@
   "exclude": [
     "node_modules",
     "Please fix this",
-    "**/*.d.ts"
+    "**/*.d.ts",
+    "projectfilesmigration"
   ]
 }

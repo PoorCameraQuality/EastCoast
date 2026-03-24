@@ -2213,6 +2213,161 @@ export const events = [
       "description": "Join Beyond Leather 2026 in West Palm Beach, FL for 55+ BDSM workshops, International Power Exchange Contest, multiple theaters, dungeon play, and community building in a safe environment.",
       "keywords": "Beyond Leather, International Power Exchange Contest, West Palm Beach, BDSM workshops, kink education, power exchange, leather community, dungeon play, burlesque, fire theater, BIPoC social, speed perving, fetish education, Florida kink events"
     }
+  },
+  {
+    "name": "Sex Down South 2026",
+    "slug": "sex-down-south",
+    "date": {
+      "start": "2026-09-17",
+      "end": "2026-09-20",
+      "display": "Sep 17-20, 2026"
+    },
+    "location": {
+      "city": "Atlanta",
+      "state": "GA",
+      "region": "Southeast, Georgia"
+    },
+    "category": "Indoor Event",
+    "excerpt": "Sex Down South is a major sex-positive conference in Atlanta with workshops on sexuality, relationships, kink, and intimacy. National speakers and a Southeast-focused audience.",
+    "longDescription": "Sex Down South brings together educators and attendees for a long weekend focused on sex positivity, relationships, and personal growth. Programming typically spans multiple tracks; confirm schedules and venue details on the official site before you travel.",
+    "website": "https://www.sexdownsouth.com/",
+    "organizer": "Sex Down South",
+    "venue": "Atlanta, GA (see official site for venue)",
+    "logo": "/images/og-image.png",
+    "features": [
+      "Sex-positive education",
+      "Workshops and panels",
+      "Southeast community hub"
+    ],
+    "seo": {
+      "title": "Sex Down South 2026 - Atlanta Sex-Positive Conference | East Coast Kink Events",
+      "description": "Sex Down South 2026 in Atlanta, GA — a major sex-positive conference with workshops on intimacy, relationships, and kink-inclusive education.",
+      "keywords": "Sex Down South, Atlanta, Georgia, sex positive conference, kink education, Southeast"
+    }
+  },
+  {
+    "name": "Southeast Leather Fest (SELF) 2026",
+    "slug": "southeast-leather-fest",
+    "date": {
+      "start": "2026-04-17",
+      "end": "2026-04-19",
+      "display": "Apr 17-19, 2026"
+    },
+    "location": {
+      "city": "Atlanta",
+      "state": "GA",
+      "region": "Southeast, Georgia"
+    },
+    "category": "Leather Event",
+    "excerpt": "SELF is a significant leather community weekend in Atlanta with workshops, socials, and contest programming serving the Southeast.",
+    "longDescription": "Southeast Leather Fest (SELF) gathers leather and kink communities for education, social events, and contests. Dates and venue are published on the official site—verify before booking travel.",
+    "website": "https://seleatherfest.com/",
+    "organizer": "Southeast Leather Fest",
+    "venue": "Atlanta, GA",
+    "logo": "/images/og-image.png",
+    "features": [
+      "Leather community",
+      "Workshops",
+      "Contests and socials"
+    ],
+    "seo": {
+      "title": "Southeast Leather Fest (SELF) 2026 - Atlanta | East Coast Kink Events",
+      "description": "SELF 2026 in Atlanta — Southeast leather weekend with workshops, socials, and contest programming.",
+      "keywords": "SELF, Southeast Leather Fest, Atlanta leather, leather community"
+    }
+  },
+  {
+    "name": "DC Fetish Ball",
+    "slug": "dc-fetish-ball",
+    "date": {
+      "start": "2026-06-15",
+      "end": "2026-06-15",
+      "display": "Jun 2026 (confirm date)"
+    },
+    "location": {
+      "city": "Washington",
+      "state": "DC",
+      "region": "Mid-Atlantic"
+    },
+    "category": "Indoor Event",
+    "excerpt": "Large recurring Mid-Atlantic fetish ball produced by Metro Underground, with DJs, dungeon space, performances, and multiple levels of entertainment.",
+    "longDescription": "The DC Fetish Ball is one of the region’s best-known recurring fetish nights. Exact dates vary by year—check Metro Underground and the official fetish ball site for tickets and dress code.",
+    "website": "https://www.dcfetishball.com/",
+    "organizer": "Metro Underground",
+    "venue": "Washington, DC",
+    "logo": "/images/og-image.png",
+    "features": [
+      "Fetish ball",
+      "DJ and dance",
+      "Dungeon and performances"
+    ],
+    "seo": {
+      "title": "DC Fetish Ball - Washington DC | East Coast Kink Events",
+      "description": "DC Fetish Ball — major Mid-Atlantic fetish event with Metro Underground. Confirm dates on the official site.",
+      "keywords": "DC Fetish Ball, Washington DC, Metro Underground, fetish ball"
+    }
+  },
+  {
+    "name": "Kinky Con 2026",
+    "slug": "kinky-con-new-hampshire",
+    "date": {
+      "start": "2026-11-13",
+      "end": "2026-11-15",
+      "display": "Nov 13-15, 2026"
+    },
+    "location": {
+      "city": "Manchester",
+      "state": "NH",
+      "region": "New England"
+    },
+    "category": "Indoor Event",
+    "excerpt": "New England kink conference in Manchester, NH with workshops, vendor marketplace, and social programming.",
+    "longDescription": "Kinky Con brings together the New England kink community for a weekend of classes, shopping, and parties. Verify registration and hotel blocks on the official event site.",
+    "website": "https://kc.gotomyevent.com/",
+    "organizer": "Kinky Con",
+    "venue": "Manchester, NH",
+    "logo": "/images/og-image.png",
+    "features": [
+      "New England region",
+      "Workshops",
+      "Vendors and socials"
+    ],
+    "seo": {
+      "title": "Kinky Con 2026 - Manchester NH | East Coast Kink Events",
+      "description": "Kinky Con 2026 — New England kink conference in Manchester, NH with workshops and vendors.",
+      "keywords": "Kinky Con, Manchester NH, New England kink conference"
+    }
+  },
+  {
+    "name": "International Mr. Leather (IML) 2026",
+    "slug": "international-mr-leather",
+    "date": {
+      "start": "2026-05-22",
+      "end": "2026-05-25",
+      "display": "May 22-25, 2026"
+    },
+    "location": {
+      "city": "Chicago",
+      "state": "IL",
+      "region": "Midwest, Illinois"
+    },
+    "category": "Contest Weekend",
+    "excerpt": "IML is the world’s largest leather contest weekend in Chicago over Memorial Day, with the International Mr. Leather competition, vendor market, and citywide events.",
+    "longDescription": "International Mr. Leather anchors Memorial Day weekend in Chicago with contests, the Leather Market, fundraisers, and community gatherings. Many attendees travel from the East Coast; confirm schedules on internationalmrleather.com.",
+    "website": "https://www.internationalmrleather.com/",
+    "organizer": "International Mr. Leather, Inc.",
+    "venue": "Chicago, IL",
+    "logo": "/images/og-image.png",
+    "features": [
+      "International Mr. Leather contest",
+      "Leather Market",
+      "Memorial Day weekend"
+    ],
+    "seo": {
+      "title": "International Mr. Leather (IML) 2026 - Chicago | East Coast Kink Events",
+      "description": "IML 2026 in Chicago over Memorial Day — International Mr. Leather contest, vendor market, and leather community events.",
+      "keywords": "IML, International Mr. Leather, Chicago, leather contest, Memorial Day"
+    }
   }
 ];
 

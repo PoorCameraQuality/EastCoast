@@ -3,50 +3,38 @@
 import { getEventsByCategory } from '@/data/events'
 import Link from 'next/link'
 import EventLogo from '@/components/EventLogo'
-import { useState, useEffect, useMemo } from 'react'
-import { useSearchParams } from 'next/navigation'
-import { EventListStructuredData } from '@/components/StructuredData'
+import { useMemo } from 'react'
+import { useRouter } from 'next/navigation'
+import { buildEventsListUrl } from '@/lib/eventsListSearchParams'
 import Breadcrumb from '@/components/Breadcrumb'
 import Search from '@/components/Search'
 import { CONTACT_US_LABEL } from '@/lib/submissionContact'
 import SupportCTAInline from '@/components/SupportCTAInline'
+import NewsletterSignup from '@/components/NewsletterSignup'
 
 type Props = {
   allEvents: Array<{
     slug: string
     name: string
     category: string
-    date: { display: string }
+    date: { display: string; start: string; end: string }
     location: { city: string; state: string }
     excerpt: string
     logo?: string
     altText?: string
   }>
   allDungeons: Array<{ slug: string; name: string }>
+  /** Derived on the server from URL — single source of truth for filters (SEO / crawlers). */
+  selectedCategory: string
 }
 
-export default function EventsPageClient({ allEvents, allDungeons }: Props) {
+export default function EventsPageClient({ allEvents, allDungeons, selectedCategory }: Props) {
   const categories = useMemo(() => ['Outdoor Events', 'Indoor Events'], [])
-  const [selectedCategory, setSelectedCategory] = useState('All Events')
-  const searchParams = useSearchParams()
+  const router = useRouter()
 
-  // Handle URL parameters for filtering
-  useEffect(() => {
-    const categoryParam = searchParams.get('category')
-    const locationParam = searchParams.get('location')
-    
-    if (categoryParam) {
-      // Map URL category to display category
-      const decodedCategory = decodeURIComponent(categoryParam)
-      if (categories.includes(decodedCategory)) {
-        setSelectedCategory(decodedCategory)
-      }
-    } else if (locationParam) {
-      // For location filtering, we'll use "All Events" but show filtered results
-      const decodedLocation = decodeURIComponent(locationParam)
-      setSelectedCategory(`Location: ${decodedLocation}`)
-    }
-  }, [searchParams, categories])
+  const applyCategory = (next: string) => {
+    router.replace(buildEventsListUrl(next))
+  }
 
   // Map plural button labels to singular category values
   const getCategoryForFilter = (filterLabel: string) => {
@@ -78,29 +66,20 @@ export default function EventsPageClient({ allEvents, allDungeons }: Props) {
     return { upcomingEvents, pastEvents }
   }
 
-  // Filter events based on selected category or location
+  // Filter events based on selected category or location (from server-parsed URL)
   const getFilteredEvents = () => {
-    const locationParam = searchParams.get('location')
-    
-    if (locationParam) {
-      // Filter by location
-      const decodedLocation = decodeURIComponent(locationParam)
-      return allEvents.filter(event => 
-        event.location.state.toLowerCase().includes(decodedLocation.toLowerCase()) ||
-        event.location.city.toLowerCase().includes(decodedLocation.toLowerCase())
-      )
-    } else if (selectedCategory === 'All Events') {
+    if (selectedCategory === 'All Events') {
       return allEvents
-    } else if (selectedCategory.startsWith('Location: ')) {
-      // Handle location category display
-      const location = selectedCategory.replace('Location: ', '')
-      return allEvents.filter(event => 
-        event.location.state.toLowerCase().includes(location.toLowerCase()) ||
-        event.location.city.toLowerCase().includes(location.toLowerCase())
-      )
-    } else {
-      return getEventsByCategory(getCategoryForFilter(selectedCategory))
     }
+    if (selectedCategory.startsWith('Location: ')) {
+      const location = selectedCategory.replace('Location: ', '')
+      return allEvents.filter(
+        (event) =>
+          event.location.state.toLowerCase().includes(location.toLowerCase()) ||
+          event.location.city.toLowerCase().includes(location.toLowerCase())
+      )
+    }
+    return getEventsByCategory(getCategoryForFilter(selectedCategory))
   }
 
   const baseEvents = getFilteredEvents()
@@ -123,11 +102,13 @@ export default function EventsPageClient({ allEvents, allDungeons }: Props) {
         <div className="absolute bottom-20 left-1/3 w-20 h-20 bg-gradient-to-r from-blue-400 to-primary-500 rounded-full blur-xl animate-pulse delay-1500 motion-reduce:animate-none"></div>
       </div>
 
-      <EventListStructuredData />
       <div className="container-custom py-8 md:py-16 relative z-10">
         <Breadcrumb items={breadcrumbItems} />
         <SupportCTAInline contextLabel="Events" />
-        
+        <div className="max-w-xl mx-auto mb-10">
+          <NewsletterSignup variant="compact" />
+        </div>
+
         {/* Enhanced Header Section */}
         <div className="text-center mb-10 md:mb-16">
           <h1 className="text-3xl sm:text-4xl md:text-6xl font-serif font-bold text-white mb-6 relative">
@@ -173,7 +154,7 @@ export default function EventsPageClient({ allEvents, allDungeons }: Props) {
             <button 
               key="all-events"
               type="button"
-              onClick={() => setSelectedCategory('All Events')}
+              onClick={() => applyCategory('All Events')}
               className={`group inline-flex shrink-0 snap-start min-h-touch items-center px-5 md:px-6 py-3 rounded-full font-bold transition-colors duration-300 shadow-xl md:hover:scale-105 motion-reduce:md:hover:scale-100 ${
                 selectedCategory === 'All Events' 
                   ? 'bg-gradient-to-r from-primary-600 via-blue-600 to-primary-700 text-white hover:from-primary-700 hover:via-blue-700 hover:to-primary-800 hover:shadow-primary-500/25' 
@@ -193,7 +174,7 @@ export default function EventsPageClient({ allEvents, allDungeons }: Props) {
               <button 
                 key={category}
                 type="button"
-                onClick={() => setSelectedCategory(category)}
+                onClick={() => applyCategory(category)}
                 className={`group inline-flex shrink-0 snap-start min-h-touch items-center px-5 md:px-6 py-3 rounded-full font-bold transition-colors duration-300 shadow-xl md:hover:scale-105 motion-reduce:md:hover:scale-100 ${
                   selectedCategory === category 
                     ? 'bg-gradient-to-r from-primary-600 via-blue-600 to-primary-700 text-white hover:from-primary-700 hover:via-blue-700 hover:to-primary-800 hover:shadow-primary-500/25' 

@@ -31,14 +31,16 @@ export async function generateMetadata({
       ? rawLogoUrl
       : `${BASE_URL}${rawLogoUrl}`
     : `${BASE_URL}/og-image.png`
-  const description = vendor.description || vendor.story || 'Vendor listing'
+  const rawDesc = (vendor.description || vendor.story || 'Vendor listing').trim()
+  const description = rawDesc.length > 160 ? `${rawDesc.slice(0, 157)}…` : rawDesc
+  const ogDescription = rawDesc.length > 200 ? `${rawDesc.slice(0, 197)}…` : rawDesc
 
   return {
     title: `${vendor.name} | East Coast Kink Events`,
     description,
     openGraph: {
       title: vendor.name,
-      description,
+      description: ogDescription,
       images: [
         {
           url: logoUrl,
@@ -54,7 +56,7 @@ export async function generateMetadata({
     twitter: {
       card: 'summary_large_image',
       title: vendor.name,
-      description,
+      description: ogDescription,
       images: [logoUrl],
     },
     alternates: {

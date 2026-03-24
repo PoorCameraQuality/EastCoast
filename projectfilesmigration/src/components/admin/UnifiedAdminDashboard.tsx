@@ -87,7 +87,7 @@ export default function UnifiedAdminDashboard({ user, isAdmin: isAdminProp }: Un
 
   const [articleData, setArticleData] = useState({
     title: '', excerpt: '', content: '', author_name: '', author_credentials: '', 
-    author_bio: '', category: '', tags: '', featured: false
+    author_bio: '', category: '', tags: '', featured: false, og_image: ''
   })
 
   const [logoFile, setLogoFile] = useState<File | null>(null)
@@ -373,6 +373,7 @@ export default function UnifiedAdminDashboard({ user, isAdmin: isAdminProp }: Un
           category: articleData.category,
           tags: articleData.tags ? articleData.tags.split(',').map(tag => tag.trim()).filter(tag => tag) : null,
           featured: articleData.featured,
+          og_image: articleData.og_image.trim() || null,
           status: 'published',
           // publish_date and last_updated will be automatically set by the database defaults
         }])
@@ -384,7 +385,7 @@ export default function UnifiedAdminDashboard({ user, isAdmin: isAdminProp }: Un
         alert('Article created successfully!')
         setArticleData({
           title: '', excerpt: '', content: '', author_name: '', author_credentials: '', 
-          author_bio: '', category: '', tags: '', featured: false
+          author_bio: '', category: '', tags: '', featured: false, og_image: ''
         })
       }
     } catch (error) {
@@ -1092,6 +1093,17 @@ export default function UnifiedAdminDashboard({ user, isAdmin: isAdminProp }: Un
                         />
                         <span className="text-white font-medium">Featured Article</span>
                       </label>
+                    </div>
+                    <div className="mt-6">
+                      <label className="block text-white font-medium mb-2">Social / OG image URL (optional)</label>
+                      <input
+                        type="url"
+                        name="og_image"
+                        value={articleData.og_image}
+                        onChange={(e) => setArticleData((prev) => ({ ...prev, og_image: e.target.value }))}
+                        className="w-full bg-dark-700 border border-dark-600 rounded-lg px-4 py-3 text-white"
+                        placeholder="https://… or /path/to/image.jpg (1200×630 recommended)"
+                      />
                     </div>
                   </div>
 

@@ -129,7 +129,7 @@ export function EventStructuredData({ event }: EventStructuredDataProps) {
 export function DungeonStructuredData({ dungeon }: { dungeon: any }) {
   const structuredData = {
     "@context": "https://schema.org",
-    "@type": "LocalBusiness",
+    "@type": "EntertainmentBusiness",
     "name": dungeon.name,
     "description": dungeon.excerpt,
     "url": `${BASE_URL}/dungeons/${dungeon.slug}`,
@@ -453,7 +453,7 @@ interface ArticleForSchema {
 }
 
 export function EducationStructuredData({ articles = [] }: { articles?: ArticleForSchema[] }) {
-  const itemListElement = articles.slice(0, 50).map((article, idx) => ({
+  const itemListElement = articles.map((article, idx) => ({
     "@type": "ListItem" as const,
     position: idx + 1,
     item: {

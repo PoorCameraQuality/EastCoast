@@ -1,6 +1,7 @@
 // src/components/Footer.tsx
 import Link from "next/link";
 import { CONTACT_US_LABEL } from "@/lib/submissionContact";
+import NewsletterSignup from "@/components/NewsletterSignup";
 
 const DISCORD_INVITE_URL = "https://discord.gg/xcnGGyGsmT";
 
@@ -82,6 +83,8 @@ export default function Footer() {
                 Join Discord
               </a>
             </div>
+
+            <NewsletterSignup variant="footer" />
 
             <div className="mt-6 rounded-xl border border-white/10 bg-white/5 backdrop-blur-sm p-4">
               <p className="text-sm font-semibold text-white">Support this site</p>
