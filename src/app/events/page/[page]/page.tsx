@@ -25,8 +25,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     alternates: {
       canonical: `${BASE_URL}/events/page/${pageNum}`,
     },
+    // Consolidate ranking on /events (first page); paginated URLs stay crawlable via rel + internal links.
     robots: {
-      index: true,
+      index: false,
       follow: true,
     },
     openGraph: {

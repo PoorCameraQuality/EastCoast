@@ -15,6 +15,7 @@ const FALLBACK_SRC = '/images/placeholder-logo.svg'
 export default function DungeonImage({ src, alt, size, className = '' }: DungeonImageProps) {
   const [error, setError] = useState(false)
   const resolvedSrc = !src || error ? FALLBACK_SRC : src
+  const imageAlt = alt.trim() || 'BDSM dungeon or play space listing logo'
 
   return (
     <div
@@ -23,7 +24,7 @@ export default function DungeonImage({ src, alt, size, className = '' }: Dungeon
     >
       <Image
         src={resolvedSrc}
-        alt={alt}
+        alt={imageAlt}
         width={size}
         height={size}
         className="h-full w-full object-contain"

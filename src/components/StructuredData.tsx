@@ -90,22 +90,17 @@ export function EventStructuredData({ event }: EventStructuredDataProps) {
     "genre": event.category,
     "offers": {
       "@type": "Offer",
-      "url": event.website,
+      "url": event.website || `${BASE_URL}/events/${event.slug}`,
       "priceCurrency": "USD",
       "availability": "https://schema.org/PreOrder",
       "validFrom": event.date.start,
       "description": "Tickets and pricing on the organizer website"
     },
-    "performer": {
-      "@type": "Organization",
-      "name": event.name,
-      "url": event.website
-    },
     "potentialAction": {
       "@type": "ViewAction",
       "target": {
         "@type": "EntryPoint",
-        "urlTemplate": event.website
+        "urlTemplate": event.website || `${BASE_URL}/events/${event.slug}`
       }
     }
   }
@@ -308,7 +303,7 @@ export function OrganizationStructuredData() {
     "name": "East Coast Kink Events",
     "description": "Discover and connect with kink events across the East Coast",
     "url": BASE_URL,
-    "logo": `${BASE_URL}/images/placeholder-logo.svg`,
+    "logo": `${BASE_URL}/og-image.png`,
     "sameAs": [
       "https://discord.gg/xcnGGyGsmT"
     ],

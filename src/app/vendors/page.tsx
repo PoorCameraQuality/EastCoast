@@ -13,14 +13,6 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: 'Kink Vendors & BDSM Gear — Marketplace Directory',
     description: description.slice(0, 160),
-    keywords: [
-      'kink vendors',
-      'bdsm gear',
-      'fetish makers',
-      'handmade floggers',
-      'bondage gear',
-      'east coast kink marketplace',
-    ],
     alternates: { canonical: 'https://www.eastcoastkinkevents.com/vendors' },
     openGraph: {
       type: 'website',

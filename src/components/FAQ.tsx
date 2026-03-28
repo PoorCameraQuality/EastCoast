@@ -1,7 +1,5 @@
 'use client'
 
-import { useState } from 'react'
-
 interface FAQItem {
   question: string
   answer: string
@@ -12,29 +10,22 @@ interface FAQProps {
   title?: string
 }
 
-export default function FAQ({ items, title = "Frequently Asked Questions" }: FAQProps) {
-  const [openItems, setOpenItems] = useState<number[]>([])
-
-  const toggleItem = (index: number) => {
-    setOpenItems(prev => 
-      prev.includes(index) 
-        ? prev.filter(i => i !== index)
-        : [...prev, index]
-    )
-  }
-
-  // Generate FAQ structured data
+/**
+ * FAQ with native <details>/<summary> so answer text stays in the DOM for crawlers
+ * (aligns FAQPage JSON-LD with visible page content per Google structured data guidelines).
+ */
+export default function FAQ({ items, title = 'Frequently Asked Questions' }: FAQProps) {
   const structuredData = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "mainEntity": items.map((item, index) => ({
-      "@type": "Question",
-      "name": item.question,
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": item.answer
-      }
-    }))
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: items.map((item) => ({
+      '@type': 'Question',
+      name: item.question,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: item.answer,
+      },
+    })),
   }
 
   return (
@@ -45,36 +36,30 @@ export default function FAQ({ items, title = "Frequently Asked Questions" }: FAQ
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData).replace(/</g, '\\u003c') }}
       />
       <div className="card-elegant">
-        <h2 className="text-2xl font-serif font-semibold text-white mb-6">
-          {title}
-        </h2>
+        <h2 className="text-2xl font-serif font-semibold text-white mb-6">{title}</h2>
         <div className="space-y-4">
           {items.map((item, index) => (
-            <div key={index} className="border border-dark-600 rounded-lg">
-              <button
-                onClick={() => toggleItem(index)}
-                aria-expanded={openItems.includes(index)}
-                aria-controls={`faq-answer-${index}`}
-                className="w-full min-h-touch px-6 py-4 text-left flex justify-between items-center gap-3 hover:bg-dark-700 transition-colors"
-              >
+            <details
+              key={index}
+              className="border border-dark-600 rounded-lg group"
+              id={`faq-item-${index}`}
+            >
+              <summary className="w-full min-h-touch px-6 py-4 text-left flex justify-between items-center gap-3 hover:bg-dark-700 transition-colors cursor-pointer list-none [&::-webkit-details-marker]:hidden">
                 <span className="text-white font-medium">{item.question}</span>
                 <svg
-                  className={`w-5 h-5 text-primary-400 transition-transform ${
-                    openItems.includes(index) ? 'rotate-180' : ''
-                  }`}
+                  className="w-5 h-5 text-primary-400 shrink-0 transition-transform group-open:rotate-180"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
+                  aria-hidden
                 >
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                 </svg>
-              </button>
-              {openItems.includes(index) && (
-                <div id={`faq-answer-${index}`} className="px-6 pb-4">
-                  <p className="text-gray-300 leading-relaxed">{item.answer}</p>
-                </div>
-              )}
-            </div>
+              </summary>
+              <div id={`faq-answer-${index}`} className="px-6 pb-4">
+                <p className="text-gray-300 leading-relaxed">{item.answer}</p>
+              </div>
+            </details>
           ))}
         </div>
       </div>

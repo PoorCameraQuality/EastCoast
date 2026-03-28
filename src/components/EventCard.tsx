@@ -32,7 +32,7 @@ export default function EventCard({ event }: EventCardProps) {
           <div className="mb-4 flex-shrink-0">
             <EventLogo 
               src={event.logo} 
-              alt={`${event.name} logo`}
+              alt={`${event.name} — kink event in ${event.location.city}, ${event.location.state}`}
               size="medium"
               className="mx-auto"
             />

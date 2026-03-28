@@ -15,14 +15,6 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title,
     description: description.slice(0, 160),
-    keywords: [
-      'kink event calendar',
-      'bdsm event calendar',
-      'kink conventions calendar',
-      'fetish events calendar',
-      'east coast kink events',
-      'bdsm conferences',
-    ],
     robots: {
       index: true,
       follow: true,

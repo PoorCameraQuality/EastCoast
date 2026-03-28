@@ -2,16 +2,11 @@ import { NextResponse } from "next/server"
 import { readFile } from "node:fs/promises"
 import path from "node:path"
 import { supabase } from "@/lib/supabase"
+import { getStateSlugsForSitemap } from "@/lib/eastCoastStates"
 
 export const runtime = "nodejs"
 
 const BASE = "https://www.eastcoastkinkevents.com"
-const STATE_SLUGS = [
-  "new-york","pennsylvania","new-jersey","maryland","delaware",
-  "virginia","north-carolina","south-carolina","georgia","florida",
-  "tennessee","louisiana","maine","vermont","new-hampshire","massachusetts","rhode-island",
-  "connecticut","washington-dc","ohio","michigan","illinois","indiana","missouri","colorado"
-]
 
 // XML escaping function for safety
 function esc(s: string) {
@@ -114,7 +109,7 @@ export async function GET() {
     { loc: `${BASE}/vendors`, changefreq: 'weekly', priority: 0.7 }
   ]
 
-  const stateUrls: UrlEntry[] = STATE_SLUGS.map(s => ({
+  const stateUrls: UrlEntry[] = getStateSlugsForSitemap().map((s) => ({
     loc: `${BASE}/states/${s}`,
     lastmod: today,
     changefreq: 'weekly' as const,

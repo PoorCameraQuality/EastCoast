@@ -9,16 +9,6 @@ export const revalidate = 1800
 export const metadata: Metadata = {
   title: 'BDSM Dungeons & Play Spaces',
   description: 'Explore BDSM dungeons and play spaces across the East Coast. Find vetted kink venues, private clubs, and community nights.',
-  keywords: [
-    'BDSM dungeons',
-    'kink spaces',
-    'east coast',
-    'private sessions',
-    'workshops',
-    'community events',
-    'safe spaces',
-    'inclusive environments'
-  ],
   alternates: {
     canonical: `${BASE_URL}/dungeons`,
   },

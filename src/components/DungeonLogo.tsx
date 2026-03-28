@@ -26,12 +26,13 @@ export default function DungeonLogo({ src, alt, size = 'medium', className = '' 
   }
 
   const { container, image } = sizeClasses[size]
+  const imageAlt = alt.trim() || 'BDSM dungeon listing logo'
 
   return (
     <div className={`flex justify-center items-center ${container} ${className}`}>
       <Image 
         src={src} 
-        alt={alt || `Logo for ${alt || "dungeon"}`}
+        alt={imageAlt}
         width={200}
         height={200}
         sizes="100vw"

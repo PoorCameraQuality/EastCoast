@@ -26,6 +26,9 @@ const playfair = Playfair_Display({
   subsets: ['latin'],
   display: 'swap',
   variable: '--font-ecke-serif',
+  // Avoid duplicate link rel=preload for serif: body/nav use Inter first; Chrome often warns
+  // "preloaded but not used" when both families are preloaded. Serif still loads normally for headings.
+  preload: false,
 })
 
 export const metadata: Metadata = {
@@ -34,20 +37,6 @@ export const metadata: Metadata = {
     template: '%s | East Coast Kink Events'
   },
   description: 'Find kink events, BDSM dungeons, and educational resources across the East Coast. Connect with workshops, conferences, and community events in a safe, inclusive environment.',
-  keywords: [
-    'kink events',
-    'BDSM events', 
-    'east coast',
-    'fetish events',
-    'lifestyle events',
-    'BDSM dungeons',
-    'kink community',
-    'workshops',
-    'conferences',
-    'educational resources',
-    'safe space',
-    'inclusive community'
-  ],
   authors: [{ name: 'East Coast Kink Events' }],
   creator: 'East Coast Kink Events',
   publisher: 'East Coast Kink Events',
@@ -99,8 +88,9 @@ export const metadata: Metadata = {
     },
   },
   verification: {
-    // Read from env at build time; set NEXT_PUBLIC_GSC_VERIFICATION in env
-    google: process.env.NEXT_PUBLIC_GSC_VERIFICATION || 'your-google-verification-code',
+    ...(process.env.NEXT_PUBLIC_GSC_VERIFICATION
+      ? { google: process.env.NEXT_PUBLIC_GSC_VERIFICATION }
+      : {}),
     yandex: 'd38c7affece1bb23',
   },
 };

@@ -228,7 +228,11 @@ function PromotionalCard({
           <div className="mb-3 rounded-lg overflow-hidden relative h-20 bg-white/10 flex items-center justify-center p-2">
             <Image 
               src={imageUrl} 
-              alt={item.title}
+              alt={
+                item.title?.trim()
+                  ? `${item.title} — promotional image on East Coast Kink Events`
+                  : 'Promotional announcement on East Coast Kink Events'
+              }
               fill
               className="object-contain"
               sizes="320px"

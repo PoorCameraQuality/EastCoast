@@ -16,18 +16,6 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: 'BDSM & Kink Events Near You | Conventions & Parties',
     description: description.slice(0, 160),
-    keywords: [
-      'bdsm events',
-      'kink events',
-      'kink events near me',
-      'bdsm events near me',
-      'kink conventions',
-      'bdsm conventions',
-      'fetish events',
-      'east coast kink',
-      'workshops',
-      'community events',
-    ],
     alternates: {
       canonical: 'https://www.eastcoastkinkevents.com/events',
     },

@@ -30,6 +30,7 @@ export default function EventLogo({ src, alt, size = 'medium', className = '' }:
   }
 
   const { container, image } = sizeClasses[size]
+  const imageAlt = alt.trim() || 'Kink event listing logo'
 
   // Handle image load error
   const handleImageError = () => {
@@ -59,7 +60,7 @@ export default function EventLogo({ src, alt, size = 'medium', className = '' }:
     <div className={`flex justify-center items-center ${container} ${className}`}>
       <Image 
         src={src} 
-        alt={alt || `Logo for ${alt || "event"}`}
+        alt={imageAlt}
         width={200}
         height={200}
         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"

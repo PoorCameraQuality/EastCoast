@@ -8,37 +8,7 @@ import Breadcrumb from '@/components/Breadcrumb'
 import SupportCTAInline from '@/components/SupportCTAInline'
 import { BASE_URL } from '@/lib/seo'
 import { notFound } from 'next/navigation'
-
-// East Coast states configuration
-const EAST_COAST_STATES = {
-  'new-york': { name: 'New York', abbr: 'NY', region: 'Northeast' },
-  'pennsylvania': { name: 'Pennsylvania', abbr: 'PA', region: 'Mid-Atlantic' },
-  'new-jersey': { name: 'New Jersey', abbr: 'NJ', region: 'Mid-Atlantic' },
-  'maryland': { name: 'Maryland', abbr: 'MD', region: 'Mid-Atlantic' },
-  'delaware': { name: 'Delaware', abbr: 'DE', region: 'Mid-Atlantic' },
-  'virginia': { name: 'Virginia', abbr: 'VA', region: 'South' },
-  'north-carolina': { name: 'North Carolina', abbr: 'NC', region: 'South' },
-  'south-carolina': { name: 'South Carolina', abbr: 'SC', region: 'South' },
-  'georgia': { name: 'Georgia', abbr: 'GA', region: 'South' },
-  'florida': { name: 'Florida', abbr: 'FL', region: 'South' },
-  'tennessee': { name: 'Tennessee', abbr: 'TN', region: 'South' },
-  'louisiana': { name: 'Louisiana', abbr: 'LA', region: 'South' },
-  'maine': { name: 'Maine', abbr: 'ME', region: 'New England' },
-  'vermont': { name: 'Vermont', abbr: 'VT', region: 'New England' },
-  'new-hampshire': { name: 'New Hampshire', abbr: 'NH', region: 'New England' },
-  'massachusetts': { name: 'Massachusetts', abbr: 'MA', region: 'New England' },
-  'rhode-island': { name: 'Rhode Island', abbr: 'RI', region: 'New England' },
-  'connecticut': { name: 'Connecticut', abbr: 'CT', region: 'New England' },
-  'washington-dc': { name: 'Washington DC', abbr: 'DC', region: 'Mid-Atlantic' },
-  'ohio': { name: 'Ohio', abbr: 'OH', region: 'Midwest' },
-  'michigan': { name: 'Michigan', abbr: 'MI', region: 'Midwest' },
-  'illinois': { name: 'Illinois', abbr: 'IL', region: 'Midwest' },
-  'indiana': { name: 'Indiana', abbr: 'IN', region: 'Midwest' },
-  'missouri': { name: 'Missouri', abbr: 'MO', region: 'Midwest' },
-  'colorado': { name: 'Colorado', abbr: 'CO', region: 'Mountain West' },
-} as const
-
-type StateSlug = keyof typeof EAST_COAST_STATES
+import { EAST_COAST_STATES, type StateSlug } from '@/lib/eastCoastStates'
 
 interface PageProps {
   params: { state: string }
@@ -73,13 +43,6 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       robots: { index: false, follow: true },
     }),
     description: `Discover kink events, BDSM conferences, workshops, and dungeons in ${stateInfo.name}. Connect with the local kink community and explore ${stateInfo.name}'s alternative lifestyle scene.`,
-    keywords: [
-      `${stateInfo.name} kink events`,
-      `${stateInfo.name} BDSM`,
-      `${stateInfo.abbr} dungeons`,
-      `${stateInfo.name} fetish events`,
-      `${stateInfo.name} kink community`,
-    ],
     alternates: {
       canonical: `${BASE_URL}/states/${params.state}`,
     },

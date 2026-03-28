@@ -10,16 +10,6 @@ export const metadata: Metadata = {
   title: 'BDSM & Kink Education Hub — Guides, Safety & Consent',
   description:
     'Free BDSM & kink education: consent, safety, techniques, and community articles. Expert-leaning guides—not fluff—so you can learn before you play.',
-  keywords: [
-    'bdsm education',
-    'kink safety',
-    'consent education',
-    'bdsm guides',
-    'kink techniques',
-    'bdsm legality',
-    'community resources',
-    'rope and impact basics',
-  ],
   alternates: {
     canonical: `${BASE_URL}/education`,
   },

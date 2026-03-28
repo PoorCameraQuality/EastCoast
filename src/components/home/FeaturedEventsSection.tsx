@@ -60,7 +60,7 @@ export default function FeaturedEventsSection() {
                   <div className="relative z-10 p-5">
                     <div className="flex items-center gap-3 mb-4">
                       {event.logo ? (
-                        <VendorImage src={event.logo} alt={`${event.name} logo`} size={48} className="flex-shrink-0" />
+                        <VendorImage src={event.logo} alt={`${event.name} — kink event in ${event.location.city}, ${event.location.state}`} size={48} className="flex-shrink-0" />
                       ) : null}
                       <div className="min-w-0 flex-1">
                         <h3 className="text-lg font-serif font-semibold text-white leading-tight line-clamp-2 group-hover:text-primary-300 transition-colors duration-300">
@@ -104,7 +104,7 @@ export default function FeaturedEventsSection() {
                 <div className="relative z-10">
                   <div className="flex items-center gap-3 mb-4">
                     {event.logo ? (
-                      <VendorImage src={event.logo} alt={`${event.name} logo`} size={48} className="flex-shrink-0" />
+                      <VendorImage src={event.logo} alt={`${event.name} — kink event in ${event.location.city}, ${event.location.state}`} size={48} className="flex-shrink-0" />
                     ) : null}
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center justify-between gap-3 mb-2">

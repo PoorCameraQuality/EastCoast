@@ -37,7 +37,7 @@ export default function FeaturedDungeonsSection() {
                   <div className="relative z-10 p-5">
                     <div className="flex items-center gap-3 mb-4">
                       {dungeon.logo ? (
-                        <VendorImage src={dungeon.logo} alt={`${dungeon.name} logo`} size={48} className="flex-shrink-0" />
+                        <VendorImage src={dungeon.logo} alt={`${dungeon.name} — BDSM space in ${dungeon.location.city}, ${dungeon.location.state}`} size={48} className="flex-shrink-0" />
                       ) : null}
                       <h3 className="text-lg font-serif font-semibold text-white leading-tight line-clamp-2 group-hover:text-primary-300 transition-colors duration-300">
                         {dungeon.name}
@@ -76,7 +76,7 @@ export default function FeaturedDungeonsSection() {
                 <div className="relative z-10">
                   <div className="flex items-center gap-3 mb-4">
                     {dungeon.logo ? (
-                      <VendorImage src={dungeon.logo} alt={`${dungeon.name} logo`} size={48} className="flex-shrink-0" />
+                      <VendorImage src={dungeon.logo} alt={`${dungeon.name} — BDSM space in ${dungeon.location.city}, ${dungeon.location.state}`} size={48} className="flex-shrink-0" />
                     ) : null}
                     <h3 className="text-xl font-serif font-semibold text-white leading-tight line-clamp-2 group-hover:text-primary-300 transition-colors duration-300">
                       {dungeon.name}
