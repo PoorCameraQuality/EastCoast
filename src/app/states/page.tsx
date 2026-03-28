@@ -8,14 +8,17 @@ import { BASE_URL } from '@/lib/seo'
 import { CONTACT_US_LABEL } from '@/lib/submissionContact'
 
 export const metadata: Metadata = {
-  title: 'Kink Events & Dungeons by State',
-  description: 'Find BDSM events and dungeons by state. Browse New York, DC, Florida, and more—discover local kink events and venues near you.',
+  title: 'Kink & BDSM Events by State — Dungeons & Parties Near You',
+  description:
+    'Pick your state for upcoming kink & BDSM events plus dungeon listings—NY, NJ, DC, FL, PA, and more. Built for “near me” and regional search.',
   keywords: [
     'kink events by state',
-    'BDSM east coast',
+    'bdsm events near me',
     'dungeons by state',
-    'fetish events near me',
-    'kink community locations',
+    'bdsm new york',
+    'bdsm dc',
+    'bdsm florida',
+    'east coast kink',
   ],
   alternates: {
     canonical: `${BASE_URL}/states`,
@@ -96,8 +99,13 @@ export default function StatesIndexPage() {
               Kink Events & Dungeons by State
             </span>
           </h1>
-          <p className="text-lg md:text-xl text-gray-300 mb-6">
-            Explore kink events and dungeons by state
+          <p className="text-lg md:text-xl text-gray-300 mb-6 max-w-2xl mx-auto">
+            Upcoming parties &amp; conventions plus vetted dungeons—organized by state so you can find what&apos;s close
+            to you faster than scrolling the full{' '}
+            <Link href="/events" className="text-primary-300 hover:text-primary-200 underline underline-offset-2">
+              events list
+            </Link>
+            .
           </p>
           <p className="text-gray-400">
             {stateStats.reduce((sum, s) => sum + s.eventCount, 0)} upcoming events • {' '}

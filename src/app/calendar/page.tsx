@@ -6,42 +6,55 @@ import Breadcrumb from '@/components/Breadcrumb'
 import SupportCTAInline from '@/components/SupportCTAInline'
 import CalendarClient from '@/components/CalendarClient'
 
-// Generate metadata for SEO
-export const metadata: Metadata = {
-  title: 'Kink Event Calendar 2026',
-  description: '2026 kink event calendar. Browse BDSM conferences, workshops, and fetish events by month. Plan your next East Coast kink gathering.',
-  keywords: 'kink event calendar, BDSM events, east coast calendar, monthly events, kink conferences, workshops',
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
+const BASE = 'https://www.eastcoastkinkevents.com'
+
+export async function generateMetadata(): Promise<Metadata> {
+  const year = new Date().getFullYear()
+  const title = `BDSM & Kink Event Calendar ${year} (By Month)`
+  const description = `Kink & BDSM event calendar ${year}: browse conferences, hotel weekends, and workshops by month. Plan travel—East Coast focus, national listings.`
+  return {
+    title,
+    description: description.slice(0, 160),
+    keywords: [
+      'kink event calendar',
+      'bdsm event calendar',
+      'kink conventions calendar',
+      'fetish events calendar',
+      'east coast kink events',
+      'bdsm conferences',
+    ],
+    robots: {
       index: true,
       follow: true,
-    },
-  },
-  alternates: {
-    canonical: 'https://www.eastcoastkinkevents.com/calendar',
-  },
-  openGraph: {
-    title: 'Kink Event Calendar 2026',
-    description: 'Browse upcoming kink events by month with our interactive calendar. Find BDSM events, conferences, and workshops across the East Coast.',
-    type: 'website',
-    url: 'https://www.eastcoastkinkevents.com/calendar',
-    images: [
-      {
-        url: 'https://www.eastcoastkinkevents.com/og-image.png',
-        width: 1200,
-        height: 630,
-        alt: 'East Coast Kink Events Calendar',
+      googleBot: {
+        index: true,
+        follow: true,
       },
-    ],
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'Kink Event Calendar 2026',
-    description: 'Browse upcoming kink events by month with our interactive calendar.',
-    images: ['https://www.eastcoastkinkevents.com/og-image.png'],
-  },
+    },
+    alternates: {
+      canonical: `${BASE}/calendar`,
+    },
+    openGraph: {
+      title,
+      description: description.slice(0, 200),
+      type: 'website',
+      url: `${BASE}/calendar`,
+      images: [
+        {
+          url: `${BASE}/og-image.png`,
+          width: 1200,
+          height: 630,
+          alt: 'East Coast Kink Events Calendar',
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description: description.slice(0, 200),
+      images: [`${BASE}/og-image.png`],
+    },
+  }
 }
 
 export default function CalendarPage() {

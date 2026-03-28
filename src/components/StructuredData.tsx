@@ -19,6 +19,7 @@ interface EventStructuredDataProps {
     website: string
     logo: string
     category: string
+    organizer?: string
     seo?: {
       title: string
       description: string
@@ -74,8 +75,8 @@ export function EventStructuredData({ event }: EventStructuredDataProps) {
     },
     "organizer": {
       "@type": "Organization",
-      "name": "East Coast Kink Events",
-      "url": BASE_URL
+      "name": event.organizer || "East Coast Kink Events",
+      "url": event.website || BASE_URL
     },
     "url": `${BASE_URL}/events/${event.slug}`,
     "image": buildImageUrl(event.logo, `${BASE_URL}/images/placeholder-logo.svg`),
@@ -90,10 +91,10 @@ export function EventStructuredData({ event }: EventStructuredDataProps) {
     "offers": {
       "@type": "Offer",
       "url": event.website,
-      "price": "0",
       "priceCurrency": "USD",
-      "availability": "https://schema.org/InStock",
-      "validFrom": event.date.start
+      "availability": "https://schema.org/PreOrder",
+      "validFrom": event.date.start,
+      "description": "Tickets and pricing on the organizer website"
     },
     "performer": {
       "@type": "Organization",
@@ -588,61 +589,3 @@ export function HomepageStructuredData() {
   }
 }
 
-// New component for individual article structured data
-interface ArticleStructuredDataProps {
-  article: {
-    title: string
-    slug: string
-    excerpt: string
-    author_name: string
-    author_credentials?: string
-    created_at?: string
-    category: string
-    tags?: string[]
-  }
-}
-
-export function ArticleStructuredData({ article }: { article: any }) {
-  const structuredData = {
-    "@context": "https://schema.org",
-    "@type": "Article",
-    "headline": article.title,
-    "description": article.excerpt,
-    ...(article?.content ? { "articleBody": article.content } : {}),
-    "author": {
-      "@type": "Person",
-      "name": article.author_name,
-      "jobTitle": article.author_credentials
-    },
-    "publisher": {
-      "@type": "Organization",
-      "name": "East Coast Kink Events",
-      "url": "https://www.eastcoastkinkevents.com"
-    },
-    "datePublished": article.created_at || new Date().toISOString(),
-    "dateModified": article.created_at || new Date().toISOString(),
-    "mainEntityOfPage": {
-      "@type": "WebPage",
-      "@id": `https://www.eastcoastkinkevents.com/education/${article.slug}`
-    },
-    "image": {
-      "@type": "ImageObject",
-      "url": "https://www.eastcoastkinkevents.com/images/education-default.jpg"
-    }
-  }
-
-  // Validate JSON before injecting
-  try {
-    const jsonString = escapeHtmlInJson(structuredData)
-    return (
-      <script
-        id={`article-structured-data-${article.slug}`}
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: jsonString }}
-      />
-    )
-  } catch (error) {
-    console.error('Invalid JSON in ArticleStructuredData:', error)
-    return null
-  }
-}

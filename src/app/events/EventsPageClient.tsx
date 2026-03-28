@@ -113,12 +113,20 @@ export default function EventsPageClient({ allEvents, allDungeons, selectedCateg
         <div className="text-center mb-10 md:mb-16">
           <h1 className="text-3xl sm:text-4xl md:text-6xl font-serif font-bold text-white mb-6 relative">
             <span className="inline-block bg-gradient-to-r from-primary-300 via-blue-400 to-primary-500 bg-clip-text text-transparent">
-              All Events
+              BDSM &amp; Kink Events
             </span>
             <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-32 h-1 bg-gradient-to-r from-primary-400 to-blue-400 rounded-full"></div>
           </h1>
           <p className="text-lg text-gray-400 max-w-3xl mx-auto mb-8 leading-relaxed">
-            Browse all upcoming and past kink events across the East Coast. Find conferences, workshops, and more.
+            Conventions, hotel takeovers, workshops, and parties—filter by indoor/outdoor or jump to{' '}
+            <Link href="/states" className="text-primary-300 hover:text-primary-200 underline underline-offset-2">
+              events by state
+            </Link>{' '}
+            or the{' '}
+            <Link href="/calendar" className="text-primary-300 hover:text-primary-200 underline underline-offset-2">
+              monthly calendar
+            </Link>
+            .
           </p>
 
           {/* Enhanced Search Component */}

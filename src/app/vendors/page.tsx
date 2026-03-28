@@ -11,8 +11,16 @@ export async function generateMetadata(): Promise<Metadata> {
   const description = `Explore ${count} kink vendors and BDSM gear makers. Browse impact play, bondage, fetish wear, and artisan makers across the East Coast.`
 
   return {
-    title: 'Kink Vendors & BDSM Gear',
+    title: 'Kink Vendors & BDSM Gear — Marketplace Directory',
     description: description.slice(0, 160),
+    keywords: [
+      'kink vendors',
+      'bdsm gear',
+      'fetish makers',
+      'handmade floggers',
+      'bondage gear',
+      'east coast kink marketplace',
+    ],
     alternates: { canonical: 'https://www.eastcoastkinkevents.com/vendors' },
     openGraph: {
       type: 'website',

@@ -364,11 +364,19 @@ export default function CalendarClient({ allEvents }: CalendarClientProps) {
     <div className="max-w-6xl mx-auto">
       {/* Header */}
       <div className="text-center mb-8 md:mb-12">
-        <h1 className="text-3xl sm:text-4xl font-serif font-bold text-white mb-4">
-          Event Calendar
+        <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-white mb-4">
+          BDSM &amp; kink event calendar
         </h1>
-        <p className="text-base md:text-lg text-subtle max-w-3xl mx-auto px-1">
-          Browse upcoming kink events by month. Click on any date to see event details.
+        <p className="text-base md:text-lg text-subtle max-w-3xl mx-auto px-1 leading-relaxed">
+          Conferences, hotel weekends, and workshops by month—tap a date for details. Prefer a list? See{' '}
+          <Link href="/events" className="text-primary-300 hover:text-primary-200 underline underline-offset-2">
+            all events
+          </Link>{' '}
+          or{' '}
+          <Link href="/states" className="text-primary-300 hover:text-primary-200 underline underline-offset-2">
+            browse by state
+          </Link>
+          .
         </p>
       </div>
 

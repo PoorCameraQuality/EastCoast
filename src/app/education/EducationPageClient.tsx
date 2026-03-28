@@ -142,12 +142,16 @@ export default function EducationPageClient({ initialArticles }: Props) {
         <div className="text-center mb-10 md:mb-16">
           <h1 className="text-3xl sm:text-4xl md:text-6xl font-serif font-bold text-white mb-6 relative">
             <span className="inline-block bg-gradient-to-r from-primary-300 via-blue-400 to-primary-500 bg-clip-text text-transparent">
-              Educational Resources
+              BDSM &amp; Kink Education
             </span>
             <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-48 h-1 bg-gradient-to-r from-primary-400 to-blue-400 rounded-full"></div>
           </h1>
           <p className="text-lg md:text-xl text-gray-400 max-w-3xl mx-auto leading-relaxed px-1">
-            Expand your knowledge with our curated collection of educational articles, safety guides, and community resources.
+            Consent, safety, techniques, and community—long-form guides you can actually use. Filter by topic or jump to{' '}
+            <Link href="/events" className="text-primary-300 hover:text-primary-200 underline underline-offset-2">
+              events
+            </Link>{' '}
+            when you&apos;re ready to go out.
           </p>
         </div>
 

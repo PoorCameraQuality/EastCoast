@@ -8,10 +8,11 @@ import RichTextEditor from '@/components/education/RichTextEditor'
 import TableOfContents from '@/components/TableOfContents'
 import ReadingProgress from '@/components/ReadingProgress'
 import BackToTop from '@/components/BackToTop'
-import { ArticleStructuredData } from '@/components/StructuredData'
+import { ArticleStructuredData } from '@/components/ArticleStructuredData'
 
 interface Article {
   id: string
+  slug: string
   title: string
   excerpt: string
   content: string
@@ -19,10 +20,14 @@ interface Article {
   author_credentials?: string
   author_bio?: string
   category: string
-  tags?: string[]
+  tags?: string[] | string
+  focus_keywords?: string[] | string
+  og_image?: string | null
   featured: boolean
   status: string
   created_at: string
+  publish_date?: string
+  last_updated?: string
   read_time?: string
 }
 
@@ -512,11 +517,19 @@ export default function ArticlePageClient({ article, breadcrumbItems }: ArticleP
               </div>
               <div className="text-right">
                 <p><strong>Published:</strong> {formatDate(article.created_at)}</p>
-                {article.tags && article.tags.length > 0 && (
+                {(() => {
+                  const raw = article.tags
+                  const tagList = raw
+                    ? Array.isArray(raw)
+                      ? raw
+                      : raw.split(',').map((t) => t.trim()).filter(Boolean)
+                    : []
+                  if (tagList.length === 0) return null
+                  return (
                   <div className="mt-2">
                     <p><strong>Tags:</strong></p>
                     <div className="flex flex-wrap gap-1 mt-1">
-                      {article.tags.map((tag: string, index: number) => (
+                      {tagList.map((tag: string, index: number) => (
                         <span
                           key={index}
                           className="px-2 py-1 rounded text-xs bg-dark-700 text-gray-300"
@@ -526,7 +539,8 @@ export default function ArticlePageClient({ article, breadcrumbItems }: ArticleP
                       ))}
                     </div>
                   </div>
-                )}
+                  )
+                })()}
               </div>
             </div>
           </div>

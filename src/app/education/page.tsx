@@ -7,17 +7,18 @@ import { supabase } from '@/lib/supabase'
 export const revalidate = 1800
 
 export const metadata: Metadata = {
-  title: 'BDSM Education & Guides',
-  description: 'Browse expert BDSM guides, kink safety tips, and consent education. Learn before you play—free articles from East Coast Kink Events.',
+  title: 'BDSM & Kink Education Hub — Guides, Safety & Consent',
+  description:
+    'Free BDSM & kink education: consent, safety, techniques, and community articles. Expert-leaning guides—not fluff—so you can learn before you play.',
   keywords: [
-    'BDSM education',
+    'bdsm education',
     'kink safety',
     'consent education',
-    'BDSM techniques',
-    'kink community resources',
-    'lifestyle education',
-    'safe practices',
-    'community building'
+    'bdsm guides',
+    'kink techniques',
+    'bdsm legality',
+    'community resources',
+    'rope and impact basics',
   ],
   alternates: {
     canonical: `${BASE_URL}/education`,
@@ -27,8 +28,9 @@ export const metadata: Metadata = {
     locale: 'en_US',
     url: 'https://www.eastcoastkinkevents.com/education',
     siteName: 'East Coast Kink Events',
-    title: 'BDSM Education & Guides',
-    description: 'Access comprehensive educational resources about BDSM, kink safety, consent, and community building.',
+    title: 'BDSM & Kink Education — Guides & Safety Articles',
+    description:
+      'Browse in-depth articles on consent, safety, techniques, and community—from East Coast Kink Events.',
     images: [
       {
         url: 'https://www.eastcoastkinkevents.com/og-image.png',
@@ -40,8 +42,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'BDSM Education & Guides',
-    description: 'Access comprehensive educational resources about BDSM, kink safety, consent, and community building.',
+    title: 'BDSM & Kink Education — Guides & Safety',
+    description:
+      'Consent, safety, techniques, and community articles—free educational library from East Coast Kink Events.',
     images: ['https://www.eastcoastkinkevents.com/og-image.png'],
   },
 }

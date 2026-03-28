@@ -50,6 +50,10 @@ const nextConfig = {
       { source: '/events/', destination: '/events', permanent: true },
       { source: '/dungeons/', destination: '/dungeons', permanent: true },
       { source: '/education/', destination: '/education', permanent: true },
+      // Hub trailing slashes → canonical URLs (reduces duplicate URLs in GSC)
+      { source: '/calendar/', destination: '/calendar', permanent: true },
+      { source: '/states/', destination: '/states', permanent: true },
+      { source: '/vendors/', destination: '/vendors', permanent: true },
 
       // Explicit trailing slash removal for detail pages
       { source: '/events/:slug/', destination: '/events/:slug', permanent: true },

@@ -24,7 +24,15 @@ export default function FeaturedEventsSection() {
               Featured Upcoming Events
             </h2>
             <p className="text-lg text-gray-400 max-w-3xl leading-relaxed">
-              A quick glance at what’s coming up across the East Coast and beyond.
+              Upcoming conventions and parties—scroll for this season, then hit{' '}
+              <Link href="/calendar" className="text-primary-300 hover:text-primary-200 underline underline-offset-2">
+                calendar
+              </Link>{' '}
+              or{' '}
+              <Link href="/states" className="text-primary-300 hover:text-primary-200 underline underline-offset-2">
+                your state
+              </Link>{' '}
+              for more.
             </p>
           </div>
           <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto md:shrink-0">

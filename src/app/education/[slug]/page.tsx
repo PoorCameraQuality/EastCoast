@@ -8,71 +8,12 @@ import { CONTACT_US_LABEL } from '@/lib/submissionContact'
 import Markdown from '@/components/Markdown'
 import { normalizeMarkdown } from '@/lib/normalizeMarkdown'
 import { BASE_URL } from '@/lib/seo'
-import { countWordsFromArticleContent, resolveArticleOgImageUrl } from '@/lib/articleSeo'
+import { resolveArticleOgImageUrl } from '@/lib/articleSeo'
 import { fetchRelatedArticleSummaries } from '@/lib/articleRelated'
+import { ArticleStructuredData } from '@/components/ArticleStructuredData'
+import { getArticleSerpOverride } from '@/lib/articleSerpOverrides'
 
 const DEFAULT_OG = `${BASE_URL}/og-image.png`
-
-// Article JSON-LD structured data
-function ArticleStructuredData({ article }: { article: Article }) {
-  const imageUrl = resolveArticleOgImageUrl(article.og_image, article.content)
-  const wordCount = countWordsFromArticleContent(article.content)
-  const dateModified = article.last_updated || article.publish_date
-
-  const structuredData: Record<string, unknown> = {
-    '@context': 'https://schema.org',
-    '@type': 'Article',
-    headline: article.title,
-    description: article.excerpt,
-    datePublished: article.publish_date,
-    dateModified,
-    publisher: {
-      '@type': 'Organization',
-      name: 'East Coast Kink Events',
-      url: BASE_URL,
-    },
-    mainEntityOfPage: {
-      '@type': 'WebPage',
-      '@id': `${BASE_URL}/education/${article.slug}`,
-    },
-    url: `${BASE_URL}/education/${article.slug}`,
-    image: imageUrl,
-    articleSection: article.category,
-    wordCount,
-  }
-
-  const rawKw = article.focus_keywords || article.tags
-  const normalizedKw = Array.isArray(rawKw)
-    ? rawKw
-    : typeof rawKw === 'string'
-      ? rawKw.split(',').map((s) => s.trim()).filter(Boolean)
-      : []
-  if (normalizedKw.length) {
-    structuredData.keywords = normalizedKw
-  }
-
-  if (article.author_name?.trim()) {
-    structuredData.author = {
-      '@type': 'Person',
-      name: article.author_name.trim(),
-      ...(article.author_bio?.trim() ? { description: article.author_bio.trim() } : {}),
-    }
-  }
-
-  try {
-    const jsonString = JSON.stringify(structuredData).replace(/</g, '\\u003c')
-    return (
-      <script
-        id={`article-structured-data-${article.slug}`}
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: jsonString }}
-      />
-    )
-  } catch (error) {
-    console.error('Invalid JSON in ArticleStructuredData:', error)
-    return null
-  }
-}
 
 interface ArticlePageProps {
   params: { slug: string }
@@ -137,8 +78,9 @@ export async function generateMetadata({ params }: ArticlePageProps): Promise<Me
     }
   }
 
-  const title = article.seo_title || article.title
-  const description = article.meta_description || article.excerpt
+  const serp = getArticleSerpOverride(article.slug)
+  const title = serp?.seo_title || article.seo_title || article.title
+  const description = serp?.meta_description || article.meta_description || article.excerpt
   const keywords =
     article.focus_keywords ||
     (article.tags
@@ -227,6 +169,10 @@ export default async function ArticlePage({ params }: { params: { slug: string }
       category: article.category,
     })
 
+    const serp = getArticleSerpOverride(article.slug)
+    const heroTitle = serp?.h1 ?? article.title
+    const heroLead = serp?.lead ?? article.excerpt
+
     // Handle tags formatting
     const formatTags = (tags?: string | string[]) => {
       if (!tags) return []
@@ -301,10 +247,10 @@ export default async function ArticlePage({ params }: { params: { slug: string }
                     </div>
 
                     <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-white mb-6 leading-tight">
-                      {article.title}
+                      {heroTitle}
                     </h1>
 
-                    <p className="text-lg md:text-xl text-subtle leading-relaxed mb-6">{article.excerpt}</p>
+                    <p className="text-lg md:text-xl text-subtle leading-relaxed mb-6">{heroLead}</p>
 
                     {articleTags.length > 0 && (
                       <div className="flex flex-wrap gap-2">

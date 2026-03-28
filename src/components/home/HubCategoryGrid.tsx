@@ -69,7 +69,15 @@ export default function HubCategoryGrid({ counts }: { counts: HubCategoryCounts 
             Choose Your Path
           </h2>
           <p className="text-lg text-gray-400 max-w-3xl mx-auto leading-relaxed">
-            East Coast Kink Events is evolving into a discovery hub for community, spaces, learning, and marketplace listings.
+            Discovery hub for kink &amp; BDSM on the East Coast (and beyond): events near you by{' '}
+            <Link href="/states" className="text-primary-300 hover:text-primary-200 underline underline-offset-2">
+              state
+            </Link>
+            ,{' '}
+            <Link href="/calendar" className="text-primary-300 hover:text-primary-200 underline underline-offset-2">
+              calendar
+            </Link>
+            , education, vendors, and dungeons—all in one place.
           </p>
         </div>
 

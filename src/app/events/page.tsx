@@ -10,19 +10,21 @@ export const revalidate = 1800
 export async function generateMetadata(): Promise<Metadata> {
   const { getAllEvents } = await import('@/data/events')
   const count = getAllEvents().length
-  const description = `Browse ${count} BDSM events, kink conferences, and community gatherings across the East Coast. Find workshops, fetish events, and conventions near you.`
+  const description = `${count}+ BDSM & kink events, conventions, and parties—search by state or type. Find kink events near you on the East Coast & Midwest. Updated list with conferences & workshops.`
   const ogDescription = description.slice(0, 200)
 
   return {
-    title: 'BDSM Events & Kink Conventions',
+    title: 'BDSM & Kink Events Near You | Conventions & Parties',
     description: description.slice(0, 160),
     keywords: [
+      'bdsm events',
       'kink events',
-      'BDSM events',
-      'east coast',
+      'kink events near me',
+      'bdsm events near me',
+      'kink conventions',
+      'bdsm conventions',
       'fetish events',
-      'lifestyle events',
-      'conferences',
+      'east coast kink',
       'workshops',
       'community events',
     ],
@@ -34,7 +36,7 @@ export async function generateMetadata(): Promise<Metadata> {
       locale: 'en_US',
       url: 'https://www.eastcoastkinkevents.com/events',
       siteName: 'East Coast Kink Events',
-      title: 'All Events - East Coast Kink Events',
+      title: 'BDSM & Kink Events — Conventions, Parties & Workshops',
       description: ogDescription,
       images: [
         {
@@ -47,7 +49,7 @@ export async function generateMetadata(): Promise<Metadata> {
     },
     twitter: {
       card: 'summary_large_image',
-      title: 'All Events - East Coast Kink Events',
+      title: 'BDSM & Kink Events — Conventions & Workshops',
       description: ogDescription,
       images: ['https://www.eastcoastkinkevents.com/og-image.png'],
     },
