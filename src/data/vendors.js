@@ -722,6 +722,99 @@ export const vendors = [
     ],
     isPaid: false,
   },
+  {
+    name: "Addison's Jewelry and Design",
+    slug: 'addisons-jewelry-and-design',
+    location: 'Online',
+    description:
+      'Jewelry and design studio branded as Chained Rapture—new website and portfolio in progress.',
+    story:
+      'Addison\'s Jewelry and Design (public tagline “Chained Rapture”) is preparing a new website and portfolio. Follow updates on their site and Facebook page: https://www.facebook.com/addisonsjewelry — https://addisonsjewelry.com/. Logo sourced from the public Facebook profile image. This listing is sourced from their public website and social profile.',
+    websiteUrl: 'https://addisonsjewelry.com/',
+    logo125Url: '/images/vendors/addisons-jewelry-and-design/logo-125.jpg',
+    tagSlugs: ['jewelry-collars', 'metalwork-chain-jewelry', 'custom-commission-vendor'],
+    isPaid: false,
+  },
+  {
+    name: 'Lovely Marks',
+    slug: 'lovely-marks',
+    location: 'Online • Etsy',
+    description:
+      'Independent maker shop on Etsy (LovelyMarkstoys); primary marketing domain lovelymarks.com.',
+    story:
+      'Lovely Marks sells through Etsy at https://www.etsy.com/shop/lovelymarkstoys/ with a companion site at https://www.lovelymarks.com/. Product focus and policies are described on those channels. Site logo: local wordmark image (automated download of Etsy/lovelymarks raster assets was blocked or returned SVG/HTML). This listing is sourced from public URLs provided for the directory.',
+    websiteUrl: 'https://www.lovelymarks.com/',
+    logo125Url: '/images/vendors/lovely-marks/logo-125.jpg',
+    tagSlugs: ['insertables-body-toys', 'handmade-silicone', 'custom-commission-vendor'],
+    isPaid: false,
+  },
+  {
+    name: 'Ransom Woodcrafts',
+    slug: 'ransom-woodcrafts',
+    location: 'Online • Etsy',
+    description:
+      'Woodcraft vendor on Etsy (RansomWoodcraftsShop); also on Facebook as Ransom Woodcrafts.',
+    story:
+      'Ransom Woodcrafts maintains an Etsy storefront at https://www.etsy.com/shop/RansomWoodcraftsShop and a Facebook page at https://www.facebook.com/ransomwoodcrafts/. Logo sourced from the public Facebook profile image. This listing is sourced from those public profiles.',
+    websiteUrl: 'https://www.etsy.com/shop/RansomWoodcraftsShop',
+    logo125Url: '/images/vendors/ransom-woodcrafts/logo-125.jpg',
+    tagSlugs: ['woodworking', 'impact-implements', 'custom-commission-vendor'],
+    isPaid: false,
+  },
+  {
+    name: 'Broken Lance After Dark',
+    slug: 'broken-lance-after-dark',
+    location: 'Online • Etsy',
+    description:
+      'Leather and kink-gear Etsy shop: Broken Lance After Dark.',
+    story:
+      'Broken Lance After Dark sells via Etsy at https://www.etsy.com/shop/BrokenLanceAfterDark. Logo sourced via Google favicon resolution for the shop URL (Etsy shop HTML blocked to server-side fetch). This listing is sourced from the public Etsy shop URL.',
+    websiteUrl: 'https://www.etsy.com/shop/BrokenLanceAfterDark',
+    logo125Url: '/images/vendors/broken-lance-after-dark/logo-125.jpg',
+    tagSlugs: [
+      'handmade-leather',
+      'impact-implements',
+      'restraints-bondage-gear',
+      'custom-commission-vendor',
+    ],
+    isPaid: false,
+  },
+  {
+    name: 'Chubby Bunny Trinkets',
+    slug: 'chubby-bunny-trinkets',
+    location: 'USA • Online',
+    description:
+      'Custom kink toys and 3D-printed work—Chubby Bunny Trinkets (CBT) and a parallel general 3D printing storefront.',
+    story:
+      'Chubby Bunny Trinkets C.B.T. highlights handcrafted kink toys (paddles, floggers, custom designs) with ordering via orders@chubbybunny.store — https://chubbybunny.wtf/. A related general 3D printing catalog lives at https://chubbybunny.store/. Public about copy describes an LGBTQ+ supportive, inclusive maker team. Logo downloaded from the official pictures/CBLogo.png asset on chubbybunny.wtf. This listing is sourced from their public websites.',
+    websiteUrl: 'https://chubbybunny.wtf/',
+    logo125Url: '/images/vendors/chubby-bunny-trinkets/logo-125.jpg',
+    tagSlugs: [
+      'impact-implements',
+      '3d-printed-items',
+      'custom-commission-vendor',
+      'lgbtq-owned',
+    ],
+    isPaid: false,
+  },
+  {
+    name: 'Soaring Eagle Creations',
+    slug: 'soaring-eagle-creations',
+    location: 'Gastonia, NC • USA',
+    description:
+      'Quality leather dragontails, floggers, restraints, and custom orders—co-owned by Mark “MSquared” and Kelly “Lady Leigh.”',
+    story:
+      'Soaring Eagle Creations offers leather dragontails, floggers, restraints, cuffs, and custom work through https://soaringeaglecreations.com/. They list Shop Locally @ The LoftNC, Gastonia, NC on the public site, with contact phones Leigh: 704.964.1923 and Mark: 704.661.5566, and email soaringeaglecreations@gmail.com. Logo resized from the public WordPress cropped site icon. This listing is sourced from their public website.',
+    websiteUrl: 'https://soaringeaglecreations.com/',
+    logo125Url: '/images/vendors/soaring-eagle-creations/logo-125.jpg',
+    tagSlugs: [
+      'handmade-leather',
+      'impact-implements',
+      'restraints-bondage-gear',
+      'custom-commission-vendor',
+    ],
+    isPaid: false,
+  },
 ]
 
 export const getAllVendors = () => {

@@ -46,6 +46,7 @@
     "@types/react": "^18.3.11",
     "@types/react-dom": "^18.3.0",
     "eslint-import-resolver-typescript": "^4.4.4",
+    "sharp": "^0.34.5",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.2"
   },

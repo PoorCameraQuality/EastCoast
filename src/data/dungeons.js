@@ -621,21 +621,29 @@ export const dungeons = [
     "location": {
       "city": "Gastonia",
       "state": "NC",
-      "address": "Gastonia, NC (see site for location details)"
+      "address": "Gastonia, NC — see loftnc.com for venue details, parking, and first-visit waivers"
     },
     "category": "BDSM Dungeon",
-    "excerpt": "The LoftNC is a private BDSM social club in Gastonia, North Carolina, offering education, recurring social events, and a member-focused dungeon experience in the Charlotte metro area.",
+    "excerpt": "The LoftNC, LLC is a BDSM dungeon and social club in Gastonia, NC (Charlotte metro). For over a decade it has offered education, recurring social events, and a member-focused play space built on responsibility, integrity, confidentiality, and respect.",
     "description": {
-      "long": "The LoftNC — Gastonia, North Carolina\n\nThe LoftNC describes itself as a BDSM dungeon and social club serving the greater Charlotte region. The organization emphasizes education, social connection, and support for members who value responsibility, integrity, confidentiality, and mutual respect.\n\nRegular monthly programming plus special classes and events are listed on the public calendar. First-time attendees should review the site for waivers, COVID/event policies, and RSVP requirements.\n\nVisit loftnc.com for membership information, the event calendar, and contact options."
+      "long": "The LoftNC — Gastonia, North Carolina\n\nThe LoftNC, LLC operates as a BDSM dungeon and social club serving the greater Charlotte region. The public site describes more than twelve years of welcoming members who felt unwelcome elsewhere—centering education, social connection, and support for people who value individual responsibility, integrity, confidentiality, and respect for self and others.\n\nProgramming includes recurring monthly events plus special classes; the live calendar on loftnc.com lists upcoming dates. First-time visitors should read event waivers and any posted health or attendance policies before attending.\n\nContact the club at 469-KINKYNC (469.546.5962) or loftnc@gmail.com. Follow social updates on Facebook, X (Twitter), and Instagram (links on loftnc.com). Web services credit: AltCarolinas.com."
     },
-    "contact": {},
+    "contact": {
+      "phone": "469.546.5962",
+      "email": "loftnc@gmail.com"
+    },
     "website": "https://loftnc.com/",
     "logo": "/images/dungeons/brand-the-loftnc.svg",
     "images": [],
+    "socialMedia": {
+      "facebook": "https://www.facebook.com/TheLoftNC",
+      "twitter": "https://twitter.com/TheLoftNC",
+      "instagram": "https://www.instagram.com/loftnc/"
+    },
     "seo": {
       "title": "The LoftNC - Gastonia NC BDSM Social Club | East Coast Kink Events",
-      "description": "The LoftNC — private BDSM dungeon and social club in Gastonia, NC near Charlotte. Education, social events, and member-focused play space.",
-      "keywords": "The LoftNC, Gastonia, North Carolina, Charlotte BDSM, dungeon, social club, kink community"
+      "description": "The LoftNC — BDSM dungeon & social club in Gastonia, NC near Charlotte. 469-KINKYNC, loftnc@gmail.com. Calendar, waivers, and membership info at loftnc.com.",
+      "keywords": "The LoftNC, Gastonia, North Carolina, Charlotte BDSM, dungeon, social club, kink community, 469-KINKYNC, Loft NC LLC"
     }
   },
   {
