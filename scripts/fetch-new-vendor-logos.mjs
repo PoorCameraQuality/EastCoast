@@ -50,11 +50,7 @@ const JOBS = [
     url: 'https://soaringeaglecreations.com/wp-content/uploads/2023/03/cropped-eagle_concho-180x180.jpg',
     note: 'WordPress apple-touch-icon / cropped site logo',
   },
-  {
-    slug: 'kneel-grain',
-    url: 'https://graph.facebook.com/61582199684459/picture?type=large',
-    note: 'Facebook page profile image (numeric page id from /people/Kneel-Grain/61582199684459/)',
-  },
+  // kneel-grain: use public/images/vendors/kneel-grain/logo-source.png (official art) → logo-125.jpg via same sharp pipeline as below
 ]
 
 async function main() {
