@@ -815,6 +815,19 @@ export const vendors = [
     ],
     isPaid: false,
   },
+  {
+    name: 'Kneel & Grain',
+    slug: 'kneel-grain',
+    location: 'Online',
+    description:
+      'Maker brand Kneel & Grain—follow on Facebook for products, drops, and how to order.',
+    story:
+      'Kneel & Grain maintains a public Facebook presence at https://www.facebook.com/people/Kneel-Grain/61582199684459/ (share links may include extra query parameters). Logo sourced from the public Facebook profile image for that page. This listing is sourced from the URL provided for the directory.',
+    websiteUrl: 'https://www.facebook.com/people/Kneel-Grain/61582199684459/',
+    logo125Url: '/images/vendors/kneel-grain/logo-125.jpg',
+    tagSlugs: ['woodworking', 'custom-commission-vendor', 'mixed-media-maker'],
+    isPaid: false,
+  },
 ]
 
 export const getAllVendors = () => {
