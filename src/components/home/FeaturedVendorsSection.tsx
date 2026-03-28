@@ -6,30 +6,10 @@ import { useEffect, useMemo, useState } from 'react'
 import VendorImage from '@/components/vendors/VendorImage'
 import { getVendorCardPreviewText } from '@/lib/vendorFiltering'
 import { tagGroupsById, tagsBySlug } from '@/data/vendorTaxonomy'
+import { shuffleCopy } from '@/lib/shuffle'
 
 const TARGET_FEATURED_COUNT = 6
 const POPULAR_FILTERS_COUNT = 8
-
-function cryptoRandomInt(maxExclusive: number): number {
-  // Fallback is fine here; this is a UI rotation feature, not security-sensitive.
-  if (maxExclusive <= 1) return 0
-  try {
-    const arr = new Uint32Array(1)
-    crypto.getRandomValues(arr)
-    return arr[0] % maxExclusive
-  } catch {
-    return Math.floor(Math.random() * maxExclusive)
-  }
-}
-
-function shuffled<T>(items: T[]): T[] {
-  const out = [...items]
-  for (let i = out.length - 1; i > 0; i--) {
-    const j = cryptoRandomInt(i + 1)
-    ;[out[i], out[j]] = [out[j], out[i]]
-  }
-  return out
-}
 
 export default function FeaturedVendorsSection() {
   const all = getAllVendors()
@@ -48,7 +28,7 @@ export default function FeaturedVendorsSection() {
 
   useEffect(() => {
     if (nonSupportersNeeded <= 0) return
-    setRotatingNonSupporters(shuffled(nonSupporters).slice(0, nonSupportersNeeded))
+    setRotatingNonSupporters(shuffleCopy(nonSupporters).slice(0, nonSupportersNeeded))
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []) // rotate per fresh visit/mount
 

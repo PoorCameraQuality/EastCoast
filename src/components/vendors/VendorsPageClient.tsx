@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
 import type { VendorTag, VendorTagGroup } from '@/data/vendorTaxonomy'
 import VendorFilters from '@/components/vendors/VendorFilters'
@@ -13,6 +13,33 @@ import {
   filterVendorsBySelectedTags,
   type VendorRecord,
 } from '@/lib/vendorFiltering'
+import { shuffleCopy } from '@/lib/shuffle'
+import { SITE_SPONSOR_VENDOR_SLUG } from '@/data/vendors'
+
+/** Site sponsor (if any), then `isPaid` supporters — stable order; everyone else is the shuffle tail. */
+function splitPinnedHeadAndTail(list: VendorRecord[]): { head: VendorRecord[]; tail: VendorRecord[] } {
+  const head: VendorRecord[] = []
+  const used = new Set<string>()
+
+  if (SITE_SPONSOR_VENDOR_SLUG) {
+    const sponsor = list.find((v) => v.slug === SITE_SPONSOR_VENDOR_SLUG)
+    if (sponsor) {
+      head.push(sponsor)
+      used.add(sponsor.slug)
+    }
+  }
+
+  const paid = list
+    .filter((v) => Boolean(v.isPaid) && !used.has(v.slug))
+    .sort((a, b) => a.slug.localeCompare(b.slug))
+  for (const v of paid) {
+    head.push(v)
+    used.add(v.slug)
+  }
+
+  const tail = list.filter((v) => !used.has(v.slug))
+  return { head, tail }
+}
 
 type Props = {
   vendors: VendorRecord[]
@@ -52,6 +79,28 @@ export default function VendorsPageClient({
       tagGroupsById,
     })
   }, [vendors, selectedTagSlugs, tagsBySlug, tagGroupsById])
+
+  /** Stable across SSR + first client paint; changes when tag filters or matching vendor set changes. */
+  const filteredStableKey = useMemo(() => {
+    const tags = [...selectedTagSlugs].sort().join('\0')
+    const slugs = filtered.map((v) => v.slug).sort().join('\0')
+    return `${tags}::${slugs}`
+  }, [selectedTagSlugs, filtered])
+
+  const sortedForHydration = useMemo(() => {
+    const { head, tail } = splitPinnedHeadAndTail([...filtered])
+    const tailSorted = [...tail].sort((a, b) => a.slug.localeCompare(b.slug))
+    return [...head, ...tailSorted]
+  }, [filtered])
+
+  const [shuffledVendors, setShuffledVendors] = useState<VendorRecord[] | null>(null)
+
+  useEffect(() => {
+    const { head, tail } = splitPinnedHeadAndTail(filtered)
+    setShuffledVendors([...head, ...shuffleCopy(tail)])
+  }, [filteredStableKey, filtered])
+
+  const displayVendors = shuffledVendors ?? sortedForHydration
 
   const setParams = (nextSelected: string[]) => {
     const next = new URLSearchParams()
@@ -106,14 +155,14 @@ export default function VendorsPageClient({
             <div className="md:col-span-8 lg:col-span-9">
               <div className="flex items-center justify-between gap-4 mb-4">
                 <div className="text-sm text-gray-400">
-                  Showing <span className="text-white font-semibold">{filtered.length}</span> vendor{filtered.length === 1 ? '' : 's'}
+                  Showing <span className="text-white font-semibold">{displayVendors.length}</span> vendor{displayVendors.length === 1 ? '' : 's'}
                 </div>
                 <Link href="/contact" className="inline-flex min-h-touch items-center text-sm text-gray-300 hover:text-white underline underline-offset-4 decoration-white/20 hover:decoration-white/50 transition-colors" aria-label="Contact us">
                   {CONTACT_US_LABEL}
                 </Link>
               </div>
 
-              {filtered.length === 0 ? (
+              {displayVendors.length === 0 ? (
                 <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl p-8">
                   <h2 className="text-xl font-serif font-semibold text-white mb-2">No matches</h2>
                   <p className="text-gray-400">
@@ -122,7 +171,7 @@ export default function VendorsPageClient({
                 </div>
               ) : (
                 <div className="grid grid-cols-1 gap-6">
-                  {filtered.map((v) => (
+                  {displayVendors.map((v) => (
                     <VendorCard key={v.slug} vendor={v} selectedTagSlugs={selectedTagSlugs} />
                   ))}
                 </div>
