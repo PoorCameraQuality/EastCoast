@@ -54,5 +54,8 @@ public/images/events/logo-northwest-leather-celebration-2026.png
 public/images/events/logo-rgv-leather-weekend-2026.jpg
 public/images/events/logo-san-diego-bootblack-leather-2026.svg
 
+# Duplicate / OS-locked; listing uses logo-southeast-leather-fest-official.png
+public/images/events/logo-southeast-leather-fest-2026.png
+
 # Local artifact: empty/locked partial download (listing uses brand-galleria-domain-2.svg)
 public/images/dungeons/galleria-domain-2.png

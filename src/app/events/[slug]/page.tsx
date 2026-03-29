@@ -8,6 +8,7 @@ import Breadcrumb from '@/components/Breadcrumb'
 import RelatedContent from '@/components/RelatedContent'
 import EventCalendarExport from '@/components/EventCalendarExport'
 import { BASE_URL } from '@/lib/seo'
+import MarkdownSimple from '@/components/MarkdownSimple'
 
 // Generate metadata for SEO
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
@@ -270,8 +271,8 @@ function EnhancedEventLayout({ event, breadcrumbItems }: { event: any, breadcrum
                   <div className="text-gray-300 space-y-3">
                     <p className="text-lg leading-relaxed">{event.excerpt}</p>
                     {event.longDescription && (
-                      <div className="text-gray-300 whitespace-pre-line text-sm">
-                        {event.longDescription}
+                      <div className="text-gray-300 text-sm [&_.prose]:text-gray-300 [&_a]:text-primary-400 [&_a]:underline [&_strong]:text-white">
+                        <MarkdownSimple content={event.longDescription} />
                       </div>
                     )}
                   </div>

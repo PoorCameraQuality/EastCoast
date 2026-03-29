@@ -149,11 +149,14 @@ const jobs = [
   },
   {
     page: 'https://gwnnbash.com/',
+    direct:
+      'https://gwnnbash.com/wp-content/uploads/2025/09/2026-GWNN-Bash-3-1-scaled.png',
     dest: join(outDir, 'events', 'logo-gwnn-bash-2026.png'),
   },
   {
     page: 'https://austinkinkweekend.com/',
-    dest: join(outDir, 'events', 'logo-austin-kink-weekend-2026.png'),
+    direct: 'https://austinkinkweekend.com/images/AWK-LOGO-400x278.webp',
+    dest: join(outDir, 'events', 'logo-austin-kink-weekend-2026.webp'),
   },
   {
     page:
@@ -167,6 +170,8 @@ const jobs = [
   {
     page:
       'https://www.midamericaconferenceofclubs.org/event/iowa-leather-weekend-2026/',
+    direct:
+      'https://www.midamericaconferenceofclubs.org/wp-content/uploads/2025/12/c443a1_fac023bda4be41188a67b2ae4b1e2ff2mv2.png.avif',
     dest: join(outDir, 'events', 'logo-iowa-leather-weekend-2026.png'),
   },
   {
@@ -174,9 +179,27 @@ const jobs = [
     dest: join(outDir, 'events', 'logo-camp-thornwood-2026.png'),
   },
   {
+    page: 'https://seleatherfest.com/home',
+    direct:
+      'https://seleatherfest.com/images/sitegraphics/SELF%20logo%202014new%20lg.png',
+    dest: join(outDir, 'events', 'logo-southeast-leather-fest-official.png'),
+  },
+  {
     page: 'https://www.kinkfest.org/home.php',
     direct: 'https://www.kinkfest.org/logo.png',
     dest: join(outDir, 'events', 'logo-kinkfest-2026.png'),
+  },
+  {
+    page: 'https://fetishfactory.com/',
+    direct:
+      'https://fetishfactory.com/wp-content/uploads/2022/05/F.F.-Logo-Med-White-e1752097388234.png',
+    dest: join(outDir, 'events', 'logo-fetish-factory-white.png'),
+  },
+  {
+    page: 'https://www.internationalmrleather.com/',
+    direct:
+      'https://static.wixstatic.com/media/dc9023_a89e801775f147bfbfd1e467590bc88a~mv2.png/v1/fill/w_400,h_400,al_c,q_85,usm_0.66_1.00_0.01/IMG_3831_PNG.png',
+    dest: join(outDir, 'events', 'logo-imlbb-2026.png'),
   },
   {
     page: 'https://leatherreign.org/',
