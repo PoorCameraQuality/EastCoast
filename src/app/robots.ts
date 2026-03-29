@@ -1,4 +1,5 @@
 import { MetadataRoute } from 'next'
+import { BASE_URL } from '@/lib/seo'
 
 export default function robots(): MetadataRoute.Robots {
   return {
@@ -14,6 +15,6 @@ export default function robots(): MetadataRoute.Robots {
         crawlDelay: 1,
       },
     ],
-    sitemap: 'https://www.eastcoastkinkevents.com/sitemap.xml',
+    sitemap: `${BASE_URL}/sitemap.xml`,
   }
 }

@@ -178,8 +178,21 @@ export function DungeonStructuredData({ dungeon }: { dungeon: any }) {
   }
 }
 
+function vendorSchemaDescription(vendor: { description?: string; story?: string; seoDescription?: string }) {
+  const primary = (vendor.seoDescription || vendor.description || '').trim()
+  if (primary.length >= 120) return primary
+  const story = (vendor.story || '').trim()
+  const combined = `${primary} ${story}`.trim()
+  return combined.length > 320 ? `${combined.slice(0, 317)}…` : combined || 'Vendor listing'
+}
+
+function vendorLocationLooksOnlineOnly(location?: string) {
+  if (!location?.trim()) return true
+  return /^online(\s|•|$)/i.test(location.trim())
+}
+
 /**
- * Vendor structured data using LocalBusiness schema.
+ * Vendor structured data: OnlineStore when location is online-only; otherwise LocalBusiness with address hint.
  */
 export function VendorStructuredData({ vendor }: { vendor: any }) {
   const rawLogoUrl = vendor.logo125Url
@@ -189,22 +202,35 @@ export function VendorStructuredData({ vendor }: { vendor: any }) {
       : `${BASE_URL}${encodeUrlPath(rawLogoUrl)}`
     : undefined
 
-  const structuredData = {
-    "@context": "https://schema.org",
-    "@type": "LocalBusiness",
-    "name": vendor.name,
-    "description": vendor.description || vendor.story || 'Vendor listing',
-    "url": `${BASE_URL}/vendors/${vendor.slug}`,
-    "image": logoUrl ? [logoUrl] : undefined,
-    "address": vendor.location
-      ? {
-          "@type": "PostalAddress",
-          "addressLocality": vendor.location,
-          "addressCountry": "US",
-        }
-      : undefined,
-    "sameAs": vendor.websiteUrl ? [vendor.websiteUrl] : undefined,
-  }
+  const onlineOnly = vendorLocationLooksOnlineOnly(vendor.location)
+  const description = vendorSchemaDescription(vendor)
+
+  const structuredData = onlineOnly
+    ? {
+        "@context": "https://schema.org",
+        "@type": "OnlineStore",
+        "name": vendor.name,
+        "description": description,
+        "url": `${BASE_URL}/vendors/${vendor.slug}`,
+        "image": logoUrl ? [logoUrl] : undefined,
+        "sameAs": vendor.websiteUrl ? [vendor.websiteUrl] : undefined,
+      }
+    : {
+        "@context": "https://schema.org",
+        "@type": "LocalBusiness",
+        "name": vendor.name,
+        "description": description,
+        "url": `${BASE_URL}/vendors/${vendor.slug}`,
+        "image": logoUrl ? [logoUrl] : undefined,
+        "address": vendor.location
+          ? {
+              "@type": "PostalAddress",
+              "addressLocality": vendor.location,
+              "addressCountry": "US",
+            }
+          : undefined,
+        "sameAs": vendor.websiteUrl ? [vendor.websiteUrl] : undefined,
+      }
 
   try {
     const jsonString = escapeHtmlInJson(structuredData)
@@ -217,6 +243,39 @@ export function VendorStructuredData({ vendor }: { vendor: any }) {
     )
   } catch (error) {
     console.error('Invalid JSON in VendorStructuredData:', error)
+    return null
+  }
+}
+
+export function VendorsIndexStructuredData({
+  vendors,
+}: {
+  vendors: { name: string; slug: string }[]
+}) {
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "name": "Kink vendors and BDSM gear makers",
+    "numberOfItems": vendors.length,
+    "itemListElement": vendors.map((v, i) => ({
+      "@type": "ListItem",
+      "position": i + 1,
+      "name": v.name,
+      "url": `${BASE_URL}/vendors/${v.slug}`,
+    })),
+  }
+
+  try {
+    const jsonString = escapeHtmlInJson(structuredData)
+    return (
+      <script
+        id="vendors-index-structured-data"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: jsonString }}
+      />
+    )
+  } catch (error) {
+    console.error('Invalid JSON in VendorsIndexStructuredData:', error)
     return null
   }
 }

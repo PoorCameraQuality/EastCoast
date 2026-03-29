@@ -2,7 +2,9 @@ import type { Metadata } from 'next'
 import { getAllVendors } from '@/data/vendors'
 import { TAG_GROUPS, TAGS, tagGroupsById, tagsBySlug } from '@/data/vendorTaxonomy'
 import VendorsPageClient from '@/components/vendors/VendorsPageClient'
+import { VendorsIndexStructuredData } from '@/components/StructuredData'
 import { getTagSlugsFromPageSearchParams } from '@/lib/vendorFiltering'
+import { BASE_URL } from '@/lib/seo'
 
 export const revalidate = 1800
 
@@ -13,17 +15,17 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: 'Kink Vendors & BDSM Gear — Marketplace Directory',
     description: description.slice(0, 160),
-    alternates: { canonical: 'https://www.eastcoastkinkevents.com/vendors' },
+    alternates: { canonical: `${BASE_URL}/vendors` },
     openGraph: {
       type: 'website',
       locale: 'en_US',
-      url: 'https://www.eastcoastkinkevents.com/vendors',
+      url: `${BASE_URL}/vendors`,
       siteName: 'East Coast Kink Events',
       title: 'Kink Vendors & BDSM Gear',
       description: description.slice(0, 200),
       images: [
         {
-          url: 'https://www.eastcoastkinkevents.com/og-image.png',
+          url: `${BASE_URL}/og-image.png`,
           width: 1200,
           height: 630,
           alt: 'East Coast Kink Events - Vendors',
@@ -34,7 +36,7 @@ export async function generateMetadata(): Promise<Metadata> {
       card: 'summary_large_image',
       title: 'Kink Vendors & BDSM Gear',
       description: description.slice(0, 200),
-      images: ['https://www.eastcoastkinkevents.com/og-image.png'],
+      images: [`${BASE_URL}/og-image.png`],
     },
   }
 }
@@ -48,14 +50,19 @@ export default function VendorsIndexPage({
   const selectedTagSlugs = getTagSlugsFromPageSearchParams(searchParams)
 
   return (
-    <VendorsPageClient
-      vendors={vendors}
-      tagGroups={TAG_GROUPS}
-      tags={TAGS}
-      tagsBySlug={tagsBySlug}
-      tagGroupsById={tagGroupsById}
-      selectedTagSlugs={selectedTagSlugs}
-    />
+    <>
+      <VendorsIndexStructuredData
+        vendors={vendors.map((v) => ({ name: v.name, slug: v.slug }))}
+      />
+      <VendorsPageClient
+        vendors={vendors}
+        tagGroups={TAG_GROUPS}
+        tags={TAGS}
+        tagsBySlug={tagsBySlug}
+        tagGroupsById={tagGroupsById}
+        selectedTagSlugs={selectedTagSlugs}
+      />
+    </>
   )
 }
 

@@ -7,7 +7,11 @@ import { BASE_URL } from '@/lib/seo'
 import VendorImage from '@/components/vendors/VendorImage'
 import Breadcrumb from '@/components/Breadcrumb'
 import { VendorStructuredData } from '@/components/StructuredData'
-import { buildVendorKeywords } from '@/lib/vendorMetadata'
+import {
+  buildVendorKeywords,
+  buildVendorMetaDescription,
+  buildVendorOgDescription,
+} from '@/lib/vendorMetadata'
 
 /**
  * Generates metadata for vendor detail pages using the vendor logo as OG image.
@@ -32,9 +36,8 @@ export async function generateMetadata({
       ? rawLogoUrl
       : `${BASE_URL}${rawLogoUrl}`
     : `${BASE_URL}/og-image.png`
-  const rawDesc = (vendor.description || vendor.story || 'Vendor listing').trim()
-  const description = rawDesc.length > 160 ? `${rawDesc.slice(0, 157)}…` : rawDesc
-  const ogDescription = rawDesc.length > 200 ? `${rawDesc.slice(0, 197)}…` : rawDesc
+  const description = buildVendorMetaDescription(vendor)
+  const ogDescription = buildVendorOgDescription(vendor)
   const keywords = buildVendorKeywords(vendor)
 
   return {

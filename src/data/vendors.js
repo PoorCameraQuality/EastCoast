@@ -1,3 +1,5 @@
+import { onboardedVendors } from './onboardedVendors.data.js'
+
 // Vendor data for the marketplace.
 //
 // Tagging model (static, DB-shaped):
@@ -828,6 +830,7 @@ export const vendors = [
     tagSlugs: ['woodworking', 'custom-commission-vendor', 'mixed-media-maker'],
     isPaid: false,
   },
+  ...onboardedVendors,
 ]
 
 export const getAllVendors = () => {

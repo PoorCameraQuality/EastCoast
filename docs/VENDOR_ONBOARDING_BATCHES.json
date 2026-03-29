@@ -1,0 +1,292 @@
+{
+  "criteria": "Handmade / small-batch makers who table at cons & dungeons. Human-review-queue brands excluded from source table.",
+  "netNewCount": 53,
+  "batchCount": 10,
+  "batches": [
+    [
+      {
+        "brand": "2V1 Dark Works",
+        "websiteUrl": "https://www.facebook.com/2V1darkworks",
+        "notes": "FB-only; confirm shop/maker before listing."
+      },
+      {
+        "brand": "Agreeable Agony",
+        "websiteUrl": "https://agreeableagony.com/",
+        "notes": "Tempest / maker collective."
+      },
+      {
+        "brand": "Anubis Gear",
+        "websiteUrl": "https://www.anubisgear.com/",
+        "notes": "MsC sponsor; designer-led gear."
+      },
+      {
+        "brand": "Arcane Impact",
+        "websiteUrl": "https://arcaneimpact.com/",
+        "notes": "Tempest vendor."
+      },
+      {
+        "brand": "Awkward Artist Studio",
+        "websiteUrl": "https://www.awkwardartiststudio.com/",
+        "notes": "CCFF; small-batch / Squarespace shop."
+      },
+      {
+        "brand": "Bastille & Bags",
+        "websiteUrl": "https://www.the-bastille.com/",
+        "notes": "Shrine vendor directory."
+      }
+    ],
+    [
+      {
+        "brand": "Biggins Beatery / The Beatery",
+        "websiteUrl": "https://www.bigginsbeatery.com/",
+        "notes": "Shrine vendor."
+      },
+      {
+        "brand": "Bloody Rose Boutique",
+        "websiteUrl": "https://bloodyroseboutique.com/",
+        "notes": "Shrine vendor."
+      },
+      {
+        "brand": "BONEAFIDE",
+        "websiteUrl": "https://boneafide.store/",
+        "notes": "Keystone vendor list."
+      },
+      {
+        "brand": "Bound Bunny Boutique",
+        "websiteUrl": "https://www.etsy.com/shop/BoundBunnyBoutique",
+        "notes": "Etsy (resolve redirect to canonical shop URL)."
+      },
+      {
+        "brand": "CedarCreek Creations",
+        "websiteUrl": "https://www.facebook.com/cedarcreek.handmadecreations",
+        "notes": "FB; “handmadecreations”."
+      },
+      {
+        "brand": "Chameleon Creations",
+        "websiteUrl": "https://www.facebook.com/ChameleonAfterDark/",
+        "notes": "Shrine vendor."
+      }
+    ],
+    [
+      {
+        "brand": "Cockeye Kink",
+        "websiteUrl": "https://cockeyekink.com/",
+        "notes": "PNWLC sponsor; fetish gear brand."
+      },
+      {
+        "brand": "Dorie’s Designs",
+        "websiteUrl": "https://doriesdesigns.net/",
+        "notes": "Chain maille; confirm site uptime."
+      },
+      {
+        "brand": "Dulcis Doloris",
+        "websiteUrl": "https://www.etsy.com/shop/WTProductions",
+        "notes": "Shrine / Etsy."
+      },
+      {
+        "brand": "Dungeon in a Bag",
+        "websiteUrl": "https://dungeoninabag.com/",
+        "notes": "Portable dungeon furniture."
+      },
+      {
+        "brand": "Fantasy Grove Toys",
+        "websiteUrl": "https://fantasygrove.com/",
+        "notes": "Tempest."
+      },
+      {
+        "brand": "Faire Treasures",
+        "websiteUrl": "https://www.fairetreasures.com/",
+        "notes": "Shrine vendor."
+      }
+    ],
+    [
+      {
+        "brand": "FFäusten",
+        "websiteUrl": "https://ffausten.com/",
+        "notes": "PNWLC sponsor; proprietary gear / shop."
+      },
+      {
+        "brand": "Fontina + Co",
+        "websiteUrl": "https://www.fontinaco.com/",
+        "notes": "Shrine vendor."
+      },
+      {
+        "brand": "Forge and Fleece",
+        "websiteUrl": "https://www.etsy.com/shop/ForgeAndFleece",
+        "notes": "Tempest / Etsy."
+      },
+      {
+        "brand": "From the Hoard",
+        "websiteUrl": "https://www.fromthehoard.com/",
+        "notes": "Shrine vendor."
+      },
+      {
+        "brand": "Heidi Sweet Sensations",
+        "websiteUrl": "https://heidisweetsensations.square.site/",
+        "notes": "Shrine / Square."
+      }
+    ],
+    [
+      {
+        "brand": "Heretical Son Leatherwork",
+        "websiteUrl": "https://www.etsy.com/shop/HereticalSonLeather",
+        "notes": "Shrine / Etsy."
+      },
+      {
+        "brand": "JAFantasyArt",
+        "websiteUrl": "https://www.jafantasyart.com/",
+        "notes": "Shrine vendor."
+      },
+      {
+        "brand": "Kilted Kink",
+        "websiteUrl": "https://kiltedkinktoys.square.site/",
+        "notes": "Shrine / Square."
+      },
+      {
+        "brand": "Kinky Nix",
+        "websiteUrl": "https://kinkynix.bigcartel.com/",
+        "notes": "Shrine / Big Cartel."
+      },
+      {
+        "brand": "Kink Works",
+        "websiteUrl": "https://www.etsy.com/shop/kinkworksrx",
+        "notes": "Shrine / Etsy."
+      }
+    ],
+    [
+      {
+        "brand": "KnottieKittie Rope",
+        "websiteUrl": "https://www.knottiekittie.com/",
+        "notes": "Shrine vendor."
+      },
+      {
+        "brand": "Kjones Pottery",
+        "websiteUrl": "https://kjonespottery.com/",
+        "notes": "Tempest; pottery."
+      },
+      {
+        "brand": "KNucks",
+        "websiteUrl": "https://www.myknucks.com/",
+        "notes": "Keystone vendor."
+      },
+      {
+        "brand": "Leather By Danny",
+        "websiteUrl": "https://www.leatherbydanny.com/",
+        "notes": "Tempest + DO Fusion; normalize URL without `www` if preferred."
+      },
+      {
+        "brand": "Lethal Ware",
+        "websiteUrl": "https://www.etsy.com/shop/LethalWare",
+        "notes": "Keystone / Etsy."
+      }
+    ],
+    [
+      {
+        "brand": "Lilfox Toy Box",
+        "websiteUrl": "https://www.etsy.com/shop/LilfoxToybox",
+        "notes": "DO Fusion / Etsy."
+      },
+      {
+        "brand": "Ms Martha’s Corset Shoppe",
+        "websiteUrl": "https://corset1.com/",
+        "notes": "CCFF new vendor."
+      },
+      {
+        "brand": "Nadia Vanilla Fine Art",
+        "websiteUrl": "https://www.nadiavanilla.com/",
+        "notes": "Tempest; artist."
+      },
+      {
+        "brand": "Oh, Jessa!",
+        "websiteUrl": "https://ohjessa.com/",
+        "notes": "Handmade apparel / corsetry; DO Fusion."
+      },
+      {
+        "brand": "Pan’s Haven Candles & More",
+        "websiteUrl": "https://www.etsy.com/shop/PansHaven",
+        "notes": "Shrine / Etsy."
+      }
+    ],
+    [
+      {
+        "brand": "Pendragon Chainmail",
+        "websiteUrl": "https://www.etsy.com/shop/PendragonChainmail",
+        "notes": "DO Fusion / Etsy."
+      },
+      {
+        "brand": "Perverted Pins",
+        "websiteUrl": "https://www.instagram.com/PervertedPins",
+        "notes": "IG-only pin maker."
+      },
+      {
+        "brand": "Pixie and Paladin Crafts",
+        "websiteUrl": "https://facebook.com/pixiepaladin",
+        "notes": "FB “Crafts”."
+      },
+      {
+        "brand": "PlusHii Kawaii",
+        "websiteUrl": "https://www.plushiikawaii.com/",
+        "notes": "Tempest."
+      },
+      {
+        "brand": "Raven Claw Rope",
+        "websiteUrl": "https://ravenclawrope.com/",
+        "notes": "Shrine vendor."
+      }
+    ],
+    [
+      {
+        "brand": "Sire Don Leather",
+        "websiteUrl": "https://www.etsy.com/shop/SDLeather",
+        "notes": "CCFF / Etsy."
+      },
+      {
+        "brand": "Skipjack Flog",
+        "websiteUrl": "https://www.etsy.com/shop/SkipjackFlog",
+        "notes": "Shrine / Etsy."
+      },
+      {
+        "brand": "Spicy Kitten Designs",
+        "websiteUrl": "https://www.spicykittendesigns.com/",
+        "notes": "Shrine vendor."
+      },
+      {
+        "brand": "Spring Hill Wood Works",
+        "websiteUrl": "https://springhill-woodworks.com/",
+        "notes": "MsC silver; woodworks."
+      },
+      {
+        "brand": "Square Peg Toys",
+        "websiteUrl": "https://www.squarepegtoys.com/",
+        "notes": "Handcrafted silicone; PNWLC sponsor."
+      }
+    ],
+    [
+      {
+        "brand": "The Fat Unicorn",
+        "websiteUrl": "https://www.etsy.com/shop/fatunicorncreations",
+        "notes": "DO Fusion / Etsy."
+      },
+      {
+        "brand": "The Giggling Sadist",
+        "websiteUrl": "https://thegigglingsadist.com/",
+        "notes": "Shrine vendor."
+      },
+      {
+        "brand": "Too Hot to Handle Candles",
+        "websiteUrl": "https://www.toohotcandles.com/",
+        "notes": "Wax play candles; vending events."
+      },
+      {
+        "brand": "Vitromancy Arts",
+        "websiteUrl": "https://www.vitromancyart.com/",
+        "notes": "Tempest; art/maker."
+      },
+      {
+        "brand": "Wolfstryker Leather",
+        "websiteUrl": "https://wolfstryker.com/",
+        "notes": "Keystone vendor."
+      }
+    ]
+  ]
+}
