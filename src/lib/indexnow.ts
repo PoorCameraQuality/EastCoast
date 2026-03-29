@@ -2,6 +2,8 @@
  * IndexNow utility functions for submitting URLs to search engines
  */
 
+import { getAllVendors } from '@/data/vendors'
+
 const INDEXNOW_API_URL = "https://api.indexnow.org/indexnow"
 const INDEXNOW_KEY = "0050cb815778482eafc98bbf0849daad"
 const KEY_LOCATION = "https://www.eastcoastkinkevents.com/0050cb815778482eafc98bbf0849daad.txt"
@@ -107,7 +109,8 @@ export function generateSitemapUrls(): string[] {
     `${BASE_URL}/education`,
     `${BASE_URL}/calendar`,
     `${BASE_URL}/guidelines`,
-    `${BASE_URL}/states`
+    `${BASE_URL}/states`,
+    `${BASE_URL}/vendors`
   ]
 
   const stateUrls = stateSlugs.map(slug => `${BASE_URL}/states/${slug}`)
@@ -138,8 +141,9 @@ export async function submitContentToIndexNow(): Promise<IndexNowResponse> {
     const eventUrls = (events || []).map((e: any) => `${BASE_URL}/events/${e.slug}`)
     const dungeonUrls = (dungeons || []).map((d: any) => `${BASE_URL}/dungeons/${d.slug}`)
     const articleUrls = (articles || []).map((a: any) => `${BASE_URL}/education/${a.slug}`)
+    const vendorUrls = getAllVendors().map((v) => `${BASE_URL}/vendors/${v.slug}`)
 
-    const allUrls = [...eventUrls, ...dungeonUrls, ...articleUrls]
+    const allUrls = [...eventUrls, ...dungeonUrls, ...articleUrls, ...vendorUrls]
     
     return submitToIndexNow(allUrls)
   } catch (error) {

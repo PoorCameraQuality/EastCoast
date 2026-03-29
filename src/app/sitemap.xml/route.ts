@@ -5,6 +5,8 @@ import { supabase } from "@/lib/supabase"
 import { getStateSlugsForSitemap } from "@/lib/eastCoastStates"
 
 export const runtime = "nodejs"
+/** Avoid baking XML at build time (stale counts vs live Supabase articles + current deploy bundle). */
+export const dynamic = "force-dynamic"
 
 const BASE = "https://www.eastcoastkinkevents.com"
 
