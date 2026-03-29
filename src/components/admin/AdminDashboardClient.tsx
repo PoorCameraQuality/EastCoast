@@ -66,7 +66,7 @@ export default function AdminDashboardClient() {
       description: 'Review and approve/reject article submissions',
       href: '/admin/review-submissions',
       icon: '📝',
-      color: 'bg-blue-600',
+      color: 'bg-primary-600',
       stat: stats.pendingSubmissions
     },
     {
@@ -197,7 +197,7 @@ export default function AdminDashboardClient() {
         <div className="flex flex-wrap gap-4">
           <button
             onClick={() => window.open('/admin/review-submissions', '_blank')}
-            className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors text-sm"
+            className="bg-primary-600 text-white px-4 py-2 rounded-md hover:bg-primary-700 transition-colors text-sm"
           >
             Review Latest Submissions
           </button>

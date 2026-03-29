@@ -6,8 +6,8 @@
 
 @layer base {
   :root {
-    --ecke-focus: #4a7bb7;
-    --ecke-focus-ring: rgba(74, 123, 183, 0.35);
+    --ecke-focus: #0f766e;
+    --ecke-focus-ring: rgba(15, 118, 110, 0.35);
     /*
      * Stacking context scale (must stay in sync with fixed/sticky UI):
      * z-40 — promo side panel (PromotionalNews)
@@ -32,18 +32,18 @@
   }
 
   body {
-    @apply text-gray-100 bg-black font-sans;
+    @apply text-gray-100 bg-brand-void font-sans;
   }
   h1, h2, h3, h4, h5, h6 {
     @apply font-serif;
   }
 
-  /* Default links: align with primary action color */
+  /* Default links: Midnight Teal accent */
   a {
-    color: #6ea6cd;
+    color: #5eead4;
   }
   a:visited {
-    color: #98cae1;
+    color: #99f6e4;
   }
 
   /* Single focus-visible system (keyboard only) */
@@ -216,7 +216,7 @@
   .btn-secondary:focus-visible,
   .btn-outline:hover,
   .btn-outline:focus-visible {
-    box-shadow: 0 0 12px rgba(74, 123, 183, 0.35), 0 0 24px rgba(54, 75, 154, 0.25);
+    box-shadow: 0 0 12px rgba(13, 148, 136, 0.4), 0 0 24px rgba(15, 118, 110, 0.28);
   }
 
   /* Card blue glow on hover/focus (non-destructive: uses filter so it doesn't override existing shadows) */
@@ -224,7 +224,7 @@
   .card:focus-within,
   .card-elegant:hover,
   .card-elegant:focus-within {
-    filter: drop-shadow(0 0 12px rgba(74, 123, 183, 0.35)) drop-shadow(0 0 24px rgba(54, 75, 154, 0.25));
+    filter: drop-shadow(0 0 12px rgba(13, 148, 136, 0.4)) drop-shadow(0 0 24px rgba(15, 118, 110, 0.28));
   }
   
   .bg-gradient-dark {
@@ -594,8 +594,8 @@
   margin-bottom: 0.25rem;
 }
 
-.rich-text-editor .ProseMirror blockquote {
-  border-left: 4px solid #6366f1;
+  .rich-text-editor .ProseMirror blockquote {
+    border-left: 4px solid #0d9488;
   padding-left: 1rem;
   margin: 1rem 0;
   font-style: italic;
@@ -646,14 +646,14 @@
   color: #d1d5db;
 }
 
-.rich-text-editor .ProseMirror a {
-  color: #6366f1;
-  text-decoration: underline;
-}
+  .rich-text-editor .ProseMirror a {
+    color: #2dd4bf;
+    text-decoration: underline;
+  }
 
-.rich-text-editor .ProseMirror a:hover {
-  color: #4f46e5;
-}
+  .rich-text-editor .ProseMirror a:hover {
+    color: #5eead4;
+  }
 
 .rich-text-editor .ProseMirror img {
   max-width: 100%;
@@ -704,7 +704,7 @@
 }
 
 .prose blockquote {
-  border-left: 4px solid #6366f1;
+  border-left: 4px solid #0d9488;
   padding-left: 1rem;
   margin: 1rem 0;
   font-style: italic;
@@ -757,12 +757,12 @@
 }
 
 .prose a {
-  color: #6366f1;
+  color: #2dd4bf;
   text-decoration: underline;
 }
 
 .prose a:hover {
-  color: #4f46e5;
+  color: #5eead4;
 }
 
 .prose img {

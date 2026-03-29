@@ -56,7 +56,7 @@ export default function FeaturedEventsSection() {
                 aria-label={`View event: ${event.name}`}
               >
                 <article className="relative h-full overflow-hidden rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl transition-all duration-500 group-hover:border-primary-400/30 group-hover:shadow-elegant-lg">
-                  <div className="absolute inset-0 bg-gradient-to-br from-primary-500/8 via-transparent to-blue-500/8 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                  <div className="absolute inset-0 bg-gradient-to-br from-primary-500/8 via-transparent to-primary-500/8 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                   <div className="relative z-10 p-5">
                     <div className="flex items-center gap-3 mb-4">
                       {event.logo ? (
@@ -100,7 +100,7 @@ export default function FeaturedEventsSection() {
               aria-label={`View event: ${event.name}`}
             >
               <article className="relative h-full overflow-hidden rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl p-6 transition-colors duration-500 md:hover:scale-[1.02] motion-reduce:md:hover:scale-100 hover:border-primary-400/30 hover:shadow-elegant-lg">
-                <div className="absolute inset-0 bg-gradient-to-br from-primary-500/8 via-transparent to-blue-500/8 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                <div className="absolute inset-0 bg-gradient-to-br from-primary-500/8 via-transparent to-primary-500/8 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                 <div className="relative z-10">
                   <div className="flex items-center gap-3 mb-4">
                     {event.logo ? (

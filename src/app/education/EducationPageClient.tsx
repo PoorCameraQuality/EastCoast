@@ -29,7 +29,7 @@ interface Article {
 const CATEGORIES = [
   { id: 'all', name: 'All Articles', color: 'bg-gradient-to-r from-gray-600 to-gray-700', textColor: 'text-white', borderColor: 'border-gray-500' },
   { id: 'Safety', name: 'Safety', color: 'bg-gradient-to-r from-red-600 to-red-700', textColor: 'text-white', borderColor: 'border-red-500' },
-  { id: 'Techniques', name: 'Techniques', color: 'bg-gradient-to-r from-blue-600 to-blue-700', textColor: 'text-white', borderColor: 'border-blue-500' },
+  { id: 'Techniques', name: 'Techniques', color: 'bg-gradient-to-r from-primary-600 to-primary-700', textColor: 'text-white', borderColor: 'border-primary-500' },
   { id: 'Community', name: 'Community', color: 'bg-gradient-to-r from-green-600 to-green-700', textColor: 'text-white', borderColor: 'border-green-500' },
   { id: 'Resources', name: 'Resources', color: 'bg-gradient-to-r from-purple-600 to-purple-700', textColor: 'text-white', borderColor: 'border-purple-500' },
   { id: 'Consent', name: 'Consent', color: 'bg-gradient-to-r from-yellow-600 to-yellow-700', textColor: 'text-black', borderColor: 'border-yellow-500' }
@@ -130,8 +130,8 @@ export default function EducationPageClient({ initialArticles }: Props) {
       {/* Subtle background elements with blue spectrum */}
       <div className="absolute inset-0 opacity-5 motion-reduce:opacity-0 pointer-events-none" aria-hidden>
         <div className="absolute top-20 left-10 w-32 h-32 bg-gradient-to-r from-primary-400 to-primary-600 rounded-full blur-3xl animate-pulse motion-reduce:animate-none"></div>
-        <div className="absolute bottom-40 right-20 w-24 h-24 bg-gradient-to-r from-blue-400 to-cyan-400 rounded-full blur-2xl animate-pulse delay-1000 motion-reduce:animate-none"></div>
-        <div className="absolute top-40 right-1/4 w-40 h-40 bg-gradient-to-r from-primary-300 to-blue-400 rounded-full blur-2xl animate-pulse delay-500 motion-reduce:animate-none"></div>
+        <div className="absolute bottom-40 right-20 w-24 h-24 bg-gradient-to-r from-primary-400 to-cyan-400 rounded-full blur-2xl animate-pulse delay-1000 motion-reduce:animate-none"></div>
+        <div className="absolute top-40 right-1/4 w-40 h-40 bg-gradient-to-r from-primary-300 to-primary-400 rounded-full blur-2xl animate-pulse delay-500 motion-reduce:animate-none"></div>
       </div>
 
       <div className="container-custom py-8 md:py-12 relative z-10">
@@ -141,10 +141,10 @@ export default function EducationPageClient({ initialArticles }: Props) {
         {/* Enhanced Header */}
         <div className="text-center mb-10 md:mb-16">
           <h1 className="text-3xl sm:text-4xl md:text-6xl font-serif font-bold text-white mb-6 relative">
-            <span className="inline-block bg-gradient-to-r from-primary-300 via-blue-400 to-primary-500 bg-clip-text text-transparent">
+            <span className="inline-block bg-gradient-to-r from-primary-300 via-primary-400 to-primary-500 bg-clip-text text-transparent">
               BDSM &amp; Kink Education
             </span>
-            <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-48 h-1 bg-gradient-to-r from-primary-400 to-blue-400 rounded-full"></div>
+            <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-48 h-1 bg-gradient-to-r from-primary-400 to-primary-400 rounded-full"></div>
           </h1>
           <p className="text-lg md:text-xl text-gray-400 max-w-3xl mx-auto leading-relaxed px-1">
             Consent, safety, techniques, and community—long-form guides you can actually use. Filter by topic or jump to{' '}

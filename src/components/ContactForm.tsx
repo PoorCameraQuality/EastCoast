@@ -120,7 +120,7 @@ export default function ContactForm({ 'aria-label': ariaLabel }: ContactFormProp
   return (
     <div className="max-w-4xl mx-auto">
       <h1 className="text-4xl md:text-5xl font-bold text-white mb-8 text-center">
-        <span className="inline-block bg-gradient-to-r from-primary-300 via-blue-400 to-primary-500 bg-clip-text text-transparent">
+        <span className="inline-block bg-gradient-to-r from-primary-300 via-primary-400 to-primary-500 bg-clip-text text-transparent">
           Contact Us
         </span>
       </h1>
@@ -133,7 +133,7 @@ export default function ContactForm({ 'aria-label': ariaLabel }: ContactFormProp
           <div className="backdrop-blur-xl bg-white/10 border border-white/20 rounded-2xl p-6 max-w-xl w-full shadow-2xl">
             <div className="flex items-start">
               <div className="flex-shrink-0">
-                <div className="w-8 h-8 bg-gradient-to-r from-primary-600 to-blue-600 rounded-lg flex items-center justify-center">
+                <div className="w-8 h-8 bg-gradient-to-r from-primary-600 to-primary-600 rounded-lg flex items-center justify-center">
                   <svg className="h-4 w-4 text-white" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                   </svg>
@@ -242,7 +242,7 @@ export default function ContactForm({ 'aria-label': ariaLabel }: ContactFormProp
           <button
             type="submit"
             disabled={isSubmitting}
-            className="group inline-block bg-gradient-to-r from-primary-600 via-blue-600 to-primary-700 text-white font-bold py-4 px-8 rounded-full hover:from-primary-700 hover:via-blue-700 hover:to-primary-800 transition-all duration-300 shadow-xl hover:shadow-primary-500/25 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="group inline-block bg-gradient-to-r from-primary-600 via-primary-600 to-primary-700 text-white font-bold py-4 px-8 rounded-full hover:from-primary-700 hover:via-primary-700 hover:to-primary-800 transition-all duration-300 shadow-xl hover:shadow-primary-500/25 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <span className="flex items-center gap-2 justify-center group-hover:translate-x-1 transition-transform">
               {isSubmitting ? 'Sending...' : 'Send Message'}

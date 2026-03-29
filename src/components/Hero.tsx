@@ -15,9 +15,9 @@ export default function Hero() {
       {/* Subtle background elements with blue spectrum */}
       <div className="absolute inset-0 opacity-10">
         <div className="absolute top-20 left-10 w-32 h-32 bg-gradient-to-r from-primary-400 to-primary-600 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute top-40 right-20 w-24 h-24 bg-gradient-to-r from-blue-400 to-cyan-400 rounded-full blur-2xl animate-pulse delay-1000"></div>
-        <div className="absolute bottom-40 left-1/3 w-40 h-40 bg-gradient-to-r from-primary-300 to-blue-400 rounded-full blur-3xl animate-pulse delay-500"></div>
-        <div className="absolute bottom-20 right-1/3 w-20 h-20 bg-gradient-to-r from-blue-400 to-primary-500 rounded-full blur-xl animate-pulse delay-1500"></div>
+        <div className="absolute top-40 right-20 w-24 h-24 bg-gradient-to-r from-primary-400 to-cyan-400 rounded-full blur-2xl animate-pulse delay-1000"></div>
+        <div className="absolute bottom-40 left-1/3 w-40 h-40 bg-gradient-to-r from-primary-300 to-primary-400 rounded-full blur-3xl animate-pulse delay-500"></div>
+        <div className="absolute bottom-20 right-1/3 w-20 h-20 bg-gradient-to-r from-primary-400 to-primary-500 rounded-full blur-xl animate-pulse delay-1500"></div>
       </div>
 
       {/* Enhanced gradient overlay */}
@@ -25,8 +25,8 @@ export default function Hero() {
       
       {/* Additional glassy elements */}
       <div className="absolute inset-0">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-gradient-to-r from-primary-400/10 to-blue-400/10 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-gradient-to-r from-blue-400/10 to-primary-400/10 rounded-full blur-3xl"></div>
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-gradient-to-r from-primary-400/10 to-primary-400/10 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-gradient-to-r from-primary-400/10 to-primary-400/10 rounded-full blur-3xl"></div>
       </div>
 
       {/* Content */}
@@ -39,7 +39,7 @@ export default function Hero() {
                 Discover Kink Events
               </span>
               <br />
-              <span className="inline-block bg-gradient-to-r from-primary-300 via-blue-400 to-primary-500 bg-clip-text text-transparent animate-gradient-x bg-[length:200%_200%]">
+              <span className="inline-block bg-gradient-to-r from-primary-300 via-primary-400 to-primary-500 bg-clip-text text-transparent animate-gradient-x bg-[length:200%_200%]">
                 Across the East Coast
               </span>
             </h1>
@@ -54,7 +54,7 @@ export default function Hero() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8 animate-fade-in-up" style={{ animationDelay: '0.5s' }}>
             <Link 
               href="/events" 
-              className="group relative inline-flex items-center justify-center min-h-touch px-6 md:px-8 py-3 md:py-4 backdrop-blur-xl bg-gradient-to-r from-primary-600/80 to-blue-600/80 text-white font-semibold rounded-full shadow-2xl hover:shadow-primary-500/25 transition-all duration-300 md:hover:scale-105 motion-reduce:hover:scale-100 min-w-[180px] md:min-w-[200px] overflow-hidden border border-white/20 hover:border-white/40"
+              className="group relative inline-flex items-center justify-center min-h-touch px-6 md:px-8 py-3 md:py-4 backdrop-blur-xl bg-gradient-to-r from-primary-600/80 to-primary-600/80 text-white font-semibold rounded-full shadow-2xl hover:shadow-primary-500/25 transition-all duration-300 md:hover:scale-105 motion-reduce:hover:scale-100 min-w-[180px] md:min-w-[200px] overflow-hidden border border-white/20 hover:border-white/40"
             >
               <span className="relative z-10 flex items-center gap-2">
                 Browse Events
@@ -62,14 +62,14 @@ export default function Hero() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                 </svg>
               </span>
-              <div className="absolute inset-0 bg-gradient-to-r from-primary-700/80 to-blue-700/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <div className="absolute inset-0 bg-gradient-to-r from-primary-700/80 to-primary-700/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
             </Link>
 
             <Link 
               href="https://discord.gg/xcnGGyGsmT" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="group relative inline-flex items-center justify-center min-h-touch px-6 md:px-8 py-3 md:py-4 backdrop-blur-xl bg-gradient-to-r from-blue-600/80 to-primary-600/80 text-white font-semibold rounded-full shadow-2xl hover:shadow-blue-500/25 transition-all duration-300 md:hover:scale-105 motion-reduce:hover:scale-100 min-w-[180px] md:min-w-[200px] overflow-hidden border border-white/20 hover:border-white/40"
+              className="group relative inline-flex items-center justify-center min-h-touch px-6 md:px-8 py-3 md:py-4 backdrop-blur-xl bg-gradient-to-r from-primary-600/80 to-primary-600/80 text-white font-semibold rounded-full shadow-2xl hover:shadow-primary-500/25 transition-all duration-300 md:hover:scale-105 motion-reduce:hover:scale-100 min-w-[180px] md:min-w-[200px] overflow-hidden border border-white/20 hover:border-white/40"
               onClick={() => trackEvent('click', 'social', 'discord', 1)}
             >
               <span className="relative z-10 flex items-center gap-2">
@@ -78,7 +78,7 @@ export default function Hero() {
                 </svg>
                 Join Discord
               </span>
-              <div className="absolute inset-0 bg-gradient-to-r from-indigo-700/80 to-blue-700/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <div className="absolute inset-0 bg-gradient-to-r from-indigo-700/80 to-primary-700/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
             </Link>
           </div>
 

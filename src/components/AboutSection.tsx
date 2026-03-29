@@ -36,19 +36,19 @@ export default function AboutSection() {
               </h3>
               <div className="space-y-4 text-subtle">
                 <div className="flex items-start gap-3">
-                  <div className="w-6 h-6 bg-gradient-to-r from-primary-500 to-blue-500 rounded-full flex-shrink-0 mt-1" aria-hidden />
+                  <div className="w-6 h-6 bg-gradient-to-r from-primary-500 to-primary-500 rounded-full flex-shrink-0 mt-1" aria-hidden />
                   <p>Curate and maintain a comprehensive directory of BDSM events and dungeons</p>
                 </div>
                 <div className="flex items-start gap-3">
-                  <div className="w-6 h-6 bg-gradient-to-r from-primary-500 to-blue-500 rounded-full flex-shrink-0 mt-1" aria-hidden />
+                  <div className="w-6 h-6 bg-gradient-to-r from-primary-500 to-primary-500 rounded-full flex-shrink-0 mt-1" aria-hidden />
                   <p>Provide educational resources and safety guidelines</p>
                 </div>
                 <div className="flex items-start gap-3">
-                  <div className="w-6 h-6 bg-gradient-to-r from-primary-500 to-blue-500 rounded-full flex-shrink-0 mt-1" aria-hidden />
+                  <div className="w-6 h-6 bg-gradient-to-r from-primary-500 to-primary-500 rounded-full flex-shrink-0 mt-1" aria-hidden />
                   <p>Foster community connections through Discord and events</p>
                 </div>
                 <div className="flex items-start gap-3">
-                  <div className="w-6 h-6 bg-gradient-to-r from-primary-500 to-blue-500 rounded-full flex-shrink-0 mt-1" aria-hidden />
+                  <div className="w-6 h-6 bg-gradient-to-r from-primary-500 to-primary-500 rounded-full flex-shrink-0 mt-1" aria-hidden />
                   <p>Ensure transparency and safety in all listings</p>
                 </div>
               </div>

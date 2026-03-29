@@ -56,7 +56,7 @@ export default function AccessibilityPage() {
                 If you encounter any accessibility barriers, please let us know.
               </p>
 
-              <div className="mt-8 p-6 bg-gradient-to-br from-primary-900/20 to-blue-900/20 border border-primary-500/30 rounded-lg">
+              <div className="mt-8 p-6 bg-gradient-to-br from-primary-900/20 to-primary-900/20 border border-primary-500/30 rounded-lg">
                 <p className="text-white font-medium mb-4">
                   For accessibility concerns or to request assistance:
                 </p>

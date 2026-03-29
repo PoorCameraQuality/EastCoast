@@ -358,7 +358,7 @@ export default function ArticlePageClient({ article, breadcrumbItems }: ArticleP
             {/* Status Message */}
             {saveMessage && (
               <div className={`mb-4 p-3 rounded-lg ${
-                saveStatus === 'saving' ? 'bg-blue-600 text-white' :
+                saveStatus === 'saving' ? 'bg-primary-600 text-white' :
                 saveStatus === 'success' ? 'bg-green-600 text-white' :
                 saveStatus === 'error' ? 'bg-red-600 text-white' :
                 'bg-gray-600 text-white'

@@ -116,7 +116,7 @@ export default function EventCalendarExport({ event }: EventCalendarExportProps)
   return (
     <div className="bg-gradient-to-br from-gray-900 to-black border border-gray-700 rounded-2xl p-6">
       <h2 className="text-xl font-serif font-bold text-white mb-3 flex items-center gap-3">
-        <div className="w-8 h-8 bg-gradient-to-r from-green-500 to-blue-500 rounded-lg flex items-center justify-center">
+        <div className="w-8 h-8 bg-gradient-to-r from-green-500 to-primary-500 rounded-lg flex items-center justify-center">
           <svg className="w-4 h-4 text-black" fill="currentColor" viewBox="0 0 24 24">
             <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/>
           </svg>
@@ -130,7 +130,7 @@ export default function EventCalendarExport({ event }: EventCalendarExportProps)
         <button
           type="button"
           onClick={exportToGoogleCalendar}
-          className="group inline-flex min-h-touch items-center justify-center gap-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-bold py-2 px-4 rounded-lg hover:from-blue-600 hover:to-blue-700 transition-colors duration-300 shadow-lg md:hover:scale-105 motion-reduce:md:hover:scale-100 text-sm"
+          className="group inline-flex min-h-touch items-center justify-center gap-2 bg-gradient-to-r from-primary-500 to-primary-600 text-white font-bold py-2 px-4 rounded-lg hover:from-primary-600 hover:to-primary-700 transition-colors duration-300 shadow-lg md:hover:scale-105 motion-reduce:md:hover:scale-100 text-sm"
         >
           <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
             <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/>

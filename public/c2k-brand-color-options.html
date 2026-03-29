@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>C2K — Coast to Coast Kink · Teal palette options</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --page-bg: #030506;
+      --card-border: rgba(45, 212, 191, 0.12);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "DM Sans", system-ui, sans-serif;
+      background: var(--page-bg);
+      color: #e2e8f0;
+      min-height: 100vh;
+      line-height: 1.5;
+    }
+    .noise {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.04;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      z-index: 0;
+    }
+    header {
+      position: relative;
+      z-index: 1;
+      padding: 3rem 1.5rem 2rem;
+      max-width: 72rem;
+      margin: 0 auto;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    h1 {
+      font-family: Syne, sans-serif;
+      font-weight: 800;
+      font-size: clamp(1.75rem, 4vw, 2.35rem);
+      letter-spacing: -0.02em;
+      margin: 0 0 0.5rem;
+      background: linear-gradient(120deg, #5eead4, #22d3ee 45%, #a7f3d0);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .sub {
+      color: #94a3b8;
+      font-size: 0.95rem;
+      max-width: 42rem;
+    }
+    .sub code { color: #67e8f9; font-size: 0.85em; }
+    main {
+      position: relative;
+      z-index: 1;
+      max-width: 72rem;
+      margin: 0 auto;
+      padding: 2rem 1.5rem 4rem;
+      display: grid;
+      gap: 1.75rem;
+    }
+    @media (min-width: 900px) {
+      main { grid-template-columns: 1fr 1fr; }
+    }
+    article {
+      border-radius: 16px;
+      border: 1px solid var(--card-border);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .preview-top {
+      padding: 1.25rem 1.25rem 1rem;
+      min-height: 140px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+    }
+    .preview-top h2 {
+      font-family: Syne, sans-serif;
+      font-weight: 700;
+      font-size: 1.15rem;
+      margin: 0 0 0.25rem;
+      letter-spacing: -0.02em;
+    }
+    .preview-top p.tagline {
+      margin: 0;
+      font-size: 0.8rem;
+      opacity: 0.85;
+    }
+    .swatches {
+      display: flex;
+      height: 44px;
+    }
+    .swatches span {
+      flex: 1;
+      min-width: 0;
+    }
+    .meta {
+      padding: 1rem 1.25rem 1.25rem;
+      background: rgba(0,0,0,0.35);
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+    .hex-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem 0.75rem;
+      font-size: 0.72rem;
+      font-family: ui-monospace, monospace;
+      color: #94a3b8;
+      margin-bottom: 1rem;
+    }
+    .hex-row span strong { color: #cbd5e1; font-weight: 500; }
+    .ui-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .btn {
+      font-family: inherit;
+      font-weight: 600;
+      font-size: 0.8rem;
+      padding: 0.55rem 1.1rem;
+      border-radius: 8px;
+      border: 2px solid transparent;
+      cursor: default;
+    }
+    .link {
+      font-size: 0.8rem;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+    footer {
+      text-align: center;
+      padding: 2rem 1rem 3rem;
+      color: #64748b;
+      font-size: 0.8rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* —— Option A: Midnight Teal (balanced, soft teal) —— */
+    .opt-a .preview-top {
+      background: linear-gradient(165deg, #0a1214 0%, #0d1a1c 50%, #0f2326 100%);
+      color: #ecfdf5;
+    }
+    .opt-a .preview-top h2 { color: #f0fdfa; }
+    .opt-a .swatches span:nth-child(1) { background: #070d0f; }
+    .opt-a .swatches span:nth-child(2) { background: #0f1a1c; }
+    .opt-a .swatches span:nth-child(3) { background: #134e4a; }
+    .opt-a .swatches span:nth-child(4) { background: #2dd4bf; }
+    .opt-a .swatches span:nth-child(5) { background: #5eead4; }
+    .opt-a .btn {
+      background: #0f766e;
+      border-color: #0f766e;
+      color: #fff;
+    }
+    .opt-a .link { color: #5eead4; }
+
+    /* —— Option B: Deep Pacific (more saturated, “ocean”) —— */
+    .opt-b .preview-top {
+      background: linear-gradient(165deg, #020617 0%, #0c1929 45%, #082f49 100%);
+      color: #e0f2fe;
+    }
+    .opt-b .preview-top h2 { color: #f0f9ff; }
+    .opt-b .swatches span:nth-child(1) { background: #020617; }
+    .opt-b .swatches span:nth-child(2) { background: #0f172a; }
+    .opt-b .swatches span:nth-child(3) { background: #155e75; }
+    .opt-b .swatches span:nth-child(4) { background: #06b6d4; }
+    .opt-b .swatches span:nth-child(5) { background: #22d3ee; }
+    .opt-b .btn {
+      background: #0891b2;
+      border-color: #0891b2;
+      color: #fff;
+    }
+    .opt-b .link { color: #67e8f9; }
+
+    /* —— Option C: Petrol Ink (green-teal, editorial) —— */
+    .opt-c .preview-top {
+      background: linear-gradient(165deg, #0a0f0d 0%, #111c18 50%, #142923 100%);
+      color: #d1fae5;
+    }
+    .opt-c .preview-top h2 { color: #ecfdf5; }
+    .opt-c .swatches span:nth-child(1) { background: #050807; }
+    .opt-c .swatches span:nth-child(2) { background: #13221c; }
+    .opt-c .swatches span:nth-child(3) { background: #115e59; }
+    .opt-c .swatches span:nth-child(4) { background: #14b8a6; }
+    .opt-c .swatches span:nth-child(5) { background: #2dd4bf; }
+    .opt-c .btn {
+      background: #0d9488;
+      border-color: #0d9488;
+      color: #fff;
+    }
+    .opt-c .link { color: #5eead4; }
+
+    /* —— Option D: Ember Teal (dark + warm edge, teal accent) —— */
+    .opt-d .preview-top {
+      background: linear-gradient(165deg, #0c0a09 0%, #1c1412 40%, #134e4a 120%);
+      color: #f5f5f4;
+    }
+    .opt-d .preview-top h2 { color: #fafaf9; }
+    .opt-d .swatches span:nth-child(1) { background: #0c0a09; }
+    .opt-d .swatches span:nth-child(2) { background: #1c1917; }
+    .opt-d .swatches span:nth-child(3) { background: #134e4a; }
+    .opt-d .swatches span:nth-child(4) { background: #2dd4bf; }
+    .opt-d .swatches span:nth-child(5) { background: #fbbf24; }
+    .opt-d .btn {
+      background: #0f766e;
+      border-color: #2dd4bf;
+      color: #fff;
+    }
+    .opt-d .link { color: #99f6e4; }
+
+    /* —— Option E: Noir Electric (high contrast, cyan pop) —— */
+    .opt-e .preview-top {
+      background: linear-gradient(165deg, #000 0%, #0a1628 100%);
+      color: #e2e8f0;
+    }
+    .opt-e .preview-top h2 { color: #f8fafc; }
+    .opt-e .swatches span:nth-child(1) { background: #000; }
+    .opt-e .swatches span:nth-child(2) { background: #0f172a; }
+    .opt-e .swatches span:nth-child(3) { background: #164e63; }
+    .opt-e .swatches span:nth-child(4) { background: #22d3ee; }
+    .opt-e .swatches span:nth-child(5) { background: #a5f3fc; }
+    .opt-e .btn {
+      background: #0891b2;
+      border-color: #22d3ee;
+      color: #fff;
+    }
+    .opt-e .link { color: #67e8f9; }
+  </style>
+</head>
+<body>
+  <div class="noise" aria-hidden="true"></div>
+  <header>
+    <h1>Coast to Coast Kink</h1>
+    <p class="sub">
+      Internal branding preview · URL stays <code>eastcoastkinkevents.com</code>.
+      Five dark + teal directions.       Use dev server: <code><a href="/brand-colors" style="color:inherit">/brand-colors</a></code>
+      (recommended) or <code>/c2k-brand-color-options.html</code> (rewrites to the same page).
+      Run <code>npm run dev</code> from the <strong>EastCoast-master</strong> project folder.
+    </p>
+  </header>
+  <main>
+    <article class="opt-a">
+      <div class="preview-top">
+        <h2>A · Midnight Teal</h2>
+        <p class="tagline">Soft teal, calm; good default for long reading.</p>
+      </div>
+      <div class="swatches" title="deep bg → surface → deep teal → accent → highlight">
+        <span></span><span></span><span></span><span></span><span></span>
+      </div>
+      <div class="meta">
+        <div class="hex-row">
+          <span><strong>bg</strong> #070d0f · #0f1a1c</span>
+          <span><strong>accent</strong> #0f766e / #2dd4bf</span>
+        </div>
+        <div class="ui-row">
+          <button type="button" class="btn">Primary action</button>
+          <span class="link">Body link style</span>
+        </div>
+      </div>
+    </article>
+
+    <article class="opt-b">
+      <div class="preview-top">
+        <h2>B · Deep Pacific</h2>
+        <p class="tagline">Blue-teal / cyan; feels “coastal night,” slightly cooler.</p>
+      </div>
+      <div class="swatches"><span></span><span></span><span></span><span></span><span></span></div>
+      <div class="meta">
+        <div class="hex-row">
+          <span><strong>bg</strong> #020617 · #0f172a</span>
+          <span><strong>accent</strong> #0891b2 / #22d3ee</span>
+        </div>
+        <div class="ui-row">
+          <button type="button" class="btn">Primary action</button>
+          <span class="link">Body link style</span>
+        </div>
+      </div>
+    </article>
+
+    <article class="opt-c">
+      <div class="preview-top">
+        <h2>C · Petrol Ink</h2>
+        <p class="tagline">Green-leaning teal; less cyan, more “malachite.”</p>
+      </div>
+      <div class="swatches"><span></span><span></span><span></span><span></span><span></span></div>
+      <div class="meta">
+        <div class="hex-row">
+          <span><strong>bg</strong> #050807 · #13221c</span>
+          <span><strong>accent</strong> #0d9488 / #14b8a6</span>
+        </div>
+        <div class="ui-row">
+          <button type="button" class="btn">Primary action</button>
+          <span class="link">Body link style</span>
+        </div>
+      </div>
+    </article>
+
+    <article class="opt-d">
+      <div class="preview-top">
+        <h2>D · Ember Teal</h2>
+        <p class="tagline">Warm dark neutrals + teal; optional gold for badges/CTA alt.</p>
+      </div>
+      <div class="swatches"><span></span><span></span><span></span><span></span><span></span></div>
+      <div class="meta">
+        <div class="hex-row">
+          <span><strong>bg</strong> #0c0a09 · #1c1917</span>
+          <span><strong>accent</strong> #0f766e + #fbbf24 sparingly</span>
+        </div>
+        <div class="ui-row">
+          <button type="button" class="btn">Primary action</button>
+          <span class="link">Body link style</span>
+        </div>
+      </div>
+    </article>
+
+    <article class="opt-e">
+      <div class="preview-top">
+        <h2>E · Noir Electric</h2>
+        <p class="tagline">Maximum contrast; cyan pops—use for bold marketing feel.</p>
+      </div>
+      <div class="swatches"><span></span><span></span><span></span><span></span><span></span></div>
+      <div class="meta">
+        <div class="hex-row">
+          <span><strong>bg</strong> #000 · #0f172a</span>
+          <span><strong>accent</strong> #0891b2 / #22d3ee</span>
+        </div>
+        <div class="ui-row">
+          <button type="button" class="btn">Primary action</button>
+          <span class="link">Body link style</span>
+        </div>
+      </div>
+    </article>
+  </main>
+  <footer>
+    Pick a letter (A–E) and we can map it to Tailwind <code>primary.*</code> + <code>globals.css</code> tokens.
+  </footer>
+</body>
+</html>

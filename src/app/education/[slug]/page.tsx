@@ -194,7 +194,7 @@ export default async function ArticlePage({ params }: { params: { slug: string }
         case 'Safety':
           return 'bg-gradient-to-r from-red-600 to-red-700'
         case 'Techniques':
-          return 'bg-gradient-to-r from-blue-600 to-blue-700'
+          return 'bg-gradient-to-r from-primary-600 to-primary-700'
         case 'Community':
           return 'bg-gradient-to-r from-green-600 to-green-700'
         case 'Resources':

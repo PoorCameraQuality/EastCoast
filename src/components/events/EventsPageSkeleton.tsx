@@ -8,9 +8,9 @@ export default function EventsPageSkeleton() {
       {/* Subtle background elements - same as EventsPageClient */}
       <div className="absolute inset-0 opacity-5">
         <div className="absolute top-20 left-10 w-32 h-32 bg-gradient-to-r from-primary-400 to-primary-600 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-40 right-20 w-24 h-24 bg-gradient-to-r from-blue-400 to-cyan-400 rounded-full blur-2xl animate-pulse delay-1000"></div>
-        <div className="absolute top-40 right-1/4 w-40 h-40 bg-gradient-to-r from-primary-300 to-blue-400 rounded-full blur-3xl animate-pulse delay-500"></div>
-        <div className="absolute bottom-20 left-1/3 w-20 h-20 bg-gradient-to-r from-blue-400 to-primary-500 rounded-full blur-xl animate-pulse delay-1500"></div>
+        <div className="absolute bottom-40 right-20 w-24 h-24 bg-gradient-to-r from-primary-400 to-cyan-400 rounded-full blur-2xl animate-pulse delay-1000"></div>
+        <div className="absolute top-40 right-1/4 w-40 h-40 bg-gradient-to-r from-primary-300 to-primary-400 rounded-full blur-3xl animate-pulse delay-500"></div>
+        <div className="absolute bottom-20 left-1/3 w-20 h-20 bg-gradient-to-r from-primary-400 to-primary-500 rounded-full blur-xl animate-pulse delay-1500"></div>
       </div>
 
       <div className="container-custom py-8 md:py-16 relative z-10">

@@ -118,7 +118,7 @@ export default function CalendarClient({ allEvents }: CalendarClientProps) {
       case 'Outdoor Event':
         return 'bg-green-600'
       case 'Indoor Event':
-        return 'bg-blue-600'
+        return 'bg-primary-600'
       case 'Conference':
         return 'bg-purple-600'
       case 'Workshop':
@@ -424,7 +424,7 @@ export default function CalendarClient({ allEvents }: CalendarClientProps) {
             type="button"
             onClick={exportMonthToGoogleCalendar}
             disabled={monthEvents.length === 0}
-            className="group inline-flex min-h-touch items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 disabled:from-gray-600 disabled:to-gray-700 disabled:cursor-not-allowed text-white font-medium transition-colors duration-300 shadow-lg hover:shadow-blue-500/25 md:hover:scale-105 motion-reduce:md:hover:scale-100 disabled:hover:scale-100"
+            className="group inline-flex min-h-touch items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 disabled:from-gray-600 disabled:to-gray-700 disabled:cursor-not-allowed text-white font-medium transition-colors duration-300 shadow-lg hover:shadow-primary-500/25 md:hover:scale-105 motion-reduce:md:hover:scale-100 disabled:hover:scale-100"
             title="Add all month events to Google Calendar"
           >
             <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
@@ -529,7 +529,7 @@ export default function CalendarClient({ allEvents }: CalendarClientProps) {
                           <button
                             type="button"
                             onClick={() => exportToGoogleCalendar(event)}
-                            className="min-h-touch min-w-touch sm:min-h-0 sm:min-w-0 sm:h-5 sm:w-5 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 rounded-md text-white text-xs inline-flex items-center justify-center transition-colors duration-200 shadow-sm hover:shadow-blue-500/25"
+                            className="min-h-touch min-w-touch sm:min-h-0 sm:min-w-0 sm:h-5 sm:w-5 bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 rounded-md text-white text-xs inline-flex items-center justify-center transition-colors duration-200 shadow-sm hover:shadow-primary-500/25"
                             title={`Add ${event.name} to Google Calendar`}
                             aria-label={`Add ${event.name} to Google Calendar`}
                           >
@@ -584,7 +584,7 @@ export default function CalendarClient({ allEvents }: CalendarClientProps) {
             <span className="text-white text-sm sm:text-base">Outdoor Events</span>
           </div>
           <div className="flex items-center space-x-2">
-            <div className="w-4 h-4 bg-blue-600 rounded"></div>
+            <div className="w-4 h-4 bg-primary-600 rounded"></div>
             <span className="text-white text-sm sm:text-base">Indoor Events</span>
           </div>
           <div className="flex items-center space-x-2">
@@ -615,7 +615,7 @@ export default function CalendarClient({ allEvents }: CalendarClientProps) {
         </div>
         
         <div className="card-elegant text-center">
-          <div className="text-3xl font-bold text-blue-400 mb-2">
+          <div className="text-3xl font-bold text-primary-400 mb-2">
             {monthEvents.filter((e: CalendarEvent) => e.category === 'Indoor Event').length}
           </div>
           <div className="text-white">Indoor Events</div>

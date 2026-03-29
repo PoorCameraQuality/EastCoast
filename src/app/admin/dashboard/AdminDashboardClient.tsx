@@ -19,7 +19,7 @@ export default function AdminDashboardClient() {
       <div className="min-h-screen bg-dark-900 flex items-center justify-center">
         <div className="text-center">
           <div className="text-white mb-4">Loading user data...</div>
-          <div className="text-blue-400 text-sm">Checking authentication...</div>
+          <div className="text-primary-400 text-sm">Checking authentication...</div>
         </div>
       </div>
     )

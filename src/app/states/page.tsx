@@ -62,7 +62,7 @@ export default function StatesIndexPage() {
         {/* Hero Section */}
         <div className="mb-10 md:mb-12 text-center px-1">
           <h1 className="text-3xl sm:text-4xl md:text-6xl font-serif font-bold text-white mb-4">
-            <span className="bg-gradient-to-r from-primary-400 via-blue-400 to-primary-500 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-primary-400 via-primary-400 to-primary-500 bg-clip-text text-transparent">
               Kink Events & Dungeons by State
             </span>
           </h1>

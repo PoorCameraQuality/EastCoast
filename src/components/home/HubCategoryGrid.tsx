@@ -24,7 +24,7 @@ function buildHubCards(counts: HubCategoryCounts): HubCard[] {
       cta: 'Browse Events',
       count: counts.events,
       countLabel: 'event',
-      accentClassName: 'from-primary-500/15 to-blue-500/10',
+      accentClassName: 'from-primary-500/15 to-primary-500/10',
     },
     {
       title: 'Dungeons & Play Spaces',
@@ -33,7 +33,7 @@ function buildHubCards(counts: HubCategoryCounts): HubCard[] {
       cta: 'Explore Spaces',
       count: counts.dungeons,
       countLabel: 'space',
-      accentClassName: 'from-blue-500/15 to-primary-500/10',
+      accentClassName: 'from-primary-500/15 to-primary-500/10',
     },
     {
       title: 'Education & Learning',
@@ -42,7 +42,7 @@ function buildHubCards(counts: HubCategoryCounts): HubCard[] {
       cta: 'Start Learning',
       count: counts.articles,
       countLabel: 'article',
-      accentClassName: 'from-primary-500/10 to-blue-500/15',
+      accentClassName: 'from-primary-500/10 to-primary-500/15',
     },
     {
       title: 'Vendor Marketplace',
@@ -51,7 +51,7 @@ function buildHubCards(counts: HubCategoryCounts): HubCard[] {
       cta: 'Browse Vendors',
       count: counts.vendors,
       countLabel: 'vendor',
-      accentClassName: 'from-blue-500/10 to-primary-500/15',
+      accentClassName: 'from-primary-500/10 to-primary-500/15',
     },
   ]
 }

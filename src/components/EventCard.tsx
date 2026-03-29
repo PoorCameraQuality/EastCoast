@@ -69,7 +69,7 @@ export default function EventCard({ event }: EventCardProps) {
           
           {/* Category Badge */}
           <div className="mt-4 flex-shrink-0">
-            <span className="inline-block px-3 py-1 rounded-full text-xs font-medium bg-gradient-to-r from-primary-600/20 to-blue-600/20 border border-primary-500/30 text-primary-300">
+            <span className="inline-block px-3 py-1 rounded-full text-xs font-medium bg-gradient-to-r from-primary-600/20 to-primary-600/20 border border-primary-500/30 text-primary-300">
               {event.category}
             </span>
           </div>

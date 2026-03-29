@@ -99,9 +99,9 @@ export default function EventsPageClient({ allEvents, allDungeons, selectedCateg
       {/* Subtle background elements with blue spectrum */}
       <div className="absolute inset-0 opacity-5 motion-reduce:opacity-0 pointer-events-none" aria-hidden>
         <div className="absolute top-20 left-10 w-32 h-32 bg-gradient-to-r from-primary-400 to-primary-600 rounded-full blur-3xl animate-pulse motion-reduce:animate-none"></div>
-        <div className="absolute bottom-40 right-20 w-24 h-24 bg-gradient-to-r from-blue-400 to-cyan-400 rounded-full blur-2xl animate-pulse delay-1000 motion-reduce:animate-none"></div>
-        <div className="absolute top-40 right-1/4 w-40 h-40 bg-gradient-to-r from-primary-300 to-blue-400 rounded-full blur-3xl animate-pulse delay-500 motion-reduce:animate-none"></div>
-        <div className="absolute bottom-20 left-1/3 w-20 h-20 bg-gradient-to-r from-blue-400 to-primary-500 rounded-full blur-xl animate-pulse delay-1500 motion-reduce:animate-none"></div>
+        <div className="absolute bottom-40 right-20 w-24 h-24 bg-gradient-to-r from-primary-400 to-cyan-400 rounded-full blur-2xl animate-pulse delay-1000 motion-reduce:animate-none"></div>
+        <div className="absolute top-40 right-1/4 w-40 h-40 bg-gradient-to-r from-primary-300 to-primary-400 rounded-full blur-3xl animate-pulse delay-500 motion-reduce:animate-none"></div>
+        <div className="absolute bottom-20 left-1/3 w-20 h-20 bg-gradient-to-r from-primary-400 to-primary-500 rounded-full blur-xl animate-pulse delay-1500 motion-reduce:animate-none"></div>
       </div>
 
       <div className="container-custom py-8 md:py-16 relative z-10">
@@ -114,10 +114,10 @@ export default function EventsPageClient({ allEvents, allDungeons, selectedCateg
         {/* Enhanced Header Section */}
         <div className="text-center mb-10 md:mb-16">
           <h1 className="text-3xl sm:text-4xl md:text-6xl font-serif font-bold text-white mb-6 relative">
-            <span className="inline-block bg-gradient-to-r from-primary-300 via-blue-400 to-primary-500 bg-clip-text text-transparent">
+            <span className="inline-block bg-gradient-to-r from-primary-300 via-primary-400 to-primary-500 bg-clip-text text-transparent">
               BDSM &amp; Kink Events
             </span>
-            <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-32 h-1 bg-gradient-to-r from-primary-400 to-blue-400 rounded-full"></div>
+            <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-32 h-1 bg-gradient-to-r from-primary-400 to-primary-400 rounded-full"></div>
           </h1>
           <p className="text-lg text-gray-400 max-w-3xl mx-auto mb-8 leading-relaxed">
             Conventions, hotel takeovers, workshops, and parties—filter by indoor/outdoor or jump to{' '}
@@ -167,7 +167,7 @@ export default function EventsPageClient({ allEvents, allDungeons, selectedCateg
               onClick={() => applyCategory('All Events')}
               className={`group inline-flex shrink-0 snap-start min-h-touch items-center px-5 md:px-6 py-3 rounded-full font-bold transition-colors duration-300 shadow-xl md:hover:scale-105 motion-reduce:md:hover:scale-100 ${
                 selectedCategory === 'All Events' 
-                  ? 'bg-gradient-to-r from-primary-600 via-blue-600 to-primary-700 text-white hover:from-primary-700 hover:via-blue-700 hover:to-primary-800 hover:shadow-primary-500/25' 
+                  ? 'bg-gradient-to-r from-primary-600 via-primary-600 to-primary-700 text-white hover:from-primary-700 hover:via-primary-700 hover:to-primary-800 hover:shadow-primary-500/25' 
                   : 'bg-white/10 backdrop-blur-xl border border-white/20 text-white hover:bg-white/20 hover:shadow-white/25'
               }`}
             >
@@ -187,7 +187,7 @@ export default function EventsPageClient({ allEvents, allDungeons, selectedCateg
                 onClick={() => applyCategory(category)}
                 className={`group inline-flex shrink-0 snap-start min-h-touch items-center px-5 md:px-6 py-3 rounded-full font-bold transition-colors duration-300 shadow-xl md:hover:scale-105 motion-reduce:md:hover:scale-100 ${
                   selectedCategory === category 
-                    ? 'bg-gradient-to-r from-primary-600 via-blue-600 to-primary-700 text-white hover:from-primary-700 hover:via-blue-700 hover:to-primary-800 hover:shadow-primary-500/25' 
+                    ? 'bg-gradient-to-r from-primary-600 via-primary-600 to-primary-700 text-white hover:from-primary-700 hover:via-primary-700 hover:to-primary-800 hover:shadow-primary-500/25' 
                     : 'bg-white/10 backdrop-blur-xl border border-white/20 text-white hover:bg-white/20 hover:shadow-white/25'
                 }`}
               >
@@ -210,10 +210,10 @@ export default function EventsPageClient({ allEvents, allDungeons, selectedCateg
             <div className="mb-12">
               <div className="text-center">
                 <h2 className="text-3xl md:text-4xl font-serif font-bold text-white mb-4 relative">
-                  <span className="inline-block bg-gradient-to-r from-primary-400 via-blue-400 to-primary-500 bg-clip-text text-transparent">
+                  <span className="inline-block bg-gradient-to-r from-primary-400 via-primary-400 to-primary-500 bg-clip-text text-transparent">
                     Upcoming Events
                   </span>
-                  <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-24 h-1 bg-gradient-to-r from-primary-400 to-blue-400 rounded-full"></div>
+                  <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-24 h-1 bg-gradient-to-r from-primary-400 to-primary-400 rounded-full"></div>
                 </h2>
                 <p className="text-gray-400 text-lg max-w-2xl mx-auto leading-relaxed">
                   Discover what's happening next in the community. Don't miss out on these exciting opportunities to connect and learn.
@@ -227,14 +227,14 @@ export default function EventsPageClient({ allEvents, allDungeons, selectedCateg
                 <Link key={event.slug} href={`/events/${event.slug}`} className="block group">
                   <div className="relative overflow-hidden backdrop-blur-xl bg-white/10 rounded-2xl border border-white/20 hover:border-white/40 transition-all duration-500 hover:scale-[1.02] shadow-2xl hover:shadow-primary-500/20">
                     {/* Animated background gradient */}
-                    <div className="absolute inset-0 bg-gradient-to-br from-primary-500/10 via-transparent to-blue-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                    <div className="absolute inset-0 bg-gradient-to-br from-primary-500/10 via-transparent to-primary-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                     
                     <div className="relative z-10 p-6">
                       {/* Event Logo */}
                       {event.logo && (
                         <div className="flex justify-center mb-6">
                           <div className="relative">
-                            <div className="absolute inset-0 bg-gradient-to-r from-primary-500 to-blue-500 rounded-2xl blur-lg opacity-50 group-hover:opacity-75 transition-opacity"></div>
+                            <div className="absolute inset-0 bg-gradient-to-r from-primary-500 to-primary-500 rounded-2xl blur-lg opacity-50 group-hover:opacity-75 transition-opacity"></div>
                             <EventLogo 
                               src={event.logo} 
                               alt={event.altText || `${event.name} — BDSM convention in ${event.location.city}, ${event.location.state}`}
@@ -292,14 +292,14 @@ export default function EventsPageClient({ allEvents, allDungeons, selectedCateg
                 <Link key={event.slug} href={`/events/${event.slug}`} className="block group">
                   <div className="relative overflow-hidden backdrop-blur-xl bg-white/10 rounded-2xl border border-white/20 hover:border-white/40 transition-all duration-500 hover:scale-105 h-[480px] flex flex-col shadow-2xl hover:shadow-primary-500/20">
                     {/* Animated background gradient */}
-                    <div className="absolute inset-0 bg-gradient-to-br from-primary-500/10 via-transparent to-blue-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                    <div className="absolute inset-0 bg-gradient-to-br from-primary-500/10 via-transparent to-primary-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                     
                     <div className="relative z-10 p-6 flex flex-col h-full">
                       {/* Event Logo */}
                       {event.logo && (
                         <div className="mb-6 flex-shrink-0">
                           <div className="relative">
-                            <div className="absolute inset-0 bg-gradient-to-r from-primary-500 to-blue-500 rounded-2xl blur-lg opacity-50 group-hover:opacity-75 transition-opacity"></div>
+                            <div className="absolute inset-0 bg-gradient-to-r from-primary-500 to-primary-500 rounded-2xl blur-lg opacity-50 group-hover:opacity-75 transition-opacity"></div>
                             <EventLogo 
                               src={event.logo} 
                               alt={event.altText || `${event.name} — BDSM convention in ${event.location.city}, ${event.location.state}`}

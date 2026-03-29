@@ -232,7 +232,7 @@ export default function SubmissionReviewPanel() {
     switch (status) {
       case 'pending': return 'bg-yellow-500 text-black'
       case 'approved': return 'bg-green-500 text-white'
-      case 'responded': return 'bg-blue-500 text-white'
+      case 'responded': return 'bg-primary-500 text-white'
       case 'rejected': return 'bg-red-500 text-white'
       default: return 'bg-gray-500 text-white'
     }
@@ -320,7 +320,7 @@ export default function SubmissionReviewPanel() {
               <div className="text-2xl font-bold text-white">{counts.approved}</div>
               <div className="text-white text-sm">Approved</div>
             </div>
-            <div className="bg-blue-500 rounded-lg p-4 text-center">
+            <div className="bg-primary-500 rounded-lg p-4 text-center">
               <div className="text-2xl font-bold text-white">{counts.responded}</div>
               <div className="text-white text-sm">Responded</div>
             </div>
@@ -366,7 +366,7 @@ export default function SubmissionReviewPanel() {
               onClick={() => setFilter('responded')}
               className={`px-4 py-2 rounded-lg font-medium transition-colors ${
                 filter === 'responded' 
-                  ? 'bg-blue-500 text-white' 
+                  ? 'bg-primary-500 text-white' 
                   : 'bg-dark-700 text-gray-300 hover:bg-dark-600'
               }`}
             >
@@ -407,7 +407,7 @@ export default function SubmissionReviewPanel() {
                       <div className="flex items-center gap-3 mb-2">
                         <span className={`px-2 py-1 rounded text-xs font-medium ${
                           submission.submission_type === 'article' 
-                            ? 'bg-blue-500 text-white' 
+                            ? 'bg-primary-500 text-white' 
                             : 'bg-green-500 text-white'
                         }`}>
                           {submission.submission_type === 'article' ? 'Article' : 'Contact'}
@@ -497,7 +497,7 @@ export default function SubmissionReviewPanel() {
                     <div className="flex-1">
                       <div className="flex items-center gap-3 mb-2">
                         <span className={`px-2 py-1 rounded text-xs font-medium ${
-                          log.action === 'edit' ? 'bg-blue-500 text-white' : 'bg-red-500 text-white'
+                          log.action === 'edit' ? 'bg-primary-500 text-white' : 'bg-red-500 text-white'
                         }`}>
                           {log.action === 'edit' ? 'Edited' : 'Deleted'}
                         </span>
@@ -547,7 +547,7 @@ export default function SubmissionReviewPanel() {
                       <div className="flex items-center gap-3 mb-2">
                         <span className={`px-2 py-1 rounded text-xs font-medium ${
                           selectedSubmission.submission_type === 'article' 
-                            ? 'bg-blue-500 text-white' 
+                            ? 'bg-primary-500 text-white' 
                             : 'bg-green-500 text-white'
                         }`}>
                           {selectedSubmission.submission_type === 'article' ? 'Article' : 'Contact'}

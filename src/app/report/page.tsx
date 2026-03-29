@@ -51,7 +51,7 @@ export default function ReportPage() {
                   </p>
                 </div>
 
-                <div className="p-4 bg-gradient-to-br from-blue-900/20 to-blue-800/20 border border-blue-500/30 rounded-lg">
+                <div className="p-4 bg-gradient-to-br from-primary-900/20 to-primary-800/20 border border-primary-500/30 rounded-lg">
                   <h3 className="text-lg font-semibold text-white mb-2"><span aria-hidden="true">🔧</span> Technical problems</h3>
                   <p className="text-gray-300 text-sm">
                     Broken links, display issues, or functionality bugs
@@ -78,7 +78,7 @@ export default function ReportPage() {
                 <li>Your contact information (optional, but helpful for follow-up)</li>
               </ul>
 
-              <div className="mt-8 p-6 bg-gradient-to-br from-primary-900/20 to-blue-900/20 border border-primary-500/30 rounded-lg">
+              <div className="mt-8 p-6 bg-gradient-to-br from-primary-900/20 to-primary-900/20 border border-primary-500/30 rounded-lg">
                 <p className="text-white font-medium mb-2">
                   Submit Your Report
                 </p>

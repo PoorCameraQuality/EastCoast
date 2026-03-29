@@ -440,7 +440,7 @@ export default function UnifiedAdminDashboard({ user, isAdmin: isAdminProp }: Un
     switch (status) {
       case 'pending': return 'bg-yellow-500 text-black'
       case 'approved': return 'bg-green-500 text-white'
-      case 'responded': return 'bg-blue-500 text-white'
+      case 'responded': return 'bg-primary-500 text-white'
       case 'rejected': return 'bg-red-500 text-white'
       default: return 'bg-gray-500 text-white'
     }
@@ -572,7 +572,7 @@ export default function UnifiedAdminDashboard({ user, isAdmin: isAdminProp }: Un
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-300">Responded:</span>
-                  <span className="text-blue-400 font-medium">{counts.responded}</span>
+                  <span className="text-primary-400 font-medium">{counts.responded}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-300">Total:</span>
@@ -612,7 +612,7 @@ export default function UnifiedAdminDashboard({ user, isAdmin: isAdminProp }: Un
                 <div className="text-2xl font-bold text-white">{counts.approved}</div>
                 <div className="text-white text-sm">Approved</div>
               </div>
-              <div className="bg-blue-500 rounded-lg p-4 text-center">
+              <div className="bg-primary-500 rounded-lg p-4 text-center">
                 <div className="text-2xl font-bold text-white">{counts.responded}</div>
                 <div className="text-white text-sm">Responded</div>
               </div>
@@ -632,7 +632,7 @@ export default function UnifiedAdminDashboard({ user, isAdmin: isAdminProp }: Un
                     filter === filterOption 
                       ? filterOption === 'pending' ? 'bg-yellow-500 text-black' :
                         filterOption === 'approved' ? 'bg-green-500 text-white' :
-                        filterOption === 'responded' ? 'bg-blue-500 text-white' :
+                        filterOption === 'responded' ? 'bg-primary-500 text-white' :
                         filterOption === 'rejected' ? 'bg-red-500 text-white' :
                         'bg-primary-500 text-white'
                       : 'bg-dark-700 text-gray-300 hover:bg-dark-600'
@@ -663,7 +663,7 @@ export default function UnifiedAdminDashboard({ user, isAdmin: isAdminProp }: Un
                         <div className="flex items-center gap-3 mb-2">
                           <span className={`px-2 py-1 rounded text-xs font-medium ${
                             submission.submission_type === 'article' 
-                              ? 'bg-blue-500 text-white' 
+                              ? 'bg-primary-500 text-white' 
                               : submission.submission_type === 'event'
                               ? 'bg-purple-500 text-white'
                               : submission.submission_type === 'dungeon'
@@ -1157,7 +1157,7 @@ export default function UnifiedAdminDashboard({ user, isAdmin: isAdminProp }: Un
                         <div className="flex items-center gap-3 mb-2">
                           <span className={`px-2 py-1 rounded text-xs font-medium ${
                             selectedSubmission.submission_type === 'article' 
-                              ? 'bg-blue-500 text-white' 
+                              ? 'bg-primary-500 text-white' 
                               : selectedSubmission.submission_type === 'event'
                               ? 'bg-purple-500 text-white'
                               : selectedSubmission.submission_type === 'dungeon'

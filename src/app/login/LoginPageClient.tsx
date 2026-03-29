@@ -116,7 +116,7 @@ export default function LoginPageClient() {
       <div className="min-h-screen bg-dark-900 flex items-center justify-center">
         <div className="text-center">
           <div className="text-white mb-4">Loading...</div>
-          <div className="text-blue-400 text-sm">Checking authentication...</div>
+          <div className="text-primary-400 text-sm">Checking authentication...</div>
         </div>
       </div>
     )
@@ -128,7 +128,7 @@ export default function LoginPageClient() {
       <div className="min-h-screen bg-dark-900 flex items-center justify-center">
         <div className="text-center">
           <div className="text-white mb-4">Already logged in!</div>
-          <div className="text-blue-400 text-sm">Redirecting to admin dashboard...</div>
+          <div className="text-primary-400 text-sm">Redirecting to admin dashboard...</div>
         </div>
       </div>
     )

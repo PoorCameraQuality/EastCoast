@@ -154,9 +154,9 @@ function PromotionalCard({
 }: PromotionalCardProps) {
   // Gradient colors that match the Hero section
   const gradients = [
-    'from-primary-600/90 to-blue-600/90',
-    'from-blue-600/90 to-primary-600/90',
-    'from-primary-500/90 to-blue-500/90',
+    'from-primary-600/90 to-primary-600/90',
+    'from-primary-600/90 to-primary-600/90',
+    'from-primary-500/90 to-primary-500/90',
   ]
   
   const gradient = gradients[index % gradients.length]

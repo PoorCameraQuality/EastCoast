@@ -7,7 +7,7 @@ function categoryChipClass(category: string) {
     case 'Safety':
       return 'bg-red-600/20 text-red-300 border-red-600/30'
     case 'Techniques':
-      return 'bg-blue-600/20 text-blue-300 border-blue-600/30'
+      return 'bg-primary-600/20 text-primary-300 border-primary-600/30'
     case 'Community':
       return 'bg-green-600/20 text-green-300 border-green-600/30'
     case 'Resources':

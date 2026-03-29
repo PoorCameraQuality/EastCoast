@@ -16,6 +16,13 @@ const nextConfig = {
   env: {
     DISABLE_VERCEL_FEEDBACK: 'true'
   },
+
+  /** If `public/*.html` is not picked up (some local setups), this still serves the preview. */
+  async rewrites() {
+    return [
+      { source: '/c2k-brand-color-options.html', destination: '/brand-colors' },
+    ]
+  },
   
   // Add redirects for old URL structure to fix 404 errors
   async redirects() {

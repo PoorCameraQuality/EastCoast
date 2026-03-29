@@ -115,7 +115,7 @@ export default function DynamicStats() {
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <Link href="/events" className="group">
-          <div className="bg-gradient-to-br from-primary-600/20 to-blue-600/20 border border-primary-500/30 rounded-xl p-6 hover:border-primary-400/50 transition-all duration-300 hover:scale-105">
+          <div className="bg-gradient-to-br from-primary-600/20 to-primary-600/20 border border-primary-500/30 rounded-xl p-6 hover:border-primary-400/50 transition-all duration-300 hover:scale-105">
             <div className="flex items-center justify-between mb-2">
               <div className="w-10 h-10 bg-primary-500/20 rounded-lg flex items-center justify-center">
                 <span className="text-2xl">🎪</span>

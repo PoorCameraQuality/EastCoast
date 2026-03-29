@@ -62,7 +62,7 @@ export default async function TestArticle() {
           
           <div className="mb-8">
             <h2 className="text-xl font-semibold text-white mb-2">Processed HTML (first 500 chars):</h2>
-            <pre className="bg-gray-800 p-4 rounded text-blue-400 text-sm overflow-x-auto">
+            <pre className="bg-gray-800 p-4 rounded text-primary-400 text-sm overflow-x-auto">
               {contentHtml.substring(0, 500)}...
             </pre>
           </div>

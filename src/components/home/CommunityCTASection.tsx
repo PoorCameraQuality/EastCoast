@@ -8,8 +8,8 @@ export default function CommunityCTASection() {
   return (
     <section className="section-padding bg-black relative overflow-hidden" aria-labelledby="community-cta-title">
       <div className="absolute inset-0 opacity-10 motion-reduce:opacity-0 pointer-events-none" aria-hidden>
-        <div className="absolute top-10 left-10 w-44 h-44 bg-gradient-to-r from-primary-400 to-blue-400 rounded-full blur-3xl" />
-        <div className="absolute bottom-10 right-10 w-44 h-44 bg-gradient-to-r from-blue-400 to-primary-500 rounded-full blur-3xl" />
+        <div className="absolute top-10 left-10 w-44 h-44 bg-gradient-to-r from-primary-400 to-primary-400 rounded-full blur-3xl" />
+        <div className="absolute bottom-10 right-10 w-44 h-44 bg-gradient-to-r from-primary-400 to-primary-500 rounded-full blur-3xl" />
       </div>
 
       <div className="container-custom relative z-10">
