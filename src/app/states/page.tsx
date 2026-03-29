@@ -39,9 +39,13 @@ export default function StatesIndexPage() {
     'New England': stateStats.filter(s => s.info.region === 'New England'),
     'Mid-Atlantic': stateStats.filter(s => s.info.region === 'Mid-Atlantic'),
     'Northeast': stateStats.filter(s => s.info.region === 'Northeast'),
-    'South': stateStats.filter(s => s.info.region === 'South'),
-    'Midwest': stateStats.filter(s => s.info.region === 'Midwest'),
+    South: stateStats.filter(s => s.info.region === 'South'),
+    'South Central': stateStats.filter(s => s.info.region === 'South Central'),
+    Midwest: stateStats.filter(s => s.info.region === 'Midwest'),
+    'Great Plains': stateStats.filter(s => s.info.region === 'Great Plains'),
     'Mountain West': stateStats.filter(s => s.info.region === 'Mountain West'),
+    Pacific: stateStats.filter(s => s.info.region === 'Pacific'),
+    Southwest: stateStats.filter(s => s.info.region === 'Southwest'),
   }
 
   const breadcrumbItems = [

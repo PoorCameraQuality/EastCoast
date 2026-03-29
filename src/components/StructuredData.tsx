@@ -17,7 +17,7 @@ interface EventStructuredDataProps {
     }
     excerpt: string
     website: string
-    logo: string
+    logo?: string
     category: string
     organizer?: string
     seo?: {

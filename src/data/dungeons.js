@@ -768,6 +768,522 @@ export const dungeons = [
       "description": "LRA Chicago — nonprofit leather and kink community organization with dungeon space, education, and social programming. lra-chicago.org.",
       "keywords": "LRA Chicago, Chicago, Illinois, 501c3, BDSM dungeon, leather, kink education, nonprofit"
     }
+  },
+  {
+    "name": "Arcadia Collective Detroit",
+    "slug": "arcadia-collective-detroit",
+    "location": {
+      "city": "Troy",
+      "state": "MI",
+      "address": "1407 Allen Dr Suite A, Troy, MI 48083"
+    },
+    "category": "BDSM Dungeon",
+    "excerpt": "Arcadia Collective operates The Mothership—a Detroit-area LGBTQ+ community hub with a stocked BDSM dungeon, rope education (Michigan Happy Knots), Deviations Detroit play parties, drag and charity events, and sober house rules.",
+    "description": {
+      "long": "Arcadia Collective Detroit — Troy, Michigan\n\nThe Arcadia Collective is a nonprofit LGBTQ+ community space centered on The Mothership venue in Troy, MI. Public schedules describe dungeon play parties (including Deviations Detroit), rope skillshares, pet/pup nights, fetish fashion events, drag shows, and fundraisers benefiting local organizations.\n\nHouse rules published for events emphasize consent, 18+ entry, digital waivers, dungeon monitors, no alcohol in the space, and photography only with explicit consent of all subjects. Ticketed events are often sold through Eventbee links posted on the official site.\n\nConfirm current dates, pricing, and accessibility on arcadiacollectivedetroit.org before attending."
+    },
+    "contact": {},
+    "website": "https://www.arcadiacollectivedetroit.org/",
+    "logo": "/images/dungeons/logo-arcadia-collective.png",
+    "images": [],
+    "seo": {
+      "title": "Arcadia Collective Detroit - The Mothership BDSM & Community Space | East Coast Kink Events",
+      "description": "Arcadia Collective — LGBTQ+ community space in Troy, MI with dungeon parties, rope education, and sober consent-forward events. arcadiacollectivedetroit.org.",
+      "keywords": "Arcadia Collective, Detroit, Troy Michigan, Mothership, BDSM dungeon, LGBTQ kink, Deviations Detroit"
+    }
+  },
+  {
+    "name": "Diosa's Play Space",
+    "slug": "diosas-play-space-winchester",
+    "location": {
+      "city": "Winchester",
+      "state": "VA",
+      "address": "Winchester, VA (exact address provided to members; see visitdiosa.com)"
+    },
+    "category": "BDSM Dungeon",
+    "excerpt": "Private membership social club in Winchester, VA—about 2,100 sq ft luxe play space, vetting and meet-and-greets, $99 annual membership, SSC framework, and BYOB events per public site. Confirm current schedule before visiting.",
+    "description": {
+      "long": "Diosa's Play Space — Winchester, Virginia\n\nDiosa's describes itself as a private membership social club with a discreet play space in Winchester, VA, operated in connection with a 501(c)(3) holding company (The Winston Corporation, Inc.) per public copy. Membership is invitation-oriented: prospective members request vetting, attend off-site mingles, and complete agreements before events.\n\nThe public website lists dress expectations (greater than casual; no jeans, t-shirts, or athletic shoes for typical events), guest policies, and $99 annual membership. Events are described as BYOB with host-gift suggestions.\n\n**Editorial note:** Footer copyright on the public site has shown 2016–2020; always confirm active programming on visitdiosa.com or official social channels before planning travel."
+    },
+    "contact": {},
+    "website": "https://visitdiosa.com/",
+    "logo": "/images/dungeons/logo-diosas-play-space.jpg",
+    "images": [],
+    "socialMedia": {
+      "facebook": "https://www.facebook.com/@DiosaPlaySpace",
+      "instagram": "https://www.instagram.com/DiosaPlaySpace"
+    },
+    "seo": {
+      "title": "Diosa's Play Space - Winchester VA Private Kink Club | East Coast Kink Events",
+      "description": "Diosa's — private membership BDSM social club in Winchester, VA. Vetting, annual membership, and event policies at visitdiosa.com.",
+      "keywords": "Diosa's Play Space, Winchester Virginia, BDSM dungeon, private membership, kink club"
+    }
+  },
+  {
+    "name": "SubSpace Indy",
+    "slug": "subspace-indy",
+    "location": {
+      "city": "Indianapolis",
+      "state": "IN",
+      "address": "Indianapolis, IN (exact address provided to registrants; see subspaceindy.com)"
+    },
+    "category": "BDSM Dungeon",
+    "excerpt": "Indy-area kink venue hosting play parties, contests, and regional rope events—including Indy Rope Expo—with membership and guest-list practices described on the official site.",
+    "description": {
+      "long": "SubSpace Indy — Indianapolis, Indiana\n\nSubSpace Indy is described on its public presence as Indiana's premier kink venue, hosting play parties, community contests, and large rope events such as Indy Rope Expo. Access policies typically require registration or membership paths outlined on subspaceindy.com.\n\nThis listing complements event pages that reference SubSpace as a venue; always confirm ticketing, address release, and house rules with organizers before attending."
+    },
+    "contact": {},
+    "website": "https://subspaceindy.com/",
+    "logo": "/images/dungeons/logo-subspace-indy.png",
+    "images": [],
+    "seo": {
+      "title": "SubSpace Indy - Indianapolis Kink Venue | East Coast Kink Events",
+      "description": "SubSpace Indy — Indianapolis kink venue for parties, education, and events such as Indy Rope Expo. subspaceindy.com.",
+      "keywords": "SubSpace Indy, Indianapolis, Indiana, BDSM dungeon, kink venue, Indy Rope Expo"
+    }
+  },
+  {
+    "name": "Oklahoma Power Exchange",
+    "slug": "oklahoma-power-exchange-okc",
+    "location": {
+      "city": "Oklahoma City metro",
+      "state": "OK",
+      "address": "OKC metro area (exact address released after vetting; see oklahomapowerexchange.com)"
+    },
+    "category": "BDSM Dungeon",
+    "excerpt": "18+ private BDSM and power-exchange community in the Oklahoma City area with a member dungeon, mandatory vetting and membership paths, recurring play parties and midweek dungeon nights, Ticketleap registration, and published guest and non-discrimination policies.",
+    "description": {
+      "long": "Oklahoma Power Exchange (OPE) — Oklahoma City metro\n\nThe public site describes OPE as a **BDSM, sex-positive community organization** with a **privately owned dungeon**, focused on kink, authority-based relationships, M/s, leather, and related dynamics. It states it is **not a swinger club** while remaining welcoming to swingers under its inclusivity framing.\n\n**Access:** **Vetting** is required; **annual membership** is described for ongoing participation. **Guests** may attend when **sponsored** by a member. Non-member party attendance is limited (e.g. caps per rolling period on published guest policy pages). **ID**, privacy agreements, **NDA**, and liability **waivers** are required. Ticketing flows through **Ticketleap** (`ope.ticketleap.com`); the site links a **FetLife** group, **Google Calendar** embed, and event updates via **Events@OklahomaPowerExchange.com**.\n\n**Programming:** Bi-monthly BDSM play parties, midweek dungeon evenings, coffee socials, newbie nights, workshops, and specialty events; **rentals** for private scenes, photo shoots, and gatherings are advertised.\n\n**Note:** Homepage pricing banners may lag (e.g. historical membership copy); **always confirm** current fees, schedule, and vetting steps on **oklahomapowerexchange.com** before attending."
+    },
+    "contact": {},
+    "website": "https://www.oklahomapowerexchange.com/",
+    "logo": "/images/dungeons/logo-oklahoma-power-exchange-okc.png",
+    "images": [],
+    "seo": {
+      "title": "Oklahoma Power Exchange - OKC BDSM Dungeon & Community | East Coast Kink Events",
+      "description": "Oklahoma Power Exchange — OKC-area vetted BDSM and power-exchange community with dungeon, parties, and education. oklahomapowerexchange.com.",
+      "keywords": "Oklahoma Power Exchange, OPE, Oklahoma City, BDSM dungeon, power exchange, vetting, OKC kink"
+    }
+  },
+  {
+    "name": "Infliction Hall",
+    "slug": "infliction-hall-dfw-tx",
+    "location": {
+      "city": "DFW / Euless area",
+      "state": "TX",
+      "address": "Dallas–Fort Worth area (street address not published on homepage; events list “Infliction Hall DFW, TX”—confirm on inflictionhall.com)"
+    },
+    "category": "BDSM Dungeon",
+    "excerpt": "DFW member-based kink club on the Modern Lifestyle platform—VIP and Platinum tiers, RSVPs and ticketing for themed dungeon nights (rope, impact, littles, and more). The public calendar also lists lifestyle travel and resort promotions; read event copy before booking.",
+    "description": {
+      "long": "Infliction Hall — Dallas–Fort Worth, Texas\n\n**Infliction Hall** markets itself as a **DFW kink club** using the **Modern Lifestyle** member platform. The homepage promotes **membership registration**, **event RSVPs**, and a busy calendar of **on-site parties** (rope, impact, themed socials, and specialty nights) described as occurring **at Infliction Hall DFW, TX**.\n\n**Editorial note:** The same ecosystem surfaces **travel and resort offers** (e.g. lifestyle takeovers) alongside local dungeon programming. ECKE focuses on the **local venue**; travelers should distinguish **club nights** from **third-party travel** listings linked in the footer and event feed.\n\nConfirm dress codes, door policies, and membership requirements in the member UI or event pages on **inflictionhall.com**."
+    },
+    "contact": {},
+    "website": "https://inflictionhall.com/",
+    "logo": "/images/dungeons/logo-infliction-hall-dfw.png",
+    "images": [],
+    "seo": {
+      "title": "Infliction Hall - DFW BDSM Club | East Coast Kink Events",
+      "description": "Infliction Hall — DFW Texas kink club with member events, rope and impact nights, and Modern Lifestyle ticketing. inflictionhall.com.",
+      "keywords": "Infliction Hall, DFW dungeon, Dallas Fort Worth BDSM, Euless kink, Texas dungeon"
+    }
+  },
+  {
+    "name": "Shrine Parties",
+    "slug": "shrine-parties-austin-tx",
+    "location": {
+      "city": "Austin",
+      "state": "TX",
+      "address": "Austin, TX (Colette’s Austin location for monthly parties; confirm on shrineparties.com)"
+    },
+    "category": "BDSM Dungeon",
+    "excerpt": "Austin monthly fetish and kink play parties blending dungeon and club energy—18+ with ID, Shrine waivers, and a no-cost temporary colette Club membership. Vendors, volunteers, and optional STI testing partnerships per official site.",
+    "description": {
+      "long": "Shrine Parties — Austin, Texas\n\n**Shrine** describes **sex-positive, fetish, and kink** programming that mixes **dungeon and club** atmosphere. Public copy welcomes diverse orientations and gender expressions and references ties to **Texas BDSM groups**.\n\n**Entry:** **18+** with valid government ID. Attendees complete **waivers/disclaimers** for Shrine’s BDSM/fetish events. A **temporary colette Club membership** (described as **no extra cost**) is required; check-in flows reference **coletteclubs.com** for the Austin location.\n\n**Programs:** **Monthly play parties** and casual **munches**, **vendor** and **volunteer** programs, and public information about **STI testing** partnerships.\n\nUse **shrineparties.com** for the latest policies (site copy has referenced periodic policy updates), ticketing, and FAQ details before you go."
+    },
+    "contact": {},
+    "website": "https://shrineparties.com/",
+    "logo": "/images/dungeons/logo-shrine-parties.png",
+    "images": [],
+    "seo": {
+      "title": "Shrine Parties - Austin TX Kink & Fetish Play Parties | East Coast Kink Events",
+      "description": "Shrine Parties — Austin fetish and kink play parties with dungeon energy, colette check-in, and 18+ policies. shrineparties.com.",
+      "keywords": "Shrine Parties, Austin kink, Austin BDSM, fetish party Texas, colette Austin"
+    }
+  },
+  {
+    "name": "The Pendulum Club",
+    "slug": "pendulum-club-houston-tx",
+    "location": {
+      "city": "Houston",
+      "state": "TX",
+      "address": "Three Houston-area locations (e.g. 14448 Hempstead Rd, Houston, TX 77040 for original club—see pendulum.club for South/North addresses)"
+    },
+    "category": "Lifestyle Club",
+    "excerpt": "Woman-owned Houston on-premise lifestyle (swingers-forward) clubs with themed nightly parties, 21+ membership, BYOB, and multiple play areas—not a dedicated BDSM dungeon listing. Listed because the CSV flagged dungeon-adjacent programming; confirm kink-specific nights on the official calendar.",
+    "description": {
+      "long": "The Pendulum Club — Houston, Texas\n\n**Editorial disclaimer:** The Pendulum Club is primarily an **on-premise lifestyle / swingers** venue group, **not** a BDSM-first dungeon. ECKE includes it with this context so visitors are not misled when browsing alongside kink-dedicated spaces.\n\nThe public **pendulum.club** site describes **three Houston-area clubs** (Hempstead Road “original,” South near Hobby Airport, and North in Spring) as **woman-owned**, **21+**, **BYOB**, **non-smoking** social venues with **private membership** registration. Copy emphasizes **couples, single women, and select single men** with **posted caps** for single men on certain nights. **Friday single-men tickets** are sometimes **door-only** per notices on the site.\n\n**Contact (from public footer):** **281-857-6040**, **info@pendulum.club**. Example address on site: **14448 Hempstead Road, Houston, Texas 77040** (map linked).\n\n**Why it appears here:** Some travelers cross-shop **lifestyle** and **kink** venues; the club’s event feed can include **kink-adjacent** travel branding. Always read the **specific night’s** description and house rules on **pendulum.club** before attending.\n\n**Note:** The domain **pendulumclubhtx.com** did not return a public page in automated checks; **pendulum.club** is the working public site."
+    },
+    "contact": {
+      "email": "info@pendulum.club",
+      "phone": "281-857-6040"
+    },
+    "website": "https://pendulum.club/",
+    "logo": "/images/placeholder-logo.svg",
+    "images": [],
+    "seo": {
+      "title": "The Pendulum Club - Houston Lifestyle Clubs | East Coast Kink Events",
+      "description": "The Pendulum Club — Houston on-premise lifestyle venues (21+, BYOB). Not kink-primary; confirm events on pendulum.club.",
+      "keywords": "Pendulum Club Houston, lifestyle club Texas, on premise club Houston, swingers club Houston"
+    }
+  },
+  {
+    "name": "Vortex Parties",
+    "slug": "vortex-parties-omaha-des-moines",
+    "location": {
+      "city": "Des Moines & Omaha",
+      "state": "IA",
+      "address": "Des Moines, IA and Omaha, NE (addresses released to registrants; email VortexFetishParties@gmail.com or see vortexparties.com)"
+    },
+    "category": "BDSM Dungeon",
+    "excerpt": "Consent-forward fetish play parties in Omaha, Nebraska, and Des Moines, Iowa—published PRICK framework, house safeword RED, waivers, member/non-member pricing, and Des Moines venue detail on the official site (Nebraska events: site cites 19+ minimum).",
+    "description": {
+      "long": "Vortex Parties — Omaha, Nebraska & Des Moines, Iowa\n\n**Vortex Parties** promotes **fetish and kink play parties** in **Omaha, NE** and **Des Moines, IA** under one brand. Public **rules** pages describe **PRICK**, a house safeword (**RED**), **dungeon monitors**, and expectations around confidentiality and conduct. A **waiver** path and **membership** storefront are linked from the site.\n\n**Locations:** Marketing is **dual-city**; the detailed **facility** narrative on **vortexparties.com/about** is **Des Moines–centric** (equipment lists, layout, rental inquiries). **Street addresses** are **not** posted publicly—first-time attendees are directed to **email** or **FetLife** for logistics. Contact paths on public pages include **VortexFetishParties@gmail.com** and phone **515-423-0591** (Iowa area code) for rental and location questions.\n\n**Age:** Posted rules note **19+ for Nebraska** Vortex events and **18+** elsewhere—confirm for your specific ticket.\n\n**ECKE listing note:** This row uses **IA** as the primary `state` code for filtering; **Omaha** attendees should still use the **official site** for Nebraska-specific logistics.\n\n**Rentals:** Private **hourly or full-day** rental of the Des Moines event space is advertised—coordinate via published contact channels."
+    },
+    "contact": {},
+    "website": "https://vortexparties.com/",
+    "logo": "/images/dungeons/logo-vortex-parties.png",
+    "images": [],
+    "seo": {
+      "title": "Vortex Parties - Des Moines & Omaha Fetish Play Parties | East Coast Kink Events",
+      "description": "Vortex Parties — consent-forward fetish play parties in Des Moines, IA and Omaha, NE. Rules, waivers, and tickets at vortexparties.com.",
+      "keywords": "Vortex Parties, Des Moines kink, Omaha BDSM, fetish party Iowa, fetish party Nebraska"
+    }
+  },
+  {
+    "name": "The Happy Kitten Portal",
+    "slug": "happy-kitten-portal-new-orleans",
+    "location": {
+      "city": "New Orleans",
+      "state": "LA",
+      "address": "French Quarter at The Prive (628 N. Rampart St, New Orleans, LA 70112 published on privenola.com; book via portalnola.com)"
+    },
+    "category": "BDSM Dungeon",
+    "excerpt": "Bookable, fully equipped BDSM dungeon for short and overnight visits at The Prive in New Orleans—appointment-based scheduling, class menu (rope, impact, tantra, and more), and amenities tied to the clothing-optional members club context.",
+    "description": {
+      "long": "The Happy Kitten Portal — New Orleans, Louisiana\n\n**The Happy Kitten Portal** markets a **fully equipped BDSM dungeon** for **short and overnight stays** located **inside The Prive**, a **French Quarter** property described as a **clothing-optional, members-focused** community (see **privenola.com** for host context and campus address **628 N. Rampart St, New Orleans, LA 70112**).\n\n**Access model:** This is **not** a drop-in public club night—it is **appointment- and booking-driven** (scheduling links such as **Acuity** appear on the Portal site). Offerings include **private and group classes** (examples on public pages: rope suspension, impact play, tantra-for-beginners, etiquette, and more) and **gallery** content showcasing the space.\n\n**Editorial note:** Expectations blend **dungeon rental** with **private-club hospitality** (pool, hot tub, bar amenities referenced in marketing). Always confirm **membership, dress, and house rules** with organizers and **The Prive** before travel.\n\nDetails: **portalnola.com**."
+    },
+    "contact": {},
+    "website": "https://portalnola.com/",
+    "logo": "/images/dungeons/logo-happy-kitten-portal.png",
+    "images": [],
+    "seo": {
+      "title": "The Happy Kitten Portal - New Orleans BDSM Dungeon Stays | East Coast Kink Events",
+      "description": "Happy Kitten Portal — bookable BDSM dungeon stays and classes at The Prive, French Quarter New Orleans. portalnola.com.",
+      "keywords": "Happy Kitten Portal, New Orleans BDSM, The Prive, dungeon rental New Orleans, NOLA kink"
+    }
+  },
+  {
+    "name": "Alaska Club Kink",
+    "slug": "alaska-club-kink-anchorage",
+    "location": {
+      "city": "Anchorage",
+      "state": "AK",
+      "address": "Anchorage, AK (exact address provided to members; see alaskaclubkink.com)"
+    },
+    "category": "BDSM Dungeon",
+    "excerpt": "Anchorage-area BDSM and kink community with a private club space—membership paths, vetting, and recurring social and play programming described on the official site.",
+    "description": {
+      "long": "Alaska Club Kink — Anchorage, Alaska\n\n**Alaska Club Kink** presents itself as a **private membership** kink and BDSM community serving the Anchorage area, with **house rules**, **orientation** steps for newcomers, and **event calendars** on **alaskaclubkink.com**.\n\n**Access:** Expect **age verification**, **waivers**, and **membership or guest** policies rather than walk-in retail sessions. Programming is framed as **community-first** (education, socials, and member events) rather than commercial pro sessions.\n\nConfirm **current fees, vetting, and schedules** on the official site before attending."
+    },
+    "contact": {},
+    "website": "https://alaskaclubkink.com/",
+    "logo": "/images/dungeons/logo-alaska-club-kink.png",
+    "images": [],
+    "seo": {
+      "title": "Alaska Club Kink - Anchorage BDSM Community | East Coast Kink Events",
+      "description": "Alaska Club Kink — Anchorage-area private kink and BDSM community with membership and event information at alaskaclubkink.com.",
+      "keywords": "Alaska Club Kink, Anchorage BDSM, Alaska kink, private membership dungeon Anchorage"
+    }
+  },
+  {
+    "name": "Black Thorn",
+    "slug": "black-thorn-oakland",
+    "location": {
+      "city": "Oakland",
+      "state": "CA",
+      "address": "Lake Merritt area, Oakland, CA (exact address confirmed at booking; see black-thorn.org)"
+    },
+    "category": "Private Kink Dungeon",
+    "excerpt": "Oakland Bay Area rental dungeon and photo-friendly studio—five themed rooms, booking requests, waivers, and ID requirements per public site copy (not a drop-in pro-domme house).",
+    "description": {
+      "long": "Black Thorn — Oakland, California\n\n**Black Thorn** operates a **fixed, equipped dungeon** in the **Lake Merritt / Oakland** area marketed for **private rentals**, **parties**, and **fetish photography / video** use. Public pages describe **multiple themed rooms**, **play stations**, **kitchen**, **parking**, and **booking** through the site’s request flow with **ID** and **waiver** expectations.\n\n**Listing note:** ECKE categorizes this row as a **rental / studio** venue: participation is through **reservations** and **hosted gatherings**, not retail **pro-domme** session advertising.\n\nDetails and rules: **black-thorn.org**."
+    },
+    "contact": {},
+    "website": "https://black-thorn.org/",
+    "logo": "/images/dungeons/logo-black-thorn-oakland.png",
+    "images": [],
+    "socialMedia": {
+      "twitter": "https://twitter.com/BlackThornKink"
+    },
+    "seo": {
+      "title": "Black Thorn - Oakland CA Dungeon Rental & Studio | East Coast Kink Events",
+      "description": "Black Thorn — equipped Oakland Bay Area dungeon for private rentals, events, and fetish photography. Booking and rules at black-thorn.org.",
+      "keywords": "Black Thorn, Oakland dungeon, Bay Area BDSM rental, fetish studio Oakland, Lake Merritt dungeon"
+    }
+  },
+  {
+    "name": "Center for Sex Positive Culture (CSPC)",
+    "slug": "cspc-seattle",
+    "location": {
+      "city": "Seattle",
+      "state": "WA",
+      "address": "Seattle, WA (facility address released to members and registrants; see thecspc.org)"
+    },
+    "category": "Kink Community Center",
+    "excerpt": "Seattle’s long-running sex-positive nonprofit—classes, labs, member programs, and consent-forward community space with published codes of conduct and membership pathways.",
+    "description": {
+      "long": "Center for Sex Positive Culture (CSPC) — Seattle, Washington\n\n**CSPC** (often branded alongside **The Wet Spot**) is a **nonprofit**, **education- and community-centered** organization serving the Seattle kink and sex-positive communities. Public materials emphasize **consent culture**, **diversity**, **accessibility** goals, and a wide **class and event** calendar.\n\n**Access:** **Membership** and **ticketing** flows are described on **thecspc.org**; many programs require **registration** or **orientation** rather than anonymous walk-ins.\n\nThis listing reflects **community space** programming—not a commercial pro-domme session provider."
+    },
+    "contact": {},
+    "website": "https://thecspc.org/",
+    "logo": "/images/dungeons/logo-cspc-seattle.png",
+    "images": [],
+    "seo": {
+      "title": "CSPC Seattle - Center for Sex Positive Culture | East Coast Kink Events",
+      "description": "CSPC — Seattle nonprofit sex-positive and kink community center with classes, membership, and consent-forward policies. thecspc.org.",
+      "keywords": "CSPC, Center for Sex Positive Culture, Seattle kink, Wet Spot Seattle, sex positive nonprofit"
+    }
+  },
+  {
+    "name": "The Crow's Nest Escape",
+    "slug": "crows-nest-seattle",
+    "location": {
+      "city": "Seattle",
+      "state": "WA",
+      "address": "Seattle, WA (two rental studio locations; book via thecrowsnestescape.com)"
+    },
+    "category": "Private Kink Dungeon",
+    "excerpt": "Seattle-area bookable kink studios—The Nest and The Roost—marketed for private rentals and small gatherings with online scheduling (community rental model, not pro-domme retail).",
+    "description": {
+      "long": "The Crow's Nest Escape — Seattle, Washington\n\n**The Crow's Nest Escape** advertises **two separate rental studios** in the **Seattle** area (**The Nest** and **The Roost**), equipped for **BDSM and kink** use. The public site focuses on **hourly bookings**, **amenities**, and **house expectations** for **private** scenes and **small groups**.\n\n**Join in:** Participation is through **reservations** on **thecrowsnestescape.com** rather than anonymous open-door parties.\n\nConfirm **addresses**, **rates**, and **rules** on the official site before you book."
+    },
+    "contact": {},
+    "website": "https://www.thecrowsnestescape.com/",
+    "logo": "/images/dungeons/logo-crows-nest-seattle.jpg",
+    "images": [],
+    "seo": {
+      "title": "The Crow's Nest Escape - Seattle BDSM Studio Rentals | East Coast Kink Events",
+      "description": "The Crow's Nest Escape — Seattle kink studio rentals (The Nest and The Roost). Book at thecrowsnestescape.com.",
+      "keywords": "Crow's Nest Escape, Seattle dungeon rental, BDSM studio Seattle, The Nest The Roost Seattle"
+    }
+  },
+  {
+    "name": "The Denver Sanctuary",
+    "slug": "denver-sanctuary-denver",
+    "location": {
+      "city": "Denver",
+      "state": "CO",
+      "address": "Denver, CO (street address provided after membership steps; see denversanctuary.com)"
+    },
+    "category": "BDSM Dungeon",
+    "excerpt": "Denver’s large member-based kink club—recurring parties, education, and a permanent play space with published rules and membership orientation (community venue, not a pro-domme house).",
+    "description": {
+      "long": "The Denver Sanctuary — Denver, Colorado\n\n**The Denver Sanctuary** is widely known as a **membership-based** BDSM club serving the **Front Range**, with a **fixed Denver-area facility** used for **socials**, **classes**, and **play parties**. Public-facing pages emphasize **community safety**, **consent**, and **membership** or **guest** pathways rather than retail **professional sessions**.\n\n**Join in:** Follow **membership**, **orientation**, and **RSVP** instructions on **denversanctuary.com**; street address details are typically shared **after** you complete published intake steps.\n\nAlways confirm **current dues, door policies, and schedules** on the official site."
+    },
+    "contact": {},
+    "website": "https://www.denversanctuary.com/",
+    "logo": "/images/dungeons/logo-denver-sanctuary.png",
+    "images": [],
+    "seo": {
+      "title": "The Denver Sanctuary - Denver CO BDSM Club | East Coast Kink Events",
+      "description": "The Denver Sanctuary — Denver membership-based BDSM club with parties, education, and a permanent space. denversanctuary.com.",
+      "keywords": "Denver Sanctuary, Denver BDSM, Colorado kink club, Front Range dungeon"
+    }
+  },
+  {
+    "name": "Kink Center",
+    "slug": "kink-center-seattle",
+    "location": {
+      "city": "Seattle",
+      "state": "WA",
+      "address": "Seattle, WA (see kinkcenter.org for location and access details)"
+    },
+    "category": "Kink Community Center",
+    "excerpt": "Seattle nonprofit community dungeon and education hub—open houses, classes, and member programming framed as consent-forward public-benefit work.",
+    "description": {
+      "long": "Kink Center — Seattle, Washington\n\n**Kink Center** describes itself as a **501(c)(3) nonprofit** providing **education**, **community space**, and **dungeon** access for **consenting adults** in the **Seattle** area. Public copy highlights **open houses**, **classes**, **volunteer** culture, and **membership** structures that support the **community mission**.\n\n**Join in:** Use **kinkcenter.org** for **calendars**, **donation/membership** links, and **visitor** expectations.\n\nThis listing is for the **community organization**—not commercial **pro-domme** session marketing."
+    },
+    "contact": {},
+    "website": "https://kinkcenter.org/",
+    "logo": "/images/dungeons/logo-kink-center-seattle.png",
+    "images": [],
+    "seo": {
+      "title": "Kink Center - Seattle Nonprofit Kink Community | East Coast Kink Events",
+      "description": "Kink Center — Seattle 501(c)(3) nonprofit kink education and community dungeon. kinkcenter.org.",
+      "keywords": "Kink Center Seattle, Seattle nonprofit BDSM, community dungeon Seattle"
+    }
+  },
+  {
+    "name": "Purgatory Dungeon",
+    "slug": "purgatory-dungeon-albuquerque",
+    "location": {
+      "city": "Albuquerque",
+      "state": "NM",
+      "address": "Albuquerque, NM (exact address released to members and ticket holders; see purgatorydungeon.com)"
+    },
+    "category": "BDSM Dungeon",
+    "excerpt": "Albuquerque member-focused dungeon and social club—vetted access, recurring parties, and education with published conduct expectations on the official site.",
+    "description": {
+      "long": "Purgatory Dungeon — Albuquerque, New Mexico\n\n**Purgatory Dungeon** markets a **private Albuquerque-area dungeon** used for **member parties**, **education**, and **community** gatherings. Public pages describe **vetting**, **membership**, **guest** policies, and **dungeon etiquette** aligned with **risk-aware** play.\n\n**Join in:** Follow the **application**, **orientation**, or **ticketing** paths published on **purgatorydungeon.com**.\n\nConfirm **schedules**, **fees**, and **ID/waiver** steps on the official site before attending."
+    },
+    "contact": {},
+    "website": "https://purgatorydungeon.com/",
+    "logo": "/images/dungeons/logo-purgatory-dungeon-albuquerque.png",
+    "images": [],
+    "seo": {
+      "title": "Purgatory Dungeon - Albuquerque NM BDSM Club | East Coast Kink Events",
+      "description": "Purgatory Dungeon — Albuquerque private membership dungeon and kink community. purgatorydungeon.com.",
+      "keywords": "Purgatory Dungeon, Albuquerque BDSM, New Mexico kink club"
+    }
+  },
+  {
+    "name": "The R.A.C.K. Room",
+    "slug": "rack-room-aurora-co",
+    "location": {
+      "city": "Aurora",
+      "state": "CO",
+      "address": "Aurora, CO metro (see rackroomdenver.com for address and door policies)"
+    },
+    "category": "Kink Club",
+    "excerpt": "Denver-area BDSM club on the Front Range—member and guest paths, recurring events, and a fixed venue marketed as a community play space (not a pro-domme retail house).",
+    "description": {
+      "long": "The R.A.C.K. Room — Aurora / Denver metro, Colorado\n\n**The R.A.C.K. Room** presents itself as a **BDSM club** serving the **Denver metro** (commonly referenced around **Aurora**) with **recurring parties** and **community** programming. Public listings emphasize **club membership**, **RSVPs**, and **house conduct** rather than **commercial pro-domme** advertising.\n\n**Join in:** Use **rackroomdenver.com** for **event calendars**, **door policies**, and **registration** details.\n\nAlways verify **current location notes**, **fees**, and **ID requirements** on the official site."
+    },
+    "contact": {},
+    "website": "https://rackroomdenver.com/",
+    "logo": "/images/dungeons/logo-rack-room-denver.png",
+    "images": [],
+    "seo": {
+      "title": "The R.A.C.K. Room - Denver Metro BDSM Club | East Coast Kink Events",
+      "description": "The R.A.C.K. Room — Denver-area BDSM club with member events and community play space. rackroomdenver.com.",
+      "keywords": "RACK Room Denver, Aurora BDSM, Colorado kink club, Denver metro dungeon"
+    }
+  },
+  {
+    "name": "Sanctuary",
+    "slug": "sanctuary-portland-pdx",
+    "location": {
+      "city": "Portland",
+      "state": "OR",
+      "address": "Portland, OR (exact address provided to members; see pdxsanctuary.com)"
+    },
+    "category": "BDSM Dungeon",
+    "excerpt": "Portland member-based dungeon and social club—orientation, parties, and education with vetting and published community standards on the official WordPress site.",
+    "description": {
+      "long": "Sanctuary — Portland, Oregon\n\n**Sanctuary** (PDX) operates as a **private membership** dungeon and **social club** in **Portland**, with public information about **orientation**, **parties**, **classes**, and **community standards** on **pdxsanctuary.com**.\n\n**Join in:** Expect **application** or **sponsorship** style steps rather than anonymous walk-in **pro sessions**; details are spelled out on the official site.\n\nConfirm **current dues, schedules, and guest rules** before planning a visit."
+    },
+    "contact": {},
+    "website": "https://pdxsanctuary.com/",
+    "logo": "/images/dungeons/logo-sanctuary-portland.png",
+    "images": [],
+    "seo": {
+      "title": "Sanctuary - Portland OR BDSM Club | East Coast Kink Events",
+      "description": "Sanctuary — Portland private membership dungeon and kink social club. pdxsanctuary.com.",
+      "keywords": "Sanctuary Portland, PDX BDSM, Portland dungeon, pdxsanctuary"
+    }
+  },
+  {
+    "name": "STL3 (Gateway Alternative Lifestyle Center)",
+    "slug": "stl3-st-louis",
+    "location": {
+      "city": "St. Louis",
+      "state": "MO",
+      "address": "St. Louis, MO (see stl3.com for membership, events, and facility contact)"
+    },
+    "category": "Community Organization",
+    "excerpt": "St. Louis 501(c)(3) Gateway Alternative Lifestyle Center—nonprofit framing for education and community support with membership and program links on stl3.com.",
+    "description": {
+      "long": "STL3 — St. Louis, Missouri\n\n**STL Cubed, Inc.**, doing business as **STL3** / **The Gateway Alternative Lifestyle Center**, publicly identifies as a **501(c)(3)** organization supporting **alternative lifestyle** education and **community** in **St. Louis**. The **stl3.com** site hosts **membership** storefront links, **event** information, and **contact** paths.\n\n**Join in:** Use the official site’s **registration** and **email/contact** forms for **programs** and **volunteer** opportunities.\n\nThe homepage has noted periodic **renovation**—confirm **active offerings** on **stl3.com** before travel."
+    },
+    "contact": {},
+    "website": "https://stl3.com/",
+    "logo": "/images/dungeons/logo-stl3-st-louis.png",
+    "images": [],
+    "seo": {
+      "title": "STL3 - St. Louis Gateway Alternative Lifestyle Center | East Coast Kink Events",
+      "description": "STL3 — St. Louis 501(c)(3) Gateway Alternative Lifestyle Center for education and community. stl3.com.",
+      "keywords": "STL3, St Louis kink, Gateway Alternative Lifestyle Center, Missouri BDSM community"
+    }
+  },
+  {
+    "name": "Sub Rosa Studios",
+    "slug": "sub-rosa-portland",
+    "location": {
+      "city": "Portland",
+      "state": "OR",
+      "address": "Portland, OR (studio location and booking via subrosapdx.com)"
+    },
+    "category": "Private Kink Dungeon",
+    "excerpt": "Portland rental kink studio—online booking for private scenes and small shoots in a fixed, equipped space (rental venue, not pro-domme session retail).",
+    "description": {
+      "long": "Sub Rosa Studios — Portland, Oregon\n\n**Sub Rosa** markets a **fixed Portland studio** available for **private rental** blocks, with **equipment** and **policies** described on **subrosapdx.com**. The model is **appointment- and booking-driven** for **individuals**, **couples**, and **small groups**, including **photo** use where permitted.\n\n**Join in:** Reserve time through the site’s **booking** flow and read **rules** carefully before you arrive.\n\nECKE lists this under **rental / studio** style venues rather than **commercial pro-domme** houses."
+    },
+    "contact": {},
+    "website": "https://subrosapdx.com/",
+    "logo": "/images/dungeons/logo-sub-rosa-portland.jpg",
+    "images": [],
+    "seo": {
+      "title": "Sub Rosa Studios - Portland OR Dungeon Rental | East Coast Kink Events",
+      "description": "Sub Rosa Studios — Portland kink studio rentals and private bookings. subrosapdx.com.",
+      "keywords": "Sub Rosa Portland, Portland dungeon rental, BDSM studio PDX"
+    }
+  },
+  {
+    "name": "SubSpace Seattle",
+    "slug": "subspace-seattle-tukwila",
+    "location": {
+      "city": "Tukwila",
+      "state": "WA",
+      "address": "Tukwila, WA (primary club venue; some events list other cities—see subspaceseattle.com)"
+    },
+    "category": "BDSM Dungeon",
+    "excerpt": "Puget Sound member dungeon south of Seattle—parties, education, and a large equipped space with published membership and guest policies (community club model).",
+    "description": {
+      "long": "SubSpace Seattle — Tukwila, Washington\n\n**SubSpace** operates a **large equipped dungeon** in **Tukwila** (south of **Seattle**) as a **membership-based** club with **recurring parties**, **classes**, and **volunteer** culture. Public materials emphasize **community safety**, **dungeon monitors**, and **membership** pathways.\n\n**Join in:** Use **subspaceseattle.com** for **orientation**, **membership**, **guest**, and **ticketing** instructions.\n\nThis is a **community venue** listing—not a **pro-domme** retail provider."
+    },
+    "contact": {},
+    "website": "https://subspaceseattle.com/",
+    "logo": "/images/dungeons/logo-subspace-seattle.png",
+    "images": [],
+    "seo": {
+      "title": "SubSpace Seattle - Tukwila WA BDSM Club | East Coast Kink Events",
+      "description": "SubSpace Seattle — Tukwila membership dungeon and kink community south of Seattle. subspaceseattle.com.",
+      "keywords": "SubSpace Seattle, Tukwila BDSM, Seattle dungeon, Puget Sound kink club"
+    }
+  },
+  {
+    "name": "Threshold Society",
+    "slug": "threshold-society-los-angeles",
+    "location": {
+      "city": "Los Angeles",
+      "state": "CA",
+      "address": "Los Angeles, CA (see thresholdla.org for facility and program access)"
+    },
+    "category": "Education-First Community Venue",
+    "excerpt": "LA-based nonprofit Threshold—dungeon education, community classes, and member programming with a long-running consent-forward mission (education-first community, not pro-domme retail).",
+    "description": {
+      "long": "Threshold Society — Los Angeles, California\n\n**Threshold** is a **Los Angeles** institution combining **nonprofit education** with a **community dungeon** used for **classes**, **workshops**, and **member** events. Public copy highlights **risk-aware** frameworks, **volunteer** instructors, and **inclusive** programming spanning many **kink** disciplines.\n\n**Join in:** Membership, orientation, and ticketing details are published on **thresholdla.org**.\n\nECKE includes Threshold as a **community and education** venue rather than a **commercial pro-domme** session business."
+    },
+    "contact": {},
+    "website": "https://thresholdla.org/",
+    "logo": "/images/dungeons/logo-threshold-los-angeles.png",
+    "images": [],
+    "seo": {
+      "title": "Threshold Society - Los Angeles Kink Education & Dungeon | East Coast Kink Events",
+      "description": "Threshold Society — Los Angeles nonprofit kink education and community dungeon. thresholdla.org.",
+      "keywords": "Threshold LA, Threshold Society, Los Angeles BDSM education, LA dungeon nonprofit"
+    }
   }
 ];
 

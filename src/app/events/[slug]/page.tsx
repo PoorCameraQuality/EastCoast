@@ -106,6 +106,11 @@ function EnhancedEventLayout({ event, breadcrumbItems }: { event: any, breadcrum
     // Default color schemes based on category
     switch (event.category?.toLowerCase()) {
       case 'conference':
+      case 'convention':
+      case 'weekend event':
+      case 'contest weekend':
+      case 'leather event':
+      case 'indoor event':
         return {
           primary: 'from-purple-500 to-pink-500',
           secondary: 'from-pink-500 to-rose-500',

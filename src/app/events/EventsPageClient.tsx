@@ -1,6 +1,6 @@
 'use client'
 
-import { getEventsByCategory } from '@/data/events'
+import { eventMatchesVenueFilter } from '@/data/events'
 import Link from 'next/link'
 import EventLogo from '@/components/EventLogo'
 import { useMemo } from 'react'
@@ -79,7 +79,9 @@ export default function EventsPageClient({ allEvents, allDungeons, selectedCateg
           event.location.city.toLowerCase().includes(location.toLowerCase())
       )
     }
-    return getEventsByCategory(getCategoryForFilter(selectedCategory))
+    return allEvents.filter((e) =>
+      eventMatchesVenueFilter(e, getCategoryForFilter(selectedCategory))
+    )
   }
 
   const baseEvents = getFilteredEvents()

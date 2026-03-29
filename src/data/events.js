@@ -1848,6 +1848,80 @@ export const events = [
     }
   },
   {
+    "name": "Dark Odyssey Surrender 2026",
+    "slug": "dark-odyssey-surrender-2026",
+    "date": {
+      "start": "2026-10-22",
+      "end": "2026-10-25",
+      "display": "Oct 22-25, 2026 (confirm on darkodyssey.com/surrender)"
+    },
+    "location": {
+      "city": "San Jose",
+      "state": "CA",
+      "region": "Pacific, California"
+    },
+    "category": "Convention",
+    "excerpt": "Dark Odyssey’s Bay Area hotel convention—workshops, massive dungeons, Sex-O-Rama, Halloween-season energy, and omnisexual programming. **2026** dates were not yet published on the live Surrender page at inventory time; ECKE uses a **late-October placeholder**—replace with official registration dates from **darkodyssey.com/surrender**.",
+    "longDescription": "**Dark Odyssey: Surrender** is described on the official site as a **San Jose / Bay Area** **pre-Halloween** weekend that blends **BDSM education**, **ritual**, **play**, and **hotel-scale dungeons** (including **Sex-O-Rama** and very large equipped play areas).\n\n**Last verified public edition cited on darkodyssey.com:** **October 24–27, 2025** (“Seven Deadly Sins” theme). For **2026**, the homepage calendar and **mailing list** (info@darkodyssey.com) are the sources of truth—**always confirm** exact nights, hotel, and ticket tiers before booking.\n\n**Relationship to other DO events:** This is **not** Winter Fire (Baltimore), Fusion/Summer Camp (Maryland retreat), or **Camp Thornwood** (Sierra sleep-away camp)—it is the **West Coast urban** flagship in Dark Odyssey’s lineup.\n\nOfficial: **https://darkodyssey.com/surrender/**",
+    "website": "https://darkodyssey.com/surrender/",
+    "organizer": "Dark Odyssey (Odyssey Events, LLC)",
+    "venue": "San Jose, CA area kink-friendly hotel (confirm on official site)",
+    "contact": {
+      "email": "info@darkodyssey.com"
+    },
+    "logo": "/images/darkodyssey.png",
+    "features": [
+      "Bay Area / San Jose Dark Odyssey weekend",
+      "80+ workshops (typical DO scale—confirm year)",
+      "Large equipped dungeons + Sex-O-Rama",
+      "Halloween-season theme parties",
+      "Omnisexual / queer-inclusive framing",
+      "Confirm 2026 dates on darkodyssey.com/surrender"
+    ],
+    "seo": {
+      "title": "Dark Odyssey Surrender 2026 - Bay Area BDSM Convention | East Coast Kink Events",
+      "description": "Dark Odyssey Surrender — Bay Area BDSM and spirituality convention. Confirm dates on darkodyssey.com/surrender.",
+      "keywords": "Dark Odyssey Surrender, San Jose kink, Bay Area BDSM, Dark Odyssey California, hotel dungeon convention"
+    }
+  },
+  {
+    "name": "Dark Odyssey Camp Thornwood 2026",
+    "slug": "dark-odyssey-camp-thornwood-2026",
+    "date": {
+      "start": "2026-08-13",
+      "end": "2026-08-17",
+      "display": "Aug 2026 (TBD — confirm campthornwood.com)"
+    },
+    "location": {
+      "city": "Sierra Foothills",
+      "state": "CA",
+      "region": "Pacific, California"
+    },
+    "category": "Outdoor Event",
+    "excerpt": "Dark Odyssey’s **West Coast** sleep-away camp—**Sex + Kink + Spirit** in a **100-acre** Sierra Foothills private retreat with dungeons, Sex-O-Rama, pool, and cabin/tenting options. Parent site lists **“TBD Aug 2026”**; ECKE uses a **mid-August placeholder** until **campthornwood.com** publishes firm dates.",
+    "longDescription": "**Camp Thornwood** is marketed as Dark Odyssey’s **Northern California** answer to big outdoor kink camp culture: **workshops**, **woodland play**, **rituals**, **stage shows**, **pool parties**, and **two dungeons** plus **Sex-O-Rama** on a **~100-acre** private property in the **Sierra Foothills** (exact driving directions are typically registrar-mediated).\n\n**History note:** The **2025** edition was branded **“Founders Adventure”** (**Aug 14–18, 2025**) on **campthornwood.com**. **darkodyssey.com** currently teases **Camp Thornwood** as **“TBD Aug 2026”** in Northern California—treat **2026** logistics as **pending** until the camp site updates.\n\n**Not the same row as** “Dark Odyssey Summer Camp” in ECKE—that listing is the **Maryland** **Labor Day** week at **darkodyssey.com/summerfest**. Thornwood is **California**.\n\n**Official:** **https://campthornwood.com/** (and linked from **darkodyssey.com**).",
+    "website": "https://campthornwood.com/",
+    "organizer": "Dark Odyssey",
+    "venue": "Private 100-acre retreat, Sierra Foothills, CA (details via registrar)",
+    "contact": {
+      "email": "registrar@darkodyssey.com"
+    },
+    "logo": "/images/darkodyssey.png",
+    "features": [
+      "West Coast Dark Odyssey outdoor camp",
+      "100-acre Sierra Foothills retreat",
+      "Two dungeons + Sex-O-Rama + pool",
+      "Cabins, tenting, glamping, meal plans (per camp site)",
+      "Separate from Maryland Summer Camp listing",
+      "Confirm 2026 dates on campthornwood.com"
+    ],
+    "seo": {
+      "title": "Dark Odyssey Camp Thornwood 2026 - California Kink Camp | East Coast Kink Events",
+      "description": "Camp Thornwood — Dark Odyssey Sex+Kink+Spirit camp in the California Sierra Foothills. Confirm dates on campthornwood.com.",
+      "keywords": "Camp Thornwood, Dark Odyssey California, Sierra Foothills kink camp, BDSM camp California"
+    }
+  },
+  {
     "name": "Charmed",
     "slug": "charmed",
     "date": {
@@ -2402,6 +2476,737 @@ export const events = [
       "description": "IML 2026 — International Mr. Leather weekend in Chicago: IML & IMBB contests, Leather Market, APEX & Victory parties, packages & add-ons. Details at internationalmrleather.com.",
       "keywords": "IML, International Mr. Leather, Chicago, leather contest, Leather Market, Memorial Day, IMBB, leather community"
     }
+  },
+  {
+    "name": "Florida Fetish Weekend 2026",
+    "slug": "florida-fetish-weekend-2026",
+    "date": {
+      "start": "2026-05-21",
+      "end": "2026-05-24",
+      "display": "May 21-24, 2026 (Memorial Day weekend)"
+    },
+    "location": {
+      "city": "Fort Lauderdale",
+      "state": "FL",
+      "region": "Southeastern, Florida"
+    },
+    "category": "Convention",
+    "excerpt": "Fetish Factory’s four-day hotel takeover—seven parties, shuttle circuit through Fort Lauderdale and Wilton Manors, international DJs and performers, and strict fetish dress culture. Host hotel: Sheraton Suites Fort Lauderdale at Cypress Creek.",
+    "longDescription": "**Florida Fetish Weekend** is produced by **Fetish Factory** as a multi-day, hotel-centered fetish celebration over **Memorial Day weekend**. The public site describes **four days**, **seven parties**, **100% fetish hotel** programming, **included transportation** between venues, **kinky day clubs**, and **performers & DJs** from around the world.\n\n**Venue:** **Sheraton Suites Fort Lauderdale at Cypress Creek**, **555 NW 62nd St, Fort Lauderdale, FL 33309**, with additional circuit venues in **Fort Lauderdale** and **Wilton Manors**.\n\n**Tickets & policies:** pricing tiers and refund windows are published on **fetishfactory.com**; all-access passes and cancellation rules change by purchase date—read the current year’s policy before buying.\n\n**Note:** Fetish Factory also operates a **store** and **monthly parties**; this listing is specifically the **Memorial Day weekend** takeover event.",
+    "website": "https://fetishfactory.com/florida-fetish-weekend/31year/",
+    "organizer": "Fetish Factory",
+    "venue": "Sheraton Suites Fort Lauderdale at Cypress Creek",
+    "hotel": "Sheraton Suites Fort Lauderdale at Cypress Creek, 555 NW 62nd St, Fort Lauderdale, FL 33309",
+    "logo": "/images/events/logo-florida-fetish-weekend.jpg",
+    "features": [
+      "Memorial Day weekend hotel takeover",
+      "Seven parties / four days",
+      "Shuttle transportation between venues",
+      "Fort Lauderdale & Wilton Manors circuit",
+      "Strict fetish dress culture",
+      "International DJs and performers",
+      "Separate from monthly Fetish Factory club nights"
+    ],
+    "seo": {
+      "title": "Florida Fetish Weekend 2026 - Fort Lauderdale | East Coast Kink Events",
+      "description": "Florida Fetish Weekend 2026 (May 21-24) — Fetish Factory’s Memorial Day hotel takeover in Fort Lauderdale with seven parties and venue circuit.",
+      "keywords": "Florida Fetish Weekend, Fetish Factory, Fort Lauderdale, Wilton Manors, Memorial Day, fetish hotel takeover"
+    }
+  },
+  {
+    "name": "Florida Power Exchange Conference",
+    "slug": "florida-power-exchange",
+    "date": {
+      "start": "2027-01-07",
+      "end": "2027-01-10",
+      "display": "Jan 2027 (confirm dates on floridapowerexchange.com)"
+    },
+    "location": {
+      "city": "Tampa Bay area",
+      "state": "FL",
+      "region": "Southeastern, Florida"
+    },
+    "category": "Conference",
+    "excerpt": "Annual conference celebrating diverse power-exchange dynamics—education, community, and inclusion—held in the Tampa Bay region. Confirm each year’s dates and venue on the official site (homepage has lagged past years at times).",
+    "longDescription": "**Florida Power Exchange (FPE)** describes itself as an **annual conference** focused on **power exchange** relationships, education, and **inclusive** community space. Programming aims to welcome varied dynamics, identities, and abilities.\n\n**Logistics:** the public website has sometimes displayed **prior-year headers**; **always confirm the current year’s dates, hotel, and registration** on **floridapowerexchange.com** before booking travel.\n\n**Relationship to other events:** FPE is a **separate brand** from **Beyond Leather** (already listed on ECKE); both may interest Florida PE-focused attendees.",
+    "website": "https://floridapowerexchange.com/",
+    "organizer": "Florida Power Exchange",
+    "venue": "Tampa Bay area (confirm each year)",
+    "logo": "/images/events/logo-florida-power-exchange.png",
+    "features": [
+      "Power exchange education & community",
+      "Tampa Bay region (typical)",
+      "Confirm dates annually on official site",
+      "Distinct from Beyond Leather weekend"
+    ],
+    "seo": {
+      "title": "Florida Power Exchange - Tampa Bay PE Conference | East Coast Kink Events",
+      "description": "Florida Power Exchange — annual power exchange conference in the Tampa Bay area. Confirm dates on floridapowerexchange.com.",
+      "keywords": "Florida Power Exchange, FPE, Tampa Bay, power exchange conference, BDSM education"
+    }
+  },
+  {
+    "name": "World Bear Weekend 2026",
+    "slug": "world-bear-weekend-2026",
+    "date": {
+      "start": "2026-07-30",
+      "end": "2026-08-02",
+      "display": "Jul 30-Aug 2, 2026"
+    },
+    "location": {
+      "city": "Lexington",
+      "state": "KY",
+      "region": "South, Kentucky"
+    },
+    "category": "Convention",
+    "excerpt": "Multi-day bear community weekend in Lexington, KY—2026 theme Renaissance Faire; pool gatherings, workshops, merchants, parties, and World Bear Contest. Registration via official Eventbrite.",
+    "longDescription": "**World Bear Weekend** is a **Lexington, Kentucky** gathering for the **bear** and allied communities. The **2026** edition is themed **Renaissance Faire** and runs **July 30 – August 2, 2026** per public copy.\n\n**Passes:** the site references **wbw2026.eventbrite.com** and notes pricing increases on published deadlines—read the current ticket page for day vs weekend passes.\n\n**Programming:** public descriptions highlight **poolside gatherings**, **workshops**, **merchants**, **parties**, and the **World Bear Contest**.\n\nConfirm hotels and venue details on **worldbearweekend.com** before travel.",
+    "website": "https://worldbearweekend.com/",
+    "organizer": "World Bear Weekend",
+    "venue": "Lexington, KY (multi-venue weekend; confirm on site)",
+    "logo": "/images/events/logo-world-bear-weekend.jpg",
+    "features": [
+      "Bear & allied community weekend",
+      "2026 theme: Renaissance Faire",
+      "World Bear Contest",
+      "Workshops, vendors, pool & parties",
+      "Ticketing via Eventbrite (wbw2026)"
+    ],
+    "seo": {
+      "title": "World Bear Weekend 2026 - Lexington KY | East Coast Kink Events",
+      "description": "World Bear Weekend 2026 Jul 30-Aug 2 in Lexington, KY — bear community convention with contest, workshops, and parties.",
+      "keywords": "World Bear Weekend, Lexington Kentucky, bear community, WBW 2026"
+    }
+  },
+  {
+    "name": "Annual Kink Expo 2026",
+    "slug": "annual-kink-expo-2026",
+    "date": {
+      "start": "2026-09-18",
+      "end": "2026-09-20",
+      "display": "Sep 18-20, 2026 (confirm on elginmunchers.org)"
+    },
+    "location": {
+      "city": "Chicago suburbs",
+      "state": "IL",
+      "region": "Midwest, Illinois"
+    },
+    "category": "Convention",
+    "excerpt": "Elgin Munchers’ annual expo—classes, vendor fair, dungeon experience, and social programming in the Chicago suburbs. 2026 dates inferred from prior-year pattern; confirm on elginmunchers.org.",
+    "longDescription": "**Annual Kink Expo (AKE)** is associated with **Elgin Munchers Inc.**, a not-for-profit community organization. Past public materials describe a weekend with **instructional tracks**, **vendor fair**, **dungeon experience**, **demonstrations**, and **social events** in the **Chicago metro / suburbs** area.\n\n**Important:** the **2026** schedule was **not clearly published** on the homepage at verification time. Dates here use a **September placeholder** aligned with a prior-year pattern—**confirm every detail** on **elginmunchers.org** (or linked official ticketing) before booking.\n\n**Website note:** deep links may live off the main Elgin Munchers site; search the org’s announcements for “Annual Kink Expo.”",
+    "website": "https://elginmunchers.org/",
+    "organizer": "Elgin Munchers Inc.",
+    "venue": "Chicago suburbs (confirm venue each year)",
+    "logo": "/images/events/logo-annual-kink-expo.jpg",
+    "features": [
+      "BDSM & kink education classes",
+      "Vendor fair",
+      "Dungeon experience (per past years)",
+      "Demonstrations & discussions",
+      "Produced by Elgin Munchers nonprofit",
+      "Confirm 2026 dates on official channels"
+    ],
+    "seo": {
+      "title": "Annual Kink Expo 2026 - Chicago Suburbs | East Coast Kink Events",
+      "description": "Annual Kink Expo by Elgin Munchers — classes, vendors, and dungeon programming near Chicago. Confirm dates on elginmunchers.org.",
+      "keywords": "Annual Kink Expo, AKE, Elgin Munchers, Chicago kink expo, BDSM education"
+    }
+  },
+  {
+    "name": "Beguiled 2026 — Odyssey of Trance",
+    "slug": "beguiled-2026",
+    "date": {
+      "start": "2026-07-16",
+      "end": "2026-07-19",
+      "display": "Jul 16-19, 2026 (confirm on beguiledcon.com)"
+    },
+    "location": {
+      "city": "Chicago",
+      "state": "IL",
+      "region": "Midwest, Illinois"
+    },
+    "category": "Conference",
+    "excerpt": "Midwest hypnokink convention—Beguiled’s 2026 “Odyssey of Trance” with sliding-scale tickets, scholarships, and community-focused programming. Tickets via TicketSpice; verify exact venue block on the official site.",
+    "longDescription": "**Beguiled** is described as a **Midwest hypnosis convention** welcoming attendees from many backgrounds for a weekend of **classes and community**.\n\n**2026 edition:** public posts title the weekend **“Odyssey of Trance.”** Ticket sales run through **TicketSpice** (see **beguiledcon.com** for the current link). Organizers publish **sliding-scale** pricing, **discount codes**, **volunteer** paths, and **scholarship** applications.\n\n**Dates:** ECKE lists **July 16–19, 2026** as a working span based on ticket deadlines posted in early 2026—**confirm the precise programming schedule** on the official ticket page.\n\n**Venue:** confirm host hotel or venues on **beguiledcon.com** / Discord announcements.",
+    "website": "https://beguiledcon.com/",
+    "organizer": "Beguiled LLC",
+    "venue": "Chicago area (confirm on site)",
+    "logo": "/images/events/logo-beguiled.png",
+    "features": [
+      "Erotic hypnosis & hypnokink education",
+      "Sliding-scale ticketing & scholarships",
+      "TicketSpice registration",
+      "Midwest-focused convention",
+      "2026 theme: Odyssey of Trance"
+    ],
+    "seo": {
+      "title": "Beguiled 2026 - Midwest Hypnokink Convention | East Coast Kink Events",
+      "description": "Beguiled 2026 Odyssey of Trance — Midwest hypnosis convention with sliding-scale tickets. beguiledcon.com.",
+      "keywords": "Beguiled, hypnokink, hypnosis convention, Chicago, Odyssey of Trance"
+    }
+  },
+  {
+    "name": "Chicago Fetish Weekend 2026",
+    "slug": "chicago-fetish-weekend-2026",
+    "date": {
+      "start": "2026-07-09",
+      "end": "2026-07-12",
+      "display": "Jul 9-12, 2026 (TBA — confirm chicagofetishweekend.com)"
+    },
+    "location": {
+      "city": "Chicago",
+      "state": "IL",
+      "region": "Midwest, Illinois"
+    },
+    "category": "Contest Weekend",
+    "excerpt": "Chicago’s fetish weekend with contests (e.g. Midwest rubber, leather ambassador), vendor fair, classes, and parties across venues. Confirm 2026 dates on the official site—prior years used mid-July patterns.",
+    "longDescription": "**Chicago Fetish Weekend** hosts **contests**, **vendor fair**, **education**, and **parties** across **Chicago** venues. Public materials reference titles such as **SLICK Midwest Rubber** and **Chicago Leather Ambassador** programming along with social and dance events.\n\n**2026:** specific **2026** dates were **not confirmed** in our automated fetch; ECKE uses a **mid-July placeholder**—replace with official dates from **chicagofetishweekend.com** as soon as published.\n\n**Tickets:** weekend passes and VIP options are described on the official participate/attend pages (wording changes by year).",
+    "website": "https://www.chicagofetishweekend.com/",
+    "organizer": "Chicago Fetish Weekend",
+    "venue": "Chicago, IL (multi-venue)",
+    "logo": "/images/events/logo-chicago-fetish-weekend.jpg",
+    "features": [
+      "Fetish & leather contests",
+      "Vendor fair & classes",
+      "Multi-venue Chicago weekend",
+      "Confirm 2026 schedule on official site"
+    ],
+    "seo": {
+      "title": "Chicago Fetish Weekend 2026 | East Coast Kink Events",
+      "description": "Chicago Fetish Weekend — contests, vendors, and parties in Chicago. Confirm dates on chicagofetishweekend.com.",
+      "keywords": "Chicago Fetish Weekend, Chicago kink, fetish contest, leather, rubber"
+    }
+  },
+  {
+    "name": "Boundless Detroit S&M Symposium 2026",
+    "slug": "boundless-detroit-sm-symposium-2026",
+    "date": {
+      "start": "2026-02-20",
+      "end": "2026-02-22",
+      "display": "Feb 20-22, 2026"
+    },
+    "location": {
+      "city": "Detroit",
+      "state": "MI",
+      "region": "Midwest, Michigan"
+    },
+    "category": "Conference",
+    "excerpt": "Three-day kink education symposium at Oblige Detroit—dual tracks for BDSM/fetish and rope, meet-and-greet, strolling performances, fetish fashion dungeon party, erotic art show, and vendors. 2026 listing noted sold out; keep for archive and waitlist context.",
+    "longDescription": "**Boundless Detroit S&M Symposium** is a **three-day** intensive hosted at **Oblige** in **Detroit’s Milwaukee Junction** district. The official page describes **16 workshops** across **two tracks** (BDSM/fetish play and rope), practice time in **The Dungeon** and **The Rope Room**, a **Friday meet & greet**, **weekend play parties** including a **Night of Strolling Performances** and a **Fetish Fashion Dungeon Party**, an **erotic art installation**, and **vendors**.\n\n**2026 edition (Feb 20–22, 2026):** the public site indicated **tickets sold out** with a **waitlist** via **ObligeRope@gmail.com**—still useful as a **calendar marker** and for future-year planning.\n\n**Accessibility:** Oblige documents **stairs and freight elevator** logistics; read **obligerope.org** accessibility notes before attending.\n\n**Host hotel:** the site links **The Atheneum Detroit** as a recommended property.",
+    "website": "https://www.obligerope.org/bdsm-symposium-2026",
+    "organizer": "Oblige Rope, Kink, Art Boutique",
+    "venue": "Oblige (Milwaukee Junction, Detroit)",
+    "logo": "/images/events/logo-boundless-symposium.jpg",
+    "features": [
+      "16 workshops / dual education tracks",
+      "Dungeon & rope practice rooms",
+      "Strolling performances & fetish fashion party",
+      "Erotic art gallery installation",
+      "Vendors (e.g. Drool Apparel, Oblige boutique)",
+      "2026 sold out — waitlist via email",
+      "Host hotel: The Atheneum Detroit (per site)"
+    ],
+    "seo": {
+      "title": "Boundless Detroit S&M Symposium 2026 | East Coast Kink Events",
+      "description": "Boundless Detroit S&M Symposium Feb 20-22, 2026 at Oblige — dual-track BDSM and rope education, parties, and art.",
+      "keywords": "Boundless Symposium, Oblige Detroit, BDSM education, rope conference, Detroit kink"
+    }
+  },
+  {
+    "name": "Cold As Hell 6",
+    "slug": "cold-as-hell-6-2026",
+    "date": {
+      "start": "2026-02-20",
+      "end": "2026-02-22",
+      "display": "Feb 20-22, 2026"
+    },
+    "location": {
+      "city": "Detroit",
+      "state": "MI",
+      "region": "Midwest, Michigan"
+    },
+    "category": "Weekend Event",
+    "excerpt": "LGBT Detroit’s sixth Black leather and kink winter weekend—mixer, hands-on demos, fetish fashion show & dance, and aftercare brunch—rooted in Black BDSM culture. Multiple Detroit venues; see lgbtdetroit.org/coldashell.",
+    "longDescription": "**Cold As Hell 6** is **LGBT Detroit’s** **Black leather and kink** winter weekend returning after several years without the in-person format. Public copy describes **February 20–22, 2026** with **four ticketed experiences** across **Detroit** venues.\n\n**Sample schedule (from official page):** **Kinky Mixer** (Halo Bar and Lounge), **Hands-On Demo Day** at **LGBT Detroit**, **Fetish Fantasy** fashion show & dance (**Olympus Hall / The Detroit Eagle**), and **Aftercare Brunch** at **LGBT Detroit**.\n\n**Hosts:** credited co-hosts include **Master Sango**, **Sir Apocalypse Onyx**, and **Mr. Dominus** on the public site.\n\n**Note:** the same February weekend hosts other major Detroit kink programming (e.g. **Boundless** at Oblige)—plan travel and energy accordingly.\n\nConfirm tickets and final venue addresses on **lgbtdetroit.org/coldashell**.",
+    "website": "https://lgbtdetroit.org/coldashell",
+    "organizer": "LGBT Detroit",
+    "venue": "Multiple Detroit venues (see official schedule)",
+    "logo": "/images/events/logo-cold-as-hell.jpg",
+    "features": [
+      "Black BDSM & leather culture weekend",
+      "Mixer, demos, fashion show & dance, brunch",
+      "Multiple Detroit venues",
+      "Produced by LGBT Detroit",
+      "Feb 20-22, 2026"
+    ],
+    "seo": {
+      "title": "Cold As Hell 6 - Detroit Black Kink Weekend | East Coast Kink Events",
+      "description": "Cold As Hell 6 (Feb 20-22, 2026) — LGBT Detroit’s Black leather & kink winter weekend with mixer, demos, and dance.",
+      "keywords": "Cold As Hell, LGBT Detroit, Black BDSM, Detroit kink, leather weekend"
+    }
+  },
+  {
+    "name": "GWNN BASH 2026",
+    "slug": "gwnn-bash-2026",
+    "date": {
+      "start": "2026-05-18",
+      "end": "2026-05-21",
+      "display": "May 18-21, 2026 (confirm schedule on gwnnbash.com)"
+    },
+    "location": {
+      "city": "Austin",
+      "state": "TX",
+      "region": "South Central, Texas"
+    },
+    "category": "Convention",
+    "excerpt": "GWNN’s BASH weekend in Austin—2026 theme “BASH & Beyond — A BDSM Space Odyssey” with hotel block at Holiday Inn Midtown Austin, Cognito registration, and class grid on Sched (bash2026.sched.com).",
+    "longDescription": "**GWNN BASH 2026** is framed as a **BDSM-forward** Austin gathering with the theme **“BASH & Beyond — A BDSM Space Odyssey.”**\n\n**Hotel:** Public **hotel information** points to the **Holiday Inn – Midtown Austin** with group code **GWN** / rate code **GSF** and a published **room block cutoff** (see **gwnnbash.com/hotel-information/**). The embedded booking link aligns with **check-in May 18, 2026** and **check-out May 21, 2026**—use the live IHG redirect on the official page to confirm nights.\n\n**Registration & classes:** **Cognito Forms** registration is linked from the homepage; presenters and schedule appear on **bash2026.sched.com**.\n\nAlways verify **exact party dates**, venues, and ticket tiers on **gwnnbash.com** before travel.",
+    "website": "https://gwnnbash.com/",
+    "organizer": "GWNN (Group With No Name) / GWNNAustin",
+    "venue": "Holiday Inn Midtown Austin (hotel block; multi-venue weekend—confirm on site)",
+    "logo": "",
+    "features": [
+      "Austin GWNN BASH weekend",
+      "2026 space-odyssey theme",
+      "Holiday Inn Midtown Austin room block",
+      "Cognito registration + Sched class grid",
+      "Confirm final schedule on gwnnbash.com"
+    ],
+    "seo": {
+      "title": "GWNN BASH 2026 - Austin BDSM Convention | East Coast Kink Events",
+      "description": "GWNN BASH 2026 in Austin — hotel block, registration, and classes. gwnnbash.com.",
+      "keywords": "GWNN BASH, Austin BDSM, GWNN, kink convention Texas, BASH 2026"
+    }
+  },
+  {
+    "name": "Austin Kink Weekend 2026",
+    "slug": "austin-kink-weekend-2026",
+    "date": {
+      "start": "2026-04-16",
+      "end": "2026-04-19",
+      "display": "Apr 16-19, 2026"
+    },
+    "location": {
+      "city": "Austin",
+      "state": "TX",
+      "region": "South Central, Texas"
+    },
+    "category": "Convention",
+    "excerpt": "Austin’s April leather/kink weekend (2026) with panels, community leaders, and contest-adjacent programming—confirm venues, registration, and hotels on austinkinkweekend.com.",
+    "longDescription": "**Austin Kink Weekend 2026** runs **April 16–19, 2026** per the public homepage. Marketing highlights **leather, education, and community**, **panels**, and **judges / titleholders** framing.\n\n**Logistics:** The crawled homepage did **not** expose a single canonical hotel or ticket URL—**confirm venues, pricing, and registration** on **austinkinkweekend.com** (and linked socials) before booking.\n\n© notice on site spans **2021–2026** Austin Kink Weekend.",
+    "website": "https://austinkinkweekend.com/",
+    "organizer": "Austin Kink Weekend",
+    "venue": "Austin, TX (venues TBA—confirm on official site)",
+    "logo": "",
+    "features": [
+      "Apr 16-19, 2026",
+      "Panels & community programming",
+      "Leather/kink education framing",
+      "Confirm registration & venues on official site"
+    ],
+    "seo": {
+      "title": "Austin Kink Weekend 2026 | East Coast Kink Events",
+      "description": "Austin Kink Weekend 2026 (Apr 16-19) — leather and kink community weekend in Austin. austinkinkweekend.com.",
+      "keywords": "Austin Kink Weekend, Texas kink, leather weekend Austin, AKW 2026"
+    }
+  },
+  {
+    "name": "Oklahoma LeatherFest 2026",
+    "slug": "oklahoma-leatherfest-2026",
+    "date": {
+      "start": "2026-05-29",
+      "end": "2026-05-31",
+      "display": "May 29-31, 2026"
+    },
+    "location": {
+      "city": "Oklahoma City",
+      "state": "OK",
+      "region": "South Central, Oklahoma"
+    },
+    "category": "Convention",
+    "excerpt": "OKC leather and BDSM education weekend at Wyndham Garden OKC—30+ sessions, vendor expo, leather gala, dungeon (Papi’s Pain Palace), bootblack, littles, and inclusive community framing. Hosted on Google Sites; confirm tickets on linked purchase flow.",
+    "longDescription": "**Oklahoma LeatherFest 2026** is scheduled **May 29–31, 2026** in **Oklahoma City** with programming marketed as **BIPOC- and LGBTQIA2S+ inclusive** leather and kink education.\n\n**Venue:** Public copy references the **Wyndham Garden Hotel OKC** with a **room block** (phone on the official Google Sites page).\n\n**Programming (from public page summaries):** **30+** educational sessions, **vendor expo**, **leather gala**, **dungeon** (described as **Papi’s Pain Palace**), **bootblack**, **littles**, **pony**, **silent auction**, and charity framing.\n\n**URL note:** Primary documentation currently lives on **Google Sites** (`sites.google.com/site/okleatherfest/...`)—URLs can change; bookmark the live page and **oklahomaleatherfest@gmail.com** (organizer contact cited on site) for updates.\n\n**Tickets:** Follow the **Purchase Tickets** link on the official page for the current processor and prices.",
+    "website": "https://sites.google.com/site/okleatherfest/2026-oklahoma-leatherfest",
+    "organizer": "Oklahoma LeatherFest",
+    "venue": "Wyndham Garden Hotel, Oklahoma City, OK",
+    "logo": "/images/events/logo-oklahoma-leatherfest-2026.png",
+    "features": [
+      "May 29-31, 2026 OKC",
+      "30+ education sessions",
+      "Vendor expo & leather gala",
+      "Dungeon, bootblack, littles tracks",
+      "Google Sites official page—verify URL yearly"
+    ],
+    "seo": {
+      "title": "Oklahoma LeatherFest 2026 - OKC | East Coast Kink Events",
+      "description": "Oklahoma LeatherFest 2026 — OKC leather/BDSM education weekend at Wyndham Garden. Google Sites official page.",
+      "keywords": "Oklahoma LeatherFest, OKC leather, OKLF 2026, BDSM conference Oklahoma"
+    }
+  },
+  {
+    "name": "OKC Kink Weekend 2026",
+    "slug": "okc-kink-weekend-2026",
+    "date": {
+      "start": "2026-07-16",
+      "end": "2026-07-19",
+      "display": "Jul 16-19, 2026"
+    },
+    "location": {
+      "city": "Oklahoma City",
+      "state": "OK",
+      "region": "South Central, Oklahoma"
+    },
+    "category": "Convention",
+    "excerpt": "Four-day OKC kink weekend at The District Hotel with Route 66 Leather contest track, pool parties, vendor market, optional education at The Diversity Center, and tiered 2026 pricing on www.okckinkweekend.com.",
+    "longDescription": "**OKC Kink Weekend 2026** is published as **July 16–19, 2026** centered on **The District Hotel** in **Oklahoma City**, with **education** tracks at **The Diversity Center** (~one block south) including **18+** class-day pricing.\n\n**Tickets:** The homepage lists **2026** tiered **weekend pass** pricing (e.g. early tiers through **April 30, 2026**) and **day passes**; **registration** may still read “coming soon” for portions of the sale cycle—monitor **www.okckinkweekend.com** (the bare domain has returned **500** errors in automated checks—use **www**).\n\n**Programming highlights:** **Route 66 Leather** contest materials, **pool parties**, **vendor market**, hospitality tracks, and archives of **2025** schedules for reference.\n\n**Editorial note:** Historical copy referenced a **Saturday dungeon** partnership with **ThatPlace**; **ThatPlace announced permanent closure in 2025**—treat any dungeon add-on language as **subject to change** and confirm with organizers.",
+    "website": "https://www.okckinkweekend.com/",
+    "organizer": "OKC Kink Weekend",
+    "venue": "The District Hotel + The Diversity Center (education), Oklahoma City, OK",
+    "logo": "/images/events/logo-okc-kink-weekend-2026.png",
+    "features": [
+      "Jul 16-19, 2026",
+      "The District Hotel HQ",
+      "Route 66 Leather contest",
+      "Diversity Center education track (18+)",
+      "Tiered weekend & day passes (see site)",
+      "Confirm registration on www.okckinkweekend.com"
+    ],
+    "seo": {
+      "title": "OKC Kink Weekend 2026 | East Coast Kink Events",
+      "description": "OKC Kink Weekend 2026 (Jul 16-19) — District Hotel, vendors, Route 66 Leather, and education track. okckinkweekend.com.",
+      "keywords": "OKC Kink Weekend, Oklahoma City kink, Route 66 Leather, kink convention OKC"
+    }
+  },
+  {
+    "name": "Iowa Leather Weekend 2026",
+    "slug": "iowa-leather-weekend-2026",
+    "date": {
+      "start": "2026-08-28",
+      "end": "2026-08-30",
+      "display": "Aug 28-30, 2026"
+    },
+    "location": {
+      "city": "Des Moines",
+      "state": "IA",
+      "region": "Midwest, Iowa"
+    },
+    "category": "Contest Weekend",
+    "excerpt": "Long-running Des Moines leather weekend at The Blazing Saddle—Mr./Ms. Iowa Leather, Mr. Iowa Bear, Iowa Pet contests, vendor mart, and socials. Calendar listing via Mid America Conference of Clubs.",
+    "longDescription": "**Iowa Leather Weekend 2026** runs **August 28–30, 2026** (Friday start **15:00 CDT** per MACC calendar) hosted at **The Blazing Saddle** in **Des Moines’ East Village**.\n\n**Contests & socials:** Public descriptions reference **Mr. and Ms. Iowa Leather**, **Mr. Iowa Bear**, **Iowa Pet**, **vendor mart**, cigar and grill events, pet socials/moshes, and victory parties. The event traces its history to **1988** in marketing copy on the calendar page.\n\n**Listing source:** Detailed dates appear on the **Mid America Conference of Clubs** event page (**midamericaconferenceofclubs.org**); cross-check **registration** and any dedicated ILW social channels as the weekend approaches.\n\n**Note:** MACC is a **regional calendar** host—confirm producer contacts and ticket links on the official ILW materials linked from that page.",
+    "website": "https://www.midamericaconferenceofclubs.org/event/iowa-leather-weekend-2026/",
+    "organizer": "Iowa Leather Weekend (hosted at The Blazing Saddle)",
+    "venue": "The Blazing Saddle, East Village, Des Moines, IA",
+    "logo": "",
+    "features": [
+      "Aug 28-30, 2026 Des Moines",
+      "Title contests: Iowa Leather, Iowa Bear, Iowa Pet",
+      "3-day vendor mart",
+      "The Blazing Saddle venue",
+      "MACC calendar listing—verify tickets annually"
+    ],
+    "seo": {
+      "title": "Iowa Leather Weekend 2026 - Des Moines | East Coast Kink Events",
+      "description": "Iowa Leather Weekend 2026 — Des Moines leather/bear/pet contests and vendor mart. Aug 28-30.",
+      "keywords": "Iowa Leather Weekend, Des Moines leather, ILW 2026, Blazing Saddle, Iowa Pet"
+    }
+  },
+  {
+    "name": "KinkFest 2026",
+    "slug": "kinkfest-2026-portland",
+    "date": {
+      "start": "2026-04-03",
+      "end": "2026-04-05",
+      "display": "Apr 3-5, 2026"
+    },
+    "location": {
+      "city": "Portland",
+      "state": "OR",
+      "region": "Pacific, Oregon"
+    },
+    "category": "Convention",
+    "excerpt": "Portland Leather Alliance’s flagship three-day kink conference—50+ classes, huge vendor mall, performances, and a large equipped dungeon at the Portland Expo Center with host hotels and shuttle. Pre-registration required (no at-door sales).",
+    "longDescription": "**KinkFest** is the **Portland Leather Alliance’s** annual **three-day** conference for the **BDSM, leather, fetish, and kink** communities.\n\n**Venue:** Programming is centered on the **Portland Expo Center** with **host hotels** nearby and **shuttle** service described on the official site. Public copy highlights a **large dungeon**, **50+ educational classes**, **play parties**, **vendor mall**, **community spaces**, **ASL interpreters**, and published **code of conduct** and **COVID** policies.\n\n**Registration:** **All attendees must pre-register**; the site states **on-site registration is not possible**. Registration flows through **portlandleather.org/kinkfest/** (linked from **kinkfest.org**).\n\n**Framing:** This is a **community nonprofit–produced** education and social convention—not a **pro-domme** or **commercial session** house.\n\nOfficial: **https://www.kinkfest.org/**",
+    "website": "https://www.kinkfest.org/",
+    "organizer": "Portland Leather Alliance",
+    "venue": "Portland Expo Center + designated host hotels (see kinkfest.org)",
+    "logo": "/images/events/logo-kinkfest-2026.png",
+    "features": [
+      "Apr 3-5, 2026 Portland OR",
+      "50+ classes, vendor mall, performances",
+      "Large equipped dungeon (Expo Center)",
+      "Pre-registration required",
+      "Host hotels + shuttle (per site)",
+      "PLA nonprofit community production"
+    ],
+    "seo": {
+      "title": "KinkFest 2026 - Portland OR Kink Convention | East Coast Kink Events",
+      "description": "KinkFest 2026 (Apr 3-5) — Portland’s major BDSM/leather education weekend at the Expo Center. kinkfest.org.",
+      "keywords": "KinkFest, Portland kink, Oregon BDSM convention, Portland Leather Alliance, PLA"
+    }
+  },
+  {
+    "name": "Leather Reign 2026",
+    "slug": "leather-reign-2026-seattle",
+    "date": {
+      "start": "2026-11-13",
+      "end": "2026-11-15",
+      "display": "Nov 13-15, 2026"
+    },
+    "location": {
+      "city": "Seattle metro",
+      "state": "WA",
+      "region": "Pacific, Washington"
+    },
+    "category": "Convention",
+    "excerpt": "20th-anniversary Puget Sound leather/BDSM conference for experienced attendees—education focused on why we do what we do (201+ framing), hotel-format weekend with public presenter applications and community RSVP links.",
+    "longDescription": "**Leather Reign** is a **Puget Sound / Seattle–area** **leather, BDSM, and kink** conference produced by **Evergreen Leather Events**. Marketing emphasizes **advanced / 201+** education about **dynamics, identity, and motivation**—**technique** appears, but **intent and meaning** are the headline.\n\n**2026:** Public homepage lists **Leather Reign 20** on **November 13–15, 2026** with **hotel takeover**–style programming; **exact property** and **ticket URLs** are typically finalized through the site’s registration cycle—confirm on **leatherreign.org** before booking travel.\n\n**Community production:** Presenter applications and volunteer framing on the site support a **member-driven** convention model rather than **pro-domme retail** services.\n\nOfficial: **https://leatherreign.org/**",
+    "website": "https://leatherreign.org/",
+    "organizer": "Evergreen Leather Events / Leather Reign",
+    "venue": "Puget Sound area hotel (confirm on leatherreign.org registration)",
+    "logo": "/images/events/logo-leather-reign-2026.png",
+    "features": [
+      "Nov 13-15, 2026 Seattle metro",
+      "Leather / BDSM / kink education weekend",
+      "201+ / experienced-audience framing",
+      "Hotel-format community con",
+      "Presenter applications (Cognito forms on site)"
+    ],
+    "seo": {
+      "title": "Leather Reign 2026 - Seattle Area Leather Conference | East Coast Kink Events",
+      "description": "Leather Reign 2026 (Nov 13-15) — Puget Sound leather/BDSM conference. leatherreign.org.",
+      "keywords": "Leather Reign, Seattle leather, Washington BDSM conference, Evergreen Leather Events"
+    }
+  },
+  {
+    "name": "Northwest Leather Celebration 2026",
+    "slug": "northwest-leather-celebration-2026-sacramento",
+    "date": {
+      "start": "2026-04-30",
+      "end": "2026-05-03",
+      "display": "Apr 30-May 3, 2026"
+    },
+    "location": {
+      "city": "Sacramento",
+      "state": "CA",
+      "region": "Pacific, California"
+    },
+    "category": "Convention",
+    "excerpt": "Four-day Sacramento leather weekend with regional contests (including Northwest Master/slave, Bootblack, and Person of Leather tracks), hotel-package style registration, and open registration on northwestleathercelebration.com.",
+    "longDescription": "**Northwest Leather Celebration (NWLC)** is a **multi-day** leather and kink community gathering. The **2026** edition is hosted in **Sacramento, California** (**April 30–May 3, 2026** per the official homepage).\n\n**Programming:** Public materials describe **contest** and **community** programming typical of a **regional leather weekend**—confirm class grids, vendors, and hospitality details on the live site.\n\n**Registration:** Use **northwestleathercelebration.com/registration** (and linked hotel blocks) for **public** ticketing.\n\n**Note:** Despite the “Northwest” name, **2026’s host city is Sacramento**—plan flights accordingly.\n\nOfficial: **https://www.northwestleathercelebration.com/**",
+    "website": "https://www.northwestleathercelebration.com/",
+    "organizer": "Northwest Leather Celebration",
+    "venue": "Sacramento, CA (host hotel—see official registration)",
+    "logo": "/images/events/logo-northwest-leather-celebration-2026-b.png",
+    "features": [
+      "Apr 30-May 3, 2026 Sacramento CA",
+      "Regional leather weekend + contests",
+      "Public registration on official site",
+      "Hotel packages (verify on site)",
+      "NWLC branding (2026 not in PNW host city)"
+    ],
+    "seo": {
+      "title": "Northwest Leather Celebration 2026 - Sacramento CA | East Coast Kink Events",
+      "description": "NWLC 2026 (Apr 30-May 3) in Sacramento — regional leather celebration with contests and registration at northwestleathercelebration.com.",
+      "keywords": "Northwest Leather Celebration, NWLC 2026, Sacramento leather, leather contest weekend"
+    }
+  },
+  {
+    "name": "Leather Leadership Conference 2026",
+    "slug": "leather-leadership-conference-2026-los-angeles",
+    "date": {
+      "start": "2026-02-27",
+      "end": "2026-03-01",
+      "display": "Feb 27-Mar 1, 2026"
+    },
+    "location": {
+      "city": "Los Angeles",
+      "state": "CA",
+      "region": "Pacific, California"
+    },
+    "category": "Conference",
+    "excerpt": "501(c)(3) nonprofit weekend for kink and leather community leaders—Feb 27–Mar 1, 2026 at the Hilton Los Angeles Airport with Eventbrite tickets and a Passkey room block (leatherleadership.net / book.passkey.com/go/LLC2026).",
+    "longDescription": "**Leather Leadership Conference (LLC)** is a **501(c)(3) nonprofit** that produces an **annual conference** aimed at **leaders** in **kink, leather, and alternative** communities—**education**, **scholarships**, **networking**, and **resource sharing** are core themes on **leatherleadership.net**.\n\n**2026 logistics:** Public listings describe **LLC 2026** on **February 27–March 1, 2026** at the **Hilton Los Angeles Airport** (**5711 West Century Blvd, Los Angeles, CA 90045**) with **Eventbrite** registration and a **Passkey** housing link (**book.passkey.com/go/LLC2026**). **Always confirm** ticket tiers, refund windows, and room-block status on the **live** site before you book.\n\n**Framing:** **Leadership and community capacity-building**—not a **pro-domme** or **session** marketplace.\n\nOfficial: **https://www.leatherleadership.net/**",
+    "website": "https://www.leatherleadership.net/",
+    "organizer": "Leather Leadership Conference (501(c)(3))",
+    "venue": "Hilton Los Angeles Airport, 5711 West Century Blvd, Los Angeles, CA 90045",
+    "logo": "/images/events/logo-leather-leadership-conference-2026-b.jpg",
+    "features": [
+      "Nonprofit leadership conference",
+      "Scholarship programs (per site)",
+      "Hotel weekend format",
+      "Open public registration (Eventbrite linked from site)",
+      "Eventbrite tickets + Passkey hotel block (LLC2026)"
+    ],
+    "seo": {
+      "title": "Leather Leadership Conference 2026 - Los Angeles | East Coast Kink Events",
+      "description": "LLC 2026 — nonprofit leather & kink leadership conference in the Los Angeles area. leatherleadership.net.",
+      "keywords": "Leather Leadership Conference, LLC kink, Los Angeles leather education, nonprofit BDSM leadership"
+    }
+  },
+  {
+    "name": "San Diego Bootblack & Leather Weekend 2026",
+    "slug": "san-diego-bootblack-leather-weekend-2026",
+    "date": {
+      "start": "2026-03-13",
+      "end": "2026-03-15",
+      "display": "Mar 13-15, 2026 (confirm on sdbbleather.com)"
+    },
+    "location": {
+      "city": "San Diego",
+      "state": "CA",
+      "region": "Pacific, California"
+    },
+    "category": "Convention",
+    "excerpt": "Three-day San Diego leather and bootblack community weekend—contests, classes, and socials across participating venues; public registration and schedules on sdbbleather.com (multi-venue pattern rather than a single hotel takeover).",
+    "longDescription": "**San Diego Bootblack & Leather (SDBBL)** produces an annual **multi-day** weekend that blends **bootblack**, **leather**, and **kink community** programming in **San Diego**. Typical years include **contests**, **education**, and **socials** spread across **partner venues**.\n\n**2026:** Marketing on **sdbbleather.com** references a **2026** cycle; **confirm** exact **nightly schedule**, **ticket URLs**, and **addresses** on the official site (past schedules show **multi-bar / multi-club** logistics rather than one **hotel buyout**).\n\n**Framing:** Community **title** and **education** weekend—not a **pro-domme session** business.\n\nOfficial: **https://sdbbleather.com/**",
+    "website": "https://sdbbleather.com/",
+    "organizer": "San Diego Bootblack & Leather",
+    "venue": "Multiple San Diego venues (see official schedule)",
+    "logo": "/images/events/logo-san-diego-bootblack-leather-2026-b.svg",
+    "features": [
+      "Mar 13-15, 2026 (verify on sdbbleather.com)",
+      "Bootblack & leather community weekend",
+      "Contests, education, socials",
+      "Multi-venue San Diego format",
+      "Public site registration when live"
+    ],
+    "seo": {
+      "title": "San Diego Bootblack & Leather Weekend 2026 | East Coast Kink Events",
+      "description": "SDBBL 2026 — San Diego bootblack and leather community weekend. sdbbleather.com.",
+      "keywords": "San Diego Bootblack, SDBBL, San Diego leather, bootblack contest California"
+    }
+  },
+  {
+    "name": "South Plains Leatherfest 2026",
+    "slug": "south-plains-leatherfest-2026-dallas",
+    "date": {
+      "start": "2026-03-19",
+      "end": "2026-03-22",
+      "display": "Mar 19-22, 2026"
+    },
+    "location": {
+      "city": "Dallas",
+      "state": "TX",
+      "region": "South Central, Texas"
+    },
+    "category": "Convention",
+    "excerpt": "Four-day Dallas–area leatherfest with hotel packages, education, vendors, and ballroom programming—public registration on southplainsleatherfest.com (2026 site copy referenced sold-out tiers; still a key regional calendar anchor).",
+    "longDescription": "**South Plains Leatherfest** is a **four-day** **Dallas**–centered leather/BDSM gathering with **hotel**, **class**, **vendor**, and **evening ballroom** programming. The **2026** registration page cites **March 19–22, 2026** and **online registration** policies (including **sold-out** messaging when capacity is reached).\n\n**Operator:** Footer and registration materials reference **South Plains, LLC** alongside **community / transformative / home** branding—read the **official** refund and **COVID** sections on **southplainsleatherfest.com** before purchasing.\n\n**Framing:** Regional **community convention** with **public** ticketing—not a **pro-domme** house.\n\nOfficial: **https://www.southplainsleatherfest.com/** (enter via **home.html** age gate, then **Registration.html**).",
+    "website": "https://www.southplainsleatherfest.com/Registration.html",
+    "organizer": "South Plains Leatherfest / South Plains, LLC",
+    "venue": "Dallas, TX metro (host hotel details emailed after registration per site)",
+    "logo": "/images/events/logo-south-plains-leatherfest-2026.png",
+    "features": [
+      "Mar 19-22, 2026 Dallas TX",
+      "4-day leather/BDSM convention",
+      "Hotel + education + vendors",
+      "Public Cognito/registration flows (see site)",
+      "Check sold-out status before travel"
+    ],
+    "seo": {
+      "title": "South Plains Leatherfest 2026 - Dallas TX | East Coast Kink Events",
+      "description": "South Plains Leatherfest 2026 (Mar 19-22) — Dallas leather convention. southplainsleatherfest.com.",
+      "keywords": "South Plains Leatherfest, SPLF, Dallas leather, Texas BDSM convention"
+    }
+  },
+  {
+    "name": "Beyond Vanilla 35",
+    "slug": "beyond-vanilla-35-2026-dallas",
+    "date": {
+      "start": "2026-10-01",
+      "end": "2026-10-04",
+      "display": "Oct 1-4, 2026"
+    },
+    "location": {
+      "city": "Dallas",
+      "state": "TX",
+      "region": "South Central, Texas"
+    },
+    "category": "Convention",
+    "excerpt": "DFW’s long-running annual kink education weekend—open presenter/vendor applications and Cognito-based registration framed as community building (Beyond Vanilla 35, Oct 1-4, 2026 per beyondvanilla.org).",
+    "longDescription": "**Beyond Vanilla** is described on **beyondvanilla.org** as an **annual DFW kink event** focused on **education** and **community building**. The public homepage currently highlights **Beyond Vanilla 35** on **October 1–4, 2026** in **Dallas, Texas**.\n\n**Registration:** The site links **Cognito Forms** registration and invites **presenters**, **vendors**, and **sponsors** through published forms—confirm **pass types**, **venues**, and **hotel** notes on the live site.\n\n**Framing:** **Community education weekend** rather than **professional domination services**.\n\nOfficial: **https://beyondvanilla.org/**",
+    "website": "https://beyondvanilla.org/",
+    "organizer": "Beyond Vanilla",
+    "venue": "Dallas, TX (venues and hotels—confirm on beyondvanilla.org)",
+    "logo": "/images/events/logo-beyond-vanilla-35.png",
+    "features": [
+      "Oct 1-4, 2026 Dallas TX",
+      "DFW kink education weekend",
+      "Cognito registration (linked from site)",
+      "Presenter / vendor / sponsor applications",
+      "35th annual branding on homepage"
+    ],
+    "seo": {
+      "title": "Beyond Vanilla 35 2026 - Dallas DFW Kink Weekend | East Coast Kink Events",
+      "description": "Beyond Vanilla 35 (Oct 1-4, 2026) — Dallas kink education weekend. beyondvanilla.org.",
+      "keywords": "Beyond Vanilla, Dallas kink, DFW BDSM education, Texas kink convention"
+    }
+  },
+  {
+    "name": "RGV Leather Weekend 2026",
+    "slug": "rgv-leather-weekend-2026-mcallen",
+    "date": {
+      "start": "2026-02-06",
+      "end": "2026-02-08",
+      "display": "Feb 6-8, 2026 (confirm on rgvbears.org)"
+    },
+    "location": {
+      "city": "McAllen",
+      "state": "TX",
+      "region": "South Central, Texas"
+    },
+    "category": "Weekend Event",
+    "excerpt": "Rio Grande Valley three-day leather weekend produced by RGV Bears—titleholder contests, vendors, and socials with ticket links on the official Wix site (community regional con, not a pro session provider).",
+    "longDescription": "**RGV Leather Weekend** is a **three-day** **Rio Grande Valley** event centered on **leather and kink community** programming, produced with **RGV Bears** branding on the public **Wix** site (**rgvbears.org/rgvlw**).\n\n**Access:** Ticketing buttons and event copy are hosted on the **official** page—confirm **hotels**, **venues**, and **COVID/house rules** there before travel.\n\n**Framing:** **Regional community weekend** with **public registration**—not marketed as **professional domination** services.\n\nOfficial: **https://www.rgvbears.org/rgvlw**",
+    "website": "https://www.rgvbears.org/rgvlw",
+    "organizer": "RGV Bears / RGV Leather Weekend",
+    "venue": "McAllen, TX metro (see official site for venues)",
+    "logo": "/images/events/logo-rgv-leather-weekend-2026-b.jpg",
+    "features": [
+      "Feb 6-8, 2026 (verify on rgvbears.org)",
+      "Rio Grande Valley leather weekend",
+      "Title and community programming",
+      "Public ticket links on official site",
+      "Regional / bilingual community framing (per site)"
+    ],
+    "seo": {
+      "title": "RGV Leather Weekend 2026 - McAllen TX | East Coast Kink Events",
+      "description": "RGV Leather Weekend 2026 — Rio Grande Valley leather community weekend. rgvbears.org.",
+      "keywords": "RGV Leather Weekend, McAllen leather, Texas border kink, RGV Bears"
+    }
+  },
+  {
+    "name": "Pacific Northwest Leathermen's Campout 2026",
+    "slug": "pacific-northwest-leathermens-campout-2026",
+    "date": {
+      "start": "2026-07-30",
+      "end": "2026-08-02",
+      "display": "Jul 30-Aug 2, 2026"
+    },
+    "location": {
+      "city": "Portland area",
+      "state": "OR",
+      "region": "Pacific, Oregon"
+    },
+    "category": "Outdoor Event",
+    "excerpt": "Four-day private-camp leather education weekend near Portland—TicketSpice registration, fixed outdoor venue, and 21+ male-identifying attendance policy per pnwlc.org (intentional niche community space, not a pro service).",
+    "longDescription": "**Pacific Northwest Leathermen's Campout (PNWLC)** is a **Thursday–Sunday** **outdoor camp** experience near the **Portland, Oregon** area on a **private property** described on **pnwlc.org**.\n\n**Attendance:** Public FAQ copy restricts attendance to **adults 21+** who are **male-identifying** and aligns programming with **gay male leather** community traditions—read the **entire** **code of conduct** and **accessibility** notes before registering.\n\n**Registration:** Tickets are sold through **TicketSpice** (`pnwlcampout.ticketspice.com/...2026` linked from the homepage).\n\n**Framing:** **Volunteer-produced niche camp**—not a **hotel** con and **not** a **pro-domme** business.\n\nOfficial: **https://www.pnwlc.org/**",
+    "website": "https://www.pnwlc.org/",
+    "organizer": "Pacific Northwest Leathermen's Campout",
+    "venue": "Private camp property, Portland metro area, OR (directions via registrants)",
+    "logo": "/images/events/logo-pnwlc-2026.jpg",
+    "features": [
+      "Jul 30-Aug 2, 2026",
+      "Private outdoor leather camp (PNW)",
+      "TicketSpice registration",
+      "21+ male-identifying space (per site FAQ)",
+      "Education, socials, and camping/RV options"
+    ],
+    "seo": {
+      "title": "PNWLC 2026 - Pacific Northwest Leathermen's Campout | East Coast Kink Events",
+      "description": "PNWLC 2026 (Jul 30-Aug 2) — Portland-area leather men’s campout. pnwlc.org.",
+      "keywords": "PNWLC, Pacific Northwest Leathermen's Campout, Oregon leather camp, gay male leather PNW"
+    }
   }
 ];
 
@@ -2430,6 +3235,20 @@ export const getPastEvents = () => {
 export const getEventsByCategory = (category) => {
   if (!category) return events;
   return events.filter(event => event.category === category);
+};
+
+/** Categories shown when the Events list "Outdoor Events" filter is active (not exact string match on "Outdoor Event"). */
+export const OUTDOOR_VENUE_CATEGORIES = new Set(['Outdoor Event', 'Retreat']);
+
+/**
+ * @param {{ category: string }} event
+ * @param {string} venueFilter From toolbar: 'Indoor Event' | 'Outdoor Event' (see EventsPageClient getCategoryForFilter).
+ */
+export const eventMatchesVenueFilter = (event, venueFilter) => {
+  if (!venueFilter) return true;
+  if (venueFilter === 'Outdoor Event') return OUTDOOR_VENUE_CATEGORIES.has(event.category);
+  if (venueFilter === 'Indoor Event') return !OUTDOOR_VENUE_CATEGORIES.has(event.category);
+  return event.category === venueFilter;
 };
 
 export const getEventsByLocation = (state) => {
