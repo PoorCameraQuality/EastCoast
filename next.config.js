@@ -67,7 +67,8 @@ const nextConfig = {
       { source: '/events/:slug/', destination: '/events/:slug', permanent: true },
       { source: '/dungeons/:slug/', destination: '/dungeons/:slug', permanent: true },
       { source: '/education/:slug/', destination: '/education/:slug', permanent: true },
-      { source: '/blog/:slug*', destination: '/blog/:slug*', permanent: true },
+      // Only strip trailing slash on blog article paths (never redirect to the same URL — that loops).
+      { source: '/blog/:path*/', destination: '/blog/:path*', permanent: true },
       { source: '/states/:state/', destination: '/states/:state', permanent: true },
       { source: '/vendors/:slug/', destination: '/vendors/:slug', permanent: true },
 
