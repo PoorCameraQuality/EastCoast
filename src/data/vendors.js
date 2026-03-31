@@ -10,13 +10,13 @@ import { onboardedVendors } from './onboardedVendors.data.js'
 
 export const vendors = [
   {
-    name: 'Floggin Farmers',
+    name: 'Flogging Farmers',
     slug: 'floggin-farmers',
     location: 'Online • Etsy',
     description:
       'Handcrafted birch wood floggers and other impact implements. Custom options available.',
     story:
-      'We’re Floggin Farmers—making handcrafted birch wood floggers and impact implements with an eye for balance, finish, and durability. We love building pieces that feel great in hand and hold up to real play. Custom options are available, and we’re happy to work with you on style, color, and handle preferences.',
+      'We’re Flogging Farmers—making handcrafted birch wood floggers and impact implements with an eye for balance, finish, and durability. We love building pieces that feel great in hand and hold up to real play. Custom options are available, and we’re happy to work with you on style, color, and handle preferences.',
     websiteUrl: 'https://www.etsy.com/shop/FlogginFarmers',
     logo125Url: '/images/vendors/floggin-farmers/logo-125.jpg',
     tagSlugs: [
@@ -24,7 +24,7 @@ export const vendors = [
       'woodworking',
       'custom-commission-vendor',
     ],
-    isPaid: false,
+    isPaid: true,
     productImage125ByTagSlug: {
       default: '/images/vendors/floggin-farmers/impact-implements-125.jpg',
       'impact-implements': '/images/vendors/floggin-farmers/impact-implements-125.jpg',
@@ -842,7 +842,7 @@ export const getVendorBySlug = (slug) => {
 }
 
 /** Set to a vendor slug (e.g. `'floggin-farmers'`) for site-wide sponsor spotlight; `null` when no active sponsor. */
-export const SITE_SPONSOR_VENDOR_SLUG = null
+export const SITE_SPONSOR_VENDOR_SLUG = 'floggin-farmers'
 
 export const getSiteSponsorVendor = () => {
   if (!SITE_SPONSOR_VENDOR_SLUG) return null

@@ -3,6 +3,10 @@ import { readFile } from "node:fs/promises"
 import path from "node:path"
 import { supabase } from "@/lib/supabase"
 import { getStateSlugsForSitemap } from "@/lib/eastCoastStates"
+import { buildAllowlistedDiscoveryPaths } from "@/lib/discoveryTier"
+import { buildAllowlistedVendorDiscoveryPaths } from "@/lib/vendorDiscoveryTier"
+import { buildAllowlistedDungeonDiscoveryPaths } from "@/lib/dungeonDiscoveryTier"
+import { buildAllowlistedBlogPaths } from "@/lib/blogDiscoveryTier"
 
 export const runtime = "nodejs"
 /** Avoid baking XML at build time (stale counts vs live Supabase articles + current deploy bundle). */
@@ -38,15 +42,15 @@ async function getSitemapData() {
   let vendors: Array<{ slug: string }> = []
 
   try {
-    const [{ getAllEvents }, { getAllDungeons }, { getAllArticles }, { getAllVendors }] = await Promise.all([
+    const [{ getAllEvents }, { getAllDungeons }, { getAllArticles }, { getUnifiedVendors }] = await Promise.all([
       import("@/data/events"),
       import("@/data/dungeons"),
       import("@/data/education"),
-      import("@/data/vendors")
+      import("@/lib/unifiedVendors")
     ])
     const allEvents = getAllEvents?.() || []
     const allDungeons = getAllDungeons?.() || []
-    const allVendors = getAllVendors?.() || []
+    const allVendors = (await getUnifiedVendors?.()) || []
 
     events = allEvents
       .filter((e: any) => e?.slug)
@@ -108,6 +112,7 @@ export async function GET() {
     { loc: `${BASE}/calendar`, changefreq: 'weekly', priority: 0.7 },
     { loc: `${BASE}/guidelines`, changefreq: 'monthly', priority: 0.5 },
     { loc: `${BASE}/states`, changefreq: 'weekly', priority: 0.5 },
+    { loc: `${BASE}/bdsm-events`, changefreq: 'weekly', priority: 0.75 },
     { loc: `${BASE}/vendors`, changefreq: 'weekly', priority: 0.7 }
   ]
 
@@ -147,7 +152,39 @@ export async function GET() {
       priority: 0.5
     }))
 
-    const body = xml([...core, ...stateUrls, ...eventUrls, ...dungeonUrls, ...articleUrls, ...vendorUrls])
+    const discoveryPaths = buildAllowlistedDiscoveryPaths()
+    const discoveryUrls: UrlEntry[] = discoveryPaths.map((p) => ({
+      loc: `${BASE}/${p}`,
+      lastmod: today,
+      changefreq: 'weekly' as const,
+      priority: 0.65
+    }))
+
+    const vendorDiscoveryPaths = buildAllowlistedVendorDiscoveryPaths()
+    const vendorDiscoveryUrls: UrlEntry[] = vendorDiscoveryPaths.map((p) => ({
+      loc: `${BASE}/${p}`,
+      lastmod: today,
+      changefreq: 'weekly' as const,
+      priority: 0.62
+    }))
+
+    const dungeonDiscoveryPaths = buildAllowlistedDungeonDiscoveryPaths()
+    const dungeonDiscoveryUrls: UrlEntry[] = dungeonDiscoveryPaths.map((p) => ({
+      loc: `${BASE}/${p}`,
+      lastmod: today,
+      changefreq: 'weekly' as const,
+      priority: 0.62
+    }))
+
+    const blogPaths = buildAllowlistedBlogPaths()
+    const blogUrls: UrlEntry[] = blogPaths.map((p) => ({
+      loc: `${BASE}/${p}`,
+      lastmod: today,
+      changefreq: 'weekly' as const,
+      priority: 0.58
+    }))
+
+    const body = xml([...core, ...stateUrls, ...discoveryUrls, ...vendorDiscoveryUrls, ...dungeonDiscoveryUrls, ...blogUrls, ...eventUrls, ...dungeonUrls, ...articleUrls, ...vendorUrls])
     return new NextResponse(body, { status: 200, headers })
   } catch {
     try {

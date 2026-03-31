@@ -1,96 +1,20 @@
 import Link from 'next/link'
-import type { Metadata } from 'next'
-import { notFound } from 'next/navigation'
-import { getVendorBySlug } from '@/data/vendors'
 import { getVendorPaidImage125Url } from '@/lib/vendorFiltering'
-import { BASE_URL } from '@/lib/seo'
 import VendorImage from '@/components/vendors/VendorImage'
 import Breadcrumb from '@/components/Breadcrumb'
 import { VendorStructuredData } from '@/components/StructuredData'
-import {
-  buildVendorKeywords,
-  buildVendorMetaDescription,
-  buildVendorOgDescription,
-} from '@/lib/vendorMetadata'
+import type { VendorRecord } from '@/lib/vendorFiltering'
+import { parseVendorLocation } from '@/lib/unifiedVendors'
+import DiscoveryEngineStrip from '@/components/discovery/DiscoveryEngineStrip'
 
-/**
- * Generates metadata for vendor detail pages using the vendor logo as OG image.
- */
-export async function generateMetadata({
-  params,
-}: {
-  params: { slug: string }
-}): Promise<Metadata> {
-  const vendor = getVendorBySlug(params.slug)
-
-  if (!vendor) {
-    return {
-      title: 'Vendor Not Found',
-      description: 'The requested vendor could not be found.',
-    }
-  }
-
-  const rawLogoUrl = vendor.logo125Url
-  const logoUrl = rawLogoUrl
-    ? rawLogoUrl.startsWith('http')
-      ? rawLogoUrl
-      : `${BASE_URL}${rawLogoUrl}`
-    : `${BASE_URL}/og-image.png`
-  const description = buildVendorMetaDescription(vendor)
-  const ogDescription = buildVendorOgDescription(vendor)
-  const keywords = buildVendorKeywords(vendor)
-
-  return {
-    title: `${vendor.name} | East Coast Kink Events`,
-    description,
-    keywords,
-    openGraph: {
-      title: vendor.name,
-      description: ogDescription,
-      images: [
-        {
-          url: logoUrl,
-          width: 1200,
-          height: 630,
-          alt: `${vendor.name} logo`,
-        },
-      ],
-      type: 'website',
-      url: `${BASE_URL}/vendors/${vendor.slug}`,
-      siteName: 'East Coast Kink Events',
-    },
-    twitter: {
-      card: 'summary_large_image',
-      title: vendor.name,
-      description: ogDescription,
-      images: [logoUrl],
-    },
-    alternates: {
-      canonical: `${BASE_URL}/vendors/${vendor.slug}`,
-    },
-  }
+type Props = {
+  vendor: VendorRecord
+  selectedTagSlugs: string[]
 }
 
-export default function VendorDetailPage({
-  params,
-  searchParams,
-}: {
-  params: { slug: string }
-  searchParams?: { tag?: string | string[] }
-}) {
-  const vendor = getVendorBySlug(params.slug)
-
-  if (!vendor) {
-    notFound()
-  }
-
-  const selected = searchParams?.tag
-    ? Array.isArray(searchParams.tag)
-      ? searchParams.tag
-      : [searchParams.tag]
-    : []
-
-  const paidImageUrl = getVendorPaidImage125Url({ vendor, selectedTagSlugs: selected })
+export default function VendorDetailView({ vendor, selectedTagSlugs }: Props) {
+  const paidImageUrl = getVendorPaidImage125Url({ vendor, selectedTagSlugs })
+  const { stateAbbr } = parseVendorLocation(vendor.location)
 
   const breadcrumbItems = [
     { label: 'Home', href: '/' },
@@ -105,12 +29,18 @@ export default function VendorDetailPage({
           <VendorStructuredData vendor={vendor} />
           <div className="mb-6">
             <Breadcrumb items={breadcrumbItems} />
-            <Link href="/vendors" className="inline-flex min-h-touch items-center text-gray-300 hover:text-white underline underline-offset-4 decoration-white/20 hover:decoration-white/50 transition-colors">
+            <DiscoveryEngineStrip stateAbbr={stateAbbr ?? undefined} />
+            <Link
+              href="/vendors"
+              className="inline-flex min-h-touch items-center text-gray-300 hover:text-white underline underline-offset-4 decoration-white/20 hover:decoration-white/50 transition-colors"
+            >
               ← Back to Vendors
             </Link>
           </div>
 
-          <header className={`rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl p-5 sm:p-8 shadow-dark ${vendor.isPaid ? 'vendor-paid-sparkle' : ''}`}>
+          <header
+            className={`rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl p-5 sm:p-8 shadow-dark ${vendor.isPaid ? 'vendor-paid-sparkle' : ''}`}
+          >
             <div className="flex flex-col md:flex-row md:items-start gap-6">
               <VendorImage src={vendor.logo125Url} alt={`${vendor.name} logo`} size={125} />
 
@@ -133,7 +63,11 @@ export default function VendorDetailPage({
 
               {vendor.isPaid ? (
                 <div className="flex-shrink-0">
-                  <VendorImage src={paidImageUrl} alt={`Featured product image for ${vendor.name}`} size={125} />
+                  <VendorImage
+                    src={paidImageUrl}
+                    alt={`Featured product image for ${vendor.name}`}
+                    size={125}
+                  />
                 </div>
               ) : null}
             </div>
@@ -164,4 +98,3 @@ export default function VendorDetailPage({
     </section>
   )
 }
-

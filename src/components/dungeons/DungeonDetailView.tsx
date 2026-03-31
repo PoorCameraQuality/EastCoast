@@ -1,18 +1,20 @@
-import { Metadata } from 'next'
-import { getDungeonBySlug, generateDungeonSEO } from '@/data/dungeons'
-import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { DungeonStructuredData } from '@/components/StructuredData'
 import Breadcrumb from '@/components/Breadcrumb'
 import RelatedContent from '@/components/RelatedContent'
+import DiscoveryEngineStrip from '@/components/discovery/DiscoveryEngineStrip'
 import DungeonImage from '@/components/dungeons/DungeonImage'
-import { BASE_URL } from '@/lib/seo'
 
 /** Converts schema.org openingHours (e.g. "Fr 20:00-02:00, Sa 20:00-02:00") to human-readable format. */
 function formatHours(hours: string): string {
   const dayMap: Record<string, string> = {
-    Mo: 'Monday', Tu: 'Tuesday', We: 'Wednesday', Th: 'Thursday',
-    Fr: 'Friday', Sa: 'Saturday', Su: 'Sunday'
+    Mo: 'Monday',
+    Tu: 'Tuesday',
+    We: 'Wednesday',
+    Th: 'Thursday',
+    Fr: 'Friday',
+    Sa: 'Saturday',
+    Su: 'Sunday',
   }
   const parts = hours.split(',').map((s) => s.trim())
   return parts
@@ -33,62 +35,25 @@ function formatHours(hours: string): string {
     .join('\n')
 }
 
-// Generate metadata for SEO
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
-  const dungeon = getDungeonBySlug(params.slug)
-  
-  if (!dungeon) {
-    return {
-      title: 'Dungeon Not Found',
-      description: 'The requested dungeon could not be found.'
-    }
-  }
-
-  const seo = generateDungeonSEO(dungeon)
-  
-  return {
-    title: seo.title,
-    description: seo.description,
-    keywords: seo.keywords,
-    openGraph: {
-      title: seo.title,
-      description: seo.description,
-      images: seo.openGraph.images,
-      type: 'website',
-      url: `${BASE_URL}/dungeons/${params.slug}`,
-      siteName: 'East Coast Kink Events',
-    },
-    twitter: {
-      card: 'summary_large_image',
-      title: seo.title,
-      description: seo.description,
-      images: seo.openGraph.images,
-    },
-    alternates: {
-      canonical: `${BASE_URL}/dungeons/${params.slug}`,
-    },
-  }
+type Dungeon = {
+  name: string
+  slug: string
+  location: { city: string; state: string; address?: string }
+  category?: string
+  excerpt?: string
+  description?: { long?: string }
+  logo?: string
+  contact?: { phone?: string; email?: string }
+  hours?: string
+  socialMedia?: Record<string, string | undefined>
+  website?: string
 }
 
-// Generate static params for all dungeons
-export async function generateStaticParams() {
-  const { dungeons } = await import('@/data/dungeons')
-  return dungeons.map((dungeon) => ({
-    slug: dungeon.slug,
-  }))
-}
-
-export default function DungeonPage({ params }: { params: { slug: string } }) {
-  const dungeon = getDungeonBySlug(params.slug)
-
-  if (!dungeon) {
-    notFound()
-  }
-
+export default function DungeonDetailView({ dungeon }: { dungeon: Dungeon }) {
   const breadcrumbItems = [
     { label: 'Home', href: '/' },
     { label: 'Dungeons', href: '/dungeons' },
-    { label: dungeon.name, href: `/dungeons/${dungeon.slug}`, current: true }
+    { label: dungeon.name, href: `/dungeons/${dungeon.slug}`, current: true },
   ]
 
   return (
@@ -98,9 +63,13 @@ export default function DungeonPage({ params }: { params: { slug: string } }) {
       <section className="section-padding">
         <div className="container-custom">
           <Breadcrumb items={breadcrumbItems} />
+          <DiscoveryEngineStrip stateAbbr={dungeon.location?.state} />
 
           <div className="mt-4">
-            <Link href="/dungeons" className="btn-outline inline-flex min-h-touch items-center justify-center px-4 py-2 text-sm w-full sm:w-auto">
+            <Link
+              href="/dungeons"
+              className="btn-outline inline-flex min-h-touch items-center justify-center px-4 py-2 text-sm w-full sm:w-auto"
+            >
               Back to Dungeons
             </Link>
           </div>
@@ -146,7 +115,7 @@ export default function DungeonPage({ params }: { params: { slug: string } }) {
                 ) : null}
               </div>
 
-              {(dungeon.contact?.phone || dungeon.contact?.email) ? (
+              {dungeon.contact?.phone || dungeon.contact?.email ? (
                 <div>
                   <h3 className="text-lg font-semibold text-white">Contact</h3>
                   {dungeon.contact?.phone ? (

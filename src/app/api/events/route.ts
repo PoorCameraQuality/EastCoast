@@ -46,11 +46,23 @@ export async function POST(request: NextRequest) {
       includes: sanitizeInput(formData.get('includes') as string || ''),
       features: sanitizeInput(formData.get('features') as string || ''),
       seoTitle: sanitizeInput(formData.get('seoTitle') as string || ''),
-      seoKeywords: sanitizeInput(formData.get('seoKeywords') as string || '')
+      seoKeywords: sanitizeInput(formData.get('seoKeywords') as string || ''),
+      eventType: sanitizeInput(formData.get('eventType') as string || ''),
+      venueId: sanitizeInput(formData.get('venueId') as string || ''),
+      metaTitle: sanitizeInput(formData.get('metaTitle') as string || ''),
+      metaDescription: sanitizeInput(formData.get('metaDescription') as string || ''),
+      organizerName: sanitizeInput(formData.get('organizerName') as string || ''),
     }
 
     // Validate the data
-    const validationResult = validateEvent(eventData)
+    const validationResult = validateEvent({
+      ...eventData,
+      eventType: eventData.eventType || undefined,
+      venueId: eventData.venueId || undefined,
+      metaTitle: eventData.metaTitle || undefined,
+      metaDescription: eventData.metaDescription || undefined,
+      organizerName: eventData.organizerName || undefined,
+    })
     
     if (!validationResult.success) {
       return NextResponse.json(
@@ -107,6 +119,11 @@ export async function POST(request: NextRequest) {
           features: eventData.features,
           seo_title: eventData.seoTitle,
           seo_keywords: eventData.seoKeywords.split(',').map(keyword => keyword.trim()).filter(keyword => keyword),
+          ...(eventData.eventType ? { event_type: eventData.eventType } : {}),
+          ...(eventData.venueId ? { venue_id: eventData.venueId } : {}),
+          ...(eventData.metaTitle ? { meta_title: eventData.metaTitle } : {}),
+          ...(eventData.metaDescription ? { meta_description: eventData.metaDescription } : {}),
+          ...(eventData.organizerName ? { organizer_name: eventData.organizerName } : {}),
           status: isAdminUser ? 'published' : 'pending',
           created_at: new Date().toISOString(),
           created_by: 'admin' // You might want to get this from the session

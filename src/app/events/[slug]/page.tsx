@@ -6,9 +6,11 @@ import EventLogo from '@/components/EventLogo'
 import { EventStructuredData } from '@/components/StructuredData'
 import Breadcrumb from '@/components/Breadcrumb'
 import RelatedContent from '@/components/RelatedContent'
+import DiscoveryEngineStrip from '@/components/discovery/DiscoveryEngineStrip'
 import EventCalendarExport from '@/components/EventCalendarExport'
 import { BASE_URL } from '@/lib/seo'
 import MarkdownSimple from '@/components/MarkdownSimple'
+import EventSeoIntro from '@/components/events/EventSeoIntro'
 
 // Generate metadata for SEO
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
@@ -191,8 +193,10 @@ function EnhancedEventLayout({ event, breadcrumbItems }: { event: any, breadcrum
         
         <div className="container-custom py-6 md:py-8 relative z-10">
           <Breadcrumb items={breadcrumbItems} />
-          
+          <DiscoveryEngineStrip stateAbbr={event.location?.state} />
+
           <div className="max-w-6xl mx-auto">
+            <EventSeoIntro event={event} />
             {/* Header Row */}
             <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-6 mb-8">
               {/* Logo and Title */}

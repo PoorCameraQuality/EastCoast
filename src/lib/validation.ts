@@ -29,7 +29,12 @@ export const eventSchema = z.object({
   includes: z.string().optional(),
   features: z.string().optional(),
   seoTitle: z.string().max(60, 'SEO title too long').optional(),
-  seoKeywords: z.string().max(200, 'SEO keywords too long').optional()
+  seoKeywords: z.string().max(200, 'SEO keywords too long').optional(),
+  eventType: z.enum(['munch', 'play_party', 'class', 'convention', 'social']).optional(),
+  venueId: z.string().uuid('Invalid venue id').optional(),
+  metaTitle: z.string().max(70).optional(),
+  metaDescription: z.string().max(320).optional(),
+  organizerName: z.string().max(120).optional(),
 })
 
 // File upload validation

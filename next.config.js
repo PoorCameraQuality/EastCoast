@@ -57,6 +57,7 @@ const nextConfig = {
       { source: '/events/', destination: '/events', permanent: true },
       { source: '/dungeons/', destination: '/dungeons', permanent: true },
       { source: '/education/', destination: '/education', permanent: true },
+      { source: '/blog/', destination: '/blog', permanent: true },
       // Hub trailing slashes → canonical URLs (reduces duplicate URLs in GSC)
       { source: '/calendar/', destination: '/calendar', permanent: true },
       { source: '/states/', destination: '/states', permanent: true },
@@ -66,6 +67,7 @@ const nextConfig = {
       { source: '/events/:slug/', destination: '/events/:slug', permanent: true },
       { source: '/dungeons/:slug/', destination: '/dungeons/:slug', permanent: true },
       { source: '/education/:slug/', destination: '/education/:slug', permanent: true },
+      { source: '/blog/:slug*', destination: '/blog/:slug*', permanent: true },
       { source: '/states/:state/', destination: '/states/:state', permanent: true },
       { source: '/vendors/:slug/', destination: '/vendors/:slug', permanent: true },
 

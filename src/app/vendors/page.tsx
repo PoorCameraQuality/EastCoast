@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
-import { getAllVendors } from '@/data/vendors'
 import { TAG_GROUPS, TAGS, tagGroupsById, tagsBySlug } from '@/data/vendorTaxonomy'
+import { getUnifiedVendors } from '@/lib/unifiedVendors'
 import VendorsPageClient from '@/components/vendors/VendorsPageClient'
 import { VendorsIndexStructuredData } from '@/components/StructuredData'
 import { getTagSlugsFromPageSearchParams } from '@/lib/vendorFiltering'
@@ -9,7 +9,7 @@ import { BASE_URL } from '@/lib/seo'
 export const revalidate = 1800
 
 export async function generateMetadata(): Promise<Metadata> {
-  const count = getAllVendors().length
+  const count = (await getUnifiedVendors()).length
   const description = `Explore ${count} kink vendors and BDSM gear makers. Browse impact play, bondage, fetish wear, and artisan makers across the East Coast.`
 
   return {
@@ -41,12 +41,12 @@ export async function generateMetadata(): Promise<Metadata> {
   }
 }
 
-export default function VendorsIndexPage({
+export default async function VendorsIndexPage({
   searchParams,
 }: {
   searchParams: Record<string, string | string[] | undefined>
 }) {
-  const vendors = getAllVendors()
+  const vendors = await getUnifiedVendors()
   const selectedTagSlugs = getTagSlugsFromPageSearchParams(searchParams)
 
   return (

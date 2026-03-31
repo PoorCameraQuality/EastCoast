@@ -137,7 +137,22 @@ export default function EducationPageClient({ initialArticles }: Props) {
       <div className="container-custom py-8 md:py-12 relative z-10">
         <Breadcrumb items={breadcrumbItems} />
         <SupportCTAInline contextLabel="Education" />
-        
+
+        <div className="mb-8 card-elegant p-4 sm:p-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border border-primary-500/20">
+          <div>
+            <h2 className="text-lg font-serif font-semibold text-white">Guides &amp; funnel articles</h2>
+            <p className="text-sm text-gray-400 mt-1 max-w-xl">
+              Long-form blog guides that link to events, vendors, and dungeons—beginner pillars plus regional pages.
+            </p>
+          </div>
+          <Link
+            href="/blog"
+            className="btn-primary min-h-touch inline-flex items-center justify-center px-5 py-2.5 shrink-0"
+          >
+            Open blog guides
+          </Link>
+        </div>
+
         {/* Enhanced Header */}
         <div className="text-center mb-10 md:mb-16">
           <h1 className="text-3xl sm:text-4xl md:text-6xl font-serif font-bold text-white mb-6 relative">

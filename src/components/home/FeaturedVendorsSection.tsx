@@ -1,21 +1,27 @@
 'use client'
 
 import Link from 'next/link'
-import { getAllVendors } from '@/data/vendors'
 import { useEffect, useMemo, useState } from 'react'
 import VendorImage from '@/components/vendors/VendorImage'
-import { getVendorCardPreviewText } from '@/lib/vendorFiltering'
+import { getVendorCardPreviewText, type VendorRecord } from '@/lib/vendorFiltering'
 import { tagGroupsById, tagsBySlug } from '@/data/vendorTaxonomy'
 import { shuffleCopy } from '@/lib/shuffle'
 
 const TARGET_FEATURED_COUNT = 6
 const POPULAR_FILTERS_COUNT = 8
 
-export default function FeaturedVendorsSection() {
-  const all = getAllVendors()
+type Props = {
+  /** Merged static + Supabase catalog from the home page server component */
+  vendors: VendorRecord[]
+}
+
+export default function FeaturedVendorsSection({ vendors: all }: Props) {
 
   const supporters = useMemo(() => all.filter((v) => Boolean(v.isPaid)), [all])
-  const nonSupporters = useMemo(() => all.filter((v) => !v.isPaid), [all])
+  const nonSupporters = useMemo(
+    () => all.filter((v) => !v.isPaid),
+    [all]
+  )
 
   const nonSupportersNeeded = Math.max(0, TARGET_FEATURED_COUNT - supporters.length)
 

@@ -7,11 +7,13 @@ import FeaturedVendorsSection from '@/components/home/FeaturedVendorsSection'
 import EducationSpotlightSection from '@/components/home/EducationSpotlightSection'
 import CommunityCTASection from '@/components/home/CommunityCTASection'
 import { getHubCategoryCounts } from '@/lib/homeHubCounts'
+import { getUnifiedVendors } from '@/lib/unifiedVendors'
 
 export const revalidate = 600
 
 export default async function Home() {
-  const hubCounts = await getHubCategoryCounts()
+  const vendors = await getUnifiedVendors()
+  const hubCounts = await getHubCategoryCounts({ vendorCount: vendors.length })
 
   return (
     <>
@@ -20,7 +22,7 @@ export default async function Home() {
         <HubCategoryGrid counts={hubCounts} />
         <FeaturedEventsSection />
         <FeaturedDungeonsSection />
-        <FeaturedVendorsSection />
+        <FeaturedVendorsSection vendors={vendors} />
         <EducationSpotlightSection />
         <CommunityCTASection />
         <AboutSection />
