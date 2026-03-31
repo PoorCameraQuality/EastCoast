@@ -22,21 +22,43 @@ interface CalendarClientProps {
   allEvents: CalendarEvent[]
 }
 
+function getCategoryStyles(category: string, isPast: boolean): { bar: string; pill: string } {
+  if (isPast) {
+    return { bar: 'bg-gray-600', pill: 'bg-gray-600/25 text-gray-300' }
+  }
+  switch (category) {
+    case 'Outdoor Event':
+      return { bar: 'bg-emerald-600', pill: 'bg-emerald-600/20 text-emerald-200' }
+    case 'Indoor Event':
+      return { bar: 'bg-primary-600', pill: 'bg-primary-600/25 text-primary-200' }
+    case 'Conference':
+    case 'Convention':
+      return { bar: 'bg-violet-600', pill: 'bg-violet-600/25 text-violet-200' }
+    case 'Workshop':
+    case 'Party':
+      return { bar: 'bg-amber-600', pill: 'bg-amber-600/25 text-amber-100' }
+    case 'Weekend Event':
+    case 'Retreat':
+    case 'Contest Weekend':
+      return { bar: 'bg-teal-600', pill: 'bg-teal-600/25 text-teal-200' }
+    default:
+      return { bar: 'bg-slate-500', pill: 'bg-slate-500/25 text-slate-200' }
+  }
+}
+
 export default function CalendarClient({ allEvents }: CalendarClientProps) {
   const [currentDate, setCurrentDate] = useState(new Date())
 
-  // Get current month/year
   const currentYear = currentDate.getFullYear()
   const currentMonth = currentDate.getMonth()
 
-  // Generate calendar data
   const calendarData = useMemo(() => {
     const firstDay = new Date(currentYear, currentMonth, 1)
     const lastDay = new Date(currentYear, currentMonth + 1, 0)
     const startDate = new Date(firstDay)
     startDate.setDate(startDate.getDate() - firstDay.getDay())
 
-    const days = []
+    const days: Date[] = []
     const dateIterator = new Date(startDate)
 
     while (dateIterator <= lastDay || dateIterator.getDay() !== 0) {
@@ -47,7 +69,6 @@ export default function CalendarClient({ allEvents }: CalendarClientProps) {
     return days
   }, [currentYear, currentMonth])
 
-  // Get events for the current month
   const monthEvents = useMemo(() => {
     const startOfMonth = new Date(currentYear, currentMonth, 1)
     const endOfMonth = new Date(currentYear, currentMonth + 1, 0)
@@ -55,106 +76,58 @@ export default function CalendarClient({ allEvents }: CalendarClientProps) {
     return allEvents.filter((event: CalendarEvent) => {
       const eventStart = new Date(event.date.start)
       const eventEnd = new Date(event.date.end)
-      
-      // Event overlaps with current month
       return eventStart <= endOfMonth && eventEnd >= startOfMonth
     })
   }, [allEvents, currentYear, currentMonth])
 
-  // Get events for a specific date
+  const sortedMonthEvents = useMemo(() => {
+    return [...monthEvents].sort(
+      (a, b) => new Date(a.date.start).getTime() - new Date(b.date.start).getTime()
+    )
+  }, [monthEvents])
+
   const getEventsForDate = (date: Date) => {
-    const dateISO = date.toISOString().split('T')[0]
-    
     return monthEvents.filter((event: CalendarEvent) => {
       const eventStart = new Date(event.date.start)
       const eventEnd = new Date(event.date.end)
       const checkDate = new Date(date)
-      
       return checkDate >= eventStart && checkDate <= eventEnd
     })
   }
 
-  // Check if date is in the past
   const isPastDate = (date: Date) => {
     const today = new Date()
     today.setHours(0, 0, 0, 0)
     return date < today
   }
 
-  // Check if date is today
   const isToday = (date: Date) => {
     const today = new Date()
     return date.toDateString() === today.toDateString()
   }
 
-  // Check if event is in the past
   const isPastEvent = (event: CalendarEvent) => {
     const today = new Date()
     today.setHours(0, 0, 0, 0)
-    const eventEnd = new Date(event.date.end)
-    return eventEnd < today
+    return new Date(event.date.end) < today
   }
 
-  // Navigate to previous month
-  const goToPreviousMonth = () => {
-    setCurrentDate(new Date(currentYear, currentMonth - 1, 1))
-  }
+  const goToPreviousMonth = () => setCurrentDate(new Date(currentYear, currentMonth - 1, 1))
+  const goToNextMonth = () => setCurrentDate(new Date(currentYear, currentMonth + 1, 1))
+  const goToToday = () => setCurrentDate(new Date())
 
-  // Navigate to next month
-  const goToNextMonth = () => {
-    setCurrentDate(new Date(currentYear, currentMonth + 1, 1))
-  }
-
-  // Navigate to today
-  const goToToday = () => {
-    setCurrentDate(new Date())
-  }
-
-  // Get category color
-  const getCategoryColor = (category: string, isPast: boolean) => {
-    if (isPast) return 'bg-gray-500'
-    
-    switch (category) {
-      case 'Outdoor Event':
-        return 'bg-green-600'
-      case 'Indoor Event':
-        return 'bg-primary-600'
-      case 'Conference':
-        return 'bg-purple-600'
-      case 'Workshop':
-        return 'bg-yellow-600'
-      case 'Party':
-        return 'bg-pink-600'
-      default:
-        return 'bg-primary-600'
-    }
-  }
-
-  // Export to Google Calendar
   const exportToGoogleCalendar = (event: CalendarEvent) => {
     const startDate = new Date(event.date.start)
     const endDate = new Date(event.date.end)
-    
-    // Format dates for Google Calendar
-    const formatDate = (date: Date) => {
-      return date.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '')
-    }
-    
+    const formatDate = (d: Date) => d.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '')
     const googleCalendarUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(event.name)}&dates=${formatDate(startDate)}/${formatDate(endDate)}&details=${encodeURIComponent(`${event.name} - ${event.date.display}\nLocation: ${event.location.city}, ${event.location.state}\n\nMore info: https://www.eastcoastkinkevents.com/events/${event.slug}`)}&location=${encodeURIComponent(`${event.location.city}, ${event.location.state}`)}`
-    
     window.open(googleCalendarUrl, '_blank')
   }
 
-  // Export to iCal
   const exportToICal = (event: CalendarEvent) => {
     const startDate = new Date(event.date.start)
     const endDate = new Date(event.date.end)
-    
-    // Format dates for iCal (YYYYMMDDTHHMMSSZ)
-    const formatDateForICal = (date: Date) => {
-      return date.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '')
-    }
-    
+    const formatDateForICal = (d: Date) => d.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '')
     const icalContent = [
       'BEGIN:VCALENDAR',
       'VERSION:2.0',
@@ -168,10 +141,8 @@ export default function CalendarClient({ allEvents }: CalendarClientProps) {
       `LOCATION:${event.location.city}, ${event.location.state}`,
       `URL:https://www.eastcoastkinkevents.com/events/${event.slug}`,
       'END:VEVENT',
-      'END:VCALENDAR'
+      'END:VCALENDAR',
     ].join('\r\n')
-    
-    // Create and download the .ics file
     const blob = new Blob([icalContent], { type: 'text/calendar;charset=utf-8' })
     const link = document.createElement('a')
     link.href = URL.createObjectURL(blob)
@@ -181,47 +152,30 @@ export default function CalendarClient({ allEvents }: CalendarClientProps) {
     document.body.removeChild(link)
   }
 
-  // Export all month events to Google Calendar
   const exportMonthToGoogleCalendar = () => {
     if (monthEvents.length === 0) return
-    
     const startDate = new Date(currentYear, currentMonth, 1)
     const endDate = new Date(currentYear, currentMonth + 1, 0)
-    
-    const formatDate = (date: Date) => {
-      return date.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '')
-    }
-    
-    const eventList = monthEvents.map(event => 
-      `${event.name} - ${event.date.display} (${event.location.city}, ${event.location.state})`
-    ).join('\n')
-    
+    const formatDate = (d: Date) => d.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '')
+    const eventList = monthEvents
+      .map((e) => `${e.name} - ${e.date.display} (${e.location.city}, ${e.location.state})`)
+      .join('\n')
     const googleCalendarUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(`East Coast Kink Events - ${startDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}`)}&dates=${formatDate(startDate)}/${formatDate(endDate)}&details=${encodeURIComponent(`Events for ${startDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}:\n\n${eventList}\n\nView all events: https://www.eastcoastkinkevents.com/calendar`)}`
-    
     window.open(googleCalendarUrl, '_blank')
   }
 
-  // Export all month events to iCal
   const exportMonthToICal = () => {
     if (monthEvents.length === 0) return
-    
     const startDate = new Date(currentYear, currentMonth, 1)
-    const endDate = new Date(currentYear, currentMonth + 1, 0)
-    
-    const formatDateForICal = (date: Date) => {
-      return date.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '')
-    }
-    
+    const formatDateForICal = (d: Date) => d.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '')
     let icalContent = [
       'BEGIN:VCALENDAR',
       'VERSION:2.0',
-      'PRODID:-//East Coast Kink Events//Calendar//EN'
+      'PRODID:-//East Coast Kink Events//Calendar//EN',
     ]
-    
-    monthEvents.forEach(event => {
+    monthEvents.forEach((event) => {
       const eventStart = new Date(event.date.start)
       const eventEnd = new Date(event.date.end)
-      
       icalContent.push(
         'BEGIN:VEVENT',
         `UID:${event.slug}@eastcoastkinkevents.com`,
@@ -234,10 +188,7 @@ export default function CalendarClient({ allEvents }: CalendarClientProps) {
         'END:VEVENT'
       )
     })
-    
     icalContent.push('END:VCALENDAR')
-    
-    // Create and download the .ics file
     const blob = new Blob([icalContent.join('\r\n')], { type: 'text/calendar;charset=utf-8' })
     const link = document.createElement('a')
     link.href = URL.createObjectURL(blob)
@@ -247,16 +198,10 @@ export default function CalendarClient({ allEvents }: CalendarClientProps) {
     document.body.removeChild(link)
   }
 
-  // Add to Apple Calendar
   const addToAppleCalendar = (event: CalendarEvent) => {
     const startDate = new Date(event.date.start)
     const endDate = new Date(event.date.end)
-    
-    // Format dates for iCal (YYYYMMDDTHHMMSSZ)
-    const formatDateForICal = (date: Date) => {
-      return date.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '')
-    }
-    
+    const formatDateForICal = (d: Date) => d.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '')
     const icalContent = [
       'BEGIN:VCALENDAR',
       'VERSION:2.0',
@@ -270,21 +215,19 @@ export default function CalendarClient({ allEvents }: CalendarClientProps) {
       `LOCATION:${event.location.city}, ${event.location.state}`,
       `URL:https://www.eastcoastkinkevents.com/events/${event.slug}`,
       'END:VEVENT',
-      'END:VCALENDAR'
+      'END:VCALENDAR',
     ].join('\r\n')
-    
-    // Create data URL for Apple Calendar integration
     const dataUrl = `data:text/calendar;charset=utf8,${encodeURIComponent(icalContent)}`
-    
-    // Try to open with Apple Calendar if on macOS/iOS, otherwise download
-    if (navigator.userAgent.includes('Mac') || navigator.userAgent.includes('iPhone') || navigator.userAgent.includes('iPad')) {
-      // On Apple devices, try to open with calendar app
+    if (
+      navigator.userAgent.includes('Mac') ||
+      navigator.userAgent.includes('iPhone') ||
+      navigator.userAgent.includes('iPad')
+    ) {
       const link = document.createElement('a')
       link.href = dataUrl
       link.download = `${event.slug}.ics`
       link.click()
     } else {
-      // On other devices, download the file
       const blob = new Blob([icalContent], { type: 'text/calendar;charset=utf-8' })
       const link = document.createElement('a')
       link.href = URL.createObjectURL(blob)
@@ -295,27 +238,18 @@ export default function CalendarClient({ allEvents }: CalendarClientProps) {
     }
   }
 
-  // Add all month events to Apple Calendar
   const addMonthToAppleCalendar = () => {
     if (monthEvents.length === 0) return
-    
     const startDate = new Date(currentYear, currentMonth, 1)
-    const endDate = new Date(currentYear, currentMonth + 1, 0)
-    
-    const formatDateForICal = (date: Date) => {
-      return date.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '')
-    }
-    
+    const formatDateForICal = (d: Date) => d.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '')
     let icalContent = [
       'BEGIN:VCALENDAR',
       'VERSION:2.0',
-      'PRODID:-//East Coast Kink Events//Calendar//EN'
+      'PRODID:-//East Coast Kink Events//Calendar//EN',
     ]
-    
-    monthEvents.forEach(event => {
+    monthEvents.forEach((event) => {
       const eventStart = new Date(event.date.start)
       const eventEnd = new Date(event.date.end)
-      
       icalContent.push(
         'BEGIN:VEVENT',
         `UID:${event.slug}@eastcoastkinkevents.com`,
@@ -328,21 +262,18 @@ export default function CalendarClient({ allEvents }: CalendarClientProps) {
         'END:VEVENT'
       )
     })
-    
     icalContent.push('END:VCALENDAR')
-    
-    // Create data URL for Apple Calendar integration
     const dataUrl = `data:text/calendar;charset=utf8,${encodeURIComponent(icalContent.join('\r\n'))}`
-    
-    // Try to open with Apple Calendar if on macOS/iOS, otherwise download
-    if (navigator.userAgent.includes('Mac') || navigator.userAgent.includes('iPhone') || navigator.userAgent.includes('iPad')) {
-      // On Apple devices, try to open with calendar app
+    if (
+      navigator.userAgent.includes('Mac') ||
+      navigator.userAgent.includes('iPhone') ||
+      navigator.userAgent.includes('iPad')
+    ) {
       const link = document.createElement('a')
       link.href = dataUrl
       link.download = `east-coast-kink-events-${startDate.getFullYear()}-${String(startDate.getMonth() + 1).padStart(2, '0')}.ics`
       link.click()
     } else {
-      // On other devices, download the file
       const blob = new Blob([icalContent.join('\r\n')], { type: 'text/calendar;charset=utf-8' })
       const link = document.createElement('a')
       link.href = URL.createObjectURL(blob)
@@ -353,272 +284,343 @@ export default function CalendarClient({ allEvents }: CalendarClientProps) {
     }
   }
 
-  const monthNames = [
-    'January', 'February', 'March', 'April', 'May', 'June',
-    'July', 'August', 'September', 'October', 'November', 'December'
-  ]
+  const monthTitle = currentDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
+  const outdoorCount = monthEvents.filter((e) => e.category === 'Outdoor Event').length
+  const nonOutdoorCount = monthEvents.length - outdoorCount
 
-  const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+  const exportDisabled = monthEvents.length === 0
+  const exportBtnClass =
+    'inline-flex min-h-touch w-full items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-45 sm:w-auto sm:py-2.5'
 
   return (
-    <div className="max-w-6xl mx-auto">
-      {/* Header */}
-      <div className="text-center mb-8 md:mb-12">
-        <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-white mb-4">
+    <div className="mx-auto max-w-6xl">
+      <div className="mb-8 text-center md:mb-10">
+        <p className="mb-2 text-sm font-medium uppercase tracking-wider text-primary-400/90">Plan ahead</p>
+        <h1 className="font-serif text-3xl font-bold text-white sm:text-4xl md:text-5xl">
           BDSM &amp; kink event calendar
         </h1>
-        <p className="text-base md:text-lg text-subtle max-w-3xl mx-auto px-1 leading-relaxed">
-          Conferences, hotel weekends, and workshops by month—tap a date for details. Prefer a list? See{' '}
-          <Link href="/events" className="text-primary-300 hover:text-primary-200 underline underline-offset-2">
-            all events
+        <p className="mx-auto mt-4 max-w-2xl px-1 text-base leading-relaxed text-gray-400 md:text-lg">
+          Conferences, hotel weekends, and workshops by month. On phones, use the{' '}
+          <strong className="font-medium text-gray-200">list below</strong>; on larger screens the month grid is a
+          quick visual map.
+        </p>
+        <p className="mx-auto mt-3 max-w-2xl text-sm text-gray-500">
+          Prefer filters?{' '}
+          <Link href="/events" className="text-primary-400 underline underline-offset-2 hover:text-primary-300">
+            All events
           </Link>{' '}
-          or{' '}
-          <Link href="/states" className="text-primary-300 hover:text-primary-200 underline underline-offset-2">
-            browse by state
+          ·{' '}
+          <Link href="/states" className="text-primary-400 underline underline-offset-2 hover:text-primary-300">
+            By state
           </Link>
-          .
         </p>
       </div>
 
-      {/* Calendar Header with Export Options */}
-      <div className="flex flex-col lg:flex-row justify-between items-stretch lg:items-center gap-4">
-        <div className="flex flex-wrap items-center gap-2 sm:gap-4">
+      {/* Month toolbar */}
+      <div className="mb-6 flex flex-col gap-4 rounded-2xl border border-white/10 bg-white/[0.03] p-4 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:gap-3 md:p-5">
+        <div className="flex flex-wrap items-center justify-center gap-2 sm:justify-start">
           <button
             type="button"
             onClick={goToPreviousMonth}
-            className="min-h-touch min-w-touch inline-flex items-center justify-center rounded-lg bg-dark-700 hover:bg-dark-600 text-white transition-colors"
+            className="inline-flex min-h-touch min-w-touch items-center justify-center rounded-xl border border-white/15 bg-white/5 text-white hover:bg-white/10"
             aria-label="Previous month"
           >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
+            <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
           </button>
-          
-          <h2 className="text-xl sm:text-2xl md:text-3xl font-serif font-bold text-white min-w-0 flex-1 text-center sm:flex-none sm:text-left">
-            {currentDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
+          <h2 className="min-w-0 flex-1 text-center font-serif text-xl font-bold text-white sm:flex-none sm:px-3 sm:text-left sm:text-2xl">
+            {monthTitle}
           </h2>
-          
           <button
             type="button"
             onClick={goToNextMonth}
-            className="min-h-touch min-w-touch inline-flex items-center justify-center rounded-lg bg-dark-700 hover:bg-dark-600 text-white transition-colors"
+            className="inline-flex min-h-touch min-w-touch items-center justify-center rounded-xl border border-white/15 bg-white/5 text-white hover:bg-white/10"
             aria-label="Next month"
           >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
+            <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
             </svg>
           </button>
-          
           <button
             type="button"
             onClick={goToToday}
-            className="min-h-touch px-4 py-2 rounded-lg bg-primary-600 hover:bg-primary-700 text-white font-medium transition-colors w-full sm:w-auto"
+            className="min-h-touch rounded-xl bg-primary-600 px-4 text-sm font-semibold text-white hover:bg-primary-500"
           >
             Today
           </button>
         </div>
 
-        {/* Export Buttons */}
-        <div className="flex flex-wrap gap-2 sm:gap-3">
-          <button
-            type="button"
-            onClick={exportMonthToGoogleCalendar}
-            disabled={monthEvents.length === 0}
-            className="group inline-flex min-h-touch items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 disabled:from-gray-600 disabled:to-gray-700 disabled:cursor-not-allowed text-white font-medium transition-colors duration-300 shadow-lg hover:shadow-primary-500/25 md:hover:scale-105 motion-reduce:md:hover:scale-100 disabled:hover:scale-100"
-            title="Add all month events to Google Calendar"
-          >
-            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/>
-            </svg>
-            <span className="hidden sm:inline">Export Month to Google</span>
-            <span className="sm:hidden">Google</span>
-          </button>
-          
-          <button
-            type="button"
-            onClick={addMonthToAppleCalendar}
-            disabled={monthEvents.length === 0}
-            className="group inline-flex min-h-touch items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-gray-800 to-gray-900 hover:from-gray-700 hover:to-gray-800 disabled:from-gray-600 disabled:to-gray-700 disabled:cursor-not-allowed text-white font-medium transition-colors duration-300 shadow-lg hover:shadow-gray-500/25 md:hover:scale-105 motion-reduce:md:hover:scale-100 disabled:hover:scale-100"
-            title="Add all month events to Apple Calendar"
-          >
-            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M18.71 19.5c-.83 1.24-1.71 2.5-3.05 2.47-1.34-.03-1.74-.79-3.27-.79-1.53 0-2 .77-3.27.79-1.34.03-2.22-1.23-3.05-2.47C5.04 17.68 4 15.33 4 13c0-5.52 4.48-10 10-10s10 4.48 10 10c0 2.33-1.04 4.68-5.29 6.5z"/>
-            </svg>
-            <span className="hidden sm:inline">Export Month to Apple</span>
-            <span className="sm:hidden">Apple</span>
-          </button>
-          
-          <button
-            type="button"
-            onClick={exportMonthToICal}
-            disabled={monthEvents.length === 0}
-            className="group inline-flex min-h-touch items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 disabled:from-gray-600 disabled:to-gray-700 disabled:cursor-not-allowed text-white font-medium transition-colors duration-300 shadow-lg hover:shadow-green-500/25 md:hover:scale-105 motion-reduce:md:hover:scale-100 disabled:hover:scale-100"
-            title="Download all month events as iCal file"
-          >
-            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
-            </svg>
-            <span className="hidden sm:inline">Export Month to iCal</span>
-            <span className="sm:hidden">iCal</span>
-          </button>
+        <div className="flex flex-wrap items-center justify-center gap-2 sm:justify-end">
+          <span className="hidden text-sm text-gray-500 md:inline">Month export:</span>
+          <details className="w-full min-w-0 sm:w-auto md:hidden">
+            <summary className="min-h-touch cursor-pointer list-none rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-center text-sm font-medium text-white hover:bg-white/10 [&::-webkit-details-marker]:hidden">
+              Export this month…
+            </summary>
+            <div className="mt-2 flex flex-col gap-2 border-t border-white/10 pt-3">
+              <button
+                type="button"
+                onClick={() => exportMonthToGoogleCalendar()}
+                disabled={exportDisabled}
+                className={`${exportBtnClass} bg-gradient-to-r from-primary-500 to-primary-600 text-white`}
+              >
+                Google Calendar
+              </button>
+              <button
+                type="button"
+                onClick={() => exportMonthToICal()}
+                disabled={exportDisabled}
+                className={`${exportBtnClass} bg-emerald-700 text-white hover:bg-emerald-600`}
+              >
+                Download .ics (Apple, Outlook, etc.)
+              </button>
+            </div>
+          </details>
+          <div className="hidden gap-2 md:flex">
+            <button
+              type="button"
+              onClick={exportMonthToGoogleCalendar}
+              disabled={exportDisabled}
+              className={`${exportBtnClass} bg-gradient-to-r from-primary-500 to-primary-600 text-white shadow-lg hover:from-primary-600 hover:to-primary-700`}
+              title="Add all month events to Google Calendar"
+            >
+              <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden>
+                <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z" />
+              </svg>
+              Google
+            </button>
+            <button
+              type="button"
+              onClick={addMonthToAppleCalendar}
+              disabled={exportDisabled}
+              className={`${exportBtnClass} border border-white/20 bg-white/10 text-white hover:bg-white/15`}
+              title="Open or download month .ics"
+            >
+              Apple
+            </button>
+            <button
+              type="button"
+              onClick={exportMonthToICal}
+              disabled={exportDisabled}
+              className={`${exportBtnClass} bg-emerald-700 text-white hover:bg-emerald-600`}
+              title="Download .ics"
+            >
+              iCal
+            </button>
+          </div>
         </div>
       </div>
 
-      {/* Calendar Grid — horizontal scroll on narrow viewports */}
-      <div className="card-elegant overflow-x-auto -mx-2 px-2 sm:mx-0 sm:px-0 touch-pan-x">
-        <div className="min-w-[36rem] sm:min-w-0">
-        {/* Day Headers */}
-        <div className="grid grid-cols-7 gap-1 mb-2">
-          {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => (
-            <div key={day} className="p-2 text-center text-sm font-medium text-gray-400">
-              {day}
-            </div>
-          ))}
+      {/* Inline stats */}
+      <div className="mb-8 flex flex-wrap justify-center gap-3 md:justify-start">
+        <div className="rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-sm text-gray-300">
+          <span className="font-semibold tabular-nums text-white">{monthEvents.length}</span> this month
         </div>
+        <div className="rounded-full border border-emerald-500/25 bg-emerald-500/10 px-4 py-2 text-sm text-emerald-200/90">
+          <span className="font-semibold tabular-nums">{outdoorCount}</span> outdoor
+        </div>
+        <div className="rounded-full border border-primary-500/25 bg-primary-500/10 px-4 py-2 text-sm text-primary-200/90">
+          <span className="font-semibold tabular-nums">{nonOutdoorCount}</span> indoor &amp; other
+        </div>
+      </div>
 
-        {/* Calendar Days */}
-        <div className="grid grid-cols-7 gap-1">
-          {calendarData.map((date, index) => {
-            const events = getEventsForDate(date)
-            const isCurrentMonth = date.getMonth() === currentMonth
-            const isPast = isPastDate(date)
-            const isTodayDate = isToday(date)
-            
-            return (
-              <div
-                key={index}
-                aria-label={`${date.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}${events.length > 0 ? ` - ${events.length} event${events.length > 1 ? 's' : ''}` : ''}`}
-                className={`min-h-[7.5rem] sm:min-h-32 p-2 border border-dark-600 ${
-                  isCurrentMonth ? 'bg-dark-800' : 'bg-dark-900'
-                } ${isPast ? 'opacity-50' : ''}`}
-              >
-                {/* Date Number */}
-                <div className="flex justify-between items-start mb-2">
-                  <span
-                    className={`text-sm font-medium ${
-                      isCurrentMonth ? 'text-white' : 'text-gray-500'
-                    } ${isTodayDate ? 'bg-primary-600 text-white px-2 py-1 rounded' : ''}`}
+      {/* Mobile-first: chronological list */}
+      <section id="this-month-list" className="mb-10 md:mb-12" aria-labelledby="list-heading">
+        <div className="mb-4 flex items-end justify-between gap-3">
+          <h2 id="list-heading" className="font-serif text-xl font-semibold text-white md:text-2xl">
+            This month · all events
+          </h2>
+          <Link
+            href="#month-grid"
+            className="hidden text-sm text-primary-400 underline underline-offset-2 hover:text-primary-300 md:inline"
+          >
+            Jump to grid
+          </Link>
+        </div>
+        {sortedMonthEvents.length === 0 ? (
+          <p className="rounded-xl border border-white/10 bg-white/[0.02] px-4 py-8 text-center text-gray-400">
+            No listings overlap this month. Try another month or browse{' '}
+            <Link href="/events" className="text-primary-400 underline">
+              all events
+            </Link>
+            .
+          </p>
+        ) : (
+          <ul className="space-y-3 list-none p-0">
+            {sortedMonthEvents.map((event) => {
+              const start = new Date(event.date.start)
+              const past = isPastEvent(event)
+              const { pill } = getCategoryStyles(event.category, past)
+              return (
+                <li key={event.slug}>
+                  <article
+                    className={`rounded-2xl border border-white/10 bg-gradient-to-br from-white/[0.06] to-transparent p-4 transition hover:border-primary-500/30 sm:p-5 ${past ? 'opacity-70' : ''}`}
                   >
-                    {date.getDate()}
-                  </span>
-                </div>
-
-                {/* Events */}
-                <div className="space-y-1">
-                  {events.map((event, eventIndex) => {
-                    const isPastEventItem = isPastEvent(event)
-                    return (
-                      <div key={`${event.slug}-${eventIndex}`} className="space-y-1">
+                    <div className="flex gap-4">
+                      <div className="flex w-14 shrink-0 flex-col items-center justify-center rounded-xl bg-black/40 py-2 text-center ring-1 ring-white/10 sm:w-16">
+                        <span className="text-[10px] font-medium uppercase tracking-wide text-primary-300/90">
+                          {start.toLocaleDateString('en-US', { month: 'short' })}
+                        </span>
+                        <span className="text-xl font-bold tabular-nums text-white sm:text-2xl">
+                          {start.getDate()}
+                        </span>
+                      </div>
+                      <div className="min-w-0 flex-1">
                         <Link
                           href={`/events/${event.slug}`}
-                          className={`block min-h-touch sm:min-h-0 py-2 sm:py-1 px-1 rounded text-xs text-white hover:opacity-80 transition-opacity ${
-                            getCategoryColor(event.category, isPastEventItem)
-                          } ${isPastEventItem ? 'opacity-60' : ''}`}
-                          title={`${event.name} - ${event.date.display}`}
+                          className="text-base font-semibold text-white hover:text-primary-300 sm:text-lg"
                         >
-                          <div className="font-medium truncate">
-                            {event.name}
-                          </div>
-                          <div className="text-xs opacity-90">
-                            {event.location.city}, {event.location.state}
-                          </div>
+                          {event.name}
                         </Link>
-                        
-                        {/* Export buttons for each event */}
-                        <div className="flex flex-wrap gap-1.5">
+                        <p className="mt-1 text-sm text-gray-400">
+                          {event.location.city}, {event.location.state}
+                          <span className="text-gray-600"> · </span>
+                          {event.date.display}
+                        </p>
+                        <span className={`mt-2 inline-block rounded-full px-2.5 py-0.5 text-xs font-medium ${pill}`}>
+                          {event.category}
+                        </span>
+                        <div className="mt-4 flex flex-wrap gap-2 border-t border-white/5 pt-3">
+                          <span className="text-xs text-gray-500">Add to calendar:</span>
                           <button
                             type="button"
                             onClick={() => exportToGoogleCalendar(event)}
-                            className="min-h-touch min-w-touch sm:min-h-0 sm:min-w-0 sm:h-5 sm:w-5 bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 rounded-md text-white text-xs inline-flex items-center justify-center transition-colors duration-200 shadow-sm hover:shadow-primary-500/25"
-                            title={`Add ${event.name} to Google Calendar`}
-                            aria-label={`Add ${event.name} to Google Calendar`}
+                            className="rounded-lg bg-primary-600/80 px-2.5 py-1.5 text-xs font-medium text-white hover:bg-primary-500"
                           >
-                            <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
-                              <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/>
-                            </svg>
+                            Google
                           </button>
-                          
                           <button
                             type="button"
                             onClick={() => addToAppleCalendar(event)}
-                            className="min-h-touch min-w-touch sm:min-h-0 sm:min-w-0 sm:h-5 sm:w-5 bg-gradient-to-r from-gray-700 to-gray-800 hover:from-gray-600 hover:to-gray-700 rounded-md text-white text-xs inline-flex items-center justify-center transition-colors duration-200 shadow-sm hover:shadow-gray-500/25"
-                            title={`Add ${event.name} to Apple Calendar`}
-                            aria-label={`Add ${event.name} to Apple Calendar`}
-                          >
-                            <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
-                              <path d="M18.71 19.5c-.83 1.24-1.71 2.5-3.05 2.47-1.34-.03-1.74-.79-3.27-.79-1.53 0-2 .77-3.27.79-1.34.03-2.22-1.23-3.05-2.47C5.04 17.68 4 15.33 4 13c0-5.52 4.48-10 10-10s10 4.48 10 10c0 2.33-1.04 4.68-5.29 6.5z"/>
-                            </svg>
+                            className="rounded-lg bg-white/10 px-2.5 py-1.5 text-xs font-medium text-white hover:bg-white/15"
+                           >
+                            Apple / .ics
                           </button>
-                          
                           <button
                             type="button"
                             onClick={() => exportToICal(event)}
-                            className="min-h-touch min-w-touch sm:min-h-0 sm:min-w-0 sm:h-5 sm:w-5 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 rounded-md text-white text-xs inline-flex items-center justify-center transition-colors duration-200 shadow-sm hover:shadow-green-500/25"
-                            title={`Download ${event.name} as iCal file`}
-                            aria-label={`Download ${event.name} as calendar file`}
+                            className="rounded-lg bg-emerald-800/80 px-2.5 py-1.5 text-xs font-medium text-white hover:bg-emerald-700"
                           >
-                            <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
-                              <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
-                            </svg>
+                            Download
                           </button>
                         </div>
                       </div>
-                    )
-                  })}
-                </div>
+                    </div>
+                  </article>
+                </li>
+              )
+            })}
+          </ul>
+        )}
+      </section>
+
+      {/* Desktop month grid — no horizontal scroll, compact cells */}
+      <section id="month-grid" className="mb-10 hidden md:block" aria-label={`Calendar grid for ${monthTitle}`}>
+        <div className="mb-3 flex items-center justify-between">
+          <h2 className="font-serif text-xl font-semibold text-white">Month view</h2>
+          <Link
+            href="#this-month-list"
+            className="text-sm text-primary-400 underline underline-offset-2 hover:text-primary-300"
+          >
+            Back to list
+          </Link>
+        </div>
+        <div className="overflow-hidden rounded-2xl border border-white/10 bg-black/40">
+          <div className="grid grid-cols-7 gap-px bg-white/10">
+            {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => (
+              <div key={day} className="bg-dark-900 py-2 text-center text-xs font-semibold uppercase tracking-wide text-gray-500">
+                {day}
               </div>
-            )
-          })}
-        </div>
-        </div>
-      </div>
+            ))}
+            {calendarData.map((date, index) => {
+              const events = getEventsForDate(date)
+              const isCurrentMonth = date.getMonth() === currentMonth
+              const past = isPastDate(date)
+              const todayD = isToday(date)
+              const show = events.slice(0, 2)
+              const more = events.length - show.length
 
-      {/* Legend */}
-      <div className="mt-8 card-elegant">
-        <h3 className="text-xl font-serif font-semibold text-white mb-4">
-          Event Categories
-        </h3>
-        <div className="flex flex-wrap gap-4">
-          <div className="flex items-center space-x-2">
-            <div className="w-4 h-4 bg-green-600 rounded"></div>
-            <span className="text-white text-sm sm:text-base">Outdoor Events</span>
-          </div>
-          <div className="flex items-center space-x-2">
-            <div className="w-4 h-4 bg-primary-600 rounded"></div>
-            <span className="text-white text-sm sm:text-base">Indoor Events</span>
-          </div>
-          <div className="flex items-center space-x-2">
-            <div className="w-4 h-4 bg-gray-500 rounded"></div>
-            <span className="text-white text-sm sm:text-base">Past Events</span>
-          </div>
-          <div className="flex items-center space-x-2">
-            <div className="w-4 h-4 bg-primary-600 rounded"></div>
-            <span className="text-white text-sm sm:text-base">Today's Date</span>
+              return (
+                <div
+                  key={index}
+                  className={`min-h-[7rem] bg-dark-900 p-1.5 lg:min-h-[8.5rem] lg:p-2 ${past ? 'opacity-55' : ''} ${!isCurrentMonth ? 'opacity-40' : ''}`}
+                >
+                  <div className="mb-1 flex justify-between">
+                    <span
+                      className={`flex h-7 min-w-[1.75rem] items-center justify-center rounded-lg text-xs font-semibold ${
+                        todayD
+                          ? 'bg-primary-600 text-white shadow-sm shadow-primary-500/40'
+                          : isCurrentMonth
+                            ? 'text-gray-200'
+                            : 'text-gray-600'
+                      }`}
+                    >
+                      {date.getDate()}
+                    </span>
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    {show.map((event, eventIndex) => {
+                      const pastEv = isPastEvent(event)
+                      const { bar } = getCategoryStyles(event.category, pastEv)
+                      return (
+                        <Link
+                          key={`${event.slug}-${eventIndex}`}
+                          href={`/events/${event.slug}`}
+                          className={`block truncate rounded-md border border-white/5 px-1.5 py-1 text-[10px] leading-tight text-white ring-1 ring-inset ring-white/5 transition hover:ring-primary-500/40 lg:text-[11px] ${bar} ${pastEv ? 'opacity-60' : ''}`}
+                          title={`${event.name} — ${event.location.city}, ${event.location.state}`}
+                        >
+                          <span className="line-clamp-2 font-medium">{event.name}</span>
+                        </Link>
+                      )
+                    })}
+                    {more > 0 ? (
+                      <Link
+                        href="#this-month-list"
+                        className="text-[10px] font-medium text-primary-400 hover:text-primary-300 lg:text-xs"
+                      >
+                        +{more} more →
+                      </Link>
+                    ) : null}
+                  </div>
+                </div>
+              )
+            })}
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* Quick Stats */}
-      <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="card-elegant text-center">
-          <div className="text-3xl font-bold text-primary-400 mb-2">
-            {monthEvents.length}
-          </div>
-          <div className="text-white">Events This Month</div>
-        </div>
-        
-        <div className="card-elegant text-center">
-          <div className="text-3xl font-bold text-green-400 mb-2">
-            {monthEvents.filter((e: CalendarEvent) => e.category === 'Outdoor Event').length}
-          </div>
-          <div className="text-white">Outdoor Events</div>
-        </div>
-        
-        <div className="card-elegant text-center">
-          <div className="text-3xl font-bold text-primary-400 mb-2">
-            {monthEvents.filter((e: CalendarEvent) => e.category === 'Indoor Event').length}
-          </div>
-          <div className="text-white">Indoor Events</div>
+      <div className="grid gap-6 lg:grid-cols-2">
+        <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-5 sm:p-6">
+          <h3 className="font-serif text-lg font-semibold text-white">Legend</h3>
+          <p className="mt-1 text-sm text-gray-500">Colors in the month grid match event type.</p>
+          <ul className="mt-4 flex list-none flex-col gap-3 p-0 text-sm">
+            <li className="flex items-center gap-3">
+              <span className="h-3 w-3 shrink-0 rounded-sm bg-emerald-600" aria-hidden />
+              <span className="text-gray-300">Outdoor</span>
+            </li>
+            <li className="flex items-center gap-3">
+              <span className="h-3 w-3 shrink-0 rounded-sm bg-primary-600" aria-hidden />
+              <span className="text-gray-300">Indoor</span>
+            </li>
+            <li className="flex items-center gap-3">
+              <span className="h-3 w-3 shrink-0 rounded-sm bg-violet-600" aria-hidden />
+              <span className="text-gray-300">Conference / convention</span>
+            </li>
+            <li className="flex items-center gap-3">
+              <span className="h-3 w-3 shrink-0 rounded-sm bg-teal-600" aria-hidden />
+              <span className="text-gray-300">Weekend / retreat / contest</span>
+            </li>
+            <li className="flex items-center gap-3">
+              <span className="h-3 w-3 shrink-0 rounded-sm bg-gray-600" aria-hidden />
+              <span className="text-gray-300">Past</span>
+            </li>
+            <li className="flex items-center gap-3">
+              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-primary-600 text-[10px] font-bold text-white" aria-hidden>
+                6
+              </span>
+              <span className="text-gray-300">Today (highlighted day number)</span>
+            </li>
+          </ul>
         </div>
       </div>
     </div>

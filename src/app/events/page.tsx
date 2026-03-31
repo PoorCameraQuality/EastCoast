@@ -4,6 +4,7 @@ import { getAllDungeons } from '@/data/dungeons'
 import { getUnifiedEvents, unifiedEventToEventsPageShape } from '@/lib/unifiedEvents'
 import { EventListStructuredData } from '@/components/StructuredData'
 import { parseEventsListSearchParams } from '@/lib/eventsListSearchParams'
+import { BASE_URL } from '@/lib/seo'
 
 export const revalidate = 1800
 
@@ -16,18 +17,18 @@ export async function generateMetadata(): Promise<Metadata> {
     title: 'BDSM & Kink Events Near You | Conventions & Parties',
     description: description.slice(0, 160),
     alternates: {
-      canonical: 'https://www.eastcoastkinkevents.com/events',
+      canonical: `${BASE_URL}/events`,
     },
     openGraph: {
       type: 'website',
       locale: 'en_US',
-      url: 'https://www.eastcoastkinkevents.com/events',
+      url: `${BASE_URL}/events`,
       siteName: 'East Coast Kink Events',
       title: 'BDSM & Kink Events — Conventions, Parties & Workshops',
       description: ogDescription,
       images: [
         {
-          url: 'https://www.eastcoastkinkevents.com/og-image.png',
+          url: `${BASE_URL}/og-image.png`,
           width: 1200,
           height: 630,
           alt: 'East Coast Kink Events - All Events',
@@ -38,7 +39,7 @@ export async function generateMetadata(): Promise<Metadata> {
       card: 'summary_large_image',
       title: 'BDSM & Kink Events — Conventions & Workshops',
       description: ogDescription,
-      images: ['https://www.eastcoastkinkevents.com/og-image.png'],
+      images: [`${BASE_URL}/og-image.png`],
     },
   }
 }

@@ -4,9 +4,12 @@ import Breadcrumb from '@/components/Breadcrumb'
 import FAQ from '@/components/FAQ'
 import { BASE_URL } from '@/lib/seo'
 
+const DISCORD_INVITE_URL = 'https://discord.gg/xcnGGyGsmT'
+
 export const metadata: Metadata = {
   title: 'About',
-  description: 'East Coast Kink Events connects the BDSM community with vetted events and dungeons. Learn our mission and how we build trust.',
+  description:
+    'East Coast Kink Events connects the BDSM community with event and dungeon listings. Our mission, values, and how to get involved.',
   keywords: 'about, mission, kink community, BDSM events, transparency, safety',
   robots: {
     index: true,
@@ -21,12 +24,13 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: 'About',
-    description: 'Learn about East Coast Kink Events, our mission to connect the kink community with vetted events and foster transparency in the BDSM community.',
+    description:
+      'Learn about East Coast Kink Events: a community-driven hub for transparent listings, education links, and safer discovery.',
     type: 'website',
-    url: 'https://www.eastcoastkinkevents.com/about',
+    url: `${BASE_URL}/about`,
     images: [
       {
-        url: 'https://www.eastcoastkinkevents.com/og-image.png',
+        url: `${BASE_URL}/og-image.png`,
         width: 1200,
         height: 630,
         alt: 'About East Coast Kink Events',
@@ -37,206 +41,207 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'About',
     description: 'Learn about East Coast Kink Events and our mission.',
-    images: ['https://www.eastcoastkinkevents.com/og-image.png'],
+    images: [`${BASE_URL}/og-image.png`],
   },
 }
+
+const offerLinkClass =
+  'inline-flex items-center gap-1 text-sm font-medium text-primary-400 hover:text-primary-300 mt-4'
 
 export default function AboutPage() {
   const breadcrumbItems = [
     { label: 'Home', href: '/' },
-    { label: 'About', href: '/about', current: true }
+    { label: 'About', href: '/about', current: true },
   ]
 
   const structuredData = {
-    "@context": "https://schema.org",
-    "@type": "AboutPage",
-    "name": "About East Coast Kink Events",
-    "description": "Learn more about East Coast Kink Events and our mission to connect the BDSM and kink community.",
-    "publisher": {
-      "@type": "Organization",
-      "name": "East Coast Kink Events",
-      "url": "https://eastcoastkinkevents.com"
-    }
+    '@context': 'https://schema.org',
+    '@type': 'AboutPage',
+    name: 'About East Coast Kink Events',
+    description:
+      'Learn more about East Coast Kink Events and our mission to connect the BDSM and kink community.',
+    publisher: {
+      '@type': 'Organization',
+      name: 'East Coast Kink Events',
+      url: BASE_URL,
+    },
   }
 
   const faqItems = [
     {
-      question: "What is East Coast Kink Events?",
-      answer: "East Coast Kink Events is an independent, community-driven platform dedicated to connecting kink enthusiasts with local BDSM events, dungeons, and inclusive play spaces across the Northeast. We provide transparent, uncensored event listings and foster honest discussions within the community."
+      question: 'What is East Coast Kink Events?',
+      answer:
+        'East Coast Kink Events is an independent, community-driven site for discovering BDSM and kink events, dungeons, vendors, and education—starting from the Northeast and expanding across listings people actually search for. We prioritize clear information and honest context over polished marketing copy.',
     },
     {
-      question: "How do you ensure event safety?",
-      answer: "We carefully curate each event listing to ensure quality and safety standards. We promote informed decision-making through comprehensive event information, community feedback, and clear safety guidelines for all participants."
+      question: 'How do you approach safety?',
+      answer:
+        'We share detailed listings and practical resources so people can make informed choices. We are not a vetting authority for every host or venue—always use your own judgment, negotiate clearly, and follow the norms and rules of each space you visit.',
     },
     {
-      question: "Can I add my event or dungeon to the site?",
-      answer: "Yes! We welcome submissions for new events and dungeons. You can use our contact form to submit your event or dungeon details, and we'll review and add them to our directory."
+      question: 'Can I add my event or dungeon?',
+      answer:
+        "Yes. Use the contact flow to submit details—we review and add listings when they're a good fit for the directory.",
     },
     {
-      question: "Is the site free to use?",
-      answer: "Yes, East Coast Kink Events is completely free to use. We believe in providing accessible information to the kink community without any barriers."
+      question: 'Is the site free to use?',
+      answer:
+        'Browsing listings and guides is free. Optional supporter tiers help keep the lights on; they are never required to use the calendar or directories.',
     },
     {
-      question: "How can I get involved with the community?",
-      answer: "Join our Discord community for honest discussions, event reviews, and building trust within the community. You can also attend events listed on our site to connect with fellow kinksters."
-    }
+      question: 'How can I get involved?',
+      answer:
+        'Join the Discord for discussion and updates, submit corrections or new listings, and show up to events that match your limits and goals.',
+    },
   ]
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-black via-dark-900 to-black relative overflow-hidden" aria-label="About East Coast Kink Events">
+    <main className="min-h-screen bg-black section-padding relative overflow-hidden" aria-label="About East Coast Kink Events">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData).replace(/</g, '\\u003c') }}
       />
-      {/* Subtle background elements with blue spectrum */}
-      <div className="absolute inset-0 opacity-5">
-        <div className="absolute top-20 left-10 w-32 h-32 bg-gradient-to-r from-primary-400 to-primary-600 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-40 right-20 w-24 h-24 bg-gradient-to-r from-primary-400 to-cyan-400 rounded-full blur-2xl animate-pulse delay-1000"></div>
-        <div className="absolute top-40 right-1/4 w-40 h-40 bg-gradient-to-r from-primary-300 to-primary-400 rounded-full blur-3xl animate-pulse delay-500"></div>
-        <div className="absolute bottom-20 left-1/3 w-20 h-20 bg-gradient-to-r from-primary-400 to-primary-500 rounded-full blur-xl animate-pulse delay-1500"></div>
+      <div className="pointer-events-none absolute inset-0 opacity-[0.07] motion-reduce:opacity-0" aria-hidden>
+        <div className="absolute -top-20 right-0 h-72 w-72 rounded-full bg-primary-500 blur-3xl" />
+        <div className="absolute bottom-0 left-0 h-64 w-64 rounded-full bg-primary-600 blur-3xl" />
       </div>
 
-      <div className="container-custom py-8 md:py-16 relative z-10">
-        <div className="max-w-4xl mx-auto">
+      <div className="container-custom relative z-10">
+        <div className="mx-auto max-w-3xl">
           <Breadcrumb items={breadcrumbItems} />
-          
-          {/* Enhanced Header */}
-          <div className="text-center mb-10 md:mb-16">
-            <h1 className="text-3xl sm:text-4xl md:text-6xl font-serif font-bold text-white mb-4 md:mb-6 relative">
-              <span className="inline-block bg-gradient-to-r from-primary-300 via-primary-400 to-primary-500 bg-clip-text text-transparent">
-                About East Coast Kink Events
-              </span>
-              <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-48 h-1 bg-gradient-to-r from-primary-400 to-primary-400 rounded-full"></div>
-            </h1>
-            <p className="text-base sm:text-lg md:text-xl text-gray-400 max-w-3xl mx-auto leading-relaxed px-1">
-              Connecting the kink community through transparency, safety, and authentic experiences
-            </p>
-          </div>
 
-          {/* Enhanced Mission Statement */}
-          <div className="backdrop-blur-xl bg-white/10 border border-white/20 rounded-2xl p-6 sm:p-8 mb-10 md:mb-12 shadow-2xl">
-            <h2 className="text-3xl font-serif font-bold text-white mb-6 flex items-center gap-3">
-              <div className="w-8 h-8 bg-gradient-to-r from-primary-600 to-primary-600 rounded-lg flex items-center justify-center">
-                <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                </svg>
-              </div>
-              Our Mission
-            </h2>
-            <p className="text-gray-300 leading-relaxed text-lg">
-              We&apos;re dedicated to fostering a safe, inclusive, and vibrant kink community across the East Coast. 
-              Our platform serves as a central hub for discovering events, connecting with like-minded individuals, 
-              and building meaningful relationships within the lifestyle community.
-            </p>
-          </div>
-
-          {/* Enhanced Services Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 mb-10 md:mb-16">
-            <div className="backdrop-blur-xl bg-white/10 border border-white/20 rounded-2xl p-6 sm:p-8 shadow-xl hover:shadow-primary-500/25 transition-all duration-300 md:hover:scale-[1.02] motion-reduce:md:hover:scale-100">
-              <h3 className="text-2xl font-serif font-bold text-white mb-4 flex items-center gap-3">
-                <div className="w-8 h-8 bg-gradient-to-r from-primary-600 to-primary-600 rounded-lg flex items-center justify-center">
-                  <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                  </svg>
-                </div>
-                Event Discovery
-              </h3>
-              <p className="text-gray-300 leading-relaxed">
-                Discover BDSM events, workshops, and parties across the East Coast. Find events that match your interests and experience level.
-              </p>
-            </div>
-            
-            <div className="backdrop-blur-xl bg-white/10 border border-white/20 rounded-2xl p-6 sm:p-8 shadow-xl hover:shadow-primary-500/25 transition-all duration-300 md:hover:scale-[1.02] motion-reduce:md:hover:scale-100">
-              <h3 className="text-2xl font-serif font-bold text-white mb-4 flex items-center gap-3">
-                <div className="w-8 h-8 bg-gradient-to-r from-primary-600 to-primary-600 rounded-lg flex items-center justify-center">
-                  <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-                  </svg>
-                </div>
-                Dungeon Directory
-              </h3>
-              <p className="text-gray-300 leading-relaxed">
-                Discover BDSM dungeons and kink spaces across the East Coast. Find private sessions, workshops, and community events in safe, inclusive environments.
-              </p>
-            </div>
-            
-            <div className="backdrop-blur-xl bg-white/10 border border-white/20 rounded-2xl p-6 sm:p-8 shadow-xl hover:shadow-primary-500/25 transition-all duration-300 md:hover:scale-[1.02] motion-reduce:md:hover:scale-100">
-              <h3 className="text-2xl font-serif font-bold text-white mb-4 flex items-center gap-3">
-                <div className="w-8 h-8 bg-gradient-to-r from-primary-600 to-primary-600 rounded-lg flex items-center justify-center">
-                  <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                  </svg>
-                </div>
-                Educational Resources
-              </h3>
-              <p className="text-gray-300 leading-relaxed">
-                Access educational content, safety guidelines, and community resources. Learn from experts and share your knowledge with the community.
-              </p>
-            </div>
-            
-            <div className="backdrop-blur-xl bg-white/10 border border-white/20 rounded-2xl p-6 sm:p-8 shadow-xl hover:shadow-primary-500/25 transition-all duration-300 md:hover:scale-[1.02] motion-reduce:md:hover:scale-100">
-              <h3 className="text-2xl font-serif font-bold text-white mb-4 flex items-center gap-3">
-                <div className="w-8 h-8 bg-gradient-to-r from-primary-600 to-primary-600 rounded-lg flex items-center justify-center">
-                  <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                  </svg>
-                </div>
-                Community Building
-              </h3>
-              <p className="text-gray-300 leading-relaxed">
-                Join our Discord community for honest discussions, event reviews, and building trust within the community. Connect with like-minded individuals.
-              </p>
-            </div>
-          </div>
-
-          {/* Enhanced Values */}
-          <div className="backdrop-blur-xl bg-white/10 border border-white/20 rounded-2xl p-6 sm:p-8 mb-10 md:mb-12 shadow-2xl">
-            <h2 className="text-3xl font-serif font-bold text-white mb-8 text-center">
-              <span className="inline-block bg-gradient-to-r from-primary-300 via-primary-400 to-primary-500 bg-clip-text text-transparent">
-                Our Values
-              </span>
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <div className="text-center">
-                <div className="w-16 h-16 bg-gradient-to-r from-primary-600 to-primary-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                </div>
-                <h3 className="text-xl font-serif font-bold text-white mb-2">Transparency</h3>
-                <p className="text-gray-300">We believe in open, honest communication and transparent event listings free from censorship.</p>
-              </div>
-              <div className="text-center">
-                <div className="w-16 h-16 bg-gradient-to-r from-primary-600 to-primary-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                  </svg>
-                </div>
-                <h3 className="text-xl font-serif font-bold text-white mb-2">Safety</h3>
-                <p className="text-gray-300">We prioritize the safety and well-being of our community members above all else.</p>
-              </div>
-              <div className="text-center">
-                <div className="w-16 h-16 bg-gradient-to-r from-primary-600 to-primary-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                  </svg>
-                </div>
-                <h3 className="text-xl font-serif font-bold text-white mb-2">Community</h3>
-                <p className="text-gray-300">We foster a supportive, inclusive environment where everyone feels welcome and respected.</p>
-              </div>
-            </div>
-          </div>
-
-          {/* Enhanced FAQ */}
-          <div className="backdrop-blur-xl bg-white/10 border border-white/20 rounded-2xl p-6 sm:p-8 shadow-2xl">
-            <h2 className="text-3xl font-serif font-bold text-white mb-8 text-center">
-              <span className="inline-block bg-gradient-to-r from-purple-400 via-pink-400 to-primary-400 bg-clip-text text-transparent">
-                Frequently Asked Questions
-              </span>
-            </h2>
-            <FAQ items={faqItems} />
-          </div>
+          <p className="mb-2 mt-8 text-sm font-medium uppercase tracking-wide text-primary-400/90">About</p>
+          <h1 className="font-serif text-3xl font-bold text-white sm:text-4xl md:text-5xl">
+            East Coast Kink Events
+          </h1>
+          <p className="mt-4 text-lg leading-relaxed text-gray-300">
+            A calm, information-first hub for people exploring kink on the East Coast (and beyond):{' '}
+            <span className="text-white/95">transparent listings</span>,{' '}
+            <span className="text-white/95">useful education links</span>, and{' '}
+            <span className="text-white/95">room for real community feedback</span>.
+          </p>
         </div>
+
+        <div className="mx-auto mt-12 max-w-3xl rounded-2xl border border-white/10 bg-white/[0.03] p-6 sm:p-8">
+          <h2 className="font-serif text-2xl font-semibold text-white">Why we exist</h2>
+          <p className="mt-4 leading-relaxed text-gray-300">
+            Adult communities rely on word of mouth and scattered flyers. We consolidate{' '}
+            <Link href="/events" className="text-primary-400 underline underline-offset-2 hover:text-primary-300">
+              events
+            </Link>
+            ,{' '}
+            <Link href="/dungeons" className="text-primary-400 underline underline-offset-2 hover:text-primary-300">
+              dungeons
+            </Link>
+            ,{' '}
+            <Link href="/vendors" className="text-primary-400 underline underline-offset-2 hover:text-primary-300">
+              vendors
+            </Link>
+            , and{' '}
+            <Link href="/education" className="text-primary-400 underline underline-offset-2 hover:text-primary-300">
+              longer reads
+            </Link>{' '}
+            so curious adults can compare options without digging through ten different apps—or guessing what a title
+            really means.
+          </p>
+          <p className="mt-4 leading-relaxed text-gray-400 text-sm sm:text-base">
+            Have a listing to add or a correction?{' '}
+            <Link href="/contact" className="text-primary-400 underline underline-offset-2">
+              Contact us
+            </Link>
+            . Ground rules for behavior on the site and around submissions live in{' '}
+            <Link href="/guidelines" className="text-primary-400 underline underline-offset-2">
+              Community guidelines
+            </Link>
+            .
+          </p>
+        </div>
+
+        <div className="mx-auto mt-14 max-w-5xl">
+          <h2 className="font-serif text-2xl font-semibold text-white">What you will find here</h2>
+          <p className="mt-2 max-w-2xl text-sm text-gray-400">
+            Four pillars—each section of the site has its own depth; this is the short version.
+          </p>
+          <ul className="mt-8 grid list-none grid-cols-1 gap-4 p-0 sm:grid-cols-2">
+            <li className="rounded-2xl border border-white/10 bg-gradient-to-b from-white/[0.04] to-transparent p-6">
+              <h3 className="font-serif text-lg font-semibold text-white">Events &amp; calendar</h3>
+              <p className="mt-2 text-sm leading-relaxed text-gray-400">
+                Conferences, parties, workshops, and recurring nights—filtered so you can plan by date, region, and
+                vibe.
+              </p>
+              <Link href="/events" className={offerLinkClass}>
+                Browse events <span aria-hidden>→</span>
+              </Link>
+            </li>
+            <li className="rounded-2xl border border-white/10 bg-gradient-to-b from-white/[0.04] to-transparent p-6">
+              <h3 className="font-serif text-lg font-semibold text-white">Dungeon &amp; play-space directory</h3>
+              <p className="mt-2 text-sm leading-relaxed text-gray-400">
+                Venues and members-only spaces with practical context, not just a name and a dot on a map.
+              </p>
+              <Link href="/dungeons" className={offerLinkClass}>
+                Explore dungeons <span aria-hidden>→</span>
+              </Link>
+            </li>
+            <li className="rounded-2xl border border-white/10 bg-gradient-to-b from-white/[0.04] to-transparent p-6">
+              <h3 className="font-serif text-lg font-semibold text-white">Education &amp; guides</h3>
+              <p className="mt-2 text-sm leading-relaxed text-gray-400">
+                Articles on consent, safety, and first steps—plus our{' '}
+                <Link href="/blog" className="text-primary-400 underline underline-offset-2 hover:text-primary-300">
+                  blog hubs
+                </Link>{' '}
+                when you want a reading path tied to real listings.
+              </p>
+              <Link href="/education" className={offerLinkClass}>
+                Open education hub <span aria-hidden>→</span>
+              </Link>
+            </li>
+            <li className="rounded-2xl border border-white/10 bg-gradient-to-b from-white/[0.04] to-transparent p-6">
+              <h3 className="font-serif text-lg font-semibold text-white">Community</h3>
+              <p className="mt-2 text-sm leading-relaxed text-gray-400">
+                Discord for discussion, heads-ups, and feedback—alongside what we publish on the site.
+              </p>
+              <a href={DISCORD_INVITE_URL} className={offerLinkClass} rel="noopener noreferrer" target="_blank">
+                Join Discord <span aria-hidden>→</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div className="mx-auto mt-14 max-w-5xl">
+          <h2 className="font-serif text-2xl font-semibold text-white">Values</h2>
+          <ul className="mt-8 grid list-none grid-cols-1 gap-4 p-0 md:grid-cols-3">
+            <li className="rounded-xl border border-white/10 px-5 py-6 text-center md:text-left">
+              <h3 className="font-serif text-base font-semibold text-primary-300">Transparency</h3>
+              <p className="mt-2 text-sm leading-relaxed text-gray-400">
+                Straightforward listings and language—fewer surprises, clearer expectations.
+              </p>
+            </li>
+            <li className="rounded-xl border border-white/10 px-5 py-6 text-center md:text-left">
+              <h3 className="font-serif text-base font-semibold text-primary-300">Safety-aware</h3>
+              <p className="mt-2 text-sm leading-relaxed text-gray-400">
+                We foreground consent-aware resources and honest limits of what any directory can promise.
+              </p>
+            </li>
+            <li className="rounded-xl border border-white/10 px-5 py-6 text-center md:text-left">
+              <h3 className="font-serif text-base font-semibold text-primary-300">Inclusion</h3>
+              <p className="mt-2 text-sm leading-relaxed text-gray-400">
+                Built for a broad adult kink community—respect the person, the party rules, and the venue.
+              </p>
+            </li>
+          </ul>
+        </div>
+
+        <section className="mx-auto mt-16 max-w-3xl" aria-labelledby="faq-heading">
+          <h2 id="faq-heading" className="font-serif text-2xl font-semibold text-white">
+            Frequently asked questions
+          </h2>
+          <p className="mt-2 text-sm text-gray-500">
+            Short answers; follow the links above if you want to go deeper.
+          </p>
+          <div className="mt-8">
+            <FAQ items={faqItems} showTitle={false} />
+          </div>
+        </section>
       </div>
     </main>
   )

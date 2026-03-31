@@ -75,11 +75,13 @@ export default function FeaturedVendorsSection({ vendors: all }: Props) {
       <div className="container-custom relative z-10">
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-8">
           <div>
+            <p className="mb-2 text-sm font-medium uppercase tracking-wider text-primary-400/90">Makers &amp; shops</p>
             <h2 id="featured-vendors-title" className="text-3xl md:text-5xl font-serif font-bold text-white mb-3">
-              Featured Vendors
+              Vendor spotlight
             </h2>
             <p className="text-lg text-gray-400 max-w-3xl leading-relaxed">
-              A growing list of makers and shops to help you discover gear, apparel, and more.
+              Supporters stay pinned; everyone else rotates so the homepage stays fresh. Tap a tag to open the
+              marketplace with that filter applied.
             </p>
           </div>
           <Link href="/vendors" className="btn-outline text-sm px-5 py-2 whitespace-nowrap min-h-touch inline-flex items-center justify-center w-full sm:w-auto md:w-auto" aria-label="Browse vendors marketplace">

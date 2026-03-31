@@ -10,11 +10,13 @@ export default function EducationSpotlightSection() {
       <div className="container-custom relative z-10">
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-10">
           <div>
+            <p className="mb-2 text-sm font-medium uppercase tracking-wider text-primary-400/90">Read</p>
             <h2 id="education-spotlight-title" className="text-3xl md:text-5xl font-serif font-bold text-white mb-3">
-              Education Spotlight
+              Education picks
             </h2>
             <p className="text-lg text-gray-400 max-w-3xl leading-relaxed">
-              Guides and resources focused on safety, communication, and community norms.
+              Featured articles when set; otherwise a small starter set. The hub has categories and shareable filter
+              links.
             </p>
           </div>
           <Link href="/education" className="btn-outline text-sm px-5 py-2 whitespace-nowrap min-h-touch inline-flex items-center justify-center w-full sm:w-auto md:w-auto" aria-label="Browse education resources">

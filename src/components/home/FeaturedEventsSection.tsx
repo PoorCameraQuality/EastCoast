@@ -20,19 +20,20 @@ export default function FeaturedEventsSection() {
       <div className="container-custom relative z-10">
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-10">
           <div>
+            <p className="mb-2 text-sm font-medium uppercase tracking-wider text-primary-400/90">On the calendar</p>
             <h2 id="featured-events-title" className="text-3xl md:text-5xl font-serif font-bold text-white mb-3">
-              Featured Upcoming Events
+              Upcoming events
             </h2>
             <p className="text-lg text-gray-400 max-w-3xl leading-relaxed">
-              Upcoming conventions and parties—scroll for this season, then hit{' '}
-              <Link href="/calendar" className="text-primary-300 hover:text-primary-200 underline underline-offset-2">
-                calendar
+              A slice of what&apos;s next—swipe on your phone, then use the{' '}
+              <Link href="/calendar" className="text-primary-400 hover:text-primary-300 underline underline-offset-2">
+                full calendar
               </Link>{' '}
               or{' '}
-              <Link href="/states" className="text-primary-300 hover:text-primary-200 underline underline-offset-2">
-                your state
+              <Link href="/states" className="text-primary-400 hover:text-primary-300 underline underline-offset-2">
+                state pages
               </Link>{' '}
-              for more.
+              to go deeper.
             </p>
           </div>
           <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto md:shrink-0">

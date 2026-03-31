@@ -2,6 +2,7 @@
 
 import VendorCard from '@/components/vendors/VendorCard'
 import type { VendorRecord } from '@/lib/vendorFiltering'
+import { tagsBySlug } from '@/data/vendorTaxonomy'
 
 type Props = {
   vendors: VendorRecord[]
@@ -25,7 +26,7 @@ export default function VendorDiscoveryHubGrid({ vendors, selectedTagSlugs }: Pr
     <ul className="grid gap-6 sm:grid-cols-1 lg:grid-cols-2 list-none p-0 m-0">
       {vendors.map((v) => (
         <li key={v.slug}>
-          <VendorCard vendor={v} selectedTagSlugs={selectedTagSlugs} />
+          <VendorCard vendor={v} selectedTagSlugs={selectedTagSlugs} tagsBySlug={tagsBySlug} />
         </li>
       ))}
     </ul>

@@ -141,8 +141,8 @@ export default function VendorFilters({
     <div className="space-y-4">
       <div className="flex items-center justify-between gap-3">
         <div className="text-sm text-gray-300">
-          <span className="font-semibold text-white">Filter</span>{' '}
-          <span className="text-gray-500">(tags are hidden on cards)</span>
+          <span className="font-semibold text-white">Narrow by topic</span>
+          <span className="block text-xs text-gray-500 mt-0.5">OR matches any selected tag</span>
         </div>
         {selectedTagSlugs.length > 0 ? (
           <button type="button" className="text-xs text-gray-300 hover:text-white underline underline-offset-4" onClick={onClearAll}>

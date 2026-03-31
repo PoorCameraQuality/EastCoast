@@ -8,13 +8,19 @@ interface FAQItem {
 interface FAQProps {
   items: FAQItem[]
   title?: string
+  /** When false, no section heading is rendered (use when the parent page already supplies the title). */
+  showTitle?: boolean
 }
 
 /**
  * FAQ with native <details>/<summary> so answer text stays in the DOM for crawlers
  * (aligns FAQPage JSON-LD with visible page content per Google structured data guidelines).
  */
-export default function FAQ({ items, title = 'Frequently Asked Questions' }: FAQProps) {
+export default function FAQ({
+  items,
+  title = 'Frequently Asked Questions',
+  showTitle = true,
+}: FAQProps) {
   const structuredData = {
     '@context': 'https://schema.org',
     '@type': 'FAQPage',
@@ -36,7 +42,9 @@ export default function FAQ({ items, title = 'Frequently Asked Questions' }: FAQ
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData).replace(/</g, '\\u003c') }}
       />
       <div className="card-elegant">
-        <h2 className="text-2xl font-serif font-semibold text-white mb-6">{title}</h2>
+        {showTitle ? (
+          <h2 className="text-2xl font-serif font-semibold text-white mb-6">{title}</h2>
+        ) : null}
         <div className="space-y-4">
           {items.map((item, index) => (
             <details

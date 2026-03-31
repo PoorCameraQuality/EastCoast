@@ -7,7 +7,7 @@ import { BASE_URL } from '@/lib/seo'
 export const revalidate = 1800
 
 export const metadata: Metadata = {
-  title: 'BDSM Dungeons & Play Spaces',
+  title: 'Dungeons & play spaces',
   description: 'Explore BDSM dungeons and play spaces across the East Coast. Find vetted kink venues, private clubs, and community nights.',
   alternates: {
     canonical: `${BASE_URL}/dungeons`,
@@ -15,13 +15,13 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: 'https://www.eastcoastkinkevents.com/dungeons',
+    url: `${BASE_URL}/dungeons`,
     siteName: 'East Coast Kink Events',
     title: 'BDSM Dungeons & Play Spaces',
     description: 'Discover BDSM dungeons and kink spaces across the East Coast. Find private sessions, workshops, and community events.',
     images: [
       {
-        url: 'https://www.eastcoastkinkevents.com/og-image.png',
+        url: `${BASE_URL}/og-image.png`,
         width: 1200,
         height: 630,
         alt: 'East Coast Kink Events - BDSM Dungeons',
@@ -32,7 +32,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'BDSM Dungeons & Play Spaces',
     description: 'Discover BDSM dungeons and kink spaces across the East Coast.',
-    images: ['https://www.eastcoastkinkevents.com/og-image.png'],
+    images: [`${BASE_URL}/og-image.png`],
   },
 }
 

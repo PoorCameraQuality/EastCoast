@@ -46,19 +46,29 @@ export default function ArticleCard({ article }: ArticleCardProps) {
       case 'Techniques':
         return 'bg-gradient-to-r from-primary-600 to-primary-700'
       case 'Community':
-        return 'bg-gradient-to-r from-green-600 to-green-700'
+        return 'bg-gradient-to-r from-emerald-600 to-emerald-800'
       case 'Resources':
-        return 'bg-gradient-to-r from-purple-600 to-purple-700'
+        return 'bg-gradient-to-r from-violet-600 to-violet-800'
       case 'Consent':
-        return 'bg-gradient-to-r from-yellow-600 to-yellow-700'
+        return 'bg-gradient-to-r from-amber-500 to-amber-700'
+      case 'Education':
+        return 'bg-gradient-to-r from-sky-600 to-sky-800'
+      case 'Identity':
+        return 'bg-gradient-to-r from-fuchsia-600 to-fuchsia-900'
+      case 'Aftercare':
+        return 'bg-gradient-to-r from-rose-600 to-rose-900'
+      case 'Mental Health':
+        return 'bg-gradient-to-r from-cyan-600 to-cyan-900'
+      case 'Legal':
+        return 'bg-gradient-to-r from-slate-600 to-slate-800'
       default:
-        return 'bg-gradient-to-r from-gray-600 to-gray-700'
+        return 'bg-gradient-to-r from-slate-600 to-slate-800'
     }
   }
 
   return (
     <Link href={`/education/${article.slug || article.id}`} className="block group">
-      <div className="card-elegant h-full transform transition-all duration-300 hover:scale-105 hover:shadow-2xl border border-dark-600 hover:border-primary-500 overflow-hidden">
+      <div className="card-elegant group/card h-full overflow-hidden border border-dark-600 transition-all duration-300 hover:border-primary-500/60 hover:shadow-xl motion-safe:md:hover:scale-[1.02] motion-reduce:hover:scale-100">
         {/* Header with category and featured badge */}
         <div className="relative p-6 pb-4">
           <div className="flex items-center justify-between mb-4">
@@ -66,8 +76,8 @@ export default function ArticleCard({ article }: ArticleCardProps) {
               {article.category}
             </span>
             {article.featured && (
-              <span className="px-3 py-1 rounded-full text-xs font-medium bg-gradient-to-r from-yellow-500 to-yellow-600 text-black shadow-lg animate-pulse">
-                ⭐ Featured
+              <span className="rounded-full bg-gradient-to-r from-amber-400 to-amber-600 px-3 py-1 text-xs font-semibold text-black shadow-md ring-2 ring-amber-300/40">
+                Featured
               </span>
             )}
           </div>

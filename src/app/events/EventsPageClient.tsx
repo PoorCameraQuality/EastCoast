@@ -2,7 +2,6 @@
 
 import { eventMatchesVenueFilter } from '@/data/events'
 import Link from 'next/link'
-import EventLogo from '@/components/EventLogo'
 import { useMemo } from 'react'
 import { useRouter } from 'next/navigation'
 import { buildEventsListUrl } from '@/lib/eventsListSearchParams'
@@ -11,32 +10,72 @@ import Search from '@/components/Search'
 import { CONTACT_US_LABEL } from '@/lib/submissionContact'
 import SupportCTAInline from '@/components/SupportCTAInline'
 import NewsletterSignup from '@/components/NewsletterSignup'
+import EventHubCard from '@/components/events/EventHubCard'
+
+type EventRow = {
+  slug: string
+  name: string
+  category: string
+  date: { display: string; start: string; end: string }
+  location: { city: string; state: string }
+  excerpt: string
+  logo?: string
+  altText?: string
+}
 
 type Props = {
-  allEvents: Array<{
-    slug: string
-    name: string
-    category: string
-    date: { display: string; start: string; end: string }
-    location: { city: string; state: string }
-    excerpt: string
-    logo?: string
-    altText?: string
-  }>
+  allEvents: EventRow[]
   allDungeons: Array<{ slug: string; name: string }>
   /** Derived on the server from URL — single source of truth for filters (SEO / crawlers). */
   selectedCategory: string
+}
+
+function startOfToday(): Date {
+  const t = new Date()
+  t.setHours(0, 0, 0, 0)
+  return t
+}
+
+function separateEventsByDate(events: EventRow[]) {
+  const today = startOfToday()
+  const upcomingEvents = events
+    .filter((event) => new Date(event.date.end) >= today)
+    .sort((a, b) => new Date(a.date.start).getTime() - new Date(b.date.start).getTime())
+  const pastEvents = events
+    .filter((event) => new Date(event.date.end) < today)
+    .sort((a, b) => new Date(b.date.start).getTime() - new Date(a.date.start).getTime())
+  return { upcomingEvents, pastEvents }
 }
 
 export default function EventsPageClient({ allEvents, allDungeons, selectedCategory }: Props) {
   const categories = useMemo(() => ['Outdoor Events', 'Indoor Events'], [])
   const router = useRouter()
 
+  const directoryStats = useMemo(() => {
+    const today = startOfToday()
+    let upcoming = 0
+    let outdoor = 0
+    let indoor = 0
+    const states = new Set<string>()
+    for (const e of allEvents) {
+      if (e.location?.state) states.add(e.location.state)
+      if (new Date(e.date.end) >= today) upcoming += 1
+      if (eventMatchesVenueFilter(e, 'Outdoor Event')) outdoor += 1
+      if (eventMatchesVenueFilter(e, 'Indoor Event')) indoor += 1
+    }
+    return { upcoming, outdoor, indoor, stateSpread: states.size }
+  }, [allEvents])
+
+  const filterSummary = useMemo(() => {
+    if (selectedCategory === 'All Events') return 'All listings'
+    if (selectedCategory.startsWith('Location: ')) return selectedCategory
+    return selectedCategory
+  }, [selectedCategory])
+
   const applyCategory = (next: string) => {
     router.replace(buildEventsListUrl(next))
   }
 
-  // Map plural button labels to singular category values
   const getCategoryForFilter = (filterLabel: string) => {
     switch (filterLabel) {
       case 'Outdoor Events':
@@ -48,26 +87,7 @@ export default function EventsPageClient({ allEvents, allDungeons, selectedCateg
     }
   }
 
-  // Separate upcoming and past events dynamically
-  const separateEventsByDate = (events: any[]) => {
-    const today = new Date()
-    today.setHours(0, 0, 0, 0)
-
-    const upcomingEvents = events.filter(event => {
-      const eventEndDate = new Date(event.date.end)
-      return eventEndDate >= today
-    }).sort((a, b) => new Date(a.date.start).getTime() - new Date(b.date.start).getTime())
-
-    const pastEvents = events.filter(event => {
-      const eventEndDate = new Date(event.date.end)
-      return eventEndDate < today
-    }).sort((a, b) => new Date(b.date.start).getTime() - new Date(a.date.start).getTime())
-
-    return { upcomingEvents, pastEvents }
-  }
-
-  // Filter events based on selected category or location (from server-parsed URL)
-  const getFilteredEvents = () => {
+  const getFilteredEvents = (): EventRow[] => {
     if (selectedCategory === 'All Events') {
       return allEvents
     }
@@ -79,9 +99,7 @@ export default function EventsPageClient({ allEvents, allDungeons, selectedCateg
           event.location.city.toLowerCase().includes(location.toLowerCase())
       )
     }
-    return allEvents.filter((e) =>
-      eventMatchesVenueFilter(e, getCategoryForFilter(selectedCategory))
-    )
+    return allEvents.filter((e) => eventMatchesVenueFilter(e, getCategoryForFilter(selectedCategory)))
   }
 
   const baseEvents = getFilteredEvents()
@@ -89,437 +107,249 @@ export default function EventsPageClient({ allEvents, allDungeons, selectedCateg
 
   const breadcrumbItems = [
     { label: 'Home', href: '/' },
-    { label: 'Events', href: '/events', current: true }
+    { label: 'Events', href: '/events', current: true },
   ]
 
-  // Event submissions route through /contact.
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-black via-dark-900 to-black relative overflow-hidden">
-      {/* Subtle background elements with blue spectrum */}
-      <div className="absolute inset-0 opacity-5 motion-reduce:opacity-0 pointer-events-none" aria-hidden>
-        <div className="absolute top-20 left-10 w-32 h-32 bg-gradient-to-r from-primary-400 to-primary-600 rounded-full blur-3xl animate-pulse motion-reduce:animate-none"></div>
-        <div className="absolute bottom-40 right-20 w-24 h-24 bg-gradient-to-r from-primary-400 to-cyan-400 rounded-full blur-2xl animate-pulse delay-1000 motion-reduce:animate-none"></div>
-        <div className="absolute top-40 right-1/4 w-40 h-40 bg-gradient-to-r from-primary-300 to-primary-400 rounded-full blur-3xl animate-pulse delay-500 motion-reduce:animate-none"></div>
-        <div className="absolute bottom-20 left-1/3 w-20 h-20 bg-gradient-to-r from-primary-400 to-primary-500 rounded-full blur-xl animate-pulse delay-1500 motion-reduce:animate-none"></div>
+    <div className="relative min-h-screen overflow-hidden bg-black">
+      <div className="pointer-events-none absolute inset-0 opacity-[0.06] motion-reduce:opacity-0" aria-hidden>
+        <div className="absolute -right-16 top-20 h-72 w-72 rounded-full bg-primary-600 blur-3xl" />
+        <div className="absolute bottom-32 left-0 h-64 w-64 rounded-full bg-cyan-600/80 blur-3xl" />
       </div>
 
-      <div className="container-custom py-8 md:py-16 relative z-10">
-        <Breadcrumb items={breadcrumbItems} />
-        <SupportCTAInline contextLabel="Events" />
-        <div className="max-w-xl mx-auto mb-10">
-          <NewsletterSignup variant="compact" />
-        </div>
+      <div className="relative z-10 section-padding">
+        <div className="container-custom">
+          <Breadcrumb items={breadcrumbItems} />
+          <SupportCTAInline contextLabel="Events" />
 
-        {/* Enhanced Header Section */}
-        <div className="text-center mb-10 md:mb-16">
-          <h1 className="text-3xl sm:text-4xl md:text-6xl font-serif font-bold text-white mb-6 relative">
-            <span className="inline-block bg-gradient-to-r from-primary-300 via-primary-400 to-primary-500 bg-clip-text text-transparent">
-              BDSM &amp; Kink Events
-            </span>
-            <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-32 h-1 bg-gradient-to-r from-primary-400 to-primary-400 rounded-full"></div>
-          </h1>
-          <p className="text-lg text-gray-400 max-w-3xl mx-auto mb-8 leading-relaxed">
-            Conventions, hotel takeovers, workshops, and parties—filter by indoor/outdoor or jump to{' '}
-            <Link href="/states" className="text-primary-300 hover:text-primary-200 underline underline-offset-2">
-              events by state
-            </Link>{' '}
-            or the{' '}
-            <Link href="/calendar" className="text-primary-300 hover:text-primary-200 underline underline-offset-2">
-              monthly calendar
-            </Link>
-            .
-          </p>
+          <div className="mx-auto mb-8 max-w-xl">
+            <NewsletterSignup variant="compact" />
+          </div>
 
-          {/* Enhanced Search Component */}
-          <div className="max-w-md mx-auto mb-8">
-            <div className="backdrop-blur-xl bg-white/10 border border-white/20 rounded-2xl p-6 shadow-2xl">
-              <Search
-                events={allEvents}
-                dungeons={allDungeons}
-                placeholder="Search events..."
-              />
+          <header className="mx-auto mb-10 max-w-3xl md:mb-12">
+            <p className="mb-2 text-sm font-medium uppercase tracking-wider text-primary-400/90">
+              Community calendar
+            </p>
+            <h1 className="font-serif text-3xl font-bold text-white sm:text-4xl md:text-5xl">
+              BDSM &amp; kink{' '}
+              <span className="bg-gradient-to-r from-primary-300 via-primary-400 to-cyan-400 bg-clip-text text-transparent">
+                events
+              </span>
+            </h1>
+            <p className="mt-4 text-base leading-relaxed text-gray-300 md:text-lg">
+              Conventions, hotel weekends, workshops, and parties—we list dates and blurbs so you can plan without
+              digging through a dozen sites. Filter by indoor or outdoor venue style, or browse{' '}
+              <Link href="/states" className="text-primary-400 underline underline-offset-2 hover:text-primary-300">
+                by state
+              </Link>
+              , the{' '}
+              <Link href="/calendar" className="text-primary-400 underline underline-offset-2 hover:text-primary-300">
+                month grid
+              </Link>
+              , and{' '}
+              <Link
+                href="/education"
+                className="text-primary-400 underline underline-offset-2 hover:text-primary-300"
+              >
+                education
+              </Link>{' '}
+              for deeper dives. Always confirm tickets and policies with organizers.
+            </p>
+
+            <div className="mt-6 flex flex-wrap gap-3">
+              <div className="rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-sm text-gray-300">
+                <span className="tabular-nums font-semibold text-white">{allEvents.length}</span> listings
+              </div>
+              <div className="rounded-full border border-primary-500/25 bg-primary-500/10 px-4 py-2 text-sm text-primary-100/90">
+                <span className="tabular-nums font-semibold">{directoryStats.upcoming}</span> upcoming
+              </div>
+              <div className="rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-sm text-gray-300">
+                <span className="tabular-nums font-semibold text-white">{directoryStats.stateSpread}</span> states /
+                regions
+              </div>
+              <div className="rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-sm text-gray-400">
+                Indoor{' '}
+                <span className="font-medium text-gray-300">{directoryStats.indoor}</span>
+                <span className="mx-1.5 text-gray-600">·</span>
+                outdoor-style{' '}
+                <span className="font-medium text-gray-300">{directoryStats.outdoor}</span>
+              </div>
+            </div>
+          </header>
+
+          <div className="mx-auto mb-8 max-w-2xl">
+            <div className="rounded-2xl border border-white/10 bg-gradient-to-br from-white/[0.06] to-transparent p-5 shadow-lg sm:p-6">
+              <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-gray-500">Search</p>
+              <Search events={allEvents} dungeons={allDungeons} placeholder="City, state, or event name…" />
+              <p className="mt-3 text-xs text-gray-600">
+                Matches events and dungeon listings—open a row to go straight to the detail page.
+              </p>
             </div>
           </div>
 
-          {/* Event submission guidance */}
-          <div className="mb-8">
+          <div className="mb-8 flex flex-col items-stretch gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-center">
             <Link
               href="/contact"
-              className="inline-flex min-h-touch items-center justify-center px-6 py-3 rounded-full bg-primary-600/15 border border-primary-500/25 text-primary-200 hover:bg-primary-600/25 hover:border-primary-400/35 transition-colors"
+              className="inline-flex min-h-touch items-center justify-center rounded-xl border border-primary-500/40 bg-primary-600/10 px-6 py-3 text-sm font-semibold text-primary-100 transition hover:border-primary-400 hover:bg-primary-600/20"
               aria-label="Contact us"
             >
               {CONTACT_US_LABEL}
             </Link>
-          </div>
-        </div>
-
-        {/* Enhanced Filter Section */}
-        <div className="mb-10 md:mb-12">
-          <div
-            className="flex flex-nowrap md:flex-wrap gap-3 md:gap-4 justify-start md:justify-center overflow-x-auto pb-2 -mx-4 px-4 md:mx-0 md:px-0 md:overflow-visible snap-x snap-mandatory"
-            role="toolbar"
-            aria-label="Filter events by category"
-          >
-            <button 
-              key="all-events"
-              type="button"
-              onClick={() => applyCategory('All Events')}
-              className={`group inline-flex shrink-0 snap-start min-h-touch items-center px-5 md:px-6 py-3 rounded-full font-bold transition-colors duration-300 shadow-xl md:hover:scale-105 motion-reduce:md:hover:scale-100 ${
-                selectedCategory === 'All Events' 
-                  ? 'bg-gradient-to-r from-primary-600 via-primary-600 to-primary-700 text-white hover:from-primary-700 hover:via-primary-700 hover:to-primary-800 hover:shadow-primary-500/25' 
-                  : 'bg-white/10 backdrop-blur-xl border border-white/20 text-white hover:bg-white/20 hover:shadow-white/25'
-              }`}
+            <Link
+              href="/vendors"
+              className="inline-flex min-h-touch items-center justify-center rounded-xl border border-white/15 bg-white/5 px-6 py-3 text-sm font-medium text-gray-200 transition hover:border-white/25 hover:bg-white/10"
             >
-              <span className="flex items-center gap-2">
-                All Events
-                {selectedCategory === 'All Events' && (
-                  <svg className="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
-                )}
-              </span>
-            </button>
-            {categories.map((category) => (
-              <button 
-                key={category}
+              Vendors &amp; makers
+            </Link>
+            <Link
+              href="/dungeons"
+              className="inline-flex min-h-touch items-center justify-center rounded-xl border border-white/15 bg-white/5 px-6 py-3 text-sm font-medium text-gray-200 transition hover:border-white/25 hover:bg-white/10"
+            >
+              Play spaces
+            </Link>
+          </div>
+
+          <div className="mb-6">
+            <div
+              className="flex snap-x snap-mandatory flex-nowrap gap-3 overflow-x-auto pb-2 md:flex-wrap md:justify-center md:overflow-visible"
+              role="toolbar"
+              aria-label="Filter events by category"
+            >
+              <button
                 type="button"
-                onClick={() => applyCategory(category)}
-                className={`group inline-flex shrink-0 snap-start min-h-touch items-center px-5 md:px-6 py-3 rounded-full font-bold transition-colors duration-300 shadow-xl md:hover:scale-105 motion-reduce:md:hover:scale-100 ${
-                  selectedCategory === category 
-                    ? 'bg-gradient-to-r from-primary-600 via-primary-600 to-primary-700 text-white hover:from-primary-700 hover:via-primary-700 hover:to-primary-800 hover:shadow-primary-500/25' 
-                    : 'bg-white/10 backdrop-blur-xl border border-white/20 text-white hover:bg-white/20 hover:shadow-white/25'
+                onClick={() => applyCategory('All Events')}
+                className={`group inline-flex min-h-touch shrink-0 snap-start items-center rounded-full px-5 py-3 font-bold shadow-xl transition duration-300 md:px-6 md:hover:scale-105 motion-reduce:md:hover:scale-100 ${
+                  selectedCategory === 'All Events'
+                    ? 'bg-gradient-to-r from-primary-600 via-primary-600 to-primary-700 text-white hover:from-primary-700 hover:via-primary-700 hover:to-primary-800 hover:shadow-primary-500/25'
+                    : 'border border-white/20 bg-white/10 text-white backdrop-blur-xl hover:bg-white/20 hover:shadow-white/25'
                 }`}
               >
                 <span className="flex items-center gap-2">
-                  {category}
-                  {selectedCategory === category && (
-                    <svg className="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  All Events
+                  {selectedCategory === 'All Events' ? (
+                    <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
-                  )}
+                  ) : null}
                 </span>
               </button>
-            ))}
+              {categories.map((category) => (
+                <button
+                  key={category}
+                  type="button"
+                  onClick={() => applyCategory(category)}
+                  className={`group inline-flex min-h-touch shrink-0 snap-start items-center rounded-full px-5 py-3 font-bold shadow-xl transition duration-300 md:px-6 md:hover:scale-105 motion-reduce:md:hover:scale-100 ${
+                    selectedCategory === category
+                      ? 'bg-gradient-to-r from-primary-600 via-primary-600 to-primary-700 text-white hover:from-primary-700 hover:via-primary-700 hover:to-primary-800 hover:shadow-primary-500/25'
+                      : 'border border-white/20 bg-white/10 text-white backdrop-blur-xl hover:bg-white/20 hover:shadow-white/25'
+                  }`}
+                >
+                  <span className="flex items-center gap-2">
+                    {category}
+                    {selectedCategory === category ? (
+                      <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                    ) : null}
+                  </span>
+                </button>
+              ))}
+            </div>
+            <p className="mt-3 text-center text-xs text-gray-600 md:px-4">
+              Filter URLs are shareable—example{' '}
+              <code className="rounded bg-white/5 px-1.5 py-0.5 text-[0.7rem] text-gray-400">
+                /events?category=Outdoor%20Events
+              </code>
+              .
+            </p>
           </div>
+
+          {upcomingEvents.length > 0 ? (
+            <section className="mb-14 md:mb-16" aria-labelledby="events-upcoming-heading">
+              <div className="mb-8 text-center md:text-left">
+                <h2
+                  id="events-upcoming-heading"
+                  className="font-serif text-2xl font-bold text-white sm:text-3xl md:text-4xl"
+                >
+                  <span className="bg-gradient-to-r from-primary-400 to-primary-500 bg-clip-text text-transparent">
+                    Upcoming
+                  </span>
+                </h2>
+                <p className="mx-auto mt-2 max-w-2xl text-gray-400 md:mx-0">
+                  Sorted by start date. Open a card for the full write-up, links, and map context when we have it.
+                </p>
+                <p className="mt-3 text-sm text-gray-500">
+                  <span className="font-medium text-gray-400">{filterSummary}</span>
+                  <span className="mx-2 text-gray-600">·</span>
+                  <span className="tabular-nums">{upcomingEvents.length}</span> upcoming
+                  {pastEvents.length > 0 ? (
+                    <>
+                      <span className="mx-2 text-gray-600">·</span>
+                      <span className="tabular-nums">{pastEvents.length}</span> past in this view
+                    </>
+                  ) : null}
+                </p>
+              </div>
+              <div className="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-8 lg:grid-cols-3">
+                {upcomingEvents.map((event) => (
+                  <EventHubCard key={event.slug} event={event} variant="upcoming" />
+                ))}
+              </div>
+            </section>
+          ) : null}
+
+          {pastEvents.length > 0 ? (
+            <section className="mb-6" aria-labelledby="events-past-heading">
+              <div className="mb-8 text-center md:text-left">
+                <h2
+                  id="events-past-heading"
+                  className="font-serif text-2xl font-bold text-white sm:text-3xl md:text-4xl"
+                >
+                  <span className="bg-gradient-to-r from-gray-400 via-slate-400 to-zinc-400 bg-clip-text text-transparent">
+                    Past
+                  </span>
+                </h2>
+                <p className="mx-auto mt-2 max-w-2xl text-gray-500 md:mx-0">
+                  Archive for context—check official sites for next year&apos;s dates.
+                </p>
+              </div>
+              <div className="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-8 lg:grid-cols-3">
+                {pastEvents.map((event) => (
+                  <EventHubCard key={event.slug} event={event} variant="past" />
+                ))}
+              </div>
+            </section>
+          ) : null}
+
+          {upcomingEvents.length === 0 && pastEvents.length === 0 ? (
+            <div className="py-12 text-center md:py-16">
+              <div className="mx-auto max-w-md rounded-2xl border border-white/20 bg-white/10 p-6 shadow-2xl backdrop-blur-xl sm:p-8">
+                <div className="mx-auto mb-6 flex h-24 w-24 items-center justify-center rounded-full bg-gradient-to-r from-gray-600 to-slate-600">
+                  <svg className="h-12 w-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                    />
+                  </svg>
+                </div>
+                <h3 className="mb-2 text-xl font-bold text-white">Nothing in this view</h3>
+                <p className="text-gray-400">
+                  Try clearing filters, searching above, or{' '}
+                  <button
+                    type="button"
+                    onClick={() => applyCategory('All Events')}
+                    className="font-medium text-primary-400 underline underline-offset-2 hover:text-primary-300"
+                  >
+                    show all events
+                  </button>
+                  .
+                </p>
+              </div>
+            </div>
+          ) : null}
         </div>
-
-        {/* Enhanced Upcoming Events Section */}
-        {upcomingEvents.length > 0 && (
-          <>
-            <div className="mb-12">
-              <div className="text-center">
-                <h2 className="text-3xl md:text-4xl font-serif font-bold text-white mb-4 relative">
-                  <span className="inline-block bg-gradient-to-r from-primary-400 via-primary-400 to-primary-500 bg-clip-text text-transparent">
-                    Upcoming Events
-                  </span>
-                  <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-24 h-1 bg-gradient-to-r from-primary-400 to-primary-400 rounded-full"></div>
-                </h2>
-                <p className="text-gray-400 text-lg max-w-2xl mx-auto leading-relaxed">
-                  Discover what's happening next in the community. Don't miss out on these exciting opportunities to connect and learn.
-                </p>
-              </div>
-            </div>
-            
-            {/* Mobile: Enhanced card layout for upcoming events */}
-            <div className="md:hidden space-y-6 mb-12">
-              {upcomingEvents.map((event: any) => (
-                <Link key={event.slug} href={`/events/${event.slug}`} className="block group">
-                  <div className="relative overflow-hidden backdrop-blur-xl bg-white/10 rounded-2xl border border-white/20 hover:border-white/40 transition-all duration-500 hover:scale-[1.02] shadow-2xl hover:shadow-primary-500/20">
-                    {/* Animated background gradient */}
-                    <div className="absolute inset-0 bg-gradient-to-br from-primary-500/10 via-transparent to-primary-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                    
-                    <div className="relative z-10 p-6">
-                      {/* Event Logo */}
-                      {event.logo && (
-                        <div className="flex justify-center mb-6">
-                          <div className="relative">
-                            <div className="absolute inset-0 bg-gradient-to-r from-primary-500 to-primary-500 rounded-2xl blur-lg opacity-50 group-hover:opacity-75 transition-opacity"></div>
-                            <EventLogo 
-                              src={event.logo} 
-                              alt={event.altText || `${event.name} — BDSM convention in ${event.location.city}, ${event.location.state}`}
-                              size="large"
-                              className="relative bg-black/80 backdrop-blur-sm rounded-2xl p-4 border border-white/20 shadow-xl"
-                            />
-                          </div>
-                        </div>
-                      )}
-                      
-                      {/* Event Details */}
-                      <div className="text-center">
-                        <div className="mb-4">
-                          <span className="inline-block backdrop-blur-sm bg-primary-500/20 text-primary-300 text-xs font-semibold px-4 py-2 rounded-full border border-primary-400/30">
-                            {event.category}
-                          </span>
-                        </div>
-                        
-                        <h3 className="text-xl font-serif font-bold text-white mb-3 group-hover:text-primary-300 transition-colors duration-300 line-clamp-2">
-                          {event.name}
-                        </h3>
-                        
-                        <div className="flex items-center justify-center gap-2 mb-3">
-                          <svg className="w-4 h-4 text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                          </svg>
-                          <p className="text-primary-300 font-medium text-sm">
-                            {event.date.display}
-                          </p>
-                        </div>
-                        
-                        <div className="flex items-center justify-center gap-2 mb-4">
-                          <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                          </svg>
-                          <p className="text-gray-300 text-sm">
-                            {event.location.city}, {event.location.state}
-                          </p>
-                        </div>
-                        
-                        <p className="text-gray-400 leading-relaxed line-clamp-3">
-                          {event.excerpt}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </Link>
-              ))}
-            </div>
-            
-            {/* Desktop: Enhanced grid layout for upcoming events */}
-            <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
-              {upcomingEvents.map((event: any) => (
-                <Link key={event.slug} href={`/events/${event.slug}`} className="block group">
-                  <div className="relative overflow-hidden backdrop-blur-xl bg-white/10 rounded-2xl border border-white/20 hover:border-white/40 transition-all duration-500 hover:scale-105 h-[480px] flex flex-col shadow-2xl hover:shadow-primary-500/20">
-                    {/* Animated background gradient */}
-                    <div className="absolute inset-0 bg-gradient-to-br from-primary-500/10 via-transparent to-primary-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                    
-                    <div className="relative z-10 p-6 flex flex-col h-full">
-                      {/* Event Logo */}
-                      {event.logo && (
-                        <div className="mb-6 flex-shrink-0">
-                          <div className="relative">
-                            <div className="absolute inset-0 bg-gradient-to-r from-primary-500 to-primary-500 rounded-2xl blur-lg opacity-50 group-hover:opacity-75 transition-opacity"></div>
-                            <EventLogo 
-                              src={event.logo} 
-                              alt={event.altText || `${event.name} — BDSM convention in ${event.location.city}, ${event.location.state}`}
-                              size="medium"
-                              className="relative bg-black/80 backdrop-blur-sm rounded-2xl p-4 border border-white/20 shadow-xl"
-                            />
-                          </div>
-                        </div>
-                      )}
-                      
-                      <div className="flex-1 flex flex-col">
-                        <div className="mb-4 flex-shrink-0">
-                          <span className="inline-block backdrop-blur-sm bg-primary-500/20 text-primary-300 text-xs font-semibold px-4 py-2 rounded-full border border-primary-400/30">
-                            {event.category}
-                          </span>
-                        </div>
-                        
-                        <h3 className="text-xl font-serif font-bold text-white mb-3 group-hover:text-primary-300 transition-colors duration-300 line-clamp-2 flex-shrink-0">
-                          {event.name}
-                        </h3>
-                        
-                        <div className="flex items-center gap-2 mb-3 flex-shrink-0">
-                          <svg className="w-4 h-4 text-primary-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                          </svg>
-                          <p className="text-primary-300 font-medium text-sm">
-                            {event.date.display}
-                          </p>
-                        </div>
-                        
-                        <div className="flex items-center gap-2 mb-4 flex-shrink-0">
-                          <svg className="w-4 h-4 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                          </svg>
-                          <p className="text-gray-300 text-sm">
-                            {event.location.city}, {event.location.state}
-                          </p>
-                        </div>
-                        
-                        <div className="flex-1 min-h-0 overflow-hidden">
-                          <p className="text-gray-400 leading-relaxed line-clamp-4">
-                            {event.excerpt}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </>
-        )}
-
-        {/* Enhanced Past Events Section */}
-        {pastEvents.length > 0 && (
-          <>
-            <div className="mb-12">
-              <div className="text-center">
-                <h2 className="text-3xl md:text-4xl font-serif font-bold text-white mb-4 relative">
-                  <span className="inline-block bg-gradient-to-r from-gray-400 via-slate-400 to-zinc-400 bg-clip-text text-transparent">
-                    Past Events
-                  </span>
-                  <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-24 h-1 bg-gradient-to-r from-gray-400 to-slate-400 rounded-full"></div>
-                </h2>
-                <p className="text-gray-400 text-lg max-w-2xl mx-auto leading-relaxed">
-                  Relive the memories from previous events. Check back for future dates and new experiences.
-                </p>
-              </div>
-            </div>
-            
-            {/* Mobile: Enhanced card layout for past events */}
-            <div className="md:hidden space-y-6 mb-12">
-              {pastEvents.map((event: any) => (
-                <Link key={event.slug} href={`/events/${event.slug}`} className="block group">
-                  <div className="relative overflow-hidden backdrop-blur-xl bg-white/5 rounded-2xl border border-white/10 hover:border-white/30 transition-all duration-500 hover:scale-[1.02] shadow-2xl hover:shadow-gray-500/20 opacity-80 hover:opacity-100">
-                    {/* Animated background gradient */}
-                    <div className="absolute inset-0 bg-gradient-to-br from-gray-500/10 via-transparent to-slate-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                    
-                    <div className="relative z-10 p-6">
-                      {/* Event Logo */}
-                      {event.logo && (
-                        <div className="flex justify-center mb-6">
-                          <div className="relative">
-                            <div className="absolute inset-0 bg-gradient-to-r from-gray-500 to-slate-500 rounded-2xl blur-lg opacity-50 group-hover:opacity-75 transition-opacity"></div>
-                            <EventLogo 
-                              src={event.logo} 
-                              alt={event.altText || `${event.name} — BDSM convention in ${event.location.city}, ${event.location.state}`}
-                              size="large"
-                              className="relative bg-black/80 backdrop-blur-sm rounded-2xl p-4 border border-white/20 shadow-xl"
-                            />
-                          </div>
-                        </div>
-                      )}
-                      
-                      {/* Event Details */}
-                      <div className="text-center">
-                        <div className="mb-4">
-                          <span className="inline-block backdrop-blur-sm bg-gray-500/20 text-gray-300 text-xs font-semibold px-4 py-2 rounded-full border border-gray-400/30">
-                            {event.category}
-                          </span>
-                        </div>
-                        
-                        <h3 className="text-xl font-serif font-bold text-white mb-3 group-hover:text-gray-300 transition-colors duration-300 line-clamp-2">
-                          {event.name}
-                        </h3>
-                        
-                        <div className="flex items-center justify-center gap-2 mb-3">
-                          <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                          </svg>
-                          <p className="text-gray-400 font-medium text-sm">
-                            {event.date.display}
-                          </p>
-                        </div>
-                        
-                        <div className="flex items-center justify-center gap-2 mb-4">
-                          <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                          </svg>
-                          <p className="text-gray-500 text-sm">
-                            {event.location.city}, {event.location.state}
-                          </p>
-                        </div>
-                        
-                        <p className="text-gray-500 leading-relaxed line-clamp-3">
-                          {event.excerpt}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </Link>
-              ))}
-            </div>
-            
-            {/* Desktop: Enhanced grid layout for past events */}
-            <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {pastEvents.map((event: any) => (
-                <Link key={event.slug} href={`/events/${event.slug}`} className="block group">
-                  <div className="relative overflow-hidden backdrop-blur-xl bg-white/5 rounded-2xl border border-white/10 hover:border-white/30 transition-all duration-500 hover:scale-105 h-[480px] flex flex-col shadow-2xl hover:shadow-gray-500/20 opacity-80 hover:opacity-100">
-                    {/* Animated background gradient */}
-                    <div className="absolute inset-0 bg-gradient-to-br from-gray-500/10 via-transparent to-slate-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                    
-                    <div className="relative z-10 p-6 flex flex-col h-full">
-                      {/* Event Logo */}
-                      {event.logo && (
-                        <div className="mb-6 flex-shrink-0">
-                          <div className="relative">
-                            <div className="absolute inset-0 bg-gradient-to-r from-gray-500 to-slate-500 rounded-2xl blur-lg opacity-50 group-hover:opacity-75 transition-opacity"></div>
-                            <EventLogo 
-                              src={event.logo} 
-                              alt={event.altText || `${event.name} — BDSM convention in ${event.location.city}, ${event.location.state}`}
-                              size="medium"
-                              className="relative bg-black/80 backdrop-blur-sm rounded-2xl p-4 border border-white/20 shadow-xl"
-                            />
-                          </div>
-                        </div>
-                      )}
-                      
-                      <div className="flex-1 flex flex-col">
-                        <div className="mb-4 flex-shrink-0">
-                          <span className="inline-block backdrop-blur-sm bg-gray-500/20 text-gray-300 text-xs font-semibold px-4 py-2 rounded-full border border-gray-400/30">
-                            {event.category}
-                          </span>
-                        </div>
-                        
-                        <h3 className="text-xl font-serif font-bold text-white mb-3 group-hover:text-gray-300 transition-colors duration-300 line-clamp-2 flex-shrink-0">
-                          {event.name}
-                        </h3>
-                        
-                        <div className="flex items-center gap-2 mb-3 flex-shrink-0">
-                          <svg className="w-4 h-4 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                          </svg>
-                          <p className="text-gray-400 font-medium text-sm">
-                            {event.date.display}
-                          </p>
-                        </div>
-                        
-                        <div className="flex items-center gap-2 mb-4 flex-shrink-0">
-                          <svg className="w-4 h-4 text-gray-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                          </svg>
-                          <p className="text-gray-500 text-sm">
-                            {event.location.city}, {event.location.state}
-                          </p>
-                        </div>
-                        
-                        <div className="flex-1 min-h-0 overflow-hidden">
-                          <p className="text-gray-500 leading-relaxed line-clamp-4">
-                            {event.excerpt}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </>
-        )}
-
-        {/* Enhanced No Events Message */}
-        {upcomingEvents.length === 0 && pastEvents.length === 0 && (
-          <div className="text-center py-8 md:py-16">
-            <div className="max-w-md mx-auto backdrop-blur-xl bg-white/10 border border-white/20 rounded-2xl p-6 sm:p-8 shadow-2xl">
-              <div className="w-24 h-24 bg-gradient-to-r from-gray-600 to-slate-600 rounded-full flex items-center justify-center mx-auto mb-6">
-                <svg className="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                </svg>
-              </div>
-              <h3 className="text-xl font-bold text-white mb-2">No events found</h3>
-              <p className="text-gray-400">
-                No events found for the selected category. Check back soon for new listings!
-              </p>
-            </div>
-          </div>
-        )}
       </div>
     </div>
   )

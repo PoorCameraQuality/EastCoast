@@ -59,7 +59,7 @@ export default function CalendarPage() {
   return (
     <main className="min-h-screen bg-black">
       <CalendarStructuredData />
-      <div className="container-custom py-8 md:py-16">
+      <div className="container-custom section-padding">
         <Breadcrumb items={breadcrumbItems} />
         <SupportCTAInline contextLabel="Calendar" />
         <CalendarClient allEvents={eventsList} />
