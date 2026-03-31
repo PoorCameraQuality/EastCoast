@@ -36,7 +36,7 @@ export default function DungeonCard({ dungeon }: DungeonCardProps) {
         <DungeonImage
           src={dungeon.logo}
           alt={`${dungeon.name} — BDSM dungeon in ${dungeon.location.city}, ${dungeon.location.state}`}
-          size={52}
+          size={48}
           className="flex-shrink-0 rounded-lg ring-1 ring-white/10 transition group-hover/card:ring-primary-500/30"
         />
 

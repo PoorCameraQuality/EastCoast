@@ -53,7 +53,7 @@ export default function DungeonsPageClient({ allDungeons, allEvents }: Props) {
       const c = normalizeCategory(d)
       m.set(c, (m.get(c) || 0) + 1)
     }
-    return [...m.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+    return Array.from(m.entries()).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
   }, [allDungeons])
 
   const filteredDungeons = useMemo(() => {

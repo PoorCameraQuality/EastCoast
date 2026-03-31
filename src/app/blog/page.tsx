@@ -79,7 +79,7 @@ export default function BlogIndexPage() {
     if (!byRegion.has(row.region)) byRegion.set(row.region, [])
     byRegion.get(row.region)!.push(row)
   }
-  for (const list of byRegion.values()) {
+  for (const list of Array.from(byRegion.values())) {
     list.sort((a, b) => a.name.localeCompare(b.name))
   }
   const regionsSorted = Array.from(byRegion.keys()).sort(
@@ -97,7 +97,7 @@ export default function BlogIndexPage() {
       href: `/blog/how-to-start-bdsm-in/${slug}`,
     })
   }
-  for (const cities of cityGroups.values()) {
+  for (const cities of Array.from(cityGroups.values())) {
     cities.sort((a, b) => a.displayName.localeCompare(b.displayName))
   }
   const cityAbbrSorted = Array.from(cityGroups.keys()).sort((a, b) =>

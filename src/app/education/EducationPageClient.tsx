@@ -129,7 +129,9 @@ function EducationPageInner({ initialArticles }: Props) {
       if (a.category?.trim()) set.add(a.category.trim())
     }
     const preferred = CATEGORY_ORDER.filter((c) => set.has(c))
-    const rest = [...set].filter((c) => !CATEGORY_ORDER.includes(c)).sort((a, b) => a.localeCompare(b))
+    const rest = Array.from(set)
+      .filter((c) => !CATEGORY_ORDER.includes(c))
+      .sort((a, b) => a.localeCompare(b))
     return [...preferred, ...rest]
   }, [articles])
 

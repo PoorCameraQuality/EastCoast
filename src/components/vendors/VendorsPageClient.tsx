@@ -106,7 +106,7 @@ export default function VendorsPageClient({
         counts.set(s, (counts.get(s) || 0) + 1)
       }
     }
-    return [...counts.entries()]
+    return Array.from(counts.entries())
       .sort((a, b) => b[1] - a[1])
       .slice(0, 10)
       .map(([slug]) => tagsBySlug[slug])
