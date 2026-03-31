@@ -47,6 +47,26 @@ export function buildAllowlistedBlogPaths(): string[] {
   return Array.from(new Set(out))
 }
 
+/**
+ * Every `/blog/[...slug]` segment list that `parseBlogSlug` accepts — for `generateStaticParams` only.
+ * Tiered {@link buildAllowlistedBlogPaths} limits sitemap / hub navigation; pages like
+ * `/blog/bdsm-events-in/michigan` must still be shipped as static HTML so preview and production
+ * never 404 when env flags omit them from the smaller allowlist.
+ */
+export function buildBlogCatchAllStaticParams(): { slug: string[] }[] {
+  const params: { slug: string[] }[] = []
+  for (const slug of BLOG_PILLAR_SLUGS) {
+    params.push({ slug: [slug] })
+  }
+  for (const s of Object.keys(EAST_COAST_STATES) as StateSlug[]) {
+    params.push({ slug: ['bdsm-events-in', s] })
+  }
+  for (const c of Object.keys(CITY_BY_SLUG)) {
+    params.push({ slug: ['how-to-start-bdsm-in', c] })
+  }
+  return params
+}
+
 /** Robots for programmatic hubs outside tier: thin or unstaged URLs stay discoverable via links only. */
 export function blogRobotsMeta(
   segments: string[],

@@ -9,23 +9,22 @@ import {
   getProgrammaticUpcomingEventStats,
 } from '@/lib/blogInternalLinks'
 import { getUnifiedEvents, getUpcomingUnified } from '@/lib/unifiedEvents'
-import { buildAllowlistedBlogPaths, blogRobotsMeta } from '@/lib/blogDiscoveryTier'
+import { buildBlogCatchAllStaticParams, blogRobotsMeta } from '@/lib/blogDiscoveryTier'
 import { BASE_URL } from '@/lib/seo'
 import BlogArticleJsonLd from '@/components/blog/BlogArticleJsonLd'
 import BlogArticleLayout from '@/components/blog/BlogArticleLayout'
 
 export const revalidate = 1800
 
+/** Allow DB-only or future slugs — but all catalog geo guides are prelisted via buildBlogCatchAllStaticParams. */
+export const dynamicParams = true
+
 interface PageProps {
   params: { slug: string[] }
 }
 
 export async function generateStaticParams() {
-  return buildAllowlistedBlogPaths()
-    .filter((p) => p !== 'blog')
-    .map((p) => ({
-      slug: p.split('/').slice(1),
-    }))
+  return buildBlogCatchAllStaticParams()
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
