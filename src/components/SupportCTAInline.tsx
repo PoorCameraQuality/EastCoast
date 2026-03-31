@@ -14,8 +14,8 @@ type Props = {
 export default function SupportCTAInline({ contextLabel }: Props) {
   const sponsorVendor = getSiteSponsorVendor()
   const wrapperClassName = sponsorVendor
-    ? 'mt-6 mb-8'
-    : 'mt-6 mb-8 rounded-2xl border border-white/10 bg-gradient-to-br from-white/6 via-white/4 to-transparent backdrop-blur-xl p-5 md:p-6'
+    ? 'mt-4 mb-6'
+    : 'mt-4 mb-6 rounded-xl border border-white/10 bg-gradient-to-br from-white/6 via-white/4 to-transparent backdrop-blur-xl p-4 md:p-5'
 
   return (
     <aside
@@ -24,7 +24,7 @@ export default function SupportCTAInline({ contextLabel }: Props) {
     >
       <div className="flex flex-col gap-4">
         {sponsorVendor ? (
-          <div className="relative overflow-visible rounded-2xl border border-amber-300/40 bg-black/70 p-4 vendor-sponsor-glitter">
+          <div className="relative overflow-visible rounded-xl border border-amber-300/40 bg-black/70 p-3 sm:p-4 vendor-sponsor-glitter">
             <span className="sponsor-spotlight-label">
               Keep this site community funded
             </span>
@@ -79,7 +79,7 @@ export default function SupportCTAInline({ contextLabel }: Props) {
               <p className="text-xs uppercase tracking-[0.2em] text-gray-400">
                 Community funded
               </p>
-              <h3 className="text-lg font-serif font-semibold text-white mt-1">
+              <h3 className="text-base font-serif font-semibold text-white mt-1 sm:text-lg">
                 Sponsor this site
               </h3>
               <p className="text-sm text-gray-300 mt-2 leading-relaxed">

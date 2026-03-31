@@ -71,9 +71,8 @@ export default function DungeonsPageClient({ allDungeons, allEvents }: Props) {
       <section className="relative z-10 section-padding">
         <div className="container-custom">
           <Breadcrumb items={breadcrumbItems} />
-          <SupportCTAInline contextLabel="Dungeons" />
 
-          <header className="mx-auto mb-10 max-w-3xl md:mb-12">
+          <header className="mx-auto mb-8 max-w-3xl md:mb-10">
             <p className="mb-2 text-sm font-medium uppercase tracking-wider text-primary-400/90">Venues &amp; clubs</p>
             <h1 className="font-serif text-3xl font-bold text-white sm:text-4xl md:text-5xl">
               Dungeons &amp;{' '}
@@ -111,6 +110,8 @@ export default function DungeonsPageClient({ allDungeons, allEvents }: Props) {
               </div>
             </div>
           </header>
+
+          <SupportCTAInline contextLabel="Dungeons" />
 
           <div className="mx-auto mb-8 max-w-2xl">
             <div className="rounded-2xl border border-white/10 bg-gradient-to-br from-white/[0.06] to-transparent p-5 shadow-lg sm:p-6">

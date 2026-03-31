@@ -149,9 +149,8 @@ export default function VendorsPageClient({
       <div className="container-custom relative z-10">
         <div className="mx-auto max-w-7xl">
           <Breadcrumb items={breadcrumbItems} />
-          <SupportCTAInline contextLabel="Vendors" />
 
-          <header className="mb-10 md:mb-12">
+          <header className="mb-8 md:mb-10">
             <p className="mb-2 text-sm font-medium uppercase tracking-wider text-primary-400/90">Marketplace</p>
             <h1 className="font-serif text-3xl font-bold text-white sm:text-4xl md:text-5xl">
               Kink vendors &amp;{' '}
@@ -219,6 +218,8 @@ export default function VendorsPageClient({
               pinned at the top.
             </p>
           </header>
+
+          <SupportCTAInline contextLabel="Vendors" />
 
           <div className="grid grid-cols-1 gap-8 md:grid-cols-12 lg:gap-10">
             <aside className="md:col-span-4 lg:col-span-3">

@@ -294,7 +294,7 @@ export default function CalendarClient({ allEvents }: CalendarClientProps) {
 
   return (
     <div className="mx-auto max-w-6xl">
-      <div className="mb-8 text-center md:mb-10">
+      <div className="mb-6 text-center md:mb-8">
         <p className="mb-2 text-sm font-medium uppercase tracking-wider text-primary-400/90">Plan ahead</p>
         <h1 className="font-serif text-3xl font-bold text-white sm:text-4xl md:text-5xl">
           BDSM &amp; kink event calendar

@@ -9,7 +9,6 @@ import Breadcrumb from '@/components/Breadcrumb'
 import Search from '@/components/Search'
 import { CONTACT_US_LABEL } from '@/lib/submissionContact'
 import SupportCTAInline from '@/components/SupportCTAInline'
-import NewsletterSignup from '@/components/NewsletterSignup'
 import EventHubCard from '@/components/events/EventHubCard'
 
 type EventRow = {
@@ -120,13 +119,8 @@ export default function EventsPageClient({ allEvents, allDungeons, selectedCateg
       <div className="relative z-10 section-padding">
         <div className="container-custom">
           <Breadcrumb items={breadcrumbItems} />
-          <SupportCTAInline contextLabel="Events" />
 
-          <div className="mx-auto mb-8 max-w-xl">
-            <NewsletterSignup variant="compact" />
-          </div>
-
-          <header className="mx-auto mb-10 max-w-3xl md:mb-12">
+          <header className="mx-auto mb-8 max-w-3xl md:mb-10">
             <p className="mb-2 text-sm font-medium uppercase tracking-wider text-primary-400/90">
               Community calendar
             </p>
@@ -176,6 +170,8 @@ export default function EventsPageClient({ allEvents, allDungeons, selectedCateg
               </div>
             </div>
           </header>
+
+          <SupportCTAInline contextLabel="Events" />
 
           <div className="mx-auto mb-8 max-w-2xl">
             <div className="rounded-2xl border border-white/10 bg-gradient-to-br from-white/[0.06] to-transparent p-5 shadow-lg sm:p-6">

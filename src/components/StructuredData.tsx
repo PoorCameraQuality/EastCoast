@@ -712,12 +712,12 @@ export function HomepageStructuredData() {
     "@context": "https://schema.org",
     "@type": "WebPage",
     "name": "East Coast Kink Events - Discover BDSM Events & Dungeons",
-    "description": "Find kink events, BDSM dungeons, and educational resources across the East Coast. Connect with workshops, conferences, and community events in a safe, inclusive environment.",
+    "description": "Plan kink and BDSM events, dungeons, vendors, and education across the United States—all 50 states and growing. East Coast roots with nationwide listings.",
     "url": BASE_URL,
     "mainEntity": {
       "@type": "ItemList",
       "name": "Featured Kink Events",
-      "description": "Upcoming kink events across the East Coast",
+      "description": "Upcoming kink events and directory hubs across the United States",
       "numberOfItems": 5,
       "itemListElement": [
         {
@@ -726,7 +726,7 @@ export function HomepageStructuredData() {
           "item": {
             "@type": "Service",
             "name": "Event Discovery",
-            "description": "Browse and discover kink events across the East Coast"
+            "description": "Browse and discover kink events nationwide"
           }
         },
         {

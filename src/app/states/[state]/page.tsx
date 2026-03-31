@@ -108,12 +108,11 @@ export default function StatePage({ params }: PageProps) {
 
   return (
     <div className="min-h-screen bg-black">
-      <div className="container-custom py-8 md:py-16">
+      <div className="container-custom section-padding">
         <Breadcrumb items={breadcrumbItems} />
-        <SupportCTAInline contextLabel="States" />
 
         {/* Hero Section */}
-        <div className="mb-10 md:mb-12">
+        <div className="mb-8 md:mb-10">
           <h1 className="text-3xl sm:text-4xl md:text-6xl font-serif font-bold text-white mb-4">
             <span className="bg-gradient-to-r from-primary-400 via-primary-400 to-primary-500 bg-clip-text text-transparent">
               {stateInfo.name}
@@ -141,6 +140,8 @@ export default function StatePage({ params }: PageProps) {
             nationwide.
           </p>
         </div>
+
+        <SupportCTAInline contextLabel="States" />
 
         {/* Upcoming Events */}
         <section className="mb-16">

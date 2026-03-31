@@ -31,7 +31,7 @@ export default function Breadcrumb({ items }: BreadcrumbProps) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData).replace(/</g, '\\u003c') }}
       />
-      <nav aria-label="Breadcrumb" className="text-sm text-gray-300 flex gap-2">
+      <nav aria-label="Breadcrumb" className="mb-2 text-sm text-gray-300 flex gap-2 flex-wrap">
         {items.map((item, index) => {
           const isLast = index === items.length - 1
           return (

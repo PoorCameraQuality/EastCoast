@@ -76,9 +76,9 @@ export default function HubCategoryGrid({ counts }: { counts: HubCategoryCounts 
       </div>
 
       <div className="container-custom relative z-10">
-        <header className="mb-12 max-w-4xl md:mx-0 md:text-left mx-auto text-center">
+        <header className="mb-8 max-w-4xl md:mx-0 md:text-left mx-auto text-center md:mb-10">
           <p className="mb-2 text-sm font-medium uppercase tracking-wider text-primary-400/90">
-            East Coast &amp; beyond
+            All 50 states · East Coast roots, nationwide reach
           </p>
           <h1 id="hub-title" className="font-serif text-3xl font-bold leading-tight text-white sm:text-4xl md:text-5xl">
             Discover{' '}
@@ -87,11 +87,11 @@ export default function HubCategoryGrid({ counts }: { counts: HubCategoryCounts 
             </span>{' '}
             <span className="text-gray-200">and kink community</span>{' '}
             <span className="bg-gradient-to-r from-violet-300 to-primary-400 bg-clip-text text-transparent">
-              on the East Coast
+              across the United States
             </span>
           </h1>
           <p className="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-gray-300 md:mx-0 md:max-w-3xl md:text-lg">
-            One directory for planning: conventions and parties by{' '}
+            One directory for planning—coverage in all 50 states plus more regions we list: conventions and parties by{' '}
             <Link href="/states" className="text-primary-400 underline underline-offset-2 hover:text-primary-300">
               state
             </Link>

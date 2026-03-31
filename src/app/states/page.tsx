@@ -108,9 +108,8 @@ export default function StatesIndexPage() {
 
       <div className="container-custom relative z-10">
         <Breadcrumb items={breadcrumbItems} />
-        <SupportCTAInline contextLabel="States" />
 
-        <header className="mx-auto mb-12 max-w-3xl text-center md:mb-16 md:px-2">
+        <header className="mx-auto mb-8 max-w-3xl text-center md:mb-10 md:px-2">
           <p className="mb-3 text-sm font-medium uppercase tracking-wider text-primary-400/90">
             Browse by region
           </p>
@@ -183,6 +182,8 @@ export default function StatesIndexPage() {
             />
           </div>
         </header>
+
+        <SupportCTAInline contextLabel="States" />
 
         <section className="mb-16 md:mb-20" aria-labelledby="spotlight-title">
           <div className="mb-8 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">

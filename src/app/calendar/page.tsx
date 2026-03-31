@@ -61,8 +61,8 @@ export default function CalendarPage() {
       <CalendarStructuredData />
       <div className="container-custom section-padding">
         <Breadcrumb items={breadcrumbItems} />
-        <SupportCTAInline contextLabel="Calendar" />
         <CalendarClient allEvents={eventsList} />
+        <SupportCTAInline contextLabel="Calendar" />
       </div>
     </main>
   )

@@ -57,7 +57,7 @@ export default function Header() {
         : 'bg-gradient-to-b from-black/90 to-black/70 backdrop-blur-md'
     }`}>
       <div className="container-custom">
-        <div className="flex justify-between items-center py-4 lg:py-6">
+        <div className="flex justify-between items-center py-3 lg:py-4">
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-3 group">
             <div className="relative">

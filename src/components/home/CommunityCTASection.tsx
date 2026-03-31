@@ -1,6 +1,5 @@
 import Link from 'next/link'
 import { CONTACT_US_LABEL } from '@/lib/submissionContact'
-import NewsletterSignup from '@/components/NewsletterSignup'
 
 const DISCORD_INVITE_URL = 'https://discord.gg/xcnGGyGsmT'
 
@@ -43,7 +42,6 @@ export default function CommunityCTASection() {
               <p className="text-xs text-gray-500 text-center">
                 We do not require personal details to browse listings.
               </p>
-              <NewsletterSignup variant="compact" />
             </div>
           </div>
         </div>

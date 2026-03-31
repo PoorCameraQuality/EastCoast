@@ -242,36 +242,8 @@ function EducationPageInner({ initialArticles }: Props) {
 
       <div className="container-custom relative z-10">
         <Breadcrumb items={breadcrumbItems} />
-        <SupportCTAInline contextLabel="Education" />
 
-        <div className="mb-10 flex flex-col gap-4 rounded-2xl border border-primary-500/20 bg-gradient-to-br from-primary-950/40 via-black to-black p-5 sm:flex-row sm:items-center sm:justify-between sm:p-6">
-          <div>
-            <h2 className="font-serif text-lg font-semibold text-white">Guides &amp; funnel articles</h2>
-            <p className="mt-1 max-w-xl text-sm text-gray-400">
-              Pillar posts and regional hubs that connect reading to real{' '}
-              <Link href="/events" className="text-primary-400 underline underline-offset-2">
-                events
-              </Link>
-              ,{' '}
-              <Link href="/vendors" className="text-primary-400 underline underline-offset-2">
-                vendors
-              </Link>
-              , and{' '}
-              <Link href="/dungeons" className="text-primary-400 underline underline-offset-2">
-                dungeons
-              </Link>
-              .
-            </p>
-          </div>
-          <Link
-            href="/blog"
-            className="btn-primary inline-flex min-h-touch shrink-0 items-center justify-center px-5 py-2.5"
-          >
-            Open blog guides
-          </Link>
-        </div>
-
-        <header className="mx-auto mb-10 max-w-3xl md:mb-12">
+        <header className="mx-auto mb-8 max-w-3xl md:mb-10">
           <p className="mb-2 text-sm font-medium uppercase tracking-wider text-primary-400/90">Library</p>
           <h1 className="font-serif text-3xl font-bold text-white sm:text-4xl md:text-5xl">
             BDSM &amp; kink{' '}
@@ -305,7 +277,36 @@ function EducationPageInner({ initialArticles }: Props) {
           </div>
         </header>
 
-        <div className="mb-10 md:mb-12">
+        <SupportCTAInline contextLabel="Education" />
+
+        <div className="mb-8 flex flex-col gap-4 rounded-xl border border-primary-500/20 bg-gradient-to-br from-primary-950/40 via-black to-black p-4 sm:flex-row sm:items-center sm:justify-between sm:p-5">
+          <div>
+            <h2 className="font-serif text-lg font-semibold text-white">Guides &amp; blog</h2>
+            <p className="mt-1 max-w-xl text-sm text-gray-400">
+              Long-form articles and regional write-ups that link what you read to live{' '}
+              <Link href="/events" className="text-primary-400 underline underline-offset-2">
+                events
+              </Link>
+              ,{' '}
+              <Link href="/vendors" className="text-primary-400 underline underline-offset-2">
+                vendors
+              </Link>
+              , and{' '}
+              <Link href="/dungeons" className="text-primary-400 underline underline-offset-2">
+                play spaces
+              </Link>
+              —so you can read, then plan your next step in one place.
+            </p>
+          </div>
+          <Link
+            href="/blog"
+            className="btn-primary inline-flex min-h-touch shrink-0 items-center justify-center px-5 py-2.5"
+          >
+            Open blog guides
+          </Link>
+        </div>
+
+        <div className="mb-8 md:mb-10">
           <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-gray-500">Filter by topic</p>
           <div
             className="-mx-4 flex snap-x snap-mandatory gap-2 overflow-x-auto px-4 pb-2 md:mx-0 md:flex-wrap md:justify-start md:gap-3 md:overflow-visible md:px-0"

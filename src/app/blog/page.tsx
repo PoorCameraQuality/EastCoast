@@ -40,7 +40,7 @@ function labelForStateAbbr(abbr: string): string {
 export const metadata: Metadata = {
   title: 'BDSM & Kink Guides — Blog',
   description:
-    'Long-form guides: what is BDSM, safety, first events, and regional funnels to calendars, vendors, and dungeons.',
+    'Long-form guides on BDSM, safety, and first events—plus regional write-ups that point to calendars, vendors, and venue listings.',
   alternates: { canonical: `${BASE_URL}/blog` },
   openGraph: {
     title: 'BDSM & Kink Guides — Blog',
