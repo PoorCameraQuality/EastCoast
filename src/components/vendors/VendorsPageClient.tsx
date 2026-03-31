@@ -8,7 +8,7 @@ import VendorFilters from '@/components/vendors/VendorFilters'
 import VendorCard from '@/components/vendors/VendorCard'
 import { CONTACT_US_LABEL } from '@/lib/submissionContact'
 import Breadcrumb from '@/components/Breadcrumb'
-import SupportCTAInline from '@/components/SupportCTAInline'
+import HeroSponsorLayout from '@/components/HeroSponsorLayout'
 import {
   filterVendorsBySelectedTags,
   type VendorRecord,
@@ -150,76 +150,76 @@ export default function VendorsPageClient({
         <div className="mx-auto max-w-7xl">
           <Breadcrumb items={breadcrumbItems} />
 
-          <header className="mb-8 md:mb-10">
-            <p className="mb-2 text-sm font-medium uppercase tracking-wider text-primary-400/90">Marketplace</p>
-            <h1 className="font-serif text-3xl font-bold text-white sm:text-4xl md:text-5xl">
-              Kink vendors &amp;{' '}
-              <span className="bg-gradient-to-r from-primary-300 via-primary-400 to-primary-500 bg-clip-text text-transparent">
-                independent makers
-              </span>
-            </h1>
-            <p className="mt-4 max-w-3xl text-base leading-relaxed text-gray-300 md:text-lg">
-              Impact gear, leather, rope, wearables, books, and services—curated as a discovery aid (not an
-              endorsement of every product). Pair with{' '}
-              <Link href="/events" className="text-primary-400 underline underline-offset-2 hover:text-primary-300">
-                events
-              </Link>
-              ,{' '}
-              <Link href="/calendar" className="text-primary-400 underline underline-offset-2 hover:text-primary-300">
-                calendar
-              </Link>
-              , and{' '}
-              <Link href="/dungeons" className="text-primary-400 underline underline-offset-2 hover:text-primary-300">
-                dungeons
-              </Link>{' '}
-              when you are planning a trip or booth crawl.
-            </p>
+          <HeroSponsorLayout contextLabel="Vendors">
+            <header className="max-w-3xl">
+              <p className="mb-2 text-sm font-medium uppercase tracking-wider text-primary-400/90">Marketplace</p>
+              <h1 className="font-serif text-3xl font-bold text-white sm:text-4xl md:text-5xl">
+                Kink vendors &amp;{' '}
+                <span className="bg-gradient-to-r from-primary-300 via-primary-400 to-primary-500 bg-clip-text text-transparent">
+                  independent makers
+                </span>
+              </h1>
+              <p className="mt-4 max-w-3xl text-base leading-relaxed text-gray-300 md:text-lg">
+                Impact gear, leather, rope, wearables, books, and services—curated as a discovery aid (not an
+                endorsement of every product). Pair with{' '}
+                <Link href="/events" className="text-primary-400 underline underline-offset-2 hover:text-primary-300">
+                  events
+                </Link>
+                ,{' '}
+                <Link href="/calendar" className="text-primary-400 underline underline-offset-2 hover:text-primary-300">
+                  calendar
+                </Link>
+                , and{' '}
+                <Link href="/dungeons" className="text-primary-400 underline underline-offset-2 hover:text-primary-300">
+                  dungeons
+                </Link>{' '}
+                when you are planning a trip or booth crawl.
+              </p>
 
-            <div className="mt-6 flex flex-wrap justify-center gap-3 md:justify-start">
-              <div className="rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-sm text-gray-300">
-                <span className="font-semibold tabular-nums text-white">{vendors.length}</span> listings
+              <div className="mt-6 flex flex-wrap justify-center gap-3 md:justify-start">
+                <div className="rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-sm text-gray-300">
+                  <span className="font-semibold tabular-nums text-white">{vendors.length}</span> listings
+                </div>
+                <div className="rounded-full border border-primary-500/25 bg-primary-500/10 px-4 py-2 text-sm text-primary-100/90">
+                  <span className="font-semibold tabular-nums">{supporterCount}</span> supporters highlighted
+                </div>
+                {selectedTagSlugs.length > 0 ? (
+                  <div className="rounded-full border border-amber-500/30 bg-amber-500/10 px-4 py-2 text-sm text-amber-100/90">
+                    <span className="font-semibold tabular-nums">{displayVendors.length}</span> match filters
+                  </div>
+                ) : null}
               </div>
-              <div className="rounded-full border border-primary-500/25 bg-primary-500/10 px-4 py-2 text-sm text-primary-100/90">
-                <span className="font-semibold tabular-nums">{supporterCount}</span> supporters highlighted
-              </div>
-              {selectedTagSlugs.length > 0 ? (
-                <div className="rounded-full border border-amber-500/30 bg-amber-500/10 px-4 py-2 text-sm text-amber-100/90">
-                  <span className="font-semibold tabular-nums">{displayVendors.length}</span> match filters
+
+              {popularTags.length > 0 ? (
+                <div className="mt-8">
+                  <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-gray-500">
+                    Popular topics · one tap
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {popularTags.map((t) => (
+                      <Link
+                        key={t.slug}
+                        href={`/vendors?tag=${encodeURIComponent(t.slug)}`}
+                        scroll={false}
+                        className={`rounded-full border px-3 py-1.5 text-xs font-medium transition ${
+                          selectedTagSlugs.includes(t.slug)
+                            ? 'border-primary-400 bg-primary-500/20 text-primary-100'
+                            : 'border-white/15 bg-white/5 text-gray-200 hover:border-primary-500/40 hover:bg-primary-950/30'
+                        }`}
+                      >
+                        {t.name}
+                      </Link>
+                    ))}
+                  </div>
                 </div>
               ) : null}
-            </div>
 
-            {popularTags.length > 0 ? (
-              <div className="mt-8">
-                <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-gray-500">
-                  Popular topics · one tap
-                </p>
-                <div className="flex flex-wrap gap-2">
-                  {popularTags.map((t) => (
-                    <Link
-                      key={t.slug}
-                      href={`/vendors?tag=${encodeURIComponent(t.slug)}`}
-                      scroll={false}
-                      className={`rounded-full border px-3 py-1.5 text-xs font-medium transition ${
-                        selectedTagSlugs.includes(t.slug)
-                          ? 'border-primary-400 bg-primary-500/20 text-primary-100'
-                          : 'border-white/15 bg-white/5 text-gray-200 hover:border-primary-500/40 hover:bg-primary-950/30'
-                      }`}
-                    >
-                      {t.name}
-                    </Link>
-                  ))}
-                </div>
-              </div>
-            ) : null}
-
-            <p className="mt-6 max-w-2xl text-xs text-gray-600">
-              Non-supporter rows shuffle between visits so different makers surface; sponsors and paid supporters stay
-              pinned at the top.
-            </p>
-          </header>
-
-          <SupportCTAInline contextLabel="Vendors" />
+              <p className="mt-6 max-w-2xl text-xs text-gray-600">
+                Non-supporter rows shuffle between visits so different makers surface; sponsors and paid supporters stay
+                pinned at the top.
+              </p>
+            </header>
+          </HeroSponsorLayout>
 
           <div className="grid grid-cols-1 gap-8 md:grid-cols-12 lg:gap-10">
             <aside className="md:col-span-4 lg:col-span-3">

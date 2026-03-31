@@ -5,7 +5,7 @@ import Link from 'next/link'
 import EventCard from '@/components/EventCard'
 import DungeonLogo from '@/components/DungeonLogo'
 import Breadcrumb from '@/components/Breadcrumb'
-import SupportCTAInline from '@/components/SupportCTAInline'
+import HeroSponsorLayout from '@/components/HeroSponsorLayout'
 import { BASE_URL } from '@/lib/seo'
 import { notFound } from 'next/navigation'
 import { EAST_COAST_STATES, type StateSlug } from '@/lib/eastCoastStates'
@@ -111,37 +111,36 @@ export default function StatePage({ params }: PageProps) {
       <div className="container-custom section-padding">
         <Breadcrumb items={breadcrumbItems} />
 
-        {/* Hero Section */}
-        <div className="mb-8 md:mb-10">
-          <h1 className="text-3xl sm:text-4xl md:text-6xl font-serif font-bold text-white mb-4">
-            <span className="bg-gradient-to-r from-primary-400 via-primary-400 to-primary-500 bg-clip-text text-transparent">
-              {stateInfo.name}
-            </span>
-          </h1>
-          <p className="text-lg md:text-xl text-gray-300 mb-2">
-            Kink Events & BDSM Community
-          </p>
-          <p className="text-gray-400">
-            {stateInfo.region} • {stateEvents.length} upcoming events • {stateDungeons.length} dungeons
-          </p>
-          <p className="text-gray-400 text-sm mt-4 max-w-2xl">
-            New to kink or your first venue visit? Read{' '}
-            <Link href="/blog/bdsm-beginner-guide" className="text-primary-400 hover:text-primary-300">
-              How to start exploring kink and BDSM safely
-            </Link>{' '}
-            on ECKE, then browse{' '}
-            <Link href="/dungeons" className="text-primary-400 hover:text-primary-300">
-              dungeons &amp; clubs
-            </Link>{' '}
-            and{' '}
-            <Link href="/events" className="text-primary-400 hover:text-primary-300">
-              events
-            </Link>{' '}
-            nationwide.
-          </p>
-        </div>
-
-        <SupportCTAInline contextLabel="States" />
+        <HeroSponsorLayout contextLabel="States">
+          <div className="max-w-3xl">
+            <h1 className="text-3xl sm:text-4xl md:text-6xl font-serif font-bold text-white mb-4">
+              <span className="bg-gradient-to-r from-primary-400 via-primary-400 to-primary-500 bg-clip-text text-transparent">
+                {stateInfo.name}
+              </span>
+            </h1>
+            <p className="text-lg md:text-xl text-gray-300 mb-2">
+              Kink Events & BDSM Community
+            </p>
+            <p className="text-gray-400">
+              {stateInfo.region} • {stateEvents.length} upcoming events • {stateDungeons.length} dungeons
+            </p>
+            <p className="text-gray-400 text-sm mt-4 max-w-2xl">
+              New to kink or your first venue visit? Read{' '}
+              <Link href="/blog/bdsm-beginner-guide" className="text-primary-400 hover:text-primary-300">
+                How to start exploring kink and BDSM safely
+              </Link>{' '}
+              on ECKE, then browse{' '}
+              <Link href="/dungeons" className="text-primary-400 hover:text-primary-300">
+                dungeons &amp; clubs
+              </Link>{' '}
+              and{' '}
+              <Link href="/events" className="text-primary-400 hover:text-primary-300">
+                events
+              </Link>{' '}
+              nationwide.
+            </p>
+          </div>
+        </HeroSponsorLayout>
 
         {/* Upcoming Events */}
         <section className="mb-16">

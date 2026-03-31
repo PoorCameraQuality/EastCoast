@@ -26,9 +26,16 @@ interface SearchProps {
   events: any[]
   dungeons: any[]
   placeholder?: string
+  /** Tighter input and typography for directory hero strips */
+  compact?: boolean
 }
 
-export default function Search({ events, dungeons, placeholder = "Search events and dungeons..." }: SearchProps) {
+export default function Search({
+  events,
+  dungeons,
+  placeholder = 'Search events and dungeons...',
+  compact = false,
+}: SearchProps) {
   const [query, setQuery] = useState('')
   const [results, setResults] = useState<SearchResult[]>([])
   const [isSearching, setIsSearching] = useState(false)
@@ -152,10 +159,14 @@ export default function Search({ events, dungeons, placeholder = "Search events 
             aria-autocomplete="list"
             aria-expanded={listboxOpen}
             aria-controls="search-smart-suggestions search-results"
-            className="w-full min-h-touch px-4 py-3 bg-dark-700 text-white border border-dark-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+            className={
+              compact
+                ? 'w-full h-10 min-h-0 px-3 py-2 text-sm bg-dark-700 text-white border border-dark-600 rounded-md focus:ring-2 focus:ring-primary-500 focus:border-transparent'
+                : 'w-full min-h-touch px-4 py-3 bg-dark-700 text-white border border-dark-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent'
+            }
           />
           {isSearching && (
-            <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+            <div className="absolute right-2.5 top-1/2 -translate-y-1/2">
               <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-primary-400"></div>
             </div>
           )}

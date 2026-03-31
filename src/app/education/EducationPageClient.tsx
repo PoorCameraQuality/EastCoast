@@ -7,7 +7,7 @@ import ArticleCard from '@/components/education/ArticleCard'
 import Breadcrumb from '@/components/Breadcrumb'
 import Link from 'next/link'
 import { CONTACT_US_LABEL } from '@/lib/submissionContact'
-import SupportCTAInline from '@/components/SupportCTAInline'
+import HeroSponsorLayout from '@/components/HeroSponsorLayout'
 
 interface Article {
   id: string
@@ -243,68 +243,41 @@ function EducationPageInner({ initialArticles }: Props) {
       <div className="container-custom relative z-10">
         <Breadcrumb items={breadcrumbItems} />
 
-        <header className="mx-auto mb-8 max-w-3xl md:mb-10">
-          <p className="mb-2 text-sm font-medium uppercase tracking-wider text-primary-400/90">Library</p>
-          <h1 className="font-serif text-3xl font-bold text-white sm:text-4xl md:text-5xl">
-            BDSM &amp; kink{' '}
-            <span className="bg-gradient-to-r from-primary-300 via-primary-400 to-primary-500 bg-clip-text text-transparent">
-              education
-            </span>
-          </h1>
-          <p className="mt-4 text-base leading-relaxed text-gray-300 md:text-lg">
-            Consent, safety, techniques, and community—articles you can use before you play. When you&apos;re ready
-            to go out, pair reading with the{' '}
-            <Link href="/calendar" className="text-primary-400 underline underline-offset-2 hover:text-primary-300">
-              calendar
-            </Link>{' '}
-            or{' '}
-            <Link href="/states" className="text-primary-400 underline underline-offset-2 hover:text-primary-300">
-              state hubs
-            </Link>
-            .
-          </p>
-
-          <div className="mt-6 flex flex-wrap gap-3">
-            <div className="rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-sm text-gray-300">
-              <span className="font-semibold tabular-nums text-white">{articles.length}</span> articles
-            </div>
-            <div className="rounded-full border border-amber-500/25 bg-amber-500/10 px-4 py-2 text-sm text-amber-100/90">
-              <span className="font-semibold tabular-nums">{featuredTotal}</span> featured
-            </div>
-            <div className="rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-sm text-gray-300">
-              <span className="font-semibold tabular-nums text-white">{categoriesInUse.length}</span> topics
-            </div>
-          </div>
-        </header>
-
-        <SupportCTAInline contextLabel="Education" />
-
-        <div className="mb-8 flex flex-col gap-4 rounded-xl border border-primary-500/20 bg-gradient-to-br from-primary-950/40 via-black to-black p-4 sm:flex-row sm:items-center sm:justify-between sm:p-5">
-          <div>
-            <h2 className="font-serif text-lg font-semibold text-white">Guides &amp; blog</h2>
-            <p className="mt-1 max-w-xl text-sm text-gray-400">
-              Long-form articles and regional write-ups that link what you read to live{' '}
-              <Link href="/events" className="text-primary-400 underline underline-offset-2">
-                events
+        <HeroSponsorLayout contextLabel="Education">
+          <header className="max-w-3xl">
+            <p className="mb-2 text-sm font-medium uppercase tracking-wider text-primary-400/90">Library</p>
+            <h1 className="font-serif text-3xl font-bold text-white sm:text-4xl md:text-5xl">
+              BDSM &amp; kink{' '}
+              <span className="bg-gradient-to-r from-primary-300 via-primary-400 to-primary-500 bg-clip-text text-transparent">
+                education
+              </span>
+            </h1>
+            <p className="mt-4 text-base leading-relaxed text-gray-300 md:text-lg">
+              Consent, safety, techniques, and community—articles you can use before you play. When you&apos;re ready
+              to go out, pair reading with the{' '}
+              <Link href="/calendar" className="text-primary-400 underline underline-offset-2 hover:text-primary-300">
+                calendar
+              </Link>{' '}
+              or{' '}
+              <Link href="/states" className="text-primary-400 underline underline-offset-2 hover:text-primary-300">
+                state hubs
               </Link>
-              ,{' '}
-              <Link href="/vendors" className="text-primary-400 underline underline-offset-2">
-                vendors
-              </Link>
-              , and{' '}
-              <Link href="/dungeons" className="text-primary-400 underline underline-offset-2">
-                play spaces
-              </Link>
-              —so you can read, then plan your next step in one place.
+              .
             </p>
-          </div>
-          <Link
-            href="/blog"
-            className="btn-primary inline-flex min-h-touch shrink-0 items-center justify-center px-5 py-2.5"
-          >
-            Open blog guides
-          </Link>
-        </div>
+
+            <div className="mt-6 flex flex-wrap gap-3">
+              <div className="rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-sm text-gray-300">
+                <span className="font-semibold tabular-nums text-white">{articles.length}</span> articles
+              </div>
+              <div className="rounded-full border border-amber-500/25 bg-amber-500/10 px-4 py-2 text-sm text-amber-100/90">
+                <span className="font-semibold tabular-nums">{featuredTotal}</span> featured
+              </div>
+              <div className="rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-sm text-gray-300">
+                <span className="font-semibold tabular-nums text-white">{categoriesInUse.length}</span> topics
+              </div>
+            </div>
+          </header>
+        </HeroSponsorLayout>
 
         <div className="mb-8 md:mb-10">
           <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-gray-500">Filter by topic</p>

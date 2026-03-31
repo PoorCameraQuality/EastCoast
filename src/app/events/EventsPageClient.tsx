@@ -8,7 +8,7 @@ import { buildEventsListUrl } from '@/lib/eventsListSearchParams'
 import Breadcrumb from '@/components/Breadcrumb'
 import Search from '@/components/Search'
 import { CONTACT_US_LABEL } from '@/lib/submissionContact'
-import SupportCTAInline from '@/components/SupportCTAInline'
+import HeroSponsorLayout from '@/components/HeroSponsorLayout'
 import EventHubCard from '@/components/events/EventHubCard'
 
 type EventRow = {
@@ -120,110 +120,115 @@ export default function EventsPageClient({ allEvents, allDungeons, selectedCateg
         <div className="container-custom">
           <Breadcrumb items={breadcrumbItems} />
 
-          <header className="mx-auto mb-8 max-w-3xl md:mb-10">
-            <p className="mb-2 text-sm font-medium uppercase tracking-wider text-primary-400/90">
-              Community calendar
-            </p>
-            <h1 className="font-serif text-3xl font-bold text-white sm:text-4xl md:text-5xl">
-              BDSM &amp; kink{' '}
-              <span className="bg-gradient-to-r from-primary-300 via-primary-400 to-cyan-400 bg-clip-text text-transparent">
-                events
-              </span>
-            </h1>
-            <p className="mt-4 text-base leading-relaxed text-gray-300 md:text-lg">
-              Conventions, hotel weekends, workshops, and parties—we list dates and blurbs so you can plan without
-              digging through a dozen sites. Filter by indoor or outdoor venue style, or browse{' '}
-              <Link href="/states" className="text-primary-400 underline underline-offset-2 hover:text-primary-300">
-                by state
-              </Link>
-              , the{' '}
-              <Link href="/calendar" className="text-primary-400 underline underline-offset-2 hover:text-primary-300">
-                month grid
-              </Link>
-              , and{' '}
-              <Link
-                href="/education"
-                className="text-primary-400 underline underline-offset-2 hover:text-primary-300"
-              >
-                education
-              </Link>{' '}
-              for deeper dives. Always confirm tickets and policies with organizers.
-            </p>
+          <HeroSponsorLayout contextLabel="Events">
+            <header className="max-w-3xl">
+              <p className="mb-2 text-sm font-medium uppercase tracking-wider text-primary-400/90">
+                Community calendar
+              </p>
+              <h1 className="font-serif text-3xl font-bold text-white sm:text-4xl md:text-5xl">
+                BDSM &amp; kink{' '}
+                <span className="bg-gradient-to-r from-primary-300 via-primary-400 to-cyan-400 bg-clip-text text-transparent">
+                  events
+                </span>
+              </h1>
+              <p className="mt-4 text-base leading-relaxed text-gray-300 md:text-lg">
+                Conventions, hotel weekends, workshops, and parties—we list dates and blurbs so you can plan without
+                digging through a dozen sites. Filter by indoor or outdoor venue style, or browse{' '}
+                <Link href="/states" className="text-primary-400 underline underline-offset-2 hover:text-primary-300">
+                  by state
+                </Link>
+                , the{' '}
+                <Link href="/calendar" className="text-primary-400 underline underline-offset-2 hover:text-primary-300">
+                  month grid
+                </Link>
+                , and{' '}
+                <Link
+                  href="/education"
+                  className="text-primary-400 underline underline-offset-2 hover:text-primary-300"
+                >
+                  education
+                </Link>{' '}
+                for deeper dives. Always confirm tickets and policies with organizers.
+              </p>
 
-            <div className="mt-6 flex flex-wrap gap-3">
-              <div className="rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-sm text-gray-300">
-                <span className="tabular-nums font-semibold text-white">{allEvents.length}</span> listings
+              <div className="mt-6 flex flex-wrap gap-3">
+                <div className="rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-sm text-gray-300">
+                  <span className="tabular-nums font-semibold text-white">{allEvents.length}</span> listings
+                </div>
+                <div className="rounded-full border border-primary-500/25 bg-primary-500/10 px-4 py-2 text-sm text-primary-100/90">
+                  <span className="tabular-nums font-semibold">{directoryStats.upcoming}</span> upcoming
+                </div>
+                <div className="rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-sm text-gray-300">
+                  <span className="tabular-nums font-semibold text-white">{directoryStats.stateSpread}</span> states /
+                  regions
+                </div>
+                <div className="rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-sm text-gray-400">
+                  Indoor{' '}
+                  <span className="font-medium text-gray-300">{directoryStats.indoor}</span>
+                  <span className="mx-1.5 text-gray-600">·</span>
+                  outdoor-style{' '}
+                  <span className="font-medium text-gray-300">{directoryStats.outdoor}</span>
+                </div>
               </div>
-              <div className="rounded-full border border-primary-500/25 bg-primary-500/10 px-4 py-2 text-sm text-primary-100/90">
-                <span className="tabular-nums font-semibold">{directoryStats.upcoming}</span> upcoming
-              </div>
-              <div className="rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-sm text-gray-300">
-                <span className="tabular-nums font-semibold text-white">{directoryStats.stateSpread}</span> states /
-                regions
-              </div>
-              <div className="rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-sm text-gray-400">
-                Indoor{' '}
-                <span className="font-medium text-gray-300">{directoryStats.indoor}</span>
-                <span className="mx-1.5 text-gray-600">·</span>
-                outdoor-style{' '}
-                <span className="font-medium text-gray-300">{directoryStats.outdoor}</span>
-              </div>
-            </div>
-          </header>
+            </header>
+          </HeroSponsorLayout>
 
-          <SupportCTAInline contextLabel="Events" />
-
-          <div className="mx-auto mb-8 max-w-2xl">
-            <div className="rounded-2xl border border-white/10 bg-gradient-to-br from-white/[0.06] to-transparent p-5 shadow-lg sm:p-6">
-              <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-gray-500">Search</p>
-              <Search events={allEvents} dungeons={allDungeons} placeholder="City, state, or event name…" />
-              <p className="mt-3 text-xs text-gray-600">
+          <div className="mx-auto mb-4 max-w-2xl">
+            <div className="rounded-xl border border-white/10 bg-gradient-to-br from-white/[0.06] to-transparent p-3 shadow-md sm:p-4">
+              <p className="mb-1.5 text-[10px] font-semibold uppercase tracking-wide text-gray-500">Search</p>
+              <Search
+                compact
+                events={allEvents}
+                dungeons={allDungeons}
+                placeholder="City, state, or event name…"
+              />
+              <p className="mt-1.5 text-[11px] leading-snug text-gray-600">
                 Matches events and dungeon listings—open a row to go straight to the detail page.
               </p>
             </div>
           </div>
 
-          <div className="mb-8 flex flex-col items-stretch gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-center">
+          <div className="mb-4 flex flex-col items-stretch gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:justify-center">
             <Link
               href="/contact"
-              className="inline-flex min-h-touch items-center justify-center rounded-xl border border-primary-500/40 bg-primary-600/10 px-6 py-3 text-sm font-semibold text-primary-100 transition hover:border-primary-400 hover:bg-primary-600/20"
+              className="inline-flex min-h-[40px] items-center justify-center rounded-lg border border-primary-500/40 bg-primary-600/10 px-4 py-2 text-sm font-semibold text-primary-100 transition hover:border-primary-400 hover:bg-primary-600/20"
               aria-label="Contact us"
             >
               {CONTACT_US_LABEL}
             </Link>
             <Link
               href="/vendors"
-              className="inline-flex min-h-touch items-center justify-center rounded-xl border border-white/15 bg-white/5 px-6 py-3 text-sm font-medium text-gray-200 transition hover:border-white/25 hover:bg-white/10"
+              className="inline-flex min-h-[40px] items-center justify-center rounded-lg border border-white/15 bg-white/5 px-4 py-2 text-sm font-medium text-gray-200 transition hover:border-white/25 hover:bg-white/10"
             >
               Vendors &amp; makers
             </Link>
             <Link
               href="/dungeons"
-              className="inline-flex min-h-touch items-center justify-center rounded-xl border border-white/15 bg-white/5 px-6 py-3 text-sm font-medium text-gray-200 transition hover:border-white/25 hover:bg-white/10"
+              className="inline-flex min-h-[40px] items-center justify-center rounded-lg border border-white/15 bg-white/5 px-4 py-2 text-sm font-medium text-gray-200 transition hover:border-white/25 hover:bg-white/10"
             >
               Play spaces
             </Link>
           </div>
 
-          <div className="mb-6">
+          <div className="mb-4">
             <div
-              className="flex snap-x snap-mandatory flex-nowrap gap-3 overflow-x-auto pb-2 md:flex-wrap md:justify-center md:overflow-visible"
+              className="flex snap-x snap-mandatory flex-nowrap gap-2 overflow-x-auto pb-1 md:flex-wrap md:justify-center md:overflow-visible"
               role="toolbar"
               aria-label="Filter events by category"
             >
               <button
                 type="button"
                 onClick={() => applyCategory('All Events')}
-                className={`group inline-flex min-h-touch shrink-0 snap-start items-center rounded-full px-5 py-3 font-bold shadow-xl transition duration-300 md:px-6 md:hover:scale-105 motion-reduce:md:hover:scale-100 ${
+                className={`group inline-flex h-9 shrink-0 snap-start items-center rounded-full px-3.5 py-1.5 text-sm font-semibold shadow-md transition duration-300 md:px-4 md:hover:scale-[1.02] motion-reduce:md:hover:scale-100 ${
                   selectedCategory === 'All Events'
                     ? 'bg-gradient-to-r from-primary-600 via-primary-600 to-primary-700 text-white hover:from-primary-700 hover:via-primary-700 hover:to-primary-800 hover:shadow-primary-500/25'
                     : 'border border-white/20 bg-white/10 text-white backdrop-blur-xl hover:bg-white/20 hover:shadow-white/25'
                 }`}
               >
-                <span className="flex items-center gap-2">
+                <span className="flex items-center gap-1.5">
                   All Events
                   {selectedCategory === 'All Events' ? (
-                    <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
+                    <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
                   ) : null}
@@ -234,16 +239,16 @@ export default function EventsPageClient({ allEvents, allDungeons, selectedCateg
                   key={category}
                   type="button"
                   onClick={() => applyCategory(category)}
-                  className={`group inline-flex min-h-touch shrink-0 snap-start items-center rounded-full px-5 py-3 font-bold shadow-xl transition duration-300 md:px-6 md:hover:scale-105 motion-reduce:md:hover:scale-100 ${
+                  className={`group inline-flex h-9 shrink-0 snap-start items-center rounded-full px-3.5 py-1.5 text-sm font-semibold shadow-md transition duration-300 md:px-4 md:hover:scale-[1.02] motion-reduce:md:hover:scale-100 ${
                     selectedCategory === category
                       ? 'bg-gradient-to-r from-primary-600 via-primary-600 to-primary-700 text-white hover:from-primary-700 hover:via-primary-700 hover:to-primary-800 hover:shadow-primary-500/25'
                       : 'border border-white/20 bg-white/10 text-white backdrop-blur-xl hover:bg-white/20 hover:shadow-white/25'
                   }`}
                 >
-                  <span className="flex items-center gap-2">
+                  <span className="flex items-center gap-1.5">
                     {category}
                     {selectedCategory === category ? (
-                      <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
+                      <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                       </svg>
                     ) : null}
@@ -251,9 +256,9 @@ export default function EventsPageClient({ allEvents, allDungeons, selectedCateg
                 </button>
               ))}
             </div>
-            <p className="mt-3 text-center text-xs text-gray-600 md:px-4">
+            <p className="mt-2 text-center text-[11px] leading-snug text-gray-600 md:px-4">
               Filter URLs are shareable—example{' '}
-              <code className="rounded bg-white/5 px-1.5 py-0.5 text-[0.7rem] text-gray-400">
+              <code className="rounded bg-white/5 px-1 py-0.5 text-[10px] text-gray-400">
                 /events?category=Outdoor%20Events
               </code>
               .
@@ -261,8 +266,8 @@ export default function EventsPageClient({ allEvents, allDungeons, selectedCateg
           </div>
 
           {upcomingEvents.length > 0 ? (
-            <section className="mb-14 md:mb-16" aria-labelledby="events-upcoming-heading">
-              <div className="mb-8 text-center md:text-left">
+            <section className="mb-12 md:mb-14" aria-labelledby="events-upcoming-heading">
+              <div className="mb-5 text-center md:text-left">
                 <h2
                   id="events-upcoming-heading"
                   className="font-serif text-2xl font-bold text-white sm:text-3xl md:text-4xl"

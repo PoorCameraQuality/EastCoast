@@ -4,7 +4,7 @@ import { getAllEvents } from '@/data/events'
 import { getAllDungeons } from '@/data/dungeons'
 import Link from 'next/link'
 import Breadcrumb from '@/components/Breadcrumb'
-import SupportCTAInline from '@/components/SupportCTAInline'
+import HeroSponsorLayout from '@/components/HeroSponsorLayout'
 import { BASE_URL } from '@/lib/seo'
 import { CONTACT_US_LABEL } from '@/lib/submissionContact'
 import { EAST_COAST_STATES } from '@/lib/eastCoastStates'
@@ -109,81 +109,81 @@ export default function StatesIndexPage() {
       <div className="container-custom relative z-10">
         <Breadcrumb items={breadcrumbItems} />
 
-        <header className="mx-auto mb-8 max-w-3xl text-center md:mb-10 md:px-2">
-          <p className="mb-3 text-sm font-medium uppercase tracking-wider text-primary-400/90">
-            Browse by region
-          </p>
-          <h1 className="font-serif text-3xl font-bold leading-tight text-white sm:text-4xl md:text-5xl">
-            Kink events &amp; dungeons{' '}
-            <span className="bg-gradient-to-r from-primary-300 via-primary-400 to-primary-500 bg-clip-text text-transparent">
-              by state
-            </span>
-          </h1>
-          <p className="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-gray-300 md:text-lg">
-            Upcoming parties and cons, plus dungeon listings—grouped the way people actually search (&quot;near
-            me&quot;). Jump to a hotspot below or scroll your region.
-          </p>
-          <p className="mt-3 text-sm text-gray-500">
-            Fast path:{' '}
-            <Link href="/events" className="text-primary-400 underline underline-offset-2 hover:text-primary-300">
-              all events
-            </Link>{' '}
-            ·{' '}
-            <Link href="/dungeons" className="text-primary-400 underline underline-offset-2 hover:text-primary-300">
-              all dungeons
-            </Link>
-          </p>
+        <HeroSponsorLayout contextLabel="States">
+          <header className="max-w-3xl text-center md:px-2 lg:text-left lg:mx-0">
+            <p className="mb-3 text-sm font-medium uppercase tracking-wider text-primary-400/90">
+              Browse by region
+            </p>
+            <h1 className="font-serif text-3xl font-bold leading-tight text-white sm:text-4xl md:text-5xl">
+              Kink events &amp; dungeons{' '}
+              <span className="bg-gradient-to-r from-primary-300 via-primary-400 to-primary-500 bg-clip-text text-transparent">
+                by state
+              </span>
+            </h1>
+            <p className="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-gray-300 md:text-lg lg:mx-0">
+              Upcoming parties and cons, plus dungeon listings—grouped the way people actually search (&quot;near
+              me&quot;). Jump to a hotspot below or scroll your region.
+            </p>
+            <p className="mt-3 text-sm text-gray-500">
+              Fast path:{' '}
+              <Link href="/events" className="text-primary-400 underline underline-offset-2 hover:text-primary-300">
+                all events
+              </Link>{' '}
+              ·{' '}
+              <Link href="/dungeons" className="text-primary-400 underline underline-offset-2 hover:text-primary-300">
+                all dungeons
+              </Link>
+            </p>
 
-          <div className="mx-auto mt-8 flex max-w-2xl flex-col gap-3 sm:flex-row sm:flex-wrap sm:justify-center">
-            <StatPill
-              label="Upcoming"
-              value={totalEvents}
-              sub="events on calendar"
-              icon={
-                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                  />
-                </svg>
-              }
-            />
-            <StatPill
-              label="Directory"
-              value={totalDungeons}
-              sub="dungeon & venue listings"
-              icon={
-                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
-                  />
-                </svg>
-              }
-            />
-            <StatPill
-              label="Coverage"
-              value={stateCount}
-              sub="US + DC + Canada"
-              icon={
-                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                  />
-                </svg>
-              }
-            />
-          </div>
-        </header>
-
-        <SupportCTAInline contextLabel="States" />
+            <div className="mx-auto mt-8 flex max-w-2xl flex-col gap-3 sm:flex-row sm:flex-wrap sm:justify-center lg:mx-0 lg:justify-start">
+              <StatPill
+                label="Upcoming"
+                value={totalEvents}
+                sub="events on calendar"
+                icon={
+                  <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                    />
+                  </svg>
+                }
+              />
+              <StatPill
+                label="Directory"
+                value={totalDungeons}
+                sub="dungeon & venue listings"
+                icon={
+                  <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+                    />
+                  </svg>
+                }
+              />
+              <StatPill
+                label="Coverage"
+                value={stateCount}
+                sub="US + DC + Canada"
+                icon={
+                  <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
+                  </svg>
+                }
+              />
+            </div>
+          </header>
+        </HeroSponsorLayout>
 
         <section className="mb-16 md:mb-20" aria-labelledby="spotlight-title">
           <div className="mb-8 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
