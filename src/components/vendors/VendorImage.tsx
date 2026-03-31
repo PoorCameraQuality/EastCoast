@@ -6,7 +6,7 @@ import React, { useState } from 'react'
 type VendorImageProps = {
   src?: string | null
   alt: string
-  size: 125 | 48
+  size: 125 | 48 | 40
   className?: string
 }
 
