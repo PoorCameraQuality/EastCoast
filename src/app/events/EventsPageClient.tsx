@@ -292,7 +292,12 @@ export default function EventsPageClient({ allEvents, allDungeons, selectedCateg
               </div>
               <div className="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-8 lg:grid-cols-3">
                 {upcomingEvents.map((event) => (
-                  <EventHubCard key={event.slug} event={event} variant="upcoming" />
+                  <EventHubCard
+                    key={event.slug}
+                    event={event}
+                    variant="upcoming"
+                    itemListName="events_page_upcoming"
+                  />
                 ))}
               </div>
             </section>
@@ -315,7 +320,12 @@ export default function EventsPageClient({ allEvents, allDungeons, selectedCateg
               </div>
               <div className="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-8 lg:grid-cols-3">
                 {pastEvents.map((event) => (
-                  <EventHubCard key={event.slug} event={event} variant="past" />
+                  <EventHubCard
+                    key={event.slug}
+                    event={event}
+                    variant="past"
+                    itemListName="events_page_past"
+                  />
                 ))}
               </div>
             </section>

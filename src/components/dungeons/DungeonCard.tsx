@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import DungeonImage from '@/components/dungeons/DungeonImage'
+import { trackSelectItemEntity } from '@/lib/analyticsEntities'
 import { stateAbbrToSlug } from '@/lib/discoveryCrossLinks'
 import { EAST_COAST_STATES } from '@/lib/eastCoastStates'
 
@@ -46,6 +47,14 @@ export default function DungeonCard({ dungeon }: DungeonCardProps) {
               <Link
                 href={`/dungeons/${dungeon.slug}`}
                 className="hover:text-primary-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-500"
+                onClick={() =>
+                  trackSelectItemEntity({
+                    entityType: 'dungeon',
+                    slug: dungeon.slug,
+                    name: dungeon.name,
+                    itemListName: 'dungeon_card',
+                  })
+                }
               >
                 {dungeon.name}
               </Link>
@@ -71,6 +80,14 @@ export default function DungeonCard({ dungeon }: DungeonCardProps) {
           href={`/dungeons/${dungeon.slug}`}
           className="btn-primary inline-flex min-h-touch flex-1 items-center justify-center px-4 py-2 text-sm sm:flex-none"
           aria-label={`View listing for ${dungeon.name}`}
+          onClick={() =>
+            trackSelectItemEntity({
+              entityType: 'dungeon',
+              slug: dungeon.slug,
+              name: dungeon.name,
+              itemListName: 'dungeon_card',
+            })
+          }
         >
           View listing
         </Link>

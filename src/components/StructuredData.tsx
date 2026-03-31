@@ -1,5 +1,75 @@
 import { getAllEvents } from '@/data/events'
 import { BASE_URL } from '@/lib/seo'
+import { venueExportType } from '@/lib/directoryExport'
+
+function dungeonHoursSpecifications(
+  hours: string | undefined
+): Record<string, unknown>[] | undefined {
+  if (!hours?.trim()) return undefined
+  const dayMap: Record<string, string> = {
+    Mo: 'Monday',
+    Tu: 'Tuesday',
+    We: 'Wednesday',
+    Th: 'Thursday',
+    Fr: 'Friday',
+    Sa: 'Saturday',
+    Su: 'Sunday',
+  }
+  const specs: Record<string, unknown>[] = []
+  for (const part of hours.split(',').map((s) => s.trim())) {
+    const m = part.match(/^([A-Za-z]{2})\s+(\d{2}):(\d{2})-(\d{2}):(\d{2})$/)
+    if (m) {
+      const dayName = dayMap[m[1] as keyof typeof dayMap] || m[1]
+      specs.push({
+        '@type': 'OpeningHoursSpecification',
+        dayOfWeek: dayName,
+        opens: `${m[2]}:${m[3]}`,
+        closes: `${m[4]}:${m[5]}`,
+      })
+    }
+  }
+  return specs.length ? specs : undefined
+}
+
+function additionalTypeUriForDungeon(category: string): string {
+  const t = venueExportType(category || '')
+  if (t === 'swing_club') return `${BASE_URL}/schema/SwingClub`
+  if (t === 'other_venue') return `${BASE_URL}/schema/CommunityVenue`
+  return `${BASE_URL}/schema/BdsmDungeon`
+}
+
+function serviceLabelForDungeon(category: string): string {
+  const t = venueExportType(category || '')
+  if (t === 'swing_club') return 'Swing and lifestyle club'
+  if (t === 'other_venue') return 'Kink-positive community venue'
+  return 'BDSM community dungeon'
+}
+
+/** Remove undefined keys so JSON-LD validators see a clean graph. */
+function pruneUndefined<T extends Record<string, unknown>>(obj: T): T {
+  const out: Record<string, unknown> = {}
+  for (const [k, v] of Object.entries(obj)) {
+    if (v === undefined) continue
+    if (v && typeof v === 'object' && !Array.isArray(v)) {
+      const inner = pruneUndefined(v as Record<string, unknown>)
+      if (Object.keys(inner).length) out[k] = inner
+      continue
+    }
+    if (Array.isArray(v)) {
+      const arr = v
+        .map((item) =>
+          item && typeof item === 'object' && !Array.isArray(item)
+            ? pruneUndefined(item as Record<string, unknown>)
+            : item
+        )
+        .filter((item) => item !== undefined && item !== null)
+      if (arr.length) out[k] = arr
+      continue
+    }
+    out[k] = v
+  }
+  return out as T
+}
 
 interface EventStructuredDataProps {
   event: {
@@ -92,7 +162,7 @@ export function EventStructuredData({ event }: EventStructuredDataProps) {
       "@type": "Offer",
       "url": event.website || `${BASE_URL}/events/${event.slug}`,
       "priceCurrency": "USD",
-      "availability": "https://schema.org/PreOrder",
+      "availability": "https://schema.org/InStock",
       "validFrom": event.date.start,
       "description": "Tickets and pricing on the organizer website"
     },
@@ -123,44 +193,79 @@ export function EventStructuredData({ event }: EventStructuredDataProps) {
 
 // New component for dungeon structured data with LocalBusiness schema
 export function DungeonStructuredData({ dungeon }: { dungeon: any }) {
-  const structuredData = {
-    "@context": "https://schema.org",
-    "@type": "EntertainmentBusiness",
-    "name": dungeon.name,
-    "description": dungeon.excerpt,
-    "url": `${BASE_URL}/dungeons/${dungeon.slug}`,
-    "image": dungeon.logo ? buildImageUrl(dungeon.logo, `${BASE_URL}/images/placeholder-logo.svg`) : undefined,
-    "telephone": dungeon.contact?.phone || dungeon.phone || undefined,
-    "email": dungeon.contact?.email || dungeon.email || undefined,
-    "address": {
-      "@type": "PostalAddress",
-      "addressLocality": dungeon.location.city,
-      "addressRegion": dungeon.location.state,
-      "addressCountry": "US"
-    },
-    "geo": {
-      "@type": "GeoCoordinates",
-      "latitude": dungeon.location.coordinates?.lat || undefined,
-      "longitude": dungeon.location.coordinates?.lng || undefined
-    },
-    "openingHours": dungeon.hours || undefined,
-    "priceRange": dungeon.priceRange || "$$",
-    "category": dungeon.category,
-    "serviceType": "BDSM Dungeon",
-    "areaServed": dungeon.location.region || dungeon.location.state,
-    "hasOfferCatalog": {
-      "@type": "OfferCatalog",
-      "name": "Dungeon Services",
-      "itemListElement": dungeon.services?.map((service: string, index: number) => ({
-        "@type": "Offer",
-        "itemOffered": {
-          "@type": "Service",
-          "name": service
-        }
-      })) || []
-    },
-    "sameAs": dungeon.socialMedia ? Object.values(dungeon.socialMedia) : undefined
+  const pageId = `${BASE_URL}/dungeons/${dungeon.slug}`
+  const cat = dungeon.category || ''
+  const hoursSpec = dungeonHoursSpecifications(dungeon.hours)
+  const street = dungeon.location?.address
+
+  const address: Record<string, unknown> = {
+    '@type': 'PostalAddress',
+    addressLocality: dungeon.location.city,
+    addressRegion: dungeon.location.state,
+    addressCountry: 'US',
   }
+  if (street) {
+    address.streetAddress = street
+  }
+
+  const raw: Record<string, unknown> = {
+    '@context': 'https://schema.org',
+    '@type': 'EntertainmentBusiness',
+    name: dungeon.name,
+    description: dungeon.excerpt,
+    url: pageId,
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': pageId,
+    },
+    additionalType: additionalTypeUriForDungeon(cat),
+    image: dungeon.logo ? buildImageUrl(dungeon.logo, `${BASE_URL}/images/placeholder-logo.svg`) : undefined,
+    telephone: dungeon.contact?.phone || dungeon.phone || undefined,
+    email: dungeon.contact?.email || dungeon.email || undefined,
+    address,
+    priceRange: dungeon.priceRange || '$$',
+    category: cat,
+    serviceType: serviceLabelForDungeon(cat),
+    areaServed: dungeon.location.region || dungeon.location.state,
+    sameAs: (() => {
+      if (!dungeon.socialMedia) return undefined
+      const urls = Object.values(dungeon.socialMedia).filter(Boolean) as string[]
+      return urls.length ? urls : undefined
+    })(),
+  }
+
+  if (dungeon.location.coordinates?.lat != null && dungeon.location.coordinates?.lng != null) {
+    raw.geo = {
+      '@type': 'GeoCoordinates',
+      latitude: dungeon.location.coordinates.lat,
+      longitude: dungeon.location.coordinates.lng,
+    }
+  }
+
+  if (hoursSpec) {
+    raw.openingHoursSpecification = hoursSpec
+  } else if (dungeon.hours) {
+    raw.openingHours = dungeon.hours
+  }
+
+  const serviceList = Array.isArray(dungeon.services)
+    ? dungeon.services.map((service: string) => ({
+        '@type': 'Offer',
+        itemOffered: {
+          '@type': 'Service',
+          name: service,
+        },
+      }))
+    : []
+  if (serviceList.length) {
+    raw.hasOfferCatalog = {
+      '@type': 'OfferCatalog',
+      name: 'Listed services and programming',
+      itemListElement: serviceList,
+    }
+  }
+
+  const structuredData = pruneUndefined(raw as Record<string, unknown>)
 
   // Validate JSON before injecting
   try {
@@ -285,13 +390,15 @@ export function WebsiteStructuredData() {
     "@context": "https://schema.org",
     "@type": "WebSite",
     "name": "East Coast Kink Events",
-    "description": "Discover and connect with kink events across the East Coast",
-    "url": "https://www.eastcoastkinkevents.com",
+    "alternateName": "ECKE",
+    "description": "Directory of BDSM community dungeons, swing and lifestyle clubs, kink events, education, and vendors—United States focus with expandable regional coverage.",
+    "url": BASE_URL,
     // SearchAction removed until a public search query param route is provided
     "publisher": {
       "@type": "Organization",
       "name": "East Coast Kink Events",
-      "url": "https://www.eastcoastkinkevents.com"
+      "alternateName": "ECKE",
+      "url": BASE_URL
     }
   }
 
@@ -356,16 +463,21 @@ export function EventListStructuredData() {
 
 // New component for organization structured data
 export function OrganizationStructuredData() {
+  const sameAs = [
+    "https://discord.gg/xcnGGyGsmT",
+    ...(process.env.NEXT_PUBLIC_TWITTER_URL ? [process.env.NEXT_PUBLIC_TWITTER_URL] : []),
+    ...(process.env.NEXT_PUBLIC_INSTAGRAM_URL ? [process.env.NEXT_PUBLIC_INSTAGRAM_URL] : []),
+  ].filter(Boolean)
+
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "Organization",
     "name": "East Coast Kink Events",
-    "description": "Discover and connect with kink events across the East Coast",
+    "alternateName": "ECKE",
+    "description": "The East Coast Kink Events (ECKE) directory lists permanent community venues (BDSM dungeons and swing/lifestyle clubs), major kink events, education, and vendors—built for discoverability and safety-forward discovery.",
     "url": BASE_URL,
     "logo": `${BASE_URL}/og-image.png`,
-    "sameAs": [
-      "https://discord.gg/xcnGGyGsmT"
-    ],
+    "sameAs": sameAs,
     "contactPoint": {
       "@type": "ContactPoint",
       "contactType": "customer service",
@@ -374,7 +486,7 @@ export function OrganizationStructuredData() {
     },
     "areaServed": {
       "@type": "Place",
-      "name": "East Coast United States"
+      "name": "United States"
     },
     "serviceType": "Event Aggregation",
     "hasOfferCatalog": {
@@ -405,6 +517,41 @@ export function OrganizationStructuredData() {
     )
   } catch (error) {
     console.error('Invalid JSON in OrganizationStructuredData:', error)
+    return null
+  }
+}
+
+export function FaqStructuredData({
+  faqs,
+  id = 'faq-structured-data',
+}: {
+  faqs: { question: string; answer: string }[]
+  id?: string
+}) {
+  if (!faqs?.length) return null
+  const structuredData = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqs.map((f) => ({
+      '@type': 'Question',
+      name: f.question,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: f.answer,
+      },
+    })),
+  }
+  try {
+    const jsonString = escapeHtmlInJson(structuredData)
+    return (
+      <script
+        id={id}
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: jsonString }}
+      />
+    )
+  } catch (error) {
+    console.error('Invalid JSON in FaqStructuredData:', error)
     return null
   }
 }

@@ -2,6 +2,8 @@
 
 import Link from 'next/link'
 import VendorImage from '@/components/vendors/VendorImage'
+import OutboundWebsiteLink from '@/components/analytics/OutboundWebsiteLink'
+import { trackSelectItemEntity } from '@/lib/analyticsEntities'
 import {
   getVendorCardPreviewText,
   getVendorPaidImage125Url,
@@ -13,13 +15,28 @@ type VendorCardProps = {
   vendor: VendorRecord
   selectedTagSlugs: string[]
   tagsBySlug: Record<string, VendorTag>
+  /** GA4 `item_list_name` for profile clicks from marketplace grids */
+  itemListName?: string
 }
 
 const MAX_TAG_CHIPS = 5
 
-export default function VendorCard({ vendor, selectedTagSlugs, tagsBySlug }: VendorCardProps) {
+export default function VendorCard({
+  vendor,
+  selectedTagSlugs,
+  tagsBySlug,
+  itemListName = 'vendors_marketplace',
+}: VendorCardProps) {
   const paidImageUrl = getVendorPaidImage125Url({ vendor, selectedTagSlugs })
   const preview = getVendorCardPreviewText({ vendor, maxSentences: 2 })
+
+  const trackProfile = () =>
+    trackSelectItemEntity({
+      entityType: 'vendor',
+      slug: vendor.slug,
+      name: vendor.name,
+      itemListName,
+    })
 
   const tagChips = (vendor.tagSlugs || [])
     .map((slug) => tagsBySlug[slug])
@@ -52,6 +69,7 @@ export default function VendorCard({ vendor, selectedTagSlugs, tagsBySlug }: Ven
               <Link
                 href={`/vendors/${vendor.slug}`}
                 className="hover:text-primary-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-500"
+                onClick={trackProfile}
               >
                 {vendor.name}
               </Link>
@@ -90,19 +108,21 @@ export default function VendorCard({ vendor, selectedTagSlugs, tagsBySlug }: Ven
 
           <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:gap-3">
             {vendor.websiteUrl ? (
-              <a
+              <OutboundWebsiteLink
                 href={vendor.websiteUrl}
-                target="_blank"
-                rel="noopener noreferrer"
+                entityType="vendor"
+                entitySlug={vendor.slug}
+                entityName={vendor.name}
                 className="btn-primary inline-flex min-h-touch w-full items-center justify-center px-4 py-2 text-sm sm:w-auto"
                 aria-label={`Visit ${vendor.name} shop (opens in a new tab)`}
               >
                 Visit shop
-              </a>
+              </OutboundWebsiteLink>
             ) : (
               <Link
                 href={`/vendors/${vendor.slug}`}
                 className="btn-primary inline-flex min-h-touch w-full items-center justify-center px-4 py-2 text-sm sm:w-auto"
+                onClick={trackProfile}
               >
                 View listing
               </Link>
@@ -111,6 +131,7 @@ export default function VendorCard({ vendor, selectedTagSlugs, tagsBySlug }: Ven
             <Link
               href={`/vendors/${vendor.slug}`}
               className="btn-outline inline-flex min-h-touch w-full items-center justify-center px-4 py-2 text-sm sm:w-auto"
+              onClick={trackProfile}
             >
               Full profile
             </Link>

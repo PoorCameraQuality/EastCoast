@@ -7,9 +7,11 @@ import { tagsBySlug } from '@/data/vendorTaxonomy'
 type Props = {
   vendors: VendorRecord[]
   selectedTagSlugs: string[]
+  /** GA4 `item_list_name` for marketplace hub grids */
+  itemListName: string
 }
 
-export default function VendorDiscoveryHubGrid({ vendors, selectedTagSlugs }: Props) {
+export default function VendorDiscoveryHubGrid({ vendors, selectedTagSlugs, itemListName }: Props) {
   if (vendors.length === 0) {
     return (
       <p className="text-gray-400 text-center py-12">
@@ -26,7 +28,12 @@ export default function VendorDiscoveryHubGrid({ vendors, selectedTagSlugs }: Pr
     <ul className="grid gap-6 sm:grid-cols-1 lg:grid-cols-2 list-none p-0 m-0">
       {vendors.map((v) => (
         <li key={v.slug}>
-          <VendorCard vendor={v} selectedTagSlugs={selectedTagSlugs} tagsBySlug={tagsBySlug} />
+          <VendorCard
+            vendor={v}
+            selectedTagSlugs={selectedTagSlugs}
+            tagsBySlug={tagsBySlug}
+            itemListName={itemListName}
+          />
         </li>
       ))}
     </ul>

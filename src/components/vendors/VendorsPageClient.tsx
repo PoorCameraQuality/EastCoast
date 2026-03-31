@@ -283,7 +283,13 @@ export default function VendorsPageClient({
               ) : (
                 <div className="grid grid-cols-1 gap-5 xl:grid-cols-2 xl:gap-6">
                   {displayVendors.map((v) => (
-                    <VendorCard key={v.slug} vendor={v} selectedTagSlugs={selectedTagSlugs} tagsBySlug={tagsBySlug} />
+                    <VendorCard
+                      key={v.slug}
+                      vendor={v}
+                      selectedTagSlugs={selectedTagSlugs}
+                      tagsBySlug={tagsBySlug}
+                      itemListName="vendors_page"
+                    />
                   ))}
                 </div>
               )}

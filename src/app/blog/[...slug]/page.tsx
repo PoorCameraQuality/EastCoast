@@ -13,6 +13,8 @@ import { buildBlogCatchAllStaticParams, blogRobotsMeta } from '@/lib/blogDiscove
 import { BASE_URL } from '@/lib/seo'
 import BlogArticleJsonLd from '@/components/blog/BlogArticleJsonLd'
 import BlogArticleLayout from '@/components/blog/BlogArticleLayout'
+import { FaqStructuredData } from '@/components/StructuredData'
+import { getBlogPillarFaqs } from '@/lib/blogPillarFaqs'
 
 export const revalidate = 1800
 
@@ -118,6 +120,7 @@ export default async function BlogCatchAllPage({ params }: PageProps) {
     if (!doc) notFound()
 
     const jsonLdDesc = [doc.description, doc.bodyMarkdown.slice(0, 500)].join(' ').slice(0, 500)
+    const pillarFaqs = getBlogPillarFaqs(parsed.slug)
 
     return (
       <div>
@@ -127,6 +130,10 @@ export default async function BlogCatchAllPage({ params }: PageProps) {
           description={jsonLdDesc}
           datePublished={doc.datePublished}
           variant="blogPosting"
+        />
+        <FaqStructuredData
+          faqs={pillarFaqs}
+          id={`blog-pillar-faq-${parsed.slug}`}
         />
         <BlogArticleLayout
           variant="pillar"

@@ -119,7 +119,7 @@ export default async function EventsPageNumber({ params }: PageProps) {
         {paginatedEvents.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
             {paginatedEvents.map((event) => (
-              <EventCard key={event.slug} event={event} />
+              <EventCard key={event.slug} event={event} itemListName="events_paginated" />
             ))}
           </div>
         ) : (

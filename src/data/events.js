@@ -2546,6 +2546,40 @@ export const events = [
     }
   },
   {
+    "name": "Southeastern Power Exchange Regional Contest 2026 (TBA)",
+    "slug": "southeastern-power-exchange-regional-contest",
+    "status": "tba",
+    "date": {
+      "start": "2026-09-01",
+      "end": "2026-09-30",
+      "display": "2026 dates TBA (confirm on southeastpowerexchange.com)"
+    },
+    "location": {
+      "city": "Southeastern U.S.",
+      "state": "TBA",
+      "region": "Southeastern United States"
+    },
+    "category": "Contest Weekend",
+    "excerpt": "Regional power exchange title contest and community weekend for the Southeastern US—contestant guidelines, judges, sponsors, and 2026 regional info on the official GoDaddy-built site. Dates and venue were not posted publicly at scrape time; use the contact email on the site for production questions.",
+    "longDescription": "## What it is\n\nThe **Southeastern Power Exchange** ([southeastpowerexchange.com](https://southeastpowerexchange.com/)) promotes a **regional power exchange contest** with pages for **contestant guidelines**, **judges**, **2026 regional contest** updates, **prior contestants**, and **sponsors**. Public copy frames the weekend around **power exchange relationship** visibility and **education** for consenting adults.\n\n## 2026 logistics\n\nThe **[2026 regional contest](https://southeastpowerexchange.com/2026-regional-contest)** landing page was still on **countdown / “preparations”** messaging when reviewed—**no confirmed calendar dates or hotel** appeared in the static HTML. **Always confirm** the current year’s **schedule, venue, and registration** on the official site (or via organizer contact) **before booking travel**.\n\n## Contact\n\nThe contest page links **SEPowerexchangecontest@gmail.com** for inquiries.\n\n## Related listings\n\nAttendees interested in **power exchange** programming may also browse **Florida Power Exchange**, **Beyond Leather** (International Power Exchange® Contest), and other **contest** listings on ECKE—each is a **separate producer**.",
+    "website": "https://southeastpowerexchange.com/2026-regional-contest",
+    "organizer": "Southeastern Power Exchange",
+    "venue": "TBA — confirm on official site",
+    "logo": "/images/events/logo-southeastern-power-exchange-2026.png",
+    "features": [
+      "Regional power exchange title contest",
+      "Contestant guidelines & judges published on site",
+      "2026 regional contest hub",
+      "Southeastern US audience",
+      "Confirm dates and venue on southeastpowerexchange.com"
+    ],
+    "seo": {
+      "title": "Southeastern Power Exchange 2026 Regional Contest | East Coast Kink Events",
+      "description": "Southeastern Power Exchange regional PE contest—2026 page, guidelines, and judges at southeastpowerexchange.com. Confirm dates and venue before travel.",
+      "keywords": "Southeastern Power Exchange, SPEX, regional power exchange contest, PE title, BDSM contest, Southeast US kink"
+    }
+  },
+  {
     "name": "World Bear Weekend 2026",
     "slug": "world-bear-weekend-2026",
     "date": {

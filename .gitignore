@@ -45,6 +45,7 @@ Thumbs.db
 
 # Cursor / agent scratch
 .cursor_tmp/
+tmp-spex.html
 
 # Image/temp artifacts
 public/images/*.tmp

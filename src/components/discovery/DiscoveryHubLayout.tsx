@@ -1,6 +1,7 @@
 import EventCard from '@/components/EventCard'
 import DungeonLogo from '@/components/DungeonLogo'
 import Link from 'next/link'
+import TrackedEntityLink from '@/components/analytics/TrackedEntityLink'
 import type { UnifiedEvent } from '@/lib/unifiedEvents'
 import type { DiscoveryParsed } from '@/lib/discoverySlug'
 import { listDungeonsForDiscovery } from '@/lib/discoveryDungeonCount'
@@ -64,7 +65,7 @@ export default function DiscoveryHubLayout({ parsed, h1, paragraphs, events }: P
           {events.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {events.map((e) => (
-                <EventCard key={e.slug} event={toEventCardShape(e)} />
+                <EventCard key={e.slug} event={toEventCardShape(e)} itemListName="discovery_hub_events" />
               ))}
             </div>
           ) : (
@@ -84,7 +85,15 @@ export default function DiscoveryHubLayout({ parsed, h1, paragraphs, events }: P
           {dungeons.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {dungeons.map((dungeon) => (
-                <Link key={dungeon.slug} href={`/dungeons/${dungeon.slug}`}>
+                <TrackedEntityLink
+                  key={dungeon.slug}
+                  href={`/dungeons/${dungeon.slug}`}
+                  entityType="dungeon"
+                  slug={dungeon.slug}
+                  name={dungeon.name}
+                  itemListName="discovery_hub_dungeons"
+                  className="block"
+                >
                   <div className="card-elegant md:hover:scale-[1.02] motion-reduce:md:hover:scale-100 transition-transform duration-300 cursor-pointer h-full">
                     {dungeon.logo && (
                       <div className="mb-4">
@@ -102,7 +111,7 @@ export default function DiscoveryHubLayout({ parsed, h1, paragraphs, events }: P
                     </p>
                     <p className="text-sm text-gray-300 line-clamp-3">{dungeon.excerpt}</p>
                   </div>
-                </Link>
+                </TrackedEntityLink>
               ))}
             </div>
           ) : (

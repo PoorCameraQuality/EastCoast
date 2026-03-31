@@ -1,0 +1,55 @@
+openapi: 3.0.3
+info:
+  title: ECKE Directory export API
+  description: |
+    Read-only JSON exports for East Coast Kink Events (ECKE) listings.
+    Prefer these `/export/` URLs for programmatic access; authenticated and mutating routes under `/api/` may be disallowed in robots.txt.
+  version: 1.0.0
+  contact:
+    name: East Coast Kink Events
+    url: https://www.eastcoastkinkevents.com/contact
+servers:
+  - url: https://www.eastcoastkinkevents.com
+paths:
+  /export/venues.json:
+    get:
+      summary: All venue-style listings
+      description: Dungeons dataset including BDSM spaces, swing/lifestyle clubs, and related community venues.
+      responses:
+        '200':
+          description: JSON envelope with venues array
+  /export/venues/{state}:
+    get:
+      summary: Venues in one US state or DC
+      parameters:
+        - name: state
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: '^[A-Z]{2}$'
+          description: Two-letter postal code (e.g. PA, CA, DC)
+      responses:
+        '200':
+          description: Filtered venues
+        '400':
+          description: Invalid state code
+  /export/conventions.json:
+    get:
+      summary: Events / conventions export
+      responses:
+        '200':
+          description: JSON envelope with conventions array
+  /export/stats.json:
+    get:
+      summary: Aggregate counts
+      responses:
+        '200':
+          description: Stats object
+  /export/directory.json:
+    get:
+      summary: Full snapshot
+      description: Stats plus full venues and conventions arrays.
+      responses:
+        '200':
+          description: Combined JSON

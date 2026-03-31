@@ -247,6 +247,12 @@ const jobs = [
       'https://www.pnwlc.org/wp-content/uploads/2021/07/PNWLC-logo-green-tent-trees-500x375-1.jpg',
     dest: join(outDir, 'events', 'logo-pnwlc-2026.jpg'),
   },
+  {
+    page: 'https://southeastpowerexchange.com/contestant-guidelines',
+    direct:
+      'https://img1.wsimg.com/isteam/ip/afec1ed4-052b-40a3-a218-0a08183e6acf/blob-a472705.png',
+    dest: join(outDir, 'events', 'logo-southeastern-power-exchange-2026.png'),
+  },
 ]
 
 mkdirSync(join(outDir, 'dungeons'), { recursive: true })

@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { useState } from 'react'
+import { trackSelectItemEntity } from '@/lib/analyticsEntities'
 
 export type HubEventRow = {
   slug: string
@@ -47,6 +48,14 @@ function EventRow({ event }: { event: HubEventRow }) {
     <Link
       href={`/events/${event.slug}`}
       className="flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 p-3 hover:border-primary-400/30 transition-colors min-h-touch"
+      onClick={() =>
+        trackSelectItemEntity({
+          entityType: 'event',
+          slug: event.slug,
+          name: event.name,
+          itemListName: 'dungeon_discovery_events_strip',
+        })
+      }
     >
       <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-lg bg-white/5">
         <Image

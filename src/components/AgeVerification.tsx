@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { markGaConsentGranted } from '@/lib/analyticsEntities'
 
 export default function AgeVerification() {
   const [showModal, setShowModal] = useState(false)
@@ -30,6 +31,7 @@ export default function AgeVerification() {
 
     // Skip age verification for search engine bots
     if (isBot()) {
+      markGaConsentGranted()
       setIsVerified(true)
       return
     }
@@ -37,6 +39,7 @@ export default function AgeVerification() {
     // Check if user has already verified their age
     const verified = localStorage.getItem('ageVerified')
     if (verified === 'true') {
+      markGaConsentGranted()
       setIsVerified(true)
     } else {
       setShowModal(true)
@@ -45,6 +48,7 @@ export default function AgeVerification() {
 
   const handleVerify = () => {
     localStorage.setItem('ageVerified', 'true')
+    markGaConsentGranted()
     setIsVerified(true)
     setShowModal(false)
   }

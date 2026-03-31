@@ -1,6 +1,9 @@
+'use client'
+
 import Link from 'next/link'
 import { getAllDungeons } from '@/data/dungeons'
 import VendorImage from '@/components/vendors/VendorImage'
+import { trackSelectItemEntity } from '@/lib/analyticsEntities'
 
 export default function FeaturedDungeonsSection() {
   const dungeons = getAllDungeons().slice(0, 6)
@@ -37,6 +40,14 @@ export default function FeaturedDungeonsSection() {
                 href={`/dungeons/${dungeon.slug}`}
                 className="snap-start min-w-[280px] group"
                 aria-label={`View listing: ${dungeon.name}`}
+                onClick={() =>
+                  trackSelectItemEntity({
+                    entityType: 'dungeon',
+                    slug: dungeon.slug,
+                    name: dungeon.name,
+                    itemListName: 'home_featured_dungeons',
+                  })
+                }
               >
                 <article className="relative h-full overflow-hidden rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl transition-all duration-500 group-hover:border-primary-400/25 group-hover:shadow-elegant-lg">
                   <div className="absolute inset-0 bg-gradient-to-br from-primary-500/8 via-transparent to-primary-500/8 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
@@ -76,6 +87,14 @@ export default function FeaturedDungeonsSection() {
               href={`/dungeons/${dungeon.slug}`}
               className="group"
               aria-label={`View listing: ${dungeon.name}`}
+              onClick={() =>
+                trackSelectItemEntity({
+                  entityType: 'dungeon',
+                  slug: dungeon.slug,
+                  name: dungeon.name,
+                  itemListName: 'home_featured_dungeons',
+                })
+              }
             >
               <article className="relative h-full overflow-hidden rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl p-6 transition-colors duration-500 md:hover:scale-[1.02] motion-reduce:md:hover:scale-100 hover:border-primary-400/25 hover:shadow-elegant-lg">
                 <div className="absolute inset-0 bg-gradient-to-br from-primary-500/8 via-transparent to-primary-500/8 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />

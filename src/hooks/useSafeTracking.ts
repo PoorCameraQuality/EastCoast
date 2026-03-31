@@ -1,8 +1,9 @@
 'use client'
 
-import { useEffect, useRef, useState, useCallback } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { usePathname } from 'next/navigation'
 import { useGA4 } from '@/contexts/GA4Provider'
+import { GA_CONSENT_EVENT } from '@/lib/analyticsEntities'
 
 export default function useSafeTracking() {
   const pathname = usePathname()
@@ -15,6 +16,7 @@ export default function useSafeTracking() {
   // Lightweight scroll tracking (passive only)
   const trackScroll = useCallback(() => {
     if (typeof window === 'undefined') return
+    if (!window.gaConsent) return
 
     const scrollTop = window.pageYOffset || document.documentElement.scrollTop
     const documentHeight = document.documentElement.scrollHeight - window.innerHeight
@@ -38,6 +40,8 @@ export default function useSafeTracking() {
 
   // Lightweight time tracking (no beforeunload listener)
   const trackTimeOnPage = useCallback(() => {
+    if (typeof window !== 'undefined' && !window.gaConsent) return
+
     const timeSpent = Math.round((Date.now() - pageStartTime) / 1000)
     
     // Only track if user spent meaningful time
@@ -54,9 +58,10 @@ export default function useSafeTracking() {
     }
   }, [pathname, ga4, pageStartTime])
 
-  // Track basic device info (lightweight)
+  // Track basic device info once consent is granted (runs after AgeVerification effect)
   useEffect(() => {
-    if (typeof window !== 'undefined') {
+    const sendDevice = () => {
+      if (typeof window === 'undefined' || !window.gaConsent) return
       const userAgent = navigator.userAgent
       const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(userAgent)
       const deviceType = isMobile ? 'mobile' : 'desktop'
@@ -69,6 +74,11 @@ export default function useSafeTracking() {
         operating_system: 'unknown',
         viewport_size: `${window.innerWidth}x${window.innerHeight}`
       })
+    }
+    sendDevice()
+    if (typeof window !== 'undefined') {
+      window.addEventListener(GA_CONSENT_EVENT, sendDevice)
+      return () => window.removeEventListener(GA_CONSENT_EVENT, sendDevice)
     }
   }, [ga4])
 

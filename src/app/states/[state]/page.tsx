@@ -125,6 +125,21 @@ export default function StatePage({ params }: PageProps) {
           <p className="text-gray-400">
             {stateInfo.region} • {stateEvents.length} upcoming events • {stateDungeons.length} dungeons
           </p>
+          <p className="text-gray-400 text-sm mt-4 max-w-2xl">
+            New to kink or your first venue visit? Read{' '}
+            <Link href="/blog/bdsm-beginner-guide" className="text-primary-400 hover:text-primary-300">
+              How to start exploring kink and BDSM safely
+            </Link>{' '}
+            on ECKE, then browse{' '}
+            <Link href="/dungeons" className="text-primary-400 hover:text-primary-300">
+              dungeons &amp; clubs
+            </Link>{' '}
+            and{' '}
+            <Link href="/events" className="text-primary-400 hover:text-primary-300">
+              events
+            </Link>{' '}
+            nationwide.
+          </p>
         </div>
 
         {/* Upcoming Events */}
@@ -141,7 +156,7 @@ export default function StatePage({ params }: PageProps) {
           {stateEvents.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {stateEvents.map((event) => (
-                <EventCard key={event.slug} event={event} />
+                <EventCard key={event.slug} event={event} itemListName="state_page_events" />
               ))}
             </div>
           ) : (

@@ -1,5 +1,8 @@
+'use client'
+
 import Link from 'next/link'
 import EventLogo from './EventLogo'
+import { trackSelectItemEntity } from '@/lib/analyticsEntities'
 
 interface Event {
   name: string
@@ -21,11 +24,23 @@ interface Event {
 
 interface EventCardProps {
   event: Event
+  /** GA4 `item_list_name` for `select_item` (e.g. `home_featured_events`, `events_paginated`). */
+  itemListName?: string
 }
 
-export default function EventCard({ event }: EventCardProps) {
+export default function EventCard({ event, itemListName = 'events_list' }: EventCardProps) {
   return (
-    <Link href={`/events/${event.slug}`}>
+    <Link
+      href={`/events/${event.slug}`}
+      onClick={() =>
+        trackSelectItemEntity({
+          entityType: 'event',
+          slug: event.slug,
+          name: event.name,
+          itemListName,
+        })
+      }
+    >
       <div className="group card-elegant md:hover:scale-[1.02] motion-reduce:md:hover:scale-100 transition-transform duration-300 cursor-pointer h-full flex flex-col min-h-touch">
         {/* Event Logo */}
         {event.logo && (

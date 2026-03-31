@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { getUpcomingEvents } from '@/data/events'
 import EventLogo from './EventLogo'
+import { trackSelectItemEntity } from '@/lib/analyticsEntities'
 
 export default function EventsSection() {
   const upcomingEvents = getUpcomingEvents()
@@ -34,7 +35,19 @@ export default function EventsSection() {
         {/* Mobile: Refined card layout */}
         <div className="md:hidden space-y-6 mb-12">
           {displayEventsMobile.map((event) => (
-            <Link key={event.slug} href={`/events/${event.slug}`} className="block group">
+            <Link
+              key={event.slug}
+              href={`/events/${event.slug}`}
+              className="block group"
+              onClick={() =>
+                trackSelectItemEntity({
+                  entityType: 'event',
+                  slug: event.slug,
+                  name: event.name,
+                  itemListName: 'home_events_section',
+                })
+              }
+            >
               <div className="relative overflow-hidden backdrop-blur-xl bg-white/5 rounded-2xl border border-white/10 hover:border-primary-400/30 transition-all duration-500 hover:scale-[1.02] shadow-2xl hover:shadow-primary-500/10">
                 {/* Subtle background gradient */}
                 <div className="absolute inset-0 bg-gradient-to-br from-primary-500/5 via-transparent to-primary-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
@@ -112,7 +125,19 @@ export default function EventsSection() {
         {/* Desktop: Refined grid layout */}
         <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
           {displayEventsDesktop.map((event) => (
-            <Link key={event.slug} href={`/events/${event.slug}`} className="block group">
+            <Link
+              key={event.slug}
+              href={`/events/${event.slug}`}
+              className="block group"
+              onClick={() =>
+                trackSelectItemEntity({
+                  entityType: 'event',
+                  slug: event.slug,
+                  name: event.name,
+                  itemListName: 'home_events_section',
+                })
+              }
+            >
               <div className="relative overflow-hidden backdrop-blur-xl bg-white/5 rounded-2xl border border-white/10 hover:border-primary-400/30 transition-all duration-500 hover:scale-105 h-[480px] flex flex-col shadow-2xl hover:shadow-primary-500/10">
                 {/* Subtle background gradient */}
                 <div className="absolute inset-0 bg-gradient-to-br from-primary-500/5 via-transparent to-primary-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>

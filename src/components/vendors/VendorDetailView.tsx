@@ -6,6 +6,7 @@ import { VendorStructuredData } from '@/components/StructuredData'
 import type { VendorRecord } from '@/lib/vendorFiltering'
 import { parseVendorLocation } from '@/lib/unifiedVendors'
 import DiscoveryEngineStrip from '@/components/discovery/DiscoveryEngineStrip'
+import OutboundWebsiteLink from '@/components/analytics/OutboundWebsiteLink'
 
 type Props = {
   vendor: VendorRecord
@@ -74,15 +75,16 @@ export default function VendorDetailView({ vendor, selectedTagSlugs }: Props) {
 
             <div className="mt-8 flex flex-col sm:flex-row gap-3">
               {vendor.websiteUrl ? (
-                <a
+                <OutboundWebsiteLink
                   href={vendor.websiteUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  entityType="vendor"
+                  entitySlug={vendor.slug}
+                  entityName={vendor.name}
                   className="btn-primary text-center min-h-touch inline-flex items-center justify-center"
                   aria-label="Visit vendor website (opens in a new tab)"
                 >
                   Visit Website
-                </a>
+                </OutboundWebsiteLink>
               ) : null}
               <Link
                 href="/contact?subject=Vendor%20Inquiry"

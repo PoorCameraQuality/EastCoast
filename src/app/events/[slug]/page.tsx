@@ -12,6 +12,7 @@ import EventCalendarExport from '@/components/EventCalendarExport'
 import { BASE_URL } from '@/lib/seo'
 import MarkdownSimple from '@/components/MarkdownSimple'
 import EventSeoIntro from '@/components/events/EventSeoIntro'
+import OutboundWebsiteLink from '@/components/analytics/OutboundWebsiteLink'
 
 // Generate metadata for SEO
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
@@ -235,10 +236,11 @@ function EnhancedEventLayout({ event, breadcrumbItems }: { event: any, breadcrum
               </div>
               
               {/* CTA Button */}
-              <a 
-                href={event.website} 
-                target="_blank" 
-                rel="noopener noreferrer"
+              <OutboundWebsiteLink
+                href={event.website}
+                entityType="event"
+                entitySlug={event.slug}
+                entityName={event.name}
                 className={`group inline-flex w-full sm:w-auto min-h-touch items-center justify-center bg-gradient-to-r ${colors.accent} text-black font-bold py-3 px-6 rounded-full ${colors.buttonHover} transition-colors duration-300 shadow-xl md:hover:scale-105 motion-reduce:md:hover:scale-100 whitespace-nowrap`}
               >
                 <span className="flex items-center gap-2">
@@ -247,7 +249,7 @@ function EnhancedEventLayout({ event, breadcrumbItems }: { event: any, breadcrum
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                   </svg>
                 </span>
-              </a>
+              </OutboundWebsiteLink>
             </div>
           </div>
         </div>

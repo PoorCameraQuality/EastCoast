@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { useEffect, useMemo, useState } from 'react'
+import { trackSelectItemEntity } from '@/lib/analyticsEntities'
 import VendorImage from '@/components/vendors/VendorImage'
 import { getVendorCardPreviewText, type VendorRecord } from '@/lib/vendorFiltering'
 import { tagGroupsById, tagsBySlug } from '@/data/vendorTaxonomy'
@@ -115,6 +116,14 @@ export default function FeaturedVendorsSection({ vendors: all }: Props) {
                 href={`/vendors/${vendor.slug}`}
                 className="snap-start min-w-[280px] group"
                 aria-label={`View vendor: ${vendor.name}`}
+                onClick={() =>
+                  trackSelectItemEntity({
+                    entityType: 'vendor',
+                    slug: vendor.slug,
+                    name: vendor.name,
+                    itemListName: 'home_featured_vendors',
+                  })
+                }
               >
                 <article className={`relative h-full overflow-hidden rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl transition-all duration-500 group-hover:border-primary-400/25 group-hover:shadow-elegant-lg ${vendor.isPaid ? 'vendor-paid-sparkle' : ''}`}>
                   <div className="absolute inset-0 bg-gradient-to-br from-primary-500/8 via-transparent to-primary-500/8 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
@@ -163,6 +172,14 @@ export default function FeaturedVendorsSection({ vendors: all }: Props) {
               href={`/vendors/${vendor.slug}`}
               className="group"
               aria-label={`View vendor: ${vendor.name}`}
+              onClick={() =>
+                trackSelectItemEntity({
+                  entityType: 'vendor',
+                  slug: vendor.slug,
+                  name: vendor.name,
+                  itemListName: 'home_featured_vendors',
+                })
+              }
             >
               <article className={`relative h-full overflow-hidden rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl p-6 transition-colors duration-500 md:hover:scale-[1.02] motion-reduce:md:hover:scale-100 hover:border-primary-400/25 hover:shadow-elegant-lg ${vendor.isPaid ? 'vendor-paid-sparkle' : ''}`}>
                 <div className="absolute inset-0 bg-gradient-to-br from-primary-500/8 via-transparent to-primary-500/8 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />

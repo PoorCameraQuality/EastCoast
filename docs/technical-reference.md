@@ -84,7 +84,15 @@ Defined in `package.json`:
 
 ### Analytics
 
-If `NEXT_PUBLIC_GA_MEASUREMENT_ID` is present, `src/app/layout.tsx` enables GA via `src/components/GoogleAnalytics.tsx` and wraps pages in `src/contexts/GA4Provider.tsx`.
+If `NEXT_PUBLIC_GA_MEASUREMENT_ID` is present, `src/app/layout.tsx` enables GA via `src/components/GoogleAnalytics.tsx` and wraps pages in `src/contexts/GA4Provider.tsx`. After age verification, `window.gaConsent` is set so SPA route changes update `page_path` in GA and optional scroll/device helpers in `src/hooks/useSafeTracking.ts` run.
+
+Listing and outbound engagement:
+
+- `src/lib/analyticsEntities.ts` — `select_item` (params include `item_list_name` and an `items` array with `item_id`, `item_name`, `item_category`) and `outbound_click` (`entity_type`, `entity_slug`, `entity_name`, `link_url`, `link_domain`).
+- `src/components/analytics/TrackedEntityLink.tsx` and `OutboundWebsiteLink.tsx` for wrapped links.
+
+**GA4 Admin (client reporting):** Register event-scoped custom dimensions as needed, for example `item_list_name`, `item_category`, and for `outbound_click` events `entity_name`, `entity_slug`, `entity_type`, `link_domain`. Use Explorations (free form) with event name `select_item` or `outbound_click` and break down by `item_name` or `entity_name` for per-entity counts. Looker Studio can connect to the same GA4 property for shareable dashboards.
+
 ## Technical Reference
 
 This project is a Next.js 14 app (App Router) running on Node.js 20.x. It uses React 18 and Tailwind CSS for UI styling and ships with serverless API routes under `src/app/api`.

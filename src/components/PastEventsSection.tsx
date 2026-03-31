@@ -1,6 +1,9 @@
+'use client'
+
 import Link from 'next/link'
 import { getPastEvents } from '@/data/events'
 import EventLogo from './EventLogo'
+import { trackSelectItemEntity } from '@/lib/analyticsEntities'
 
 export default function PastEventsSection() {
   const pastEvents = getPastEvents()
@@ -33,7 +36,19 @@ export default function PastEventsSection() {
         {/* Mobile: Refined card layout */}
         <div className="md:hidden space-y-6 mb-12">
           {pastEvents.slice(0, 3).map((event) => (
-            <Link key={event.slug} href={`/events/${event.slug}`} className="block group">
+            <Link
+              key={event.slug}
+              href={`/events/${event.slug}`}
+              className="block group"
+              onClick={() =>
+                trackSelectItemEntity({
+                  entityType: 'event',
+                  slug: event.slug,
+                  name: event.name,
+                  itemListName: 'home_past_events',
+                })
+              }
+            >
               <div className="relative overflow-hidden backdrop-blur-xl bg-white/3 rounded-2xl border border-white/5 hover:border-primary-400/20 transition-all duration-500 hover:scale-[1.02] shadow-2xl hover:shadow-primary-500/5 opacity-80 hover:opacity-100">
                 {/* Subtle background gradient */}
                 <div className="absolute inset-0 bg-gradient-to-br from-primary-600/5 via-transparent to-primary-600/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
@@ -97,7 +112,19 @@ export default function PastEventsSection() {
         {/* Desktop: Refined grid layout */}
         <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
           {pastEvents.slice(0, 6).map((event) => (
-            <Link key={event.slug} href={`/events/${event.slug}`} className="block group">
+            <Link
+              key={event.slug}
+              href={`/events/${event.slug}`}
+              className="block group"
+              onClick={() =>
+                trackSelectItemEntity({
+                  entityType: 'event',
+                  slug: event.slug,
+                  name: event.name,
+                  itemListName: 'home_past_events',
+                })
+              }
+            >
               <div className="relative overflow-hidden backdrop-blur-xl bg-white/3 rounded-2xl border border-white/5 hover:border-primary-400/20 transition-all duration-500 hover:scale-105 h-[480px] flex flex-col shadow-2xl hover:shadow-primary-500/5 opacity-80 hover:opacity-100">
                 {/* Subtle background gradient */}
                 <div className="absolute inset-0 bg-gradient-to-br from-primary-600/5 via-transparent to-primary-600/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>

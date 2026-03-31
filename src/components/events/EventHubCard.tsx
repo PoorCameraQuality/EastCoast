@@ -1,5 +1,8 @@
+'use client'
+
 import Link from 'next/link'
 import EventLogo from '@/components/EventLogo'
+import { trackSelectItemEntity } from '@/lib/analyticsEntities'
 
 export type EventHubCardEvent = {
   slug: string
@@ -15,6 +18,8 @@ export type EventHubCardEvent = {
 type Props = {
   event: EventHubCardEvent
   variant: 'upcoming' | 'past'
+  /** GA4 `item_list_name` for listing clicks */
+  itemListName?: string
 }
 
 const shell = {
@@ -44,13 +49,24 @@ const shell = {
   },
 } as const
 
-export default function EventHubCard({ event, variant }: Props) {
+export default function EventHubCard({ event, variant, itemListName = 'events_page' }: Props) {
   const s = shell[variant]
   const alt =
     event.altText || `${event.name} — BDSM convention in ${event.location.city}, ${event.location.state}`
 
   return (
-    <Link href={`/events/${event.slug}`} className="group block">
+    <Link
+      href={`/events/${event.slug}`}
+      className="group block"
+      onClick={() =>
+        trackSelectItemEntity({
+          entityType: 'event',
+          slug: event.slug,
+          name: event.name,
+          itemListName,
+        })
+      }
+    >
       <div
         className={`relative flex h-full min-h-0 flex-col overflow-hidden rounded-2xl border transition-all duration-500 hover:scale-[1.02] md:min-h-[460px] md:hover:scale-105 motion-reduce:transition-none motion-reduce:hover:scale-100 ${s.card} shadow-2xl`}
       >

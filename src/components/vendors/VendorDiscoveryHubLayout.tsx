@@ -64,7 +64,11 @@ export default function VendorDiscoveryHubLayout({
 
         <div className="max-w-5xl mx-auto">
           <h2 className="text-xl font-serif font-semibold text-white mb-4">Matching vendors</h2>
-          <VendorDiscoveryHubGrid vendors={vendors} selectedTagSlugs={selectedTagSlugs} />
+          <VendorDiscoveryHubGrid
+            vendors={vendors}
+            selectedTagSlugs={selectedTagSlugs}
+            itemListName={path.replace(/^\//, '').replace(/\//g, '_')}
+          />
           <VendorDiscoveryRelatedLinks parsed={parsed} />
         </div>
       </div>

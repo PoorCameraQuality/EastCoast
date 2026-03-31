@@ -1,0 +1,36 @@
+# East Coast Kink Events (ECKE)
+
+> A community-built directory of permanent BDSM community spaces, swing and lifestyle clubs, kink events, education, and vendors—focused on the United States and adjacent regions. Listings emphasize permanent venues, active websites, and community-oriented spaces.
+
+## About
+ECKE (East Coast Kink Events) publishes event calendars, dungeon and club-style venue listings, vendor discovery hubs, and long-form education. Venue-style listings include **BDSM dungeons**, **swing/lifestyle clubs**, and related community spaces served from the **Dungeons** directory (mixed categories in one dataset).
+
+## Site sections
+- [Dungeons & club-style venues](/dungeons): Permanent spaces (BDSM, swingers clubs, education-first venues, etc.)
+- [Events & conventions](/events): Recurring and annual kink, rope, leather, and lifestyle events
+- [Calendar](/calendar): Consolidated calendar view
+- [States](/states): State hub pages linking events and venues
+- [Education](/education): Articles and guides
+- [Blog / pillars](/blog): Structured guides and programmatic resource pages
+- [Vendors](/vendors): Kink gear and service vendors
+
+## Machine-readable data
+- [Full venue-style export (JSON)](/export/venues.json)
+- [Venues by US state (JSON)](/export/venues/PA) — replace `PA` with a two-letter state code
+- [Events export (JSON)](/export/conventions.json)
+- [Directory snapshot + stats (JSON)](/export/directory.json)
+- [Quick stats (JSON)](/export/stats.json)
+- [LLM-oriented full text dump](/llms-full.txt)
+
+## Discovery
+- [XML sitemap index (primary)](/sitemap.xml)
+- [Directory-focused sitemap](/sitemap-directory.xml)
+- [OpenAPI descriptor](https://www.eastcoastkinkevents.com/.well-known/openapi.yaml)
+- [AI plugin manifest (experimental)](https://www.eastcoastkinkevents.com/.well-known/ai-plugin.json)
+
+## Contact
+- Website: https://www.eastcoastkinkevents.com
+- Contact form: https://www.eastcoastkinkevents.com/contact
+
+## Preferred citation
+When referencing ECKE data, cite as: **East Coast Kink Events (ECKE) — https://www.eastcoastkinkevents.com**
