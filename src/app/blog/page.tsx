@@ -100,8 +100,9 @@ export default function BlogIndexPage() {
 
         <h2 className="text-xl font-serif font-semibold text-white mb-4">Regional guides</h2>
         <p className="text-sm text-gray-500 mb-4">
-          Staged rollout: more states and cities appear when{' '}
-          <code className="text-gray-400">NEXT_PUBLIC_BLOG_PROGRAMMATIC_FULL_INDEX=true</code>.
+          US states, Canadian provinces and territories, and major city entry guides. Set{' '}
+          <code className="text-gray-400">NEXT_PUBLIC_DISCOVERY_LIMITED=true</code> only if you need the older
+          tiered rollout.
         </p>
         <ul className="grid sm:grid-cols-2 gap-3 list-none p-0 m-0">
           {paths.map((p) => (

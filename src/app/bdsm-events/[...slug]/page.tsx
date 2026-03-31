@@ -27,7 +27,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const year = new Date().getFullYear()
   const { h1 } = buildDiscoveryIntro({ parsed, events: filtered, year })
   const path = `/bdsm-events/${params.slug.join('/')}`
-  const desc = `${h1}. Upcoming BDSM and kink events, dungeons, and community listings on the East Coast.`
+  const desc = `${h1}. Upcoming BDSM and kink events, dungeons, and community listings across the US and Canada.`
 
   return {
     title: `${h1} | East Coast Kink Events`,

@@ -1,28 +1,16 @@
 /**
- * Tiered indexing for programmatic /blog URLs.
- * Set NEXT_PUBLIC_BLOG_PROGRAMMATIC_FULL_INDEX=true to include all east-coast states + tier-2 cities.
- * Set NEXT_PUBLIC_DISCOVERY_FULL_INDEX=true to unlock all discovery surfaces at once.
+ * Programmatic /blog geo URLs: full US + Canadian provincial hubs + city guides (see EAST_COAST_STATES, CITY_BY_SLUG).
+ * Set `NEXT_PUBLIC_DISCOVERY_LIMITED=true` to stage rollout; then tier rules in discoveryTier / vendor / dungeon modules apply.
  */
 
 import { EAST_COAST_STATES, type StateSlug } from '@/lib/eastCoastStates'
 import { CITY_BY_SLUG } from '@/lib/discoveryCityRegistry'
 import { BLOG_PILLAR_SLUGS } from '@/lib/blogPillarRegistry'
-import { isDiscoveryFullIndexUnlocked } from '@/lib/discoveryIndexingEnv'
 import { parseBlogSlug } from '@/lib/parseBlogSlug'
 
-const TIER1_STATE_SLUGS: StateSlug[] = ['new-jersey', 'pennsylvania']
-
-const TIER2_CITY_SLUGS = ['philadelphia', 'baltimore'] as const
-
 export function isBlogProgrammaticPathAllowlisted(segments: string[]): boolean {
-  if (isDiscoveryFullIndexUnlocked(process.env.NEXT_PUBLIC_BLOG_PROGRAMMATIC_FULL_INDEX === 'true')) {
-    return parseBlogSlug(segments) !== null && segments.length === 2
-  }
-  if (segments.length !== 2) return false
-  const [a, b] = segments
-  if (a === 'bdsm-events-in') return TIER1_STATE_SLUGS.includes(b as StateSlug)
-  if (a === 'how-to-start-bdsm-in') return (TIER2_CITY_SLUGS as readonly string[]).includes(b)
-  return false
+  const parsed = parseBlogSlug(segments)
+  return parsed !== null && (parsed.kind === 'stateEventsGuide' || parsed.kind === 'cityStartGuide')
 }
 
 export function buildAllowlistedBlogPaths(): string[] {
@@ -31,16 +19,11 @@ export function buildAllowlistedBlogPaths(): string[] {
     out.push(`blog/${slug}`)
   }
 
-  const fullBlog = isDiscoveryFullIndexUnlocked(process.env.NEXT_PUBLIC_BLOG_PROGRAMMATIC_FULL_INDEX === 'true')
-  const states = fullBlog ? (Object.keys(EAST_COAST_STATES) as StateSlug[]) : TIER1_STATE_SLUGS
-
-  for (const s of states) {
+  for (const s of Object.keys(EAST_COAST_STATES) as StateSlug[]) {
     out.push(`blog/bdsm-events-in/${s}`)
   }
 
-  const cities = fullBlog ? Object.keys(CITY_BY_SLUG) : [...TIER2_CITY_SLUGS]
-
-  for (const c of cities) {
+  for (const c of Object.keys(CITY_BY_SLUG)) {
     out.push(`blog/how-to-start-bdsm-in/${c}`)
   }
 
@@ -49,9 +32,6 @@ export function buildAllowlistedBlogPaths(): string[] {
 
 /**
  * Every `/blog/[...slug]` segment list that `parseBlogSlug` accepts — for `generateStaticParams` only.
- * Tiered {@link buildAllowlistedBlogPaths} limits sitemap / hub navigation; pages like
- * `/blog/bdsm-events-in/michigan` must still be shipped as static HTML so preview and production
- * never 404 when env flags omit them from the smaller allowlist.
  */
 export function buildBlogCatchAllStaticParams(): { slug: string[] }[] {
   const params: { slug: string[] }[] = []
@@ -67,7 +47,7 @@ export function buildBlogCatchAllStaticParams(): { slug: string[] }[] {
   return params
 }
 
-/** Robots for programmatic hubs outside tier: thin or unstaged URLs stay discoverable via links only. */
+/** Robots for programmatic hubs when using staged indexing (blog uses full allowlist by default). */
 export function blogRobotsMeta(
   segments: string[],
   kind: 'pillar' | 'stateEventsGuide' | 'cityStartGuide'

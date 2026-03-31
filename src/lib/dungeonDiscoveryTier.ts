@@ -79,16 +79,14 @@ export function buildAllowlistedDungeonDiscoveryPaths(): string[] {
   })
   const sampleTags = ['rope-friendly', 'members-only', 'classes'] as const
   const comboStates = full
-    ? (['new-jersey', 'pennsylvania', 'maryland', 'delaware', 'virginia'] as const)
-    : (['new-jersey', 'pennsylvania', 'maryland'] as const)
+    ? (Object.keys(EAST_COAST_STATES) as StateSlug[])
+    : (Array.from(TIER1_STATE_SLUGS) as StateSlug[])
   for (const st of comboStates) {
     for (const tg of sampleTags) {
       out.push(`dungeons/${st}/${tg}`)
     }
   }
-  const comboCities = full
-    ? (['philadelphia', 'baltimore', 'atlanta', 'miami', 'richmond'] as const)
-    : (['philadelphia', 'baltimore'] as const)
+  const comboCities = full ? Object.keys(CITY_BY_SLUG) : Array.from(TIER2_CITY_SLUGS)
   for (const c of comboCities) {
     out.push(`dungeons/${c}/rope-friendly`)
     out.push(`dungeons/${c}/classes`)

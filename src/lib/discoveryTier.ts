@@ -1,10 +1,8 @@
 /**
- * Staged rollout: when NEXT_PUBLIC_DISCOVERY_FULL_INDEX is not "true",
- * only these path prefixes get index,follow; others get noindex until you expand the list.
- * Paths are `/bdsm-events` segments joined (no leading slash), e.g. `new-jersey`, `new-jersey/rope`.
- *
- * Legacy per-vertical flags do not apply here; this surface uses the unified flag only
- * (`NEXT_PUBLIC_DISCOVERY_FULL_INDEX` via `isDiscoveryFullIndexUnlocked(false)`).
+ * `/bdsm-events` sitemap + tier allowlisting. By default full North American hubs are indexed
+ * (see `isDiscoveryFullIndexUnlocked`). Set `NEXT_PUBLIC_DISCOVERY_LIMITED=true` to restrict to
+ * tier-1 states/cities until you set `NEXT_PUBLIC_DISCOVERY_FULL_INDEX=true`.
+ * Paths are segments joined (no leading slash), e.g. `new-jersey`, `new-jersey/rope`.
  */
 
 import { EAST_COAST_STATES, type StateSlug } from '@/lib/eastCoastStates'
@@ -97,8 +95,8 @@ export function buildAllowlistedDiscoveryPaths(): string[] {
   cities.forEach((c) => out.push(`bdsm-events/${c}`))
   const sampleTags = ['beginner-friendly', 'rope', 'munch', 'play-party', 'classes']
   const comboStates = full
-    ? (['new-jersey', 'pennsylvania', 'maryland', 'delaware', 'new-york'] as const)
-    : (['new-jersey', 'pennsylvania'] as const)
+    ? (Object.keys(EAST_COAST_STATES) as StateSlug[])
+    : (Array.from(TIER1_STATE_SLUGS) as StateSlug[])
   for (const st of comboStates) {
     for (const t of sampleTags) {
       out.push(`bdsm-events/${st}/${t}`)

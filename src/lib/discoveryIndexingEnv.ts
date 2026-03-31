@@ -1,14 +1,16 @@
 /**
- * Rollout: set `NEXT_PUBLIC_DISCOVERY_FULL_INDEX=true` to unlock full indexing on **all**
- * programmatic discovery surfaces (bdsm-events, vendors, dungeons, blog geo pages).
+ * Programmatic surfaces default to **full North American** hub coverage (US + Canadian provinces/territories).
  *
- * Per-vertical flags remain supported when the unified flag is unset so existing deploys keep working:
- * - NEXT_PUBLIC_VENDOR_DISCOVERY_FULL_INDEX
- * - NEXT_PUBLIC_DUNGEON_DISCOVERY_FULL_INDEX
- * - NEXT_PUBLIC_BLOG_PROGRAMMATIC_FULL_INDEX
+ * Set `NEXT_PUBLIC_DISCOVERY_LIMITED=true` to restore staged rollout: then use
+ * `NEXT_PUBLIC_DISCOVERY_FULL_INDEX=true` or per-vertical flags
+ * (`NEXT_PUBLIC_VENDOR_DISCOVERY_FULL_INDEX`, `NEXT_PUBLIC_DUNGEON_DISCOVERY_FULL_INDEX`,
+ * `NEXT_PUBLIC_BLOG_PROGRAMMATIC_FULL_INDEX`) to expand beyond tier-1 paths.
  */
 
 export function isDiscoveryFullIndexUnlocked(legacyPerVerticalFullIndex: boolean): boolean {
-  if (process.env.NEXT_PUBLIC_DISCOVERY_FULL_INDEX === 'true') return true
-  return legacyPerVerticalFullIndex
+  if (process.env.NEXT_PUBLIC_DISCOVERY_LIMITED === 'true') {
+    if (process.env.NEXT_PUBLIC_DISCOVERY_FULL_INDEX === 'true') return true
+    return legacyPerVerticalFullIndex
+  }
+  return true
 }

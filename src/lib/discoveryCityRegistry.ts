@@ -77,6 +77,18 @@ export const CITY_BY_SLUG: Record<string, CityEntry> = {
   'west-palm-beach': m('west-palm-beach', 'FL', 'West Palm Beach', ['west palm']),
   'st-petersburg': m('st-petersburg', 'FL', 'St. Petersburg', ['st. petersburg', 'st petersburg', 'st pete']),
   daytona: m('daytona', 'FL', 'Daytona', ['daytona']),
+  toronto: m('toronto', 'ON', 'Toronto', ['toronto']),
+  ottawa: m('ottawa', 'ON', 'Ottawa', ['ottawa']),
+  hamilton: m('hamilton', 'ON', 'Hamilton', ['hamilton']),
+  vancouver: m('vancouver', 'BC', 'Vancouver', ['vancouver']),
+  victoria: m('victoria', 'BC', 'Victoria', ['victoria']),
+  montreal: m('montreal', 'QC', 'Montreal', ['montreal', 'montréal']),
+  'quebec-city': m('quebec-city', 'QC', 'Quebec City', ['quebec city']),
+  calgary: m('calgary', 'AB', 'Calgary', ['calgary']),
+  edmonton: m('edmonton', 'AB', 'Edmonton', ['edmonton']),
+  winnipeg: m('winnipeg', 'MB', 'Winnipeg', ['winnipeg']),
+  saskatoon: m('saskatoon', 'SK', 'Saskatoon', ['saskatoon']),
+  halifax: m('halifax', 'NS', 'Halifax', ['halifax']),
 }
 
 export function isCitySlug(s: string): s is keyof typeof CITY_BY_SLUG {

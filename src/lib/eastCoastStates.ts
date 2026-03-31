@@ -1,7 +1,10 @@
 import { getAllEvents } from '@/data/events'
 import { getAllDungeons } from '@/data/dungeons'
 
-/** Single source for state hub slugs (index + detail + sitemap). */
+/**
+ * Single source for regional hub slugs: all US states + DC + Canadian provinces & territories.
+ * (`EAST_COAST_STATES` name is legacy; covers North America for discovery / blog / SEO hubs.)
+ */
 export const EAST_COAST_STATES = {
   'new-york': { name: 'New York', abbr: 'NY', region: 'Northeast', emoji: '🗽' },
   pennsylvania: { name: 'Pennsylvania', abbr: 'PA', region: 'Mid-Atlantic', emoji: '🔔' },
@@ -44,6 +47,29 @@ export const EAST_COAST_STATES = {
   'new-mexico': { name: 'New Mexico', abbr: 'NM', region: 'Southwest', emoji: '🌶️' },
   alaska: { name: 'Alaska', abbr: 'AK', region: 'Pacific', emoji: '❄️' },
   hawaii: { name: 'Hawaii', abbr: 'HI', region: 'Pacific', emoji: '🌺' },
+  alabama: { name: 'Alabama', abbr: 'AL', region: 'South', emoji: '🏈' },
+  arkansas: { name: 'Arkansas', abbr: 'AR', region: 'South', emoji: '🌲' },
+  kansas: { name: 'Kansas', abbr: 'KS', region: 'Great Plains', emoji: '🌾' },
+  kentucky: { name: 'Kentucky', abbr: 'KY', region: 'South', emoji: '🐎' },
+  minnesota: { name: 'Minnesota', abbr: 'MN', region: 'Midwest', emoji: '❄️' },
+  mississippi: { name: 'Mississippi', abbr: 'MS', region: 'South', emoji: '🎸' },
+  'north-dakota': { name: 'North Dakota', abbr: 'ND', region: 'Great Plains', emoji: '🌾' },
+  'south-dakota': { name: 'South Dakota', abbr: 'SD', region: 'Great Plains', emoji: '🦬' },
+  wisconsin: { name: 'Wisconsin', abbr: 'WI', region: 'Midwest', emoji: '🧀' },
+  'west-virginia': { name: 'West Virginia', abbr: 'WV', region: 'South', emoji: '⛰️' },
+  ontario: { name: 'Ontario', abbr: 'ON', region: 'Canada', emoji: '🍁' },
+  quebec: { name: 'Quebec', abbr: 'QC', region: 'Canada', emoji: '🍁' },
+  'british-columbia': { name: 'British Columbia', abbr: 'BC', region: 'Canada', emoji: '🍁' },
+  alberta: { name: 'Alberta', abbr: 'AB', region: 'Canada', emoji: '🍁' },
+  manitoba: { name: 'Manitoba', abbr: 'MB', region: 'Canada', emoji: '🍁' },
+  saskatchewan: { name: 'Saskatchewan', abbr: 'SK', region: 'Canada', emoji: '🍁' },
+  'nova-scotia': { name: 'Nova Scotia', abbr: 'NS', region: 'Canada', emoji: '🍁' },
+  'new-brunswick': { name: 'New Brunswick', abbr: 'NB', region: 'Canada', emoji: '🍁' },
+  'newfoundland-and-labrador': { name: 'Newfoundland and Labrador', abbr: 'NL', region: 'Canada', emoji: '🍁' },
+  'prince-edward-island': { name: 'Prince Edward Island', abbr: 'PE', region: 'Canada', emoji: '🍁' },
+  'northwest-territories': { name: 'Northwest Territories', abbr: 'NT', region: 'Canada', emoji: '🍁' },
+  yukon: { name: 'Yukon', abbr: 'YT', region: 'Canada', emoji: '🍁' },
+  nunavut: { name: 'Nunavut', abbr: 'NU', region: 'Canada', emoji: '🍁' },
 } as const
 
 export type StateSlug = keyof typeof EAST_COAST_STATES
