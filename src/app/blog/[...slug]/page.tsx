@@ -4,7 +4,11 @@ import { parseBlogSlug, parseBlogSlugSafe } from '@/lib/parseBlogSlug'
 import { loadBlogPillar } from '@/lib/loadBlogPillar'
 import { isBlogPillarSlug } from '@/lib/blogPillarRegistry'
 import { buildStateEventsGuideCopy, buildCityStartGuideCopy } from '@/lib/seo/blogProgrammaticCopy'
-import { getBlogInternalLinks } from '@/lib/blogInternalLinks'
+import {
+  getBlogInternalLinks,
+  getProgrammaticUpcomingEventStats,
+} from '@/lib/blogInternalLinks'
+import { getUnifiedEvents, getUpcomingUnified } from '@/lib/unifiedEvents'
 import { buildAllowlistedBlogPaths, blogRobotsMeta } from '@/lib/blogDiscoveryTier'
 import { BASE_URL } from '@/lib/seo'
 import BlogArticleJsonLd from '@/components/blog/BlogArticleJsonLd'
@@ -104,7 +108,10 @@ export default async function BlogCatchAllPage({ params }: PageProps) {
   }
 
   const path = `/blog/${params.slug.join('/')}`
-  const links = await getBlogInternalLinks(parsed)
+  const merged = await getUnifiedEvents()
+  const upcoming = getUpcomingUnified(merged)
+  const links = await getBlogInternalLinks(parsed, merged)
+  const programmaticStats = getProgrammaticUpcomingEventStats(parsed, upcoming)
 
   if (parsed.kind === 'pillar') {
     if (!isBlogPillarSlug(parsed.slug)) notFound()
@@ -147,7 +154,13 @@ export default async function BlogCatchAllPage({ params }: PageProps) {
           description={flat.slice(0, 500)}
           variant="webPage"
         />
-        <BlogArticleLayout variant="programmatic" path={path} sections={sections} links={links} />
+        <BlogArticleLayout
+          variant="programmatic"
+          path={path}
+          sections={sections}
+          links={links}
+          programmaticStats={programmaticStats}
+        />
       </div>
     )
   }
@@ -162,7 +175,13 @@ export default async function BlogCatchAllPage({ params }: PageProps) {
         description={flat.slice(0, 500)}
         variant="webPage"
       />
-      <BlogArticleLayout variant="programmatic" path={path} sections={sections} links={links} />
+      <BlogArticleLayout
+        variant="programmatic"
+        path={path}
+        sections={sections}
+        links={links}
+        programmaticStats={programmaticStats}
+      />
     </div>
   )
 }

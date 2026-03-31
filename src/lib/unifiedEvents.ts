@@ -1,6 +1,7 @@
-import { getAllEvents } from '@/data/events'
+import { getAllEvents, getEventBySlug } from '@/data/events'
 import { getSupabaseClient } from '@/lib/supabase'
 import { KNOWN_TAG_SLUGS } from '@/lib/discoveryTags'
+import { BASE_URL } from '@/lib/seo'
 
 export type UnifiedEvent = {
   name: string
@@ -170,4 +171,170 @@ export function getUpcomingUnified(events: UnifiedEvent[]): UnifiedEvent[] {
   return events
     .filter((e) => new Date(e.date.end) >= today)
     .sort((a, b) => new Date(a.date.start).getTime() - new Date(b.date.start).getTime())
+}
+
+/** Same shape as static `events.js` entries — used by `/events/[slug]`, SEO, and structured data. */
+export type EventPageRecord = {
+  name: string
+  slug: string
+  date: { start: string; end: string; display: string }
+  location: { city: string; state: string; region: string }
+  category: string
+  excerpt: string
+  longDescription?: string
+  website: string
+  organizer?: string
+  venue?: string
+  logo?: string
+  features?: string[]
+  seo?: { title: string; description: string; keywords: string }
+}
+
+function parseDbFeatures(raw: unknown): string[] {
+  if (!raw) return []
+  if (Array.isArray(raw)) return raw.map((x) => String(x).trim()).filter(Boolean)
+  const s = String(raw).trim()
+  if (!s) return []
+  try {
+    const parsed = JSON.parse(s) as unknown
+    if (Array.isArray(parsed)) return parsed.map((x) => String(x).trim()).filter(Boolean)
+  } catch {
+    // freeform text
+  }
+  return s
+    .split(/\r?\n/)
+    .flatMap((line) => line.split(';').map((part) => part.trim()))
+    .map((line) => line.replace(/^[-*•]\s*/, '').trim())
+    .filter(Boolean)
+}
+
+function formatSeoKeywords(raw: unknown): string {
+  if (Array.isArray(raw)) return raw.map(String).filter(Boolean).join(', ')
+  return String(raw || '').trim()
+}
+
+function dbRowToEventPageRecord(row: Record<string, unknown>): EventPageRecord | null {
+  const slug = row.slug as string | undefined
+  if (!slug) return null
+  const start = (row.start_date as string)?.slice(0, 10) || ''
+  const end = (row.end_date as string)?.slice(0, 10) || start
+  const display = ((row.display_date as string) || '').trim() || start
+  const city = String(row.city || '').trim()
+  const stateAbbr = String(row.state || '')
+    .toUpperCase()
+    .slice(0, 2)
+  const excerpt = (row.short_description as string)?.trim() || ''
+  const longDesc = (row.long_description as string)?.trim() || ''
+  const title = ((row.title as string) || slug).trim()
+  const websiteRaw = (row.website as string)?.trim()
+  const fallbackUrl = `${BASE_URL}/events/${encodeURIComponent(slug)}`
+  const website = websiteRaw || fallbackUrl
+  const organizer =
+    ((row.organizer_name as string) || (row.organizer as string))?.trim() || undefined
+  const venue = (row.venue as string)?.trim() || undefined
+  const metaTitle = ((row.meta_title as string) || (row.seo_title as string))?.trim()
+  const metaDesc = ((row.meta_description as string) || (row.seo_description as string))?.trim()
+  const kw = formatSeoKeywords(row.seo_keywords)
+
+  return {
+    name: title,
+    slug,
+    date: { start, end, display },
+    location: {
+      city,
+      state: stateAbbr,
+      region: city && stateAbbr ? `${city}, ${stateAbbr}` : stateAbbr || '',
+    },
+    category: ((row.category as string) || 'Event').trim(),
+    excerpt: excerpt || longDesc.slice(0, 280) || `${title} — kink event in ${city || stateAbbr || 'your area'}.`,
+    longDescription: longDesc || undefined,
+    website,
+    organizer,
+    venue,
+    logo: (row.logo as string)?.trim() || undefined,
+    features: parseDbFeatures(row.features),
+    seo: metaTitle
+      ? {
+          title: metaTitle,
+          description: (metaDesc || excerpt || longDesc).slice(0, 320),
+          keywords: kw || title,
+        }
+      : undefined,
+  }
+}
+
+/**
+ * Published event from Supabase as a full page record (for `/events/[slug]` when not in static data).
+ */
+export async function fetchPublishedSupabaseEventAsPageEvent(
+  slug: string
+): Promise<EventPageRecord | null> {
+  const client = getSupabaseClient()
+  if (!client) return null
+  try {
+    const { data, error } = await client
+      .from('events')
+      .select(
+        [
+          'title',
+          'slug',
+          'start_date',
+          'end_date',
+          'display_date',
+          'city',
+          'state',
+          'short_description',
+          'long_description',
+          'category',
+          'logo',
+          'status',
+          'website',
+          'features',
+          'venue',
+          'organizer',
+          'organizer_name',
+          'seo_title',
+          'seo_description',
+          'seo_keywords',
+          'meta_title',
+          'meta_description',
+        ].join(', ')
+      )
+      .eq('status', 'published')
+      .eq('slug', slug)
+      .maybeSingle()
+
+    if (error || !data) return null
+    return dbRowToEventPageRecord(data as unknown as Record<string, unknown>)
+  } catch {
+    return null
+  }
+}
+
+/**
+ * Resolve an event for the public detail page — matches `getUnifiedEvents` precedence for slug conflicts.
+ */
+export async function resolveEventForPage(slug: string): Promise<EventPageRecord | null> {
+  const preferDb = process.env.UNIFIED_EVENTS_PREFER_DB === 'true'
+  const staticEv = getEventBySlug(slug) as EventPageRecord | undefined
+  const dbEv = await fetchPublishedSupabaseEventAsPageEvent(slug)
+
+  if (preferDb && dbEv) return dbEv
+  if (staticEv) return staticEv
+  return dbEv
+}
+
+/** Shape for `/events` client list and paginated `EventCard` grids (static + Supabase). */
+export function unifiedEventToEventsPageShape(e: UnifiedEvent) {
+  const { city, state, region } = e.location
+  const regionOut = region || (city && state ? `${city}, ${state}` : state || '')
+  return {
+    slug: e.slug,
+    name: e.name,
+    category: e.category,
+    date: e.date,
+    location: { city, state, region: regionOut },
+    excerpt: e.excerpt,
+    logo: e.logo,
+  }
 }

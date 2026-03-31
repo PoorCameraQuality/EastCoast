@@ -1,11 +1,13 @@
 import { Metadata } from 'next'
-import { getAllEvents } from '@/data/events'
 import Link from 'next/link'
 import EventCard from '@/components/EventCard'
 import Breadcrumb from '@/components/Breadcrumb'
 import { BASE_URL } from '@/lib/seo'
+import { getUnifiedEvents, getUpcomingUnified, unifiedEventToEventsPageShape } from '@/lib/unifiedEvents'
 
 const EVENTS_PER_PAGE = 20
+
+export const revalidate = 1800
 
 interface PageProps {
   params: { page: string }
@@ -13,9 +15,8 @@ interface PageProps {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const pageNum = Math.max(1, parseInt(params.page) || 1)
-  const events = getAllEvents()
-  const now = new Date()
-  const upcomingEvents = events.filter((event) => new Date(event.date.end) >= now)
+  const merged = await getUnifiedEvents()
+  const upcomingEvents = getUpcomingUnified(merged)
   const totalPages = Math.max(1, Math.ceil(upcomingEvents.length / EVENTS_PER_PAGE))
   const description = `Upcoming kink events — page ${pageNum} of ${totalPages}. Browse BDSM conferences and workshops across the East Coast.`
 
@@ -49,8 +50,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 // Generate static paths for the first few pages
 export async function generateStaticParams() {
-  const events = getAllEvents()
-  const upcomingEvents = events.filter(event => new Date(event.date.end) >= new Date())
+  const merged = await getUnifiedEvents()
+  const upcomingEvents = getUpcomingUnified(merged)
   const totalPages = Math.ceil(upcomingEvents.length / EVENTS_PER_PAGE)
   
   // Pre-generate first 5 pages at build time
@@ -59,15 +60,11 @@ export async function generateStaticParams() {
   }))
 }
 
-export default function EventsPageNumber({ params }: PageProps) {
+export default async function EventsPageNumber({ params }: PageProps) {
   const pageNum = Math.max(1, parseInt(params.page) || 1)
-  
-  // Get all upcoming events
-  const allEvents = getAllEvents()
-  const now = new Date()
-  const upcomingEvents = allEvents
-    .filter(event => new Date(event.date.end) >= now)
-    .sort((a, b) => new Date(a.date.start).getTime() - new Date(b.date.start).getTime())
+
+  const merged = await getUnifiedEvents()
+  const upcomingEvents = getUpcomingUnified(merged).map(unifiedEventToEventsPageShape)
   
   // Calculate pagination
   const totalEvents = upcomingEvents.length

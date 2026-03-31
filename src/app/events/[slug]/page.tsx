@@ -1,5 +1,6 @@
 import { Metadata } from 'next'
-import { getEventBySlug, generateEventSEO } from '@/data/events'
+import { getAllEvents, generateEventSEO } from '@/data/events'
+import { resolveEventForPage } from '@/lib/unifiedEvents'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import EventLogo from '@/components/EventLogo'
@@ -14,12 +15,12 @@ import EventSeoIntro from '@/components/events/EventSeoIntro'
 
 // Generate metadata for SEO
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
-  const event = getEventBySlug(params.slug)
-  
+  const event = await resolveEventForPage(params.slug)
+
   if (!event) {
     return {
       title: 'Event Not Found',
-      description: 'The requested event could not be found.'
+      description: 'The requested event could not be found.',
     }
   }
 
@@ -49,18 +50,17 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   }
 }
 
-// Generate static paths for all events
+// Generate static paths for all static events (Supabase-only slugs render on demand)
 export async function generateStaticParams() {
-  const { getAllEvents } = await import('@/data/events')
   const events = getAllEvents()
-  
+
   return events.map((event) => ({
     slug: event.slug,
   }))
 }
 
-export default function EventPage({ params }: { params: { slug: string } }) {
-  const event = getEventBySlug(params.slug)
+export default async function EventPage({ params }: { params: { slug: string } }) {
+  const event = await resolveEventForPage(params.slug)
 
   if (!event) {
     notFound()

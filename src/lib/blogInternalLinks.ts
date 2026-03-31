@@ -1,5 +1,5 @@
-import { getAllEvents } from '@/data/events'
 import { getAllDungeons } from '@/data/dungeons'
+import { getUnifiedEvents, getUpcomingUnified, type UnifiedEvent } from '@/lib/unifiedEvents'
 import { getUnifiedVendors } from '@/lib/unifiedVendors'
 import { EAST_COAST_STATES, type StateSlug } from '@/lib/eastCoastStates'
 import { CITY_BY_SLUG } from '@/lib/discoveryCityRegistry'
@@ -11,10 +11,6 @@ import {
 import type { ParsedBlogSlug } from '@/lib/parseBlogSlug'
 
 export type BlogInternalLink = { href: string; label: string }
-
-function eventIsUpcoming(event: { date: { end: string } }): boolean {
-  return new Date(event.date.end) >= new Date(new Date().toISOString().slice(0, 10))
-}
 
 function stateSlugFromAbbr(abbr: string): StateSlug | undefined {
   for (const slug of Object.keys(EAST_COAST_STATES) as StateSlug[]) {
@@ -83,8 +79,32 @@ export type BlogInternalLinksBundle = {
   ctaLabel: string
 }
 
-export async function getBlogInternalLinks(parsed: ParsedBlogSlug): Promise<BlogInternalLinksBundle> {
-  const allEvents = getAllEvents().filter(eventIsUpcoming)
+/** Upcoming event count for the region covered by a programmatic blog URL (state or city). */
+export function getProgrammaticUpcomingEventStats(
+  parsed: ParsedBlogSlug,
+  upcoming: UnifiedEvent[]
+): { count: number; regionLabel: string } | null {
+  if (parsed.kind === 'pillar') return null
+  if (parsed.kind === 'stateEventsGuide') {
+    const abbr = EAST_COAST_STATES[parsed.stateSlug].abbr
+    const name = EAST_COAST_STATES[parsed.stateSlug].name
+    const count = upcoming.filter((e) => e.location.state === abbr).length
+    return { count, regionLabel: name }
+  }
+  const entry = CITY_BY_SLUG[parsed.citySlug]
+  const count = upcoming.filter(
+    (e) =>
+      e.location.state === entry.stateAbbr && entry.matchCity(e.location.city || '')
+  ).length
+  return { count, regionLabel: entry.displayName }
+}
+
+export async function getBlogInternalLinks(
+  parsed: ParsedBlogSlug,
+  preloadedUnified?: UnifiedEvent[]
+): Promise<BlogInternalLinksBundle> {
+  const merged = preloadedUnified ?? (await getUnifiedEvents())
+  const allEvents = getUpcomingUnified(merged)
   const allDungeons = getAllDungeons()
   const vendors = await getUnifiedVendors()
 

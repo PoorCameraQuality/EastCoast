@@ -1,15 +1,14 @@
 import { Metadata } from 'next'
 import EventsPageClient from './EventsPageClient'
-import { getAllEvents } from '@/data/events'
 import { getAllDungeons } from '@/data/dungeons'
+import { getUnifiedEvents, unifiedEventToEventsPageShape } from '@/lib/unifiedEvents'
 import { EventListStructuredData } from '@/components/StructuredData'
 import { parseEventsListSearchParams } from '@/lib/eventsListSearchParams'
 
 export const revalidate = 1800
 
 export async function generateMetadata(): Promise<Metadata> {
-  const { getAllEvents } = await import('@/data/events')
-  const count = getAllEvents().length
+  const count = (await getUnifiedEvents()).length
   const description = `${count}+ BDSM & kink events, conventions, and parties—search by state or type. Find kink events near you on the East Coast & Midwest. Updated list with conferences & workshops.`
   const ogDescription = description.slice(0, 200)
 
@@ -44,12 +43,13 @@ export async function generateMetadata(): Promise<Metadata> {
   }
 }
 
-export default function EventsPage({
+export default async function EventsPage({
   searchParams,
 }: {
   searchParams: Record<string, string | string[] | undefined>
 }) {
-  const allEvents = getAllEvents()
+  const unified = await getUnifiedEvents()
+  const allEvents = unified.map(unifiedEventToEventsPageShape)
   const allDungeons = getAllDungeons()
   const selectedCategory = parseEventsListSearchParams(searchParams)
 
