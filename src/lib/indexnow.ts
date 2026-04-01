@@ -3,6 +3,7 @@
  */
 
 import { getAllVendors } from '@/data/vendors'
+import { getSpiritualityKinkIndexPaths } from '@/lib/spiritualityKinkProgrammatic'
 
 const INDEXNOW_API_URL = "https://api.indexnow.org/indexnow"
 const INDEXNOW_KEY = "0050cb815778482eafc98bbf0849daad"
@@ -91,6 +92,11 @@ export async function submitUrlToIndexNow(url: string): Promise<IndexNowResponse
   return submitToIndexNow([url])
 }
 
+/** Full URLs for spirituality/kink programmatic hub (same paths as XML sitemap). */
+export function spiritualityKinkUrlsForIndexNow(): string[] {
+  return getSpiritualityKinkIndexPaths().map((path) => `${BASE_URL}${path}`)
+}
+
 /**
  * Generate URLs for sitemap submission
  */
@@ -115,7 +121,7 @@ export function generateSitemapUrls(): string[] {
 
   const stateUrls = stateSlugs.map(slug => `${BASE_URL}/states/${slug}`)
 
-  return [...coreUrls, ...stateUrls]
+  return [...coreUrls, ...stateUrls, ...spiritualityKinkUrlsForIndexNow()]
 }
 
 /**
@@ -143,8 +149,14 @@ export async function submitContentToIndexNow(): Promise<IndexNowResponse> {
     const articleUrls = (articles || []).map((a: any) => `${BASE_URL}/education/${a.slug}`)
     const vendorUrls = getAllVendors().map((v) => `${BASE_URL}/vendors/${v.slug}`)
 
-    const allUrls = [...eventUrls, ...dungeonUrls, ...articleUrls, ...vendorUrls]
-    
+    const allUrls = [
+      ...eventUrls,
+      ...dungeonUrls,
+      ...articleUrls,
+      ...vendorUrls,
+      ...spiritualityKinkUrlsForIndexNow(),
+    ]
+
     return submitToIndexNow(allUrls)
   } catch (error) {
     console.error('[IndexNow] Error getting content URLs:', error)

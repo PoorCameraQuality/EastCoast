@@ -33,6 +33,14 @@ export function spokePath(slug: string): string {
   return `${SPIRITUALITY_KINK_BASE}/${slug}`
 }
 
+/** Canonical paths for IndexNow / bulk pings (hub + every spoke). */
+export function getSpiritualityKinkIndexPaths(): string[] {
+  return [
+    SPIRITUALITY_KINK_BASE,
+    ...SPIRITUALITY_KINK_SPOKES.map((s) => `${SPIRITUALITY_KINK_BASE}/${s.slug}`),
+  ]
+}
+
 /** Primal Arts + THE Beltane (Maryland). */
 export const MARYLAND_FEATURE_SLUGS = ['primal-arts-festival', 'beltane'] as const
 
