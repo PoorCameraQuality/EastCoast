@@ -833,15 +833,16 @@ export const vendors = [
   {
     name: 'The Vulgarians',
     slug: 'the-vulgarians',
-    location: 'Online',
+    location: 'USA',
     description:
-      'Apparel and merchandise via a Square storefront—shipping and exchanges handled per their storefront policies.',
+      'A home dungeon with educational gatherings—welcoming the community broadly; vetting required for demos, parties, and events. Merch via their Square shop.',
     story:
-      'The Vulgarians sells through a Square online store at https://thevulgarians.square.site/. Checkout is hosted by Square. Their storefront lists shipping via USPS or UPS at actual rates and notes that PO boxes are not valid shipping addresses. Returns are not allowed; exchanges may be possible for T-shirt sizes (contact them to arrange), with return shipping costs the customer’s responsibility. This listing is summarized from the public Square site as of the date added.',
-    websiteUrl: 'https://thevulgarians.square.site/',
+      'The Vulgarians describe themselves as a home dungeon with educational gatherings. Their public site at https://thevulgarians.com/ states they welcome and embrace the community without distinctions regarding race, religion, gender identity, expression, age, or other discriminatory facets of someone’s existence. Attendance at demos, parties, or other events requires becoming a vetted member; the site links to FetLife, vetting, and a vetting status checker, and they identify as a Coalition Partner of NCSF. They also promote volunteering and a shop. Branded merchandise is sold through a Square storefront at https://thevulgarians.square.site/ (checkout by Square; their shop lists USPS/UPS shipping at actual rates, no PO boxes, no returns—T-shirt size exchanges may be arranged by contact, with return shipping at customer expense). This listing is summarized from their public website and Square storefront.',
+    websiteUrl: 'https://thevulgarians.com/',
     tagSlugs: [
+      'services-experiences',
+      'educational-focused-vendor',
       'clothing-fetish-wear',
-      'roleplay-costume',
       'reseller-curated-shop',
     ],
     isPaid: false,
