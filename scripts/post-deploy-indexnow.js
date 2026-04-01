@@ -25,7 +25,9 @@ async function postDeployIndexNow() {
     // Build submission payload
     const payload = {
       indexNow: true,
-      includeContent: !coreOnly
+      includeContent: !coreOnly,
+      /** false only when --content-only: skip hub/discovery batch, submit detail URLs only */
+      coreSitemap: !contentOnly,
     }
 
     // Submit via our API

@@ -30,7 +30,8 @@ export async function GET() {
     const status = {
       timestamp: new Date().toISOString(),
       configuration: {
-        key: "0050cb815778482eafc98bbf0849daad",
+        /** Do not expose raw key in JSON — verify via keyFileStatus only. */
+        keyConfigured: true,
         keyLocation: keyFile,
         keyFileStatus,
         apiEndpoint: "https://api.indexnow.org/indexnow",

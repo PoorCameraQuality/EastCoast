@@ -1,8 +1,17 @@
 /**
  * IndexNow utility functions for submitting URLs to search engines
+ *
+ * Hub URL sets should stay aligned with `buildDirectorySitemapUrls` in sitemapUrls.ts
+ * (core + state hubs + allowlisted discovery paths). Detail URLs (events, dungeons, etc.)
+ * are submitted via `submitContentToIndexNow`.
  */
 
 import { getAllVendors } from '@/data/vendors'
+import { buildAllowlistedBlogPaths } from '@/lib/blogDiscoveryTier'
+import { buildAllowlistedDiscoveryPaths } from '@/lib/discoveryTier'
+import { buildAllowlistedDungeonDiscoveryPaths } from '@/lib/dungeonDiscoveryTier'
+import { getStateSlugsForSitemap } from '@/lib/eastCoastStates'
+import { buildAllowlistedVendorDiscoveryPaths } from '@/lib/vendorDiscoveryTier'
 import { getSpiritualityKinkIndexPaths } from '@/lib/spiritualityKinkProgrammatic'
 
 const INDEXNOW_API_URL = "https://api.indexnow.org/indexnow"
@@ -97,31 +106,43 @@ export function spiritualityKinkUrlsForIndexNow(): string[] {
   return getSpiritualityKinkIndexPaths().map((path) => `${BASE_URL}${path}`)
 }
 
+function uniqueStrings(urls: string[]): string[] {
+  return Array.from(new Set(urls))
+}
+
 /**
- * Generate URLs for sitemap submission
+ * Hub & discovery URLs aligned with `buildDirectorySitemapUrls` core + state + allowlists
+ * (not individual event/dungeon/education/vendor detail pages — those go through submitContentToIndexNow).
  */
 export function generateSitemapUrls(): string[] {
-  const stateSlugs = [
-    "new-york", "pennsylvania", "new-jersey", "maryland", "delaware",
-    "virginia", "north-carolina", "south-carolina", "georgia", "florida",
-    "maine", "vermont", "new-hampshire", "massachusetts", "rhode-island",
-    "connecticut", "washington-dc"
-  ]
-
-  const coreUrls = [
+  const coreHubs = [
     `${BASE_URL}/`,
     `${BASE_URL}/events`,
     `${BASE_URL}/dungeons`,
     `${BASE_URL}/education`,
     `${BASE_URL}/calendar`,
-    `${BASE_URL}/guidelines`,
     `${BASE_URL}/states`,
-    `${BASE_URL}/vendors`
+    `${BASE_URL}/bdsm-events`,
+    `${BASE_URL}/vendors`,
+    `${BASE_URL}/blog`,
+    ...spiritualityKinkUrlsForIndexNow(),
   ]
 
-  const stateUrls = stateSlugs.map(slug => `${BASE_URL}/states/${slug}`)
+  const stateUrls = getStateSlugsForSitemap().map((slug) => `${BASE_URL}/states/${slug}`)
 
-  return [...coreUrls, ...stateUrls, ...spiritualityKinkUrlsForIndexNow()]
+  const discoveryUrls = buildAllowlistedDiscoveryPaths().map((p) => `${BASE_URL}/${p}`)
+  const vendorDiscoveryUrls = buildAllowlistedVendorDiscoveryPaths().map((p) => `${BASE_URL}/${p}`)
+  const dungeonDiscoveryUrls = buildAllowlistedDungeonDiscoveryPaths().map((p) => `${BASE_URL}/${p}`)
+  const blogProgrammaticUrls = buildAllowlistedBlogPaths().map((p) => `${BASE_URL}/${p}`)
+
+  return uniqueStrings([
+    ...coreHubs,
+    ...stateUrls,
+    ...discoveryUrls,
+    ...vendorDiscoveryUrls,
+    ...dungeonDiscoveryUrls,
+    ...blogProgrammaticUrls,
+  ])
 }
 
 /**
@@ -149,13 +170,7 @@ export async function submitContentToIndexNow(): Promise<IndexNowResponse> {
     const articleUrls = (articles || []).map((a: any) => `${BASE_URL}/education/${a.slug}`)
     const vendorUrls = getAllVendors().map((v) => `${BASE_URL}/vendors/${v.slug}`)
 
-    const allUrls = [
-      ...eventUrls,
-      ...dungeonUrls,
-      ...articleUrls,
-      ...vendorUrls,
-      ...spiritualityKinkUrlsForIndexNow(),
-    ]
+    const allUrls = [...eventUrls, ...dungeonUrls, ...articleUrls, ...vendorUrls]
 
     return submitToIndexNow(allUrls)
   } catch (error) {

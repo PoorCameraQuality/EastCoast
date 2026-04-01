@@ -152,7 +152,7 @@ fi
 # Test 11: IndexNow key file
 echo ""
 echo "📋 Testing IndexNow key file..."
-INDEXNOW_STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:3000/33ef4629d0fdd1a995f5370f99e77d6b9cc217f6ef0dfc1ee2ee966846fea864.txt)
+INDEXNOW_STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:3000/0050cb815778482eafc98bbf0849daad.txt)
 if [ "$INDEXNOW_STATUS" = "200" ]; then
     print_status 0 "IndexNow key file is accessible"
 else

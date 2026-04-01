@@ -12,8 +12,13 @@ export const runtime = "nodejs"
  */
 export async function POST(request: NextRequest) {
   try {
-    const { indexNow = true, includeContent = true } = await request.json().catch(() => ({}))
-    
+    const {
+      indexNow = true,
+      includeContent = true,
+      /** When false, only `submitContentToIndexNow` runs (large detail URL set). */
+      coreSitemap = true,
+    } = await request.json().catch(() => ({}))
+
     const results = {
       timestamp: new Date().toISOString(),
       indexNow: {} as any,
@@ -23,21 +28,33 @@ export async function POST(request: NextRequest) {
     // Submit URLs via IndexNow
     if (indexNow) {
       try {
-        // Submit core sitemap URLs (always include these)
-        const sitemapResult = await submitSitemapToIndexNow()
-        
+        let sitemapResult = {
+          submittedCount: 0,
+          status: 200,
+          statusText: "Skipped",
+          skippedCount: 0,
+        } as Awaited<ReturnType<typeof submitSitemapToIndexNow>>
+
+        if (coreSitemap) {
+          sitemapResult = await submitSitemapToIndexNow()
+        }
+
         let contentResult = { submittedCount: 0, status: 200, statusText: "Skipped" }
-        
+
         // Optionally submit content URLs (events, dungeons, articles)
         if (includeContent) {
           contentResult = await submitContentToIndexNow()
         }
-        
+
+        const totalSubmitted = sitemapResult.submittedCount + contentResult.submittedCount
+        const coreOk = !coreSitemap || sitemapResult.status === 200
+        const contentOk = !includeContent || contentResult.status === 200
+
         results.indexNow = {
-          sitemap: sitemapResult,
+          sitemap: coreSitemap ? sitemapResult : { ...sitemapResult, statusText: "Skipped (coreSitemap: false)" },
           content: includeContent ? contentResult : null,
-          totalSubmitted: sitemapResult.submittedCount + contentResult.submittedCount,
-          success: sitemapResult.status === 200
+          totalSubmitted,
+          success: coreOk && contentOk,
         }
       } catch (error) {
         results.indexNow = {
