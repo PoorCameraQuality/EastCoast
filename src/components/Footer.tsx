@@ -110,6 +110,7 @@ export default function Footer() {
               <L href="/vendors">Vendors</L>
               <L href="/calendar">Calendar</L>
               <L href="/states">States</L>
+              <L href="/community-spotlight">Community spotlight</L>
             </Section>
 
             <Section title="Community">

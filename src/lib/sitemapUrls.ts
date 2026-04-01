@@ -99,6 +99,7 @@ export async function buildDirectorySitemapUrls(): Promise<SitemapUrlEntry[]> {
     { loc: `${BASE}/bdsm-events`, changefreq: 'weekly', priority: 0.72 },
     { loc: `${BASE}/vendors`, changefreq: 'weekly', priority: 0.68 },
     { loc: `${BASE}/blog`, changefreq: 'weekly', priority: 0.62 },
+    { loc: `${BASE}/community-spotlight`, changefreq: 'monthly', priority: 0.58 },
   ]
 
   const stateUrls: SitemapUrlEntry[] = getStateSlugsForSitemap().map((s) => ({
