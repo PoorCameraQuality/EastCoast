@@ -830,6 +830,22 @@ export const vendors = [
     tagSlugs: ['woodworking', 'custom-commission-vendor', 'mixed-media-maker'],
     isPaid: false,
   },
+  {
+    name: 'The Vulgarians',
+    slug: 'the-vulgarians',
+    location: 'Online',
+    description:
+      'Apparel and merchandise via a Square storefront—shipping and exchanges handled per their storefront policies.',
+    story:
+      'The Vulgarians sells through a Square online store at https://thevulgarians.square.site/. Checkout is hosted by Square. Their storefront lists shipping via USPS or UPS at actual rates and notes that PO boxes are not valid shipping addresses. Returns are not allowed; exchanges may be possible for T-shirt sizes (contact them to arrange), with return shipping costs the customer’s responsibility. This listing is summarized from the public Square site as of the date added.',
+    websiteUrl: 'https://thevulgarians.square.site/',
+    tagSlugs: [
+      'clothing-fetish-wear',
+      'roleplay-costume',
+      'reseller-curated-shop',
+    ],
+    isPaid: false,
+  },
   ...onboardedVendors,
 ]
 
