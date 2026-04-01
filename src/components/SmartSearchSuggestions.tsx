@@ -4,13 +4,14 @@ import { useState, useEffect, useCallback } from 'react'
 import Link from 'next/link'
 import { getAllEvents } from '@/data/events'
 import { getAllDungeons } from '@/data/dungeons'
+import { getAllSwingClubs } from '@/data/swingClubs'
 import { supabase } from '@/lib/supabase'
 import { useGA4 } from '@/contexts/GA4Provider'
 
 interface SearchSuggestion {
   id: string
   title: string
-  type: 'event' | 'dungeon' | 'article'
+  type: 'event' | 'dungeon' | 'swingClub' | 'article'
   slug: string
   category?: string
   location?: string
@@ -113,6 +114,22 @@ export default function SmartSearchSuggestions({ searchQuery, maxSuggestions = 5
         }
       })
 
+      const allSwingClubs = getAllSwingClubs()
+      allSwingClubs.forEach((club) => {
+        const score = calculateRelevanceScore(club, searchQuery, 'swingClub')
+        if (score > 0) {
+          allSuggestions.push({
+            id: club.slug,
+            title: club.name,
+            type: 'swingClub',
+            slug: club.slug,
+            category: club.category,
+            location: `${club.location.city}, ${club.location.state}`,
+            relevanceScore: score,
+          })
+        }
+      })
+
       // Search articles
       if (supabase) {
         try {
@@ -185,6 +202,7 @@ export default function SmartSearchSuggestions({ searchQuery, maxSuggestions = 5
     switch (type) {
       case 'event': return '🎪'
       case 'dungeon': return '🏰'
+      case 'swingClub': return '💃'
       case 'article': return '📚'
       default: return '🔍'
     }
@@ -194,6 +212,7 @@ export default function SmartSearchSuggestions({ searchQuery, maxSuggestions = 5
     switch (type) {
       case 'event': return 'text-primary-400'
       case 'dungeon': return 'text-purple-400'
+      case 'swingClub': return 'text-violet-400'
       case 'article': return 'text-green-400'
       default: return 'text-gray-400'
     }
@@ -203,6 +222,7 @@ export default function SmartSearchSuggestions({ searchQuery, maxSuggestions = 5
     switch (suggestion.type) {
       case 'event': return `/events/${suggestion.slug}`
       case 'dungeon': return `/dungeons/${suggestion.slug}`
+      case 'swingClub': return `/swing-clubs/${suggestion.slug}`
       case 'article': return `/education/${suggestion.slug}`
       default: return '/'
     }
@@ -255,7 +275,13 @@ export default function SmartSearchSuggestions({ searchQuery, maxSuggestions = 5
                     {suggestion.title}
                   </h4>
                   <span className={`text-xs px-2 py-1 rounded border ${getTypeColor(suggestion.type)}`}>
-                    {suggestion.type}
+                    {suggestion.type === 'swingClub'
+                      ? 'Swing club'
+                      : suggestion.type === 'dungeon'
+                        ? 'Dungeon'
+                        : suggestion.type === 'article'
+                          ? 'Article'
+                          : 'Event'}
                   </span>
                 </div>
                 <div className="flex items-center space-x-2 mt-1">

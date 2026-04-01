@@ -8,7 +8,7 @@ import SmartSearchSuggestions from '@/components/SmartSearchSuggestions'
 import { useGA4 } from '@/contexts/GA4Provider'
 
 interface SearchResult {
-  type: 'event' | 'dungeon'
+  type: 'event' | 'dungeon' | 'swingClub'
   slug: string
   name: string
   location: {
@@ -25,15 +25,29 @@ interface SearchResult {
 interface SearchProps {
   events: any[]
   dungeons: any[]
+  swingClubs?: any[]
   placeholder?: string
   /** Tighter input and typography for directory hero strips */
   compact?: boolean
 }
 
+function hrefForSearchResult(r: SearchResult): string {
+  if (r.type === 'event') return `/events/${r.slug}`
+  if (r.type === 'dungeon') return `/dungeons/${r.slug}`
+  return `/swing-clubs/${r.slug}`
+}
+
+function labelForSearchType(t: SearchResult['type']): string {
+  if (t === 'event') return 'Event'
+  if (t === 'dungeon') return 'Dungeon'
+  return 'Swing club'
+}
+
 export default function Search({
   events,
   dungeons,
-  placeholder = 'Search events and dungeons...',
+  swingClubs = [],
+  placeholder = 'Search events, dungeons, and swing clubs...',
   compact = false,
 }: SearchProps) {
   const [query, setQuery] = useState('')
@@ -102,6 +116,22 @@ export default function Search({
       }
     })
 
+    swingClubs.forEach((club) => {
+      if (
+        club.name.toLowerCase().includes(lowerQuery) ||
+        club.location.city.toLowerCase().includes(lowerQuery) ||
+        club.location.state.toLowerCase().includes(lowerQuery)
+      ) {
+        searchResults.push({
+          type: 'swingClub',
+          slug: club.slug,
+          name: club.name,
+          location: club.location,
+          logo: club.logo,
+        })
+      }
+    })
+
     setResults(searchResults.slice(0, 6))
     setShowSuggestions(true)
     setIsSearching(false)
@@ -113,7 +143,7 @@ export default function Search({
       search_type: 'site_search',
       clicked_result: false
     })
-  }, [debouncedQuery, events, dungeons, trackSearch])
+  }, [debouncedQuery, events, dungeons, swingClubs, trackSearch])
 
   // Generate search structured data
   const structuredData = {
@@ -155,7 +185,7 @@ export default function Search({
             }}
             placeholder={placeholder}
             role="combobox"
-            aria-label="Search events and dungeons"
+            aria-label="Search events, dungeons, and swing clubs"
             aria-autocomplete="list"
             aria-expanded={listboxOpen}
             aria-controls="search-smart-suggestions search-results"
@@ -185,7 +215,7 @@ export default function Search({
             {results.map((result, index) => (
               <Link
                 key={`${result.type}-${result.slug}`}
-                href={`/${result.type}s/${result.slug}`}
+                href={hrefForSearchResult(result)}
                 className="block p-4 hover:bg-dark-700 transition-colors border-b border-dark-600 last:border-b-0"
                 onMouseDown={(e) => e.preventDefault()}
                 onClick={() => {
@@ -201,7 +231,7 @@ export default function Search({
                       })
                       trackInternalLinkClick({
                         from_page: window.location.pathname,
-                        to_page: `/${result.type}s/${result.slug}`,
+                        to_page: hrefForSearchResult(result),
                         link_text: result.name,
                         link_type: result.type,
                         link_position: 'search_results',
@@ -239,7 +269,7 @@ export default function Search({
                         {result.name}
                       </span>
                       <span className="text-xs bg-primary-600 text-white px-2 py-1 rounded">
-                        {result.type === 'event' ? 'Event' : 'Dungeon'}
+                        {labelForSearchType(result.type)}
                       </span>
                     </div>
                     <p className="text-sm text-subtle">

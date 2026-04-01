@@ -3,6 +3,7 @@ import { getStateSlugsForSitemap } from '@/lib/eastCoastStates'
 import { buildAllowlistedDiscoveryPaths } from '@/lib/discoveryTier'
 import { buildAllowlistedVendorDiscoveryPaths } from '@/lib/vendorDiscoveryTier'
 import { buildAllowlistedDungeonDiscoveryPaths } from '@/lib/dungeonDiscoveryTier'
+import { buildAllowlistedSwingDiscoveryPaths } from '@/lib/swingDiscoveryTier'
 import { buildAllowlistedBlogPaths } from '@/lib/blogDiscoveryTier'
 
 const BASE = 'https://www.eastcoastkinkevents.com'
@@ -18,18 +19,22 @@ async function loadSitemapEntities() {
   const today = new Date().toISOString().slice(0, 10)
   let events: Array<{ slug: string; updated?: string }> = []
   let dungeons: Array<{ slug: string; updated?: string }> = []
+  let swingClubs: Array<{ slug: string; updated?: string }> = []
   let articles: Array<{ slug: string; updated?: string }> = []
   let vendors: Array<{ slug: string }> = []
 
   try {
-    const [{ getAllEvents }, { getAllDungeons }, { getAllArticles }, { getUnifiedVendors }] = await Promise.all([
-      import('@/data/events'),
-      import('@/data/dungeons'),
-      import('@/data/education'),
-      import('@/lib/unifiedVendors'),
-    ])
+    const [{ getAllEvents }, { getAllDungeons }, { getAllSwingClubs }, { getAllArticles }, { getUnifiedVendors }] =
+      await Promise.all([
+        import('@/data/events'),
+        import('@/data/dungeons'),
+        import('@/data/swingClubs'),
+        import('@/data/education'),
+        import('@/lib/unifiedVendors'),
+      ])
     const allEvents = getAllEvents?.() || []
     const allDungeons = getAllDungeons?.() || []
+    const allSwingClubs = getAllSwingClubs?.() || []
     const allVendors = (await getUnifiedVendors?.()) || []
 
     events = allEvents
@@ -47,6 +52,12 @@ async function loadSitemapEntities() {
             (d as { updated?: string }).updated ||
             today
         ),
+      }))
+    swingClubs = allSwingClubs
+      .filter((c: { slug?: string }) => c?.slug)
+      .map((c: Record<string, unknown>) => ({
+        slug: String(c.slug),
+        updated: String((c as { updated?: string }).updated || today),
       }))
     vendors = allVendors
       .filter((v: { slug?: string }) => v?.slug)
@@ -81,13 +92,13 @@ async function loadSitemapEntities() {
     console.error('[sitemapUrls] Error loading data:', err)
   }
 
-  return { events, dungeons, articles, vendors }
+  return { events, dungeons, swingClubs, articles, vendors }
 }
 
 /** High-value directory and content URLs (events, venues, education, hubs). */
 export async function buildDirectorySitemapUrls(): Promise<SitemapUrlEntry[]> {
   const today = new Date().toISOString().slice(0, 10)
-  const { events, dungeons, articles, vendors } = await loadSitemapEntities()
+  const { events, dungeons, swingClubs, articles, vendors } = await loadSitemapEntities()
 
   const core: SitemapUrlEntry[] = [
     { loc: `${BASE}/`, lastmod: today, changefreq: 'daily', priority: 1.0 },
@@ -138,6 +149,13 @@ export async function buildDirectorySitemapUrls(): Promise<SitemapUrlEntry[]> {
     priority: 0.65,
   }))
 
+  const swingClubUrls: SitemapUrlEntry[] = swingClubs.map((c) => ({
+    loc: `${BASE}/swing-clubs/${c.slug}`,
+    lastmod: c.updated?.slice(0, 10),
+    changefreq: 'monthly' as const,
+    priority: 0.64,
+  }))
+
   const articleUrls: SitemapUrlEntry[] = articles.map((a) => ({
     loc: `${BASE}/education/${a.slug}`,
     lastmod: a.updated?.slice(0, 10),
@@ -176,6 +194,14 @@ export async function buildDirectorySitemapUrls(): Promise<SitemapUrlEntry[]> {
     priority: 0.62,
   }))
 
+  const swingDiscoveryPaths = buildAllowlistedSwingDiscoveryPaths()
+  const swingDiscoveryUrls: SitemapUrlEntry[] = swingDiscoveryPaths.map((p) => ({
+    loc: `${BASE}/${p}`,
+    lastmod: today,
+    changefreq: 'weekly' as const,
+    priority: 0.61,
+  }))
+
   const blogPaths = buildAllowlistedBlogPaths()
   const blogUrls: SitemapUrlEntry[] = blogPaths.map((p) => ({
     loc: `${BASE}/${p}`,
@@ -190,9 +216,11 @@ export async function buildDirectorySitemapUrls(): Promise<SitemapUrlEntry[]> {
     ...discoveryUrls,
     ...vendorDiscoveryUrls,
     ...dungeonDiscoveryUrls,
+    ...swingDiscoveryUrls,
     ...blogUrls,
     ...eventUrls,
     ...dungeonUrls,
+    ...swingClubUrls,
     ...articleUrls,
     ...vendorUrls,
   ]

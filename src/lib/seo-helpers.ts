@@ -106,6 +106,14 @@ export function generateDungeonTitle(dungeon: any): string {
   return title
 }
 
+/** Same pattern as dungeons — swing / lifestyle club listing pages. */
+export function generateSwingClubTitle(club: {
+  name: string
+  location: { city: string; state: string }
+}): string {
+  return generateDungeonTitle(club)
+}
+
 /**
  * Generate optimized article title
  * Format: [Article Title] | [Brand]

@@ -283,6 +283,80 @@ export function DungeonStructuredData({ dungeon }: { dungeon: any }) {
   }
 }
 
+/** Swing / lifestyle club listing — EntertainmentBusiness under /swing-clubs/{slug} */
+export function SwingClubStructuredData({ club }: { club: any }) {
+  const pageId = `${BASE_URL}/swing-clubs/${club.slug}`
+  const hoursSpec = dungeonHoursSpecifications(club.hours)
+  const street = club.location?.address
+
+  const address: Record<string, unknown> = {
+    '@type': 'PostalAddress',
+    addressLocality: club.location.city,
+    addressRegion: club.location.state,
+    addressCountry: 'US',
+  }
+  if (street) {
+    address.streetAddress = street
+  }
+
+  const raw: Record<string, unknown> = {
+    '@context': 'https://schema.org',
+    '@type': 'EntertainmentBusiness',
+    name: club.name,
+    description: club.excerpt,
+    url: pageId,
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': pageId,
+      ...(club.lastReviewed ? { dateModified: club.lastReviewed } : {}),
+    },
+    additionalType: `${BASE_URL}/schema/SwingClub`,
+    image: club.logo ? buildImageUrl(club.logo, `${BASE_URL}/images/placeholder-logo.svg`) : undefined,
+    telephone: club.contact?.phone || club.phone || undefined,
+    email: club.contact?.email || club.email || undefined,
+    address,
+    priceRange: club.priceRange || '$$',
+    category: club.category || 'Swing / lifestyle club',
+    serviceType: 'Swing and lifestyle club',
+    areaServed: club.location.region || club.location.state,
+    sameAs: (() => {
+      if (!club.socialMedia) return undefined
+      const urls = Object.values(club.socialMedia).filter(Boolean) as string[]
+      return urls.length ? urls : undefined
+    })(),
+  }
+
+  if (club.location.coordinates?.lat != null && club.location.coordinates?.lng != null) {
+    raw.geo = {
+      '@type': 'GeoCoordinates',
+      latitude: club.location.coordinates.lat,
+      longitude: club.location.coordinates.lng,
+    }
+  }
+
+  if (hoursSpec) {
+    raw.openingHoursSpecification = hoursSpec
+  } else if (club.hours) {
+    raw.openingHours = club.hours
+  }
+
+  const structuredData = pruneUndefined(raw as Record<string, unknown>)
+
+  try {
+    const jsonString = escapeHtmlInJson(structuredData)
+    return (
+      <script
+        id={`swing-club-structured-data-${club.slug}`}
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: jsonString }}
+      />
+    )
+  } catch (error) {
+    console.error('Invalid JSON in SwingClubStructuredData:', error)
+    return null
+  }
+}
+
 function vendorSchemaDescription(vendor: { description?: string; story?: string; seoDescription?: string }) {
   const primary = (vendor.seoDescription || vendor.description || '').trim()
   if (primary.length >= 120) return primary

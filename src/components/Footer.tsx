@@ -105,7 +105,7 @@ export default function Footer() {
           >
             <Section title="Explore">
               <L href="/events">Events</L>
-              <L href="/dungeons">Dungeons</L>
+              <L href="/dungeons">Dungeons &amp; clubs</L>
               <L href="/education">Education</L>
               <L href="/vendors">Vendors</L>
               <L href="/calendar">Calendar</L>

@@ -1,6 +1,7 @@
 import { Metadata } from 'next'
 import EventsPageClient from './EventsPageClient'
 import { getAllDungeons } from '@/data/dungeons'
+import { getAllSwingClubs } from '@/data/swingClubs'
 import { getUnifiedEvents, unifiedEventToEventsPageShape } from '@/lib/unifiedEvents'
 import { EventListStructuredData } from '@/components/StructuredData'
 import { parseEventsListSearchParams } from '@/lib/eventsListSearchParams'
@@ -52,6 +53,7 @@ export default async function EventsPage({
   const unified = await getUnifiedEvents()
   const allEvents = unified.map(unifiedEventToEventsPageShape)
   const allDungeons = getAllDungeons()
+  const allSwingClubs = getAllSwingClubs()
   const selectedCategory = parseEventsListSearchParams(searchParams)
 
   return (
@@ -60,6 +62,7 @@ export default async function EventsPage({
       <EventsPageClient
         allEvents={allEvents}
         allDungeons={allDungeons}
+        allSwingClubs={allSwingClubs}
         selectedCategory={selectedCategory}
       />
     </>

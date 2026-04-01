@@ -8,7 +8,7 @@ import { CONTACT_US_LABEL } from '@/lib/submissionContact'
 
 const NAV_LINKS = [
   { href: '/events', label: 'Events' },
-  { href: '/dungeons', label: 'Dungeons' },
+  { href: '/dungeons', label: 'Dungeons & clubs' },
   { href: '/education', label: 'Education' },
   { href: '/vendors', label: 'Vendors' },
   { href: '/calendar', label: 'Calendar' },

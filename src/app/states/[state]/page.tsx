@@ -1,11 +1,13 @@
 import { Metadata } from 'next'
 import { getAllEvents } from '@/data/events'
 import { getAllDungeons } from '@/data/dungeons'
+import { getAllSwingClubs } from '@/data/swingClubs'
 import Link from 'next/link'
 import EventCard from '@/components/EventCard'
 import DungeonLogo from '@/components/DungeonLogo'
 import Breadcrumb from '@/components/Breadcrumb'
 import HeroSponsorLayout from '@/components/HeroSponsorLayout'
+import SwingClubCard from '@/components/swingclubs/SwingClubCard'
 import { BASE_URL } from '@/lib/seo'
 import { notFound } from 'next/navigation'
 import { EAST_COAST_STATES, type StateSlug } from '@/lib/eastCoastStates'
@@ -26,6 +28,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   const allEvents = getAllEvents()
   const allDungeons = getAllDungeons()
+  const allSwingClubs = getAllSwingClubs()
   const now = new Date()
   const eventCount = allEvents.filter(
     (e: { location: { state: string }; date: { end: string } }) =>
@@ -34,21 +37,24 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const dungeonCount = allDungeons.filter(
     (d: { location: { state: string } }) => d.location.state === stateInfo.abbr
   ).length
-  const totalListings = eventCount + dungeonCount
+  const swingCount = allSwingClubs.filter(
+    (c: { location: { state: string } }) => c.location.state === stateInfo.abbr
+  ).length
+  const totalListings = eventCount + dungeonCount + swingCount
   const isThinPage = totalListings < 2
 
   return {
-    title: `${stateInfo.name} Kink Events & BDSM Dungeons`,
+    title: `${stateInfo.name} Kink Events, Dungeons & Swing Clubs`,
     ...(isThinPage && {
       robots: { index: false, follow: true },
     }),
-    description: `Discover kink events, BDSM conferences, workshops, and dungeons in ${stateInfo.name}. Connect with the local kink community and explore ${stateInfo.name}'s alternative lifestyle scene.`,
+    description: `Discover kink events, BDSM conferences, workshops, dungeons, and swing & lifestyle clubs in ${stateInfo.name}. Connect with the local scene and confirm policies on venue sites.`,
     alternates: {
       canonical: `${BASE_URL}/states/${params.state}`,
     },
     openGraph: {
-      title: `${stateInfo.name} Kink Events & Dungeons`,
-      description: `Find BDSM events and dungeons in ${stateInfo.name}. ${eventCount} upcoming events and ${dungeonCount} dungeon listings in this directory (counts change as listings update).`,
+      title: `${stateInfo.name} Kink Events & Venues`,
+      description: `Find BDSM events, dungeons, and swing clubs in ${stateInfo.name}. ${eventCount} upcoming events, ${dungeonCount} dungeon listings, ${swingCount} swing clubs (counts change as listings update).`,
       type: 'website',
       url: `${BASE_URL}/states/${params.state}`,
       siteName: 'East Coast Kink Events',
@@ -63,8 +69,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     },
     twitter: {
       card: 'summary_large_image',
-      title: `${stateInfo.name} Kink Events & Dungeons`,
-      description: `Kink events and dungeons in ${stateInfo.name} (${stateInfo.abbr}).`,
+      title: `${stateInfo.name} Kink Events & Venues`,
+      description: `Kink events, dungeons, and swing clubs in ${stateInfo.name} (${stateInfo.abbr}).`,
       images: [`${BASE_URL}/og-image.png`],
     },
   }
@@ -87,7 +93,8 @@ export default function StatePage({ params }: PageProps) {
   // Get events and dungeons for this state
   const allEvents = getAllEvents()
   const allDungeons = getAllDungeons()
-  
+  const allSwingClubs = getAllSwingClubs()
+
   const now = new Date()
   const stateEvents = allEvents
     .filter(event => 
@@ -98,6 +105,10 @@ export default function StatePage({ params }: PageProps) {
   
   const stateDungeons = allDungeons.filter(dungeon => 
     dungeon.location.state === stateInfo.abbr
+  )
+
+  const stateSwingClubs = allSwingClubs.filter(
+    (club) => club.location.state === stateInfo.abbr
   )
 
   const breadcrumbItems = [
@@ -122,7 +133,8 @@ export default function StatePage({ params }: PageProps) {
               Kink Events & BDSM Community
             </p>
             <p className="text-gray-400">
-              {stateInfo.region} • {stateEvents.length} upcoming events • {stateDungeons.length} dungeons
+              {stateInfo.region} • {stateEvents.length} upcoming events • {stateDungeons.length} dungeons •{' '}
+              {stateSwingClubs.length} swing clubs
             </p>
             <p className="text-gray-400 text-sm mt-4 max-w-2xl">
               New to kink or your first venue visit? Read{' '}
@@ -223,6 +235,43 @@ export default function StatePage({ params }: PageProps) {
                 className="inline-flex min-h-touch items-center text-primary-400 hover:text-primary-300 transition-colors"
               >
                 View all dungeons →
+              </Link>
+            </div>
+          )}
+        </section>
+
+        {/* Swing & lifestyle clubs */}
+        <section className="mb-16">
+          <h2 className="text-3xl font-serif font-bold text-white mb-6 flex items-center gap-3">
+            <div className="w-8 h-8 bg-gradient-to-r from-violet-600 to-fuchsia-600 rounded-lg flex items-center justify-center">
+              <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+            </div>
+            Swing &amp; lifestyle clubs in {stateInfo.name}
+          </h2>
+
+          {stateSwingClubs.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {stateSwingClubs.map((club) => (
+                <SwingClubCard key={club.slug} club={club} />
+              ))}
+            </div>
+          ) : (
+            <div className="card-elegant text-center py-12">
+              <p className="text-gray-400 text-lg mb-4">
+                No swing &amp; lifestyle clubs currently listed for {stateInfo.name}.
+              </p>
+              <Link
+                href="/dungeons#swing-clubs"
+                className="inline-flex min-h-touch items-center text-violet-400 hover:text-violet-300 transition-colors"
+              >
+                Browse all swing clubs →
               </Link>
             </div>
           )}

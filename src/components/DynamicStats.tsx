@@ -4,11 +4,13 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { getAllEvents } from '@/data/events'
 import { getAllDungeons } from '@/data/dungeons'
+import { getAllSwingClubs } from '@/data/swingClubs'
 import { supabase } from '@/lib/supabase'
 
 interface StatsData {
   totalEvents: number
   totalDungeons: number
+  totalSwingClubs: number
   totalArticles: number
   upcomingEvents: number
   recentArticles: any[]
@@ -19,6 +21,7 @@ export default function DynamicStats() {
   const [stats, setStats] = useState<StatsData>({
     totalEvents: 0,
     totalDungeons: 0,
+    totalSwingClubs: 0,
     totalArticles: 0,
     upcomingEvents: 0,
     recentArticles: [],
@@ -33,6 +36,7 @@ export default function DynamicStats() {
       // Get events and dungeons from static data
       const allEvents = getAllEvents()
       const allDungeons = getAllDungeons()
+      const allSwingClubs = getAllSwingClubs()
       
       // Calculate upcoming events
       const today = new Date()
@@ -81,6 +85,7 @@ export default function DynamicStats() {
       setStats({
         totalEvents: allEvents.length,
         totalDungeons: allDungeons.length,
+        totalSwingClubs: allSwingClubs.length,
         totalArticles,
         upcomingEvents: upcomingEvents.length,
         recentArticles,
@@ -140,9 +145,13 @@ export default function DynamicStats() {
                 View All →
               </Link>
             </div>
-            <div className="text-2xl font-bold text-white mb-1">{stats.totalDungeons}</div>
-            <div className="text-gray-300 text-sm">Dungeons</div>
-            <div className="text-purple-300 text-xs mt-1">East Coast locations</div>
+            <div className="text-2xl font-bold text-white mb-1">
+              {stats.totalDungeons + stats.totalSwingClubs}
+            </div>
+            <div className="text-gray-300 text-sm">Dungeons &amp; clubs</div>
+            <div className="text-purple-300 text-xs mt-1">
+              {stats.totalDungeons} kink · {stats.totalSwingClubs} swing
+            </div>
           </div>
         </Link>
 

@@ -8,6 +8,20 @@ export const BLOG_PILLAR_SLUGS = [
   'bdsm-beginner-guide',
   'bdsm-safety-guide',
   'what-to-expect-at-a-kink-event',
+  'how-to-find-kink-events-near-me',
+  'what-to-expect-first-bdsm-convention',
+  'what-is-a-munch-bdsm',
+  'what-is-a-play-party',
+  'what-is-a-bdsm-dungeon',
+  'bdsm-safety-consent-events',
+  'guide-to-rope-bondage-workshops',
+  'what-is-sacred-kink',
+  'can-kink-be-spiritual-practice',
+  'what-is-primal-play-bdsm',
+  'spring-kink-events-east-coast',
+  'summer-kink-events-east-coast',
+  'fall-kink-events-east-coast',
+  'winter-kink-events-east-coast',
 ] as const
 
 export type BlogPillarSlug = (typeof BLOG_PILLAR_SLUGS)[number]

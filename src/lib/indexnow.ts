@@ -10,6 +10,8 @@ import { getAllVendors } from '@/data/vendors'
 import { buildAllowlistedBlogPaths } from '@/lib/blogDiscoveryTier'
 import { buildAllowlistedDiscoveryPaths } from '@/lib/discoveryTier'
 import { buildAllowlistedDungeonDiscoveryPaths } from '@/lib/dungeonDiscoveryTier'
+import { buildAllowlistedSwingDiscoveryPaths } from '@/lib/swingDiscoveryTier'
+import { getAllSwingClubs } from '@/data/swingClubs'
 import { getStateSlugsForSitemap } from '@/lib/eastCoastStates'
 import { buildAllowlistedVendorDiscoveryPaths } from '@/lib/vendorDiscoveryTier'
 import { getSpiritualityKinkIndexPaths } from '@/lib/spiritualityKinkProgrammatic'
@@ -133,6 +135,7 @@ export function generateSitemapUrls(): string[] {
   const discoveryUrls = buildAllowlistedDiscoveryPaths().map((p) => `${BASE_URL}/${p}`)
   const vendorDiscoveryUrls = buildAllowlistedVendorDiscoveryPaths().map((p) => `${BASE_URL}/${p}`)
   const dungeonDiscoveryUrls = buildAllowlistedDungeonDiscoveryPaths().map((p) => `${BASE_URL}/${p}`)
+  const swingDiscoveryUrls = buildAllowlistedSwingDiscoveryPaths().map((p) => `${BASE_URL}/${p}`)
   const blogProgrammaticUrls = buildAllowlistedBlogPaths().map((p) => `${BASE_URL}/${p}`)
 
   return uniqueStrings([
@@ -141,6 +144,7 @@ export function generateSitemapUrls(): string[] {
     ...discoveryUrls,
     ...vendorDiscoveryUrls,
     ...dungeonDiscoveryUrls,
+    ...swingDiscoveryUrls,
     ...blogProgrammaticUrls,
   ])
 }
@@ -167,10 +171,11 @@ export async function submitContentToIndexNow(): Promise<IndexNowResponse> {
 
     const eventUrls = (events || []).map((e: any) => `${BASE_URL}/events/${e.slug}`)
     const dungeonUrls = (dungeons || []).map((d: any) => `${BASE_URL}/dungeons/${d.slug}`)
+    const swingClubUrls = getAllSwingClubs().map((c) => `${BASE_URL}/swing-clubs/${c.slug}`)
     const articleUrls = (articles || []).map((a: any) => `${BASE_URL}/education/${a.slug}`)
     const vendorUrls = getAllVendors().map((v) => `${BASE_URL}/vendors/${v.slug}`)
 
-    const allUrls = [...eventUrls, ...dungeonUrls, ...articleUrls, ...vendorUrls]
+    const allUrls = [...eventUrls, ...dungeonUrls, ...swingClubUrls, ...articleUrls, ...vendorUrls]
 
     return submitToIndexNow(allUrls)
   } catch (error) {

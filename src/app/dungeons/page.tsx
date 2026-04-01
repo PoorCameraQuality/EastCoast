@@ -1,14 +1,16 @@
 import { Metadata } from 'next'
 import { getAllDungeons } from '@/data/dungeons'
 import { getAllEvents } from '@/data/events'
+import { getAllSwingClubs } from '@/data/swingClubs'
 import DungeonsPageClient from './DungeonsPageClient'
 import { BASE_URL } from '@/lib/seo'
 
 export const revalidate = 1800
 
 export const metadata: Metadata = {
-  title: 'Dungeons & play spaces',
-  description: 'Explore BDSM dungeons and play spaces across the East Coast. Find vetted kink venues, private clubs, and community nights.',
+  title: 'Dungeons & swing clubs',
+  description:
+    'Browse BDSM dungeons, play spaces, and swing & lifestyle clubs nationwide. Member clubs and on-premise venues—always confirm rules on the venue site before you go.',
   alternates: {
     canonical: `${BASE_URL}/dungeons`,
   },
@@ -17,8 +19,9 @@ export const metadata: Metadata = {
     locale: 'en_US',
     url: `${BASE_URL}/dungeons`,
     siteName: 'East Coast Kink Events',
-    title: 'BDSM Dungeons & Play Spaces',
-    description: 'Discover BDSM dungeons and kink spaces across the East Coast. Find private sessions, workshops, and community events.',
+    title: 'BDSM Dungeons & Swing Clubs',
+    description:
+      'Discover kink play spaces and swing & lifestyle clubs. Filter by venue type, search by city, and link through to official sites.',
     images: [
       {
         url: `${BASE_URL}/og-image.png`,
@@ -30,8 +33,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'BDSM Dungeons & Play Spaces',
-    description: 'Discover BDSM dungeons and kink spaces across the East Coast.',
+    title: 'BDSM Dungeons & Swing Clubs',
+    description: 'Kink venues and swing & lifestyle clubs in one directory.',
     images: [`${BASE_URL}/og-image.png`],
   },
 }
@@ -44,6 +47,9 @@ function dedupeBySlug<T extends { slug: string; name: string }>(items: T[]): T[]
 
 export default function DungeonsPage() {
   const allDungeons = dedupeBySlug(getAllDungeons())
+  const allSwingClubs = dedupeBySlug(getAllSwingClubs())
   const allEvents = getAllEvents()
-  return <DungeonsPageClient allDungeons={allDungeons} allEvents={allEvents} />
+  return (
+    <DungeonsPageClient allDungeons={allDungeons} allSwingClubs={allSwingClubs} allEvents={allEvents} />
+  )
 }

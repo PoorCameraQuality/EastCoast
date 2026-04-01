@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { getAllEvents, getEventsByLocation, getEventsByCategory } from '@/data/events'
 import { getAllDungeons, getDungeonsByLocation } from '@/data/dungeons'
+import { getSwingClubsByLocation } from '@/data/swingClubs'
 import EventLogo from './EventLogo'
 import DungeonLogo from './DungeonLogo'
 import { useState, useEffect, useCallback } from 'react'
@@ -11,12 +12,19 @@ import { supabase } from '@/lib/supabase'
 interface RelatedContentProps {
   currentEvent?: any
   currentDungeon?: any
+  currentSwingClub?: any
   maxItems?: number
 }
 
-export default function RelatedContent({ currentEvent, currentDungeon, maxItems = 3 }: RelatedContentProps) {
+export default function RelatedContent({
+  currentEvent,
+  currentDungeon,
+  currentSwingClub,
+  maxItems = 3,
+}: RelatedContentProps) {
   const [relatedEvents, setRelatedEvents] = useState<any[]>([])
   const [relatedDungeons, setRelatedDungeons] = useState<any[]>([])
+  const [relatedSwingClubs, setRelatedSwingClubs] = useState<any[]>([])
   const [relatedArticles, setRelatedArticles] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
 
@@ -25,6 +33,7 @@ export default function RelatedContent({ currentEvent, currentDungeon, maxItems 
       setLoading(true)
       let events: any[] = []
       let dungeons: any[] = []
+      let swingClubs: any[] = []
       let articles: any[] = []
 
       // Load related content based on current page type
@@ -78,6 +87,22 @@ export default function RelatedContent({ currentEvent, currentDungeon, maxItems 
         // Find events in the same location
         const locationEvents = getEventsByLocation(currentDungeon.location.state) || []
         events = locationEvents.slice(0, 2) // Show fewer events for dungeons
+
+        const locationSwing = getSwingClubsByLocation(currentDungeon.location.state) || []
+        swingClubs = locationSwing.slice(0, 2)
+      }
+
+      if (currentSwingClub && currentSwingClub.location?.state) {
+        const locationEvents = getEventsByLocation(currentSwingClub.location.state) || []
+        events = locationEvents.slice(0, maxItems)
+
+        const locationDungeons = getDungeonsByLocation(currentSwingClub.location.state) || []
+        dungeons = locationDungeons.slice(0, 2)
+
+        const locationSwing = getSwingClubsByLocation(currentSwingClub.location.state) || []
+        swingClubs = locationSwing
+          .filter((c) => c.slug !== currentSwingClub.slug)
+          .slice(0, maxItems)
       }
 
       // Load related education articles
@@ -89,6 +114,9 @@ export default function RelatedContent({ currentEvent, currentDungeon, maxItems 
           }
           if (currentDungeon) {
             searchTerms.push(currentDungeon.category, currentDungeon.location.state)
+          }
+          if (currentSwingClub) {
+            searchTerms.push(currentSwingClub.category, currentSwingClub.location.state)
           }
 
           // Get articles that might be related to the content
@@ -110,13 +138,14 @@ export default function RelatedContent({ currentEvent, currentDungeon, maxItems 
 
       setRelatedEvents(events)
       setRelatedDungeons(dungeons)
+      setRelatedSwingClubs(swingClubs)
       setRelatedArticles(articles)
     } catch (error) {
       console.error('Error loading related content:', error)
     } finally {
       setLoading(false)
     }
-  }, [currentEvent, currentDungeon, maxItems])
+  }, [currentEvent, currentDungeon, currentSwingClub, maxItems])
 
   useEffect(() => {
     loadRelatedContent()
@@ -135,7 +164,12 @@ export default function RelatedContent({ currentEvent, currentDungeon, maxItems 
     )
   }
 
-  if (relatedEvents.length === 0 && relatedDungeons.length === 0 && relatedArticles.length === 0) {
+  if (
+    relatedEvents.length === 0 &&
+    relatedDungeons.length === 0 &&
+    relatedSwingClubs.length === 0 &&
+    relatedArticles.length === 0
+  ) {
     return null
   }
 
@@ -185,10 +219,45 @@ export default function RelatedContent({ currentEvent, currentDungeon, maxItems 
         </div>
       )}
 
+      {relatedSwingClubs.length > 0 && (
+        <div className={relatedEvents.length > 0 ? 'mb-8' : ''}>
+          <h3 className="text-lg font-semibold text-violet-300 mb-4">
+            Nearby swing &amp; lifestyle clubs
+          </h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {relatedSwingClubs.map((c) => (
+              <Link
+                key={c.slug}
+                href={`/swing-clubs/${c.slug}`}
+                prefetch={true}
+                aria-label={`View ${c.name || 'Club'} details`}
+                className="flex min-h-touch items-center p-4 bg-dark-800 border border-dark-600 rounded-lg hover:border-violet-500/50 transition-colors duration-300 md:hover:scale-[1.02] motion-reduce:md:hover:scale-100"
+              >
+                <div className="flex items-center gap-3 min-w-0 w-full">
+                  {c.logo && (
+                    <DungeonLogo
+                      src={c.logo}
+                      alt={`${c.name || 'Club'} logo`}
+                      size="small"
+                    />
+                  )}
+                  <div className="flex-1 min-w-0">
+                    <h4 className="text-white font-medium text-sm truncate">{c.name || 'Club'}</h4>
+                    <p className="text-gray-400 text-xs">
+                      {c.location?.city || ''}, {c.location?.state || ''}
+                    </p>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
+
       {relatedDungeons.length > 0 && (
         <div>
           <h3 className="text-lg font-semibold text-primary-300 mb-4">
-            Nearby Dungeons
+            {currentSwingClub ? 'Nearby dungeons & play spaces' : 'Nearby Dungeons'}
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {relatedDungeons.map((dungeon) => (

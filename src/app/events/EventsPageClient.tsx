@@ -24,7 +24,8 @@ type EventRow = {
 
 type Props = {
   allEvents: EventRow[]
-  allDungeons: Array<{ slug: string; name: string }>
+  allDungeons: Array<{ slug: string; name: string; location: { city: string; state: string }; logo?: string }>
+  allSwingClubs?: Array<{ slug: string; name: string; location: { city: string; state: string }; logo?: string }>
   /** Derived on the server from URL — single source of truth for filters (SEO / crawlers). */
   selectedCategory: string
 }
@@ -46,7 +47,12 @@ function separateEventsByDate(events: EventRow[]) {
   return { upcomingEvents, pastEvents }
 }
 
-export default function EventsPageClient({ allEvents, allDungeons, selectedCategory }: Props) {
+export default function EventsPageClient({
+  allEvents,
+  allDungeons,
+  allSwingClubs = [],
+  selectedCategory,
+}: Props) {
   const categories = useMemo(() => ['Outdoor Events', 'Indoor Events'], [])
   const router = useRouter()
 
@@ -180,10 +186,11 @@ export default function EventsPageClient({ allEvents, allDungeons, selectedCateg
                 compact
                 events={allEvents}
                 dungeons={allDungeons}
+                swingClubs={allSwingClubs}
                 placeholder="City, state, or event name…"
               />
               <p className="mt-1.5 text-[11px] leading-snug text-gray-600">
-                Matches events and dungeon listings—open a row to go straight to the detail page.
+                Matches events, dungeons, and swing club listings—open a row to go to the detail page.
               </p>
             </div>
           </div>

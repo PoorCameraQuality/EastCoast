@@ -2,8 +2,8 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import Breadcrumb from '@/components/Breadcrumb'
 import { BASE_URL } from '@/lib/seo'
-import { BLOG_PILLAR_SLUGS } from '@/lib/blogPillarRegistry'
 import { loadBlogPillar } from '@/lib/loadBlogPillar'
+import { BLOG_PILLAR_INDEX_GROUPS } from '@/lib/blogPillarIndexGroups'
 import { buildAllowlistedBlogPaths } from '@/lib/blogDiscoveryTier'
 import { EAST_COAST_STATES, type StateSlug } from '@/lib/eastCoastStates'
 import { CITY_BY_SLUG } from '@/lib/discoveryCityRegistry'
@@ -51,11 +51,16 @@ export const metadata: Metadata = {
   },
 }
 
+type PillarCard = { slug: string; title: string; description: string }
+
 export default function BlogIndexPage() {
-  const pillars = BLOG_PILLAR_SLUGS.map((slug) => {
-    const doc = loadBlogPillar(slug)
-    return doc ? { slug, title: doc.title, description: doc.description } : null
-  }).filter(Boolean) as { slug: string; title: string; description: string }[]
+  const pillarBySlug = new Map<string, PillarCard>()
+  for (const group of BLOG_PILLAR_INDEX_GROUPS) {
+    for (const slug of group.slugs) {
+      const doc = loadBlogPillar(slug)
+      if (doc) pillarBySlug.set(slug, { slug, title: doc.title, description: doc.description })
+    }
+  }
 
   const allowlisted = new Set(buildAllowlistedBlogPaths())
 
@@ -126,7 +131,7 @@ export default function BlogIndexPage() {
           Practical reads for curious adults
         </h1>
         <p className="text-lg text-gray-300 leading-relaxed mb-3">
-          Start with the essentials below, then dig into listings that match how people actually search:{' '}
+          Browse by topic below, then dig into listings that match how people actually search:{' '}
           <Link href="/events" className="text-primary-400 underline underline-offset-2 decoration-primary-400/40 hover:decoration-primary-300">
             events
           </Link>
@@ -148,22 +153,40 @@ export default function BlogIndexPage() {
           .
         </p>
 
-        <h2 className="text-2xl font-serif font-semibold text-white mb-2">Start here</h2>
-        <p className="text-gray-400 text-sm mb-6 max-w-2xl">
-          Foundational topics we point newcomers to first—consent, safety, vocabulary, and what a first night out can look like.
-        </p>
-        <ul className="space-y-4 list-none p-0 m-0 mb-16">
-          {pillars.map((p) => (
-            <li key={p.slug}>
-              <Link href={`/blog/${p.slug}`} className={`${stateLinkClass} sm:flex-row sm:items-start sm:gap-6`}>
-                <span className="text-base font-semibold text-white group-hover:text-primary-100">{p.title}</span>
-                <p className="text-sm text-gray-400 mt-2 sm:mt-0 sm:flex-1 sm:font-normal leading-relaxed">
-                  {p.description}
-                </p>
-              </Link>
-            </li>
+        <div className="space-y-12 mb-16">
+          {BLOG_PILLAR_INDEX_GROUPS.map((group) => (
+            <section key={group.id} aria-labelledby={`blog-group-${group.id}`}>
+              <h2
+                id={`blog-group-${group.id}`}
+                className="text-2xl font-serif font-semibold text-white mb-2"
+              >
+                {group.title}
+              </h2>
+              <p className="text-gray-400 text-sm mb-6 max-w-2xl leading-relaxed">{group.description}</p>
+              <ul className="space-y-4 list-none p-0 m-0">
+                {group.slugs.map((slug) => {
+                  const p = pillarBySlug.get(slug)
+                  if (!p) return null
+                  return (
+                    <li key={p.slug}>
+                      <Link
+                        href={`/blog/${p.slug}`}
+                        className={`${stateLinkClass} sm:flex-row sm:items-start sm:gap-6`}
+                      >
+                        <span className="text-base font-semibold text-white group-hover:text-primary-100">
+                          {p.title}
+                        </span>
+                        <p className="text-sm text-gray-400 mt-2 sm:mt-0 sm:flex-1 sm:font-normal leading-relaxed">
+                          {p.description}
+                        </p>
+                      </Link>
+                    </li>
+                  )
+                })}
+              </ul>
+            </section>
           ))}
-        </ul>
+        </div>
       </div>
 
       <div className="container-custom max-w-5xl border-t border-white/10 pt-14 pb-8">

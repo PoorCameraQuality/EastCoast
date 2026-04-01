@@ -3,7 +3,7 @@
  * Fires only when gtag is loaded and `window.gaConsent` is true (set after age verification).
  */
 
-export type AnalyticsEntityType = 'event' | 'vendor' | 'dungeon'
+export type AnalyticsEntityType = 'event' | 'vendor' | 'dungeon' | 'swingClub'
 
 declare global {
   interface Window {
