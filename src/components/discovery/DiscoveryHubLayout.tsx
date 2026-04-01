@@ -7,6 +7,7 @@ import type { DiscoveryParsed } from '@/lib/discoverySlug'
 import { listDungeonsForDiscovery } from '@/lib/discoveryDungeonCount'
 import { getAllDungeons } from '@/data/dungeons'
 import DiscoveryRelatedLinks from '@/components/discovery/DiscoveryRelatedLinks'
+import Breadcrumb from '@/components/Breadcrumb'
 
 type Dungeon = ReturnType<typeof getAllDungeons>[number]
 
@@ -15,6 +16,8 @@ type Props = {
   h1: string
   paragraphs: string[]
   events: UnifiedEvent[]
+  /** Canonical path e.g. /bdsm-events/ny */
+  path: string
 }
 
 /** Map unified event back to EventCard shape */
@@ -34,22 +37,22 @@ function toEventCardShape(e: UnifiedEvent) {
   }
 }
 
-export default function DiscoveryHubLayout({ parsed, h1, paragraphs, events }: Props) {
+export default function DiscoveryHubLayout({ parsed, h1, paragraphs, events, path }: Props) {
   const dungeons: Dungeon[] = listDungeonsForDiscovery(parsed).slice(0, 9)
+  const currentLabel = h1.length > 80 ? `${h1.slice(0, 77)}…` : h1
+  const breadcrumbItems = [
+    { label: 'Home', href: '/' },
+    { label: 'BDSM events', href: '/bdsm-events' },
+    { label: currentLabel, href: path, current: true },
+  ]
 
   return (
-    <div className="min-h-screen bg-black">
+    <div className="min-h-screen bg-brand-void">
       <article className="container-custom py-8 md:py-16">
         <header className="mb-10 md:mb-12">
-          <p className="text-sm text-primary-400 mb-2">
-            <Link href="/" className="hover:underline">
-              Home
-            </Link>
-            <span className="mx-2 text-gray-600">/</span>
-            <Link href="/bdsm-events" className="hover:underline">
-              BDSM events
-            </Link>
-          </p>
+          <div className="mb-4">
+            <Breadcrumb items={breadcrumbItems} />
+          </div>
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-white mb-6">{h1}</h1>
           <div className="prose prose-invert prose-lg max-w-none text-gray-300 space-y-4">
             {paragraphs.map((p, i) => (
@@ -59,7 +62,7 @@ export default function DiscoveryHubLayout({ parsed, h1, paragraphs, events }: P
         </header>
 
         <section className="mb-16" aria-labelledby="discovery-events-heading">
-          <h2 id="discovery-events-heading" className="text-2xl font-serif font-bold text-white mb-6">
+          <h2 id="discovery-events-heading" className="text-xl font-serif font-semibold text-white mb-6">
             Upcoming events
           </h2>
           {events.length > 0 ? (
@@ -79,7 +82,7 @@ export default function DiscoveryHubLayout({ parsed, h1, paragraphs, events }: P
         </section>
 
         <section className="mb-16" aria-labelledby="discovery-venues-heading">
-          <h2 id="discovery-venues-heading" className="text-2xl font-serif font-bold text-white mb-6">
+          <h2 id="discovery-venues-heading" className="text-xl font-serif font-semibold text-white mb-6">
             Dungeons & kink venues
           </h2>
           {dungeons.length > 0 ? (

@@ -183,7 +183,7 @@ export default function DungeonsPageClient({ allDungeons, allSwingClubs, allEven
                 <h2 className="font-serif text-2xl font-bold text-white sm:text-3xl">Kink-first / play spaces</h2>
                 <p className="mt-2 max-w-3xl text-sm text-gray-400 sm:text-base">
                   Member clubs, rental studios, and education-first spaces.{' '}
-                  <a href="#swing-clubs" className="text-violet-400 underline underline-offset-2 hover:text-violet-300">
+                  <a href="#swing-clubs" className="text-social underline underline-offset-2 hover:text-social-hover">
                     Jump to swing &amp; lifestyle clubs
                   </a>
                 </p>

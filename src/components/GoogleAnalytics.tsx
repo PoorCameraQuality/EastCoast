@@ -1,8 +1,9 @@
 "use client"
 import Script from 'next/script'
-import { useEffect, Suspense } from 'react'
+import { useEffect, useState, Suspense } from 'react'
 import { initWebVitals } from '@/lib/web-vitals'
 import { usePathname, useSearchParams } from 'next/navigation'
+import { GA_CONSENT_EVENT } from '@/lib/analyticsEntities'
 
 interface GoogleAnalyticsProps {
   GA_MEASUREMENT_ID: string
@@ -12,41 +13,60 @@ function GoogleAnalyticsInner({ GA_MEASUREMENT_ID }: GoogleAnalyticsProps) {
   const pathname = usePathname()
   const searchParams = useSearchParams()
   const GA_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || GA_MEASUREMENT_ID
+  const [loadScripts, setLoadScripts] = useState(false)
+  const [gtagJsLoaded, setGtagJsLoaded] = useState(false)
 
   useEffect(() => {
     if (typeof window === 'undefined') return
-    if (!(window as any).gaConsent) return // require consent before tracking
+    if ((window as any).gaConsent) {
+      setLoadScripts(true)
+      return
+    }
+    const onConsent = () => setLoadScripts(true)
+    window.addEventListener(GA_CONSENT_EVENT, onConsent)
+    return () => window.removeEventListener(GA_CONSENT_EVENT, onConsent)
+  }, [])
+
+  useEffect(() => {
+    if (typeof window === 'undefined' || !loadScripts || !gtagJsLoaded) return
+    if (!(window as any).gaConsent) return
     const url = pathname + (searchParams?.toString() ? `?${searchParams.toString()}` : '')
     if ((window as any).gtag) {
       ;(window as any).gtag('config', GA_ID, {
         page_path: url,
       })
     }
-    // Initialize Core Web Vitals once per mount
     initWebVitals()
-  }, [pathname, searchParams, GA_ID])
+  }, [pathname, searchParams, GA_ID, loadScripts, gtagJsLoaded])
 
   return (
     <>
-      <Script
-        src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
-        strategy="afterInteractive"
-      />
-      <Script
-        id="google-analytics"
-        strategy="afterInteractive"
-        dangerouslySetInnerHTML={{
-          __html: `
+      {loadScripts && (
+        <>
+          <Script
+            src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
+            strategy="afterInteractive"
+            onLoad={() => setGtagJsLoaded(true)}
+          />
+          {gtagJsLoaded && (
+            <Script
+              id="google-analytics"
+              strategy="afterInteractive"
+              dangerouslySetInnerHTML={{
+                __html: `
             window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);} 
+            function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
             gtag('config', '${GA_ID}', {
               page_title: document.title,
               page_location: window.location.href,
             });
           `,
-        }}
-      />
+              }}
+            />
+          )}
+        </>
+      )}
     </>
   )
 }

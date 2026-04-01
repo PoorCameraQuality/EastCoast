@@ -3,6 +3,7 @@ import { DungeonStructuredData } from '@/components/StructuredData'
 import Breadcrumb from '@/components/Breadcrumb'
 import RelatedContent from '@/components/RelatedContent'
 import DiscoveryEngineStrip from '@/components/discovery/DiscoveryEngineStrip'
+import ListingHubLinks from '@/components/seo/ListingHubLinks'
 import DungeonImage from '@/components/dungeons/DungeonImage'
 
 /** Converts schema.org openingHours (e.g. "Fr 20:00-02:00, Sa 20:00-02:00") to human-readable format. */
@@ -63,6 +64,11 @@ export default function DungeonDetailView({ dungeon }: { dungeon: Dungeon }) {
       <section className="section-padding">
         <div className="container-custom">
           <Breadcrumb items={breadcrumbItems} />
+          <ListingHubLinks
+            variant="dungeon"
+            stateAbbr={dungeon.location.state}
+            city={dungeon.location.city}
+          />
           <DiscoveryEngineStrip stateAbbr={dungeon.location?.state} />
 
           <div className="mt-4">

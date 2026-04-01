@@ -2,7 +2,7 @@ import { Metadata } from 'next'
 import { BASE_URL } from '@/lib/seo'
 
 export const metadata: Metadata = {
-  title: 'Education | East Coast Kink Events',
+  title: 'Education',
   description: 'Educational articles and resources about kink, BDSM, and the community.',
   openGraph: {
     title: 'Education | East Coast Kink Events',

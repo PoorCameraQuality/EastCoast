@@ -1,4 +1,4 @@
-/* Readability defaults */
+/* Readability defaults — uses semantic tokens from tokens.css */
 .article-prose {
   max-width: 70ch;              /* comfortable measure */
 }
@@ -8,7 +8,7 @@
   font-size: 1.125rem;          /* ~18px */
   line-height: 1.85;
   margin: 0.9rem 0 1.1rem;
-  color: rgba(255,255,255,0.92);
+  color: var(--ecke-mdx-text);
 }
 
 /* Headings spacing */
@@ -24,9 +24,9 @@
 
 /* Blockquote */
 .article-prose blockquote {
-  border-left: 3px solid rgba(255,255,255,0.22);
+  border-left: 3px solid var(--ecke-mdx-border-subtle);
   padding-left: 1rem;
-  color: rgba(255,255,255,0.86);
+  color: var(--ecke-mdx-text-soft);
 }
 
 /* Tables */
@@ -35,24 +35,24 @@
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
-  border: 1px solid rgba(255,255,255,0.08);
+  border: 1px solid var(--ecke-mdx-border-faint);
   border-radius: 0.75rem;
-  box-shadow: 0 4px 18px rgba(0,0,0,0.25);
+  box-shadow: 0 4px 18px var(--ecke-mdx-table-shadow);
 }
 .article-prose thead th {
-  background: rgba(255,255,255,0.06);
-  color: rgba(255,255,255,0.95);
+  background: var(--ecke-mdx-thead);
+  color: var(--ecke-mdx-thead-text);
   font-weight: 700;
   padding: 0.8rem 0.9rem;
-  border-bottom: 1px solid rgba(255,255,255,0.12);
+  border-bottom: 1px solid var(--ecke-mdx-border-medium);
 }
 .article-prose td {
   padding: 0.75rem 0.9rem;
-  border-bottom: 1px solid rgba(255,255,255,0.08);
+  border-bottom: 1px solid var(--ecke-mdx-border-faint);
   vertical-align: top;
 }
-.article-prose tbody tr:nth-child(odd) td { background: rgba(255,255,255,0.03); }
-.article-prose tbody tr:hover td { background: rgba(255,255,255,0.06); }
+.article-prose tbody tr:nth-child(odd) td { background: var(--ecke-mdx-row-odd); }
+.article-prose tbody tr:hover td { background: var(--ecke-mdx-row-hover); }
 
 /* Make links pop a bit more in dark mode */
 .article-prose a {
@@ -62,7 +62,7 @@
 
 /* Code/inline code contrast if you have any */
 .article-prose code {
-  background: rgba(255,255,255,0.08);
+  background: var(--ecke-mdx-code-bg);
   padding: 0.15rem 0.35rem;
   border-radius: 0.35rem;
 }

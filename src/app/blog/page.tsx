@@ -48,6 +48,20 @@ export const metadata: Metadata = {
     url: `${BASE_URL}/blog`,
     siteName: 'East Coast Kink Events',
     type: 'website',
+    images: [
+      {
+        url: `${BASE_URL}/og-image.png`,
+        width: 1200,
+        height: 630,
+        alt: 'East Coast Kink Events blog',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'BDSM & Kink Guides — Blog',
+    description: 'Education that links to real events, vendors, and venue listings.',
+    images: [`${BASE_URL}/og-image.png`],
   },
 }
 

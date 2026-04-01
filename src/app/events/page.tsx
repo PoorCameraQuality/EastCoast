@@ -4,28 +4,50 @@ import { getAllDungeons } from '@/data/dungeons'
 import { getAllSwingClubs } from '@/data/swingClubs'
 import { getUnifiedEvents, unifiedEventToEventsPageShape } from '@/lib/unifiedEvents'
 import { EventListStructuredData } from '@/components/StructuredData'
-import { parseEventsListSearchParams } from '@/lib/eventsListSearchParams'
+import {
+  eventsListHasActiveFilter,
+  parseEventsListSearchParams,
+} from '@/lib/eventsListSearchParams'
 import { BASE_URL } from '@/lib/seo'
 
 export const revalidate = 1800
 
-export async function generateMetadata(): Promise<Metadata> {
+type EventsIndexProps = {
+  searchParams: Record<string, string | string[] | undefined>
+}
+
+export async function generateMetadata({
+  searchParams,
+}: EventsIndexProps): Promise<Metadata> {
   const count = (await getUnifiedEvents()).length
-  const description = `${count}+ BDSM & kink events, conventions, and parties—search by state or type. Find kink events near you on the East Coast & Midwest. Updated list with conferences & workshops.`
-  const ogDescription = description.slice(0, 200)
+  const filtered = eventsListHasActiveFilter(searchParams)
+  const selection = parseEventsListSearchParams(searchParams)
+
+  const baseDescription = `${count}+ BDSM & kink events, conventions, and parties—search by state or type. Find kink events near you on the East Coast & Midwest. Updated list with conferences & workshops.`
+  const filterSuffix = filtered
+    ? ` Filtered: ${selection}.`
+    : ''
+  const description = `${baseDescription}${filterSuffix}`.slice(0, 160)
+  const ogDescription = `${baseDescription}${filterSuffix}`.slice(0, 200)
+
+  const defaultTitle = 'BDSM & Kink Events Near You | Conventions & Parties'
+  const title = filtered ? `${selection} — Kink Events`.slice(0, 70) : defaultTitle
 
   return {
-    title: 'BDSM & Kink Events Near You | Conventions & Parties',
-    description: description.slice(0, 160),
+    title,
+    description,
     alternates: {
       canonical: `${BASE_URL}/events`,
     },
+    ...(filtered && {
+      robots: { index: false, follow: true },
+    }),
     openGraph: {
       type: 'website',
       locale: 'en_US',
       url: `${BASE_URL}/events`,
       siteName: 'East Coast Kink Events',
-      title: 'BDSM & Kink Events — Conventions, Parties & Workshops',
+      title: filtered ? `${selection} — Kink Events` : 'BDSM & Kink Events — Conventions, Parties & Workshops',
       description: ogDescription,
       images: [
         {
@@ -38,7 +60,7 @@ export async function generateMetadata(): Promise<Metadata> {
     },
     twitter: {
       card: 'summary_large_image',
-      title: 'BDSM & Kink Events — Conventions & Workshops',
+      title: filtered ? `${selection} — Kink Events` : 'BDSM & Kink Events — Conventions & Workshops',
       description: ogDescription,
       images: [`${BASE_URL}/og-image.png`],
     },

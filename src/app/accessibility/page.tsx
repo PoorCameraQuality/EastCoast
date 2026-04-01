@@ -4,7 +4,7 @@ import { BASE_URL } from '@/lib/seo'
 import Breadcrumb from '@/components/Breadcrumb'
 
 export const metadata: Metadata = {
-  title: 'Accessibility | East Coast Kink Events',
+  title: 'Accessibility',
   description: 'Accessibility statement for East Coast Kink Events. We are committed to ensuring digital accessibility for people of all abilities.',
   robots: { index: false, follow: true },
   alternates: {

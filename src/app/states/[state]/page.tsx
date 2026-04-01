@@ -11,6 +11,8 @@ import SwingClubCard from '@/components/swingclubs/SwingClubCard'
 import { BASE_URL } from '@/lib/seo'
 import { notFound } from 'next/navigation'
 import { EAST_COAST_STATES, type StateSlug } from '@/lib/eastCoastStates'
+import { FaqStructuredData } from '@/components/StructuredData'
+import { buildStateHubFaqs } from '@/lib/seo/stateHubFaqs'
 
 interface PageProps {
   params: { state: string }
@@ -42,18 +44,21 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   ).length
   const totalListings = eventCount + dungeonCount + swingCount
   const isThinPage = totalListings < 2
+  const year = new Date().getFullYear()
+  const primaryTitle = `${stateInfo.name} (${year}) — Kink events, dungeons & clubs`
+  const title = primaryTitle.length <= 60 ? primaryTitle : `${stateInfo.name} (${year}) — Kink directory`
 
   return {
-    title: `${stateInfo.name} Kink Events, Dungeons & Swing Clubs`,
+    title,
     ...(isThinPage && {
       robots: { index: false, follow: true },
     }),
-    description: `Discover kink events, BDSM conferences, workshops, dungeons, and swing & lifestyle clubs in ${stateInfo.name}. Connect with the local scene and confirm policies on venue sites.`,
+    description: `${year} guide: kink events, BDSM parties, workshops, dungeons, and swing clubs in ${stateInfo.name} (${stateInfo.region}). Browse listings and confirm policies on venue sites.`,
     alternates: {
       canonical: `${BASE_URL}/states/${params.state}`,
     },
     openGraph: {
-      title: `${stateInfo.name} Kink Events & Venues`,
+      title,
       description: `Find BDSM events, dungeons, and swing clubs in ${stateInfo.name}. ${eventCount} upcoming events, ${dungeonCount} dungeon listings, ${swingCount} swing clubs (counts change as listings update).`,
       type: 'website',
       url: `${BASE_URL}/states/${params.state}`,
@@ -69,7 +74,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     },
     twitter: {
       card: 'summary_large_image',
-      title: `${stateInfo.name} Kink Events & Venues`,
+      title,
       description: `Kink events, dungeons, and swing clubs in ${stateInfo.name} (${stateInfo.abbr}).`,
       images: [`${BASE_URL}/og-image.png`],
     },
@@ -117,8 +122,11 @@ export default function StatePage({ params }: PageProps) {
     { label: stateInfo.name, href: `/states/${params.state}`, current: true }
   ]
 
+  const hubFaqs = buildStateHubFaqs(stateInfo.name, stateInfo.region)
+
   return (
     <div className="min-h-screen bg-black">
+      <FaqStructuredData faqs={hubFaqs} id="state-hub-faq-jsonld" />
       <div className="container-custom section-padding">
         <Breadcrumb items={breadcrumbItems} />
 
@@ -269,12 +277,38 @@ export default function StatePage({ params }: PageProps) {
               </p>
               <Link
                 href="/dungeons#swing-clubs"
-                className="inline-flex min-h-touch items-center text-violet-400 hover:text-violet-300 transition-colors"
+                className="inline-flex min-h-touch items-center text-social hover:text-social-hover transition-colors"
               >
                 Browse all swing clubs →
               </Link>
             </div>
           )}
+        </section>
+
+        <section className="mb-16" aria-labelledby="state-faq-heading">
+          <h2 id="state-faq-heading" className="text-2xl font-serif font-bold text-white mb-4">
+            Questions about this directory
+          </h2>
+          <div className="space-y-3 max-w-3xl">
+            {hubFaqs.map((item) => (
+              <details
+                key={item.question}
+                className="group rounded-xl border border-white/10 bg-white/5 px-4 py-3 open:bg-white/[0.07]"
+              >
+                <summary className="cursor-pointer list-none font-medium text-gray-100 [&::-webkit-details-marker]:hidden">
+                  <span className="inline-flex w-full items-center justify-between gap-2">
+                    {item.question}
+                    <span className="text-primary-400 text-lg leading-none group-open:rotate-45 transition-transform">
+                      +
+                    </span>
+                  </span>
+                </summary>
+                <p className="mt-3 text-sm text-gray-300 leading-relaxed border-t border-white/10 pt-3">
+                  {item.answer}
+                </p>
+              </details>
+            ))}
+          </div>
         </section>
 
         {/* Other East Coast States */}

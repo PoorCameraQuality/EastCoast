@@ -26,6 +26,9 @@ module.exports = {
           900: '#134e4a',
           950: '#042f2e',
         },
+        /* Semantic accents — values mirror src/styles/tokens.css */
+        social: 'var(--ecke-accent-social)',
+        'social-hover': 'var(--ecke-accent-social-hover)',
         dark: {
           50: '#f8fafc',
           100: '#f1f5f9',
@@ -54,6 +57,15 @@ module.exports = {
         'elegant': '0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2)',
         'elegant-lg': '0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2)',
         'dark': '0 4px 6px -1px rgba(0, 0, 0, 0.5), 0 2px 4px -1px rgba(0, 0, 0, 0.3)',
+      },
+      transitionDuration: {
+        ecke: '300ms',
+        'ecke-fast': '200ms',
+        'ecke-slow': '500ms',
+      },
+      transitionTimingFunction: {
+        'ecke-out': 'ease-out',
+        'ecke-in-out': 'ease-in-out',
       },
       animation: {
         'fade-in-up': 'fadeInUp 0.8s ease-out forwards',

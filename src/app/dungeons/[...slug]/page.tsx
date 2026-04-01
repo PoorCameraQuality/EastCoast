@@ -79,7 +79,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const desc = paragraphs.join(' ')
 
   return {
-    title: `${h1} | East Coast Kink Events`,
+    title: h1,
     description: desc.slice(0, 160),
     robots,
     alternates: {

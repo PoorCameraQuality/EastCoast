@@ -2,14 +2,14 @@ import type { Metadata } from 'next'
 import Breadcrumb from '@/components/Breadcrumb'
 
 export const metadata: Metadata = {
-  title: 'Privacy Policy - East Coast Kink Events',
+  title: 'Privacy Policy',
   description: 'Learn about how we collect, use, and protect your personal information on East Coast Kink Events.',
   keywords: 'privacy policy, data protection, personal information, kink events, BDSM events',
   alternates: {
     canonical: 'https://www.eastcoastkinkevents.com/privacy',
   },
   openGraph: {
-    title: 'Privacy Policy - East Coast Kink Events',
+    title: 'Privacy Policy | East Coast Kink Events',
     description: 'Learn about how we collect, use, and protect your personal information.',
     type: 'website',
     url: 'https://www.eastcoastkinkevents.com/privacy',
@@ -24,7 +24,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Privacy Policy - East Coast Kink Events',
+    title: 'Privacy Policy | East Coast Kink Events',
     description: 'Learn about how we collect, use, and protect your personal information.',
     images: ['https://www.eastcoastkinkevents.com/og-image.png'],
   },

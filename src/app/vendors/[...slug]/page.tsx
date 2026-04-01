@@ -55,7 +55,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     const keywords = buildVendorKeywords(vendor)
 
     return {
-      title: `${vendor.name} | East Coast Kink Events`,
+      title: vendor.name,
       description,
       keywords,
       openGraph: {
@@ -99,7 +99,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const desc = paragraphs.join(' ')
 
   return {
-    title: `${h1} | East Coast Kink Events`,
+    title: h1,
     description: desc.slice(0, 160),
     robots,
     alternates: {

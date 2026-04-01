@@ -40,7 +40,7 @@ const L = ({
   <li>
     <Link
       href={href}
-      className="text-gray-400 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 focus-visible:ring-offset-black rounded-md min-h-touch inline-flex items-center py-1"
+      className="text-gray-400 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 focus-visible:ring-offset-brand-void rounded-md min-h-touch inline-flex items-center py-1"
     >
       {children}
     </Link>
@@ -49,7 +49,7 @@ const L = ({
 
 export default function Footer() {
   return (
-    <footer className="bg-gradient-to-b from-black to-dark-900 text-gray-300 border-t border-dark-700/40">
+    <footer className="bg-gradient-to-b from-black to-dark-900 text-gray-300 border-t border-dark-700/50">
       <div className="container-custom py-12 md:py-16">
         <div className="grid grid-cols-1 gap-y-10 md:grid-cols-12 md:gap-8">
           <div className="md:col-span-4">
@@ -76,7 +76,7 @@ export default function Footer() {
                 href={DISCORD_INVITE_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center min-h-touch rounded-lg bg-amber-400/90 px-4 py-2 text-sm font-medium text-black hover:bg-amber-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+                className="inline-flex items-center min-h-touch rounded-lg bg-amber-400/90 px-4 py-2 text-sm font-medium text-black hover:bg-amber-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-2 focus-visible:ring-offset-brand-void"
                 aria-label="Join Discord (opens in a new tab)"
               >
                 Join Discord
@@ -91,7 +91,7 @@ export default function Footer() {
               <div className="mt-3">
                 <Link
                   href="/support"
-                  className="inline-flex items-center min-h-touch rounded-lg bg-white/10 px-4 py-2 text-sm font-medium text-white hover:bg-white/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+                  className="inline-flex items-center min-h-touch rounded-lg bg-white/10 px-4 py-2 text-sm font-medium text-white hover:bg-white/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 focus-visible:ring-offset-brand-void"
                 >
                   Learn more
                 </Link>
@@ -110,6 +110,7 @@ export default function Footer() {
               <L href="/vendors">Vendors</L>
               <L href="/calendar">Calendar</L>
               <L href="/states">States</L>
+              <L href="/directory-snapshot">Directory snapshot</L>
               <L href="/spirituality-kink">Spirituality &amp; kink</L>
             </Section>
 

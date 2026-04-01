@@ -46,12 +46,12 @@ export default function Hero() {
           </div>
 
           {/* Subtitle */}
-          <p className="text-lg md:text-xl lg:text-2xl mb-8 text-gray-300 max-w-3xl mx-auto leading-relaxed animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
+          <p className="text-lg md:text-xl lg:text-2xl mb-8 text-gray-300 max-w-3xl mx-auto leading-relaxed animate-fade-in-up delay-300">
             Connect with your community. Find events, dungeons, educational resources, and vendors—built for privacy, discretion, and inclusion.
           </p>
 
           {/* Action buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8 animate-fade-in-up" style={{ animationDelay: '0.5s' }}>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8 animate-fade-in-up delay-500">
             <Link 
               href="/events" 
               className="group relative inline-flex items-center justify-center min-h-touch px-6 md:px-8 py-3 md:py-4 backdrop-blur-xl bg-gradient-to-r from-primary-600/80 to-primary-600/80 text-white font-semibold rounded-full shadow-2xl hover:shadow-primary-500/25 transition-all duration-300 md:hover:scale-105 motion-reduce:hover:scale-100 min-w-[180px] md:min-w-[200px] overflow-hidden border border-white/20 hover:border-white/40"
@@ -82,7 +82,7 @@ export default function Hero() {
             </Link>
           </div>
 
-          <div className="animate-fade-in-up mb-8" style={{ animationDelay: '0.55s' }}>
+          <div className="animate-fade-in-up mb-8 delay-[550ms]">
             <Link
               href="/contact"
               className="inline-flex min-h-touch items-center justify-center text-gray-300 hover:text-white underline underline-offset-4 decoration-white/20 hover:decoration-white/50 transition-colors"
@@ -93,7 +93,7 @@ export default function Hero() {
           </div>
 
           {/* Dynamic Stats - Enhanced with recent content */}
-          <div className="animate-fade-in-up" style={{ animationDelay: '0.6s' }}>
+          <div className="animate-fade-in-up delay-[600ms]">
             <DynamicStats />
           </div>
         </div>

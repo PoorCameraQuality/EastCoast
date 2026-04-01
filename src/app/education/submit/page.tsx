@@ -5,20 +5,20 @@ import Link from 'next/link'
 import { CONTACT_US_LABEL } from '@/lib/submissionContact'
 
 export const metadata: Metadata = {
-  title: 'Submit Article - Kink Education | East Coast Kink Events',
+  title: 'Submit Article — Kink Education',
   description: 'To submit an educational article, please contact us.',
   keywords: 'submit article, kink education, BDSM education, community contribution',
   alternates: {
     canonical: `${BASE_URL}/education/submit`,
   },
   openGraph: {
-    title: 'Submit Article - Kink Education | East Coast Kink Events',
+    title: 'Submit Article — Kink Education',
     description: 'Submit your educational article for review and potential publication on our kink education platform.',
     type: 'website',
-    url: 'https://eastcoastkinkevents.com/education/submit',
+    url: `${BASE_URL}/education/submit`,
     images: [
       {
-        url: 'https://eastcoastkinkevents.com/og-image.png',
+        url: `${BASE_URL}/og-image.png`,
         width: 1200,
         height: 630,
         alt: 'Submit Article - East Coast Kink Events',
@@ -27,9 +27,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Submit Article - Kink Education | East Coast Kink Events',
+    title: 'Submit Article — Kink Education',
     description: 'Submit your educational article for review and potential publication.',
-    images: ['https://eastcoastkinkevents.com/og-image.png'],
+    images: [`${BASE_URL}/og-image.png`],
   },
 }
 

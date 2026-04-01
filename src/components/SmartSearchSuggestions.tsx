@@ -212,7 +212,7 @@ export default function SmartSearchSuggestions({ searchQuery, maxSuggestions = 5
     switch (type) {
       case 'event': return 'text-primary-400'
       case 'dungeon': return 'text-purple-400'
-      case 'swingClub': return 'text-violet-400'
+      case 'swingClub': return 'text-social'
       case 'article': return 'text-green-400'
       default: return 'text-gray-400'
     }

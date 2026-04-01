@@ -28,6 +28,13 @@ function firstParam(v: string | string[] | undefined): string | undefined {
   return Array.isArray(v) ? v[0] : v
 }
 
+/** True when URL has a recognized category or location filter (for SEO: noindex filtered views). */
+export function eventsListHasActiveFilter(
+  searchParams: Record<string, string | string[] | undefined>
+): boolean {
+  return parseEventsListSearchParams(searchParams) !== 'All Events'
+}
+
 /** Path + query for Next.js router (no trailing slash; matches trailingSlash: false). */
 export function buildEventsListUrl(selectedCategory: string): string {
   if (selectedCategory === 'All Events') {

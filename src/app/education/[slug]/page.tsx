@@ -73,7 +73,7 @@ export async function generateMetadata({ params }: ArticlePageProps): Promise<Me
 
   if (!article) {
     return {
-      title: 'Article Not Found | East Coast Kink Events',
+      title: 'Article Not Found',
       description: 'The requested article could not be found.',
     }
   }
@@ -96,7 +96,7 @@ export async function generateMetadata({ params }: ArticlePageProps): Promise<Me
       : { url: ogImageUrl, alt: `${title} - East Coast Kink Events` }
 
   return {
-    title: `${title} | East Coast Kink Events`,
+    title,
     description: description,
     keywords: keywords,
     openGraph: {

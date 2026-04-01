@@ -88,13 +88,13 @@ export default function SwingDiscoveryRelatedLinks({ parsed }: Props) {
       <h2 className="text-2xl font-serif font-bold text-white mb-6">Explore more</h2>
       <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 text-sm">
         <section>
-          <h3 className="text-violet-400 font-semibold mb-3">Club topics</h3>
+          <h3 className="text-social font-semibold mb-3">Club topics</h3>
           <ul className="space-y-2">
             {tagLinks.map((slug) => (
               <li key={slug}>
                 <Link
                   href={`/swing-clubs/${slug}`}
-                  className="text-gray-300 hover:text-violet-300 underline-offset-2 hover:underline"
+                  className="text-gray-300 hover:text-social-hover underline-offset-2 hover:underline"
                 >
                   {SWING_SEO_HUB_LABELS[slug]}
                 </Link>
@@ -104,7 +104,7 @@ export default function SwingDiscoveryRelatedLinks({ parsed }: Props) {
               <li key={slug}>
                 <Link
                   href={`/swing-clubs/${slug}`}
-                  className="text-gray-300 hover:text-violet-300 underline-offset-2 hover:underline"
+                  className="text-gray-300 hover:text-social-hover underline-offset-2 hover:underline"
                 >
                   {SWING_SEO_HUB_LABELS[slug]}
                 </Link>
@@ -113,13 +113,13 @@ export default function SwingDiscoveryRelatedLinks({ parsed }: Props) {
           </ul>
         </section>
         <section>
-          <h3 className="text-violet-400 font-semibold mb-3">By state</h3>
+          <h3 className="text-social font-semibold mb-3">By state</h3>
           <ul className="space-y-2">
             {stateLinks.map((slug) => (
               <li key={slug}>
                 <Link
                   href={`/swing-clubs/${slug}`}
-                  className="text-gray-300 hover:text-violet-300 underline-offset-2 hover:underline"
+                  className="text-gray-300 hover:text-social-hover underline-offset-2 hover:underline"
                 >
                   {EAST_COAST_STATES[slug].name}
                 </Link>
@@ -128,13 +128,13 @@ export default function SwingDiscoveryRelatedLinks({ parsed }: Props) {
           </ul>
         </section>
         <section>
-          <h3 className="text-violet-400 font-semibold mb-3">Events</h3>
+          <h3 className="text-social font-semibold mb-3">Events</h3>
           <ul className="space-y-2">
             {eventHubLinks.map((l) => (
               <li key={l.href}>
                 <Link
                   href={l.href}
-                  className="text-gray-300 hover:text-violet-300 underline-offset-2 hover:underline"
+                  className="text-gray-300 hover:text-social-hover underline-offset-2 hover:underline"
                 >
                   {l.label}
                 </Link>
@@ -143,13 +143,13 @@ export default function SwingDiscoveryRelatedLinks({ parsed }: Props) {
           </ul>
         </section>
         <section>
-          <h3 className="text-violet-400 font-semibold mb-3">Shops & guides</h3>
+          <h3 className="text-social font-semibold mb-3">Shops & guides</h3>
           <ul className="space-y-2">
             {shopGuideLinks.map((l) => (
               <li key={l.href}>
                 <Link
                   href={l.href}
-                  className="text-gray-300 hover:text-violet-300 underline-offset-2 hover:underline"
+                  className="text-gray-300 hover:text-social-hover underline-offset-2 hover:underline"
                 >
                   {l.label}
                 </Link>

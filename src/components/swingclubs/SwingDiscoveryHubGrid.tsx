@@ -6,7 +6,7 @@ export default function SwingDiscoveryHubGrid({ clubs }: { clubs: UnifiedSwingCl
     return (
       <p className="text-gray-400">
         No matching swing clubs for this filter yet.{' '}
-        <a href="/dungeons#swing-clubs" className="text-violet-400 underline underline-offset-2">
+        <a href="/dungeons#swing-clubs" className="text-social underline underline-offset-2 hover:text-social-hover">
           Browse all swing clubs
         </a>
       </p>

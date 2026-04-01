@@ -5,8 +5,7 @@ import { buildAllowlistedVendorDiscoveryPaths } from '@/lib/vendorDiscoveryTier'
 import { buildAllowlistedDungeonDiscoveryPaths } from '@/lib/dungeonDiscoveryTier'
 import { buildAllowlistedSwingDiscoveryPaths } from '@/lib/swingDiscoveryTier'
 import { buildAllowlistedBlogPaths } from '@/lib/blogDiscoveryTier'
-
-const BASE = 'https://www.eastcoastkinkevents.com'
+import { BASE_URL } from '@/lib/seo'
 
 export type SitemapUrlEntry = {
   loc: string
@@ -101,70 +100,71 @@ export async function buildDirectorySitemapUrls(): Promise<SitemapUrlEntry[]> {
   const { events, dungeons, swingClubs, articles, vendors } = await loadSitemapEntities()
 
   const core: SitemapUrlEntry[] = [
-    { loc: `${BASE}/`, lastmod: today, changefreq: 'daily', priority: 1.0 },
-    { loc: `${BASE}/events`, changefreq: 'weekly', priority: 0.85 },
-    { loc: `${BASE}/dungeons`, changefreq: 'weekly', priority: 0.85 },
-    { loc: `${BASE}/education`, changefreq: 'weekly', priority: 0.65 },
-    { loc: `${BASE}/calendar`, changefreq: 'weekly', priority: 0.72 },
-    { loc: `${BASE}/states`, changefreq: 'weekly', priority: 0.55 },
-    { loc: `${BASE}/bdsm-events`, changefreq: 'weekly', priority: 0.72 },
-    { loc: `${BASE}/vendors`, changefreq: 'weekly', priority: 0.68 },
-    { loc: `${BASE}/blog`, changefreq: 'weekly', priority: 0.62 },
-    { loc: `${BASE}/spirituality-kink`, changefreq: 'weekly', priority: 0.58 },
+    { loc: `${BASE_URL}/`, lastmod: today, changefreq: 'daily', priority: 1.0 },
+    { loc: `${BASE_URL}/events`, changefreq: 'weekly', priority: 0.85 },
+    { loc: `${BASE_URL}/dungeons`, changefreq: 'weekly', priority: 0.85 },
+    { loc: `${BASE_URL}/education`, changefreq: 'weekly', priority: 0.65 },
+    { loc: `${BASE_URL}/calendar`, changefreq: 'weekly', priority: 0.72 },
+    { loc: `${BASE_URL}/states`, changefreq: 'weekly', priority: 0.55 },
+    { loc: `${BASE_URL}/directory-snapshot`, lastmod: today, changefreq: 'weekly', priority: 0.48 },
+    { loc: `${BASE_URL}/bdsm-events`, changefreq: 'weekly', priority: 0.72 },
+    { loc: `${BASE_URL}/vendors`, changefreq: 'weekly', priority: 0.68 },
+    { loc: `${BASE_URL}/blog`, changefreq: 'weekly', priority: 0.62 },
+    { loc: `${BASE_URL}/spirituality-kink`, changefreq: 'weekly', priority: 0.58 },
     {
-      loc: `${BASE}/spirituality-kink/maryland-sacred-kink-gatherings`,
+      loc: `${BASE_URL}/spirituality-kink/maryland-sacred-kink-gatherings`,
       changefreq: 'weekly',
       priority: 0.56,
     },
     {
-      loc: `${BASE}/spirituality-kink/north-carolina-rope-embodiment`,
+      loc: `${BASE_URL}/spirituality-kink/north-carolina-rope-embodiment`,
       changefreq: 'weekly',
       priority: 0.56,
     },
     {
-      loc: `${BASE}/spirituality-kink/east-coast-conscious-kink`,
+      loc: `${BASE_URL}/spirituality-kink/east-coast-conscious-kink`,
       changefreq: 'weekly',
       priority: 0.56,
     },
   ]
 
   const stateUrls: SitemapUrlEntry[] = getStateSlugsForSitemap().map((s) => ({
-    loc: `${BASE}/states/${s}`,
+    loc: `${BASE_URL}/states/${s}`,
     lastmod: today,
     changefreq: 'weekly' as const,
     priority: 0.62,
   }))
 
   const eventUrls: SitemapUrlEntry[] = events.map((e) => ({
-    loc: `${BASE}/events/${e.slug}`,
+    loc: `${BASE_URL}/events/${e.slug}`,
     lastmod: e.updated?.slice(0, 10),
     changefreq: 'weekly' as const,
     priority: 0.82,
   }))
 
   const dungeonUrls: SitemapUrlEntry[] = dungeons.map((d) => ({
-    loc: `${BASE}/dungeons/${d.slug}`,
+    loc: `${BASE_URL}/dungeons/${d.slug}`,
     lastmod: d.updated?.slice(0, 10),
     changefreq: 'monthly' as const,
     priority: 0.65,
   }))
 
   const swingClubUrls: SitemapUrlEntry[] = swingClubs.map((c) => ({
-    loc: `${BASE}/swing-clubs/${c.slug}`,
+    loc: `${BASE_URL}/swing-clubs/${c.slug}`,
     lastmod: c.updated?.slice(0, 10),
     changefreq: 'monthly' as const,
     priority: 0.64,
   }))
 
   const articleUrls: SitemapUrlEntry[] = articles.map((a) => ({
-    loc: `${BASE}/education/${a.slug}`,
+    loc: `${BASE_URL}/education/${a.slug}`,
     lastmod: a.updated?.slice(0, 10),
     changefreq: 'monthly' as const,
     priority: 0.52,
   }))
 
   const vendorUrls: SitemapUrlEntry[] = vendors.map((v) => ({
-    loc: `${BASE}/vendors/${v.slug}`,
+    loc: `${BASE_URL}/vendors/${v.slug}`,
     lastmod: today,
     changefreq: 'monthly' as const,
     priority: 0.52,
@@ -172,7 +172,7 @@ export async function buildDirectorySitemapUrls(): Promise<SitemapUrlEntry[]> {
 
   const discoveryPaths = buildAllowlistedDiscoveryPaths()
   const discoveryUrls: SitemapUrlEntry[] = discoveryPaths.map((p) => ({
-    loc: `${BASE}/${p}`,
+    loc: `${BASE_URL}/${p}`,
     lastmod: today,
     changefreq: 'weekly' as const,
     priority: 0.64,
@@ -180,7 +180,7 @@ export async function buildDirectorySitemapUrls(): Promise<SitemapUrlEntry[]> {
 
   const vendorDiscoveryPaths = buildAllowlistedVendorDiscoveryPaths()
   const vendorDiscoveryUrls: SitemapUrlEntry[] = vendorDiscoveryPaths.map((p) => ({
-    loc: `${BASE}/${p}`,
+    loc: `${BASE_URL}/${p}`,
     lastmod: today,
     changefreq: 'weekly' as const,
     priority: 0.62,
@@ -188,7 +188,7 @@ export async function buildDirectorySitemapUrls(): Promise<SitemapUrlEntry[]> {
 
   const dungeonDiscoveryPaths = buildAllowlistedDungeonDiscoveryPaths()
   const dungeonDiscoveryUrls: SitemapUrlEntry[] = dungeonDiscoveryPaths.map((p) => ({
-    loc: `${BASE}/${p}`,
+    loc: `${BASE_URL}/${p}`,
     lastmod: today,
     changefreq: 'weekly' as const,
     priority: 0.62,
@@ -196,7 +196,7 @@ export async function buildDirectorySitemapUrls(): Promise<SitemapUrlEntry[]> {
 
   const swingDiscoveryPaths = buildAllowlistedSwingDiscoveryPaths()
   const swingDiscoveryUrls: SitemapUrlEntry[] = swingDiscoveryPaths.map((p) => ({
-    loc: `${BASE}/${p}`,
+    loc: `${BASE_URL}/${p}`,
     lastmod: today,
     changefreq: 'weekly' as const,
     priority: 0.61,
@@ -204,7 +204,7 @@ export async function buildDirectorySitemapUrls(): Promise<SitemapUrlEntry[]> {
 
   const blogPaths = buildAllowlistedBlogPaths()
   const blogUrls: SitemapUrlEntry[] = blogPaths.map((p) => ({
-    loc: `${BASE}/${p}`,
+    loc: `${BASE_URL}/${p}`,
     lastmod: today,
     changefreq: 'weekly' as const,
     priority: 0.58,
@@ -230,15 +230,12 @@ export async function buildDirectorySitemapUrls(): Promise<SitemapUrlEntry[]> {
 export async function buildFullSitemapUrls(): Promise<SitemapUrlEntry[]> {
   const main = await buildDirectorySitemapUrls()
   const today = new Date().toISOString().slice(0, 10)
+  // Omit noindex routes (accessibility, contact, report, guidelines) — see page metadata robots.
   const legal: SitemapUrlEntry[] = [
-    { loc: `${BASE}/about`, lastmod: today, changefreq: 'monthly', priority: 0.5 },
-    { loc: `${BASE}/accessibility`, changefreq: 'monthly', priority: 0.4 },
-    { loc: `${BASE}/contact`, changefreq: 'monthly', priority: 0.5 },
-    { loc: `${BASE}/privacy`, changefreq: 'monthly', priority: 0.3 },
-    { loc: `${BASE}/terms`, changefreq: 'monthly', priority: 0.3 },
-    { loc: `${BASE}/support`, changefreq: 'monthly', priority: 0.5 },
-    { loc: `${BASE}/report`, changefreq: 'monthly', priority: 0.4 },
-    { loc: `${BASE}/guidelines`, changefreq: 'monthly', priority: 0.5 },
+    { loc: `${BASE_URL}/about`, lastmod: today, changefreq: 'monthly', priority: 0.5 },
+    { loc: `${BASE_URL}/privacy`, changefreq: 'monthly', priority: 0.3 },
+    { loc: `${BASE_URL}/terms`, changefreq: 'monthly', priority: 0.3 },
+    { loc: `${BASE_URL}/support`, changefreq: 'monthly', priority: 0.5 },
   ]
   return [...main, ...legal]
 }

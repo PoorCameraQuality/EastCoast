@@ -3,6 +3,7 @@ import { SwingClubStructuredData } from '@/components/StructuredData'
 import Breadcrumb from '@/components/Breadcrumb'
 import RelatedContent from '@/components/RelatedContent'
 import DiscoveryEngineStrip from '@/components/discovery/DiscoveryEngineStrip'
+import ListingHubLinks from '@/components/seo/ListingHubLinks'
 import DungeonImage from '@/components/dungeons/DungeonImage'
 
 export type SwingFactSource = 'website' | 'directory' | 'mixed'
@@ -63,6 +64,11 @@ export default function SwingClubDetailView({ club }: { club: Club }) {
       <section className="section-padding">
         <div className="container-custom">
           <Breadcrumb items={breadcrumbItems} />
+          <ListingHubLinks
+            variant="swing"
+            stateAbbr={club.location.state}
+            city={club.location.city}
+          />
           <DiscoveryEngineStrip stateAbbr={club.location?.state} />
 
           <div className="mt-4 flex flex-wrap gap-3">

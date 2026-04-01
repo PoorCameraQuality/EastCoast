@@ -132,6 +132,13 @@ export default function StatesIndexPage() {
               ·{' '}
               <Link href="/dungeons" className="text-primary-400 underline underline-offset-2 hover:text-primary-300">
                 all dungeons
+              </Link>{' '}
+              ·{' '}
+              <Link
+                href="/directory-snapshot"
+                className="text-primary-400 underline underline-offset-2 hover:text-primary-300"
+              >
+                directory snapshot
               </Link>
             </p>
 

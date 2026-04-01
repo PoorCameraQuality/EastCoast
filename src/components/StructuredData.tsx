@@ -161,7 +161,7 @@ export function EventStructuredData({ event }: EventStructuredDataProps) {
     "offers": {
       "@type": "Offer",
       "url": event.website || `${BASE_URL}/events/${event.slug}`,
-      "priceCurrency": "USD",
+      "priceCurrency": addressCountry === 'CA' ? 'CAD' : 'USD',
       "availability": "https://schema.org/InStock",
       "validFrom": event.date.start,
       "description": "Tickets and pricing on the organizer website"

@@ -46,7 +46,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       return { title: 'Not found', description: 'Article not found.' }
     }
     return {
-      title: `${doc.title} | East Coast Kink Events`,
+      title: doc.title,
       description: doc.description,
       keywords: [doc.focusKeyword],
       alternates: { canonical: `${BASE_URL}${path}` },
@@ -70,7 +70,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     const desc = [copy.lead, ...copy.intro].join(' ').slice(0, 160)
     const robots = blogRobotsMeta(params.slug, 'stateEventsGuide')
     return {
-      title: `${copy.h1} | East Coast Kink Events`,
+      title: copy.h1,
       description: desc,
       robots,
       alternates: { canonical: `${BASE_URL}${path}` },
@@ -88,7 +88,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const desc = [copy.lead, ...copy.intro].join(' ').slice(0, 160)
   const robots = blogRobotsMeta(params.slug, 'cityStartGuide')
   return {
-    title: `${copy.h1} | East Coast Kink Events`,
+    title: copy.h1,
     description: desc,
     robots,
     alternates: { canonical: `${BASE_URL}${path}` },

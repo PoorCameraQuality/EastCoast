@@ -30,7 +30,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const desc = `${h1}. Upcoming BDSM and kink events, dungeons, and community listings across the US and Canada.`
 
   return {
-    title: `${h1} | East Coast Kink Events`,
+    title: h1,
     description: desc.slice(0, 160),
     robots,
     alternates: {
@@ -58,7 +58,7 @@ export default async function DiscoverySlugPage({ params }: PageProps) {
   return (
     <>
       <DiscoveryStructuredData urlPath={path} name={h1} description={desc} />
-      <DiscoveryHubLayout parsed={parsed} h1={h1} paragraphs={paragraphs} events={filtered} />
+      <DiscoveryHubLayout parsed={parsed} h1={h1} paragraphs={paragraphs} events={filtered} path={path} />
     </>
   )
 }

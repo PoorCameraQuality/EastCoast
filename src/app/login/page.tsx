@@ -3,19 +3,19 @@ import LoginPageClient from './LoginPageClient'
 import { BASE_URL } from '@/lib/seo'
 
 export const metadata: Metadata = {
-  title: 'Admin Login - East Coast Kink Events',
+  title: 'Admin Login',
   description: 'Admin login portal for East Coast Kink Events management.',
   robots: { index: false, follow: false },
   keywords: 'admin login, website management, kink events admin',
   alternates: { canonical: `${BASE_URL}/login` },
   openGraph: {
-    title: 'Admin Login - East Coast Kink Events',
+    title: 'Admin Login | East Coast Kink Events',
     description: 'Admin login portal for East Coast Kink Events management.',
     type: 'website',
-    url: 'https://eastcoastkinkevents.com/login',
+    url: `${BASE_URL}/login`,
     images: [
       {
-        url: 'https://eastcoastkinkevents.com/og-image.png',
+        url: `${BASE_URL}/og-image.png`,
         width: 1200,
         height: 630,
         alt: 'Admin Login - East Coast Kink Events',
@@ -24,9 +24,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Admin Login - East Coast Kink Events',
+    title: 'Admin Login | East Coast Kink Events',
     description: 'Admin login portal for East Coast Kink Events management.',
-    images: ['https://eastcoastkinkevents.com/og-image.png'],
+    images: [`${BASE_URL}/og-image.png`],
   },
 }
 

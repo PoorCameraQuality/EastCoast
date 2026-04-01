@@ -4,7 +4,7 @@ import { BASE_URL } from '@/lib/seo'
 import Breadcrumb from '@/components/Breadcrumb'
 
 export const metadata: Metadata = {
-  title: 'Report a Problem | East Coast Kink Events',
+  title: 'Report a Problem',
   description: 'Report technical issues, content concerns, or community conduct violations. Help us maintain a safe and functional platform.',
   robots: { index: false, follow: true },
   alternates: {
@@ -19,7 +19,7 @@ export default function ReportPage() {
   ]
 
   return (
-    <div className="min-h-screen bg-black">
+    <div className="min-h-screen bg-brand-void">
       <div className="container-custom py-8 md:py-16">
         <div className="max-w-4xl mx-auto">
           <Breadcrumb items={breadcrumbItems} />

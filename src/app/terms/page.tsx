@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import Breadcrumb from '@/components/Breadcrumb'
 
 export const metadata: Metadata = {
-  title: 'Terms of Service - East Coast Kink Events',
+  title: 'Terms of Service',
   description: 'Read our terms of service and understand the rules and guidelines for using East Coast Kink Events. Updated for 2025.',
   keywords: 'terms of service, user agreement, website terms, kink events, BDSM events',
   robots: {
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     canonical: 'https://www.eastcoastkinkevents.com/terms',
   },
   openGraph: {
-    title: 'Terms of Service - East Coast Kink Events',
+    title: 'Terms of Service | East Coast Kink Events',
     description: 'Read our terms of service and understand the rules and guidelines for using our platform.',
     type: 'website',
     url: 'https://www.eastcoastkinkevents.com/terms',
@@ -32,7 +32,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Terms of Service - East Coast Kink Events',
+    title: 'Terms of Service | East Coast Kink Events',
     description: 'Read our terms of service and understand the rules and guidelines.',
     images: ['https://www.eastcoastkinkevents.com/og-image.png'],
   },

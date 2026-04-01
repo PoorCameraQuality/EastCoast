@@ -5,6 +5,8 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { useAuth } from '@/contexts/AuthProvider'
 import { supabase } from '@/lib/supabase'
+import { Button } from '@/components/ui/Button'
+import { Card } from '@/components/ui/Card'
 
 export default function LoginPageClient() {
   const [email, setEmail] = useState('')
@@ -22,43 +24,14 @@ export default function LoginPageClient() {
     }
   }, [user, isAdmin, authLoading, router])
 
-  const handleSignOut = async () => {
-    try {
-      if (!supabase) {
-        setError('Supabase not configured')
-        return
-      }
-      await supabase.auth.signOut()
-      setMessage('Signed out successfully')
-      setError('')
-    } catch (error) {
-      console.error('Error signing out:', error)
-      setError('Error signing out')
-    }
-  }
-
-  const handleSignOutAndRedirect = async () => {
-    try {
-      if (!supabase) {
-        setError('Supabase not configured')
-        return
-      }
-      await supabase.auth.signOut()
-      router.push('/')
-    } catch (error) {
-      console.error('Error signing out:', error)
-      setError('Error signing out')
-    }
-  }
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    
+
     // Prevent double submission
     if (loading) {
       return
     }
-    
+
     setLoading(true)
     setError('')
     setMessage('')
@@ -68,7 +41,7 @@ export default function LoginPageClient() {
         setError('Supabase not configured')
         return
       }
-      
+
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
@@ -113,7 +86,7 @@ export default function LoginPageClient() {
   // Show loading while auth is being checked
   if (authLoading) {
     return (
-      <div className="min-h-screen bg-dark-900 flex items-center justify-center">
+      <div className="min-h-screen bg-brand-void flex items-center justify-center">
         <div className="text-center">
           <div className="text-white mb-4">Loading...</div>
           <div className="text-primary-400 text-sm">Checking authentication...</div>
@@ -125,7 +98,7 @@ export default function LoginPageClient() {
   // If already logged in as admin, show redirect message
   if (user && isAdmin) {
     return (
-      <div className="min-h-screen bg-dark-900 flex items-center justify-center">
+      <div className="min-h-screen bg-brand-void flex items-center justify-center">
         <div className="text-center">
           <div className="text-white mb-4">Already logged in!</div>
           <div className="text-primary-400 text-sm">Redirecting to admin dashboard...</div>
@@ -135,12 +108,14 @@ export default function LoginPageClient() {
   }
 
   return (
-    <div className="min-h-screen bg-dark-900 flex items-center justify-center">
+    <div className="min-h-screen bg-brand-void flex items-center justify-center">
       <div className="max-w-md w-full mx-4">
-                <div className="bg-dark-800 p-6 sm:p-8 rounded-lg shadow-lg">
+        <Card variant="solid" className="rounded-lg">
           <div className="text-center mb-8">
-            <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">Admin Login</h1>
-            <p className="text-gray-400">Sign in to access the admin panel</p>
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-white mb-2">
+              Admin Login
+            </h1>
+            <p className="text-subtle">Sign in to access the admin panel</p>
           </div>
 
           {error && (
@@ -190,26 +165,26 @@ export default function LoginPageClient() {
               />
             </div>
 
-            <button
+            <Button
               type="submit"
               disabled={loading}
               aria-label={loading ? 'Signing in, please wait' : 'Sign in to admin panel'}
-              className="w-full min-h-touch inline-flex items-center justify-center bg-primary-600 hover:bg-primary-700 disabled:opacity-50 text-white font-medium py-2 px-4 rounded-md transition-colors duration-200"
+              className="w-full"
             >
               {loading ? 'Signing in...' : 'Sign In'}
-            </button>
+            </Button>
           </form>
 
           <div className="mt-6 text-center">
             <Link
               href="/"
-              className="text-gray-400 hover:text-white text-sm transition-colors duration-200"
+              className="text-gray-400 hover:text-white text-sm transition-colors duration-ecke-fast"
               aria-label="Return to home page"
             >
               ← Back to Home
             </Link>
           </div>
-        </div>
+        </Card>
       </div>
     </div>
   )

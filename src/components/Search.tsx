@@ -145,33 +145,12 @@ export default function Search({
     })
   }, [debouncedQuery, events, dungeons, swingClubs, trackSearch])
 
-  // Generate search structured data
-  const structuredData = {
-    "@context": "https://schema.org",
-    "@type": "WebSite",
-    "name": "East Coast Kink Events",
-    "url": "https://eastcoastkinkevents.com",
-    "potentialAction": {
-      "@type": "SearchAction",
-      "target": {
-        "@type": "EntryPoint",
-        "urlTemplate": "https://eastcoastkinkevents.com/search?q={search_term_string}"
-      },
-      "query-input": "required name=search_term_string"
-    }
-  }
-
   const suggestionsOpen = searchFocused && query.length >= 2
   const resultsOpen = results.length > 0
   const listboxOpen = suggestionsOpen || resultsOpen
 
   return (
     <>
-      <script
-        id="search-structured-data"
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData).replace(/</g, '\\u003c') }}
-      />
       <div className="relative z-[55]">
         <div className="relative">
           <input

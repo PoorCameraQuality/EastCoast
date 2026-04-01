@@ -49,32 +49,39 @@ export function validateTitleLength(title: string): { valid: boolean; length: nu
 
 /**
  * Generate optimized event title
- * Format: [Event Name] [Year] | [Brand]
+ * Prefers city + state + year when length allows, then falls back to shorter patterns.
  */
 export function generateEventTitle(event: any): string {
-  const year = event.date?.start ? new Date(event.date.start).getFullYear() : ''
-  const eventName = event.name
-  
-  // Try different title formats based on length
-  let title = `${eventName} ${year} | ${BRAND_NAME}`
-  
-  // If too long, try with short brand
+  const yearNum = event.date?.start ? new Date(event.date.start).getFullYear() : ''
+  const yearStr = yearNum ? String(yearNum) : ''
+  const eventName = event.name || ''
+  const city = event.location?.city || ''
+  const stateAbbr = event.location?.state || ''
+  const locationPart = city && stateAbbr ? ` — ${city}, ${stateAbbr}` : ''
+  const yearPart = yearStr ? ` (${yearStr})` : ''
+
+  const brandSuffix = ` | ${BRAND_SHORT}`
+
+  let title = `${eventName}${locationPart}${yearPart}${brandSuffix}`
+
   if (title.length > MAX_TITLE_LENGTH) {
-    title = `${eventName} ${year} | ${BRAND_SHORT}`
+    title = `${eventName}${locationPart}${brandSuffix}`
   }
-  
-  // If still too long, remove year
+
+  if (title.length > MAX_TITLE_LENGTH && yearStr) {
+    title = `${eventName} ${yearStr} | ${BRAND_SHORT}`
+  }
+
   if (title.length > MAX_TITLE_LENGTH) {
     title = `${eventName} | ${BRAND_SHORT}`
   }
-  
-  // If still too long, truncate event name
+
   if (title.length > MAX_TITLE_LENGTH) {
-    const brandLength = BRAND_SHORT.length + 3 // +3 for " | "
+    const brandLength = BRAND_SHORT.length + 3
     const availableForEvent = MAX_TITLE_LENGTH - brandLength
-    title = `${eventName.substring(0, availableForEvent - 3)}... | ${BRAND_SHORT}`
+    title = `${eventName.substring(0, Math.max(0, availableForEvent - 3))}... | ${BRAND_SHORT}`
   }
-  
+
   return title
 }
 

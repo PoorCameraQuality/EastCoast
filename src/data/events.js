@@ -3296,22 +3296,32 @@ export const generateEventSEO = (event) => {
   const { generateEventTitle } = require('@/lib/seo-helpers');
   const { BASE_URL } = require('@/lib/seo');
 
+  const clampMeta = (s, max) => {
+    if (!s || typeof s !== 'string') return '';
+    const t = s.trim();
+    if (t.length <= max) return t;
+    return `${t.slice(0, max - 1).trimEnd()}…`;
+  };
+
   // Generate optimized title (≤60 chars)
   const optimizedTitle = generateEventTitle(event);
+  const rawExcerpt = event.seo?.description || event.excerpt || '';
+  const metaDescription = clampMeta(rawExcerpt, 160);
+  const ogDescription = clampMeta(rawExcerpt, 200);
   const rawLogoUrl = event.logo;
   const logoUrl = rawLogoUrl
     ? rawLogoUrl.startsWith('http')
       ? rawLogoUrl
       : `${BASE_URL}${rawLogoUrl}`
-    : `${BASE_URL}/images/og-image.png`;
+    : `${BASE_URL}/og-image.png`;
 
   return {
     title: optimizedTitle,
-    description: event.excerpt,
+    description: metaDescription,
     keywords: event.seo?.keywords || `${event.name}, ${event.location.city}, ${event.location.state}, kink events, BDSM`,
     openGraph: {
       title: optimizedTitle,
-      description: event.seo?.description || event.excerpt,
+      description: ogDescription,
       images: [
         {
           url: logoUrl,

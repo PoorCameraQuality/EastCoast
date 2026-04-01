@@ -35,6 +35,20 @@ export async function generateMetadata(): Promise<Metadata> {
       url: `${BASE_URL}${SPIRITUALITY_KINK_BASE}`,
       siteName: 'East Coast Kink Events',
       type: 'website',
+      images: [
+        {
+          url: `${BASE_URL}/og-image.png`,
+          width: 1200,
+          height: 630,
+          alt: title,
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description: description.slice(0, 200),
+      images: [`${BASE_URL}/og-image.png`],
     },
   }
 }

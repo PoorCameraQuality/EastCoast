@@ -1,0 +1,90 @@
+/**
+ * Design tokens — single source for semantic colors and motion references.
+ * Numeric scales remain in tailwind.config.js; map new UI to these vars first.
+ */
+:root {
+  /* Focus (matches primary-700 / ring) */
+  --ecke-focus: #0f766e;
+  --ecke-focus-ring: rgba(15, 118, 110, 0.35);
+  --ecke-radius-focus: 4px;
+
+  /* Default anchors — primary-300 / primary-200 */
+  --ecke-link: #5eead4;
+  --ecke-link-visited: #99f6e4;
+
+  /* Prose & editor — align with Tailwind primary / gray scales */
+  --ecke-link-prose: #2dd4bf;
+  --ecke-link-prose-hover: #5eead4;
+  --ecke-prose-body: #d1d5db;
+  --ecke-prose-muted: #9ca3af;
+  --ecke-prose-border: #4b5563;
+  --ecke-prose-code-bg: #374151;
+  --ecke-prose-pre-bg: #1f2937;
+  --ecke-prose-code-text: #e5e7eb;
+  --ecke-prose-accent-border: #0d9488;
+
+  /* Social / swing accent (Tailwind violet-400 / violet-300 hover) */
+  --ecke-accent-social: #a78bfa;
+  --ecke-accent-social-hover: #c4b5fd;
+
+  /* Page shell */
+  --ecke-page-bg: #070d0f;
+
+  /* Discord CTA */
+  --ecke-discord-violet-600: #7c3aed;
+  --ecke-discord-violet-400: #c084fc;
+  --ecke-discord-white: #ffffff;
+
+  /* Teal glows (primary-600 / primary-700) */
+  --ecke-glow-teal-a: rgba(13, 148, 136, 0.4);
+  --ecke-glow-teal-b: rgba(15, 118, 110, 0.28);
+
+  /* Violet glow (124, 58, 237) */
+  --ecke-glow-violet-50: rgba(124, 58, 237, 0.5);
+  --ecke-glow-violet-30: rgba(124, 58, 237, 0.3);
+  --ecke-glow-violet-20: rgba(124, 58, 237, 0.2);
+  --ecke-glow-violet-95: rgba(124, 58, 237, 0.95);
+  --ecke-glow-violet-70: rgba(124, 58, 237, 0.7);
+  --ecke-glow-violet-24a: rgba(124, 58, 237, 0.24);
+  --ecke-glow-violet-30a: rgba(124, 58, 237, 0.3);
+
+  /* Login / overlay */
+  --ecke-overlay-scrim: rgba(0, 0, 0, 0.5);
+
+  /* Admin neon (dev visibility) */
+  --ecke-admin-neon-a: #00ff00;
+  --ecke-admin-neon-b: #00cc00;
+  --ecke-admin-glow-soft: rgba(0, 255, 0, 0.3);
+  --ecke-admin-glow-mid: rgba(0, 255, 0, 0.5);
+  --ecke-admin-glow-strong: rgba(0, 255, 0, 0.7);
+
+  /*
+   * Stacking scale (keep in sync with fixed/sticky UI):
+   * z-40 — promo side panel (PromotionalNews)
+   * z-50 — sticky header, reading bar
+   * z-[60] — SupportBanner
+   * --z-ecke-drawer — slide-overs e.g. vendor filters
+   * --z-ecke-modal — blocking modals (age gate, admin, contact success)
+   * 9999 — .login-modal-overlay (auth popover)
+   */
+  --z-ecke-drawer: 70;
+  --z-ecke-modal: 80;
+
+  /* Motion (reference for CSS; Tailwind theme extends durations too) */
+  --ecke-duration-fast: 200ms;
+  --ecke-duration-base: 300ms;
+  --ecke-duration-slow: 500ms;
+
+  /* MDX article surfaces (white alpha on dark) */
+  --ecke-mdx-text: rgba(255, 255, 255, 0.92);
+  --ecke-mdx-text-soft: rgba(255, 255, 255, 0.86);
+  --ecke-mdx-border-subtle: rgba(255, 255, 255, 0.22);
+  --ecke-mdx-border-faint: rgba(255, 255, 255, 0.08);
+  --ecke-mdx-border-medium: rgba(255, 255, 255, 0.12);
+  --ecke-mdx-thead: rgba(255, 255, 255, 0.06);
+  --ecke-mdx-thead-text: rgba(255, 255, 255, 0.95);
+  --ecke-mdx-row-odd: rgba(255, 255, 255, 0.03);
+  --ecke-mdx-row-hover: rgba(255, 255, 255, 0.06);
+  --ecke-mdx-code-bg: rgba(255, 255, 255, 0.08);
+  --ecke-mdx-table-shadow: rgba(0, 0, 0, 0.25);
+}

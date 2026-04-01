@@ -491,7 +491,7 @@ export default function ArticlePageClient({ article, breadcrumbItems }: ArticleP
           {/* Article Content */}
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
             <div className="lg:col-span-3">
-              <div className="prose prose-invert prose-lg max-w-none">
+              <div className="prose prose-invert prose-lg article-prose max-w-none">
                 <div 
                   className="rich-text-content"
                   dangerouslySetInnerHTML={{ __html: article.content }}

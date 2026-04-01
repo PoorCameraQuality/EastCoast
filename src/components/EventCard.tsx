@@ -1,5 +1,9 @@
 'use client'
 
+/**
+ * Compact event card for discovery grids, paginated lists, and related rails.
+ * For the main /events marketing index, see {@link EventHubCard} (glass hero + logo-forward layout).
+ */
 import Link from 'next/link'
 import EventLogo from './EventLogo'
 import { trackSelectItemEntity } from '@/lib/analyticsEntities'

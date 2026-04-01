@@ -1,3 +1,4 @@
+@import '../styles/tokens.css';
 @import '../styles/mdx-prose.css';
 
 @tailwind base;
@@ -5,22 +6,6 @@
 @tailwind utilities;
 
 @layer base {
-  :root {
-    --ecke-focus: #0f766e;
-    --ecke-focus-ring: rgba(15, 118, 110, 0.35);
-    /*
-     * Stacking context scale (must stay in sync with fixed/sticky UI):
-     * z-40 — promo side panel (PromotionalNews)
-     * z-50 — sticky header, reading bar, skip-link when focused uses z-100 below
-     * z-[60] — SupportBanner (Tailwind class on component)
-     * --z-ecke-drawer (70) — slide-overs e.g. vendor filters
-     * --z-ecke-modal (80) — blocking modals (age gate, admin, contact success)
-     * 9999 — .login-modal-overlay (auth popover)
-     */
-    --z-ecke-drawer: 70;
-    --z-ecke-modal: 80;
-  }
-
   html {
     scroll-behavior: smooth;
   }
@@ -40,10 +25,10 @@
 
   /* Default links: Midnight Teal accent */
   a {
-    color: #5eead4;
+    color: var(--ecke-link);
   }
   a:visited {
-    color: #99f6e4;
+    color: var(--ecke-link-visited);
   }
 
   /* Single focus-visible system (keyboard only) */
@@ -63,7 +48,7 @@
   [tabindex]:focus-visible {
     outline: 2px solid var(--ecke-focus);
     outline-offset: 2px;
-    border-radius: 4px;
+    border-radius: var(--ecke-radius-focus);
   }
 
   a:focus-visible {
@@ -138,45 +123,23 @@
     @apply hover:-translate-y-1 transition-transform duration-300;
   }
 
-  /* New hero animations */
-  .animate-fade-in-up {
-    animation: fadeInUp 0.8s ease-out forwards;
-  }
-
-  .animate-fade-in-up.delay-300 {
-    animation-delay: 0.3s;
-  }
-
-  .animate-fade-in-up.delay-500 {
-    animation-delay: 0.5s;
-  }
-
-  .animate-fade-in-up.delay-700 {
-    animation-delay: 0.7s;
-  }
-
-  .animate-gradient-x {
-    background-size: 200% 200%;
-    animation: gradientX 3s ease-in-out infinite;
-  }
-
   /* Discord/community CTA: soft purple-tinted glow (always visible, becomes very bright on hover) */
   .discord-glow {
     position: relative;
     /* purple hue base */
     box-shadow:
-      0 0 16px rgba(124, 58, 237, 0.50),
-      0 0 36px rgba(124, 58, 237, 0.30),
-      0 0 56px rgba(124, 58, 237, 0.20);
-    transition: box-shadow 200ms ease, transform 200ms ease;
+      0 0 16px var(--ecke-glow-violet-50),
+      0 0 36px var(--ecke-glow-violet-30),
+      0 0 56px var(--ecke-glow-violet-20);
+    transition: box-shadow var(--ecke-duration-fast) ease, transform var(--ecke-duration-fast) ease;
   }
   .discord-glow:hover,
   .discord-glow:focus-visible {
     /* very bright on hover */
     box-shadow:
-      0 0 36px rgba(124, 58, 237, 0.95),
-      0 0 90px rgba(124, 58, 237, 0.70),
-      0 0 140px rgba(124, 58, 237, 0.50);
+      0 0 36px var(--ecke-glow-violet-95),
+      0 0 90px var(--ecke-glow-violet-70),
+      0 0 140px var(--ecke-glow-violet-50);
     transform: translateY(-1px);
     /* vibrant appearance */
     filter: saturate(1.25) brightness(1.05);
@@ -189,23 +152,23 @@
   .discord-glow.btn-secondary:focus-visible,
   .discord-glow.btn-outline:hover,
   .discord-glow.btn-outline:focus-visible {
-    background-color: #7C3AED !important; /* violet-600 */
-    border-color: #7C3AED !important;
-    color: #ffffff !important;
+    background-color: var(--ecke-discord-violet-600) !important;
+    border-color: var(--ecke-discord-violet-600) !important;
+    color: var(--ecke-discord-white) !important;
   }
 
   /* On hover: text-style Discord links turn purple if not buttons */
   .discord-glow:hover:not(.btn-primary):not(.btn-secondary):not(.btn-outline),
   .discord-glow:focus-visible:not(.btn-primary):not(.btn-secondary):not(.btn-outline) {
-    color: #C084FC !important; /* violet-400 */
+    color: var(--ecke-discord-violet-400) !important;
   }
   .discord-glow::after {
     content: '';
     position: absolute;
     inset: -2px;
     border-radius: 2px;
-    background: radial-gradient(120px 10px at 8% -18%, rgba(124, 58, 237, 0.30), transparent 70%),
-                radial-gradient(90px 8px at 92% 118%, rgba(124, 58, 237, 0.24), transparent 70%);
+    background: radial-gradient(120px 10px at 8% -18%, var(--ecke-glow-violet-30a), transparent 70%),
+                radial-gradient(90px 8px at 92% 118%, var(--ecke-glow-violet-24a), transparent 70%);
     pointer-events: none;
   }
 
@@ -216,7 +179,7 @@
   .btn-secondary:focus-visible,
   .btn-outline:hover,
   .btn-outline:focus-visible {
-    box-shadow: 0 0 12px rgba(13, 148, 136, 0.4), 0 0 24px rgba(15, 118, 110, 0.28);
+    box-shadow: 0 0 12px var(--ecke-glow-teal-a), 0 0 24px var(--ecke-glow-teal-b);
   }
 
   /* Card blue glow on hover/focus (non-destructive: uses filter so it doesn't override existing shadows) */
@@ -224,7 +187,7 @@
   .card:focus-within,
   .card-elegant:hover,
   .card-elegant:focus-within {
-    filter: drop-shadow(0 0 12px rgba(13, 148, 136, 0.4)) drop-shadow(0 0 24px rgba(15, 118, 110, 0.28));
+    filter: drop-shadow(0 0 12px var(--ecke-glow-teal-a)) drop-shadow(0 0 24px var(--ecke-glow-teal-b));
   }
   
   .bg-gradient-dark {
@@ -466,29 +429,6 @@
       transform: translateX(0);
     }
   }
-
-  @keyframes fadeInUp {
-    from {
-      opacity: 0;
-      transform: translateY(30px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  @keyframes gradientX {
-    0% {
-      background-position: 0% 50%;
-    }
-    50% {
-      background-position: 100% 50%;
-    }
-    100% {
-      background-position: 0% 50%;
-    }
-  }
 }
 
 /* Custom styles for rich text editor */
@@ -499,10 +439,10 @@
 
 /* Admin mode button styles */
   .admin-mode-button {
-    background: linear-gradient(45deg, #00ff00, #00cc00, #00ff00);
+    background: linear-gradient(45deg, var(--ecke-admin-neon-a), var(--ecke-admin-neon-b), var(--ecke-admin-neon-a));
     background-size: 200% 200%;
     animation: neonGlow 2s ease-in-out infinite alternate;
-    box-shadow: 0 0 20px rgba(0, 255, 0, 0.5), 0 0 40px rgba(0, 255, 0, 0.3);
+    box-shadow: 0 0 20px var(--ecke-admin-glow-mid), 0 0 40px var(--ecke-admin-glow-soft);
   }
 
   /* Login modal positioning */
@@ -518,7 +458,7 @@
     z-index: 9999 !important;
     min-height: 100vh !important;
     padding: 1rem !important;
-    background-color: rgba(0, 0, 0, 0.5) !important;
+    background-color: var(--ecke-overlay-scrim) !important;
   }
 
   .login-modal-content {
@@ -548,11 +488,11 @@
 @keyframes neonGlow {
   0% {
     background-position: 0% 50%;
-    box-shadow: 0 0 20px rgba(0, 255, 0, 0.5), 0 0 40px rgba(0, 255, 0, 0.3);
+    box-shadow: 0 0 20px var(--ecke-admin-glow-mid), 0 0 40px var(--ecke-admin-glow-soft);
   }
   100% {
     background-position: 100% 50%;
-    box-shadow: 0 0 30px rgba(0, 255, 0, 0.7), 0 0 60px rgba(0, 255, 0, 0.5);
+    box-shadow: 0 0 30px var(--ecke-admin-glow-strong), 0 0 60px var(--ecke-admin-glow-mid);
   }
 }
 
@@ -595,15 +535,15 @@
 }
 
   .rich-text-editor .ProseMirror blockquote {
-    border-left: 4px solid #0d9488;
+    border-left: 4px solid var(--ecke-prose-accent-border);
   padding-left: 1rem;
   margin: 1rem 0;
   font-style: italic;
-  color: #9ca3af;
+  color: var(--ecke-prose-muted);
 }
 
 .rich-text-editor .ProseMirror code {
-  background-color: #374151;
+  background-color: var(--ecke-prose-code-bg);
   padding: 0.125rem 0.25rem;
   border-radius: 0.25rem;
   font-family: monospace;
@@ -611,7 +551,7 @@
 }
 
 .rich-text-editor .ProseMirror pre {
-  background-color: #1f2937;
+  background-color: var(--ecke-prose-pre-bg);
   padding: 1rem;
   border-radius: 0.5rem;
   overflow-x: auto;
@@ -631,28 +571,28 @@
 
 .rich-text-editor .ProseMirror th,
 .rich-text-editor .ProseMirror td {
-  border: 1px solid #4b5563;
+  border: 1px solid var(--ecke-prose-border);
   padding: 0.5rem;
   text-align: left;
 }
 
 .rich-text-editor .ProseMirror th {
-  background-color: #374151;
+  background-color: var(--ecke-prose-code-bg);
   font-weight: 600;
   color: white;
 }
 
 .rich-text-editor .ProseMirror td {
-  color: #d1d5db;
+  color: var(--ecke-prose-body);
 }
 
   .rich-text-editor .ProseMirror a {
-    color: #2dd4bf;
+    color: var(--ecke-link-prose);
     text-decoration: underline;
   }
 
   .rich-text-editor .ProseMirror a:hover {
-    color: #5eead4;
+    color: var(--ecke-link-prose-hover);
   }
 
 .rich-text-editor .ProseMirror img {
@@ -689,14 +629,14 @@
 
 .prose p {
   margin-bottom: 1rem;
-  color: #d1d5db;
+  color: var(--ecke-prose-body);
 }
 
 .prose ul,
 .prose ol {
   margin-bottom: 1rem;
   padding-left: 1.5rem;
-  color: #d1d5db;
+  color: var(--ecke-prose-body);
 }
 
 .prose li {
@@ -704,24 +644,24 @@
 }
 
 .prose blockquote {
-  border-left: 4px solid #0d9488;
+  border-left: 4px solid var(--ecke-prose-accent-border);
   padding-left: 1rem;
   margin: 1rem 0;
   font-style: italic;
-  color: #9ca3af;
+  color: var(--ecke-prose-muted);
 }
 
 .prose code {
-  background-color: #374151;
+  background-color: var(--ecke-prose-code-bg);
   padding: 0.125rem 0.25rem;
   border-radius: 0.25rem;
   font-family: monospace;
   font-size: 0.875rem;
-  color: #e5e7eb;
+  color: var(--ecke-prose-code-text);
 }
 
 .prose pre {
-  background-color: #1f2937;
+  background-color: var(--ecke-prose-pre-bg);
   padding: 1rem;
   border-radius: 0.5rem;
   overflow-x: auto;
@@ -741,28 +681,28 @@
 
 .prose th,
 .prose td {
-  border: 1px solid #4b5563;
+  border: 1px solid var(--ecke-prose-border);
   padding: 0.5rem;
   text-align: left;
 }
 
 .prose th {
-  background-color: #374151;
+  background-color: var(--ecke-prose-code-bg);
   font-weight: 600;
   color: white;
 }
 
 .prose td {
-  color: #d1d5db;
+  color: var(--ecke-prose-body);
 }
 
 .prose a {
-  color: #2dd4bf;
+  color: var(--ecke-link-prose);
   text-decoration: underline;
 }
 
 .prose a:hover {
-  color: #5eead4;
+  color: var(--ecke-link-prose-hover);
 }
 
 .prose img {

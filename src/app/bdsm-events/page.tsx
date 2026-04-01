@@ -1,5 +1,6 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
+import Breadcrumb from '@/components/Breadcrumb'
 import { EAST_COAST_STATES, type StateSlug } from '@/lib/eastCoastStates'
 import { buildAllowlistedDiscoveryPaths } from '@/lib/discoveryTier'
 import { BASE_URL } from '@/lib/seo'
@@ -11,7 +12,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const description =
     'Find BDSM events, kink parties, and fetish-friendly gatherings by state, province, city, and tag—US and Canada.'
   return {
-    title: `${title} | East Coast Kink Events`,
+    title,
     description: description.slice(0, 160),
     alternates: { canonical: `${BASE_URL}/bdsm-events` },
     openGraph: {
@@ -35,9 +36,17 @@ const CA_SLUGS = ALL_STATE_SLUGS.filter((s) => EAST_COAST_STATES[s].region === '
 export default function BdsmEventsHubPage() {
   const samples = buildAllowlistedDiscoveryPaths().slice(0, 36)
 
+  const hubBreadcrumb = [
+    { label: 'Home', href: '/' },
+    { label: 'BDSM events', href: '/bdsm-events', current: true },
+  ]
+
   return (
     <div className="min-h-screen bg-black">
       <div className="container-custom py-8 md:py-16">
+        <div className="mb-6">
+          <Breadcrumb items={hubBreadcrumb} />
+        </div>
         <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-white mb-4">
           BDSM events discovery hub
         </h1>

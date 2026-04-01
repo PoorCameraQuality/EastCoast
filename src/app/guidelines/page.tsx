@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import Breadcrumb from '@/components/Breadcrumb'
 
 export const metadata: Metadata = {
-  title: 'Community Guidelines - East Coast Kink Events',
+  title: 'Community Guidelines',
   description: 'Learn about our community guidelines for creating a safe, inclusive, and respectful environment for all kink enthusiasts.',
   keywords: 'community guidelines, safety, inclusivity, consent, kink community, BDSM guidelines',
   robots: {
@@ -13,7 +13,7 @@ export const metadata: Metadata = {
     canonical: 'https://www.eastcoastkinkevents.com/guidelines',
   },
   openGraph: {
-    title: 'Community Guidelines - East Coast Kink Events',
+    title: 'Community Guidelines | East Coast Kink Events',
     description: 'Learn about our community guidelines for creating a safe, inclusive, and respectful environment for all kink enthusiasts.',
     type: 'website',
     url: 'https://www.eastcoastkinkevents.com/guidelines',
@@ -28,7 +28,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Community Guidelines - East Coast Kink Events',
+    title: 'Community Guidelines | East Coast Kink Events',
     description: 'Learn about our community guidelines for creating a safe, inclusive environment.',
     images: ['https://www.eastcoastkinkevents.com/og-image.png'],
   },

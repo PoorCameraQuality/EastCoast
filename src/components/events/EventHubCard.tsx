@@ -1,5 +1,9 @@
 'use client'
 
+/**
+ * Large “hub” event tile for the primary /events page (upcoming/past tabs).
+ * Discovery and paginated routes use {@link EventCard} for a denser grid.
+ */
 import Link from 'next/link'
 import EventLogo from '@/components/EventLogo'
 import { trackSelectItemEntity } from '@/lib/analyticsEntities'

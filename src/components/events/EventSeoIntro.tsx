@@ -1,6 +1,4 @@
-import Link from 'next/link'
-import { EAST_COAST_STATES } from '@/lib/eastCoastStates'
-import { getStateSlugFromAbbr, getCityHubSlugForEvent } from '@/lib/eventDiscoveryLinks'
+import ListingHubLinks from '@/components/seo/ListingHubLinks'
 
 type EventLike = {
   name: string
@@ -26,8 +24,6 @@ function buildIntroText(event: EventLike): string {
 }
 
 export default function EventSeoIntro({ event }: { event: EventLike }) {
-  const stateSlug = getStateSlugFromAbbr(event.location.state)
-  const citySlug = getCityHubSlugForEvent(event.location.city, event.location.state)
   const text = buildIntroText(event)
 
   return (
@@ -37,25 +33,12 @@ export default function EventSeoIntro({ event }: { event: EventLike }) {
       </h2>
       <div className="prose prose-invert prose-sm md:prose-base max-w-none text-gray-300 leading-relaxed">
         <p>{text}</p>
-        <p className="mt-4 text-sm text-gray-400">
-          Explore:{' '}
-          {stateSlug && (
-            <Link href={`/bdsm-events/${stateSlug}`} className="text-primary-400 hover:underline">
-              BDSM events in {EAST_COAST_STATES[stateSlug].name}
-            </Link>
-          )}
-          {stateSlug && citySlug && <span className="mx-2 text-gray-600">·</span>}
-          {citySlug && (
-            <Link href={`/bdsm-events/${citySlug}`} className="text-primary-400 hover:underline">
-              {event.location.city} hub
-            </Link>
-          )}
-          {(stateSlug || citySlug) && <span className="mx-2 text-gray-600">·</span>}
-          <Link href="/states" className="text-primary-400 hover:underline">
-            All state directories
-          </Link>
-        </p>
       </div>
+      <ListingHubLinks
+        variant="event"
+        stateAbbr={event.location.state}
+        city={event.location.city}
+      />
     </section>
   )
 }

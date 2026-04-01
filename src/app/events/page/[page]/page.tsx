@@ -21,7 +21,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const description = `Upcoming kink events — page ${pageNum} of ${totalPages}. Browse BDSM conferences and workshops across the East Coast.`
 
   return {
-    title: `Events - Page ${pageNum} | East Coast Kink Events`,
+    title: `Events - Page ${pageNum}`,
     description: description.slice(0, 160),
     alternates: {
       canonical: `${BASE_URL}/events/page/${pageNum}`,

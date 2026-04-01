@@ -57,7 +57,7 @@ export function initWebVitals() {
     window.addEventListener('pagehide', report)
   } catch {}
 
-  // FID (first-input)
+  // FID (first-input) — legacy; Chrome may deprecate in favor of INP
   try {
     const po = new PerformanceObserver((list) => {
       const entry = list.getEntries()[0] as any
@@ -66,6 +66,27 @@ export function initWebVitals() {
       sendToGA({ name: 'FID', id: `${idBase}-FID`, value: fid })
     })
     po.observe({ type: 'first-input', buffered: true } as any)
+  } catch {}
+
+  // INP proxy: worst interaction duration from Event Timing API (when interactionId is set)
+  try {
+    let worst = 0
+    const po = new PerformanceObserver((list) => {
+      for (const entry of list.getEntries()) {
+        const e = entry as PerformanceEventTiming & { interactionId?: number }
+        if (e.interactionId && e.duration > worst) {
+          worst = e.duration
+        }
+      }
+    })
+    po.observe({ type: 'event', buffered: true, durationThreshold: 0 } as PerformanceObserverInit)
+    const report = () => {
+      if (worst) sendToGA({ name: 'INP', id: `${idBase}-INP`, value: worst })
+    }
+    window.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'hidden') report()
+    })
+    window.addEventListener('pagehide', report)
   } catch {}
 
   // TTFB

@@ -7,6 +7,9 @@ type Props = {
   /** ISO date for BlogPosting */
   datePublished?: string
   variant: 'blogPosting' | 'webPage'
+  /** Absolute or site-root image URL for rich results */
+  imageUrl?: string
+  authorName?: string
 }
 
 export default function BlogArticleJsonLd({
@@ -15,10 +18,17 @@ export default function BlogArticleJsonLd({
   description,
   datePublished,
   variant,
+  imageUrl,
+  authorName,
 }: Props) {
   const path = urlPath.startsWith('/') ? urlPath : `/${urlPath}`
   const url = `${BASE_URL}${path}`
   const desc = description.slice(0, 320)
+  const resolvedImage = imageUrl
+    ? imageUrl.startsWith('http')
+      ? imageUrl
+      : `${BASE_URL}${imageUrl.startsWith('/') ? imageUrl : `/${imageUrl}`}`
+    : `${BASE_URL}/og-image.png`
 
   const node =
     variant === 'blogPosting'
@@ -27,7 +37,9 @@ export default function BlogArticleJsonLd({
           headline,
           description: desc,
           url,
+          image: resolvedImage,
           datePublished: datePublished || new Date().toISOString().slice(0, 10),
+          ...(authorName ? { author: { '@type': 'Person', name: authorName } } : {}),
           publisher: {
             '@type': 'Organization',
             name: 'East Coast Kink Events',

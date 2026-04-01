@@ -5,8 +5,7 @@ import { CalendarStructuredData } from '@/components/StructuredData'
 import Breadcrumb from '@/components/Breadcrumb'
 import SupportCTAInline from '@/components/SupportCTAInline'
 import CalendarClient from '@/components/CalendarClient'
-
-const BASE = 'https://www.eastcoastkinkevents.com'
+import { BASE_URL } from '@/lib/seo'
 
 export async function generateMetadata(): Promise<Metadata> {
   const year = new Date().getFullYear()
@@ -24,16 +23,16 @@ export async function generateMetadata(): Promise<Metadata> {
       },
     },
     alternates: {
-      canonical: `${BASE}/calendar`,
+      canonical: `${BASE_URL}/calendar`,
     },
     openGraph: {
       title,
       description: description.slice(0, 200),
       type: 'website',
-      url: `${BASE}/calendar`,
+      url: `${BASE_URL}/calendar`,
       images: [
         {
-          url: `${BASE}/og-image.png`,
+          url: `${BASE_URL}/og-image.png`,
           width: 1200,
           height: 630,
           alt: 'East Coast Kink Events Calendar',
@@ -44,7 +43,7 @@ export async function generateMetadata(): Promise<Metadata> {
       card: 'summary_large_image',
       title,
       description: description.slice(0, 200),
-      images: [`${BASE}/og-image.png`],
+      images: [`${BASE_URL}/og-image.png`],
     },
   }
 }
