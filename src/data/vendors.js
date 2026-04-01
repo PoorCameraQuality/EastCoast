@@ -833,12 +833,13 @@ export const vendors = [
   {
     name: 'The Vulgarians',
     slug: 'the-vulgarians',
-    location: 'USA',
+    location: 'North Florida & Florida Panhandle region • USA',
     description:
-      'A home dungeon with educational gatherings—welcoming the community broadly; vetting required for demos, parties, and events. Merch via their Square shop.',
+      'Dungeon & educational gatherings—250+ vetted members; annual consent class & screening; in-person or Zoom vetting; dedicated on-site dungeon; events, classes (shibari, fire, wax, blowgun), and workshops.',
     story:
-      'The Vulgarians describe themselves as a home dungeon with educational gatherings. Their public site at https://thevulgarians.com/ states they welcome and embrace the community without distinctions regarding race, religion, gender identity, expression, age, or other discriminatory facets of someone’s existence. Attendance at demos, parties, or other events requires becoming a vetted member; the site links to FetLife, vetting, and a vetting status checker, and they identify as a Coalition Partner of NCSF. They also promote volunteering and a shop. Branded merchandise is sold through a Square storefront at https://thevulgarians.square.site/ (checkout by Square; their shop lists USPS/UPS shipping at actual rates, no PO boxes, no returns—T-shirt size exchanges may be arranged by contact, with return shipping at customer expense). This listing is summarized from their public website and Square storefront.',
+      'The Vulgarians (vul-gar-i-ans, /vəlˈɡerēəns/)—“an unrefined person, especially one with newly acquired power”—operate as Dungeon & Educational Gatherings with a private, vetted community. They welcome the whole community without distinctions regarding race, religion, gender identity, expression, age, or other discriminatory facets of someone’s existence. Vetting includes an annual registered sexual predator report and an annual Consent & Negotiation Class; they meet prospects in person or via Zoom, offer Virtual Vetting Classes when travel or schedules are tight, and do not discriminate, judge, or shame kinks. After vetting, members access events (play parties, camping, concerts, impact, protocol, bondage), classes (e.g. shibari, fire, wax, blowgun darts), and workshops. They have a dedicated dungeon on the property with room and privacy from vanilla folks; 250+ members draw from Tallahassee, Jacksonville, Alabama, Georgia, Pensacola, and travelers beyond. Ask about reciprocal vetting if you belong to another group. Primary site: https://thevulgarians.com/ · FetLife group: https://fetlife.com/groups/237552 · merch: https://thevulgarians.square.site/ (Square checkout; shipping and return policies per their shop). Full venue copy and structured data: /dungeons/the-vulgarians on East Coast Kink Events.',
     websiteUrl: 'https://thevulgarians.com/',
+    dungeonListingSlug: 'the-vulgarians',
     tagSlugs: [
       'services-experiences',
       'educational-focused-vendor',

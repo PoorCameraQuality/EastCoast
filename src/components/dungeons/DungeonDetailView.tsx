@@ -48,6 +48,10 @@ type Dungeon = {
   hours?: string
   socialMedia?: Record<string, string | undefined>
   website?: string
+  /** Official merch / third-party shop (e.g. Square) */
+  shopUrl?: string
+  /** ECKE marketplace slug when this venue is also a vendor listing */
+  vendorListingSlug?: string
 }
 
 export default function DungeonDetailView({ dungeon }: { dungeon: Dungeon }) {
@@ -225,6 +229,27 @@ export default function DungeonDetailView({ dungeon }: { dungeon: Dungeon }) {
                 >
                   Visit Website
                 </a>
+              ) : null}
+
+              {dungeon.shopUrl ? (
+                <a
+                  href={dungeon.shopUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn-outline inline-flex min-h-touch items-center justify-center px-4 py-2 text-sm w-full"
+                  aria-label={`Official shop for ${dungeon.name} (opens in a new tab)`}
+                >
+                  Official merch shop
+                </a>
+              ) : null}
+
+              {dungeon.vendorListingSlug ? (
+                <Link
+                  href={`/vendors/${dungeon.vendorListingSlug}`}
+                  className="inline-flex min-h-touch items-center justify-center px-4 py-2 text-sm w-full rounded-md border border-primary-500/40 bg-primary-500/10 text-primary-200 hover:bg-primary-500/20 transition-colors"
+                >
+                  Marketplace vendor profile
+                </Link>
               ) : null}
 
               <Link

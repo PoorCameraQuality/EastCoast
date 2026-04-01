@@ -228,9 +228,14 @@ export function DungeonStructuredData({ dungeon }: { dungeon: any }) {
     serviceType: serviceLabelForDungeon(cat),
     areaServed: dungeon.location.region || dungeon.location.state,
     sameAs: (() => {
-      if (!dungeon.socialMedia) return undefined
-      const urls = Object.values(dungeon.socialMedia).filter(Boolean) as string[]
-      return urls.length ? urls : undefined
+      const urls: string[] = []
+      if (dungeon.website) urls.push(dungeon.website)
+      if (dungeon.shopUrl) urls.push(dungeon.shopUrl)
+      if (dungeon.socialMedia) {
+        urls.push(...(Object.values(dungeon.socialMedia).filter(Boolean) as string[]))
+      }
+      const unique = Array.from(new Set(urls))
+      return unique.length ? unique : undefined
     })(),
   }
 

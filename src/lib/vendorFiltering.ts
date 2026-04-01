@@ -13,6 +13,8 @@ export type VendorRecord = {
   tagSlugs: string[]
   isPaid?: boolean
   productImage125ByTagSlug?: Record<string, string>
+  /** When set, links to the matching dungeon directory page (same slug) */
+  dungeonListingSlug?: string
 }
 
 export function getVendorCardPreviewText(args: { vendor: VendorRecord; maxSentences: number }): string {

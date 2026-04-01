@@ -1284,6 +1284,33 @@ export const dungeons = [
       "description": "Threshold Society — Los Angeles nonprofit kink education and community dungeon. thresholdla.org.",
       "keywords": "Threshold LA, Threshold Society, Los Angeles BDSM education, LA dungeon nonprofit"
     }
+  },
+  {
+    "name": "The Vulgarians",
+    "slug": "the-vulgarians",
+    "location": {
+      "city": "Florida Panhandle",
+      "state": "FL",
+      "region": "North Florida & Southeast US — members from Tallahassee, Jacksonville, Pensacola, Alabama, Georgia & beyond",
+      "address": "Private property — exact location shared with vetted members via thevulgarians.com"
+    },
+    "category": "Private Kink Dungeon",
+    "excerpt": "The Vulgarians — dungeon & educational gatherings: 250+ vetted members across North Florida and the Panhandle. Annual consent class & screening, in-person or Zoom vetting, dedicated on-site dungeon. Play parties, classes (shibari, fire, wax, blowgun), workshops & more.",
+    "description": {
+      "long": "The Vulgarians — Dungeon & Educational Gatherings\n\nVulgarians (vul-gar-i-ans, /vəlˈɡerēəns/): “An unrefined person, especially one with newly acquired power.”\n\nThe Vulgarians welcome, encourage, and embrace the entirety of their community with no distinctions regarding race, religion, gender identity, expression, age, or any other discriminatory facet of someone’s existence.\n\nThey are a private group who vet members through an annual registered sexual predator report and an annual Consent & Negotiation Class. Prospective members meet in person or via Zoom so the group can gauge fit—they emphasize that they do not discriminate, judge, or shame your kinks. Virtual Vetting Classes are offered for people who are out of town or cannot attend regular in-person classes.\n\nAfter requirements are met, members may attend events including play parties, camping, concerts, impact, protocol, and bondage; classes such as shibari, fire, wax, and blowgun darts; and workshops where you can learn or teach a new craft and more.\n\nThey maintain a dedicated dungeon on the property with lots of room and privacy from vanilla folks.\n\nCommunity scale: 250+ members from Tallahassee, Jacksonville, Alabama, Georgia, Pensacola, and others who travel in for events.\n\nReciprocal vetting: If you belong to another group, ask whether The Vulgarians are reciprocal—meaning they may accept that group’s vetting process.\n\nOfficial links: Website and vetting flows at thevulgarians.com; FetLife group: fetlife.com/groups/237552. Merch and support via their Square shop (linked from the official site). East Coast Kink Events also lists them in the vendor marketplace—see the linked vendor profile on this page.\n\nConfirm all dates, requirements, and logistics on thevulgarians.com before attending."
+    },
+    "website": "https://thevulgarians.com/",
+    "shopUrl": "https://thevulgarians.square.site/",
+    "vendorListingSlug": "the-vulgarians",
+    "images": [],
+    "socialMedia": {
+      "fetlife": "https://fetlife.com/groups/237552"
+    },
+    "seo": {
+      "title": "The Vulgarians — Florida Panhandle Dungeon & Kink Education | East Coast Kink Events",
+      "description": "The Vulgarians: private dungeon & educational gatherings in North Florida. Vetted community (250+), consent class, Zoom & in-person vetting, shibari & impact classes, play parties & workshops. FetLife & thevulgarians.com.",
+      "keywords": "The Vulgarians, Florida Panhandle kink, North Florida BDSM dungeon, Tallahassee kink community, Pensacola Jacksonville kink, vetted dungeon, consent negotiation class, shibari classes Florida, private kink dungeon FL, FetLife 237552, educational kink gatherings"
+    }
   }
 ];
 
