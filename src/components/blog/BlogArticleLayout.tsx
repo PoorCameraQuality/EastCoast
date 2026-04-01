@@ -30,11 +30,11 @@ type ProgrammaticProps = {
 type Props = PillarProps | ProgrammaticProps
 
 const PROGRAMMATIC_TOC = [
+  { href: '#blog-explore', label: 'Events, vendors & venues', short: 'Listings' },
   { href: '#blog-intro', label: 'Introduction', short: 'Intro' },
   { href: '#blog-main', label: 'Main topics', short: 'Topics' },
   { href: '#blog-practical', label: 'Practical advice', short: 'Practical' },
   { href: '#blog-next', label: 'Next steps', short: 'Next' },
-  { href: '#blog-explore', label: 'Explore listings', short: 'Listings' },
 ] as const
 
 export default function BlogArticleLayout(props: Props) {
@@ -110,7 +110,7 @@ export default function BlogArticleLayout(props: Props) {
                 ) : null}
                 <p className="text-lg text-gray-300 leading-relaxed mb-8">{props.sections.lead}</p>
 
-                <div className="flex flex-col sm:flex-row flex-wrap gap-3 mb-8">
+                <div className="flex flex-col sm:flex-row flex-wrap gap-3 mb-6">
                   <Link
                     href={props.links.ctaHref}
                     className="btn-primary min-h-touch inline-flex items-center justify-center px-6 py-3 text-base"
@@ -124,6 +124,10 @@ export default function BlogArticleLayout(props: Props) {
                     Browse all events
                   </Link>
                 </div>
+
+                <section id="blog-explore" className="scroll-mt-24">
+                  <BlogExplorePlatformSection bundle={props.links} embedded />
+                </section>
 
                 <nav
                   className="lg:hidden flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-primary-300/95 mb-10 pb-6 border-b border-gray-800"
@@ -220,9 +224,11 @@ export default function BlogArticleLayout(props: Props) {
             </article>
           )}
 
-          <section id="blog-explore" className={props.variant === 'programmatic' ? 'scroll-mt-24' : undefined}>
-            <BlogExplorePlatformSection bundle={props.links} />
-          </section>
+          {props.variant === 'pillar' ? (
+            <section id="blog-explore" className="scroll-mt-24">
+              <BlogExplorePlatformSection bundle={props.links} />
+            </section>
+          ) : null}
         </div>
       </section>
     </div>

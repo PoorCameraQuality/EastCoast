@@ -1,9 +1,19 @@
 import Link from 'next/link'
 import type { BlogInternalLinksBundle } from '@/lib/blogInternalLinks'
 
-export default function BlogExplorePlatformSection({ bundle }: { bundle: BlogInternalLinksBundle }) {
+type Props = {
+  bundle: BlogInternalLinksBundle
+  /** When true, tighter spacing for programmatic guides (listings before long-form copy). */
+  embedded?: boolean
+}
+
+export default function BlogExplorePlatformSection({ bundle, embedded }: Props) {
+  const sectionClass = embedded
+    ? 'mt-6 mb-10 pt-8 border-t border-gray-800'
+    : 'mt-12 pt-10 border-t border-gray-800'
+
   return (
-    <section className="mt-12 pt-10 border-t border-gray-800" aria-label="Explore the platform">
+    <section className={sectionClass} aria-label="Explore the platform">
       <h2 className="text-2xl font-serif font-bold text-white mb-6">Explore the platform</h2>
       <p className="text-gray-400 mb-8 max-w-2xl">
         Use these links to move from reading to real listings: upcoming events, trusted vendors, and dungeon

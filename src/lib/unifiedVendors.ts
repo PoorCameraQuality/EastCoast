@@ -208,6 +208,23 @@ export function vendorHubFilterFromParsed(
   }
 }
 
+/** Max online-only vendors (not tied to the hub state) mixed into state / state+tag hubs. */
+const ONLINE_VENDORS_SAMPLE_CAP = 5
+
+function sampleAtMost<T>(items: T[], max: number): T[] {
+  if (items.length <= max) return [...items]
+  const shuffled = [...items]
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1))
+    ;[shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]
+  }
+  return shuffled.slice(0, max)
+}
+
+/**
+ * State hubs used to include every `onlineOnly` vendor nationwide. We keep all in-state rows
+ * and cap ship-everywhere online vendors so each region surfaces a small rotating sample.
+ */
 export function filterVendorsForHub(
   vendors: UnifiedVendor[],
   filter: VendorHubFilter
@@ -221,9 +238,9 @@ export function filterVendorsForHub(
 
   if (filter.stateSlug) {
     const abbr = EAST_COAST_STATES[filter.stateSlug].abbr
-    list = list.filter(
-      (v) => v.stateAbbr === abbr || v.onlineOnly === true
-    )
+    const inState = list.filter((v) => v.stateAbbr === abbr)
+    const onlineNotInState = list.filter((v) => v.onlineOnly && v.stateAbbr !== abbr)
+    list = [...inState, ...sampleAtMost(onlineNotInState, ONLINE_VENDORS_SAMPLE_CAP)]
   }
 
   if (filter.seoTagSlug) {

@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useCallback } from 'react'
+import { useCallback } from 'react'
 import { usePathname } from 'next/navigation'
 
 // Declare gtag function for TypeScript
@@ -377,10 +377,8 @@ export default function useEnhancedGA4() {
     }
   }
 
-  // Auto-track page views on route changes
-  useEffect(() => {
-    trackPageView()
-  }, [pathname, trackPageView])
+  // Page views: rely on `GoogleAnalytics.tsx` gtag('config', …, { page_path }) after consent
+  // to avoid double-counting the same navigation in GA4.
 
   return {
     trackPageView,

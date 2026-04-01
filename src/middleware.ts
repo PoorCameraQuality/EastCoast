@@ -51,12 +51,32 @@ export async function middleware(req: NextRequest) {
     return NextResponse.redirect(url, 308)
   }
 
-  // Strip unwanted query parameters
+  // Strip unwanted query parameters (keep functional filters + attribution for GA/ads)
   const allowedParams = new Set(['page', 'q', 'tag'])
+  const marketingParams = new Set([
+    'gclid',
+    'gbraid',
+    'wbraid',
+    'fbclid',
+    'msclkid',
+    'twclid',
+    'yclid',
+    'mc_cid',
+    'mc_eid',
+    '_ga',
+    '_gl',
+  ])
+  const isAllowedQueryKey = (key: string) =>
+    allowedParams.has(key) ||
+    key === 'format' ||
+    key === 'category' ||
+    key.startsWith('utm_') ||
+    marketingParams.has(key)
+
   let paramsChanged = false
   const keysToDelete: string[] = []
   url.searchParams.forEach((value, key) => {
-    if (!allowedParams.has(key) && key !== 'format' && key !== 'category') {
+    if (!isAllowedQueryKey(key)) {
       keysToDelete.push(key)
     }
   })
