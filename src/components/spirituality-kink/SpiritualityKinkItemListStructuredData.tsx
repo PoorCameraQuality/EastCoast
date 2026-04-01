@@ -1,27 +1,28 @@
 import { BASE_URL } from '@/lib/seo'
 import type { EventPageRecord } from '@/lib/unifiedEvents'
 
-const PAGE_PATH = '/community-spotlight'
-
 function escapeJsonLd(data: unknown): string {
   return JSON.stringify(data).replace(/</g, '\\u003c')
 }
 
-/**
- * ItemList JSON-LD for the curated three-event hub (supplements FAQ + breadcrumb on the page).
- */
-export default function CommunitySpotlightStructuredData({
+export default function SpiritualityKinkItemListStructuredData({
+  path,
+  name,
+  description,
   events,
 }: {
+  path: string
+  name: string
+  description: string
   events: Pick<EventPageRecord, 'name' | 'slug' | 'date'>[]
 }) {
+  const url = `${BASE_URL}${path}`
   const structuredData = {
     '@context': 'https://schema.org',
     '@type': 'ItemList',
-    name: 'Community spotlight — featured kink gatherings',
-    description:
-      'Curated East Coast Kink Events listings: Primal Arts Festival, THE Beltane, and Elevation Rope.',
-    url: `${BASE_URL}${PAGE_PATH}`,
+    name,
+    description,
+    url,
     numberOfItems: events.length,
     itemListElement: events.map((e, i) => ({
       '@type': 'ListItem',
@@ -36,9 +37,10 @@ export default function CommunitySpotlightStructuredData({
     })),
   }
 
+  const safeId = path.replace(/^\//, '').replace(/\//g, '-') || 'hub'
   return (
     <script
-      id="community-spotlight-itemlist-ld"
+      id={`spirituality-kink-itemlist-${safeId}`}
       type="application/ld+json"
       dangerouslySetInnerHTML={{ __html: escapeJsonLd(structuredData) }}
     />

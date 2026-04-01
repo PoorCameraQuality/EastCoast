@@ -1,7 +1,7 @@
 import { resolveEventForPage } from '@/lib/unifiedEvents'
 import type { EventPageRecord } from '@/lib/unifiedEvents'
 
-/** Fixed allowlist for `/community-spotlight` — do not expand without an explicit product decision. */
+/** Fixed allowlist for `/spirituality-kink` cluster — do not expand without an explicit product decision. */
 export const CURATED_SPOTLIGHT_EVENT_SLUGS = [
   'primal-arts-festival',
   'beltane',

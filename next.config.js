@@ -72,6 +72,9 @@ const nextConfig = {
       { source: '/states/:state/', destination: '/states/:state', permanent: true },
       { source: '/vendors/:slug/', destination: '/vendors/:slug', permanent: true },
 
+      // Spirituality/kink programmatic hub superseded community-spotlight (single canonical)
+      { source: '/community-spotlight', destination: '/spirituality-kink', permanent: true },
+
       // Event URL canonicalization: redirect year-based event slugs to year-agnostic URLs (SEO)
       { source: '/events/indy-rope-expo-2026', destination: '/events/indy-rope-expo', permanent: true },
       { source: '/events/claw-26', destination: '/events/claw', permanent: true },
