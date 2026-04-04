@@ -831,6 +831,19 @@ export const vendors = [
     isPaid: false,
   },
   {
+    name: 'goBOUNDLESS',
+    slug: 'goboundless',
+    location: 'Massachusetts • USA',
+    description:
+      'Discover New Horizons—accessible kink and relationship education, local workshops, and a vetted community built on accessibility, education, community, and accountability.',
+    story:
+      'goBOUNDLESS (goboundless.us) empowers individuals to explore and understand kink and alternative relationships through accessible education. They foster a safe, inclusive, judgment-free space; break down barriers with affordable resources and local workshops; and emphasize Accessibility (affordability, local reach, inclusive needs), Education (knowledge for safer solo and partnered exploration), Community (support and acceptance), and Accountability (risk awareness, informed consent, respect, communication, self-awareness). Featured listings on East Coast Kink Events: /events/goboundless-formality-forward-dinner-holyoke-2026 and /events/goboundless-full-access-camp-2026. Events calendar: https://goboundless.us/events · Vetting: https://goboundless.us/vetting_request/new',
+    websiteUrl: 'https://goboundless.us/',
+    logo125Url: '/images/events/goboundless-logo-light.svg',
+    tagSlugs: ['services-experiences', 'educational-focused-vendor'],
+    isPaid: false,
+  },
+  {
     name: 'The Vulgarians',
     slug: 'the-vulgarians',
     location: 'North Florida & Florida Panhandle region • USA',

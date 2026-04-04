@@ -3242,6 +3242,77 @@ export const events = [
       "description": "PNWLC 2026 (Jul 30-Aug 2) — Portland-area leather men’s campout. pnwlc.org.",
       "keywords": "PNWLC, Pacific Northwest Leathermen's Campout, Oregon leather camp, gay male leather PNW"
     }
+  },
+  {
+    "name": "goBOUNDLESS — Formality Forward High Protocol Dinner (Holyoke)",
+    "slug": "goboundless-formality-forward-dinner-holyoke-2026",
+    "date": {
+      "start": "2026-05-02",
+      "end": "2026-05-02",
+      "display": "May 2, 2026 · 7pm–10pm (doors close 7:30pm)"
+    },
+    "location": {
+      "city": "Holyoke",
+      "state": "MA",
+      "region": "Western Massachusetts"
+    },
+    "category": "Indoor Event",
+    "excerpt": "goBOUNDLESS hosts a potluck-style Formality Forward high-protocol dinner at B.O.I.N.K. in Holyoke, MA—formal dynamics, collars, service ritual, and community in a vetted, ticketed indoor takeover (30 cap). Full Access $40 · Limited Access $50.",
+    "longDescription": "**goBOUNDLESS: Discover New Horizons** empowers people to explore kink and alternative relationships through accessible education in a safe, inclusive, judgment-free community—built on **Accessibility**, **Education**, **Community**, and **Accountability** (risk awareness, informed consent, respect, communication, and self-awareness).\n\nJoin us for a **potluck-style Formality Forward High Protocol Dinner**—like their other Black Tie High Protocol Dinners, focused on expressing aspects of **formal dynamics and protocol**. Enjoy dinner and the company of the goBOUNDLESS community while welcoming potential new members.\n\n**This event requires vetting to attend.** **Limited space: 30 tickets.** Only **Full Access** or **Limited Access** members may purchase tickets.\n\n**Pricing:** Full Access Members **$40** · Limited Access Members **$50**\n\n### What “high protocol” means here\n\nExact protocol varies by dynamic; here it signals the deepest levels of service and reverence your dynamic can support. For this evening:\n\n- **Fetish wear** is highly encouraged—**dress wear** is equally on-vibe if leather or latex isn’t your thing.\n- **Collars:** bottoms may wear formal or play collars.\n- **Names:** bottoms use pet/service names; tops use honorifics.\n- **Seating:** tops get chairs; bottoms may stand or use floor seating (accessibility accommodated).\n- **Service:** bottoms wash hands and/or feet of their top, then serve food and drink.\n- **While serving:** bottoms may be hobbled, cuffed, or tied.\n- **House subs** help with drinks and **human food boards** (Nyotaimori / Nantaimori style).\n\n### What this does **not** mean\n\n- **No sex** at this ticketed event—save it for private time afterward.\n- **No heavy physical scenes.** Cap is **light-to-moderate** bondage, restraints, rope, stockades, etc.\n\n**Venue type:** **Indoor space takeover** at **B.O.I.N.K.**, Holyoke, MA.\n\n### Registration\n\n1. **Vetting:** [goboundless.us/vetting_request/new](https://goboundless.us/vetting_request/new)\n2. **Tickets (once vetted):** [Forbidden Tickets — goBOUNDLESS event](https://forbiddentickets.com/events/goboundless/de11c369e3)\n\n**Calendar & updates:** [goboundless.us/events](https://goboundless.us/events)\n\nWe look forward to dining with you!",
+    "website": "https://goboundless.us/events",
+    "organizer": "goBOUNDLESS",
+    "venue": "B.O.I.N.K., Holyoke, MA",
+    "logo": "/images/events/goboundless-logo-light.svg",
+    "features": [
+      "May 2, 2026 · 7pm–10pm (doors close 7:30pm)",
+      "Indoor space takeover · B.O.I.N.K., Holyoke MA",
+      "Vetting required",
+      "30 ticket cap · Full or Limited Access members only",
+      "Full Access $40 · Limited Access $50",
+      "Potluck dinner · outdoor cigar lounge",
+      "House subs · hand and foot washing · shared talents",
+      "High protocol / formal dynamics (see event page for boundaries)"
+    ],
+    "seo": {
+      "title": "goBOUNDLESS High Protocol Dinner - Holyoke MA May 2026 | East Coast Kink Events",
+      "description": "Vetted high-protocol potluck dinner with goBOUNDLESS at B.O.I.N.K., Holyoke MA, May 2, 2026. 30 tickets. Vet via goboundless.us; tickets on Forbidden Tickets.",
+      "keywords": "goBOUNDLESS, Holyoke MA, high protocol dinner, BDSM education Massachusetts, vetted kink event, Western MA kink, formal dynamics, potluck protocol dinner"
+    }
+  },
+  {
+    "name": "goBOUNDLESS Full Access Member Camp 2026",
+    "slug": "goboundless-full-access-camp-2026",
+    "date": {
+      "start": "2026-08-20",
+      "end": "2026-08-23",
+      "display": "Aug 20–23, 2026 (Thu 5pm early arrival – Sun 2pm)"
+    },
+    "location": {
+      "city": "Central Massachusetts",
+      "state": "MA",
+      "region": "New England"
+    },
+    "category": "Outdoor Event",
+    "excerpt": "Second immersive weekend-long vetted educational camp from goBOUNDLESS—presentations, workshops, classes, performers, and camping on a private central MA site near I-90. Full Access members only; 200 paid spots. Cabin add-on available.",
+    "longDescription": "**goBOUNDLESS** helps people explore and understand kink and alternative relationships through **accessible education**, with goals rooted in a **safe, inclusive, judgment-free** community—**Accessibility**, **Education**, **Community**, and **Accountability** (risk awareness, informed consent, respect, communication, self-awareness).\n\n## Full Access Member Camp\n\nJoin the **second** immersive **weekend-long**, **fully vetted** educational camp dedicated to **BDSM and alternative intimacy**. All experience levels welcome—from curious newcomers to experienced practitioners deepening skills—in an **expansive outdoor** setting focused on understanding, consent, and community.\n\n### Programming\n\n- **Presentations** — Experts on BDSM, consent and negotiation, safety, and psychology of alternative intimacy.\n- **Workshops** — Hands-on skills: rope bondage, impact, communication in relationships, and more.\n- **Classes** — Themes such as aftercare, power exchange, and trust.\n- **Performers** — Live demos showcasing technique and artistry.\n- **Fun activities** — Games and creative exercises for connection.\n- **Camping** — Tent areas and communal space; **cabin add-on** available.\n\n### Community\n\nEvening **fireside discussion**, space to connect, share, and build friendships—not only education but lasting community.\n\n### Location & format\n\n**Outdoor camp takeover** on goBOUNDLESS’s **private camp site**—about **5 minutes off I-90** in **central Massachusetts**, within **~10 minutes** of restaurants and big-box retail. Exact directions provided to registrants (no published street address here).\n\n### Capacity & who can attend\n\n- **200 paid participants**, **Full Access members only**—apply early.\n- Complete **membership application**, **vetting**, and **Full Access** enrollment before registering.\n- **Vetting:** [goboundless.us/vetting_request/new](https://goboundless.us/vetting_request/new)\n\n**Schedule:** **Thursday, August 20, 2026 @ 5pm** — early arrival and setup only — through **Sunday, August 23, 2026 @ 2pm**.\n\n**Events hub:** [goboundless.us/events](https://goboundless.us/events)\n\nCome with an open mind and respect for safer, consensual exploration.",
+    "website": "https://goboundless.us/events",
+    "organizer": "goBOUNDLESS",
+    "venue": "goBOUNDLESS camp site, central MA near I-90 (private; directions for registrants)",
+    "logo": "/images/events/goboundless-logo-light.svg",
+    "features": [
+      "Aug 20–23, 2026 · Thu 5pm (early arrival) – Sun 2pm",
+      "Outdoor camp takeover · private site near I-90, central MA",
+      "200 paid spots · Full Access vetted members only",
+      "Presentations, workshops, classes, performers, social programming",
+      "Tent camping + communal spaces · cabin add-on available",
+      "Evening fireside discussions",
+      "Vetting via goboundless.us before registration"
+    ],
+    "seo": {
+      "title": "goBOUNDLESS Full Access Camp 2026 - Massachusetts | East Coast Kink Events",
+      "description": "goBOUNDLESS weekend BDSM education camp Aug 20–23, 2026 near I-90 in central Massachusetts. 200 spots. Full Access vetted members. goboundless.us/events.",
+      "keywords": "goBOUNDLESS, Massachusetts kink camp, BDSM education camp New England, vetted kink camping, central MA, I-90, Full Access camp, outdoor kink education"
+    }
   }
 ];
 
