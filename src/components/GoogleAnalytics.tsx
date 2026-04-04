@@ -3,7 +3,7 @@ import Script from 'next/script'
 import { useEffect, useState, Suspense } from 'react'
 import { initWebVitals } from '@/lib/web-vitals'
 import { usePathname, useSearchParams } from 'next/navigation'
-import { GA_CONSENT_EVENT } from '@/lib/analyticsEntities'
+import { markGaConsentGranted } from '@/lib/analyticsEntities'
 
 interface GoogleAnalyticsProps {
   GA_MEASUREMENT_ID: string
@@ -18,13 +18,8 @@ function GoogleAnalyticsInner({ GA_MEASUREMENT_ID }: GoogleAnalyticsProps) {
 
   useEffect(() => {
     if (typeof window === 'undefined') return
-    if ((window as any).gaConsent) {
-      setLoadScripts(true)
-      return
-    }
-    const onConsent = () => setLoadScripts(true)
-    window.addEventListener(GA_CONSENT_EVENT, onConsent)
-    return () => window.removeEventListener(GA_CONSENT_EVENT, onConsent)
+    markGaConsentGranted()
+    setLoadScripts(true)
   }, [])
 
   useEffect(() => {

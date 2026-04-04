@@ -3,7 +3,6 @@ import type { Metadata } from "next";
 import { Inter } from 'next/font/google'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
-import AgeVerification from '@/components/AgeVerification'
 import BackToTop from '@/components/BackToTop'
 import SupportBanner from '@/components/SupportBanner'
 import { AuthProvider } from "@/contexts/AuthProvider";
@@ -137,7 +136,6 @@ export default function RootLayout({
                 {children}
               </main>
               <Footer />
-              <AgeVerification />
               <BackToTop />
             </SafeTrackingWrapper>
             <Analytics />

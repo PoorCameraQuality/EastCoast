@@ -58,7 +58,7 @@ export default function useSafeTracking() {
     }
   }, [pathname, ga4, pageStartTime])
 
-  // Track basic device info once consent is granted (runs after AgeVerification effect)
+  // Track basic device info once consent is granted
   useEffect(() => {
     const sendDevice = () => {
       if (typeof window === 'undefined' || !window.gaConsent) return

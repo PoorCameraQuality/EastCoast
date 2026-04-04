@@ -1,6 +1,6 @@
 /**
  * GA4 helpers for listing clicks (select_item) and outbound entity CTAs.
- * Fires only when gtag is loaded and `window.gaConsent` is true (set after age verification).
+ * Fires only when gtag is loaded and `window.gaConsent` is true (set on load with GA).
  */
 
 export type AnalyticsEntityType = 'event' | 'vendor' | 'dungeon' | 'swingClub'
@@ -11,7 +11,7 @@ declare global {
   }
 }
 
-/** Dispatched on `window` after age verification so listeners can defer tracking until consent. */
+/** Dispatched on `window` when analytics consent is granted so listeners can defer tracking until then. */
 export const GA_CONSENT_EVENT = 'ecke_ga_consent'
 
 export function markGaConsentGranted(): void {
