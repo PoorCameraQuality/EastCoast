@@ -1,5 +1,6 @@
 import { getAllEvents } from '@/data/events'
 import { BASE_URL } from '@/lib/seo'
+import { openGraphListingImageUrl } from '@/lib/ogListingImage'
 import { venueExportType } from '@/lib/directoryExport'
 
 function dungeonHoursSpecifications(
@@ -149,7 +150,7 @@ export function EventStructuredData({ event }: EventStructuredDataProps) {
       "url": event.website || BASE_URL
     },
     "url": `${BASE_URL}/events/${event.slug}`,
-    "image": buildImageUrl(event.logo, `${BASE_URL}/images/placeholder-logo.svg`),
+    "image": [openGraphListingImageUrl(event.logo)],
     "mainEntityOfPage": {
       "@type": "WebPage",
       "@id": `${BASE_URL}/events/${event.slug}`
@@ -219,7 +220,7 @@ export function DungeonStructuredData({ dungeon }: { dungeon: any }) {
       '@id': pageId,
     },
     additionalType: additionalTypeUriForDungeon(cat),
-    image: dungeon.logo ? buildImageUrl(dungeon.logo, `${BASE_URL}/images/placeholder-logo.svg`) : undefined,
+    image: [openGraphListingImageUrl(dungeon.logo)],
     telephone: dungeon.contact?.phone || dungeon.phone || undefined,
     email: dungeon.contact?.email || dungeon.email || undefined,
     address,
@@ -379,12 +380,7 @@ function vendorLocationLooksOnlineOnly(location?: string) {
  * Vendor structured data: OnlineStore when location is online-only; otherwise LocalBusiness with address hint.
  */
 export function VendorStructuredData({ vendor }: { vendor: any }) {
-  const rawLogoUrl = vendor.logo125Url
-  const logoUrl = rawLogoUrl
-    ? rawLogoUrl.startsWith('http')
-      ? rawLogoUrl
-      : `${BASE_URL}${encodeUrlPath(rawLogoUrl)}`
-    : undefined
+  const previewImageUrl = openGraphListingImageUrl(vendor.logo125Url ?? undefined)
 
   const onlineOnly = vendorLocationLooksOnlineOnly(vendor.location)
   const description = vendorSchemaDescription(vendor)
@@ -396,7 +392,7 @@ export function VendorStructuredData({ vendor }: { vendor: any }) {
         "name": vendor.name,
         "description": description,
         "url": `${BASE_URL}/vendors/${vendor.slug}`,
-        "image": logoUrl ? [logoUrl] : undefined,
+        "image": [previewImageUrl],
         "sameAs": vendor.websiteUrl ? [vendor.websiteUrl] : undefined,
       }
     : {
@@ -405,7 +401,7 @@ export function VendorStructuredData({ vendor }: { vendor: any }) {
         "name": vendor.name,
         "description": description,
         "url": `${BASE_URL}/vendors/${vendor.slug}`,
-        "image": logoUrl ? [logoUrl] : undefined,
+        "image": [previewImageUrl],
         "address": vendor.location
           ? {
               "@type": "PostalAddress",

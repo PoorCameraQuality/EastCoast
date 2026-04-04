@@ -3366,6 +3366,7 @@ export const generateEventSEO = (event) => {
   // Import SEO helpers dynamically to avoid circular dependencies
   const { generateEventTitle } = require('@/lib/seo-helpers');
   const { BASE_URL } = require('@/lib/seo');
+  const { openGraphListingImageUrl } = require('@/lib/ogListingImage');
 
   const clampMeta = (s, max) => {
     if (!s || typeof s !== 'string') return '';
@@ -3380,11 +3381,7 @@ export const generateEventSEO = (event) => {
   const metaDescription = clampMeta(rawExcerpt, 160);
   const ogDescription = clampMeta(rawExcerpt, 200);
   const rawLogoUrl = event.logo;
-  const logoUrl = rawLogoUrl
-    ? rawLogoUrl.startsWith('http')
-      ? rawLogoUrl
-      : `${BASE_URL}${rawLogoUrl}`
-    : `${BASE_URL}/og-image.png`;
+  const ogImageUrl = openGraphListingImageUrl(rawLogoUrl);
 
   return {
     title: optimizedTitle,
@@ -3395,7 +3392,7 @@ export const generateEventSEO = (event) => {
       description: ogDescription,
       images: [
         {
-          url: logoUrl,
+          url: ogImageUrl,
           width: 1200,
           height: 630,
           alt: event.name

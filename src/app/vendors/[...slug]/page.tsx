@@ -18,6 +18,7 @@ import {
   buildVendorMetaDescription,
   buildVendorOgDescription,
 } from '@/lib/vendorMetadata'
+import { openGraphListingImageUrl } from '@/lib/ogListingImage'
 import { getTagSlugsFromPageSearchParams } from '@/lib/vendorFiltering'
 
 export const revalidate = 1800
@@ -45,11 +46,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       }
     }
     const rawLogoUrl = vendor.logo125Url
-    const logoUrl = rawLogoUrl
-      ? rawLogoUrl.startsWith('http')
-        ? rawLogoUrl
-        : `${BASE_URL}${rawLogoUrl}`
-      : `${BASE_URL}/og-image.png`
+    const logoUrl = openGraphListingImageUrl(rawLogoUrl ?? undefined)
     const description = buildVendorMetaDescription(vendor)
     const ogDescription = buildVendorOgDescription(vendor)
     const keywords = buildVendorKeywords(vendor)
