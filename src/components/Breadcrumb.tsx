@@ -39,7 +39,7 @@ export default function Breadcrumb({ items }: BreadcrumbProps) {
             {item.current ? (
               <span aria-current="page" className="text-yellow-400">{item.label}</span>
             ) : (
-              <Link href={item.href} className="hover:underline focus:outline-none focus:ring-2 focus:ring-yellow-400">
+              <Link href={item.href} className="hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-ecke-focus">
                 {item.label}
               </Link>
             )}

@@ -170,8 +170,8 @@ export default function Search({
             aria-controls="search-smart-suggestions search-results"
             className={
               compact
-                ? 'w-full h-10 min-h-0 px-3 py-2 text-sm bg-dark-700 text-white border border-dark-600 rounded-md focus:ring-2 focus:ring-primary-500 focus:border-transparent'
-                : 'w-full min-h-touch px-4 py-3 bg-dark-700 text-white border border-dark-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent'
+                ? 'w-full h-10 min-h-0 px-3 py-2 text-sm bg-dark-700 text-white border border-dark-600 rounded-md focus-visible:ring-2 focus-visible:ring-ecke-focus focus:border-transparent'
+                : 'w-full min-h-touch px-4 py-3 bg-dark-700 text-white border border-dark-600 rounded-lg focus-visible:ring-2 focus-visible:ring-ecke-focus focus:border-transparent'
             }
           />
           {isSearching && (

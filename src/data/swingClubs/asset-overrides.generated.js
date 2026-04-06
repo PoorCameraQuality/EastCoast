@@ -167,10 +167,6 @@ export const ASSET_OVERRIDES = {
     "logo": "/images/swing-clubs/syracuse-speakeasy-liverpool-ny-logo.png",
     "assetSourceUrl": "https://modernlifestyle-prod.nyc3.cdn.digitaloceanspaces.com/4459599/4d93544e-4fc3-476f-9e98-e3e05069a3fe/original.png?v=sezh2f"
   },
-  "tabu-social-club-catonsville-md": {
-    "logo": "/images/swing-clubs/tabu-social-club-catonsville-md-logo.png",
-    "assetSourceUrl": "https://tabulife.com/"
-  },
   "the-cottage-social-club-orrtanna-pa": {
     "logo": "/images/swing-clubs/the-cottage-social-club-orrtanna-pa-logo.jpg",
     "assetSourceUrl": "https://img1.wsimg.com/isteam/ip/35ff818c-1f03-4ae6-a2f9-7dae73f51d2c/thumbnails/thumbnail-35f39e16-35d1-400a-bc97-a3acd082a2ce.png"

@@ -29,6 +29,8 @@ module.exports = {
         /* Semantic accents — values mirror src/styles/tokens.css */
         social: 'var(--ecke-accent-social)',
         'social-hover': 'var(--ecke-accent-social-hover)',
+        /** Matches `tokens.css` --ecke-focus; use with `ring-ecke-focus` for focus rings */
+        'ecke-focus': 'var(--ecke-focus)',
         dark: {
           50: '#f8fafc',
           100: '#f1f5f9',
@@ -52,6 +54,28 @@ module.exports = {
       },
       minWidth: {
         touch: '44px',
+      },
+      spacing: {
+        'ecke-0': 'var(--ecke-space-0)',
+        'ecke-1': 'var(--ecke-space-1)',
+        'ecke-2': 'var(--ecke-space-2)',
+        'ecke-3': 'var(--ecke-space-3)',
+        'ecke-4': 'var(--ecke-space-4)',
+        'ecke-5': 'var(--ecke-space-5)',
+        'ecke-6': 'var(--ecke-space-6)',
+        'ecke-7': 'var(--ecke-space-7)',
+        'ecke-8': 'var(--ecke-space-8)',
+        'ecke-9': 'var(--ecke-space-9)',
+        'ecke-10': 'var(--ecke-space-10)',
+        'ecke-11': 'var(--ecke-space-11)',
+        'ecke-12': 'var(--ecke-space-12)',
+        'ecke-14': 'var(--ecke-space-14)',
+        'ecke-16': 'var(--ecke-space-16)',
+        'ecke-20': 'var(--ecke-space-20)',
+        'ecke-24': 'var(--ecke-space-24)',
+        'ecke-section': 'var(--ecke-section-py)',
+        'ecke-section-md': 'var(--ecke-section-py-md)',
+        'ecke-section-lg': 'var(--ecke-section-py-lg)',
       },
       boxShadow: {
         'elegant': '0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2)',

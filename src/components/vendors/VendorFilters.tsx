@@ -160,7 +160,7 @@ export default function VendorFilters({
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Search tags..."
-          className="w-full min-h-touch rounded-xl border border-white/10 bg-black/40 px-3 py-2 text-sm text-white placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-400/30"
+          className="w-full min-h-touch rounded-xl border border-white/10 bg-black/40 px-3 py-2 text-sm text-white placeholder:text-gray-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-ecke-focus/30"
         />
       </div>
 

@@ -833,7 +833,7 @@ export default function UnifiedAdminDashboard({ user, isAdmin: isAdminProp }: Un
                             value="indoor"
                             checked={eventData.eventType === 'indoor'}
                             onChange={(e) => setEventData(prev => ({ ...prev, eventType: e.target.value as 'indoor' | 'outdoor' }))}
-                            className="w-4 h-4 text-primary-500 bg-dark-700 border-dark-600 focus:ring-primary-500"
+                            className="w-4 h-4 text-primary-500 bg-dark-700 border-dark-600 focus-visible:ring-2 focus-visible:ring-ecke-focus"
                           />
                           <span className="text-white">Indoor</span>
                         </label>
@@ -844,7 +844,7 @@ export default function UnifiedAdminDashboard({ user, isAdmin: isAdminProp }: Un
                             value="outdoor"
                             checked={eventData.eventType === 'outdoor'}
                             onChange={(e) => setEventData(prev => ({ ...prev, eventType: e.target.value as 'indoor' | 'outdoor' }))}
-                            className="w-4 h-4 text-primary-500 bg-dark-700 border-dark-600 focus:ring-primary-500"
+                            className="w-4 h-4 text-primary-500 bg-dark-700 border-dark-600 focus-visible:ring-2 focus-visible:ring-ecke-focus"
                           />
                           <span className="text-white">Outdoor</span>
                         </label>
@@ -1089,7 +1089,7 @@ export default function UnifiedAdminDashboard({ user, isAdmin: isAdminProp }: Un
                           name="featured"
                           checked={articleData.featured}
                           onChange={(e) => setArticleData(prev => ({ ...prev, featured: e.target.checked }))}
-                          className="w-4 h-4 text-primary-500 bg-dark-700 border-dark-600 rounded focus:ring-primary-500"
+                          className="w-4 h-4 text-primary-500 bg-dark-700 border-dark-600 rounded focus-visible:ring-2 focus-visible:ring-ecke-focus"
                         />
                         <span className="text-white font-medium">Featured Article</span>
                       </label>

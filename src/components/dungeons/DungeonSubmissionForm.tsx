@@ -114,7 +114,7 @@ export default function DungeonSubmissionForm() {
                 name="dungeonName"
                 value={formData.dungeonName}
                 onChange={handleInputChange}
-                className="w-full bg-dark-700 border border-dark-600 rounded-lg px-4 py-3 text-white focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-colors min-h-touch"
+                className="w-full bg-dark-700 border border-dark-600 rounded-lg px-4 py-3 text-white focus:border-ecke-focus focus-visible:ring-1 focus-visible:ring-ecke-focus transition-colors min-h-touch"
                 placeholder="Enter dungeon name"
                 required
               />
@@ -127,7 +127,7 @@ export default function DungeonSubmissionForm() {
                 name="dungeonLocation"
                 value={formData.dungeonLocation}
                 onChange={handleInputChange}
-                className="w-full bg-dark-700 border border-dark-600 rounded-lg px-4 py-3 text-white focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-colors min-h-touch"
+                className="w-full bg-dark-700 border border-dark-600 rounded-lg px-4 py-3 text-white focus:border-ecke-focus focus-visible:ring-1 focus-visible:ring-ecke-focus transition-colors min-h-touch"
                 placeholder="City, State"
                 required
               />
@@ -140,7 +140,7 @@ export default function DungeonSubmissionForm() {
                 name="dungeonWebsite"
                 value={formData.dungeonWebsite}
                 onChange={handleInputChange}
-                className="w-full bg-dark-700 border border-dark-600 rounded-lg px-4 py-3 text-white focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-colors min-h-touch"
+                className="w-full bg-dark-700 border border-dark-600 rounded-lg px-4 py-3 text-white focus:border-ecke-focus focus-visible:ring-1 focus-visible:ring-ecke-focus transition-colors min-h-touch"
                 placeholder="https://example.com"
               />
             </div>
@@ -151,7 +151,7 @@ export default function DungeonSubmissionForm() {
                 name="dungeonCategory"
                 value={formData.dungeonCategory}
                 onChange={handleInputChange}
-                className="w-full bg-dark-700 border border-dark-600 rounded-lg px-4 py-3 text-white focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-colors min-h-touch"
+                className="w-full bg-dark-700 border border-dark-600 rounded-lg px-4 py-3 text-white focus:border-ecke-focus focus-visible:ring-1 focus-visible:ring-ecke-focus transition-colors min-h-touch"
                 required
               >
                 <option value="">Select Category</option>
@@ -172,7 +172,7 @@ export default function DungeonSubmissionForm() {
                 name="dungeonTags"
                 value={formData.dungeonTags}
                 onChange={handleInputChange}
-                className="w-full bg-dark-700 border border-dark-600 rounded-lg px-4 py-3 text-white focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-colors min-h-touch"
+                className="w-full bg-dark-700 border border-dark-600 rounded-lg px-4 py-3 text-white focus:border-ecke-focus focus-visible:ring-1 focus-visible:ring-ecke-focus transition-colors min-h-touch"
                 placeholder="Comma-separated tags (e.g., rope, impact, suspension)"
               />
             </div>
@@ -184,7 +184,7 @@ export default function DungeonSubmissionForm() {
               name="dungeonDescription"
               value={formData.dungeonDescription}
               onChange={handleInputChange}
-              className="w-full bg-dark-700 border border-dark-600 rounded-lg px-4 py-3 text-white focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-colors h-32"
+              className="w-full bg-dark-700 border border-dark-600 rounded-lg px-4 py-3 text-white focus:border-ecke-focus focus-visible:ring-1 focus-visible:ring-ecke-focus transition-colors h-32"
               placeholder="Describe your dungeon in detail..."
               required
             />
@@ -205,7 +205,7 @@ export default function DungeonSubmissionForm() {
                 name="ownerName"
                 value={formData.ownerName}
                 onChange={handleInputChange}
-                className="w-full bg-dark-700 border border-dark-600 rounded-lg px-4 py-3 text-white focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-colors min-h-touch"
+                className="w-full bg-dark-700 border border-dark-600 rounded-lg px-4 py-3 text-white focus:border-ecke-focus focus-visible:ring-1 focus-visible:ring-ecke-focus transition-colors min-h-touch"
                 placeholder="Your name or organization name"
                 required
               />
@@ -218,7 +218,7 @@ export default function DungeonSubmissionForm() {
                 name="ownerEmail"
                 value={formData.ownerEmail}
                 onChange={handleInputChange}
-                className="w-full bg-dark-700 border border-dark-600 rounded-lg px-4 py-3 text-white focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-colors min-h-touch"
+                className="w-full bg-dark-700 border border-dark-600 rounded-lg px-4 py-3 text-white focus:border-ecke-focus focus-visible:ring-1 focus-visible:ring-ecke-focus transition-colors min-h-touch"
                 placeholder="your@email.com"
                 required
               />
@@ -235,7 +235,7 @@ export default function DungeonSubmissionForm() {
               name="agreeToTerms"
               checked={formData.agreeToTerms}
               onChange={handleInputChange}
-              className="w-5 h-5 min-h-touch min-w-touch text-primary-500 bg-dark-700 border-dark-600 rounded focus:ring-primary-500 mt-1"
+              className="w-5 h-5 min-h-touch min-w-touch text-primary-500 bg-dark-700 border-dark-600 rounded focus-visible:ring-ecke-focus mt-1"
               required
             />
             <label htmlFor="dungeon-submission-agree-terms" className="text-gray-300 text-sm">

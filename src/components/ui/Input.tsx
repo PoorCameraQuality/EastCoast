@@ -2,7 +2,7 @@ import { forwardRef, type InputHTMLAttributes } from 'react'
 import { cn } from '@/lib/cn'
 
 export const inputPrimitiveClass =
-  'w-full min-h-touch rounded-lg border border-dark-600 bg-dark-700 px-4 py-3 text-white placeholder:text-gray-500 focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed'
+  'w-full min-h-touch rounded-lg border border-dark-600 bg-dark-700 px-4 py-3 text-white placeholder:text-gray-500 focus:border-ecke-focus focus-visible:ring-1 focus-visible:ring-ecke-focus transition-colors disabled:opacity-50 disabled:cursor-not-allowed'
 
 export type InputProps = InputHTMLAttributes<HTMLInputElement> & {
   className?: string

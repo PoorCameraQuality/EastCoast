@@ -152,7 +152,7 @@ function PromotionalCard({
   onToggleExpand,
   isMobile = false 
 }: PromotionalCardProps) {
-  // Gradient colors that match the Hero section
+  // Gradient colors that match the home hub / marketing sections
   const gradients = [
     'from-primary-600/90 to-primary-600/90',
     'from-primary-600/90 to-primary-600/90',

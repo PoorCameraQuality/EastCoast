@@ -246,7 +246,7 @@ export default function ArticlePageClient({ article, breadcrumbItems }: ArticleP
                   type="text"
                   value={editForm.title}
                   onChange={(e) => setEditForm({ ...editForm, title: e.target.value })}
-                  className="w-full px-4 py-2 bg-dark-700 text-white border border-dark-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                  className="w-full px-4 py-2 bg-dark-700 text-white border border-dark-600 rounded-lg focus-visible:ring-2 focus-visible:ring-ecke-focus focus:border-transparent"
                   required
                 />
               </div>
@@ -256,7 +256,7 @@ export default function ArticlePageClient({ article, breadcrumbItems }: ArticleP
                 <select
                   value={editForm.category}
                   onChange={(e) => setEditForm({ ...editForm, category: e.target.value })}
-                  className="w-full px-4 py-2 bg-dark-700 text-white border border-dark-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                  className="w-full px-4 py-2 bg-dark-700 text-white border border-dark-600 rounded-lg focus-visible:ring-2 focus-visible:ring-ecke-focus focus:border-transparent"
                   required
                 >
                   <option value="">Select Category</option>
@@ -273,7 +273,7 @@ export default function ArticlePageClient({ article, breadcrumbItems }: ArticleP
               <textarea
                 value={editForm.excerpt}
                 onChange={(e) => setEditForm({ ...editForm, excerpt: e.target.value })}
-                className="w-full px-4 py-2 bg-dark-700 text-white border border-dark-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                className="w-full px-4 py-2 bg-dark-700 text-white border border-dark-600 rounded-lg focus-visible:ring-2 focus-visible:ring-ecke-focus focus:border-transparent"
                 rows={3}
                 required
               />
@@ -286,7 +286,7 @@ export default function ArticlePageClient({ article, breadcrumbItems }: ArticleP
                   type="text"
                   value={editForm.author_name}
                   onChange={(e) => setEditForm({ ...editForm, author_name: e.target.value })}
-                  className="w-full px-4 py-2 bg-dark-700 text-white border border-dark-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                  className="w-full px-4 py-2 bg-dark-700 text-white border border-dark-600 rounded-lg focus-visible:ring-2 focus-visible:ring-ecke-focus focus:border-transparent"
                   required
                 />
               </div>
@@ -297,7 +297,7 @@ export default function ArticlePageClient({ article, breadcrumbItems }: ArticleP
                   type="text"
                   value={editForm.author_credentials}
                   onChange={(e) => setEditForm({ ...editForm, author_credentials: e.target.value })}
-                  className="w-full px-4 py-2 bg-dark-700 text-white border border-dark-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                  className="w-full px-4 py-2 bg-dark-700 text-white border border-dark-600 rounded-lg focus-visible:ring-2 focus-visible:ring-ecke-focus focus:border-transparent"
                 />
               </div>
             </div>
@@ -307,7 +307,7 @@ export default function ArticlePageClient({ article, breadcrumbItems }: ArticleP
               <textarea
                 value={editForm.author_bio}
                 onChange={(e) => setEditForm({ ...editForm, author_bio: e.target.value })}
-                className="w-full px-4 py-2 bg-dark-700 text-white border border-dark-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                className="w-full px-4 py-2 bg-dark-700 text-white border border-dark-600 rounded-lg focus-visible:ring-2 focus-visible:ring-ecke-focus focus:border-transparent"
                 rows={2}
               />
             </div>
@@ -318,7 +318,7 @@ export default function ArticlePageClient({ article, breadcrumbItems }: ArticleP
                 type="text"
                 value={editForm.tags}
                 onChange={(e) => setEditForm({ ...editForm, tags: e.target.value })}
-                className="w-full px-4 py-2 bg-dark-700 text-white border border-dark-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                className="w-full px-4 py-2 bg-dark-700 text-white border border-dark-600 rounded-lg focus-visible:ring-2 focus-visible:ring-ecke-focus focus:border-transparent"
                 placeholder="safety, consent, negotiation"
               />
             </div>
@@ -349,7 +349,7 @@ export default function ArticlePageClient({ article, breadcrumbItems }: ArticleP
               <textarea
                 value={editForm.notes}
                 onChange={(e) => setEditForm({ ...editForm, notes: e.target.value })}
-                className="w-full px-4 py-2 bg-dark-700 text-white border border-dark-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                className="w-full px-4 py-2 bg-dark-700 text-white border border-dark-600 rounded-lg focus-visible:ring-2 focus-visible:ring-ecke-focus focus:border-transparent"
                 rows={2}
                 placeholder="Optional notes about this edit..."
               />

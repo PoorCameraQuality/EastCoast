@@ -148,7 +148,7 @@ export default function UserMenu() {
             type="button"
             onClick={closeLogin}
             aria-label="Close login dialog"
-            className="absolute top-4 right-4 min-h-touch min-w-touch flex items-center justify-center text-gray-400 hover:text-white rounded-md focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-400"
+            className="absolute top-4 right-4 min-h-touch min-w-touch flex items-center justify-center text-gray-400 hover:text-white rounded-md focus:outline-none focus-visible:ring-2 focus-visible:ring-ecke-focus"
           >
             <span aria-hidden="true">×</span>
           </button>

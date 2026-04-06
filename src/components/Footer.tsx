@@ -40,7 +40,7 @@ const L = ({
   <li>
     <Link
       href={href}
-      className="text-gray-400 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 focus-visible:ring-offset-brand-void rounded-md min-h-touch inline-flex items-center py-1"
+      className="text-gray-400 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ecke-focus focus-visible:ring-offset-2 focus-visible:ring-offset-brand-void rounded-md min-h-touch inline-flex items-center py-1"
     >
       {children}
     </Link>
@@ -91,7 +91,7 @@ export default function Footer() {
               <div className="mt-3">
                 <Link
                   href="/support"
-                  className="inline-flex items-center min-h-touch rounded-lg bg-white/10 px-4 py-2 text-sm font-medium text-white hover:bg-white/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 focus-visible:ring-offset-brand-void"
+                  className="inline-flex items-center min-h-touch rounded-lg bg-white/10 px-4 py-2 text-sm font-medium text-white hover:bg-white/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ecke-focus focus-visible:ring-offset-2 focus-visible:ring-offset-brand-void"
                 >
                   Learn more
                 </Link>
@@ -137,17 +137,17 @@ export default function Footer() {
           </p>
           <ul className="flex flex-wrap gap-x-6 gap-y-2 text-xs text-gray-500">
             <li>
-              <Link href="/sitemap.xml" className="hover:text-white focus-visible:ring-2 focus-visible:ring-primary-500 rounded">
+              <Link href="/sitemap.xml" className="hover:text-white focus-visible:ring-2 focus-visible:ring-ecke-focus rounded">
                 Sitemap
               </Link>
             </li>
             <li>
-              <Link href="/accessibility" className="hover:text-white focus-visible:ring-2 focus-visible:ring-primary-500 rounded">
+              <Link href="/accessibility" className="hover:text-white focus-visible:ring-2 focus-visible:ring-ecke-focus rounded">
                 Accessibility
               </Link>
             </li>
             <li>
-              <Link href="/report" className="hover:text-white focus-visible:ring-2 focus-visible:ring-primary-500 rounded">
+              <Link href="/report" className="hover:text-white focus-visible:ring-2 focus-visible:ring-ecke-focus rounded">
                 Report a Problem
               </Link>
             </li>

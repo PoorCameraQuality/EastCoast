@@ -46,7 +46,7 @@ export default function Header() {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20)
     }
-    window.addEventListener('scroll', handleScroll)
+    window.addEventListener('scroll', handleScroll, { passive: true })
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
@@ -77,30 +77,38 @@ export default function Header() {
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center space-x-1" role="navigation">
-            {NAV_LINKS.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={`relative px-4 py-2 rounded-lg font-medium transition-all duration-300 ${
-                  pathname === link.href
-                    ? 'text-primary-300 bg-primary-600/20 border border-primary-600/30'
-                    : 'text-gray-300 hover:text-white hover:bg-dark-800/50'
-                }`}
-              >
-                {link.label}
-                {pathname === link.href && (
-                  <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-primary-400 rounded-full"></div>
-                )}
-              </Link>
-            ))}
-            
-            <div className="mx-2 w-px h-6 bg-dark-600"></div>
+          <nav className="hidden lg:flex items-center space-x-1" aria-label="Primary">
+            <ul className="flex items-center space-x-1 list-none m-0 p-0" role="list">
+              {NAV_LINKS.map((link) => {
+                const isCurrent = pathname === link.href
+                return (
+                  <li key={link.href}>
+                    <Link
+                      href={link.href}
+                      className={`relative px-4 py-2 rounded-lg font-medium transition-all duration-300 inline-flex ${
+                        isCurrent
+                          ? 'text-primary-300 bg-primary-600/20 border border-primary-600/30'
+                          : 'text-gray-300 hover:text-white hover:bg-dark-800/50'
+                      }`}
+                      aria-current={isCurrent ? 'page' : undefined}
+                    >
+                      {link.label}
+                      {isCurrent && (
+                        <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-primary-400 rounded-full"></div>
+                      )}
+                    </Link>
+                  </li>
+                )
+              })}
+            </ul>
+
+            <div className="mx-2 w-px h-6 bg-dark-600" aria-hidden="true" />
 
             <Link
               href="/contact"
               className="btn-outline text-sm px-5 py-2 whitespace-nowrap min-h-touch inline-flex items-center justify-center"
               aria-label="Contact us"
+              aria-current={pathname === '/contact' ? 'page' : undefined}
             >
               {CONTACT_US_LABEL}
             </Link>
@@ -145,20 +153,30 @@ export default function Header() {
           }`}
         >
           <div className="py-4 border-t border-dark-700/50 bg-black/80 backdrop-blur-md max-h-[min(80vh,26rem)] overflow-y-auto overscroll-contain">
-            <nav className="grid grid-cols-2 gap-3 sm:gap-4" role="navigation">
-              {[...NAV_LINKS, { href: '/contact', label: 'Contact' }].map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className={`flex min-h-touch items-center justify-center px-3 py-3 rounded-xl text-center transition-all duration-300 ${
-                    pathname === link.href
-                      ? 'bg-primary-600/20 border border-primary-600/30 text-primary-300'
-                      : 'text-gray-300 hover:text-white hover:bg-dark-800/50 border border-transparent'
-                  }`}
-                >
-                  <span className="text-sm font-medium leading-tight">{link.label}</span>
-                </Link>
-              ))}
+            <nav aria-label="Mobile">
+              <ul
+                className="grid grid-cols-2 gap-3 sm:gap-4 list-none m-0 p-0"
+                role="list"
+              >
+                {[...NAV_LINKS, { href: '/contact', label: 'Contact' }].map((link) => {
+                  const isCurrent = pathname === link.href
+                  return (
+                    <li key={link.href}>
+                      <Link
+                        href={link.href}
+                        className={`flex min-h-touch items-center justify-center px-3 py-3 rounded-xl text-center transition-all duration-300 ${
+                          isCurrent
+                            ? 'bg-primary-600/20 border border-primary-600/30 text-primary-300'
+                            : 'text-gray-300 hover:text-white hover:bg-dark-800/50 border border-transparent'
+                        }`}
+                        aria-current={isCurrent ? 'page' : undefined}
+                      >
+                        <span className="text-sm font-medium leading-tight">{link.label}</span>
+                      </Link>
+                    </li>
+                  )
+                })}
+              </ul>
             </nav>
             
             <div className="mt-4 pt-4 border-t border-dark-700/50">

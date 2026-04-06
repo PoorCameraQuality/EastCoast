@@ -76,8 +76,8 @@ export default function HubCategoryGrid({ counts }: { counts: HubCategoryCounts 
       </div>
 
       <div className="container-custom relative z-10">
-        <header className="mb-8 max-w-4xl md:mx-0 md:text-left mx-auto text-center md:mb-10">
-          <p className="mb-2 text-sm font-medium uppercase tracking-wider text-primary-400/90">
+        <header className="mb-ecke-8 max-w-4xl md:mx-0 md:text-left mx-auto text-center md:mb-ecke-10">
+          <p className="mb-ecke-2 text-sm font-medium uppercase tracking-wider text-primary-400/90">
             All 50 states · East Coast roots, nationwide reach
           </p>
           <h1 id="hub-title" className="font-serif text-3xl font-bold leading-tight text-white sm:text-4xl md:text-5xl">
@@ -90,7 +90,7 @@ export default function HubCategoryGrid({ counts }: { counts: HubCategoryCounts 
               across the United States
             </span>
           </h1>
-          <p className="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-gray-300 md:mx-0 md:max-w-3xl md:text-lg">
+          <p className="mx-auto mt-ecke-4 max-w-2xl text-base leading-relaxed text-gray-300 md:mx-0 md:max-w-3xl md:text-lg">
             One directory for planning—coverage in all 50 states plus more regions we list: conventions and parties by{' '}
             <Link href="/states" className="text-primary-400 underline underline-offset-2 hover:text-primary-300">
               state
@@ -102,7 +102,7 @@ export default function HubCategoryGrid({ counts }: { counts: HubCategoryCounts 
             , education articles, vendors, and play-space listings. Pick a doorway below—every card opens a full hub.
           </p>
 
-          <div className="mt-6 flex flex-wrap justify-center gap-3 md:justify-start">
+          <div className="mt-ecke-6 flex flex-wrap justify-center gap-ecke-3 md:justify-start">
             <Link
               href="/calendar"
               className="inline-flex min-h-touch items-center rounded-full border border-white/15 bg-white/5 px-4 py-2 text-sm font-medium text-gray-200 transition hover:border-white/25 hover:bg-white/10"
@@ -124,7 +124,7 @@ export default function HubCategoryGrid({ counts }: { counts: HubCategoryCounts 
           </div>
         </header>
 
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+        <div className="grid grid-cols-1 gap-ecke-6 sm:grid-cols-2">
           {HUB_CARDS.map((card) => (
             <Link
               key={card.href}

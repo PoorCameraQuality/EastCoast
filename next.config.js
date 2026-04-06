@@ -10,6 +10,12 @@ const nextConfig = {
       { protocol: 'https', hostname: 'www.kicevents.com' },
       { protocol: 'https', hostname: 'studio58events.com' },
       { protocol: 'https', hostname: 'www.kinkdownsouth.com' },
+      /** Supabase Storage (`NEXT_PUBLIC_SUPABASE_URL` host) — logos from DB */
+      { protocol: 'https', hostname: '*.supabase.co', pathname: '/storage/v1/object/public/**' },
+      /** Swing-club asset pipeline (see `asset-overrides.generated.js`) */
+      { protocol: 'https', hostname: 'modernlifestyle-prod.nyc3.cdn.digitaloceanspaces.com' },
+      { protocol: 'https', hostname: 'cdn.prod.website-files.com' },
+      { protocol: 'https', hostname: 'lirp.cdn-website.com' },
     ],
   },
 

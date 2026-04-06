@@ -142,7 +142,7 @@ export default function ArticleSubmissionForm() {
                 name="authorName"
                 value={formData.authorName}
                 onChange={handleInputChange}
-                className="w-full px-4 py-3 bg-dark-700 text-white border border-dark-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors min-h-touch"
+                className="w-full px-4 py-3 bg-dark-700 text-white border border-dark-600 rounded-lg focus-visible:ring-2 focus-visible:ring-ecke-focus focus:border-transparent transition-colors min-h-touch"
                 placeholder="Enter your full name"
                 required
               />
@@ -158,7 +158,7 @@ export default function ArticleSubmissionForm() {
                 name="authorEmail"
                 value={formData.authorEmail}
                 onChange={handleInputChange}
-                className="w-full px-4 py-3 bg-dark-700 text-white border border-dark-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors min-h-touch"
+                className="w-full px-4 py-3 bg-dark-700 text-white border border-dark-600 rounded-lg focus-visible:ring-2 focus-visible:ring-ecke-focus focus:border-transparent transition-colors min-h-touch"
                 placeholder="your.email@example.com"
                 required
               />
@@ -175,7 +175,7 @@ export default function ArticleSubmissionForm() {
               name="authorCredentials"
               value={formData.authorCredentials}
               onChange={handleInputChange}
-              className="w-full px-4 py-3 bg-dark-700 text-white border border-dark-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors min-h-touch"
+              className="w-full px-4 py-3 bg-dark-700 text-white border border-dark-600 rounded-lg focus-visible:ring-2 focus-visible:ring-ecke-focus focus:border-transparent transition-colors min-h-touch"
               placeholder="e.g., BDSM Educator, Therapist, Community Leader, etc."
             />
           </div>
@@ -190,7 +190,7 @@ export default function ArticleSubmissionForm() {
               value={formData.authorBio}
               onChange={handleInputChange}
               rows={3}
-              className="w-full px-4 py-3 bg-dark-700 text-white border border-dark-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors"
+              className="w-full px-4 py-3 bg-dark-700 text-white border border-dark-600 rounded-lg focus-visible:ring-2 focus-visible:ring-ecke-focus focus:border-transparent transition-colors"
               placeholder="Brief description of your experience and expertise in the kink community..."
               required
             />
@@ -213,7 +213,7 @@ export default function ArticleSubmissionForm() {
               name="articleTitle"
               value={formData.articleTitle}
               onChange={handleInputChange}
-              className="w-full px-4 py-3 bg-dark-700 text-white border border-dark-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors min-h-touch"
+              className="w-full px-4 py-3 bg-dark-700 text-white border border-dark-600 rounded-lg focus-visible:ring-2 focus-visible:ring-ecke-focus focus:border-transparent transition-colors min-h-touch"
               placeholder="Enter a compelling title for your article..."
               required
             />
@@ -229,7 +229,7 @@ export default function ArticleSubmissionForm() {
               value={formData.articleExcerpt}
               onChange={handleInputChange}
               rows={3}
-              className="w-full px-4 py-3 bg-dark-700 text-white border border-dark-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors"
+              className="w-full px-4 py-3 bg-dark-700 text-white border border-dark-600 rounded-lg focus-visible:ring-2 focus-visible:ring-ecke-focus focus:border-transparent transition-colors"
               placeholder="Brief summary of your article (will appear in article previews)..."
               required
             />
@@ -245,7 +245,7 @@ export default function ArticleSubmissionForm() {
                 name="articleCategory"
                 value={formData.articleCategory}
                 onChange={handleInputChange}
-                className="w-full px-4 py-3 bg-dark-700 text-white border border-dark-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors min-h-touch"
+                className="w-full px-4 py-3 bg-dark-700 text-white border border-dark-600 rounded-lg focus-visible:ring-2 focus-visible:ring-ecke-focus focus:border-transparent transition-colors min-h-touch"
                 required
               >
                 <option value="">Select a category</option>
@@ -267,7 +267,7 @@ export default function ArticleSubmissionForm() {
                 name="articleTags"
                 value={formData.articleTags}
                 onChange={handleInputChange}
-                className="w-full px-4 py-3 bg-dark-700 text-white border border-dark-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors min-h-touch"
+                className="w-full px-4 py-3 bg-dark-700 text-white border border-dark-600 rounded-lg focus-visible:ring-2 focus-visible:ring-ecke-focus focus:border-transparent transition-colors min-h-touch"
                 placeholder="Enter tags separated by commas (e.g., consent, negotiation, safety)"
               />
             </div>
@@ -309,7 +309,7 @@ export default function ArticleSubmissionForm() {
             name="contactMethod"
             value={formData.contactMethod}
             onChange={handleInputChange}
-            className="w-full px-4 py-3 bg-dark-700 text-white border border-dark-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors min-h-touch"
+            className="w-full px-4 py-3 bg-dark-700 text-white border border-dark-600 rounded-lg focus-visible:ring-2 focus-visible:ring-ecke-focus focus:border-transparent transition-colors min-h-touch"
           >
             <option value="">Select contact method</option>
             <option value="email">Email</option>
@@ -328,7 +328,7 @@ export default function ArticleSubmissionForm() {
               name="agreeToTerms"
               checked={formData.agreeToTerms}
               onChange={handleInputChange}
-              className="mt-1 h-5 w-5 min-h-touch min-w-touch text-primary-600 focus:ring-primary-500 border-gray-600 rounded bg-dark-700"
+              className="mt-1 h-5 w-5 min-h-touch min-w-touch text-primary-600 focus-visible:ring-ecke-focus border-gray-600 rounded bg-dark-700"
               required
             />
             <label htmlFor="article-submission-agree-terms" className="text-sm text-subtle">

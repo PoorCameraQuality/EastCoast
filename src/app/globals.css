@@ -76,6 +76,14 @@
   .animate-slide-in-right {
     animation: none !important;
   }
+
+  /* Near-instant transitions for UI chrome (masterclass: respect reduced motion) */
+  .transition-all,
+  .transition-colors,
+  .transition-opacity,
+  .transition-transform {
+    transition-duration: 0.01ms !important;
+  }
 }
 
 @layer components {
@@ -103,8 +111,20 @@
     @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
   }
   
+  /* Vertical section rhythm — uses tokens (--ecke-section-py*) */
   .section-padding {
-    @apply py-7 md:py-11 lg:py-14;
+    @apply py-ecke-section md:py-ecke-section-md lg:py-ecke-section-lg;
+  }
+
+  /** Stack related content with token gaps (prefer over ad hoc gap-y / space-y) */
+  .stack-ecke-sm {
+    @apply flex flex-col gap-ecke-4;
+  }
+  .stack-ecke-md {
+    @apply flex flex-col gap-ecke-6;
+  }
+  .stack-ecke-lg {
+    @apply flex flex-col gap-ecke-8;
   }
   
   .text-elegant {

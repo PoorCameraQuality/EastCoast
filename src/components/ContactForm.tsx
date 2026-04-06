@@ -146,7 +146,7 @@ export default function ContactForm({ 'aria-label': ariaLabel }: ContactFormProp
               </div>
               <div className="ml-4 flex-shrink-0 flex">
                 <button
-                  className="bg-white/10 rounded-md inline-flex text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
+                  className="bg-white/10 rounded-md inline-flex text-gray-400 hover:text-gray-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-ecke-focus"
                   onClick={() => setShowPopup(false)}
                 >
                   <span className="sr-only">Close</span>
@@ -172,7 +172,7 @@ export default function ContactForm({ 'aria-label': ariaLabel }: ContactFormProp
               id="name"
               name="name"
               required
-              className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent backdrop-blur-xl transition-all duration-300"
+              className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-ecke-focus focus:border-transparent backdrop-blur-xl transition-all duration-300"
               placeholder="Your name"
               value={formData.name}
               onChange={handleInputChange}
@@ -189,7 +189,7 @@ export default function ContactForm({ 'aria-label': ariaLabel }: ContactFormProp
               name="email"
               required
               pattern="^[\\w-.]+@([\\w-]+\\.)+[\\w-]{2,}$"
-              className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent backdrop-blur-xl transition-all duration-300"
+              className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-ecke-focus focus:border-transparent backdrop-blur-xl transition-all duration-300"
               placeholder="your.email@example.com"
               value={formData.email}
               onChange={handleInputChange}
@@ -206,7 +206,7 @@ export default function ContactForm({ 'aria-label': ariaLabel }: ContactFormProp
             id="subject"
             name="subject"
             required
-            className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent backdrop-blur-xl transition-all duration-300"
+            className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-ecke-focus focus:border-transparent backdrop-blur-xl transition-all duration-300"
             value={formData.subject}
             onChange={(e) => handleContactTypeChange(e.target.value)}
           >
@@ -230,7 +230,7 @@ export default function ContactForm({ 'aria-label': ariaLabel }: ContactFormProp
             name="message"
             required
             rows={6}
-            className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent backdrop-blur-xl transition-all duration-300 resize-vertical"
+            className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-ecke-focus focus:border-transparent backdrop-blur-xl transition-all duration-300 resize-vertical"
             placeholder="Tell us more about your inquiry..."
             value={formData.message}
             onChange={handleInputChange}

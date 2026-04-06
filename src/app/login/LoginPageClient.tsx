@@ -143,7 +143,7 @@ export default function LoginPageClient() {
                 required
                 autoComplete="email"
                 aria-label="Email address"
-                className="w-full min-h-touch px-3 py-2 bg-dark-700 border border-gray-600 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                className="w-full min-h-touch px-3 py-2 bg-dark-700 border border-gray-600 rounded-md text-white placeholder-gray-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-ecke-focus focus:border-transparent"
                 placeholder="admin@example.com"
               />
             </div>
@@ -160,7 +160,7 @@ export default function LoginPageClient() {
                 required
                 autoComplete="current-password"
                 aria-label="Password"
-                className="w-full min-h-touch px-3 py-2 bg-dark-700 border border-gray-600 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                className="w-full min-h-touch px-3 py-2 bg-dark-700 border border-gray-600 rounded-md text-white placeholder-gray-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-ecke-focus focus:border-transparent"
                 placeholder="••••••••"
               />
             </div>
