@@ -624,7 +624,19 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
               </section>
             ))
           )}
-          {!filteredSlots.length ? <p className="text-sm text-slate-500">No sessions match filters.</p> : null}
+          {!schedule.slots.length ? (
+            <div className="rounded-xl border border-amber-500/25 bg-amber-950/25 p-4 text-sm text-amber-50/95">
+              <p className="font-medium text-amber-100">No program is loaded for this event yet.</p>
+              <p className="mt-2 text-slate-300">
+                Publishing the website only ships the app. Sessions live in your Supabase project (
+                <code className="rounded bg-black/40 px-1">dancecard_program_slots</code>). Run the import once
+                against <strong>production</strong> using the service-role key and the checked-in JSON (see{' '}
+                <code className="rounded bg-black/40 px-1">docs/dancecard-first-run.md</code>).
+              </p>
+            </div>
+          ) : !filteredSlots.length ? (
+            <p className="text-sm text-slate-500">No sessions match filters.</p>
+          ) : null}
           <p className="text-xs text-slate-500">{saving ? 'Saving…' : ''}</p>
         </div>
       ) : null}

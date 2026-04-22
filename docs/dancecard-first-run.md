@@ -68,6 +68,20 @@ npm run dancecard:import -- --slug paf26 --json ./data/paf26-program-slots.json
 
 The seed SQL already sets the `paf26` event window to cover the festival; re-run the parser + import whenever the Grid changes.
 
+### After you deploy to Vercel (or any host)
+
+Deploying the Next.js app does **not** copy rows into Postgres. If `/dancecard/paf26` shows an empty program on the live site, your **production** Supabase project still needs the same import step, using that project’s URL and **secret / service_role** key (never the publishable key in the browser bundle for this script).
+
+From a trusted machine with the repo checked out:
+
+```bash
+export NEXT_PUBLIC_SUPABASE_URL="https://YOUR_PROJECT_REF.supabase.co"
+export SUPABASE_SERVICE_ROLE_KEY="your-production-secret-or-service-role-key"
+npm run dancecard:import -- --slug paf26 --json ./data/paf26-program-slots.json
+```
+
+On Windows PowerShell, use `$env:NEXT_PUBLIC_SUPABASE_URL="..."` and `$env:SUPABASE_SERVICE_ROLE_KEY="..."` instead of `export`. Then reload the live `/dancecard/paf26` Program tab.
+
 ## Import other schedules (flat Excel or JSON)
 
 ```bash
