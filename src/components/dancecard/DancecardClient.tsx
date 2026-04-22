@@ -31,7 +31,15 @@ type ProgramSlot = {
 type MeResponse = {
   account: { id: string; username: string; displayName: string }
   prefs: { bufferMinutes: number }
-  selections: { id: string; kind: string; slotId: string | null; startsAt: string; endsAt: string }[]
+  selections: {
+    id: string
+    kind: string
+    slotId: string | null
+    startsAt: string
+    endsAt: string
+    programTitle?: string | null
+    programRoom?: string | null
+  }[]
 }
 
 type ShareResponse = {
@@ -471,6 +479,13 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
 
       {tab === 'program' ? (
         <div className="space-y-4">
+          {schedule.slots.length ? (
+            <p className="text-sm text-slate-400">
+              Browse the official schedule below. <strong className="text-slate-200">Click any class</strong> to add
+              it to <strong className="text-slate-200">My dancecard</strong> (pick as many as you like); click again
+              to remove. Switch to the My dancecard tab to see your list and add manual busy blocks.
+            </p>
+          ) : null}
           <div className="flex flex-wrap items-center gap-2">
             <span className="text-xs uppercase text-slate-500">View</span>
             {(['simple', 'expanded', 'venue', 'grid'] as const).map((v) => (
@@ -669,12 +684,23 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
           <ul className="space-y-2">
             {me.selections.length ? (
               me.selections.map((s) => (
-                <li key={s.id} className="flex items-center justify-between rounded-lg border border-white/5 bg-slate-950/60 px-3 py-2 text-sm">
-                  <span>
-                    <span className="text-slate-500">{s.kind}</span>{' '}
-                    <span className="text-white">{formatRange(s.startsAt, s.endsAt, tz)}</span>
+                <li key={s.id} className="flex items-center justify-between gap-3 rounded-lg border border-white/5 bg-slate-950/60 px-3 py-2 text-sm">
+                  <span className="min-w-0 flex-1">
+                    <span className="block font-medium text-white">
+                      {s.kind === 'program'
+                        ? s.programTitle || 'Program session'
+                        : s.kind === 'manual'
+                          ? 'Manual busy block'
+                          : s.kind}
+                    </span>
+                    <span className="mt-0.5 block text-xs text-slate-500">
+                      {s.kind === 'program' && s.programRoom ? (
+                        <span className="text-slate-400">{s.programRoom} · </span>
+                      ) : null}
+                      {formatRange(s.startsAt, s.endsAt, tz)}
+                    </span>
                   </span>
-                  <button type="button" className="text-rose-300 hover:underline" onClick={() => removeSelection(s.id)}>
+                  <button type="button" className="shrink-0 text-rose-300 hover:underline" onClick={() => removeSelection(s.id)}>
                     Remove
                   </button>
                 </li>
@@ -787,10 +813,13 @@ function SessionCard(props: {
   onToggle: () => void
 }) {
   const { slot, tz, expanded, selected, onToggle } = props
+  const addLabel = selected ? 'On your dancecard — click to remove' : 'Click to add to My dancecard'
   return (
     <button
       type="button"
       onClick={onToggle}
+      aria-pressed={selected}
+      aria-label={`${slot.title}. ${addLabel}`}
       className={`flex max-w-md min-w-[200px] flex-1 flex-col gap-1 rounded-lg border p-3 text-left transition focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 ${
         selected ? 'border-amber-400/60 bg-amber-500/10' : 'border-white/10 bg-slate-950/70 hover:border-amber-400/40 hover:shadow-md'
       }`}
@@ -820,6 +849,7 @@ function SessionCard(props: {
       <div className="text-[11px] text-slate-500">
         {formatTime(slot.startsAt, tz)} → {formatTime(slot.endsAt, tz)}
       </div>
+      <div className="text-[10px] font-medium uppercase tracking-wide text-amber-200/70">{addLabel}</div>
     </button>
   )
 }

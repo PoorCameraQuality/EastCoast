@@ -26,7 +26,7 @@ npm install
 npm run dev
 ```
 
-Open `http://localhost:3000/dancecard/paf26`. After SQL setup you still need to **import the program** (next section) before the schedule tab shows sessions.
+Open `http://localhost:3000/dancecard/paf26`. After SQL setup you still need to **import the program** (next section) before the Program tab lists sessions from the Grid workbook. **Personal dancecard:** registered users click classes on the Program tab to add or remove them; open **My dancecard** to see the list (titles, times, rooms) and optional manual busy blocks.
 
 ## Automated smoke
 

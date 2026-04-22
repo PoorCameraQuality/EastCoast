@@ -35,6 +35,8 @@ export async function GET(
         slotId: s.slot_id,
         startsAt: s.starts_at,
         endsAt: s.ends_at,
+        programTitle: s.program_title,
+        programRoom: s.program_room,
       })),
     })
   } catch (e) {
