@@ -52,16 +52,16 @@ function main() {
       endsAt = `${d}T09:30:00${TZ}`
     }
 
-    if (title.includes("Dancer and Ritualist Prep") && startsAt.includes('T07:00:00')) {
-      const d = startsAt.slice(0, 10)
-      startsAt = `${d}T19:00:00${TZ}`
-      endsAt = `${d}T20:30:00${TZ}`
-    }
-
-    if (/Uggla's Session Number/.test(title) && startsAt.includes('T07:00:00')) {
-      const d = startsAt.slice(0, 10)
-      startsAt = `${d}T19:00:00${TZ}`
-      endsAt = `${d}T20:30:00${TZ}`
+    // Excel often dropped "pm" on the first clock: "7 - 8:30 pm" → 7:00am–8:30pm same day (13+ hours).
+    const dayS = startsAt.slice(0, 10)
+    const dayE = endsAt.slice(0, 10)
+    if (dayS === dayE && startsAt.includes('T07:00:00')) {
+      const dur = (new Date(endsAt).getTime() - new Date(startsAt).getTime()) / 36e5
+      if (dur >= 11) {
+        startsAt = `${dayS}T19:00:00${TZ}`
+        if (endsAt.includes('T20:30:00')) endsAt = `${dayS}T20:30:00${TZ}`
+        else if (endsAt.includes('T21:30:00')) endsAt = `${dayS}T20:30:00${TZ}`
+      }
     }
 
     if (startsAt.includes('T04:15:00') && endsAt.includes('T17:45:00')) {
