@@ -29,7 +29,26 @@ export async function dancecardFetch<T>(
   })
   const text = await res.text()
   if (!res.ok) {
+    const t = text.trimStart()
+    if (t.startsWith('<!') || t.startsWith('<html')) {
+      throw new DancecardApiError(
+        res.status,
+        `Expected JSON from ${apiBase(slug)}${path} but got an HTML page (HTTP ${res.status}). ` +
+          `If this is the public site, the latest deploy may be missing dancecard API routes — ` +
+          `redeploy from GitHub master and confirm Vercel build output lists /api/dancecard/[eventSlug]/schedule.`,
+      )
+    }
     throw new DancecardApiError(res.status, text)
   }
-  return text ? (JSON.parse(text) as T) : (undefined as T)
+  if (text) {
+    const t = text.trimStart()
+    if (t.startsWith('<!') || t.startsWith('<html')) {
+      throw new DancecardApiError(
+        res.status,
+        `Expected JSON from ${apiBase(slug)}${path} but received HTML. Check deployment and URL.`,
+      )
+    }
+    return JSON.parse(text) as T
+  }
+  return undefined as T
 }
