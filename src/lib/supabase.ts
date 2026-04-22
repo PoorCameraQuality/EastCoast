@@ -80,7 +80,17 @@ export const getSupabaseAdminClient = (): SupabaseClient | null => {
       return null
     }
 
-    supabaseAdminClient = createClient(supabaseUrl, supabaseServiceKey)
+    // Force every admin-side Supabase fetch to bypass Next.js's persistent Data
+    // Cache. Without this, supabase-js's internal fetch() calls get memoized at
+    // the fetch-cache layer and stale rows can be served across deploys even
+    // after the underlying table has changed.
+    const noStoreFetch: typeof fetch = (input, init) =>
+      fetch(input as RequestInfo, { ...(init ?? {}), cache: 'no-store' })
+
+    supabaseAdminClient = createClient(supabaseUrl, supabaseServiceKey, {
+      auth: { persistSession: false, autoRefreshToken: false },
+      global: { fetch: noStoreFetch },
+    })
   }
 
   return supabaseAdminClient
