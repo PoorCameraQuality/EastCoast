@@ -23,7 +23,8 @@ const testUrls = [
   '/kinkeventcalendar/neehu/',
   '/kinkeventcalendar/fetcamp/',
   
-  // Old education URLs
+  // Legacy kinkeducationcenter → /blog (see legacyKinkEducationToBlog.ts)
+  '/kinkeducationcenter/consent101',
   '/kinkeducationcenter/ssc-vs-rack-kink-safety-frameworks',
   
   // Old dungeon URLs

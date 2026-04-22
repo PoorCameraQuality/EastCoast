@@ -2,6 +2,7 @@ import { createServerClient, type CookieOptions } from '@supabase/ssr'
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 import type { PostgrestError } from '@supabase/supabase-js'
+import { getLegacyKinkEducationBlogRedirect } from '@/lib/legacyKinkEducationToBlog'
 
 interface Profile {
   id: string;
@@ -35,6 +36,36 @@ export async function middleware(req: NextRequest) {
     return NextResponse.redirect(dest, 308)
   }
 
+  // Legacy CMS: map known articles to /blog pillars; else /education/:slug (Supabase)
+  if (pathLower === '/kinkeducationcenter' || pathLower.startsWith('/kinkeducationcenter/')) {
+    const dest = req.nextUrl.clone()
+    dest.searchParams.delete('format')
+    if (pathLower === '/kinkeducationcenter' || pathLower === '/kinkeducationcenter/') {
+      dest.pathname = '/education'
+      return NextResponse.redirect(dest, 308)
+    }
+    const raw = pathLower
+      .replace(/^\/kinkeducationcenter\/?/, '')
+      .replace(/\/$/, '')
+    if (!raw) {
+      dest.pathname = '/education'
+      return NextResponse.redirect(dest, 308)
+    }
+    const segments = raw.split('/').filter(Boolean)
+    if (segments.length > 1) {
+      dest.pathname = `/education/${segments.join('/')}`
+      return NextResponse.redirect(dest, 308)
+    }
+    const slug = segments[0]
+    const blogSlug = getLegacyKinkEducationBlogRedirect(slug)
+    if (blogSlug) {
+      dest.pathname = `/blog/${blogSlug}`
+      return NextResponse.redirect(dest, 308)
+    }
+    dest.pathname = `/education/${slug}`
+    return NextResponse.redirect(dest, 308)
+  }
+
   // Normalize URL: force www and lowercase paths
   const host = req.headers.get('host') || ''
   const lowerPath = pathname.toLowerCase()
@@ -52,7 +83,7 @@ export async function middleware(req: NextRequest) {
   }
 
   // Strip unwanted query parameters (keep functional filters + attribution for GA/ads)
-  const allowedParams = new Set(['page', 'q', 'tag'])
+  const allowedParams = new Set(['page', 'q', 'tag', 'view', 'track', 'day', 'room'])
   const marketingParams = new Set([
     'gclid',
     'gbraid',

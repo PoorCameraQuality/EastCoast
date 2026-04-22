@@ -1286,6 +1286,219 @@ export const dungeons = [
     }
   },
   {
+    "name": "DFW Dungeon",
+    "slug": "dfw-dungeon-dallas-tx",
+    "location": {
+      "city": "Dallas",
+      "state": "TX",
+      "address": "Dallas–Fort Worth, TX (street address shared with members and renters—confirm on dfwdungeon.com)"
+    },
+    "category": "BDSM Dungeon",
+    "excerpt": "DFW-area adult dungeon and event venue with a public calendar of orientations, rope labs, Pride nights, recurring education tracks, and private rentals. Not the same operator as Infliction Hall—both serve the Metroplex with different ticketing and membership models.",
+    "description": {
+      "long": "DFW Dungeon — Dallas–Fort Worth, Texas\n\n**DFW Dungeon** describes itself as a **traditional dungeon and event venue** for the **DFW** metro, with a public site covering **rules**, **calendar**, **rentals**, and recurring programming such as **orientations**, **rope labs**, **Pride nights**, and **BDSM basics** series.\n\n**Join in:** Use **dfwdungeon.com** for **RSVP/ticketing** links, **dress and conduct** expectations, and **rental** inquiries.\n\n**Editorial note:** East Coast Kink Events also lists **Infliction Hall** as a separate DFW-area member club; compare calendars before planning a trip—names, addresses, and door policies differ."
+    },
+    "contact": {},
+    "website": "https://dfwdungeon.com/",
+    "images": [],
+    "seo": {
+      "title": "DFW Dungeon - Dallas Fort Worth BDSM Venue | East Coast Kink Events",
+      "description": "DFW Dungeon — Dallas–Fort Worth dungeon and event venue: orientations, rope labs, education, rentals. dfwdungeon.com.",
+      "keywords": "DFW Dungeon, Dallas BDSM dungeon, Fort Worth kink venue, Texas dungeon, dfwdungeon.com"
+    }
+  },
+  {
+    "name": "Stopgap",
+    "slug": "stopgap-san-francisco-ca",
+    "location": {
+      "city": "San Francisco",
+      "state": "CA",
+      "address": "San Francisco, CA (SoMa-adjacent turnkey kink venue—confirm current address and entry instructions on stopgap.afterdark-events.com or ticket pages)"
+    },
+    "category": "BDSM Dungeon",
+    "excerpt": "AfterDark-affiliated turnkey San Francisco kink venue—equipped dungeon floor, social areas, and hosted ticketed nights (often listed on Forbidden Tickets and Plura). Marketed as an interim flagship while longer-term club plans continue.",
+    "description": {
+      "long": "Stopgap — San Francisco, California\n\n**Stopgap** is promoted as a **turnkey venue** for the **San Francisco** kink and sex-positive communities, frequently hosting **AfterDark**-branded nights and **third-party** producers. Public materials describe a **multi-level** layout with a **dungeon** level and **social** areas, hygiene supplies, and rental-oriented operations.\n\n**Join in:** Follow **stopgap.afterdark-events.com**, **AfterDark** mailing lists, and individual **ticket** pages for **door**, **vaccination/masking**, and **N95** requirements that change by event.\n\nConfirm the **published address** and **entry** flow on the **current** event listing before you travel."
+    },
+    "contact": {},
+    "website": "https://stopgap.afterdark-events.com/",
+    "images": [],
+    "socialMedia": {
+      "instagram": "https://www.instagram.com/stopgap415/"
+    },
+    "seo": {
+      "title": "Stopgap - San Francisco Turnkey Kink Venue | East Coast Kink Events",
+      "description": "Stopgap — San Francisco turnkey kink venue (AfterDark ecosystem): dungeon nights, rentals, hosted events. stopgap.afterdark-events.com.",
+      "keywords": "Stopgap San Francisco, AfterDark SF, SoMa kink venue, BDSM dungeon San Francisco"
+    }
+  },
+  {
+    "name": "Paradox",
+    "slug": "paradox-san-francisco-ca",
+    "location": {
+      "city": "San Francisco",
+      "state": "CA",
+      "address": "1310 Mission Street, San Francisco, CA 94103"
+    },
+    "category": "BDSM Dungeon",
+    "excerpt": "1310 Mission Street playspace and venue—classes, parties, and producer rentals in a queer-, women-, POC-, and disabled-owned small business framing. Check paradox-sf.com for membership, hours, and door policies.",
+    "description": {
+      "long": "Paradox — San Francisco, California\n\n**Paradox** operates a **Mission Street** playspace at **1310 Mission St., San Francisco, CA** with public marketing as a **queer-, women-, POC-, and disabled-owned** venue offering **classes**, **parties**, and **rentals**.\n\n**Join in:** Use **paradox-sf.com** for **membership**, **ticketing**, and **accessibility** notes; many regional producers list events here and on third-party ticket pages.\n\nECKE lists Paradox as a **brick-and-mortar venue** rather than a single producer brand."
+    },
+    "contact": {},
+    "website": "https://www.paradox-sf.com/",
+    "images": [],
+    "seo": {
+      "title": "Paradox - San Francisco Mission Street Playspace | East Coast Kink Events",
+      "description": "Paradox — 1310 Mission St, San Francisco BDSM playspace and venue. paradox-sf.com.",
+      "keywords": "Paradox SF, 1310 Mission Street, San Francisco BDSM dungeon, Mission District kink venue"
+    }
+  },
+  {
+    "name": "Transform1060",
+    "slug": "transform1060-san-francisco-ca",
+    "location": {
+      "city": "San Francisco",
+      "state": "CA",
+      "address": "1060 Folsom Street, San Francisco, CA 94103"
+    },
+    "category": "501(c)(3) Community Space",
+    "excerpt": "501(c)(3) leather, kink, and fetish education and social space on Folsom Street—calendar, rentals, and host expectations published on transform1060.org.",
+    "description": {
+      "long": "Transform1060 — San Francisco, California\n\n**Transform1060** is a **501(c)(3)** educational and social space serving **Bay Area leather, kink, and fetish** communities from **1060 Folsom St., San Francisco**. The site publishes a **monthly calendar**, **rental/rates** information, and **host expectations** for community-run programming.\n\n**Join in:** Use **transform1060.org** for **volunteer**, **donation**, and **event** pathways.\n\nConfirm **noise**, **access**, and **alcohol** policies on the official host agreement pages before booking or attending."
+    },
+    "contact": {},
+    "website": "https://www.transform1060.org/",
+    "images": [],
+    "socialMedia": {
+      "facebook": "https://www.facebook.com/Transform1060/"
+    },
+    "seo": {
+      "title": "Transform1060 - San Francisco Leather & Kink 501(c)(3) | East Coast Kink Events",
+      "description": "Transform1060 — 1060 Folsom St nonprofit leather/kink education and social space. transform1060.org.",
+      "keywords": "Transform1060, San Francisco leather, Folsom Street kink venue, SF BDSM nonprofit"
+    }
+  },
+  {
+    "name": "910WeHo",
+    "slug": "910-weho-west-hollywood-ca",
+    "location": {
+      "city": "West Hollywood",
+      "state": "CA",
+      "address": "910 N La Cienega Blvd, Los Angeles, CA 90069"
+    },
+    "category": "Education & Community Space",
+    "excerpt": "West Hollywood educational and community space for kink-positive classes, socials, and curated parties—910weho.com lists rules, parking, and event registration.",
+    "description": {
+      "long": "910WeHo — West Hollywood / Los Angeles, California\n\n**910WeHo** markets a **fixed venue** at **910 N La Cienega Blvd** for **education-first** and **community** programming spanning classes, socials, and ticketed parties. Public pages emphasize **rules**, **parking**, and **registration** flows.\n\n**Join in:** Use **910weho.com** for **event** calendars, **rentals**, and **contact** paths.\n\nNeighborhood context: the address reads as **Los Angeles 90069** in many maps while branding references **WeHo**—plan transit and parking using the official site’s **Entrance** and **Scene** pages."
+    },
+    "contact": {},
+    "website": "https://www.910weho.com/",
+    "images": [],
+    "socialMedia": {
+      "twitter": "https://x.com/910weho"
+    },
+    "seo": {
+      "title": "910WeHo - West Hollywood Kink Education & Events | East Coast Kink Events",
+      "description": "910WeHo — 910 N La Cienega Blvd community and education space for kink-positive events. 910weho.com.",
+      "keywords": "910WeHo, West Hollywood kink, LA BDSM education, 910 N La Cienega kink venue"
+    }
+  },
+  {
+    "name": "Mission Control",
+    "slug": "mission-control-san-francisco-ca",
+    "location": {
+      "city": "San Francisco",
+      "state": "CA",
+      "address": "San Francisco, CA (see missioncontrolsf.org for membership, venue access, and Oakland satellite references)"
+    },
+    "category": "Sex-Positive Community",
+    "excerpt": "Long-running Bay Area sex-positive collective with member-facing sites for Mission Control programming—often overlapping with Oakland/Berkeley producers who book adjacent venues.",
+    "description": {
+      "long": "Mission Control — San Francisco Bay Area\n\n**Mission Control** describes a **sex-positive**, **consent-forward** member community with public hubs at **missioncontrolsf.org** (and related member portals). Event formats and **addresses** vary by night—many listings pair **Mission Control** culture with **rented** venues such as **Mission**-corridor clubs.\n\n**Join in:** Start from **missioncontrolsf.org** for **membership**, **codes of conduct**, and **calendar** links.\n\nECKE treats Mission Control as a **community umbrella**; always read the **specific ticket page** for the **physical** address of each event."
+    },
+    "contact": {},
+    "website": "https://missioncontrolsf.org/",
+    "images": [],
+    "seo": {
+      "title": "Mission Control - San Francisco Sex-Positive Community | East Coast Kink Events",
+      "description": "Mission Control — Bay Area sex-positive collective and member programming. missioncontrolsf.org.",
+      "keywords": "Mission Control SF, San Francisco sex positive, Bay Area kink community, missioncontrolsf.org"
+    }
+  },
+  {
+    "name": "B.O.I.N.K.",
+    "slug": "boink-holyoke-ma",
+    "location": {
+      "city": "Holyoke",
+      "state": "MA",
+      "address": "358 Dwight Street, Holyoke, MA 01040"
+    },
+    "category": "BDSM Dungeon & Retail",
+    "excerpt": "Western Massachusetts kink-positive retail and event home—rope parties, classes, and community nights at 358 Dwight St. Public registration and calendars live on boink-ed.com.",
+    "description": {
+      "long": "B.O.I.N.K. — Holyoke, Massachusetts\n\n**B.O.I.N.K.** operates a **Holyoke** storefront and **event space** at **358 Dwight St., Holyoke, MA 01040**, combining **retail** with **rope**, **education**, and **social** programming marketed to **local BDSM & LGBTQ+** communities.\n\n**Join in:** Use **boink-ed.com** for **class** registration, **party** RSVPs, and **store** hours.\n\nEast Coast Kink Events already references **B.O.I.N.K.** as a **goBOUNDLESS** dinner venue—confirm **room** and **ticketing** splits on each organizer’s official page before attending."
+    },
+    "contact": {},
+    "website": "https://www.boink-ed.com/",
+    "images": [],
+    "socialMedia": {
+      "instagram": "https://www.instagram.com/boink_ed/"
+    },
+    "seo": {
+      "title": "B.O.I.N.K. - Holyoke MA Kink Venue & Education | East Coast Kink Events",
+      "description": "B.O.I.N.K. — 358 Dwight St, Holyoke MA kink-positive retail, rope parties, and classes. boink-ed.com.",
+      "keywords": "B.O.I.N.K., Holyoke Massachusetts, Western MA BDSM, boink-ed.com, Holyoke rope party"
+    }
+  },
+  {
+    "name": "Heartland Kinbaku",
+    "slug": "heartland-kinbaku-chicago-il",
+    "location": {
+      "city": "Chicago",
+      "state": "IL",
+      "address": "Chicago, IL (studio address and class RSVP details via heartlandkinbaku.com)"
+    },
+    "category": "Rope Education Studio",
+    "excerpt": "Chicago rope and shibari education collective—beginner through advanced classes, jams, and private lessons with published safety curriculum on heartlandkinbaku.com.",
+    "description": {
+      "long": "Heartland Kinbaku — Chicago, Illinois\n\n**Heartland Kinbaku** is a **Chicago**-based **rope** and **shibari** education studio offering **classes**, **jams**, **private lessons**, and **community** programming with detailed **safety** and **prep** resources on **heartlandkinbaku.com**.\n\n**Join in:** Use the official **events calendar** and **contact** form for **waitlists**, **COVID/masking** updates, and **venue** directions.\n\nECKE lists Heartland Kinbaku as an **education-first studio** rather than a public commercial dungeon chain."
+    },
+    "contact": {},
+    "website": "https://www.heartlandkinbaku.com/",
+    "images": [],
+    "seo": {
+      "title": "Heartland Kinbaku - Chicago Shibari & Rope Education | East Coast Kink Events",
+      "description": "Heartland Kinbaku — Chicago rope bondage and shibari classes, jams, and private lessons. heartlandkinbaku.com.",
+      "keywords": "Heartland Kinbaku, Chicago shibari, Chicago rope studio, Illinois kinbaku education"
+    }
+  },
+  {
+    "name": "Arizona Power Exchange (APEX)",
+    "slug": "arizona-power-exchange-phoenix-az",
+    "location": {
+      "city": "Phoenix",
+      "state": "AZ",
+      "address": "4006 South 23rd Street, Suite 10, Phoenix, AZ 85040"
+    },
+    "category": "BDSM Dungeon",
+    "excerpt": "Phoenix’s long-running APEX home—orientations, dungeon parties, intensives, and vendor-style community events on arizonapowerexchange.org. Confirm membership tiers and door rules on the join page before your first visit.",
+    "description": {
+      "long": "Arizona Power Exchange (APEX) — Phoenix, Arizona\n\n**APEX** operates a **South 23rd Street** facility in **Phoenix** marketed as **The Heart of Phoenix's BDSM Community**, combining **dungeon parties**, **orientations**, **education**, and **social** programming. Public pages on **arizonapowerexchange.org** outline **membership**, **volunteer** expectations, and an **events** calendar that frequently lists **Forbidden Tickets** links for paid nights.\n\n**Join in:** Use the **How to Join** and **Events** sections for **orientation** prerequisites, **dress codes**, and **photography** policies.\n\nECKE lists APEX as a **brick-and-mortar** regional anchor—distinct from traveling **conference** producers who occasionally rent the space."
+    },
+    "contact": {},
+    "website": "https://arizonapowerexchange.org/",
+    "images": [],
+    "socialMedia": {
+      "instagram": "https://www.instagram.com/azpowerexchange/"
+    },
+    "seo": {
+      "title": "Arizona Power Exchange (APEX) - Phoenix BDSM Dungeon | East Coast Kink Events",
+      "description": "APEX — Arizona Power Exchange Phoenix dungeon and community at 4006 S 23rd St. arizonapowerexchange.org.",
+      "keywords": "APEX Phoenix, Arizona Power Exchange, Phoenix BDSM dungeon, AZ kink club, arizonapowerexchange.org"
+    }
+  },
+  {
     "name": "The Vulgarians",
     "slug": "the-vulgarians",
     "location": {
