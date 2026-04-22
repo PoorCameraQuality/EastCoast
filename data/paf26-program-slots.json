@@ -5,7 +5,7 @@
       "endsAt": "2026-05-07T11:00:00-04:00",
       "title": "Registration Opens at 10 am and Closes at 6 pm Welcome to PAF26",
       "track": "PAF26",
-      "room": "Barn",
+      "room": "All locations",
       "sortOrder": 0
     },
     {
@@ -13,7 +13,7 @@
       "endsAt": "2026-05-07T13:00:00-04:00",
       "title": "Lunch in the Dining Hall Meal Plan Attendees or purchase a la carte meals at HQ no later than 11:45 am",
       "track": "PAF26",
-      "room": "Barn",
+      "room": "All locations",
       "sortOrder": 1
     },
     {
@@ -77,7 +77,7 @@
       "endsAt": "2026-05-07T15:00:00-04:00",
       "title": "Uggla's Session Number One",
       "track": "PAF26",
-      "room": "Uggla's Forge Reserve your spot for a one on one session.",
+      "room": "Uggla's Forge",
       "sortOrder": 9
     },
     {
@@ -109,11 +109,11 @@
       "endsAt": "2026-05-07T19:00:00-04:00",
       "title": "Dinner in the Dining Hall Meal Plan Attendees or purchase a la carte meals at HQ no later than 5:45 pm",
       "track": "PAF26",
-      "room": "Barn",
+      "room": "All locations",
       "sortOrder": 13
     },
     {
-      "startsAt": "2026-05-07T07:00:00-04:00",
+      "startsAt": "2026-05-07T19:00:00-04:00",
       "endsAt": "2026-05-07T20:30:00-04:00",
       "title": "Dancer and Ritualist Prep in Dancer's Green Room with BrynnEir",
       "track": "PAF26",
@@ -121,11 +121,11 @@
       "sortOrder": 14
     },
     {
-      "startsAt": "2026-05-07T07:00:00-04:00",
+      "startsAt": "2026-05-07T19:00:00-04:00",
       "endsAt": "2026-05-07T20:30:00-04:00",
       "title": "Uggla's Session Number Two",
       "track": "PAF26",
-      "room": "Uggla's Forge Reserve your spot for a one on one session.",
+      "room": "Uggla's Forge",
       "sortOrder": 15
     },
     {
@@ -138,7 +138,7 @@
     },
     {
       "startsAt": "2026-05-07T22:00:00-04:00",
-      "endsAt": "2026-05-07T24:00:00-04:00",
+      "endsAt": "2026-05-08T00:00:00-04:00",
       "title": "Ritual Fire Night One \"The Stirring in the Dark\"",
       "track": "PAF26",
       "room": "Lower Fire Circle",
@@ -146,10 +146,10 @@
     },
     {
       "startsAt": "2026-05-08T08:30:00-04:00",
-      "endsAt": "2026-05-08T21:30:00-04:00",
+      "endsAt": "2026-05-08T09:30:00-04:00",
       "title": "Breakfast in the Dining Hall Meal Plan Attendees or purchase a la carte meals with Dining Hall Monitor no later than 8:30 am",
       "track": "PAF26",
-      "room": "Barn",
+      "room": "All locations",
       "sortOrder": 18
     },
     {
@@ -157,12 +157,12 @@
       "endsAt": "2026-05-08T11:00:00-04:00",
       "title": "Registration Opens at 10 am and Closes at 6 pm Welcome to PAF26",
       "track": "PAF26",
-      "room": "Barn",
+      "room": "All locations",
       "sortOrder": 19
     },
     {
       "startsAt": "2026-05-08T10:00:00-04:00",
-      "endsAt": "2026-05-08T23:30:00-04:00",
+      "endsAt": "2026-05-08T11:30:00-04:00",
       "title": "Creating Energetic Containers for Kink with HG Wyndell",
       "track": "PAF26",
       "room": "Barn",
@@ -170,7 +170,7 @@
     },
     {
       "startsAt": "2026-05-08T10:00:00-04:00",
-      "endsAt": "2026-05-08T23:30:00-04:00",
+      "endsAt": "2026-05-08T11:30:00-04:00",
       "title": "The Possibilities of Sex Magic with April Terreau",
       "track": "PAF26",
       "room": "Class Cabins E&F",
@@ -178,7 +178,7 @@
     },
     {
       "startsAt": "2026-05-08T10:00:00-04:00",
-      "endsAt": "2026-05-08T23:30:00-04:00",
+      "endsAt": "2026-05-08T11:30:00-04:00",
       "title": "FetLife 101 with Bearded Rob",
       "track": "PAF26",
       "room": "Dining Hall Deck",
@@ -186,7 +186,7 @@
     },
     {
       "startsAt": "2026-05-08T10:00:00-04:00",
-      "endsAt": "2026-05-08T23:30:00-04:00",
+      "endsAt": "2026-05-08T11:30:00-04:00",
       "title": "Tied from the Waist Down - Lower Body Ties with Violet and Veers",
       "track": "PAF26",
       "room": "Dungeon Mats & Hardpoints",
@@ -194,7 +194,7 @@
     },
     {
       "startsAt": "2026-05-08T10:00:00-04:00",
-      "endsAt": "2026-05-08T23:30:00-04:00",
+      "endsAt": "2026-05-08T11:30:00-04:00",
       "title": "Negotiations and Enthusiastic Consent with BabyBeaver",
       "track": "PAF26",
       "room": "Lower Fire Circle",
@@ -202,7 +202,7 @@
     },
     {
       "startsAt": "2026-05-08T10:00:00-04:00",
-      "endsAt": "2026-05-08T23:30:00-04:00",
+      "endsAt": "2026-05-08T11:30:00-04:00",
       "title": "Floorwerk and Flow with Sara WithoutanH",
       "track": "PAF26",
       "room": "Pavilion",
@@ -210,7 +210,7 @@
     },
     {
       "startsAt": "2026-05-08T10:00:00-04:00",
-      "endsAt": "2026-05-08T23:30:00-04:00",
+      "endsAt": "2026-05-08T11:30:00-04:00",
       "title": "Appointments booked Thursday",
       "track": "PAF26",
       "room": "Elemental Retreat (Primal Spa) Cabins A-D",
@@ -218,7 +218,7 @@
     },
     {
       "startsAt": "2026-05-08T10:00:00-04:00",
-      "endsAt": "2026-05-08T23:30:00-04:00",
+      "endsAt": "2026-05-08T11:30:00-04:00",
       "title": "Make Your Own: Shamanic Hand Drum with Jeff from Bohemian Brewing Reserve Your Spot",
       "track": "PAF26",
       "room": "Vendor Workshop Cabins 1&2",
@@ -226,7 +226,7 @@
     },
     {
       "startsAt": "2026-05-08T10:00:00-04:00",
-      "endsAt": "2026-05-08T23:30:00-04:00",
+      "endsAt": "2026-05-08T11:30:00-04:00",
       "title": "Uggla's Session Number Three",
       "track": "PAF26",
       "room": "Uggla's Forge",
@@ -237,7 +237,7 @@
       "endsAt": "2026-05-08T13:00:00-04:00",
       "title": "Lunch in the Dining Hall Meal Plan Attendees or purchase a la carte meals at HQ no later than 11:45 am",
       "track": "PAF26",
-      "room": "Barn",
+      "room": "All locations",
       "sortOrder": 29
     },
     {
@@ -333,7 +333,7 @@
       "endsAt": "2026-05-08T19:00:00-04:00",
       "title": "Dinner in the Dining Hall Meal Plan Attendees or purchase a la carte meals at HQ no later than 5:45 pm",
       "track": "PAF26",
-      "room": "Barn",
+      "room": "All locations",
       "sortOrder": 41
     },
     {
@@ -362,271 +362,271 @@
     },
     {
       "startsAt": "2026-05-08T22:00:00-04:00",
-      "endsAt": "2026-05-08T24:00:00-04:00",
+      "endsAt": "2026-05-09T00:00:00-04:00",
       "title": "Ritual Fire Night Two \"Teeth in the Night\"",
       "track": "PAF26",
       "room": "Lower Fire Circle",
       "sortOrder": 45
     },
     {
-      "startsAt": "2026-05-08T08:30:00-04:00",
-      "endsAt": "2026-05-08T21:30:00-04:00",
+      "startsAt": "2026-05-09T08:30:00-04:00",
+      "endsAt": "2026-05-09T09:30:00-04:00",
       "title": "Breakfast in the Dining Hall Meal Plan Attendees or purchase a la carte meals with Dining Hall Monitor no later than 8:30 am",
       "track": "PAF26",
-      "room": "Barn",
+      "room": "All locations",
       "sortOrder": 46
     },
     {
-      "startsAt": "2026-05-08T10:00:00-04:00",
-      "endsAt": "2026-05-08T11:00:00-04:00",
+      "startsAt": "2026-05-09T10:00:00-04:00",
+      "endsAt": "2026-05-09T11:00:00-04:00",
       "title": "Registration is by appointment only.",
       "track": "PAF26",
       "room": "Barn",
       "sortOrder": 47
     },
     {
-      "startsAt": "2026-05-08T10:00:00-04:00",
-      "endsAt": "2026-05-08T23:30:00-04:00",
+      "startsAt": "2026-05-09T10:00:00-04:00",
+      "endsAt": "2026-05-09T11:30:00-04:00",
       "title": "Torture Ties with CreamChezFrostin and Cookie_Doe_",
       "track": "PAF26",
       "room": "Barn",
       "sortOrder": 48
     },
     {
-      "startsAt": "2026-05-08T10:00:00-04:00",
-      "endsAt": "2026-05-08T23:30:00-04:00",
+      "startsAt": "2026-05-09T10:00:00-04:00",
+      "endsAt": "2026-05-09T11:30:00-04:00",
       "title": "Masters and Padawans with Sunny Leigh Mayne She/Her and Oximus",
       "track": "PAF26",
       "room": "Class Cabins E&F",
       "sortOrder": 49
     },
     {
-      "startsAt": "2026-05-08T10:00:00-04:00",
-      "endsAt": "2026-05-08T23:30:00-04:00",
+      "startsAt": "2026-05-09T10:00:00-04:00",
+      "endsAt": "2026-05-09T11:30:00-04:00",
       "title": "Setting the Scene with Bearded Rob",
       "track": "PAF26",
       "room": "Dining Hall Deck",
       "sortOrder": 50
     },
     {
-      "startsAt": "2026-05-08T10:00:00-04:00",
-      "endsAt": "2026-05-08T23:30:00-04:00",
+      "startsAt": "2026-05-09T10:00:00-04:00",
+      "endsAt": "2026-05-09T11:30:00-04:00",
       "title": "Bratting for Sadomasochists with s8nshrimp",
       "track": "PAF26",
       "room": "Dungeon Mats & Hardpoints",
       "sortOrder": 51
     },
     {
-      "startsAt": "2026-05-08T10:00:00-04:00",
-      "endsAt": "2026-05-08T23:30:00-04:00",
+      "startsAt": "2026-05-09T10:00:00-04:00",
+      "endsAt": "2026-05-09T11:30:00-04:00",
       "title": "Primal Energy Play: Awakening the Hidden Hunger with Dawn",
       "track": "PAF26",
       "room": "Lower Fire Circle",
       "sortOrder": 52
     },
     {
-      "startsAt": "2026-05-08T10:00:00-04:00",
-      "endsAt": "2026-05-08T23:30:00-04:00",
+      "startsAt": "2026-05-09T10:00:00-04:00",
+      "endsAt": "2026-05-09T11:30:00-04:00",
       "title": "The Big Heist: Taking CNC from Planning to Action with Lubegirl",
       "track": "PAF26",
       "room": "Pavilion",
       "sortOrder": 53
     },
     {
-      "startsAt": "2026-05-08T10:00:00-04:00",
-      "endsAt": "2026-05-08T23:30:00-04:00",
+      "startsAt": "2026-05-09T10:00:00-04:00",
+      "endsAt": "2026-05-09T11:30:00-04:00",
       "title": "Appointment Backups",
       "track": "PAF26",
       "room": "Elemental Retreat (Primal Spa) Cabins A-D",
       "sortOrder": 54
     },
     {
-      "startsAt": "2026-05-08T10:00:00-04:00",
-      "endsAt": "2026-05-08T23:30:00-04:00",
+      "startsAt": "2026-05-09T10:00:00-04:00",
+      "endsAt": "2026-05-09T11:30:00-04:00",
       "title": "Make Your Own: Copper Wire Jewelry with Java from Java Makes Reserve Your Spot",
       "track": "PAF26",
       "room": "Vendor Workshop Cabins 1&2",
       "sortOrder": 55
     },
     {
-      "startsAt": "2026-05-08T10:00:00-04:00",
-      "endsAt": "2026-05-08T23:30:00-04:00",
+      "startsAt": "2026-05-09T10:00:00-04:00",
+      "endsAt": "2026-05-09T11:30:00-04:00",
       "title": "Uggla's Session Number Six",
       "track": "PAF26",
       "room": "Uggla's Forge",
       "sortOrder": 56
     },
     {
-      "startsAt": "2026-05-08T12:00:00-04:00",
-      "endsAt": "2026-05-08T13:00:00-04:00",
+      "startsAt": "2026-05-09T12:00:00-04:00",
+      "endsAt": "2026-05-09T13:00:00-04:00",
       "title": "Lunch in the Dining Hall Meal Plan Attendees or purchase a la carte meals at HQ no later than 11:45 am",
       "track": "PAF26",
-      "room": "Barn",
+      "room": "All locations",
       "sortOrder": 57
     },
     {
-      "startsAt": "2026-05-08T13:15:00-04:00",
-      "endsAt": "2026-05-08T14:15:00-04:00",
+      "startsAt": "2026-05-09T13:30:00-04:00",
+      "endsAt": "2026-05-09T15:00:00-04:00",
       "title": "Death Fetish 101: The Ultimate Taboo with Rebecca Doll and James Gordon 1:30 pm - 3 pm",
       "track": "PAF26",
       "room": "Class Cabins E&F",
       "sortOrder": 58
     },
     {
-      "startsAt": "2026-05-08T13:15:00-04:00",
-      "endsAt": "2026-05-08T14:15:00-04:00",
+      "startsAt": "2026-05-09T13:15:00-04:00",
+      "endsAt": "2026-05-09T14:15:00-04:00",
       "title": "The Primal Hunt Orientation & Safety Required to Play NLA",
       "track": "PAF26",
       "room": "Dining Hall Deck",
       "sortOrder": 59
     },
     {
-      "startsAt": "2026-05-08T13:15:00-04:00",
-      "endsAt": "2026-05-08T14:15:00-04:00",
+      "startsAt": "2026-05-09T13:15:00-04:00",
+      "endsAt": "2026-05-09T14:15:00-04:00",
       "title": "The Hunt’s Hecklers Prepare Poolside Patio 1:15 - 2:30 pm",
       "track": "PAF26",
       "room": "Misc Location",
       "sortOrder": 60
     },
     {
-      "startsAt": "2026-05-08T13:15:00-04:00",
-      "endsAt": "2026-05-08T14:15:00-04:00",
+      "startsAt": "2026-05-09T13:15:00-04:00",
+      "endsAt": "2026-05-09T14:15:00-04:00",
       "title": "Vendor Markets Open at 11 am and Close at 8 pm",
       "track": "PAF26",
       "room": "Vendor Market Dining Hall Annex and Vendor Row",
       "sortOrder": 61
     },
     {
-      "startsAt": "2026-05-08T13:15:00-04:00",
-      "endsAt": "2026-05-08T14:15:00-04:00",
+      "startsAt": "2026-05-09T13:00:00-04:00",
+      "endsAt": "2026-05-09T15:30:00-04:00",
       "title": "Uggla's Session Number Seven (1 - 3:30 pm)",
       "track": "PAF26",
       "room": "Uggla's Forge",
       "sortOrder": 62
     },
     {
-      "startsAt": "2026-05-08T14:45:00-04:00",
-      "endsAt": "2026-05-08T15:45:00-04:00",
+      "startsAt": "2026-05-09T14:45:00-04:00",
+      "endsAt": "2026-05-09T15:45:00-04:00",
       "title": "THE PRIMAL HUNT 2:45 pm start!",
       "track": "PAF26",
       "room": "Dining Hall Deck",
       "sortOrder": 63
     },
     {
-      "startsAt": "2026-05-08T14:45:00-04:00",
-      "endsAt": "2026-05-08T15:45:00-04:00",
+      "startsAt": "2026-05-09T14:45:00-04:00",
+      "endsAt": "2026-05-09T15:45:00-04:00",
       "title": "Hunt Hecklers Hunt Field",
       "track": "PAF26",
       "room": "Misc Location",
       "sortOrder": 64
     },
     {
-      "startsAt": "2026-05-08T04:15:00-04:00",
-      "endsAt": "2026-05-08T17:45:00-04:00",
+      "startsAt": "2026-05-09T16:15:00-04:00",
+      "endsAt": "2026-05-09T17:45:00-04:00",
       "title": "“Is that a Nipple!?” Painting with Lola Montez",
       "track": "PAF26",
       "room": "Barn",
       "sortOrder": 65
     },
     {
-      "startsAt": "2026-05-08T04:15:00-04:00",
-      "endsAt": "2026-05-08T17:45:00-04:00",
+      "startsAt": "2026-05-09T16:15:00-04:00",
+      "endsAt": "2026-05-09T17:45:00-04:00",
       "title": "Reconnecting with the Muses: A Workshop for Creatives with James Welch",
       "track": "PAF26",
       "room": "Dining Hall Deck",
       "sortOrder": 66
     },
     {
-      "startsAt": "2026-05-08T04:15:00-04:00",
-      "endsAt": "2026-05-08T17:45:00-04:00",
+      "startsAt": "2026-05-09T16:15:00-04:00",
+      "endsAt": "2026-05-09T17:45:00-04:00",
       "title": "Tied and True: Introduction to Rope Bondage with SuspendDisbelief and AutomataBound",
       "track": "PAF26",
       "room": "Dungeon Mats & Hardpoints",
       "sortOrder": 67
     },
     {
-      "startsAt": "2026-05-08T04:15:00-04:00",
-      "endsAt": "2026-05-08T17:45:00-04:00",
+      "startsAt": "2026-05-09T16:15:00-04:00",
+      "endsAt": "2026-05-09T17:45:00-04:00",
       "title": "Meditative Needle Work with undertheskin",
       "track": "PAF26",
       "room": "Dungeon Blood/Wax Play Area",
       "sortOrder": 68
     },
     {
-      "startsAt": "2026-05-08T04:15:00-04:00",
-      "endsAt": "2026-05-08T17:45:00-04:00",
+      "startsAt": "2026-05-09T16:15:00-04:00",
+      "endsAt": "2026-05-09T17:45:00-04:00",
       "title": "So You Wanna Drum? with Keiden Bren",
       "track": "PAF26",
       "room": "Lower Fire Circle",
       "sortOrder": 69
     },
     {
-      "startsAt": "2026-05-08T04:15:00-04:00",
-      "endsAt": "2026-05-08T17:45:00-04:00",
+      "startsAt": "2026-05-09T16:15:00-04:00",
+      "endsAt": "2026-05-09T17:45:00-04:00",
       "title": "Fuck Around and Flow Out with Sparx Meet at Maypole",
       "track": "PAF26",
       "room": "Misc Location",
       "sortOrder": 70
     },
     {
-      "startsAt": "2026-05-08T18:00:00-04:00",
-      "endsAt": "2026-05-08T19:00:00-04:00",
+      "startsAt": "2026-05-09T18:00:00-04:00",
+      "endsAt": "2026-05-09T19:00:00-04:00",
       "title": "Dinner in the Dining Hall Meal Plan Attendees or purchase a la carte meals at HQ no later than 5:45 pm",
       "track": "PAF26",
-      "room": "Barn",
+      "room": "All locations",
       "sortOrder": 71
     },
     {
-      "startsAt": "2026-05-08T07:00:00-04:00",
-      "endsAt": "2026-05-08T20:30:00-04:00",
+      "startsAt": "2026-05-09T19:00:00-04:00",
+      "endsAt": "2026-05-09T20:30:00-04:00",
       "title": "Dancer and Ritualist Prep in Dancer's Green Room with BrynnEir",
       "track": "PAF26",
       "room": "Misc Location",
       "sortOrder": 72
     },
     {
-      "startsAt": "2026-05-08T07:00:00-04:00",
-      "endsAt": "2026-05-08T20:30:00-04:00",
+      "startsAt": "2026-05-09T19:00:00-04:00",
+      "endsAt": "2026-05-09T20:30:00-04:00",
       "title": "Uggla's Session Number Eight",
       "track": "PAF26",
       "room": "Uggla's Forge",
       "sortOrder": 73
     },
     {
-      "startsAt": "2026-05-08T19:30:00-04:00",
-      "endsAt": "2026-05-08T21:30:00-04:00",
-      "title": "Mead, Wead, and Wine Social Hosted by Flogging Farmers",
+      "startsAt": "2026-05-09T19:30:00-04:00",
+      "endsAt": "2026-05-09T21:30:00-04:00",
+      "title": "Mead, Weed, and Wine Social Hosted by Flogging Farmers",
       "track": "PAF26",
       "room": "Pavilion",
       "sortOrder": 74
     },
     {
-      "startsAt": "2026-05-08T21:30:00-04:00",
-      "endsAt": "2026-05-08T22:00:00-04:00",
+      "startsAt": "2026-05-09T21:30:00-04:00",
+      "endsAt": "2026-05-09T22:00:00-04:00",
       "title": "Mini Fire Show",
       "track": "PAF26",
       "room": "Pavilion",
       "sortOrder": 75
     },
     {
-      "startsAt": "2026-05-08T22:00:00-04:00",
-      "endsAt": "2026-05-08T24:00:00-04:00",
+      "startsAt": "2026-05-09T22:00:00-04:00",
+      "endsAt": "2026-05-10T02:00:00-04:00",
       "title": "Ritual Alternative Revel at Lower Fire Circle",
       "track": "PAF26",
       "room": "Lower Fire Circle",
       "sortOrder": 76
     },
     {
-      "startsAt": "2026-05-08T22:00:00-04:00",
-      "endsAt": "2026-05-08T24:00:00-04:00",
+      "startsAt": "2026-05-09T22:00:00-04:00",
+      "endsAt": "2026-05-09T23:30:00-04:00",
       "title": "Fire 401: Fire Caning with Echo 10 - 11:30 pm",
       "track": "PAF26",
       "room": "Pavilion",
       "sortOrder": 77
     },
     {
-      "startsAt": "2026-05-08T22:00:00-04:00",
-      "endsAt": "2026-05-08T24:00:00-04:00",
+      "startsAt": "2026-05-09T22:00:00-04:00",
+      "endsAt": "2026-05-09T23:30:00-04:00",
       "title": "Ritual Fire Night Three \"The Hidden Burrow\" 10 - ≈11:30 pm",
       "track": "PAF26",
       "room": "Upper Fire Circle",
@@ -634,15 +634,15 @@
     },
     {
       "startsAt": "2026-05-10T08:30:00-04:00",
-      "endsAt": "2026-05-10T21:30:00-04:00",
+      "endsAt": "2026-05-10T09:30:00-04:00",
       "title": "Breakfast in the Dining Hall Meal Plan Attendees or purchase a la carte meals with Dining Hall Monitor no later than 8:30 am",
       "track": "PAF26",
-      "room": "Barn",
+      "room": "All locations",
       "sortOrder": 79
     },
     {
       "startsAt": "2026-05-10T10:00:00-04:00",
-      "endsAt": "2026-05-10T23:30:00-04:00",
+      "endsAt": "2026-05-10T11:30:00-04:00",
       "title": "Beyond Boots: Leathercare for Primals with Jasper",
       "track": "PAF26",
       "room": "Barn",
@@ -650,7 +650,7 @@
     },
     {
       "startsAt": "2026-05-10T10:00:00-04:00",
-      "endsAt": "2026-05-10T23:30:00-04:00",
+      "endsAt": "2026-05-10T11:30:00-04:00",
       "title": "Death Fetish 201: The Next Level with Rebecca Doll and James Gordon",
       "track": "PAF26",
       "room": "Class Cabins E&F",
@@ -658,7 +658,7 @@
     },
     {
       "startsAt": "2026-05-10T10:00:00-04:00",
-      "endsAt": "2026-05-10T23:30:00-04:00",
+      "endsAt": "2026-05-10T11:30:00-04:00",
       "title": "Magickal Properties of Color: Your Personal Colors with James Welch",
       "track": "PAF26",
       "room": "Dining Hall Deck",
@@ -666,7 +666,7 @@
     },
     {
       "startsAt": "2026-05-10T10:00:00-04:00",
-      "endsAt": "2026-05-10T23:30:00-04:00",
+      "endsAt": "2026-05-10T11:30:00-04:00",
       "title": "The Double Diamond Chest Harness with SuspendDisbelief and AutomataBound",
       "track": "PAF26",
       "room": "Dungeon Mats & Hardpoints",
@@ -674,7 +674,7 @@
     },
     {
       "startsAt": "2026-05-10T10:00:00-04:00",
-      "endsAt": "2026-05-10T23:30:00-04:00",
+      "endsAt": "2026-05-10T11:30:00-04:00",
       "title": "Open Poi Workshop with Elvira Woodburn Meet at Maypole",
       "track": "PAF26",
       "room": "Misc Location",
@@ -682,7 +682,7 @@
     },
     {
       "startsAt": "2026-05-10T10:00:00-04:00",
-      "endsAt": "2026-05-10T23:30:00-04:00",
+      "endsAt": "2026-05-10T11:30:00-04:00",
       "title": "Rhythmic Body Drumming with BabyBeaver",
       "track": "PAF26",
       "room": "Pavilion",
@@ -690,7 +690,7 @@
     },
     {
       "startsAt": "2026-05-10T10:00:00-04:00",
-      "endsAt": "2026-05-10T23:30:00-04:00",
+      "endsAt": "2026-05-10T11:30:00-04:00",
       "title": "Appointments booked Saturday",
       "track": "PAF26",
       "room": "Elemental Retreat (Primal Spa) Cabins A-D",
@@ -698,7 +698,7 @@
     },
     {
       "startsAt": "2026-05-10T10:00:00-04:00",
-      "endsAt": "2026-05-10T23:30:00-04:00",
+      "endsAt": "2026-05-10T11:30:00-04:00",
       "title": "Make Your Own: Raku Fired Bisqueware with Kirah from KJones Pottery Reserve Your Spot",
       "track": "PAF26",
       "room": "Vendor Workshop Cabins 1&2",
@@ -706,7 +706,7 @@
     },
     {
       "startsAt": "2026-05-10T10:00:00-04:00",
-      "endsAt": "2026-05-10T23:30:00-04:00",
+      "endsAt": "2026-05-10T11:30:00-04:00",
       "title": "Uggla's Session Number Nine",
       "track": "PAF26",
       "room": "Uggla's Forge",
@@ -717,7 +717,7 @@
       "endsAt": "2026-05-10T13:00:00-04:00",
       "title": "Lunch in the Dining Hall Meal Plan Attendees or purchase a la carte meals at HQ no later than 11:45 am",
       "track": "PAF26",
-      "room": "Barn",
+      "room": "All locations",
       "sortOrder": 89
     },
     {
@@ -813,7 +813,7 @@
       "endsAt": "2026-05-10T19:00:00-04:00",
       "title": "Dinner in the Dining Hall Meal Plan Attendees or purchase a la carte meals at HQ no later than 5:45 pm",
       "track": "PAF26",
-      "room": "Barn",
+      "room": "All locations",
       "sortOrder": 101
     },
     {
@@ -849,40 +849,40 @@
       "sortOrder": 105
     },
     {
-      "startsAt": "2026-05-10T10:00:00-04:00",
-      "endsAt": "2026-05-10T13:00:00-04:00",
+      "startsAt": "2026-05-11T11:00:00-04:00",
+      "endsAt": "2026-05-11T11:30:00-04:00",
       "title": "Concluding Ritual 11 - 11:30 am A farewell and opportunity to collect keepsake ashes.",
       "track": "PAF26",
       "room": "Lower Fire Circle",
       "sortOrder": 106
     },
     {
-      "startsAt": "2026-05-10T10:00:00-04:00",
-      "endsAt": "2026-05-10T13:00:00-04:00",
+      "startsAt": "2026-05-11T10:00:00-04:00",
+      "endsAt": "2026-05-11T12:00:00-04:00",
       "title": "Brunch (10am - Noon)",
       "track": "PAF26",
       "room": "Dining Hall",
       "sortOrder": 107
     },
     {
-      "startsAt": "2026-05-10T10:00:00-04:00",
-      "endsAt": "2026-05-10T13:00:00-04:00",
+      "startsAt": "2026-05-11T10:00:00-04:00",
+      "endsAt": "2026-05-11T13:00:00-04:00",
       "title": "Reset your cabin. Beds must match diagram. Trash bagged on porches or in dumpsters. No MOOP Be kind to camp staff.",
       "track": "PAF26",
       "room": "Cabins & Private Rooms",
       "sortOrder": 108
     },
     {
-      "startsAt": "2026-05-10T10:00:00-04:00",
-      "endsAt": "2026-05-10T13:00:00-04:00",
+      "startsAt": "2026-05-11T10:00:00-04:00",
+      "endsAt": "2026-05-11T13:00:00-04:00",
       "title": "Leave your site better than you found it. Do no overload trash cans. Take trash to dumpsters. No MOOP Be kind to camp staff.",
       "track": "PAF26",
       "room": "Tent Sites",
       "sortOrder": 109
     },
     {
-      "startsAt": "2026-05-10T13:00:00-04:00",
-      "endsAt": "2026-05-10T14:00:00-04:00",
+      "startsAt": "2026-05-11T13:00:00-04:00",
+      "endsAt": "2026-05-11T13:30:00-04:00",
       "title": "Goodbye, safe travels, and thank you!",
       "track": "PAF26",
       "room": "Lower Fire Circle",

@@ -142,11 +142,17 @@ async function main() {
   const supabase = createClient(url, key)
   const { data: ev, error: evErr } = await supabase
     .from('dancecard_events')
-    .select('id')
+    .select('id, status')
     .eq('slug', slug)
     .maybeSingle()
   if (evErr) throw evErr
   if (!ev) throw new Error(`Event slug not found: ${slug} (create event row first)`)
+  if (ev.status !== 'published') {
+    throw new Error(
+      `Event "${slug}" has status "${ev.status}" but the public API only loads published events. ` +
+        `In Supabase SQL: UPDATE dancecard_events SET status = 'published' WHERE slug = ${JSON.stringify(slug)};`,
+    )
+  }
 
   if (jsonPath) {
     await importJson(path.resolve(jsonPath), supabase, ev.id)

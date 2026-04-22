@@ -1,15 +1,18 @@
 'use client'
 
 import Link from 'next/link'
-import { useEffect, useMemo, useState } from 'react'
-import { dancecardFetch, DancecardApiError } from '@/components/dancecard/api-client'
-import { formatRange, formatTime, groupSlotsByDay } from '@/components/dancecard/time'
-import { trackChipClass, trackChipStyle } from '@/components/dancecard/trackColor'
+import { useCallback, useEffect, useMemo, useState } from 'react'
+import { dancecardFetch, DancecardApiError, formatDancecardApiMessage } from '@/components/dancecard/api-client'
+import { MutualAvailabilityStrip } from '@/components/dancecard/MutualAvailabilityStrip'
+import { dayRangesFromSchedule } from '@/components/dancecard/eventAvailability'
+import { toDatetimeLocalValue } from '@/components/dancecard/time'
 
 type SharePayload = {
   meta: {
     eventTitle: string
     timezone: string
+    windowStartsAt: string
+    windowEndsAt: string
   } | null
   host: { displayName: string }
   viewerYou: string | null
@@ -29,11 +32,6 @@ type SharePayload = {
 
 type MeLight = { account: { displayName: string } } | null
 
-function toLocalInput(d: Date): string {
-  const pad = (n: number) => String(n).padStart(2, '0')
-  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`
-}
-
 export function ShareDancecardClient(props: { eventSlug: string; token: string }) {
   const { eventSlug, token } = props
   const [data, setData] = useState<SharePayload | null>(null)
@@ -43,9 +41,25 @@ export function ShareDancecardClient(props: { eventSlug: string; token: string }
   const [end, setEnd] = useState('')
   const [note, setNote] = useState('')
   const [preview, setPreview] = useState<{ ok: boolean } | null>(null)
+  const [reserveNotice, setReserveNotice] = useState<null | { kind: 'ok' } | { kind: 'error'; text: string }>(null)
 
   const tz = data?.meta?.timezone ?? 'America/New_York'
-  const grouped = useMemo(() => (data ? groupSlotsByDay(data.slots, tz) : []), [data, tz])
+
+  const shortDayLabel = (day: string) => day.split(',')[0]?.trim() ?? day
+
+  const shareDayWindows = useMemo(() => {
+    if (!data?.meta) return []
+    return dayRangesFromSchedule(data.slots, data.meta, tz, shortDayLabel)
+  }, [data, tz])
+
+  const shareStripDays = useMemo(() => {
+    if (shareDayWindows.length) return shareDayWindows
+    if (!data?.meta) return []
+    const s = Date.parse(data.meta.windowStartsAt)
+    const e = Date.parse(data.meta.windowEndsAt)
+    if (!(e > s)) return []
+    return [{ label: 'Event', startMs: s, endMs: e }]
+  }, [shareDayWindows, data])
 
   useEffect(() => {
     void (async () => {
@@ -54,8 +68,8 @@ export function ShareDancecardClient(props: { eventSlug: string; token: string }
         setData(s)
         const first = s.mutualFreeGaps?.[0]
         if (first) {
-          setStart(toLocalInput(new Date(first.start)))
-          setEnd(toLocalInput(new Date(first.end)))
+          setStart(toDatetimeLocalValue(new Date(first.start)))
+          setEnd(toDatetimeLocalValue(new Date(first.end)))
         }
       } catch (e) {
         setErr(e instanceof DancecardApiError ? e.body : 'Not found')
@@ -74,8 +88,20 @@ export function ShareDancecardClient(props: { eventSlug: string; token: string }
     })()
   }, [eventSlug])
 
+  const fillReserveFromStep = useCallback((startMs: number, endMs: number) => {
+    setStart(toDatetimeLocalValue(new Date(startMs)))
+    setEnd(toDatetimeLocalValue(new Date(endMs)))
+    setPreview(null)
+    setReserveNotice(null)
+    setErr(null)
+  }, [])
+
   async function runPreview() {
-    if (!start || !end) return
+    setReserveNotice(null)
+    if (!start || !end) {
+      setReserveNotice({ kind: 'error', text: 'Pick start and end times — tap a green half-hour on the strips above.' })
+      return
+    }
     try {
       const p = await dancecardFetch<{ ok: boolean }>(eventSlug, '/preview', {
         method: 'POST',
@@ -87,13 +113,24 @@ export function ShareDancecardClient(props: { eventSlug: string; token: string }
         }),
       })
       setPreview(p)
-    } catch {
+    } catch (e) {
       setPreview({ ok: false })
+      setReserveNotice({ kind: 'error', text: formatDancecardApiMessage(e) })
     }
   }
 
   async function submitReserve() {
-    if (!start || !end) return
+    setReserveNotice(null)
+    if (!start || !end) {
+      setReserveNotice({ kind: 'error', text: 'Pick start and end times — tap a green block on the schedule above.' })
+      return
+    }
+    const sMs = new Date(start).getTime()
+    const eMs = new Date(end).getTime()
+    if (!Number.isFinite(sMs) || !Number.isFinite(eMs) || eMs <= sMs) {
+      setReserveNotice({ kind: 'error', text: 'End time must be after start time.' })
+      return
+    }
     try {
       await dancecardFetch(eventSlug, '/reserve', {
         method: 'POST',
@@ -105,9 +142,10 @@ export function ShareDancecardClient(props: { eventSlug: string; token: string }
         }),
       })
       setErr(null)
-      alert('Reserved — both dancecards updated.')
+      setPreview(null)
+      setReserveNotice({ kind: 'ok' })
     } catch (e) {
-      setErr(e instanceof DancecardApiError ? e.body : 'Failed')
+      setReserveNotice({ kind: 'error', text: formatDancecardApiMessage(e) })
     }
   }
 
@@ -130,145 +168,150 @@ export function ShareDancecardClient(props: { eventSlug: string; token: string }
   }
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-8 text-slate-100">
-      <div className="mb-6">
+    <div className="mx-auto max-w-3xl px-4 py-6 pb-40 text-slate-100 lg:max-w-6xl lg:pb-10">
+      <div className="mb-4">
         <Link href={`/dancecard/${eventSlug}`} className="text-sm text-amber-300 hover:underline">
           ← Back to dancecard
         </Link>
       </div>
-      <header className="mb-6 border-b border-white/10 pb-4">
+      <header className="mb-4 border-b border-white/10 pb-4">
         <p className="text-xs uppercase tracking-wide text-amber-200/80">East Coast Kink Events</p>
-        <h1 className="font-serif text-2xl font-semibold text-white">{data.meta?.eventTitle ?? 'Dancecard'}</h1>
-        <p className="mt-1 text-slate-300">
-          <span className="font-medium text-white">{data.host.displayName}</span>&apos;s dancecard
+        <h1 className="font-serif text-xl font-semibold text-white sm:text-2xl">{data.meta?.eventTitle ?? 'Dancecard'}</h1>
+        <p className="mt-1 text-sm text-slate-300">
+          <span className="font-medium text-white">{data.host.displayName}</span>
+          <span className="text-slate-500"> · shared availability</span>
         </p>
         {data.viewerYou ? (
-          <p className="mt-2 text-sm text-slate-400">
-            Signed in as <span className="text-white">{data.viewerYou}</span>. Mutual free gaps highlighted below.
+          <p className="mt-2 text-xs text-slate-400 sm:text-sm">
+            Signed in as <span className="text-white">{data.viewerYou}</span>.{' '}
+            <span className="text-emerald-200">Green</span> = both free when comparing; otherwise host-only free time.
+            {me?.account ? (
+              <span className="mt-1 block text-emerald-100/90">
+                Tap a green half-hour to drop it into the reserve form below (adjust the window if you need longer).
+              </span>
+            ) : null}
           </p>
         ) : (
-          <p className="mt-2 text-sm text-slate-400">
-            Log in on the main dancecard page to see mutual availability and reserve time together.
+          <p className="mt-2 text-xs text-slate-400 sm:text-sm">
+            Log in on the main dancecard page to compare both calendars and reserve.
           </p>
         )}
       </header>
 
-      <div className="grid gap-6 lg:grid-cols-3">
-        <div className="lg:col-span-2 space-y-6">
-          {grouped.map((g) => (
-            <section key={g.day} className="rounded-xl border border-white/10 bg-slate-900/60 p-4">
-              <h2 className="mb-3 font-display text-lg font-semibold text-white">{g.day}</h2>
-              <div className="space-y-3">
-                {g.items.map((slot) => (
-                  <div
-                    key={slot.id}
-                    className="flex flex-wrap gap-3 rounded-lg border border-white/5 bg-slate-950/50 p-3 transition hover:border-amber-400/30"
-                  >
-                    <div className="min-w-[5.5rem] text-sm text-amber-100/90">
-                      <div>{formatTime(slot.startsAt, tz)}</div>
-                      <div className="text-xs text-slate-500">→ {formatTime(slot.endsAt, tz)}</div>
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <div className="font-medium text-white">{slot.title}</div>
-                      <div className="mt-1 flex flex-wrap gap-2 text-xs">
-                        {slot.track ? (
-                          <span className={`rounded px-2 py-0.5 text-xs ${trackChipClass()}`} style={trackChipStyle(slot.track)}>
-                            {slot.track}
-                          </span>
-                        ) : null}
-                        {slot.room ? <span className="rounded bg-white/5 px-2 py-0.5 text-slate-300">{slot.room}</span> : null}
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </section>
-          ))}
-        </div>
-
-        <aside className="space-y-4">
-          <div className="rounded-xl border border-rose-500/25 bg-rose-950/20 p-4">
-            <h3 className="text-sm font-semibold text-rose-100">Host busy (conflicts)</h3>
-            <ul className="mt-2 max-h-40 space-y-1 overflow-y-auto text-xs text-rose-100/85">
-              {data.hostBusy.slice(0, 20).map((g, i) => (
-                <li key={i} className="rounded bg-black/20 px-2 py-1">
-                  {formatRange(g.start, g.end, tz)}
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div className="rounded-xl border border-white/10 bg-slate-900/70 p-4">
-            <h3 className="text-sm font-semibold text-white">Host free gaps</h3>
-            <ul className="mt-2 max-h-48 space-y-1 overflow-y-auto text-xs text-slate-300">
-              {data.hostFreeGaps.slice(0, 16).map((g, i) => (
-                <li key={i} className="rounded bg-white/5 px-2 py-1">
-                  {formatRange(g.start, g.end, tz)}
-                </li>
-              ))}
-            </ul>
-          </div>
-          {data.mutualFreeGaps?.length ? (
-            <div className="rounded-xl border border-emerald-500/30 bg-emerald-950/30 p-4">
-              <h3 className="text-sm font-semibold text-emerald-200">Mutual free</h3>
-              <ul className="mt-2 space-y-1 text-xs text-emerald-100/90">
-                {data.mutualFreeGaps.map((g, i) => (
-                  <li key={i}>{formatRange(g.start, g.end, tz)}</li>
-                ))}
-              </ul>
-            </div>
-          ) : null}
-          {me?.account ? (
-            <div className="rounded-xl border border-white/10 bg-slate-900/70 p-4">
-              <h3 className="text-sm font-semibold text-white">Reserve together</h3>
-              <label className="mt-2 block text-xs text-slate-400">Start</label>
-              <input
-                type="datetime-local"
-                className="mt-1 w-full rounded border border-white/10 bg-slate-950 px-2 py-1 text-sm text-white"
-                value={start}
-                onChange={(e) => setStart(e.target.value)}
-              />
-              <label className="mt-2 block text-xs text-slate-400">End</label>
-              <input
-                type="datetime-local"
-                className="mt-1 w-full rounded border border-white/10 bg-slate-950 px-2 py-1 text-sm text-white"
-                value={end}
-                onChange={(e) => setEnd(e.target.value)}
-              />
-              <label className="mt-2 block text-xs text-slate-400">Note (optional)</label>
-              <input
-                className="mt-1 w-full rounded border border-white/10 bg-slate-950 px-2 py-1 text-sm text-white"
-                value={note}
-                maxLength={500}
-                onChange={(e) => setNote(e.target.value)}
-              />
-              <div className="mt-3 flex flex-wrap gap-2">
-                <button
-                  type="button"
-                  className="rounded-lg border border-white/20 px-3 py-1.5 text-sm text-white hover:bg-white/5"
-                  onClick={() => void runPreview()}
-                >
-                  Preview
-                </button>
-                <button
-                  type="button"
-                  className="rounded-lg bg-amber-500 px-3 py-1.5 text-sm font-medium text-slate-900 hover:bg-amber-400"
-                  onClick={() => void submitReserve()}
-                >
-                  Reserve
-                </button>
-              </div>
-              {preview ? (
-                <p
-                  className={`mt-2 text-xs ${preview.ok ? 'text-emerald-300' : 'text-rose-300'}`}
-                >
-                  {preview.ok ? 'Looks mutually free.' : 'Not mutually free or conflicts.'}
-                </p>
-              ) : null}
-              {err ? <p className="mt-2 text-xs text-rose-300">{err}</p> : null}
-            </div>
-          ) : null}
-        </aside>
+      <div className="flex flex-wrap gap-2 text-[10px] uppercase tracking-[0.2em] text-slate-400">
+        <span className="rounded-full border border-rose-500/30 bg-rose-950/40 px-2 py-1 text-rose-100">Red = busy</span>
+        <span className="rounded-full border border-emerald-500/30 bg-emerald-950/40 px-2 py-1 text-emerald-100">
+          {data.viewerYou ? 'Green = both free' : 'Green = host free'}
+        </span>
       </div>
+
+      <div className="mt-4 max-h-[50vh] space-y-3 overflow-y-auto pr-1 sm:max-h-none">
+        {shareStripDays.map((d) => (
+          <MutualAvailabilityStrip
+            key={`${d.label}-${d.startMs}`}
+            dayLabel={d.label}
+            rangeStartMs={d.startMs}
+            rangeEndMs={d.endMs}
+            freeIntervals={data.viewerYou ? (data.mutualFreeGaps ?? []) : data.hostFreeGaps}
+            tz={tz}
+            mode={data.viewerYou ? 'mutual' : 'host'}
+            onFreeStepClick={me?.account && data.viewerYou ? fillReserveFromStep : undefined}
+          />
+        ))}
+      </div>
+
+      <div className="mt-4 rounded-2xl border border-cyan-400/25 bg-cyan-950/30 px-4 py-3 text-sm leading-relaxed text-cyan-50/95">
+        <p className="font-semibold text-white">How to reserve</p>
+        {data.viewerYou && me?.account ? (
+          <p className="mt-1.5 text-cyan-100/95">
+            <span className="text-white">Tap a green half-hour</span> on the strips above. That fills the form; adjust
+            the times if you need a longer window, tap Preview, then Reserve.
+          </p>
+        ) : (
+          <p className="mt-1.5 text-cyan-100/95">
+            Green shows the host&apos;s free time. Log in on the main dancecard page (as someone other than the host)
+            to see when you are <span className="text-white">both</span> free, then tap green to fill the form.
+          </p>
+        )}
+      </div>
+
+      {me?.account ? (
+        <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-white/10 bg-slate-950/95 p-4 pb-[max(1rem,env(safe-area-inset-bottom))] backdrop-blur-xl lg:relative lg:z-0 lg:mt-6 lg:rounded-xl lg:border lg:bg-slate-900/70 lg:p-4">
+          <h3 className="text-sm font-semibold text-white">Reserve together</h3>
+          {reserveNotice?.kind === 'ok' ? (
+            <div className="mt-3 rounded-xl border border-emerald-500/40 bg-emerald-950/45 p-3 text-sm text-emerald-50">
+              <p className="font-semibold text-white">Reservation sent</p>
+              <p className="mt-1 text-emerald-100/95">It is saved on both dancecards. You can close this page.</p>
+            </div>
+          ) : (
+            <>
+          <div className="mt-3 grid gap-3 sm:grid-cols-2">
+            <div>
+              <label className="block text-xs text-slate-400">Start</label>
+              <input
+                type="datetime-local"
+                className="mt-1 w-full rounded-lg border border-white/10 bg-slate-950 px-2 py-2 text-sm text-white"
+                value={start}
+                onChange={(e) => {
+                  setStart(e.target.value)
+                  setReserveNotice(null)
+                  setPreview(null)
+                }}
+              />
+            </div>
+            <div>
+              <label className="block text-xs text-slate-400">End</label>
+              <input
+                type="datetime-local"
+                className="mt-1 w-full rounded-lg border border-white/10 bg-slate-950 px-2 py-2 text-sm text-white"
+                value={end}
+                onChange={(e) => {
+                  setEnd(e.target.value)
+                  setReserveNotice(null)
+                  setPreview(null)
+                }}
+              />
+            </div>
+          </div>
+          <label className="mt-3 block text-xs text-slate-400">Note (optional)</label>
+          <input
+            className="mt-1 w-full rounded-lg border border-white/10 bg-slate-950 px-2 py-2 text-sm text-white"
+            value={note}
+            maxLength={500}
+            onChange={(e) => {
+              setNote(e.target.value)
+              setReserveNotice(null)
+            }}
+          />
+          <div className="mt-3 flex flex-wrap gap-2">
+            <button
+              type="button"
+              className="flex-1 rounded-lg border border-white/20 px-3 py-2 text-sm text-white hover:bg-white/5 sm:flex-none"
+              onClick={() => void runPreview()}
+            >
+              Preview
+            </button>
+            <button
+              type="button"
+              className="flex-1 rounded-lg bg-amber-500 px-3 py-2 text-sm font-medium text-slate-900 hover:bg-amber-400 sm:flex-none"
+              onClick={() => void submitReserve()}
+            >
+              Reserve
+            </button>
+          </div>
+          {preview ? (
+            <p className={`mt-2 text-xs ${preview.ok ? 'text-emerald-300' : 'text-rose-300'}`}>
+              {preview.ok ? 'Looks mutually free.' : 'Not mutually free or conflicts.'}
+            </p>
+          ) : null}
+          {reserveNotice?.kind === 'error' ? (
+            <p className="mt-2 text-sm text-rose-200">{reserveNotice.text}</p>
+          ) : null}
+          {err ? <p className="mt-2 text-xs text-rose-300">{err}</p> : null}
+            </>
+          )}
+        </div>
+      ) : null}
     </div>
   )
 }

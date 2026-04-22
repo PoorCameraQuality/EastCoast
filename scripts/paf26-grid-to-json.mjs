@@ -20,10 +20,12 @@ function etIso(day, hour, minute) {
   return `${YEAR}-${pad(MONTH)}-${pad(day)}T${pad(hour)}:${pad(minute)}:00${TZ_OFFSET}`
 }
 
-/** Parse "Thursday May 7th" / "Friday, May 8th" → day of month */
+/** Parse "Thursday May 7th" / "Fri May 8" / "Saturday, May 9th" → day of month */
 function parseDayLine(cell) {
   const s = String(cell ?? '').replace(/\s+/g, ' ')
-  const m = s.match(/\b(?:Mon|Tues|Wednes|Thurs|Fri|Sat|Sun)day\b.*?\bMay\b\s+(\d{1,2})(?:st|nd|rd|th)?\b/i)
+  const m = s.match(
+    /\b(?:Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday|Mon|Tue|Wed|Thu|Fri|Sat|Sun)(?:day)?\b.*?\bMay\b\s+(\d{1,2})(?:st|nd|rd|th)?\b/i,
+  )
   if (!m) return null
   return parseInt(m[1], 10)
 }
@@ -39,6 +41,8 @@ function normalizeTimeToken(t) {
 
 /** Parse single clock like 1:30 pm, 10 am, 7, 5:30 pm → {h24, m} */
 function parseClock(str, defaultMeridiem) {
+  const raw = String(str ?? '').trim()
+  const hadExplicitMeridiem = /\b(am|pm)\b/i.test(raw)
   let s = normalizeTimeToken(str).toLowerCase()
   if (!s) return null
   let mer = s.includes('pm') ? 'pm' : s.includes('am') ? 'am' : defaultMeridiem
@@ -49,7 +53,8 @@ function parseClock(str, defaultMeridiem) {
   const min = m[2] ? parseInt(m[2], 10) : 0
   if (mer === 'pm' && h < 12) h += 12
   if (mer === 'am' && h === 12) h = 0
-  if (!s.match(/am|pm/i) && defaultMeridiem === 'pm' && h < 12) h += 12
+  // Only apply "assume PM" when the token had no am/pm (avoid turning 11:30 am into 11:30 pm).
+  if (!hadExplicitMeridiem && defaultMeridiem === 'pm' && h < 12) h += 12
   return { h, m: min }
 }
 
@@ -85,9 +90,25 @@ function parseTimeCell(timeCell, dayOfMonth) {
   }
 
   let startMer = /pm/i.test(parts[0]) ? 'pm' : /am/i.test(parts[0]) ? 'am' : null
-  const c1 = parseClock(parts[0], startMer || 'am')
+  let c1 = parseClock(parts[0], startMer || 'am')
   if (!c1) return null
-  const endDefault = startMer === 'pm' || c1.h >= 12 ? 'pm' : 'pm'
+  // "7 - 8:30 pm" / "4:15 - 5:45 pm": first clock has no meridiem but the range ends in the evening.
+  if (
+    startMer == null &&
+    parts.length >= 2 &&
+    /\bpm\b/i.test(parts[1]) &&
+    !/\bam\b/i.test(parts[1])
+  ) {
+    c1 = parseClock(parts[0], 'pm')
+  }
+  const endHasMer = /\b(am|pm)\b/i.test(parts[1])
+  const endDefault = /pm/i.test(parts[1])
+    ? 'pm'
+    : /am/i.test(parts[1])
+      ? 'am'
+      : startMer === 'pm' || c1.h >= 12
+        ? 'pm'
+        : 'am'
   let c2 = parseClock(parts[1], endDefault)
   if (!c2) return null
 
@@ -159,7 +180,15 @@ function main() {
 
     const t0 = String(c0 ?? '').trim().toLowerCase()
     if (t0.startsWith('time') && row.length > 2) {
-      headers = row.map((h, idx) => (idx === 0 ? 'Time' : cleanTitle(h) || `Col${idx}`))
+      headers = row.map((h, idx) => {
+        if (idx === 0) return 'Time'
+        const t = cleanTitle(h)
+        if (!t) return `Col${idx}`
+        const low = t.toLowerCase()
+        const cut = low.indexOf('reserve your spot')
+        if (cut >= 0) return t.slice(0, cut).trim() || "Uggla's Forge"
+        return t
+      })
       continue
     }
 
@@ -183,6 +212,11 @@ function main() {
         sortOrder: sortOrder++,
       })
     }
+  }
+
+  const campwide = /^(Registration Opens|Lunch in the Dining Hall|Dinner in the Dining Hall|Breakfast in the Dining Hall)/i
+  for (const s of slots) {
+    if (campwide.test(s.title)) s.room = 'All locations'
   }
 
   const starts = slots.map((s) => new Date(s.startsAt).getTime())

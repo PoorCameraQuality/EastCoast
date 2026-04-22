@@ -1,0 +1,8 @@
+# Shrink CLI uploads and avoid failed deploys. Root app must stay `src/app` at repo root.
+# If Vercel "Root Directory" is wrong, fix it in the dashboard — do not point at this folder.
+
+# Entire duplicate Next app (no Dancecard routes; wrong Root Directory = 404 on /api/dancecard/*)
+projectfilesmigration/
+
+# Agent / scratch
+.cursor_tmp/

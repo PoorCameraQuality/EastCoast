@@ -25,6 +25,14 @@ export async function GET(
     if (!event) {
       return NextResponse.json({ error: 'Event not found' }, { status: 404 })
     }
+
+    const { data: slots } = await admin
+      .from('dancecard_program_slots')
+      .select('id, starts_at, ends_at, title, track, room, description, sort_order')
+      .eq('event_id', event.id)
+      .order('starts_at', { ascending: true })
+      .order('sort_order', { ascending: true })
+
     const { data: link, error: lErr } = await admin
       .from('dancecard_share_links')
       .select('id, account_id, token, revoked_at')
@@ -44,13 +52,6 @@ export async function GET(
     if (hErr || !host || host.event_id !== event.id) {
       return NextResponse.json({ error: 'Host not found' }, { status: 404 })
     }
-
-    const { data: slots } = await admin
-      .from('dancecard_program_slots')
-      .select('id, starts_at, ends_at, title, track, room, description, sort_order')
-      .eq('event_id', event.id)
-      .order('starts_at', { ascending: true })
-      .order('sort_order', { ascending: true })
 
     const window = eventWindowFromRow({
       window_starts_at: event.window_starts_at,
