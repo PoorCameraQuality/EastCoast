@@ -755,12 +755,10 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
   if (!schedule && loadErr) {
     return (
       <div className="mx-auto max-w-lg px-4 py-12 text-slate-100">
-        <div className="rounded-xl border border-rose-500/30 bg-rose-950/40 p-6">
-          <h1 className="text-lg font-semibold text-rose-100">Schedule unavailable</h1>
-          <p className="mt-2 text-sm text-rose-200/80">{loadErr}</p>
-          <p className="mt-3 text-xs text-slate-400">
-            Apply <code className="rounded bg-black/30 px-1">database/dancecard_000_schema.sql</code> and the PAF26
-            event seed under <code className="rounded bg-black/30 px-1">database/</code> in Supabase, then refresh.
+        <div className="rounded-xl border border-cyan-500/30 bg-[#0b1426] p-6 text-center">
+          <h1 className="text-lg font-semibold text-cyan-100">Dance card temporarily disabled</h1>
+          <p className="mt-2 text-sm text-slate-300">
+            The event is disabled for now. Please check back later.
           </p>
         </div>
       </div>
