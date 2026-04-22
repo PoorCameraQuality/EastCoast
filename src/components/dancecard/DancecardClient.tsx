@@ -395,7 +395,13 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
             Register
           </button>
         </div>
-        <div className="space-y-3 rounded-xl border border-white/10 bg-slate-900/70 p-4">
+        <form
+          className="space-y-3 rounded-xl border border-white/10 bg-slate-900/70 p-4"
+          onSubmit={(e) => {
+            e.preventDefault()
+            void submitAuth()
+          }}
+        >
           <label className="block text-xs text-slate-400">Username</label>
           <input
             className="w-full rounded border border-white/10 bg-slate-950 px-3 py-2 text-sm text-white"
@@ -422,13 +428,12 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
             </>
           ) : null}
           <button
-            type="button"
+            type="submit"
             className="mt-2 w-full rounded-lg bg-amber-500 py-2 text-sm font-semibold text-slate-900 hover:bg-amber-400"
-            onClick={() => void submitAuth()}
           >
             {authMode === 'register' ? 'Create account' : 'Log in'}
           </button>
-        </div>
+        </form>
         {toast ? <p className="mt-3 text-sm text-rose-300">{toast}</p> : null}
       </div>
     )
