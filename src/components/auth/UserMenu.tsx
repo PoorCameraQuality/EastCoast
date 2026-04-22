@@ -5,6 +5,26 @@ import { supabase } from '@/lib/supabase'
 import { getCurrentUser } from '@/lib/auth'
 import LoginForm from './LoginForm'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+import { DANCECARD_DEFAULT_EVENT_PATH } from '@/lib/dancecard/nav'
+
+function DancecardHeaderLink() {
+  const pathname = usePathname()
+  const onDancecard = pathname.startsWith('/dancecard')
+  return (
+    <Link
+      href={DANCECARD_DEFAULT_EVENT_PATH}
+      className={`text-sm font-medium min-h-touch inline-flex items-center px-2 rounded-lg transition-colors ${
+        onDancecard
+          ? 'text-primary-300 bg-primary-600/20 border border-primary-600/30'
+          : 'text-primary-500 hover:text-primary-400'
+      }`}
+      aria-current={onDancecard ? 'page' : undefined}
+    >
+      Dancecard
+    </Link>
+  )
+}
 
 export default function UserMenu() {
   const [user, setUser] = useState<any>(null)
@@ -112,10 +132,8 @@ export default function UserMenu() {
   if (!supabase) {
     return (
       <div className="flex items-center space-x-4">
-        <Link 
-          href="/login" 
-          className="text-primary-500 hover:text-primary-400 transition-colors"
-        >
+        <DancecardHeaderLink />
+        <Link href="/login" className="text-primary-500 hover:text-primary-400 transition-colors">
           Login
         </Link>
       </div>
@@ -161,6 +179,7 @@ export default function UserMenu() {
   if (user) {
     return (
       <div className="flex items-center space-x-4">
+        <DancecardHeaderLink />
         <div className="text-sm text-gray-300">
           Welcome, {user.email}
         </div>
@@ -177,6 +196,7 @@ export default function UserMenu() {
 
   return (
     <div className="flex items-center space-x-4">
+      <DancecardHeaderLink />
       <button
         ref={loginTriggerRef}
         type="button"
