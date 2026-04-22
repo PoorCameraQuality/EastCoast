@@ -643,10 +643,12 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
             <div className="rounded-xl border border-amber-500/25 bg-amber-950/25 p-4 text-sm text-amber-50/95">
               <p className="font-medium text-amber-100">No program is loaded for this event yet.</p>
               <p className="mt-2 text-slate-300">
-                Publishing the website only ships the app. Sessions live in your Supabase project (
-                <code className="rounded bg-black/40 px-1">dancecard_program_slots</code>). Run the import once
-                against <strong>production</strong> using the service-role key and the checked-in JSON (see{' '}
-                <code className="rounded bg-black/40 px-1">docs/dancecard-first-run.md</code>).
+                The site is live, but this Supabase project has no rows in{' '}
+                <code className="rounded bg-black/40 px-1">dancecard_program_slots</code> for this event. Either run
+                the import script with your <strong>Vercel</strong> <code className="rounded bg-black/40 px-1">NEXT_PUBLIC_SUPABASE_URL</code> and{' '}
+                <code className="rounded bg-black/40 px-1">SUPABASE_SERVICE_ROLE_KEY</code> (see{' '}
+                <code className="rounded bg-black/40 px-1">docs/dancecard-first-run.md</code>), or fix env vars if you
+                already imported into a <em>different</em> Supabase project than production uses.
               </p>
             </div>
           ) : !filteredSlots.length ? (
