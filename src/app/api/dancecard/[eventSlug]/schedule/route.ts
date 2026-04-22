@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getDancecardAdmin, loadEventBySlug, normalizeEventSlug } from '@/lib/dancecard/routeCommon'
 
+/** Always hit origin + Supabase; avoid any edge cache of an empty first response. */
+export const dynamic = 'force-dynamic'
+
 export async function GET(
   _request: NextRequest,
   context: { params: { eventSlug: string } }
@@ -20,7 +23,7 @@ export async function GET(
       .order('starts_at', { ascending: true })
       .order('sort_order', { ascending: true })
     if (error) throw error
-    return NextResponse.json({
+    const body = {
       meta: {
         productTitle: event.product_title,
         eventTitle: event.event_title,
@@ -42,6 +45,11 @@ export async function GET(
         description: s.description,
         sortOrder: s.sort_order,
       })),
+    }
+    return NextResponse.json(body, {
+      headers: {
+        'Cache-Control': 'private, no-store, max-age=0',
+      },
     })
   } catch (e) {
     const msg = e instanceof Error ? e.message : 'Internal error'

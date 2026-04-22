@@ -643,12 +643,15 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
             <div className="rounded-xl border border-amber-500/25 bg-amber-950/25 p-4 text-sm text-amber-50/95">
               <p className="font-medium text-amber-100">No program is loaded for this event yet.</p>
               <p className="mt-2 text-slate-300">
-                The site is live, but this Supabase project has no rows in{' '}
-                <code className="rounded bg-black/40 px-1">dancecard_program_slots</code> for this event. Either run
-                the import script with your <strong>Vercel</strong> <code className="rounded bg-black/40 px-1">NEXT_PUBLIC_SUPABASE_URL</code> and{' '}
-                <code className="rounded bg-black/40 px-1">SUPABASE_SERVICE_ROLE_KEY</code> (see{' '}
-                <code className="rounded bg-black/40 px-1">docs/dancecard-first-run.md</code>), or fix env vars if you
-                already imported into a <em>different</em> Supabase project than production uses.
+                The schedule API returned an empty list for this event. Common causes: (1) no rows in{' '}
+                <code className="rounded bg-black/40 px-1">dancecard_program_slots</code> yet — run the import with
+                your <strong>Vercel</strong> <code className="rounded bg-black/40 px-1">NEXT_PUBLIC_SUPABASE_URL</code>{' '}
+                and <code className="rounded bg-black/40 px-1">SUPABASE_SERVICE_ROLE_KEY</code> (see{' '}
+                <code className="rounded bg-black/40 px-1">docs/dancecard-first-run.md</code>); (2) production env points
+                at a <em>different</em> Supabase project than the one you imported; (3) production is an{' '}
+                <strong>older deploy</strong> — open{' '}
+                <code className="rounded bg-black/40 px-1">/api/dancecard/{slug}/schedule</code> in a new tab; if you get
+                404 HTML instead of JSON, redeploy from GitHub / Vercel.
               </p>
             </div>
           ) : !filteredSlots.length ? (
