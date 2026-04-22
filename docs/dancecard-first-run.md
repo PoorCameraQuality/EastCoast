@@ -7,6 +7,23 @@
    - [`database/dancecard_seed_paf26_demo.sql`](../database/dancecard_seed_paf26_demo.sql)
 2. Confirm tables exist: `dancecard_events`, `dancecard_program_slots`, `dancecard_accounts`, …
 
+## Supabase CLI (optional)
+
+The repo includes [`supabase/config.toml`](../supabase/config.toml) from `supabase init` so you can use the [Supabase CLI](https://supabase.com/docs/guides/cli) for `db pull`, migrations, and local stacks.
+
+On your machine (no secrets committed):
+
+```bash
+npx supabase@latest login
+npx supabase@latest link --project-ref YOUR_PROJECT_REF
+```
+
+`YOUR_PROJECT_REF` is the subdomain of your project URL (`https://YOUR_PROJECT_REF.supabase.co`). Linking may prompt for the **database password** (set under Project Settings → Database; it is **not** the anon or service_role API keys).
+
+**Direct Postgres** (`postgresql://postgres:…@db.YOUR_PROJECT_REF.supabase.co:5432/postgres`) is only for tools like `psql`; keep the password out of git and chat logs.
+
+For **Next.js / Vercel**, continue to use **Project URL** + **anon/publishable** + **service_role/secret** from **Project Settings → API**, copied into `.env.local` / Vercel env vars as documented below.
+
 ## Local environment
 
 Copy [`.env.example`](../.env.example) to `.env.local` and set at minimum:

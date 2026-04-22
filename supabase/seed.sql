@@ -1,0 +1,1 @@
+-- Optional seed for `supabase db reset` locally. Dancecard production seeds: `database/dancecard_seed_paf26_demo.sql`.
