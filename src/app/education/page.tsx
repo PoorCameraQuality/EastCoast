@@ -7,9 +7,9 @@ import { supabase } from '@/lib/supabase'
 export const revalidate = 1800
 
 export const metadata: Metadata = {
-  title: 'Education — Guides, Safety & Consent',
+  title: 'BDSM Education: Consent, Safety & Kink Guides',
   description:
-    'Free BDSM & kink education: consent, safety, techniques, and community articles. Expert-leaning guides—not fluff—so you can learn before you play.',
+    'Free BDSM education guides for adults: consent, safety, negotiation, aftercare, kink terms, and technique basics before events or play.',
   alternates: {
     canonical: `${BASE_URL}/education`,
   },
@@ -18,9 +18,9 @@ export const metadata: Metadata = {
     locale: 'en_US',
     url: `${BASE_URL}/education`,
     siteName: 'East Coast Kink Events',
-    title: 'BDSM & Kink Education — Guides & Safety Articles',
+    title: 'BDSM Education — Consent, Safety & Kink Guides',
     description:
-      'Browse in-depth articles on consent, safety, techniques, and community—from East Coast Kink Events.',
+      'Browse adult BDSM education articles on consent, safety, negotiation, aftercare, kink terms, and community norms.',
     images: [
       {
         url: `${BASE_URL}/og-image.png`,
@@ -32,9 +32,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'BDSM & Kink Education — Guides & Safety',
+    title: 'BDSM Education — Consent, Safety & Kink Guides',
     description:
-      'Consent, safety, techniques, and community articles—free educational library from East Coast Kink Events.',
+      'Free adult BDSM education articles on consent, safety, negotiation, aftercare, kink terms, and community norms.',
     images: [`${BASE_URL}/og-image.png`],
   },
 }

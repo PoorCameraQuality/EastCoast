@@ -1,8 +1,8 @@
 ---
 slug: bdsm-safety-guide
-title: BDSM Safety Guide: Risk, Consent, and Smarter Play
+title: BDSM Safety Guide: Consent, Risks & Safer Play Rules
 focusKeyword: bdsm safety guide
-description: A thorough BDSM safety guide covering negotiation, injury prevention, emotional care, red flags, and how events, vendors, and dungeons support safer community spaces.
+description: Learn BDSM safety basics: consent, negotiation, safe words, injury prevention, emotional aftercare, red flags, and safer play rules for adults.
 category: Safety
 datePublished: 2026-03-03
 ---

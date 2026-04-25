@@ -23,14 +23,14 @@ export async function generateMetadata({
   const filtered = eventsListHasActiveFilter(searchParams)
   const selection = parseEventsListSearchParams(searchParams)
 
-  const baseDescription = `${count}+ BDSM & kink events, conventions, and parties—search by state or type. Find kink events near you on the East Coast & Midwest. Updated list with conferences & workshops.`
+  const baseDescription = `${count}+ BDSM events near you: kink conventions, workshops, parties, retreats, and dungeons across the East Coast & Midwest. Search by state or type.`
   const filterSuffix = filtered
     ? ` Filtered: ${selection}.`
     : ''
   const description = `${baseDescription}${filterSuffix}`.slice(0, 160)
   const ogDescription = `${baseDescription}${filterSuffix}`.slice(0, 200)
 
-  const defaultTitle = 'BDSM & Kink Events Near You | Conventions & Parties'
+  const defaultTitle = 'BDSM Events Near Me: Kink Conventions & Workshops'
   const title = filtered ? `${selection} — Kink Events`.slice(0, 70) : defaultTitle
 
   return {
@@ -47,7 +47,7 @@ export async function generateMetadata({
       locale: 'en_US',
       url: `${BASE_URL}/events`,
       siteName: 'East Coast Kink Events',
-      title: filtered ? `${selection} — Kink Events` : 'BDSM & Kink Events — Conventions, Parties & Workshops',
+      title: filtered ? `${selection} — Kink Events` : 'BDSM Events Near Me — Kink Conventions & Workshops',
       description: ogDescription,
       images: [
         {
@@ -60,7 +60,7 @@ export async function generateMetadata({
     },
     twitter: {
       card: 'summary_large_image',
-      title: filtered ? `${selection} — Kink Events` : 'BDSM & Kink Events — Conventions & Workshops',
+      title: filtered ? `${selection} — Kink Events` : 'BDSM Events Near Me — Kink Conventions & Workshops',
       description: ogDescription,
       images: [`${BASE_URL}/og-image.png`],
     },

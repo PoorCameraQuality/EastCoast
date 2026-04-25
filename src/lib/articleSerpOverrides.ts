@@ -13,18 +13,18 @@ export type ArticleSerpOverride = {
 
 const OVERRIDES: Record<string, ArticleSerpOverride> = {
   'age-play-101-adult-consensual-safe': {
-    seo_title: 'Age Play 101: Consensual Adult Roleplay — Safety & Norms',
+    seo_title: 'Age Play 101: Meaning, Consent & Safety for Adults',
     meta_description:
-      'Educational overview of consensual adult age play: negotiation, boundaries, privacy, and community context. Safety-first reading from East Coast Kink Events.',
-    h1: 'Age Play 101: Consensual Adult Roleplay',
-    lead: 'A plain-language, safety-first introduction to consensual adult age play—what people usually mean by it, how negotiation works, and how to engage responsibly in community spaces.',
+      'Learn what consensual adult age play means, how negotiation works, and what boundaries, privacy, and safety checks matter before exploring.',
+    h1: 'Age Play 101: Meaning, Consent & Safety for Adults',
+    lead: 'A plain-language, safety-first introduction to consensual adult age play: what people usually mean by it, how negotiation works, and how to engage responsibly in community spaces.',
   },
   'bdsm-breast-torture-play-comprehensive-guide': {
-    seo_title: 'Breast & Nipple Play: A Safety-First BDSM Guide',
+    seo_title: 'BDSM Breast Torture Guide: Safety, Consent & Aftercare',
     meta_description:
-      'Consent-focused guide to breast and nipple sensation play: negotiation, anatomy basics, pacing, aftercare, and risk awareness. Educational resource—not explicit content.',
-    h1: 'Breast & Nipple Play: A Safety-First Guide',
-    lead: 'This guide focuses on consent, anatomy, pacing, and aftercare for breast and nipple sensation play—written for adults who want a sober, educational reference before trying scenes or workshops.',
+      'A safety-first BDSM breast torture guide covering consent, anatomy basics, pacing, safer tools, red flags, and aftercare for adults.',
+    h1: 'BDSM Breast Torture Guide: Safety, Consent & Aftercare',
+    lead: 'A safety-first adult guide to breast and nipple sensation play, with practical notes on consent, anatomy, pacing, red flags, and aftercare before scenes or workshops.',
   },
   'a-to-z-kinks-and-fetishes-guide': {
     seo_title: 'Kinks A–Z: Beginner Glossary (50+ Terms, Consent Context)',
@@ -32,6 +32,20 @@ const OVERRIDES: Record<string, ArticleSerpOverride> = {
       'Browse 50+ kink and fetish terms A–Z with short definitions and consent-aware context. Free beginner reference from East Coast Kink Events.',
     h1: 'Kinks A–Z: A Beginner’s Glossary',
     lead: 'A consent-aware A–Z glossary of common kinks and fetishes—short definitions, safety context, and links to deeper reading when you want to learn more.',
+  },
+  '2257-record-keeping-adult-industry-analysis': {
+    seo_title: '2257 Record-Keeping Rules: Adult Industry Guide',
+    meta_description:
+      'Plain-language 2257 record-keeping overview for adult creators and businesses: what records are for, why compliance matters, and when to get legal help.',
+    h1: '2257 Record-Keeping Rules: Adult Industry Guide',
+    lead: 'A practical overview of 2257 record-keeping for adult-industry creators, organizers, and businesses, with compliance context and reminders to get qualified legal advice.',
+  },
+  'hottest-kink-events-winter-2024-2025': {
+    seo_title: 'Winter Kink Events: Conferences, Parties & Workshops',
+    meta_description:
+      'Find winter kink events, BDSM conferences, parties, workshops, and community gatherings, with notes on location, timing, and what each event is known for.',
+    h1: 'Winter Kink Events: Conferences, Parties & Workshops',
+    lead: 'A seasonal guide to winter kink events, BDSM conferences, parties, workshops, and community gatherings, with practical notes on where they happen and what each event is known for.',
   },
 }
 

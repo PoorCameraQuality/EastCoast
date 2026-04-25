@@ -6,16 +6,20 @@ import { getSiteSponsorVendor } from '@/data/vendors'
 import { BASE_URL } from '@/lib/seo'
 
 export const metadata: Metadata = {
-  title: 'Support This Site',
+  title: 'Sponsor East Coast Kink Events',
   description:
-    'Keep East Coast Kink Events self-funded and growing. Explore Supporter and Sponsor options for sticky placement and highly visible support.',
+    'Sponsor or support East Coast Kink Events with sticky placement, sponsor visibility, and direct funding for directory improvements.',
+  robots: {
+    index: false,
+    follow: true,
+  },
   alternates: {
     canonical: `${BASE_URL}/support`,
   },
   openGraph: {
-    title: 'Support This Site | East Coast Kink Events',
+    title: 'Sponsor East Coast Kink Events',
     description:
-      'Help keep East Coast Kink Events self-funded and growing. Supporter and Sponsor tiers available.',
+      'Supporter and sponsor options for events, shops, and community projects that want visibility on East Coast Kink Events.',
     url: `${BASE_URL}/support`,
     type: 'website',
     images: [
@@ -29,9 +33,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Support This Site | East Coast Kink Events',
+    title: 'Sponsor East Coast Kink Events',
     description:
-      'Help keep East Coast Kink Events self-funded and growing. Supporter and Sponsor tiers available.',
+      'Supporter and sponsor options for events, shops, and community projects that want visibility on East Coast Kink Events.',
     images: [`${BASE_URL}/og-image.png`],
   },
 }

@@ -6,6 +6,12 @@ const MAX_TITLE_LENGTH = 60
 const BRAND_NAME = "East Coast Kink Events"
 const BRAND_SHORT = "East Coast Kink Events"
 
+function stripBrandSuffix(title: string): string {
+  return title
+    .replace(/\s+[|–-]\s+East Coast Kink Events$/i, '')
+    .trim()
+}
+
 /**
  * Smart title truncation that preserves important parts
  */
@@ -58,31 +64,28 @@ export function generateEventTitle(event: any): string {
   const city = event.location?.city || ''
   const stateAbbr = event.location?.state || ''
   const locationPart = city && stateAbbr ? ` — ${city}, ${stateAbbr}` : ''
-  const yearPart = yearStr ? ` (${yearStr})` : ''
+  const nameHasYear = yearStr ? new RegExp(`\\b${yearStr}\\b`).test(eventName) : false
+  const yearPart = yearStr && !nameHasYear ? ` (${yearStr})` : ''
 
-  const brandSuffix = ` | ${BRAND_SHORT}`
-
-  let title = `${eventName}${locationPart}${yearPart}${brandSuffix}`
-
-  if (title.length > MAX_TITLE_LENGTH) {
-    title = `${eventName}${locationPart}${brandSuffix}`
-  }
-
-  if (title.length > MAX_TITLE_LENGTH && yearStr) {
-    title = `${eventName} ${yearStr} | ${BRAND_SHORT}`
-  }
+  let title = `${eventName}${locationPart}${yearPart}`
 
   if (title.length > MAX_TITLE_LENGTH) {
-    title = `${eventName} | ${BRAND_SHORT}`
+    title = `${eventName}${locationPart}`
+  }
+
+  if (title.length > MAX_TITLE_LENGTH && yearStr && !nameHasYear) {
+    title = `${eventName} ${yearStr}`
   }
 
   if (title.length > MAX_TITLE_LENGTH) {
-    const brandLength = BRAND_SHORT.length + 3
-    const availableForEvent = MAX_TITLE_LENGTH - brandLength
-    title = `${eventName.substring(0, Math.max(0, availableForEvent - 3))}... | ${BRAND_SHORT}`
+    title = eventName
   }
 
-  return title
+  if (title.length > MAX_TITLE_LENGTH) {
+    title = `${eventName.substring(0, MAX_TITLE_LENGTH - 3)}...`
+  }
+
+  return stripBrandSuffix(title)
 }
 
 /**
@@ -91,26 +94,19 @@ export function generateEventTitle(event: any): string {
  */
 export function generateDungeonTitle(dungeon: any): string {
   const location = `${dungeon.location.city}, ${dungeon.location.state}`
-  let title = `${dungeon.name} - ${location} | ${BRAND_NAME}`
+  let title = `${dungeon.name} - ${location}`
   
-  // If too long, try with short brand
+  // If too long, remove location; the layout template appends the site brand.
   if (title.length > MAX_TITLE_LENGTH) {
-    title = `${dungeon.name} - ${location} | ${BRAND_SHORT}`
-  }
-  
-  // If still too long, remove location
-  if (title.length > MAX_TITLE_LENGTH) {
-    title = `${dungeon.name} | ${BRAND_SHORT}`
+    title = dungeon.name
   }
   
   // If still too long, truncate dungeon name
   if (title.length > MAX_TITLE_LENGTH) {
-    const brandLength = BRAND_SHORT.length + 3 // +3 for " | "
-    const availableForDungeon = MAX_TITLE_LENGTH - brandLength
-    title = `${dungeon.name.substring(0, availableForDungeon - 3)}... | ${BRAND_SHORT}`
+    title = `${dungeon.name.substring(0, MAX_TITLE_LENGTH - 3)}...`
   }
   
-  return title
+  return stripBrandSuffix(title)
 }
 
 /** Same pattern as dungeons — swing / lifestyle club listing pages. */

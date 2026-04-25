@@ -1,8 +1,8 @@
 ---
 slug: bdsm-safety-consent-events
-title: "BDSM Safety and Consent at Events: What Every Attendee Should Know"
+title: "BDSM Event Safety: Consent Rules, Red Flags & Etiquette"
 focusKeyword: BDSM consent
-description: Consent and safety are the foundation of every good kink event. Here's how they work in practice, what to watch for, and what to do if something goes wrong.
+description: Before a kink event, learn consent rules, dungeon etiquette, negotiation basics, red flags, and what to do if something goes wrong.
 category: Education
 datePublished: 2026-04-01
 ---

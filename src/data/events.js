@@ -83,8 +83,8 @@ export const events = [
       "CEUs Through CARAS"
     ],
     "seo": {
-      "title": "CLAW 26 - Columbus Leather & Kink Weekend | East Coast Kink Events",
-      "description": "CLAW 26 (Apr 2-5, 2026) takes over the Hyatt Regency Columbus with VendorMart, 150+ classes, socials, and play spaces. 21+ event with CLAW package required for the host hotel.",
+      "title": "CLAW 26 Columbus: Leather Weekend & VendorMart",
+      "description": "CLAW 26 runs Apr 2-5, 2026 in Columbus, OH with a Hyatt hotel takeover, 118-booth VendorMart, 150+ classes, socials, and BDSM play spaces.",
       "keywords": "CLAW 26, Columbus leather weekend, Hyatt Regency Columbus, VendorMart, BDSM dungeons, kink education, leather community event, Ohio leather event"
     }
   },
@@ -653,8 +653,8 @@ export const events = [
       "Professional Development"
     ],
     "seo": {
-      "title": "Elevation Rope 2026 - Premier Rope Bondage Conference in North Carolina | East Coast Kink Events",
-      "description": "Join Elevation Rope 2026 in Horse Shoe, NC for an immersive 5-day rope bondage conference featuring comprehensive education, scenic Blue Ridge Mountains setting, and community building at Deerfields Retreat.",
+      "title": "Elevation Rope 2026: Shibari Conference in NC",
+      "description": "Elevation Rope 2026 runs Jul 16-21 in Horse Shoe, NC with shibari and rope bondage education, play parties, performances, and Deerfields Retreat lodging.",
       "keywords": "Elevation Rope, rope bondage conference, shibari, North Carolina, Blue Ridge Mountains, Deerfields Retreat, Horse Shoe NC, rope education, BDSM conference, kink education, rope workshop"
     }
   },
@@ -1084,8 +1084,8 @@ export const events = [
       "Myrtle Beach Location"
     ],
     "seo": {
-      "title": "Coastal Carolina Fetish Fair - Myrtle Beach BDSM Vendor Weekend | East Coast Kink Events",
-      "description": "A multi-day vendor fair with education and community in Myrtle Beach, South Carolina. Hotel room block available with group rates.",
+      "title": "Coastal Carolina Fetish Fair 2026: Myrtle Beach",
+      "description": "Coastal Carolina Fetish Fair is a Myrtle Beach BDSM vendor weekend with toy makers, workshops, community, and hotel details. Confirm 2026 dates with the organizer.",
       "keywords": "Coastal Carolina Fetish Fair, Myrtle Beach, South Carolina, BDSM vendors, kink fair, education, hotel"
     }
   },
@@ -1530,9 +1530,9 @@ export const events = [
       "Music Midway"
     ],
     "seo": {
-      "title": "Frolicon 2026 - Where Nerdy Meets Naughty | East Coast Kink Events",
-      "description": "Frolicon is the unique juxtaposition of the geek and kink worlds celebrated in glorious fashion in downtown Atlanta with 2500+ attendees, kink, gaming, burlesque, music, and parties.",
-      "keywords": "Frolicon 2026, Atlanta, geek culture, kink, gaming, burlesque, music, costuming, parties, LGBTQIA, Georgia"
+      "title": "Frolicon 2026 Atlanta: Kink, Gaming & Parties",
+      "description": "Frolicon 2026 in Atlanta, GA runs May 14-17 with kink classes, gaming, burlesque, parties, LGBTQIA programming, vendors, and a 6,000 sq ft playroom.",
+      "keywords": "Frolicon 2026, Frolicon Atlanta, Atlanta kink convention, geek culture, kink, gaming, burlesque, parties, LGBTQIA, Georgia"
     }
   },
   {
@@ -1602,8 +1602,8 @@ export const events = [
       "Pool"
     ],
     "seo": {
-      "title": "Primal Arts Festival 2026 - Darlington MD Ancient Arts & Kink Celebration | East Coast Kink Events",
-      "description": "Primal Arts Fest returns to Darlington, Maryland May 7-11, 2026 connecting body and spirit, provoking spiritual evolution, and embracing the sacred and the profane.",
+      "title": "Primal Arts Festival 2026: Maryland Kink Retreat",
+      "description": "Primal Arts Festival runs May 7-11, 2026 in Darlington, MD with sacred sexuality, kink education, ritual fires, play spaces, vendors, and camping.",
       "keywords": "Primal Arts Festival 2026, Darlington, Maryland, ancient arts, fire performance, tattooing, scarification, suspension, sacred sexuality, kink, spiritual evolution"
     }
   },
@@ -1951,8 +1951,8 @@ export const events = [
       "Multifaceted Schedule"
     ],
     "seo": {
-      "title": "Charmed - Philadelphia Erotic & Recreational Hypnosis Convention | East Coast Kink Events",
-      "description": "Charmed! has been setting the standard for in-person, erotic, and recreational hypnosis conventions since Jan 15-18, 2026. Join us for classes, demonstrations, and erotic experiences in a safe, welcoming environment.",
+      "title": "Charmed 2026: Erotic Hypnosis Convention",
+      "description": "Charmed runs Jan 15-18, 2026 in Philadelphia with erotic and recreational hypnosis classes, demos, consent rules, social events, and dungeon space.",
       "keywords": "Charmed, Philadelphia, erotic hypnosis, recreational hypnosis, hypnosis convention, Pennsylvania, hypnosis education"
     }
   },
@@ -3374,9 +3374,15 @@ export const generateEventSEO = (event) => {
     if (t.length <= max) return t;
     return `${t.slice(0, max - 1).trimEnd()}…`;
   };
+  const stripBrandSuffix = (s) => {
+    if (!s || typeof s !== 'string') return '';
+    return s.replace(/\s+[|–-]\s+East Coast Kink Events$/i, '').trim();
+  };
 
-  // Generate optimized title (≤60 chars)
-  const optimizedTitle = generateEventTitle(event);
+  // Prefer hand-tuned SERP copy when present; the app layout adds the site brand.
+  const optimizedTitle = event.seo?.title
+    ? clampMeta(stripBrandSuffix(event.seo.title), 60)
+    : generateEventTitle(event);
   const rawExcerpt = event.seo?.description || event.excerpt || '';
   const metaDescription = clampMeta(rawExcerpt, 160);
   const ogDescription = clampMeta(rawExcerpt, 200);
