@@ -40,6 +40,33 @@ export async function resolveHostIdFromCompareUsername(
   return acc.id
 }
 
+export type CompareUsernameResolution =
+  | { ok: true; hostId: string }
+  | { ok: false; reason: 'not_found' | 'self' | 'not_enabled' }
+
+/** Detailed username compare resolution for user-facing compare errors. */
+export async function resolveCompareUsername(
+  admin: SupabaseClient,
+  eventId: string,
+  rawUsername: string,
+  viewerAccountId: string
+): Promise<CompareUsernameResolution> {
+  const username = rawUsername.trim().toLowerCase()
+  if (!username) return { ok: false, reason: 'not_found' }
+  const { data: acc, error } = await admin
+    .from('dancecard_accounts')
+    .select('id')
+    .eq('event_id', eventId)
+    .eq('username', username)
+    .maybeSingle()
+  if (error) throw error
+  if (!acc?.id) return { ok: false, reason: 'not_found' }
+  if (acc.id === viewerAccountId) return { ok: false, reason: 'self' }
+  const prefs = await loadPrefs(admin, acc.id)
+  if (!prefs.allowCompareByUsername) return { ok: false, reason: 'not_enabled' }
+  return { ok: true, hostId: acc.id }
+}
+
 export type ReserveHostResolution =
   | { ok: true; hostId: string }
   | { ok: false; reason: 'not_found' | 'self' }

@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { z, ZodError } from 'zod'
 import { getDancecardAdmin, loadEventBySlug, normalizeEventSlug, resolveAccountFromSession } from '@/lib/dancecard/routeCommon'
 import { usernameSchema } from '@/lib/dancecard/schemas'
-import { resolveHostIdFromCompareUsername } from '@/lib/dancecard/mutualHostResolve'
+import { resolveCompareUsername } from '@/lib/dancecard/mutualHostResolve'
 import { buildMutualSharePayload } from '@/lib/dancecard/mutualSharePayload'
 
 export const dynamic = 'force-dynamic'
@@ -29,10 +29,17 @@ export async function POST(
     }
     const { username } = bodySchema.parse(await request.json())
 
-    const hostId = await resolveHostIdFromCompareUsername(admin, event.id, username, session.accountId)
-    if (!hostId) {
+    const resolved = await resolveCompareUsername(admin, event.id, username, session.accountId)
+    if (!resolved.ok) {
+      if (resolved.reason === 'self') {
+        return NextResponse.json({ error: 'You cannot compare with your own username. Enter another attendee or use a share link.' }, { status: 400 })
+      }
+      if (resolved.reason === 'not_enabled') {
+        return NextResponse.json({ error: 'That attendee has not enabled compare by username. Ask them for their share link instead.' }, { status: 404 })
+      }
       return NextResponse.json({ error: 'Compare not available for that username.' }, { status: 404 })
     }
+    const hostId = resolved.hostId
 
     const { data: host, error: hErr } = await admin
       .from('dancecard_accounts')

@@ -33,13 +33,15 @@ export async function PUT(
       window_starts_at: event.window_starts_at,
       window_ends_at: event.window_ends_at,
     })
-    const availabilityStart = parseIso(body.availabilityStartsAt)
-    const availabilityEnd = parseIso(body.availabilityEndsAt)
-    if (availabilityEnd <= availabilityStart) {
+    const requestedAvailabilityStart = parseIso(body.availabilityStartsAt)
+    const requestedAvailabilityEnd = parseIso(body.availabilityEndsAt)
+    if (requestedAvailabilityEnd <= requestedAvailabilityStart) {
       return NextResponse.json({ error: 'availabilityEndsAt must be after availabilityStartsAt' }, { status: 400 })
     }
-    if (availabilityStart < eventWindow.start || availabilityEnd > eventWindow.end) {
-      return NextResponse.json({ error: 'Availability range must fall inside the event window' }, { status: 400 })
+    const availabilityStart = new Date(Math.max(requestedAvailabilityStart.getTime(), eventWindow.start.getTime()))
+    const availabilityEnd = new Date(Math.min(requestedAvailabilityEnd.getTime(), eventWindow.end.getTime()))
+    if (availabilityEnd <= availabilityStart) {
+      return NextResponse.json({ error: 'Availability range must overlap the event window' }, { status: 400 })
     }
 
     const normalized: {
@@ -111,8 +113,8 @@ export async function PUT(
       .from('dancecard_prefs')
       .update({
         buffer_minutes: body.bufferMinutes,
-        availability_starts_at: body.availabilityStartsAt,
-        availability_ends_at: body.availabilityEndsAt,
+        availability_starts_at: availabilityStart.toISOString(),
+        availability_ends_at: availabilityEnd.toISOString(),
         updated_at: new Date().toISOString(),
       })
       .eq('account_id', session.accountId)

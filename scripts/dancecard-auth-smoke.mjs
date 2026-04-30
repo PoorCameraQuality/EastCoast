@@ -220,6 +220,31 @@ async function main() {
     })
     await request(`/api/dancecard/${enc}/dancecard`, {
       method: 'PUT',
+      jar: hostJar,
+      body: {
+        bufferMinutes: 0,
+        availabilityStartsAt: iso(addMinutes(eventStart, -4 * 60)),
+        availabilityEndsAt: iso(addMinutes(eventEnd, 4 * 60)),
+        selections: [
+          {
+            kind: 'program',
+            slotId: firstSlot.id,
+            startsAt: firstSlot.startsAt,
+            endsAt: firstSlot.endsAt,
+            note: 'Smoke selected program',
+          },
+          {
+            kind: 'manual',
+            startsAt: iso(manualBusyStart),
+            endsAt: iso(addMinutes(manualBusyStart, 30)),
+            note: 'Smoke manual unavailable',
+          },
+        ],
+      },
+      label: 'host save dancecard with boundary-expanded availability range',
+    })
+    await request(`/api/dancecard/${enc}/dancecard`, {
+      method: 'PUT',
       jar: viewerJar,
       body: {
         bufferMinutes: 0,
@@ -277,6 +302,18 @@ async function main() {
       throw new Error('compare by username: expected host and mutualFreeGaps')
     }
     console.log('OK compare by username gaps=', compare.mutualFreeGaps.length)
+
+    const selfCompare = await request(`/api/dancecard/${enc}/compare/by-username`, {
+      method: 'POST',
+      jar: hostJar,
+      body: { username: host.username },
+      expected: 400,
+      label: 'self compare by username',
+    })
+    if (!String(selfCompare?.error ?? '').includes('own username')) {
+      throw new Error(`self compare: expected explicit self-compare error, got ${JSON.stringify(selfCompare)}`)
+    }
+    console.log('OK self compare by username → 400 explicit message')
 
     const preview = await request(`/api/dancecard/${enc}/preview`, {
       method: 'POST',

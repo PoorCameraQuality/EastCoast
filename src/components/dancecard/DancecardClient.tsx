@@ -368,12 +368,15 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
       const sDate = splitLocalDateTime(startInput).date || startInput.slice(0, 10)
       const eDate = splitLocalDateTime(endInput).date || endInput.slice(0, 10)
       if (!sDate || !eDate) return null
-      const startMs = utcMillisAtZonedWallClock(tz, sDate, 0, 0)
-      const endBaseMs = utcMillisAtZonedWallClock(tz, eDate, 0, 0)
-      if (startMs == null || endBaseMs == null) return null
-      const dayMs = 24 * 60 * 60 * 1000
+      const selectedStartMs = utcMillisAtZonedWallClock(tz, sDate, 0, 0)
+      if (selectedStartMs == null) return null
+      const selectedEndMs = exclusiveEndOfZonedCalendarDayMs(tz, eDate)
+      const eventStartMs = Date.parse(schedule?.meta?.windowStartsAt ?? '')
+      const eventEndMs = Date.parse(schedule?.meta?.windowEndsAt ?? '')
+      const startMs = Number.isFinite(eventStartMs) ? Math.max(selectedStartMs, eventStartMs) : selectedStartMs
+      const endMs = Number.isFinite(eventEndMs) ? Math.min(selectedEndMs, eventEndMs) : selectedEndMs
       const start = new Date(startMs)
-      const end = new Date(endBaseMs + dayMs)
+      const end = new Date(endMs)
       if (end <= start) return null
       return {
         startLocal: `${sDate}T00:00`,
@@ -382,7 +385,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
         endIso: end.toISOString(),
       }
     },
-    [splitLocalDateTime, tz]
+    [schedule?.meta?.windowEndsAt, schedule?.meta?.windowStartsAt, splitLocalDateTime, tz]
   )
 
   const availabilityStateFromServer = useCallback(
@@ -1467,9 +1470,9 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
         setMutualData(d)
         setMutualToken('')
         mutualTokenRef.current = ''
-      } catch {
+      } catch (e) {
         setMutualData(null)
-        setToast('Compare not available for that username.')
+        setToast(formatDancecardApiMessage(e))
       }
       return
     }
