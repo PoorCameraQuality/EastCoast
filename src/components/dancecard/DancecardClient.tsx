@@ -7,7 +7,10 @@ import {
   extractDancecardShareToken,
   formatRange,
   formatTime,
+  exclusiveEndOfZonedCalendarDayMs,
+  formatUtcMsAsDatetimeLocalInZone,
   groupSlotsByDay,
+  parseDatetimeLocalInZone,
   toDatetimeLocalValue,
   utcMillisAtZonedWallClock,
   zonedCalendarDateFromUtc,
@@ -413,7 +416,10 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
     return `${p.label} ${fmt.format(start)}-${fmt.format(end)}`
   }, [])
 
-  const localDateKey = useCallback((iso: string) => toDatetimeLocalValue(new Date(iso)).slice(0, 10), [])
+  const localDateKey = useCallback(
+    (iso: string) => zonedCalendarDateFromUtc(Date.parse(iso), tz),
+    [tz]
+  )
 
   const selectedDayKey = useMemo(
     () => mobileDayKey || splitLocalDateTime(mStart || availabilityStart).date || toDatetimeLocalValue(new Date()).slice(0, 10),
@@ -713,13 +719,13 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
 
   const manualDraftSummary = useMemo(() => {
     if (!mStart || !mEnd) return null
-    const s = new Date(mStart)
-    const e = new Date(mEnd)
-    if (!Number.isFinite(s.getTime()) || !Number.isFinite(e.getTime()) || e <= s) return null
-    const hours = (e.getTime() - s.getTime()) / 36e5
+    const sMs = parseDatetimeLocalInZone(mStart, tz)
+    const eMs = parseDatetimeLocalInZone(mEnd, tz)
+    if (sMs == null || eMs == null || eMs <= sMs) return null
+    const hours = (eMs - sMs) / 36e5
     const days = new Set([splitLocalDateTime(mStart).date, splitLocalDateTime(mEnd).date]).size
     return { hours, days }
-  }, [mStart, mEnd, splitLocalDateTime])
+  }, [mStart, mEnd, splitLocalDateTime, tz])
 
   const upcomingHostClaims = useMemo(
     () =>
@@ -913,6 +919,11 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
         await refreshMe()
       } catch (e) {
         setToast(e instanceof DancecardApiError ? e.body : 'Save failed')
+        try {
+          await refreshMe()
+        } catch {
+          /* ignore resync failure */
+        }
       } finally {
         setSaving(false)
       }
@@ -1031,8 +1042,8 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
   function openManualFromOpenSlot(row: { start: Date; end: Date; busy: boolean }) {
     if (row.busy) return
     setEditingManualId(null)
-    setMStart(toDatetimeLocalValue(row.start))
-    setMEnd(toDatetimeLocalValue(row.end))
+    setMStart(formatUtcMsAsDatetimeLocalInZone(row.start.getTime(), tz))
+    setMEnd(formatUtcMsAsDatetimeLocalInZone(row.end.getTime(), tz))
     setMTitle('')
     setMobileDayKey(zonedCalendarDateFromUtc(row.start.getTime(), tz))
     setManualOpen(true)
@@ -1042,8 +1053,8 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
     const selection = (me?.selections ?? []).find((s) => s.id === selectionId && s.kind === 'manual')
     if (!selection) return
     setEditingManualId(selection.id)
-    setMStart(toDatetimeLocalValue(new Date(selection.startsAt)))
-    setMEnd(toDatetimeLocalValue(new Date(selection.endsAt)))
+    setMStart(formatUtcMsAsDatetimeLocalInZone(Date.parse(selection.startsAt), tz))
+    setMEnd(formatUtcMsAsDatetimeLocalInZone(Date.parse(selection.endsAt), tz))
     setMTitle(selection.note ?? '')
     setManualOpen(true)
   }
@@ -1053,26 +1064,28 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
       setToast('Set both start and end for unavailable time.')
       return
     }
-    if (new Date(mEnd).getTime() <= new Date(mStart).getTime()) {
+    const startMs = parseDatetimeLocalInZone(mStart, tz)
+    const endMs = parseDatetimeLocalInZone(mEnd, tz)
+    if (startMs == null || endMs == null) {
+      setToast(`Could not read those times in the event timezone (${tz}).`)
+      return
+    }
+    if (endMs <= startMs) {
       setToast('Unavailable end must be after start.')
       return
     }
     if (manualDateRangeBounds) {
-      const sMs = new Date(mStart).getTime()
-      const eMs = new Date(mEnd).getTime()
       if (
-        !Number.isFinite(sMs) ||
-        !Number.isFinite(eMs) ||
-        sMs < manualDateRangeBounds.rangeStartMs ||
-        eMs > manualDateRangeBounds.rangeEndMs
+        startMs < manualDateRangeBounds.rangeStartMs ||
+        endMs > manualDateRangeBounds.rangeEndMs
       ) {
         setToast('Unavailable time must stay within your saved date range.')
         return
       }
     }
     const cur = me?.selections ?? []
-    const startsAt = new Date(mStart).toISOString()
-    const endsAt = new Date(mEnd).toISOString()
+    const startsAt = new Date(startMs).toISOString()
+    const endsAt = new Date(endMs).toISOString()
     const note = mTitle.trim() ? mTitle.trim().slice(0, 1000) : null
     const isEditing = Boolean(editingManualId)
     const provisional = isEditing
@@ -1140,23 +1153,33 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
       setToast('That preset is not in this event schedule.')
       return
     }
-    const anchor = (() => {
-      const candidate = mStart || availabilityStart
-      if (!candidate) return new Date()
-      const parsed = new Date(candidate)
-      return Number.isFinite(parsed.getTime()) ? parsed : new Date()
-    })()
-
-    const makeLocal = (hour: number, minute: number, plusDays = 0) =>
-      new Date(anchor.getFullYear(), anchor.getMonth(), anchor.getDate() + plusDays, hour, minute, 0, 0)
-    const start = makeLocal(preset.startHour, preset.startMinute)
+    const dayYmd =
+      splitLocalDateTime(mStart || '').date ||
+      splitLocalDateTime(availabilityStart).date ||
+      selectedDayKey
+    if (!dayYmd) {
+      setToast('Pick a day first.')
+      return
+    }
+    const startMs = utcMillisAtZonedWallClock(tz, dayYmd, preset.startHour, preset.startMinute)
+    if (startMs == null) {
+      setToast('Could not place that preset in the event timezone.')
+      return
+    }
     const wrapsNextDay =
       preset.endHour < preset.startHour ||
       (preset.endHour === preset.startHour && preset.endMinute <= preset.startMinute)
-    const end = makeLocal(preset.endHour, preset.endMinute, wrapsNextDay ? 1 : 0)
+    const endYmd = wrapsNextDay
+      ? zonedCalendarDateFromUtc(exclusiveEndOfZonedCalendarDayMs(tz, dayYmd), tz)
+      : dayYmd
+    const endMs = utcMillisAtZonedWallClock(tz, endYmd, preset.endHour, preset.endMinute)
+    if (endMs == null) {
+      setToast('Could not place that preset end in the event timezone.')
+      return
+    }
     setMTitle(`Unavailable: ${preset.key}`)
-    setMStart(toDatetimeLocalValue(start))
-    setMEnd(toDatetimeLocalValue(end))
+    setMStart(formatUtcMsAsDatetimeLocalInZone(startMs, tz))
+    setMEnd(formatUtcMsAsDatetimeLocalInZone(endMs, tz))
   }
 
   async function addDailyPresetAcrossAvailability(presetKey: 'breakfast' | 'lunch' | 'dinner') {
@@ -1169,9 +1192,14 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
       setToast('Set and save your date range first.')
       return
     }
-    const rangeStart = new Date(availabilityStart)
-    const rangeEnd = new Date(availabilityEnd)
-    if (!Number.isFinite(rangeStart.getTime()) || !Number.isFinite(rangeEnd.getTime()) || rangeEnd <= rangeStart) {
+    const normalized = normalizeAvailabilityBounds(availabilityStart, availabilityEnd)
+    if (!normalized) {
+      setToast('Your date range is invalid.')
+      return
+    }
+    const rangeStartMs = Date.parse(normalized.startIso)
+    const rangeEndMs = Date.parse(normalized.endIso)
+    if (!Number.isFinite(rangeStartMs) || !Number.isFinite(rangeEndMs) || rangeEndMs <= rangeStartMs) {
       setToast('Your date range is invalid.')
       return
     }
@@ -1179,32 +1207,42 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
     const current = me?.selections ?? []
     const dedupe = new Set(current.map((s) => `${s.kind}|${s.startsAt}|${s.endsAt}|${s.note ?? ''}`))
     const next = [...current]
-    const startDay = new Date(rangeStart.getFullYear(), rangeStart.getMonth(), rangeStart.getDate())
-    const endLimit = rangeEnd.getTime()
+    const wrapsNextDay =
+      preset.endHour < preset.startHour ||
+      (preset.endHour === preset.startHour && preset.endMinute <= preset.startMinute)
 
-    for (let d = new Date(startDay); d.getTime() < endLimit; d.setDate(d.getDate() + 1)) {
-      const blockStart = new Date(d.getFullYear(), d.getMonth(), d.getDate(), preset.startHour, preset.startMinute, 0, 0)
-      const wrapsNextDay =
-        preset.endHour < preset.startHour ||
-        (preset.endHour === preset.startHour && preset.endMinute <= preset.startMinute)
-      const blockEnd = new Date(
-        d.getFullYear(),
-        d.getMonth(),
-        d.getDate() + (wrapsNextDay ? 1 : 0),
-        preset.endHour,
-        preset.endMinute,
-        0,
-        0
-      )
-      if (blockEnd <= rangeStart || blockStart >= rangeEnd) continue
-      const clippedStart = blockStart < rangeStart ? rangeStart : blockStart
-      const clippedEnd = blockEnd > rangeEnd ? rangeEnd : blockEnd
-      if (clippedEnd <= clippedStart) continue
-      const startsAt = clippedStart.toISOString()
-      const endsAt = clippedEnd.toISOString()
+    let dayYmd = zonedCalendarDateFromUtc(rangeStartMs, tz)
+    const lastInclusiveYmd = zonedCalendarDateFromUtc(rangeEndMs - 1, tz)
+
+    while (dayYmd.localeCompare(lastInclusiveYmd) <= 0) {
+      const blockStartMs = utcMillisAtZonedWallClock(tz, dayYmd, preset.startHour, preset.startMinute)
+      if (blockStartMs == null) break
+      const endYmd = wrapsNextDay
+        ? zonedCalendarDateFromUtc(exclusiveEndOfZonedCalendarDayMs(tz, dayYmd), tz)
+        : dayYmd
+      const blockEndMs = utcMillisAtZonedWallClock(tz, endYmd, preset.endHour, preset.endMinute)
+      if (blockEndMs == null) break
+      if (blockEndMs <= rangeStartMs || blockStartMs >= rangeEndMs) {
+        const nextStart = exclusiveEndOfZonedCalendarDayMs(tz, dayYmd)
+        dayYmd = zonedCalendarDateFromUtc(nextStart, tz)
+        continue
+      }
+      const clippedStartMs = Math.max(blockStartMs, rangeStartMs)
+      const clippedEndMs = Math.min(blockEndMs, rangeEndMs)
+      if (clippedEndMs <= clippedStartMs) {
+        const nextStart = exclusiveEndOfZonedCalendarDayMs(tz, dayYmd)
+        dayYmd = zonedCalendarDateFromUtc(nextStart, tz)
+        continue
+      }
+      const startsAt = new Date(clippedStartMs).toISOString()
+      const endsAt = new Date(clippedEndMs).toISOString()
       const note = `Unavailable: ${preset.key}`
       const key = `manual|${startsAt}|${endsAt}|${note}`
-      if (dedupe.has(key)) continue
+      if (dedupe.has(key)) {
+        const nextStart = exclusiveEndOfZonedCalendarDayMs(tz, dayYmd)
+        dayYmd = zonedCalendarDateFromUtc(nextStart, tz)
+        continue
+      }
       dedupe.add(key)
       next.push({
         id: crypto.randomUUID(),
@@ -1214,6 +1252,8 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
         endsAt,
         note,
       })
+      const nextStart = exclusiveEndOfZonedCalendarDayMs(tz, dayYmd)
+      dayYmd = zonedCalendarDateFromUtc(nextStart, tz)
     }
 
     if (next.length === current.length) {
@@ -1249,26 +1289,33 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
 
   async function duplicateYesterdayToSelectedDay() {
     const cur = me?.selections ?? []
-    const dayStart = new Date(`${selectedDayKey}T00:00`)
-    if (!Number.isFinite(dayStart.getTime())) {
-      setToast('Could not determine target day.')
+    const keys = availabilityDays.map((d) => d.key).sort()
+    const idx = keys.indexOf(selectedDayKey)
+    if (idx <= 0) {
+      setToast('No previous day in your saved range to copy from.')
       return
     }
-    const prevDay = new Date(dayStart.getTime() - 24 * 60 * 60 * 1000)
-    const prevKey = toDatetimeLocalValue(prevDay).slice(0, 10)
+    const prevKey = keys[idx - 1]!
     const source = cur.filter((s) => s.kind === 'manual' && localDateKey(s.startsAt) === prevKey)
     if (!source.length) {
-      setToast('No unavailable times found yesterday to duplicate.')
+      setToast('No unavailable times found on the previous day to duplicate.')
       return
     }
+    const prevStartMs = utcMillisAtZonedWallClock(tz, prevKey, 0, 0)
+    const selStartMs = utcMillisAtZonedWallClock(tz, selectedDayKey, 0, 0)
+    if (prevStartMs == null || selStartMs == null) {
+      setToast('Could not align days in the event timezone.')
+      return
+    }
+    const delta = selStartMs - prevStartMs
     const dedupe = new Set(cur.map((s) => `${s.kind}|${s.startsAt}|${s.endsAt}|${s.note ?? ''}`))
     const shifted = source
       .map((s) => ({
         id: crypto.randomUUID(),
         kind: 'manual',
         slotId: null,
-        startsAt: new Date(Date.parse(s.startsAt) + 24 * 60 * 60 * 1000).toISOString(),
-        endsAt: new Date(Date.parse(s.endsAt) + 24 * 60 * 60 * 1000).toISOString(),
+        startsAt: new Date(Date.parse(s.startsAt) + delta).toISOString(),
+        endsAt: new Date(Date.parse(s.endsAt) + delta).toISOString(),
         note: s.note ?? null,
       }))
       .filter((s) => {

@@ -267,6 +267,33 @@ export function exclusiveEndOfZonedCalendarDayMs(timeZone: string, calendarYmd: 
   return hi
 }
 
+/**
+ * Format an instant as `YYYY-MM-DDTHH:mm` for `<input type="datetime-local" />`-style values,
+ * using the **event** `timeZone` wall clock (not the browser's local zone).
+ */
+export function formatUtcMsAsDatetimeLocalInZone(utcMs: number, timeZone: string): string {
+  const dtf = wallPartsFormatter(timeZone)
+  const p = readWallPartsWith(dtf, utcMs)
+  const pad = (n: number) => String(n).padStart(2, '0')
+  return `${p.y}-${pad(p.m)}-${pad(p.d)}T${pad(p.h)}:${pad(p.min)}`
+}
+
+/**
+ * Parse `YYYY-MM-DDTHH:mm` (optional seconds) as a wall time in `timeZone`, returning UTC epoch ms.
+ * Use for manual unavailable times so they align with the event-tz day grid.
+ */
+export function parseDatetimeLocalInZone(value: string, timeZone: string): number | null {
+  const trimmed = value.trim()
+  const [datePart, rest = ''] = trimmed.split('T')
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(datePart)) return null
+  const timePart = rest.replace(/Z$/i, '').trim()
+  const hm = timePart.match(/^(\d{1,2}):(\d{2})/)
+  const hour24 = hm ? Number(hm[1]) : 0
+  const minute = hm ? Number(hm[2].slice(0, 2)) : 0
+  if (!Number.isFinite(hour24) || !Number.isFinite(minute)) return null
+  return utcMillisAtZonedWallClock(timeZone, datePart, hour24, minute)
+}
+
 /** Short label like `6 AM` for dancecard hour ticks (12-hour clock). */
 export function formatHourTickLabel(hour24: number): string {
   if (hour24 === 0 || hour24 === 24) return '12 AM'
