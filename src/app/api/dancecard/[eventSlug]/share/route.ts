@@ -30,9 +30,15 @@ export async function POST(
     })
     if (error) throw error
     const u = new URL(request.url)
+    const requestOrigin = `${u.protocol}//${u.host}`
+    const requestIsVercelPreview = u.host.endsWith('.vercel.app')
     const origin =
       process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, '') ||
-      (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : `${u.protocol}//${u.host}`)
+      (!requestIsVercelPreview
+        ? requestOrigin
+        : process.env.VERCEL_URL
+          ? `https://${process.env.VERCEL_URL}`
+          : requestOrigin)
     const url = `${origin}/dancecard/${slug}/s/${token}`
     return NextResponse.json({ token, url })
   } catch (e) {

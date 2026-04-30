@@ -400,9 +400,10 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
     [tz]
   )
 
+  /** Whole-event wall-clock presets (event timezone) — break, lunch, dinner only. */
   const mealPresetOptions = useMemo(
     () => [
-      { key: 'breakfast' as const, label: 'Breakfast', startHour: 8, startMinute: 30, endHour: 9, endMinute: 30 },
+      { key: 'break' as const, label: 'Break', startHour: 10, startMinute: 30, endHour: 11, endMinute: 0 },
       { key: 'lunch' as const, label: 'Lunch', startHour: 12, startMinute: 0, endHour: 13, endMinute: 0 },
       { key: 'dinner' as const, label: 'Dinner', startHour: 18, startMinute: 0, endHour: 19, endMinute: 0 },
     ],
@@ -917,7 +918,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
           )
         })
         if (outside.length) {
-          const kinds = [...new Set(outside.map((s) => s.kind))]
+          const kinds = Array.from(new Set(outside.map((s) => s.kind)))
           throw new Error(
             `${outside.length} block(s) fall outside your saved start/end dates (${kinds.join(', ')}). ` +
               'Widen the date range at the top, or remove those classes/blocks, then save again.'
@@ -1199,7 +1200,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
     }
   }
 
-  function applyManualPreset(presetKey: 'breakfast' | 'lunch' | 'dinner') {
+  function applyManualPreset(presetKey: 'break' | 'lunch' | 'dinner') {
     const preset = mealPresetOptions.find((p) => p.key === presetKey)
     if (!preset) {
       setToast('That preset is not in this event schedule.')
@@ -1234,7 +1235,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
     setMEnd(formatUtcMsAsDatetimeLocalInZone(endMs, tz))
   }
 
-  async function addDailyPresetAcrossAvailability(presetKey: 'breakfast' | 'lunch' | 'dinner') {
+  async function addDailyPresetAcrossAvailability(presetKey: 'break' | 'lunch' | 'dinner') {
     const preset = mealPresetOptions.find((p) => p.key === presetKey)
     if (!preset) {
       setToast('That preset is not in this event schedule.')
@@ -1320,7 +1321,9 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
 
   async function clearMealPresetsAcrossAvailability() {
     const cur = me?.selections ?? []
-    const next = cur.filter((s) => !(s.kind === 'manual' && /^Unavailable: (breakfast|lunch|dinner)$/i.test(s.note ?? '')))
+    const next = cur.filter(
+      (s) => !(s.kind === 'manual' && /^Unavailable: (breakfast|break|lunch|dinner)$/i.test(s.note ?? ''))
+    )
     if (next.length === cur.length) {
       setToast('No meal presets to clear.')
       return
@@ -1393,9 +1396,13 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
     try {
       const res = await dancecardFetch<{ token: string; url?: string }>(slug, '/share', { method: 'POST' })
       const token = res.token.trim()
-      const shareUrl = res.url?.trim()
-        ? res.url.trim()
-        : `${window.location.origin.replace(/\/+$/, '')}/dancecard/${encodeURIComponent(slug)}/s/${encodeURIComponent(token)}`
+      const path = `/dancecard/${encodeURIComponent(slug)}/s/${encodeURIComponent(token)}`
+      const canon = process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/+$/, '').trim()
+      const shareUrl = canon
+        ? `${canon}${path}`
+        : res.url?.trim()
+          ? res.url.trim()
+          : `${window.location.origin.replace(/\/+$/, '')}${path}`
       if (navigator.clipboard?.writeText) {
         await navigator.clipboard.writeText(shareUrl)
         setToast('Copied share link.')
@@ -2679,7 +2686,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                     </button>
                   ))}
                   {!mealPresetOptions.length ? (
-                    <p className="text-xs text-slate-500">No breakfast/lunch/dinner slots found in this event schedule.</p>
+                    <p className="text-xs text-slate-500">No break/lunch/dinner presets.</p>
                   ) : null}
                 </div>
                 <div className="mt-2 flex flex-wrap gap-2">
@@ -3721,7 +3728,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                   </button>
                 ))}
                 {!mealPresetOptions.length ? (
-                  <p className="text-xs text-slate-500">No breakfast/lunch/dinner slots found in this event schedule.</p>
+                  <p className="text-xs text-slate-500">No break/lunch/dinner presets.</p>
                 ) : null}
               </div>
               <div className="mt-2 flex flex-wrap gap-2">
