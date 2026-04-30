@@ -6,6 +6,7 @@ import {
   resolveAccountFromSession,
 } from '@/lib/dancecard/routeCommon'
 import { reserveBodySchema } from '@/lib/dancecard/schemas'
+import { resolveReserveHostId } from '@/lib/dancecard/mutualHostResolve'
 import { loadPrefs, loadReservationsForAccount, loadSelections, selectionsToBusyInput } from '@/lib/dancecard/data'
 import { computeMutualFree, eventWindowFromRow, parseIso, intervalFullyInsideWindow } from '@/lib/dancecard/busy'
 import { ZodError } from 'zod'
@@ -27,18 +28,15 @@ export async function POST(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
     const body = reserveBodySchema.parse(await request.json())
-    const { data: link } = await admin
-      .from('dancecard_share_links')
-      .select('account_id')
-      .eq('token', body.shareToken)
-      .is('revoked_at', null)
-      .maybeSingle()
-    if (!link) {
-      return NextResponse.json({ error: 'Share token not found' }, { status: 404 })
+    const resolved = await resolveReserveHostId(admin, event.id, body, session.accountId)
+    if (!resolved.ok) {
+      if (resolved.reason === 'self') {
+        return NextResponse.json({ error: 'Cannot book yourself' }, { status: 400 })
+      }
+      return NextResponse.json({ error: 'Could not load host for this request.' }, { status: 404 })
     }
-    if (link.account_id === session.accountId) {
-      return NextResponse.json({ error: 'Cannot book yourself' }, { status: 400 })
-    }
+    const hostId = resolved.hostId
+
     const window = eventWindowFromRow({
       window_starts_at: event.window_starts_at,
       window_ends_at: event.window_ends_at,
@@ -51,7 +49,6 @@ export async function POST(
       return NextResponse.json({ error: 'Outside event window' }, { status: 400 })
     }
 
-    const hostId = link.account_id
     const hb = await loadPrefs(admin, hostId)
     const hs = await loadSelections(admin, hostId)
     const hr = await loadReservationsForAccount(admin, event.id, hostId)
@@ -60,11 +57,11 @@ export async function POST(
     const vr = await loadReservationsForAccount(admin, event.id, session.accountId)
     const mutual = computeMutualFree(
       window,
-      hb,
+      hb.bufferMinutes,
       selectionsToBusyInput(hs),
       hr,
       hostId,
-      vb,
+      vb.bufferMinutes,
       selectionsToBusyInput(vs),
       vr,
       session.accountId
@@ -79,6 +76,7 @@ export async function POST(
         event_id: event.id,
         host_account_id: hostId,
         guest_account_id: session.accountId,
+        guest_name: null,
         starts_at: body.startsAt,
         ends_at: body.endsAt,
         status: 'confirmed',

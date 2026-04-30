@@ -1,6 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getDancecardAdmin, loadEventBySlug, normalizeEventSlug, resolveAccountFromSession } from '@/lib/dancecard/routeCommon'
-import { loadPrefs, loadSelections } from '@/lib/dancecard/data'
+import {
+  loadPrefs,
+  loadSelections,
+  loadAvailabilityRange,
+  setPrefsAllowCompareByUsername,
+} from '@/lib/dancecard/data'
 import { z, ZodError } from 'zod'
 import { displayNameSchema } from '@/lib/dancecard/schemas'
 
@@ -20,15 +25,22 @@ export async function GET(
     if (!session) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
-    const buffer = await loadPrefs(admin, session.accountId)
+    const prefs = await loadPrefs(admin, session.accountId)
+    const availability = await loadAvailabilityRange(admin, session.accountId)
     const selections = await loadSelections(admin, session.accountId)
     return NextResponse.json({
       account: {
         id: session.accountId,
         username: session.username,
         displayName: session.displayName,
+        isStaff: session.isStaff,
       },
-      prefs: { bufferMinutes: buffer },
+      prefs: {
+        bufferMinutes: prefs.bufferMinutes,
+        allowCompareByUsername: prefs.allowCompareByUsername,
+        availabilityStartsAt: availability?.startsAt ?? event.window_starts_at,
+        availabilityEndsAt: availability?.endsAt ?? event.window_ends_at,
+      },
       selections: selections.map((s) => ({
         id: s.id,
         kind: s.kind,
@@ -37,6 +49,8 @@ export async function GET(
         endsAt: s.ends_at,
         programTitle: s.program_title,
         programRoom: s.program_room,
+        programTrack: s.program_track,
+        note: s.note ?? null,
       })),
     })
   } catch (e) {
@@ -61,17 +75,50 @@ export async function PATCH(
     if (!session) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
-    const patchSchema = z.object({ displayName: displayNameSchema })
-    const { displayName } = patchSchema.parse(await request.json())
-    const { data, error } = await admin
-      .from('dancecard_accounts')
-      .update({ display_name: displayName })
-      .eq('id', session.accountId)
-      .select('id, display_name')
-      .single()
-    if (error) throw error
+    const patchSchema = z
+      .object({
+        displayName: displayNameSchema.optional(),
+        allowCompareByUsername: z.boolean().optional(),
+      })
+      .refine((b) => b.displayName !== undefined || b.allowCompareByUsername !== undefined, {
+        message: 'No updates provided',
+      })
+    const body = patchSchema.parse(await request.json())
+
+    let accountOut: { id: string; displayName: string } | undefined
+    if (body.displayName !== undefined) {
+      const { data, error } = await admin
+        .from('dancecard_accounts')
+        .update({ display_name: body.displayName })
+        .eq('id', session.accountId)
+        .select('id, display_name')
+        .single()
+      if (error) throw error
+      accountOut = { id: data.id, displayName: data.display_name }
+    }
+
+    let prefsOut: { allowCompareByUsername: boolean } | undefined
+    if (body.allowCompareByUsername !== undefined) {
+      const prefRes = await setPrefsAllowCompareByUsername(
+        admin,
+        session.accountId,
+        body.allowCompareByUsername
+      )
+      if (!prefRes.ok && prefRes.reason === 'allow_compare_column_missing') {
+        return NextResponse.json(
+          {
+            error:
+              'Database is missing column dancecard_prefs.allow_compare_by_username. Apply migration 20260430130000_dancecard_allow_compare_by_username.sql (or run: npm run dancecard:apply-migrations).',
+          },
+          { status: 503 }
+        )
+      }
+      prefsOut = { allowCompareByUsername: body.allowCompareByUsername }
+    }
+
     return NextResponse.json({
-      account: { id: data.id, displayName: data.display_name },
+      ...(accountOut ? { account: accountOut } : {}),
+      ...(prefsOut ? { prefs: prefsOut } : {}),
     })
   } catch (e) {
     if (e instanceof ZodError) {

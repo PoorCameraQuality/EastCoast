@@ -26,12 +26,19 @@ export async function middleware(req: NextRequest) {
   // Legacy CMS paths: always consolidate under /events (case-insensitive; backup to next.config).
   const pathLower = pathname.toLowerCase()
   if (pathLower === '/kinkeventcalendar' || pathLower.startsWith('/kinkeventcalendar/')) {
+    const legacyEventRedirects: Record<string, string> = {
+      'costal-carolina-fetish-fair': 'coastal-carolina-fetish-fair',
+      campcrucible2024: 'camp-crucible',
+      summercamp: 'dark-odyssey-summer-camp',
+      'dungeons-and-geekdoms': 'dungeons-geekdoms',
+    }
     const dest = req.nextUrl.clone()
     if (pathLower === '/kinkeventcalendar') {
       dest.pathname = '/events'
     } else {
       const slug = pathLower.slice('/kinkeventcalendar/'.length)
-      dest.pathname = slug ? `/events/${slug}` : '/events'
+      const canonicalSlug = legacyEventRedirects[slug] || slug
+      dest.pathname = canonicalSlug ? `/events/${canonicalSlug}` : '/events'
     }
     return NextResponse.redirect(dest, 308)
   }
@@ -77,7 +84,8 @@ export async function middleware(req: NextRequest) {
   }
 
   // Force lowercase paths for consistency
-  if (pathname !== lowerPath) {
+  const isDancecardSharePath = /^\/dancecard\/[^/]+\/s\/[^/]+/.test(pathLower)
+  if (!isDancecardSharePath && pathname !== lowerPath) {
     url.pathname = lowerPath
     return NextResponse.redirect(url, 308)
   }
@@ -126,9 +134,20 @@ export async function middleware(req: NextRequest) {
   }
 
   // Set crawl-friendly headers for public pages
-  if (!pathname.startsWith('/admin') && !pathname.startsWith('/api') && !pathname.startsWith('/login')) {
+  if (
+    !pathname.startsWith('/admin') &&
+    !pathname.startsWith('/organizer') &&
+    !pathname.startsWith('/api') &&
+    !pathname.startsWith('/login')
+  ) {
     const response = NextResponse.next()
     response.headers.set('X-Robots-Tag', 'index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1')
+    return response
+  }
+
+  if (pathname.startsWith('/organizer')) {
+    const response = NextResponse.next()
+    response.headers.set('X-Robots-Tag', 'noindex, nofollow')
     return response
   }
 

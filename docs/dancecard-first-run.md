@@ -43,7 +43,7 @@ npm install
 npm run dev
 ```
 
-Open `http://localhost:3000/dancecard/paf26`. After SQL setup you still need to **import the program** (next section) before the Program tab lists sessions from the Grid workbook. **Personal dancecard:** registered users click classes on the Program tab to add or remove them; open **My dancecard** to see the list (titles, times, rooms) and optional manual busy blocks.
+Open `http://localhost:3000/dancecard/paf26`. After SQL setup you still need to **import the program** (next section) before the Program tab lists sessions. **Official program** (organizer Grid workbook): [Google Sheets — Grid](https://docs.google.com/spreadsheets/d/14gT9gufCcbHoDtabJeGSRSAkwhiEFUfGdDQcw-2Ju1U/edit?gid=1445461642#gid=1445461642). **Personal dancecard:** registered users click classes on the Program tab to add or remove them; open **My dancecard** to see the list (titles, times, rooms) and optional manual busy blocks.
 
 ## Automated smoke
 
@@ -67,7 +67,9 @@ Expect: `OK dancecard smoke` with a slot count. If the count is `0`, the smoke s
 
 ## PAF26 official Grid → JSON → Supabase
 
-The organizer workbook is a **time × venue matrix** on the **Grid** sheet, not a flat Start/End table. Use the dedicated parser (defaults to the standard Downloads filename if present):
+**Official program** is maintained by the organizer here: [Google Sheets — Grid (gid 1445461642)](https://docs.google.com/spreadsheets/d/14gT9gufCcbHoDtabJeGSRSAkwhiEFUfGdDQcw-2Ju1U/edit?gid=1445461642#gid=1445461642).
+
+That workbook is a **time × venue matrix** on the **Grid** sheet, not a flat Start/End table. Use the dedicated parser (defaults to the standard Downloads filename if present):
 
 ```bash
 npm run dancecard:parse-paf26

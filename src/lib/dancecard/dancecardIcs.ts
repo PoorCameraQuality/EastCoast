@@ -7,6 +7,7 @@ export type IcsSelection = {
   endsAt: string
   programTitle?: string | null
   programRoom?: string | null
+  note?: string | null
 }
 
 export type IcsReservation = {
@@ -71,7 +72,10 @@ function collectEvents(
     if (s.kind === 'program') {
       const title = (s.programTitle ?? 'Program session').trim() || 'Program session'
       const room = (s.programRoom ?? '').trim()
-      const desc = [room ? `Room: ${room}` : null, `Event: ${attendeeName}`].filter(Boolean).join('\n')
+      const note = (s.note ?? '').trim()
+      const desc = [room ? `Room: ${room}` : null, note ? `Note: ${note}` : null, `Event: ${attendeeName}`]
+        .filter(Boolean)
+        .join('\n')
       out.push({
         uid: `${s.id}@dancecard.eastcoastkinkevents`,
         start: ds,
@@ -80,12 +84,13 @@ function collectEvents(
         description: desc,
       })
     } else if (s.kind === 'manual') {
+      const note = (s.note ?? '').trim()
       out.push({
         uid: `${s.id}@dancecard.eastcoastkinkevents`,
         start: ds,
         end: de,
         summary: 'Busy (dancecard)',
-        description: `Manual busy block\n${attendeeName}`,
+        description: [note ? `Note: ${note}` : null, `Manual busy block`, attendeeName].filter(Boolean).join('\n'),
       })
     }
   }
@@ -144,6 +149,21 @@ export function buildDancecardIcs(args: {
   return lines.join('\r\n')
 }
 
+/** Selections only (no reservations) — used by GET /api/dancecard/.../ics */
+export function buildDancecardSelectionsOnlyIcs(args: {
+  calendarName: string
+  attendeeDisplayName: string
+  selections: IcsSelection[]
+}): string {
+  const emptyReservations: IcsReservation[] = []
+  return buildDancecardIcs({
+    calendarName: args.calendarName,
+    attendeeDisplayName: args.attendeeDisplayName,
+    selections: args.selections,
+    reservations: emptyReservations,
+  })
+}
+
 export function downloadIcsFile(filename: string, icsBody: string) {
   const blob = new Blob([icsBody], { type: 'text/calendar;charset=utf-8' })
   const url = URL.createObjectURL(blob)
@@ -159,4 +179,41 @@ export function downloadIcsFile(filename: string, icsBody: string) {
 
 export function googleCalendarImportHintUrl(): string {
   return 'https://support.google.com/calendar/answer/37118'
+}
+
+const pad2 = (n: number) => String(n).padStart(2, '0')
+
+/** Format instant as Google Calendar `dates` param segment (`YYYYMMDDTHHmmssZ`, UTC). */
+function formatGoogleCalendarUtcSegment(d: Date): string | null {
+  const t = d.getTime()
+  if (!Number.isFinite(t)) return null
+  return (
+    `${d.getUTCFullYear()}${pad2(d.getUTCMonth() + 1)}${pad2(d.getUTCDate())}` +
+    `T${pad2(d.getUTCHours())}${pad2(d.getUTCMinutes())}${pad2(d.getUTCSeconds())}Z`
+  )
+}
+
+/**
+ * Opens Google Calendar prefilled “create event” (timed, UTC). Use after the user picks local times in datetime fields.
+ * Returns null if the range is invalid.
+ */
+export function googleCalendarCreateEventUrl(args: {
+  title: string
+  details: string
+  start: Date
+  end: Date
+}): string | null {
+  const t0 = args.start.getTime()
+  const t1 = args.end.getTime()
+  if (!Number.isFinite(t0) || !Number.isFinite(t1) || t1 <= t0) return null
+  const a = formatGoogleCalendarUtcSegment(args.start)
+  const b = formatGoogleCalendarUtcSegment(args.end)
+  if (!a || !b) return null
+  const dates = `${a}/${b}`
+  const u = new URL('https://calendar.google.com/calendar/render')
+  u.searchParams.set('action', 'TEMPLATE')
+  u.searchParams.set('text', args.title)
+  u.searchParams.set('dates', dates)
+  u.searchParams.set('details', args.details)
+  return u.toString()
 }

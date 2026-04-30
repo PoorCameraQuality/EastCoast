@@ -26,11 +26,11 @@ function addDays(dateStr, days) {
 }
 
 function parseClockLabel(clock) {
-  const m = String(clock).trim().match(/^(\d{1,2}):(\d{2})\s*([AP]M)$/i)
+  const m = String(clock).trim().match(/^(\d{1,2}):(\d{2})\s*([AP]M)\.?$/i)
   if (!m) return null
   let hour = Number(m[1]) % 12
   const minute = Number(m[2])
-  if (m[3].toUpperCase() === 'PM') hour += 12
+  if (m[3].toUpperCase().startsWith('P')) hour += 12
   return hour * 60 + minute
 }
 
@@ -69,20 +69,38 @@ function normalizeRole(role) {
   return r
 }
 
-/** Merge same-role shifts that touch in time (after Excel merged cells left gaps). */
+const GAP_MERGE_MS = 120 * 60 * 1000
+
+/** Merge same-role shifts that touch; then merge across gaps ≤120min (same person, any role). */
 function mergeAdjacentShifts(shifts) {
   const norm = shifts.map((s) => ({
     ...s,
     role: normalizeRole(s.role),
   }))
   norm.sort((a, b) => a.startsAt.localeCompare(b.startsAt) || a.role.localeCompare(b.role))
-  const out = []
+  const pass1 = []
   for (const s of norm) {
-    const prev = out[out.length - 1]
+    const prev = pass1[pass1.length - 1]
     if (prev && prev.role === s.role && prev.endsAt === s.startsAt) prev.endsAt = s.endsAt
-    else out.push({ ...s })
+    else pass1.push({ ...s })
   }
-  return out
+  const pass2 = []
+  for (const s of pass1) {
+    const prev = pass2[pass2.length - 1]
+    if (prev) {
+      const gap = Date.parse(s.startsAt) - Date.parse(prev.endsAt)
+      if (gap >= 0 && gap <= GAP_MERGE_MS) {
+        if (!prev._roles) prev._roles = [prev.role]
+        if (!prev._roles.includes(s.role)) prev._roles.push(s.role)
+        prev.endsAt = s.endsAt
+        const uniq = [...new Set(prev._roles)]
+        prev.role = uniq.length === 1 ? uniq[0] : `${uniq[0]} (+${uniq.length - 1} more roles)`
+        continue
+      }
+    }
+    pass2.push({ ...s })
+  }
+  return pass2.map(({ _roles, ...rest }) => rest)
 }
 
 function postProcessPeople(people) {

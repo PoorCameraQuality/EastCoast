@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { ZodError } from 'zod'
 import bcrypt from 'bcryptjs'
+import { codesEqual } from '@/lib/dancecard/accessCodes'
 import { getDancecardAdmin, loadEventBySlug, normalizeEventSlug } from '@/lib/dancecard/routeCommon'
 import { loginBodySchema } from '@/lib/dancecard/schemas'
 import { newSessionToken, hashToken, DANCECARD_SESSION_COOKIE, DANCECARD_COOKIE_PATH, SESSION_DAYS } from '@/lib/dancecard/session'
@@ -28,6 +30,14 @@ export async function POST(
       return NextResponse.json({ error: 'Invalid username or password' }, { status: 401 })
     }
 
+    const regGate = String((event as { registration_access_code?: string }).registration_access_code ?? '').trim()
+    if (regGate) {
+      const provided = String(body.registrationAccessCode ?? '').trim()
+      if (!provided || !codesEqual(provided, regGate)) {
+        return NextResponse.json({ error: 'Invalid or missing event access code' }, { status: 401 })
+      }
+    }
+
     const token = newSessionToken()
     const tokenHash = hashToken(token)
     const expiresAt = new Date(Date.now() + SESSION_DAYS * 86400_000).toISOString()
@@ -50,8 +60,8 @@ export async function POST(
     })
     return res
   } catch (e) {
-    if (e && typeof e === 'object' && 'name' in e && (e as { name: string }).name === 'ZodError') {
-      return NextResponse.json({ error: 'Validation error' }, { status: 400 })
+    if (e instanceof ZodError) {
+      return NextResponse.json({ error: 'Validation error', details: e.flatten() }, { status: 400 })
     }
     const msg = e instanceof Error ? e.message : 'Internal error'
     return NextResponse.json({ error: msg }, { status: 500 })

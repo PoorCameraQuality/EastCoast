@@ -38,6 +38,33 @@ export async function loadEventBySlug(admin: SupabaseClient, eventSlug: string) 
         shared_by_detail: string | null
         logo_url: string | null
         status: string
+        staff_access_code?: string | null
+        registration_access_code?: string | null
+      }
+    | null
+}
+
+/** Load event by slug for any status (draft or published). Service-role only. */
+export async function loadEventBySlugAnyStatus(admin: SupabaseClient, eventSlug: string) {
+  const slug = normalizeEventSlug(eventSlug)
+  const { data, error } = await admin.from('dancecard_events').select('*').eq('slug', slug).maybeSingle()
+  if (error) throw error
+  return data as
+    | {
+        id: string
+        slug: string
+        product_title: string
+        event_title: string
+        subtitle: string | null
+        timezone: string
+        window_starts_at: string
+        window_ends_at: string
+        shared_by_label: string
+        shared_by_detail: string | null
+        logo_url: string | null
+        status: string
+        staff_access_code?: string | null
+        registration_access_code?: string | null
       }
     | null
 }
@@ -51,6 +78,7 @@ export async function resolveAccountFromSession(
   username: string
   displayName: string
   eventId: string
+  isStaff: boolean
 } | null> {
   const token = request.cookies.get(DANCECARD_SESSION_COOKIE)?.value
   if (!token) return null
@@ -66,7 +94,7 @@ export async function resolveAccountFromSession(
 
   const { data: acc, error: aErr } = await admin
     .from('dancecard_accounts')
-    .select('id, username, display_name, event_id')
+    .select('id, username, display_name, event_id, is_staff')
     .eq('id', sess.account_id)
     .maybeSingle()
   if (aErr || !acc) return null
@@ -83,5 +111,6 @@ export async function resolveAccountFromSession(
     username: acc.username,
     displayName: acc.display_name,
     eventId: acc.event_id,
+    isStaff: Boolean((acc as { is_staff?: boolean }).is_staff),
   }
 }

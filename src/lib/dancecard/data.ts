@@ -1,13 +1,104 @@
 import type { SupabaseClient } from '@supabase/supabase-js'
 import type { ReservationRow, SelectionRow } from './busy'
 
-export async function loadPrefs(admin: SupabaseClient, accountId: string): Promise<number> {
-  const { data } = await admin
+export type DancecardPrefsLoaded = {
+  bufferMinutes: number
+  allowCompareByUsername: boolean
+}
+
+export async function loadPrefs(admin: SupabaseClient, accountId: string): Promise<DancecardPrefsLoaded> {
+  const { data, error } = await admin
     .from('dancecard_prefs')
-    .select('buffer_minutes')
+    .select('buffer_minutes, allow_compare_by_username')
     .eq('account_id', accountId)
     .maybeSingle()
-  return data?.buffer_minutes ?? 0
+  if (error) {
+    const code = (error as { code?: string }).code
+    if (code === '42703') {
+      const { data: d2, error: e2 } = await admin
+        .from('dancecard_prefs')
+        .select('buffer_minutes')
+        .eq('account_id', accountId)
+        .maybeSingle()
+      if (e2) throw e2
+      return { bufferMinutes: d2?.buffer_minutes ?? 0, allowCompareByUsername: false }
+    }
+    throw error
+  }
+  return {
+    bufferMinutes: data?.buffer_minutes ?? 0,
+    allowCompareByUsername: Boolean((data as { allow_compare_by_username?: boolean }).allow_compare_by_username),
+  }
+}
+
+export type SetPrefsAllowCompareResult =
+  | { ok: true }
+  | { ok: false; reason: 'allow_compare_column_missing' }
+
+/**
+ * Persists compare-by-username opt-in. Creates a prefs row if the account has none yet.
+ * If `allow_compare_by_username` is not in the database (migration not applied), returns
+ * `allow_compare_column_missing` instead of throwing.
+ */
+export async function setPrefsAllowCompareByUsername(
+  admin: SupabaseClient,
+  accountId: string,
+  allowCompareByUsername: boolean
+): Promise<SetPrefsAllowCompareResult> {
+  const updatedAt = new Date().toISOString()
+  const payload = {
+    allow_compare_by_username: allowCompareByUsername,
+    updated_at: updatedAt,
+  } as const
+
+  const { data: updated, error: upErr } = await admin
+    .from('dancecard_prefs')
+    .update(payload)
+    .eq('account_id', accountId)
+    .select('account_id')
+    .maybeSingle()
+
+  if (upErr) {
+    const code = (upErr as { code?: string }).code
+    if (code === '42703') return { ok: false, reason: 'allow_compare_column_missing' }
+    throw upErr
+  }
+
+  if (updated) return { ok: true }
+
+  const { error: insErr } = await admin.from('dancecard_prefs').insert({
+    account_id: accountId,
+    buffer_minutes: 0,
+    ...payload,
+  })
+  if (insErr) {
+    const code = (insErr as { code?: string }).code
+    if (code === '42703') return { ok: false, reason: 'allow_compare_column_missing' }
+    throw insErr
+  }
+  return { ok: true }
+}
+
+export async function loadAvailabilityRange(
+  admin: SupabaseClient,
+  accountId: string
+): Promise<{ startsAt: string; endsAt: string } | null> {
+  const { data, error } = await admin
+    .from('dancecard_prefs')
+    .select('availability_starts_at, availability_ends_at')
+    .eq('account_id', accountId)
+    .maybeSingle()
+  if (error) {
+    // Backward compatibility while DB migration is being rolled out.
+    const code = (error as { code?: string }).code
+    if (code === '42703') return null
+    throw error
+  }
+  if (!data?.availability_starts_at || !data?.availability_ends_at) return null
+  return {
+    startsAt: data.availability_starts_at as string,
+    endsAt: data.availability_ends_at as string,
+  }
 }
 
 export type LoadedSelectionRow = {
@@ -16,9 +107,11 @@ export type LoadedSelectionRow = {
   slot_id: string | null
   starts_at: string
   ends_at: string
+  note: string | null
   /** Joined from dancecard_program_slots when kind is program */
   program_title: string | null
   program_room: string | null
+  program_track: string | null
 }
 
 export async function loadSelections(admin: SupabaseClient, accountId: string): Promise<LoadedSelectionRow[]> {
@@ -31,22 +124,29 @@ export async function loadSelections(admin: SupabaseClient, accountId: string): 
       slot_id,
       starts_at,
       ends_at,
-      dancecard_program_slots ( title, room )
+      note,
+      dancecard_program_slots ( title, room, track )
     `,
     )
     .eq('account_id', accountId)
     .order('starts_at', { ascending: true })
   if (error) throw error
   return (data ?? []).map((row: Record<string, unknown>) => {
-    const slot = row.dancecard_program_slots as { title: string; room: string | null } | null | undefined
+    const slot = row.dancecard_program_slots as {
+      title: string
+      room: string | null
+      track: string | null
+    } | null | undefined
     return {
       id: row.id as string,
       kind: row.kind as string,
       slot_id: (row.slot_id as string | null) ?? null,
       starts_at: row.starts_at as string,
       ends_at: row.ends_at as string,
+      note: (row.note as string | null) ?? null,
       program_title: slot?.title ?? null,
       program_room: slot?.room ?? null,
+      program_track: slot?.track ?? null,
     }
   })
 }

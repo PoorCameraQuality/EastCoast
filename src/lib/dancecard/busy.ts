@@ -14,7 +14,7 @@ export type SelectionRow = {
 
 export type ReservationRow = {
   host_account_id: string
-  guest_account_id: string
+  guest_account_id: string | null
   starts_at: string
   ends_at: string
   status: string
@@ -36,7 +36,7 @@ export function eventWindowFromRow(row: {
   }
 }
 
-/** Busy = selections expanded by buffer + confirmed reservations touching this account. */
+/** Busy = selections and confirmed reservations expanded by buffer for this account. */
 export function computeBusyForAccount(
   window: Interval,
   bufferMinutes: number,
@@ -56,7 +56,8 @@ export function computeBusyForAccount(
       start: parseIso(b.starts_at),
       end: parseIso(b.ends_at),
     }))
-  return clipAndMergeBusy([...selectionExpanded, ...bookingIntervals], window)
+  const bookingExpanded = bookingIntervals.map((r) => expandInterval(r, bufferMinutes))
+  return clipAndMergeBusy([...selectionExpanded, ...bookingExpanded], window)
 }
 
 export function computeFreeGapsForAccount(

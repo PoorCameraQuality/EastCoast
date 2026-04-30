@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getDancecardAdmin, loadEventBySlug, normalizeEventSlug } from '@/lib/dancecard/routeCommon'
+import { getDancecardAdmin, loadEventBySlug, normalizeEventSlug, resolveAccountFromSession } from '@/lib/dancecard/routeCommon'
 
 export const dynamic = 'force-dynamic'
 
@@ -11,13 +11,20 @@ type StaffRow = {
   sort_order: number
 }
 
-export async function GET(_request: NextRequest, context: { params: { eventSlug: string } }) {
+export async function GET(request: NextRequest, context: { params: { eventSlug: string } }) {
   try {
     const admin = getDancecardAdmin()
     const slug = normalizeEventSlug(context.params.eventSlug)
     const event = await loadEventBySlug(admin, slug)
     if (!event) {
       return NextResponse.json({ error: 'Event not found' }, { status: 404 })
+    }
+    const session = await resolveAccountFromSession(admin, request, slug)
+    if (!session) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+    if (!session.isStaff) {
+      return NextResponse.json({ error: 'staff access required' }, { status: 401 })
     }
     const { data: rows, error } = await admin
       .from('dancecard_staff_shifts')

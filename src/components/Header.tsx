@@ -50,6 +50,10 @@ export default function Header() {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
+  if (pathname?.startsWith('/dancecard')) {
+    return null
+  }
+
   return (
     <header className={`sticky top-0 z-50 transition-all duration-500 ${
       isScrolled 

@@ -29,16 +29,25 @@ export async function PUT(
     if (body.bufferMinutes % 15 !== 0) {
       return NextResponse.json({ error: 'bufferMinutes must be a multiple of 15' }, { status: 400 })
     }
-    const window = eventWindowFromRow({
+    const eventWindow = eventWindowFromRow({
       window_starts_at: event.window_starts_at,
       window_ends_at: event.window_ends_at,
     })
+    const availabilityStart = parseIso(body.availabilityStartsAt)
+    const availabilityEnd = parseIso(body.availabilityEndsAt)
+    if (availabilityEnd <= availabilityStart) {
+      return NextResponse.json({ error: 'availabilityEndsAt must be after availabilityStartsAt' }, { status: 400 })
+    }
+    if (availabilityStart < eventWindow.start || availabilityEnd > eventWindow.end) {
+      return NextResponse.json({ error: 'Availability range must fall inside the event window' }, { status: 400 })
+    }
 
     const normalized: {
       slot_id: string | null
       starts_at: string
       ends_at: string
       kind: string
+      note: string | null
     }[] = []
 
     for (const sel of body.selections) {
@@ -47,8 +56,8 @@ export async function PUT(
       if (end <= start) {
         return NextResponse.json({ error: 'Each selection needs endsAt > startsAt' }, { status: 400 })
       }
-      if (start < window.start || end > window.end) {
-        return NextResponse.json({ error: 'Selections must fall inside the event window' }, { status: 400 })
+      if (start < availabilityStart || end > availabilityEnd) {
+        return NextResponse.json({ error: 'Selections must fall inside your availability range' }, { status: 400 })
       }
       if (sel.kind === 'program') {
         if (!sel.slotId) {
@@ -72,18 +81,22 @@ export async function PUT(
             { status: 400 }
           )
         }
+        const note = sel.note?.trim() ? sel.note.trim().slice(0, 1000) : null
         normalized.push({
           slot_id: slot.id,
           starts_at: sel.startsAt,
           ends_at: sel.endsAt,
           kind: 'program',
+          note,
         })
       } else {
+        const note = sel.note?.trim() ? sel.note.trim().slice(0, 1000) : null
         normalized.push({
           slot_id: null,
           starts_at: sel.startsAt,
           ends_at: sel.endsAt,
           kind: 'manual',
+          note,
         })
       }
     }
@@ -96,7 +109,12 @@ export async function PUT(
 
     const { error: upPref } = await admin
       .from('dancecard_prefs')
-      .update({ buffer_minutes: body.bufferMinutes, updated_at: new Date().toISOString() })
+      .update({
+        buffer_minutes: body.bufferMinutes,
+        availability_starts_at: body.availabilityStartsAt,
+        availability_ends_at: body.availabilityEndsAt,
+        updated_at: new Date().toISOString(),
+      })
       .eq('account_id', session.accountId)
     if (upPref) throw upPref
 
@@ -108,6 +126,7 @@ export async function PUT(
           starts_at: n.starts_at,
           ends_at: n.ends_at,
           kind: n.kind,
+          note: n.note,
         }))
       )
       if (insErr) throw insErr

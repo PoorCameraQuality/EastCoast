@@ -31,6 +31,7 @@ export default function SupportBanner() {
     if (!pathname) return true
     if (pathname === '/support') return true
     if (pathname.startsWith('/admin')) return true
+    if (pathname.startsWith('/dancecard')) return true
     if (pathname === '/login') return true
     return false
   }, [pathname])
