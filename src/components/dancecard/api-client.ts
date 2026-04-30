@@ -10,17 +10,20 @@ export class DancecardApiError extends Error {
 
 /** Short message for UI (handles JSON `{ error }` bodies from API routes). */
 export function formatDancecardApiMessage(e: unknown): string {
-  if (!(e instanceof DancecardApiError)) return 'Something went wrong. Please try again.'
-  const raw = e.body?.trim() ?? ''
-  if (!raw) return e.message || 'Request failed'
-  try {
-    const j = JSON.parse(raw) as { error?: string; message?: string }
-    if (typeof j.error === 'string' && j.error) return j.error
-    if (typeof j.message === 'string' && j.message) return j.message
-  } catch {
-    if (raw.length < 400 && !raw.startsWith('<')) return raw
+  if (e instanceof DancecardApiError) {
+    const raw = e.body?.trim() ?? ''
+    if (!raw) return e.message || 'Request failed'
+    try {
+      const j = JSON.parse(raw) as { error?: string; message?: string }
+      if (typeof j.error === 'string' && j.error) return j.error
+      if (typeof j.message === 'string' && j.message) return j.message
+    } catch {
+      if (raw.length < 400 && !raw.startsWith('<')) return raw
+    }
+    return 'Request failed. Please try again.'
   }
-  return 'Request failed. Please try again.'
+  if (e instanceof Error && e.message.trim()) return e.message.trim()
+  return 'Something went wrong. Please try again.'
 }
 
 function apiBase(slug: string): string {

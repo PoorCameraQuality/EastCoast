@@ -901,10 +901,33 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
         if (!nextAvailabilityStart || !nextAvailabilityEnd) throw new Error('Set availability range first.')
         const normalized = normalizeAvailabilityBounds(nextAvailabilityStart, nextAvailabilityEnd)
         if (!normalized) throw new Error('Availability range is invalid.')
+        const rangeStartMs = Date.parse(normalized.startIso)
+        const rangeEndMs = Date.parse(normalized.endIso)
+        if (!Number.isFinite(rangeStartMs) || !Number.isFinite(rangeEndMs) || rangeEndMs <= rangeStartMs) {
+          throw new Error('Availability range is invalid.')
+        }
+        const outside = nextSelections.filter((s) => {
+          const sStart = Date.parse(s.startsAt)
+          const sEnd = Date.parse(s.endsAt)
+          return (
+            !Number.isFinite(sStart) ||
+            !Number.isFinite(sEnd) ||
+            sStart < rangeStartMs ||
+            sEnd > rangeEndMs
+          )
+        })
+        if (outside.length) {
+          const kinds = [...new Set(outside.map((s) => s.kind))]
+          throw new Error(
+            `${outside.length} block(s) fall outside your saved start/end dates (${kinds.join(', ')}). ` +
+              'Widen the date range at the top, or remove those classes/blocks, then save again.'
+          )
+        }
+        const bufferMinutes = Math.max(0, Math.min(120, Math.round(nextBuffer / 15) * 15))
         await dancecardFetch(slug, '/dancecard', {
           method: 'PUT',
           body: JSON.stringify({
-            bufferMinutes: nextBuffer,
+            bufferMinutes,
             availabilityStartsAt: normalized.startIso,
             availabilityEndsAt: normalized.endIso,
             selections: nextSelections.map((s) => ({
@@ -918,12 +941,13 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
         })
         await refreshMe()
       } catch (e) {
-        setToast(e instanceof DancecardApiError ? e.body : 'Save failed')
+        setToast(formatDancecardApiMessage(e))
         try {
           await refreshMe()
         } catch {
           /* ignore resync failure */
         }
+        throw e
       } finally {
         setSaving(false)
       }
@@ -935,7 +959,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
     (nextSelections: MeResponse['selections'], nextBuffer: number) => {
       if (saveTimer.current) window.clearTimeout(saveTimer.current)
       saveTimer.current = window.setTimeout(() => {
-        void persist(nextSelections, nextBuffer, availabilityStart, availabilityEnd)
+        void persist(nextSelections, nextBuffer, availabilityStart, availabilityEnd).catch(() => null)
       }, 450)
     },
     [persist, availabilityStart, availabilityEnd]
@@ -964,12 +988,24 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
     queueSave(next, buffer)
   }
 
-  async function persistWithUndo(next: MeResponse['selections'], previous: MeResponse['selections'], label: string) {
+  async function persistWithUndo(
+    next: MeResponse['selections'],
+    previous: MeResponse['selections'],
+    label: string
+  ): Promise<boolean> {
     if (undoTimerRef.current) window.clearTimeout(undoTimerRef.current)
     setUndoSnapshot({ previous, label })
     undoTimerRef.current = window.setTimeout(() => setUndoSnapshot(null), 10000)
     setMe((m) => (m ? { ...m, selections: next } : m))
-    await persist(next, buffer, availabilityStart, availabilityEnd)
+    try {
+      await persist(next, buffer, availabilityStart, availabilityEnd)
+      return true
+    } catch {
+      setMe((m) => (m ? { ...m, selections: previous } : m))
+      setUndoSnapshot(null)
+      if (undoTimerRef.current) window.clearTimeout(undoTimerRef.current)
+      return false
+    }
   }
 
   async function undoLastSelectionChange() {
@@ -978,16 +1014,21 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
     setUndoSnapshot(null)
     if (undoTimerRef.current) window.clearTimeout(undoTimerRef.current)
     setMe((m) => (m ? { ...m, selections: previous } : m))
-    await persist(previous, buffer, availabilityStart, availabilityEnd)
-    setToast('Undid last change.')
+    try {
+      await persist(previous, buffer, availabilityStart, availabilityEnd)
+      setToast('Undid last change.')
+    } catch {
+      /* persist already toasts */
+    }
   }
 
   async function removeSelection(id: string) {
     const cur = me?.selections ?? []
     const next = cur.filter((s) => s.id !== id)
     if (next.length === cur.length) return
-    await persistWithUndo(next, cur, 'Removed unavailable time.')
-    setToast('Removed unavailable time. Undo?')
+    if (await persistWithUndo(next, cur, 'Removed unavailable time.')) {
+      setToast('Removed unavailable time. Undo?')
+    }
   }
 
   async function cancelReservation(reservationId: string) {
@@ -1026,9 +1067,16 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
       setToast('Set both start and end.')
       return
     }
+    const prevStart = availabilityStart
+    const prevEnd = availabilityEnd
     setAvailabilityStart(normalized.startLocal)
     setAvailabilityEnd(normalized.endLocal)
-    await persist(selectionsRef.current, buffer, normalized.startLocal, normalized.endLocal)
+    try {
+      await persist(selectionsRef.current, buffer, normalized.startLocal, normalized.endLocal)
+    } catch {
+      setAvailabilityStart(prevStart)
+      setAvailabilityEnd(prevEnd)
+    }
   }
 
   function closeManualModal() {
@@ -1137,14 +1185,18 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
       }
     }
     closeManualModal()
-    await persist(next, buffer, availabilityStart, availabilityEnd)
-    setToast(
-      merged
-        ? 'Updated unavailable time. Overlapping blocks were merged automatically.'
-        : isEditing
-          ? 'Updated unavailable time.'
-          : 'Added unavailable time.'
-    )
+    try {
+      await persist(next, buffer, availabilityStart, availabilityEnd)
+      setToast(
+        merged
+          ? 'Updated unavailable time. Overlapping blocks were merged automatically.'
+          : isEditing
+            ? 'Updated unavailable time.'
+            : 'Added unavailable time.'
+      )
+    } catch {
+      /* persist already toasts and re-syncs /me */
+    }
   }
 
   function applyManualPreset(presetKey: 'breakfast' | 'lunch' | 'dinner') {
@@ -1260,9 +1312,10 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
       setToast(`${preset.label} blocks already exist for this range.`)
       return
     }
-    await persistWithUndo(next, current, `Added ${preset.key} to every event day.`)
-    closeManualModal()
-    setToast(`Added ${preset.key} to every event day.`)
+    if (await persistWithUndo(next, current, `Added ${preset.key} to every event day.`)) {
+      closeManualModal()
+      setToast(`Added ${preset.key} to every event day.`)
+    }
   }
 
   async function clearMealPresetsAcrossAvailability() {
@@ -1272,8 +1325,9 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
       setToast('No meal presets to clear.')
       return
     }
-    await persistWithUndo(next, cur, 'Cleared meal presets.')
-    setToast('Cleared meal presets. Undo?')
+    if (await persistWithUndo(next, cur, 'Cleared meal presets.')) {
+      setToast('Cleared meal presets. Undo?')
+    }
   }
 
   async function clearUnavailableForSelectedDay() {
@@ -1283,8 +1337,9 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
       setToast('No unavailable times found for that day.')
       return
     }
-    await persistWithUndo(next, cur, `Cleared unavailable times for ${selectedDayKey}.`)
-    setToast(`Cleared unavailable times for ${selectedDayKey}. Undo?`)
+    if (await persistWithUndo(next, cur, `Cleared unavailable times for ${selectedDayKey}.`)) {
+      setToast(`Cleared unavailable times for ${selectedDayKey}. Undo?`)
+    }
   }
 
   async function duplicateYesterdayToSelectedDay() {
@@ -1329,8 +1384,9 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
       return
     }
     const next = [...cur, ...shifted]
-    await persistWithUndo(next, cur, 'Duplicated yesterday unavailable times.')
-    setToast(`Copied ${shifted.length} unavailable time(s) to ${selectedDayKey}. Undo?`)
+    if (await persistWithUndo(next, cur, 'Duplicated yesterday unavailable times.')) {
+      setToast(`Copied ${shifted.length} unavailable time(s) to ${selectedDayKey}. Undo?`)
+    }
   }
 
   async function copyShare() {
@@ -1702,11 +1758,15 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
     )
     setSelectedStaffName(nextName)
     setMe((current) => (current ? { ...current, selections: merged } : current))
-    await persist(merged, buffer, availabilityStart, availabilityEnd)
-    if (nextName) {
-      setToast(`Applied staff schedule for ${nextName}.`)
-    } else {
-      setToast('Removed staff schedule autofill.')
+    try {
+      await persist(merged, buffer, availabilityStart, availabilityEnd)
+      if (nextName) {
+        setToast(`Applied staff schedule for ${nextName}.`)
+      } else {
+        setToast('Removed staff schedule autofill.')
+      }
+    } catch {
+      void checkSession()
     }
   }
 
