@@ -89,6 +89,8 @@ type MutualSharePayload = {
 
 type Tab = 'program' | 'dancecard' | 'mutual' | 'reservations'
 type ScheduleView = 'simple' | 'venue' | 'grid'
+type AvailabilityDisplayMode = 'all' | 'free'
+type ManualPresetKey = 'break' | 'lunch' | 'dinner' | 'sleep'
 
 type ReservationRow = {
   id: string
@@ -173,7 +175,7 @@ function reservationPartnerName(r: ReservationRow): string {
 }
 
 function isMealPresetNote(note: string | null | undefined): boolean {
-  return /^Unavailable: (breakfast|break|lunch|dinner)$/i.test((note ?? '').trim())
+  return /^Unavailable: (breakfast|break|lunch|dinner|sleep)$/i.test((note ?? '').trim())
 }
 
 function eventWindowLabel(meta: ScheduleMeta | null) {
@@ -304,6 +306,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
   const [authChecked, setAuthChecked] = useState(false)
   const [tab, setTab] = useState<Tab>('dancecard')
   const [scheduleView, setScheduleView] = useState<ScheduleView>('simple')
+  const [availabilityDisplayMode, setAvailabilityDisplayMode] = useState<AvailabilityDisplayMode>('all')
   const [selectedStaffName, setSelectedStaffName] = useState('')
   const [trackFilter, setTrackFilter] = useState('')
   const [roomFilter, setRoomFilter] = useState('')
@@ -418,12 +421,13 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
     [tz]
   )
 
-  /** Whole-event wall-clock presets (event timezone) — break, lunch, dinner only. */
+  /** Whole-event wall-clock presets (event timezone), including overnight sleep blocks. */
   const mealPresetOptions = useMemo(
     () => [
-      { key: 'break' as const, label: 'Break', startHour: 10, startMinute: 30, endHour: 11, endMinute: 0 },
-      { key: 'lunch' as const, label: 'Lunch', startHour: 12, startMinute: 0, endHour: 13, endMinute: 0 },
-      { key: 'dinner' as const, label: 'Dinner', startHour: 18, startMinute: 0, endHour: 19, endMinute: 0 },
+      { key: 'break' as ManualPresetKey, label: 'Break', startHour: 10, startMinute: 30, endHour: 11, endMinute: 0 },
+      { key: 'lunch' as ManualPresetKey, label: 'Lunch', startHour: 12, startMinute: 0, endHour: 13, endMinute: 0 },
+      { key: 'dinner' as ManualPresetKey, label: 'Dinner', startHour: 18, startMinute: 0, endHour: 19, endMinute: 0 },
+      { key: 'sleep' as ManualPresetKey, label: 'Sleep', startHour: 23, startMinute: 0, endHour: 8, endMinute: 0 },
     ],
     []
   )
@@ -824,7 +828,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
       </div>
       {manualSelections.length ? (
         <div className={cx('mt-3 space-y-1.5 overflow-y-auto pr-1', compact ? 'max-h-40' : 'max-h-52')}>
-          {manualSelections.slice(0, compact ? 6 : 10).map((s) => (
+          {manualSelections.map((s) => (
             <div
               key={s.id}
               className="flex items-center gap-2 rounded-xl border border-slate-600/60 bg-[#0b1426]/80 px-2.5 py-2 shadow-[inset_0_1px_0_rgba(255,255,255,0.035)]"
@@ -855,9 +859,6 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
               </button>
             </div>
           ))}
-          {manualSelections.length > (compact ? 6 : 10) ? (
-            <p className="text-[10px] text-slate-400">Open Add busy time to manage the rest.</p>
-          ) : null}
         </div>
       ) : (
         <p className="mt-3 rounded-xl border border-slate-600/60 bg-[#0b1426]/80 px-3 py-2 text-xs text-slate-300/80">
@@ -892,15 +893,59 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
       })
   }, [availabilityHourRows, tz])
 
+  const visibleAvailabilityHourRows = useMemo(
+    () => (availabilityDisplayMode === 'free' ? availabilityHourRows.filter((row) => !row.busy) : availabilityHourRows),
+    [availabilityDisplayMode, availabilityHourRows]
+  )
+
+  const visibleAvailabilityDays = useMemo(
+    () =>
+      availabilityDisplayMode === 'free'
+        ? availabilityDays.map((day) => ({ ...day, rows: day.rows.filter((row) => !row.busy) }))
+        : availabilityDays,
+    [availabilityDisplayMode, availabilityDays]
+  )
+
   const desktopDayGroups = useMemo(
     () =>
-      availabilityDays.map((day) => ({
-        ...day,
-        openCount: day.rows.filter((r) => !r.busy).length,
-        busyCount: day.rows.filter((r) => r.busy).length,
-      })),
-    [availabilityDays]
+      visibleAvailabilityDays.map((day) => {
+        const source = availabilityDays.find((candidate) => candidate.key === day.key) ?? day
+        return {
+          ...day,
+          busyCount: source.rows.filter((r) => r.busy).length,
+          openCount: source.rows.filter((r) => !r.busy).length,
+        }
+      }),
+    [availabilityDays, visibleAvailabilityDays]
   )
+
+  const availabilityDisplayToggle = (
+    <div className="flex flex-wrap items-center gap-1.5">
+      {[
+        { key: 'all' as const, label: 'All hours' },
+        { key: 'free' as const, label: 'Free only' },
+      ].map((option) => (
+        <button
+          key={option.key}
+          type="button"
+          className={cx(
+            'rounded-full border px-2.5 py-1 text-[11px] font-semibold transition',
+            availabilityDisplayMode === option.key
+              ? 'border-cyan-300 bg-cyan-100 text-slate-950'
+              : 'border-slate-700 bg-[#111a2c] text-slate-200 hover:border-slate-500'
+          )}
+          onClick={() => setAvailabilityDisplayMode(option.key)}
+        >
+          {option.label}
+        </button>
+      ))}
+    </div>
+  )
+
+  const selectedDayLabel = useMemo(() => {
+    const day = availabilityDays.find((d) => d.key === selectedDayKey)
+    return day?.label ?? selectedDayKey
+  }, [availabilityDays, selectedDayKey])
 
   const availabilityDaysKeySig = useMemo(
     () => availabilityDays.map((d) => d.key).join(','),
@@ -912,9 +957,9 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
 
   /** Label + rows for the mobile day schedule (times are wall-clock only; label makes day switches obvious). */
   const mobileSchedulePanel = useMemo(() => {
-    const d = availabilityDays.find((x) => x.key === mobileDayKey)
+    const d = visibleAvailabilityDays.find((x) => x.key === mobileDayKey)
     return { label: d?.label ?? null, rows: d?.rows ?? [] }
-  }, [availabilityDays, mobileDayKey])
+  }, [visibleAvailabilityDays, mobileDayKey])
 
   useEffect(() => {
     const days = availabilityDaysRef.current
@@ -1139,6 +1184,159 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
     }
   }
 
+  function clippedDayBounds(dayYmd: string): { startMs: number; endMs: number } | null {
+    if (!dayYmd || !manualDateRangeBounds) return null
+    const dayStartMs = utcMillisAtZonedWallClock(tz, dayYmd, 0, 0)
+    if (dayStartMs == null) return null
+    const dayEndMs = exclusiveEndOfZonedCalendarDayMs(tz, dayYmd)
+    const startMs = Math.max(dayStartMs, manualDateRangeBounds.rangeStartMs)
+    const endMs = Math.min(dayEndMs, manualDateRangeBounds.rangeEndMs)
+    return endMs > startMs ? { startMs, endMs } : null
+  }
+
+  function mergeOverlappingManualSelections(
+    selections: MeResponse['selections'],
+    candidateId: string
+  ): { selections: MeResponse['selections']; merged: boolean } {
+    const candidateSelection = selections.find((s) => s.id === candidateId && s.kind === 'manual')
+    if (!candidateSelection) return { selections, merged: false }
+    const cStart = Date.parse(candidateSelection.startsAt)
+    const cEnd = Date.parse(candidateSelection.endsAt)
+    const overlaps = selections.filter((s) => {
+      if (s.kind !== 'manual' || s.id === candidateId) return false
+      const sStart = Date.parse(s.startsAt)
+      const sEnd = Date.parse(s.endsAt)
+      return cStart < sEnd && sStart < cEnd
+    })
+    if (!overlaps.length) return { selections, merged: false }
+    const mergedStart = Math.min(cStart, ...overlaps.map((s) => Date.parse(s.startsAt)))
+    const mergedEnd = Math.max(cEnd, ...overlaps.map((s) => Date.parse(s.endsAt)))
+    const overlapIds = new Set(overlaps.map((s) => s.id))
+    return {
+      merged: true,
+      selections: selections
+        .filter((s) => !overlapIds.has(s.id))
+        .map((s) =>
+          s.id === candidateId && s.kind === 'manual'
+            ? { ...s, startsAt: new Date(mergedStart).toISOString(), endsAt: new Date(mergedEnd).toISOString() }
+            : s
+        ),
+    }
+  }
+
+  async function addManualBlockFromMs(startMs: number, endMs: number, note: string | null, label: string) {
+    if (endMs <= startMs) {
+      setToast('Busy time end must be after start.')
+      return false
+    }
+    const cur = me?.selections ?? []
+    const candidateId = crypto.randomUUID()
+    const provisional = [
+      ...cur,
+      {
+        id: candidateId,
+        kind: 'manual',
+        slotId: null,
+        startsAt: new Date(startMs).toISOString(),
+        endsAt: new Date(endMs).toISOString(),
+        note,
+      },
+    ]
+    const { selections: next, merged } = mergeOverlappingManualSelections(provisional, candidateId)
+    const ok = await persistWithUndo(next, cur, label)
+    if (ok) setToast(merged ? `${label} Overlapping blocks were merged. Undo?` : `${label} Undo?`)
+    return ok
+  }
+
+  function splitManualSelectionAroundRange(
+    selections: MeResponse['selections'],
+    selectionId: string,
+    removeStartMs: number,
+    removeEndMs: number
+  ): MeResponse['selections'] {
+    const next: MeResponse['selections'] = []
+    for (const s of selections) {
+      if (s.id !== selectionId || s.kind !== 'manual') {
+        next.push(s)
+        continue
+      }
+      const startMs = Date.parse(s.startsAt)
+      const endMs = Date.parse(s.endsAt)
+      if (removeEndMs <= startMs || removeStartMs >= endMs) {
+        next.push(s)
+        continue
+      }
+      const beforeEnd = Math.min(removeStartMs, endMs)
+      const afterStart = Math.max(removeEndMs, startMs)
+      if (beforeEnd > startMs) {
+        next.push({ ...s, endsAt: new Date(beforeEnd).toISOString() })
+      }
+      if (afterStart < endMs) {
+        next.push({
+          ...s,
+          id: beforeEnd > startMs ? crypto.randomUUID() : s.id,
+          startsAt: new Date(afterStart).toISOString(),
+        })
+      }
+    }
+    return next
+  }
+
+  function selectionsOutsideRange(selections: MeResponse['selections'], rangeStartMs: number, rangeEndMs: number) {
+    return selections.filter((s) => {
+      const sStart = Date.parse(s.startsAt)
+      const sEnd = Date.parse(s.endsAt)
+      return !Number.isFinite(sStart) || !Number.isFinite(sEnd) || sStart < rangeStartMs || sEnd > rangeEndMs
+    })
+  }
+
+  function trimSelectionsToRange(
+    selections: MeResponse['selections'],
+    rangeStartMs: number,
+    rangeEndMs: number
+  ): MeResponse['selections'] {
+    return selections.flatMap((s) => {
+      const startMs = Date.parse(s.startsAt)
+      const endMs = Date.parse(s.endsAt)
+      if (!Number.isFinite(startMs) || !Number.isFinite(endMs)) return []
+      if (s.kind !== 'manual') return startMs >= rangeStartMs && endMs <= rangeEndMs ? [s] : []
+      const clippedStart = Math.max(startMs, rangeStartMs)
+      const clippedEnd = Math.min(endMs, rangeEndMs)
+      if (clippedEnd <= clippedStart) return []
+      return [{ ...s, startsAt: new Date(clippedStart).toISOString(), endsAt: new Date(clippedEnd).toISOString() }]
+    })
+  }
+
+  async function blockDay(dayYmd: string) {
+    const bounds = clippedDayBounds(dayYmd)
+    if (!bounds) {
+      setToast('That day is outside your saved date range.')
+      return
+    }
+    const day = availabilityDays.find((d) => d.key === dayYmd)
+    await addManualBlockFromMs(bounds.startMs, bounds.endMs, 'Unavailable: all day', `Blocked ${day?.label ?? dayYmd}.`)
+  }
+
+  async function blockSelectedDay() {
+    await blockDay(selectedDayKey)
+  }
+
+  async function toggleHourBlock(row: AvailabilityHourRow) {
+    const startMs = row.start.getTime()
+    const endMs = row.end.getTime()
+    if (!row.busy) {
+      await addManualBlockFromMs(startMs, endMs, null, 'Blocked one hour.')
+      return
+    }
+    if (!row.editableManualId) return
+    const cur = me?.selections ?? []
+    const next = splitManualSelectionAroundRange(cur, row.editableManualId, startMs, endMs)
+    if (next.length === cur.length && next.every((s, i) => s === cur[i])) return
+    if (await persistWithUndo(next, cur, 'Freed one hour.')) {
+      setToast('Freed one hour. Undo?')
+    }
+  }
+
   async function undoLastSelectionChange() {
     if (!undoSnapshot) return
     const previous = undoSnapshot.previous
@@ -1200,10 +1398,32 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
     }
     const prevStart = availabilityStart
     const prevEnd = availabilityEnd
+    const rangeStartMs = Date.parse(normalized.startIso)
+    const rangeEndMs = Date.parse(normalized.endIso)
+    if (!Number.isFinite(rangeStartMs) || !Number.isFinite(rangeEndMs) || rangeEndMs <= rangeStartMs) {
+      setToast('Your date range is invalid.')
+      return
+    }
+    let nextSelections = selectionsRef.current
+    const outside = selectionsOutsideRange(nextSelections, rangeStartMs, rangeEndMs)
+    if (outside.length) {
+      const ok =
+        typeof window !== 'undefined' &&
+        window.confirm(
+          `${outside.length} saved block(s) fall outside that date range. ` +
+            'Choose OK to trim or remove those blocks and save the shorter range, or Cancel to keep your current range.'
+        )
+      if (!ok) {
+        setToast('Date range unchanged.')
+        return
+      }
+      nextSelections = trimSelectionsToRange(nextSelections, rangeStartMs, rangeEndMs)
+    }
     setAvailabilityStart(normalized.startLocal)
     setAvailabilityEnd(normalized.endLocal)
     try {
-      await persist(selectionsRef.current, buffer, normalized.startLocal, normalized.endLocal)
+      await persist(nextSelections, buffer, normalized.startLocal, normalized.endLocal)
+      setToast(outside.length ? 'Saved date range and trimmed outside blocks.' : 'Saved date range.')
     } catch {
       setAvailabilityStart(prevStart)
       setAvailabilityEnd(prevEnd)
@@ -1267,6 +1487,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
     const endsAt = new Date(endMs).toISOString()
     const note = mTitle.trim() ? mTitle.trim().slice(0, 1000) : null
     const isEditing = Boolean(editingManualId)
+    const candidateId = editingManualId ?? crypto.randomUUID()
     const provisional = isEditing
       ? cur.map((s) =>
           s.id === editingManualId && s.kind === 'manual'
@@ -1276,7 +1497,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
       : [
           ...cur,
           {
-            id: crypto.randomUUID(),
+            id: candidateId,
             kind: 'manual',
             slotId: null,
             startsAt,
@@ -1284,37 +1505,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
             note,
           },
         ]
-
-    const candidate = provisional.find((s) => (isEditing ? s.id === editingManualId : s.id !== undefined && s.startsAt === startsAt && s.endsAt === endsAt && s.note === note))
-    const candidateId = candidate?.id ?? editingManualId
-    let merged = false
-    let next = provisional
-    if (candidateId) {
-      const candidateSelection = provisional.find((s) => s.id === candidateId && s.kind === 'manual')
-      if (candidateSelection) {
-        const cStart = Date.parse(candidateSelection.startsAt)
-        const cEnd = Date.parse(candidateSelection.endsAt)
-        const overlaps = provisional.filter((s) => {
-          if (s.kind !== 'manual' || s.id === candidateId) return false
-          const sStart = Date.parse(s.startsAt)
-          const sEnd = Date.parse(s.endsAt)
-          return cStart < sEnd && sStart < cEnd
-        })
-        if (overlaps.length) {
-          merged = true
-          const mergedStart = Math.min(cStart, ...overlaps.map((s) => Date.parse(s.startsAt)))
-          const mergedEnd = Math.max(cEnd, ...overlaps.map((s) => Date.parse(s.endsAt)))
-          const overlapIds = new Set(overlaps.map((s) => s.id))
-          next = provisional
-            .filter((s) => !overlapIds.has(s.id))
-            .map((s) =>
-              s.id === candidateId && s.kind === 'manual'
-                ? { ...s, startsAt: new Date(mergedStart).toISOString(), endsAt: new Date(mergedEnd).toISOString() }
-                : s
-            )
-        }
-      }
-    }
+    const { selections: next, merged } = mergeOverlappingManualSelections(provisional, candidateId)
     closeManualModal()
     try {
       await persist(next, buffer, availabilityStart, availabilityEnd)
@@ -1330,7 +1521,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
     }
   }
 
-  function applyManualPreset(presetKey: 'break' | 'lunch' | 'dinner') {
+  function applyManualPreset(presetKey: ManualPresetKey) {
     const preset = mealPresetOptions.find((p) => p.key === presetKey)
     if (!preset) {
       setToast('That preset is not in this event schedule.')
@@ -1366,7 +1557,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
     setToast(`${preset.label} ready for ${dayYmd}. Tap Save to block it once.`)
   }
 
-  async function addDailyPresetAcrossAvailability(presetKey: 'break' | 'lunch' | 'dinner') {
+  async function addDailyPresetAcrossAvailability(presetKey: ManualPresetKey) {
     const preset = mealPresetOptions.find((p) => p.key === presetKey)
     if (!preset) {
       setToast('That preset is not in this event schedule.')
@@ -1453,14 +1644,14 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
   async function clearMealPresetsAcrossAvailability() {
     const cur = me?.selections ?? []
     const next = cur.filter(
-      (s) => !(s.kind === 'manual' && /^Unavailable: (breakfast|break|lunch|dinner)$/i.test(s.note ?? ''))
+      (s) => !(s.kind === 'manual' && /^Unavailable: (breakfast|break|lunch|dinner|sleep)$/i.test(s.note ?? ''))
     )
     if (next.length === cur.length) {
-      setToast('No meal presets to clear.')
+      setToast('No presets to clear.')
       return
     }
-    if (await persistWithUndo(next, cur, 'Cleared meal presets.')) {
-      setToast('Cleared meal presets. Undo?')
+    if (await persistWithUndo(next, cur, 'Cleared presets.')) {
+      setToast('Cleared presets. Undo?')
     }
   }
 
@@ -2569,7 +2760,10 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
             </GlassPanel>
 
             <GlassPanel className="p-2.5 md:hidden">
-              <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500">Day schedule</p>
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500">Day schedule</p>
+                {availabilityDisplayToggle}
+              </div>
               {availabilityDays.length ? (
                 <div
                   className="mt-2 border-b border-white/5 pb-2 md:hidden"
@@ -2585,9 +2779,18 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                 </div>
               ) : null}
               {mobileSchedulePanel.label ? (
-                <p className="mt-2 text-xs font-semibold tracking-tight text-white" aria-live="polite">
-                  {mobileSchedulePanel.label}
-                </p>
+                <div className="mt-2 flex flex-wrap items-center justify-between gap-2">
+                  <p className="text-xs font-semibold tracking-tight text-white" aria-live="polite">
+                    {mobileSchedulePanel.label}
+                  </p>
+                  <button
+                    type="button"
+                    className="rounded-full border border-cyan-300/40 bg-cyan-500/15 px-2.5 py-1 text-[11px] font-semibold text-cyan-100"
+                    onClick={() => void blockSelectedDay()}
+                  >
+                    Block whole day
+                  </button>
+                </div>
               ) : null}
               <div
                 key={mobileDayKey || 'none'}
@@ -2596,7 +2799,9 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                 {mobileSchedulePanel.rows.length === 0 ? (
                   <p className="py-6 text-center text-xs leading-relaxed text-slate-500">
                     {availabilityDays.length
-                      ? 'No hours in your saved date range for this day.'
+                      ? availabilityDisplayMode === 'free'
+                        ? 'No free hours in your saved date range for this day.'
+                        : 'No hours in your saved date range for this day.'
                       : 'Set start and end dates above to see hours here.'}
                   </p>
                 ) : (
@@ -2619,8 +2824,8 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                           key={`${row.start.toISOString()}-${idx}`}
                           type="button"
                           className={slotCls}
-                          aria-label={`Edit busy time ${formatTime(row.start.toISOString(), tz)} to ${formatTime(row.end.toISOString(), tz)}`}
-                          onClick={() => beginManualEdit(row.editableManualId!)}
+                          aria-label={`Mark free ${formatTime(row.start.toISOString(), tz)} to ${formatTime(row.end.toISOString(), tz)}`}
+                          onClick={() => void toggleHourBlock(row)}
                         >
                           {inner}
                         </button>
@@ -2634,8 +2839,8 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                         key={`${row.start.toISOString()}-${idx}`}
                         type="button"
                         className={slotCls}
-                        aria-label={`Add busy time ${formatTime(row.start.toISOString(), tz)} to ${formatTime(row.end.toISOString(), tz)}`}
-                        onClick={() => openManualFromOpenSlot(row)}
+                        aria-label={`Mark busy ${formatTime(row.start.toISOString(), tz)} to ${formatTime(row.end.toISOString(), tz)}`}
+                        onClick={() => void toggleHourBlock(row)}
                       >
                         {inner}
                       </button>
@@ -2644,25 +2849,37 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                 )}
               </div>
               <p className="mt-2 border-t border-white/5 pt-2 text-[10px] leading-snug text-slate-500">
-                Tap <span className="text-emerald-200">green</span> hours to mark busy. Times are for the highlighted day — day
-                chips are above; the same row can dock at the bottom while you scroll.
+                Tap <span className="text-emerald-200">green</span> hours to mark busy; tap editable red hours to free them.
+                Times are for the highlighted day.
               </p>
             </GlassPanel>
 
             <GlassPanel className="hidden p-3 md:block">
-              <p className="text-xs uppercase tracking-[0.25em] text-slate-400">Calendar by day</p>
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <p className="text-xs uppercase tracking-[0.25em] text-slate-400">Calendar by day</p>
+                {availabilityDisplayToggle}
+              </div>
               {desktopDayGroups.length ? (
                 <div className="mt-3 grid gap-3 lg:grid-cols-2">
                   {desktopDayGroups.map((day) => (
                     <div key={day.key} className="rounded-xl border border-white/10 bg-black/20 p-3">
                       <div className="flex items-center justify-between gap-2">
                         <p className="text-sm font-semibold text-white">{day.label}</p>
-                        <p className="text-xs text-slate-400">
-                          {day.busyCount} busy · {day.openCount} open
-                        </p>
+                        <div className="flex items-center gap-2">
+                          <p className="text-xs text-slate-400">
+                            {day.busyCount} busy · {day.openCount} open
+                          </p>
+                          <button
+                            type="button"
+                            className="rounded-full border border-cyan-300/40 bg-cyan-500/15 px-2 py-1 text-[10px] font-semibold text-cyan-100"
+                            onClick={() => void blockDay(day.key)}
+                          >
+                            Block day
+                          </button>
+                        </div>
                       </div>
                       <div className="mt-2 max-h-56 space-y-1 overflow-y-auto pr-1">
-                        {day.rows.map((row, idx) => {
+                        {day.rows.length ? day.rows.map((row, idx) => {
                           const slotCls = cx(
                             'grid w-full min-h-10 grid-cols-[84px_minmax(0,1fr)] items-center gap-2 rounded-lg border px-2 py-1.5 text-left text-xs transition motion-reduce:transition-none',
                             row.busy
@@ -2681,8 +2898,8 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                                 key={`${day.key}-${row.start.toISOString()}-${idx}`}
                                 type="button"
                                 className={slotCls}
-                                aria-label={`Edit busy time ${formatTime(row.start.toISOString(), tz)} to ${formatTime(row.end.toISOString(), tz)}`}
-                                onClick={() => beginManualEdit(row.editableManualId!)}
+                                aria-label={`Mark free ${formatTime(row.start.toISOString(), tz)} to ${formatTime(row.end.toISOString(), tz)}`}
+                                onClick={() => void toggleHourBlock(row)}
                               >
                                 {inner}
                               </button>
@@ -2696,13 +2913,17 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                               key={`${day.key}-${row.start.toISOString()}-${idx}`}
                               type="button"
                               className={slotCls}
-                              aria-label={`Add busy time ${formatTime(row.start.toISOString(), tz)} to ${formatTime(row.end.toISOString(), tz)}`}
-                              onClick={() => openManualFromOpenSlot(row)}
+                              aria-label={`Mark busy ${formatTime(row.start.toISOString(), tz)} to ${formatTime(row.end.toISOString(), tz)}`}
+                              onClick={() => void toggleHourBlock(row)}
                             >
                               {inner}
                             </button>
                           )
-                        })}
+                        }) : (
+                          <p className="py-3 text-xs text-slate-500">
+                            {availabilityDisplayMode === 'free' ? 'No free hours on this day.' : 'No hours in this day.'}
+                          </p>
+                        )}
                       </div>
                     </div>
                   ))}
@@ -2821,6 +3042,27 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                     placeholder="Work, gym, commute..."
                   />
                 </div>
+                {availabilityDays.length ? (
+                  <div className="mt-3">
+                    <p className="mb-2 text-xs uppercase tracking-[0.22em] text-slate-500">Pick day</p>
+                    <HostMobileDayChipsRow
+                      days={availabilityDays.map((d) => ({ key: d.key, label: d.label }))}
+                      activeKey={selectedDayKey}
+                      onSelect={(key) => {
+                        setMobileDayKey(key)
+                        setMStart((prev) => mergeLocalDateTime(prev, { date: key }))
+                        setMEnd((prev) => mergeLocalDateTime(prev, { date: key }))
+                      }}
+                    />
+                    <button
+                      type="button"
+                      className="mt-2 rounded-full border border-cyan-300/40 bg-cyan-500/15 px-3 py-1.5 text-xs font-semibold text-cyan-100"
+                      onClick={() => void blockSelectedDay()}
+                    >
+                      Block whole day ({selectedDayLabel})
+                    </button>
+                  </div>
+                ) : null}
                 <div className="mt-3">
                 <p className="mb-2 text-xs uppercase tracking-[0.22em] text-slate-500">Use once</p>
                 <div className="flex flex-wrap gap-2">
@@ -2851,7 +3093,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                     </button>
                   ))}
                   {!mealPresetOptions.length ? (
-                    <p className="text-xs text-slate-500">No break/lunch/dinner presets.</p>
+                    <p className="text-xs text-slate-500">No presets.</p>
                   ) : null}
                 </div>
                 <div className="mt-2 flex flex-wrap gap-2">
@@ -2860,7 +3102,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                     className="rounded-full border border-white/15 bg-white/[0.04] px-3 py-1.5 text-xs text-slate-200"
                     onClick={() => void clearMealPresetsAcrossAvailability()}
                   >
-                    Clear meal presets
+                    Clear presets
                   </button>
                   <button
                     type="button"
@@ -2881,7 +3123,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
               <div className="mt-6 grid gap-4 sm:grid-cols-2">
                 <div>
                   <label className="mb-2 block text-xs uppercase tracking-[0.25em] text-slate-400">Start</label>
-                  <div className="mb-2 grid grid-cols-2 gap-2 md:hidden">
+                  <div className="mb-2 grid grid-cols-2 gap-2">
                     <input
                       type="date"
                       className="w-full rounded-2xl border border-white/10 bg-black/25 px-3 py-3 text-sm text-white"
@@ -2900,7 +3142,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                   </div>
                   <input
                     type="datetime-local"
-                    className="hidden w-full rounded-2xl border border-white/10 bg-black/25 px-4 py-3 text-white md:block"
+                    className="hidden"
                     value={mStart}
                     min={manualDateRangeBounds ? `${manualDateRangeBounds.dateMin}T00:00` : undefined}
                     max={manualDateRangeBounds ? `${manualDateRangeBounds.dateMax}T23:59` : undefined}
@@ -2909,7 +3151,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                 </div>
                 <div>
                   <label className="mb-2 block text-xs uppercase tracking-[0.25em] text-slate-400">End</label>
-                  <div className="mb-2 grid grid-cols-2 gap-2 md:hidden">
+                  <div className="mb-2 grid grid-cols-2 gap-2">
                     <input
                       type="date"
                       className="w-full rounded-2xl border border-white/10 bg-black/25 px-3 py-3 text-sm text-white"
@@ -2928,7 +3170,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                   </div>
                   <input
                     type="datetime-local"
-                    className="hidden w-full rounded-2xl border border-white/10 bg-black/25 px-4 py-3 text-white md:block"
+                    className="hidden"
                     value={mEnd}
                     min={manualDateRangeBounds ? `${manualDateRangeBounds.dateMin}T00:00` : undefined}
                     max={manualDateRangeBounds ? `${manualDateRangeBounds.dateMax}T23:59` : undefined}
@@ -2940,7 +3182,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                 <div className="mt-4 rounded-2xl border border-slate-700/70 bg-[#0b1426]/80 p-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.035)]">
                   <p className="text-xs font-semibold uppercase tracking-[0.22em] text-slate-300/90">Already blocked</p>
                   <div className="mt-2 max-h-32 space-y-1.5 overflow-y-auto pr-1">
-                    {manualSelections.slice(0, 8).map((s) => (
+                    {manualSelections.map((s) => (
                     <div
                       key={s.id}
                       className="flex items-center gap-2 rounded-xl border border-slate-600/60 bg-[#101a2d]/85 px-2.5 py-2"
@@ -3666,7 +3908,10 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                     </div>
                     <div className="space-y-3">
                       <GlassPanel className="p-3 md:hidden">
-                        <p className="text-xs uppercase tracking-[0.25em] text-slate-400">Day schedule</p>
+                        <div className="flex flex-wrap items-center justify-between gap-2">
+                          <p className="text-xs uppercase tracking-[0.25em] text-slate-400">Day schedule</p>
+                          {availabilityDisplayToggle}
+                        </div>
                         {availabilityDays.length ? (
                           <div
                             className="mt-2 border-b border-white/5 pb-2 md:hidden"
@@ -3682,9 +3927,18 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                           </div>
                         ) : null}
                         {mobileSchedulePanel.label ? (
-                          <p className="mt-2 text-xs font-semibold tracking-tight text-white" aria-live="polite">
-                            {mobileSchedulePanel.label}
-                          </p>
+                          <div className="mt-2 flex flex-wrap items-center justify-between gap-2">
+                            <p className="text-xs font-semibold tracking-tight text-white" aria-live="polite">
+                              {mobileSchedulePanel.label}
+                            </p>
+                            <button
+                              type="button"
+                              className="rounded-full border border-cyan-300/40 bg-cyan-500/15 px-2.5 py-1 text-[11px] font-semibold text-cyan-100"
+                              onClick={() => void blockSelectedDay()}
+                            >
+                              Block whole day
+                            </button>
+                          </div>
                         ) : null}
                         <div
                           key={mobileDayKey || 'none'}
@@ -3693,7 +3947,9 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                           {mobileSchedulePanel.rows.length === 0 ? (
                             <p className="py-6 text-center text-xs leading-relaxed text-slate-500">
                               {availabilityDays.length
-                                ? 'No hours in your saved date range for this day.'
+                                ? availabilityDisplayMode === 'free'
+                                  ? 'No free hours in your saved date range for this day.'
+                                  : 'No hours in your saved date range for this day.'
                                 : 'Set a date range to show your day schedule.'}
                             </p>
                           ) : (
@@ -3716,8 +3972,8 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                                     key={`${row.start.toISOString()}-${idx}`}
                                     type="button"
                                     className={slotCls}
-                                    aria-label={`Edit busy time ${formatTime(row.start.toISOString(), tz)} to ${formatTime(row.end.toISOString(), tz)}`}
-                                    onClick={() => beginManualEdit(row.editableManualId!)}
+                                    aria-label={`Mark free ${formatTime(row.start.toISOString(), tz)} to ${formatTime(row.end.toISOString(), tz)}`}
+                                    onClick={() => void toggleHourBlock(row)}
                                   >
                                     {inner}
                                   </button>
@@ -3731,8 +3987,8 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                                   key={`${row.start.toISOString()}-${idx}`}
                                   type="button"
                                   className={slotCls}
-                                  aria-label={`Add busy time ${formatTime(row.start.toISOString(), tz)} to ${formatTime(row.end.toISOString(), tz)}`}
-                                  onClick={() => openManualFromOpenSlot(row)}
+                                  aria-label={`Mark busy ${formatTime(row.start.toISOString(), tz)} to ${formatTime(row.end.toISOString(), tz)}`}
+                                  onClick={() => void toggleHourBlock(row)}
                                 >
                                   {inner}
                                 </button>
@@ -3741,18 +3997,21 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                           )}
                         </div>
                         <p className="mt-2 border-t border-white/5 pt-2 text-[11px] leading-snug text-slate-500">
-                          Tap <span className="text-emerald-200">green</span> hours. Times are for the highlighted day — day chips
-                          are above; the same row can pin above the bottom tabs while you scroll.
+                          Tap <span className="text-emerald-200">green</span> hours to mark busy; tap editable red hours to free them.
+                          Day chips are above.
                         </p>
                       </GlassPanel>
                       <GlassPanel className="p-3">
-                        <p className="text-xs uppercase tracking-[0.25em] text-slate-400">Hour-by-hour</p>
+                        <div className="flex flex-wrap items-center justify-between gap-2">
+                          <p className="text-xs uppercase tracking-[0.25em] text-slate-400">Hour-by-hour</p>
+                          {availabilityDisplayToggle}
+                        </div>
                         <p className="mt-1 hidden text-[11px] text-slate-500 md:block">
-                          Tap a green <span className="text-emerald-200">open</span> row to add busy time.
+                          Tap green rows to mark busy; tap editable red rows to free that hour.
                         </p>
                         <div className="mt-2 max-h-56 space-y-1 overflow-y-auto pr-1 hidden md:block">
-                          {availabilityHourRows.length ? (
-                            availabilityHourRows.map((row, idx) => {
+                          {visibleAvailabilityHourRows.length ? (
+                            visibleAvailabilityHourRows.map((row, idx) => {
                               const slotCls = cx(
                                 'flex w-full min-h-10 items-center justify-between rounded-lg border px-2.5 py-2 text-left text-xs transition motion-reduce:transition-none',
                                 row.busy
@@ -3771,8 +4030,8 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                                     key={`${row.start.toISOString()}-${idx}`}
                                     type="button"
                                     className={slotCls}
-                                    aria-label={`Edit busy time ${formatTime(row.start.toISOString(), tz)} to ${formatTime(row.end.toISOString(), tz)}`}
-                                    onClick={() => beginManualEdit(row.editableManualId!)}
+                                    aria-label={`Mark free ${formatTime(row.start.toISOString(), tz)} to ${formatTime(row.end.toISOString(), tz)}`}
+                                    onClick={() => void toggleHourBlock(row)}
                                   >
                                     {inner}
                                   </button>
@@ -3786,15 +4045,19 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                                   key={`${row.start.toISOString()}-${idx}`}
                                   type="button"
                                   className={slotCls}
-                                  aria-label={`Add busy time ${formatTime(row.start.toISOString(), tz)} to ${formatTime(row.end.toISOString(), tz)}`}
-                                  onClick={() => openManualFromOpenSlot(row)}
+                                  aria-label={`Mark busy ${formatTime(row.start.toISOString(), tz)} to ${formatTime(row.end.toISOString(), tz)}`}
+                                  onClick={() => void toggleHourBlock(row)}
                                 >
                                   {inner}
                                 </button>
                               )
                             })
                           ) : (
-                            <p className="text-xs text-slate-400">Set availability start and end to build hour blocks.</p>
+                            <p className="text-xs text-slate-400">
+                              {availabilityHourRows.length && availabilityDisplayMode === 'free'
+                                ? 'No free hours in this range.'
+                                : 'Set availability start and end to build hour blocks.'}
+                            </p>
                           )}
                         </div>
                       </GlassPanel>
@@ -3885,7 +4148,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
               </button>
             </div>
             <div className="min-h-0 flex-1 overflow-y-auto px-5 py-4 sm:px-6">
-            <p className="text-sm text-slate-400">Times use your browser local timezone and are stored as UTC.</p>
+            <p className="text-sm text-slate-400">Times use the event timezone ({tz}) and are stored as UTC.</p>
             <div className="mt-4">
               <label className="mb-2 block text-xs uppercase tracking-[0.25em] text-slate-400">Title</label>
               <input
@@ -3896,6 +4159,27 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                 placeholder="Gym, dinner, commute..."
               />
             </div>
+            {availabilityDays.length ? (
+              <div className="mt-3">
+                <p className="mb-2 text-xs uppercase tracking-[0.22em] text-slate-500">Pick day</p>
+                <HostMobileDayChipsRow
+                  days={availabilityDays.map((d) => ({ key: d.key, label: d.label }))}
+                  activeKey={selectedDayKey}
+                  onSelect={(key) => {
+                    setMobileDayKey(key)
+                    setMStart((prev) => mergeLocalDateTime(prev, { date: key }))
+                    setMEnd((prev) => mergeLocalDateTime(prev, { date: key }))
+                  }}
+                />
+                <button
+                  type="button"
+                  className="mt-2 rounded-full border border-cyan-300/40 bg-cyan-500/15 px-3 py-1.5 text-xs font-semibold text-cyan-100"
+                  onClick={() => void blockSelectedDay()}
+                >
+                  Block whole day ({selectedDayLabel})
+                </button>
+              </div>
+            ) : null}
             <div className="mt-3">
               <p className="mb-2 text-xs uppercase tracking-[0.22em] text-slate-500">Use once</p>
               <div className="flex flex-wrap gap-2">
@@ -3926,7 +4210,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                   </button>
                 ))}
                 {!mealPresetOptions.length ? (
-                  <p className="text-xs text-slate-500">No break/lunch/dinner presets.</p>
+                  <p className="text-xs text-slate-500">No presets.</p>
                 ) : null}
               </div>
               <div className="mt-2 flex flex-wrap gap-2">
@@ -3935,7 +4219,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                   className="rounded-full border border-white/15 bg-white/[0.04] px-3 py-1.5 text-xs text-slate-200"
                   onClick={() => void clearMealPresetsAcrossAvailability()}
                 >
-                  Clear meal presets
+                  Clear presets
                 </button>
                 <button
                   type="button"
@@ -3956,7 +4240,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
             <div className="mt-6 grid gap-4 sm:grid-cols-2">
               <div>
                 <label className="mb-2 block text-xs uppercase tracking-[0.25em] text-slate-400">Start</label>
-                <div className="mb-2 grid grid-cols-2 gap-2 md:hidden">
+                <div className="mb-2 grid grid-cols-2 gap-2">
                   <input
                     type="date"
                     className="w-full rounded-2xl border border-white/10 bg-black/25 px-3 py-3 text-sm text-white"
@@ -3975,7 +4259,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                 </div>
                 <input
                   type="datetime-local"
-                  className="hidden w-full rounded-2xl border border-white/10 bg-black/25 px-4 py-3 text-white md:block"
+                  className="hidden"
                   value={mStart}
                   min={manualDateRangeBounds ? `${manualDateRangeBounds.dateMin}T00:00` : undefined}
                   max={manualDateRangeBounds ? `${manualDateRangeBounds.dateMax}T23:59` : undefined}
@@ -3984,7 +4268,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
               </div>
               <div>
                 <label className="mb-2 block text-xs uppercase tracking-[0.25em] text-slate-400">End</label>
-                <div className="mb-2 grid grid-cols-2 gap-2 md:hidden">
+                <div className="mb-2 grid grid-cols-2 gap-2">
                   <input
                     type="date"
                     className="w-full rounded-2xl border border-white/10 bg-black/25 px-3 py-3 text-sm text-white"
@@ -4003,7 +4287,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                 </div>
                 <input
                   type="datetime-local"
-                  className="hidden w-full rounded-2xl border border-white/10 bg-black/25 px-4 py-3 text-white md:block"
+                  className="hidden"
                   value={mEnd}
                   min={manualDateRangeBounds ? `${manualDateRangeBounds.dateMin}T00:00` : undefined}
                   max={manualDateRangeBounds ? `${manualDateRangeBounds.dateMax}T23:59` : undefined}
@@ -4015,7 +4299,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
               <div className="mt-4 rounded-2xl border border-slate-700/70 bg-[#0b1426]/80 p-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.035)]">
                 <p className="text-xs font-semibold uppercase tracking-[0.22em] text-slate-300/90">Already blocked</p>
                 <div className="mt-2 max-h-32 space-y-1.5 overflow-y-auto pr-1">
-                  {manualSelections.slice(0, 8).map((s) => (
+                  {manualSelections.map((s) => (
                     <div
                       key={s.id}
                       className="flex items-center gap-2 rounded-xl border border-slate-600/60 bg-[#101a2d]/85 px-2.5 py-2"
