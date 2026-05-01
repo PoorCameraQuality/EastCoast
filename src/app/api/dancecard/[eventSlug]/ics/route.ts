@@ -32,9 +32,8 @@ export async function GET(request: NextRequest, context: { params: { eventSlug: 
       note: s.note,
     }))
 
-    const eventTitle = event.event_title || slug
     const body = buildDancecardSelectionsOnlyIcs({
-      calendarName: `${eventTitle} — dancecard`,
+      calendarName: 'Dancecard',
       attendeeDisplayName: session.displayName,
       selections,
     })

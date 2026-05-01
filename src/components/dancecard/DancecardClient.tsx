@@ -113,6 +113,21 @@ type AvailabilityHourRow = {
 
 const SHARE_LINK_PRIVACY_BLURB =
   'Anyone with the link only sees free vs busy — not your block titles or private notes.'
+const DANCECARD_DISPLAY_TITLE = 'Dancecard'
+const DANCECARD_DISPLAY_SUBTITLE =
+  'A private planning surface for busy times, mutual free time, reservations, and calendar export.'
+
+function scrubEventBrand(value: string | null | undefined, fallback = ''): string {
+  const cleaned = (value ?? '')
+    .replace(/Primal Arts Festival\s*2026/gi, DANCECARD_DISPLAY_TITLE)
+    .replace(/Primal Arts Festival/gi, DANCECARD_DISPLAY_TITLE)
+    .replace(/\bPAF\s*26\b/gi, DANCECARD_DISPLAY_TITLE)
+    .replace(/\bPAF26\b/gi, DANCECARD_DISPLAY_TITLE)
+    .replace(/\bPAF\b/gi, DANCECARD_DISPLAY_TITLE)
+    .replace(/\s{2,}/g, ' ')
+    .trim()
+  return cleaned || fallback
+}
 
 const TAB_OPTIONS: Array<{ key: Tab; label: string; blurb: string }> = [
   { key: 'dancecard', label: 'My availability', blurb: 'Block off time, share your code, and export your plans.' },
@@ -364,6 +379,9 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
   const appTopRef = useRef<HTMLDivElement | null>(null)
 
   const tz = schedule?.meta?.timezone ?? 'America/New_York'
+  const displayProductTitle = DANCECARD_DISPLAY_TITLE
+  const displayEventTitle = DANCECARD_DISPLAY_TITLE
+  const displaySubtitle = DANCECARD_DISPLAY_SUBTITLE
 
   const splitLocalDateTime = useCallback((value: string) => {
     const [date = '', rawTime = ''] = value.split('T')
@@ -611,7 +629,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
 
   const tracks = useMemo(() => {
     const s = schedule?.slots ?? []
-    return Array.from(new Set(s.map((x) => x.track).filter(Boolean))) as string[]
+    return Array.from(new Set(s.map((x) => scrubEventBrand(x.track, '').trim()).filter(Boolean))) as string[]
   }, [schedule])
 
   const rooms = useMemo(() => {
@@ -620,7 +638,11 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
   }, [schedule])
 
   const filteredSlots = useMemo(() => {
-    let s = schedule?.slots ?? []
+    let s = (schedule?.slots ?? []).map((slot) => ({
+      ...slot,
+      title: scrubEventBrand(slot.title, 'Program session'),
+      track: slot.track ? scrubEventBrand(slot.track, '') || null : null,
+    }))
     if (trackFilter) s = s.filter((x) => (x.track ?? '') === trackFilter)
     if (roomFilter) s = s.filter((x) => (x.room ?? '') === roomFilter)
     return s
@@ -742,7 +764,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
       return 0
     }
     const selectionTitle = (s: MeResponse['selections'][number]): string => {
-      if (s.kind === 'program') return s.programTitle?.trim() || 'Program session'
+      if (s.kind === 'program') return scrubEventBrand(s.programTitle, 'Program session')
       return s.note?.trim() || 'Busy'
     }
     const rows: AvailabilityHourRow[] = []
@@ -1012,17 +1034,8 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
     let endMs = Date.parse(schedule.meta.windowEndsAt)
     if (!(endMs > startMs)) return null
 
-    // PAF26 requested playable hours: Thu 10:00 AM → Mon 4:00 AM.
-    if (slug === 'paf26' && mutualStripDays.length) {
-      const firstYmd = zonedCalendarDateFromUtc(mutualStripDays[0].startMs, tz)
-      const lastYmd = zonedCalendarDateFromUtc(mutualStripDays[mutualStripDays.length - 1].startMs, tz)
-      const pafStart = utcMillisAtZonedWallClock(tz, firstYmd, 10, 0)
-      const pafEnd = utcMillisAtZonedWallClock(tz, lastYmd, 4, 0)
-      if (pafStart != null) startMs = pafStart
-      if (pafEnd != null) endMs = pafEnd
-    }
     return endMs > startMs ? { startMs, endMs } : null
-  }, [schedule, slug, mutualStripDays, tz])
+  }, [schedule])
 
   const staffPeople = useMemo(() => staffRoster?.people ?? [], [staffRoster])
   const selectedStaffEntry = useMemo(
@@ -1755,9 +1768,8 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
       setToast('Add busy blocks or reservations to export your availability.')
       return
     }
-    const eventTitle = schedule?.meta?.eventTitle ?? slug
     const body = buildDancecardIcs({
-      calendarName: `${eventTitle} — availability`,
+      calendarName: `${DANCECARD_DISPLAY_TITLE} — availability`,
       attendeeDisplayName: me.account.displayName,
       selections: me.selections ?? [],
       reservations,
@@ -1851,8 +1863,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
       return
     }
     const range = formatRange(new Date(sMs).toISOString(), new Date(eMs).toISOString(), tz)
-    const eventTitle = schedule?.meta?.eventTitle ?? slug
-    const lines = [`Dancecard reservation — ${eventTitle}`, `Host: ${host}`, `You: ${you}`, `Time: ${range} (${tz})`]
+    const lines = [`Dancecard reservation`, `Host: ${host}`, `You: ${you}`, `Time: ${range} (${tz})`]
     const note = reserveMutualNote.trim()
     if (note) lines.push(`Note: ${note}`)
     const text = lines.join('\n')
@@ -1872,8 +1883,6 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
     reserveMutualEnd,
     reserveMutualNote,
     reserveMutualStart,
-    schedule?.meta?.eventTitle,
-    slug,
     tz,
   ])
 
@@ -1882,7 +1891,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
     const you = me?.account.displayName ?? 'You'
     const s = new Date(reserveMutualStart)
     const e = new Date(reserveMutualEnd)
-    const calTitle = `Dancecard: ${schedule?.meta?.eventTitle ?? slug} (${host})`
+    const calTitle = `Dancecard (${host})`
     const details = [`Reservation with ${host}`, `You: ${you}`, `Times (${tz}): ${formatRange(s.toISOString(), e.toISOString(), tz)}`, reserveMutualNote.trim() ? `Note: ${reserveMutualNote.trim()}` : null]
       .filter(Boolean)
       .join('\n')
@@ -1898,8 +1907,6 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
     reserveMutualEnd,
     reserveMutualNote,
     reserveMutualStart,
-    schedule?.meta?.eventTitle,
-    slug,
     tz,
   ])
 
@@ -2339,14 +2346,11 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
         <div className="relative mx-auto grid min-h-screen max-w-7xl gap-6 px-4 py-8 sm:px-6 lg:grid-cols-[1.15fr_0.85fr] lg:px-8 lg:py-10">
           <GlassPanel className="overflow-hidden p-8 lg:p-10">
             <div className="max-w-2xl">
-              <p className="text-xs uppercase tracking-[0.4em] text-cyan-200/75">{schedule.meta?.productTitle}</p>
+              <p className="text-xs uppercase tracking-[0.4em] text-cyan-200/75">{displayProductTitle}</p>
               <h1 className="mt-4 font-serif text-4xl leading-tight text-white sm:text-5xl">
-                {schedule.meta?.eventTitle ?? 'Availability'}
+                {displayEventTitle}
               </h1>
-              <p className="mt-4 max-w-xl text-base leading-7 text-slate-300">
-                {schedule.meta?.subtitle ||
-                  'A private planning surface for busy times, mutual free time, reservations, and calendar export.'}
-              </p>
+              <p className="mt-4 max-w-xl text-base leading-7 text-slate-300">{displaySubtitle}</p>
             </div>
 
             <div className="mt-8 grid gap-4 lg:grid-cols-[0.8fr_1.2fr]">
@@ -2566,7 +2570,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
               <div>
                 <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-slate-500">Your schedule</p>
                 <h1 className="mt-0.5 font-serif text-lg leading-snug text-white sm:text-2xl">
-                  {schedule.meta?.eventTitle ?? 'Availability'}
+                  {displayEventTitle}
                 </h1>
                 <p className="mt-1 text-[11px] leading-snug text-slate-400">
                   Block busy time, set buffer, and share your link.{' '}
@@ -3296,10 +3300,10 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div className="min-w-0 flex-1">
                   <p className="text-[10px] font-semibold uppercase tracking-[0.32em] text-cyan-100/85 sm:text-xs sm:tracking-[0.38em]">
-                    {schedule.meta?.productTitle}
+                    {displayProductTitle}
                   </p>
                   <h1 className="mt-2 font-serif text-xl leading-tight text-white sm:mt-2 sm:text-3xl lg:text-[2.1rem]">
-                    {schedule.meta?.eventTitle}
+                    {displayEventTitle}
                   </h1>
                   <p className="mt-1 hidden max-w-3xl text-sm leading-6 text-slate-200/85 md:block">
                     Share your availability, compare free windows with someone else, and reserve time without exposing
@@ -3330,7 +3334,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                           {staffManualBlockTitle(
                             nextAgendaItem.selection,
                             nextAgendaItem.selection.kind === 'program'
-                              ? nextAgendaItem.selection.programTitle || 'Scheduled block'
+                              ? scrubEventBrand(nextAgendaItem.selection.programTitle, 'Scheduled block')
                               : 'Busy time'
                           )}
                         </div>

@@ -5,7 +5,9 @@ import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } fr
 import { dancecardFetch, DancecardApiError, formatDancecardApiMessage } from '@/components/dancecard/api-client'
 import { MutualAvailabilityStrip } from '@/components/dancecard/MutualAvailabilityStrip'
 import { dayRangesFromSchedule } from '@/components/dancecard/eventAvailability'
-import { formatRange, toDatetimeLocalValue, utcMillisAtZonedWallClock, zonedCalendarDateFromUtc } from '@/components/dancecard/time'
+import { formatRange, toDatetimeLocalValue } from '@/components/dancecard/time'
+
+const DANCECARD_DISPLAY_TITLE = 'Dancecard'
 
 type SharePayload = {
   meta: {
@@ -75,16 +77,8 @@ export function ShareDancecardClient(props: { eventSlug: string; token: string }
     let endMs = Date.parse(data.meta.windowEndsAt)
     if (!(endMs > startMs)) return null
 
-    if (eventSlug === 'paf26' && shareStripDays.length) {
-      const firstYmd = zonedCalendarDateFromUtc(shareStripDays[0].startMs, tz)
-      const lastYmd = zonedCalendarDateFromUtc(shareStripDays[shareStripDays.length - 1].startMs, tz)
-      const pafStart = utcMillisAtZonedWallClock(tz, firstYmd, 10, 0)
-      const pafEnd = utcMillisAtZonedWallClock(tz, lastYmd, 4, 0)
-      if (pafStart != null) startMs = pafStart
-      if (pafEnd != null) endMs = pafEnd
-    }
     return endMs > startMs ? { startMs, endMs } : null
-  }, [data, eventSlug, shareStripDays, tz])
+  }, [data])
 
   const loadShare = useCallback(
     async (opts?: { silent?: boolean }) => {
@@ -236,7 +230,7 @@ export function ShareDancecardClient(props: { eventSlug: string; token: string }
           aria-labelledby="dc-share-intro-title"
         >
           <div className="w-full max-w-md animate-in motion-reduce:animate-none rounded-[28px] border border-white/10 bg-[#0c1424]/98 p-6 shadow-[0_28px_90px_rgba(2,6,23,0.65)] sm:p-8">
-            <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-teal-200/90">East Coast Kink Events</p>
+            <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-teal-200/90">{DANCECARD_DISPLAY_TITLE}</p>
             <h2 id="dc-share-intro-title" className="mt-2 font-serif text-2xl text-stone-50">
               Welcome to Dancecard <span className="text-teal-200">beta</span>
             </h2>
@@ -377,8 +371,8 @@ export function ShareDancecardClient(props: { eventSlug: string; token: string }
         </Link>
       </div>
       <header className="mb-4 border-b border-white/10 pb-4">
-        <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-teal-200/80">East Coast Kink Events</p>
-        <h1 className="font-serif text-xl font-semibold text-stone-50 sm:text-2xl">{data.meta?.eventTitle ?? 'Dancecard'}</h1>
+        <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-teal-200/80">{DANCECARD_DISPLAY_TITLE}</p>
+        <h1 className="font-serif text-xl font-semibold text-stone-50 sm:text-2xl">{DANCECARD_DISPLAY_TITLE}</h1>
         <p className="mt-1 text-sm text-stone-300">
           <span className="font-medium text-stone-100">{data.host.displayName}</span>
           <span className="text-stone-500"> · shared availability</span>

@@ -45,6 +45,18 @@ function dayKey(iso: string, tz: string) {
   }).format(new Date(iso))
 }
 
+function scrubEventBrand(value: string | null | undefined, fallback = ''): string {
+  const cleaned = (value ?? '')
+    .replace(/Primal Arts Festival\s*2026/gi, 'Dancecard')
+    .replace(/Primal Arts Festival/gi, 'Dancecard')
+    .replace(/\bPAF\s*26\b/gi, 'Dancecard')
+    .replace(/\bPAF26\b/gi, 'Dancecard')
+    .replace(/\bPAF\b/gi, 'Dancecard')
+    .replace(/\s{2,}/g, ' ')
+    .trim()
+  return cleaned || fallback
+}
+
 function reservationPartnerName(r: ReservationRow): string {
   return r.role === 'host' ? r.guest.displayName : r.host.displayName
 }
@@ -79,7 +91,7 @@ export function DancecardCompactList(props: {
     if (row.type === 'reservation') return 'Reservation'
     const s = row.selection
     if (s.kind === 'program') {
-      const t = (s.programTrack ?? '').trim()
+      const t = scrubEventBrand(s.programTrack, '').trim()
       return t || 'Class'
     }
     const shift = findMatchingStaffShift(s)
@@ -90,7 +102,7 @@ export function DancecardCompactList(props: {
   function chipColorForRow(row: CompactAgendaRow): ReturnType<typeof roleColor> {
     if (row.type === 'reservation') return roleColor('Reservation')
     const s = row.selection
-    if (s.kind === 'program') return roleColor(s.programTrack || 'track')
+    if (s.kind === 'program') return roleColor(scrubEventBrand(s.programTrack, 'track'))
     const shift = findMatchingStaffShift(s)
     return roleColor(shift?.role ?? 'Busy')
   }
@@ -160,14 +172,14 @@ export function DancecardCompactList(props: {
         const title = staffManualBlockTitle(
           s,
           s.kind === 'program'
-            ? s.programTitle || 'Program session'
+            ? scrubEventBrand(s.programTitle, 'Program session')
             : s.kind === 'manual'
               ? 'Manual busy block'
               : s.kind
         )
         const metaFromStaff = Boolean(findMatchingStaffShift(s))
         const meta = metaFromStaff
-          ? 'From PAF staff & volunteer schedule'
+          ? 'From staff & volunteer schedule'
           : `${s.kind === 'program' && s.programRoom ? `${s.programRoom} · ` : ''}${formatRange(s.startsAt, s.endsAt, tz)}`
         const label = roleLabel(row)
         const rc = chipColorForRow(row)
