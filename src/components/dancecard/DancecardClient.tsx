@@ -101,6 +101,14 @@ type ReservationRow = {
   guest: { id: string; displayName: string }
 }
 
+type AvailabilityHourRow = {
+  start: Date
+  end: Date
+  busy: boolean
+  title: string
+  editableManualId: string | null
+}
+
 const SHARE_LINK_PRIVACY_BLURB =
   'Anyone with the link only sees free vs busy — not your block titles or private notes.'
 
@@ -109,7 +117,7 @@ const TAB_OPTIONS: Array<{ key: Tab; label: string; blurb: string }> = [
   {
     key: 'mutual',
     label: 'Compare',
-    blurb: 'By login name or share link — shared open windows and reserve.',
+    blurb: 'Shared schedules by login name or share link.',
   },
   { key: 'reservations', label: 'Reservations', blurb: 'Track confirmed time with other people.' },
 ]
@@ -162,6 +170,10 @@ type MutualReserveBanner = null | { kind: 'success' } | { kind: 'error'; message
 
 function reservationPartnerName(r: ReservationRow): string {
   return r.role === 'host' ? r.guest.displayName : r.host.displayName
+}
+
+function isMealPresetNote(note: string | null | undefined): boolean {
+  return /^Unavailable: (breakfast|break|lunch|dinner)$/i.test((note ?? '').trim())
 }
 
 function eventWindowLabel(meta: ScheduleMeta | null) {
@@ -265,7 +277,7 @@ function MobileDayStripBar(props: {
     <nav
       aria-label="Select schedule day"
       className={cn(
-        'fixed inset-x-0 z-[42] border-t border-white/10 bg-[#050b18]/96 shadow-[0_-10px_36px_rgba(2,6,23,0.55)] backdrop-blur-md md:hidden',
+        'fixed inset-x-0 z-[42] border-t border-slate-700/80 bg-[#07101f]/96 shadow-[0_-10px_36px_rgba(2,6,23,0.55)] backdrop-blur-md md:hidden',
         positionClassName ??
           'bottom-0 pb-[max(0.35rem,env(safe-area-inset-bottom))] pt-1.5'
       )}
@@ -324,6 +336,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
   const [mStart, setMStart] = useState('')
   const [mEnd, setMEnd] = useState('')
   const [mTitle, setMTitle] = useState('')
+  const [lastShareToken, setLastShareToken] = useState('')
   const [mutualToken, setMutualToken] = useState(() =>
     typeof window !== 'undefined' ? sessionStorage.getItem(`eck_dc_mutual_${slug}`) ?? '' : ''
   )
@@ -344,6 +357,8 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
   const undoTimerRef = useRef<number | null>(null)
   const selectionsRef = useRef<MeResponse['selections']>([])
   const mutualTokenRef = useRef(mutualToken)
+  const mutualDataRef = useRef<MutualSharePayload | null>(null)
+  const appTopRef = useRef<HTMLDivElement | null>(null)
 
   const tz = schedule?.meta?.timezone ?? 'America/New_York'
 
@@ -448,6 +463,33 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
   useLayoutEffect(() => {
     mutualTokenRef.current = mutualToken
   }, [mutualToken])
+
+  useLayoutEffect(() => {
+    mutualDataRef.current = mutualData
+  }, [mutualData])
+
+  const scrollToAppTop = useCallback(() => {
+    if (typeof window === 'undefined') return
+    window.requestAnimationFrame(() => {
+      appTopRef.current?.scrollIntoView({ block: 'start', behavior: 'smooth' })
+    })
+  }, [])
+
+  const switchTab = useCallback(
+    (next: Tab, opts?: { scroll?: boolean }) => {
+      setTab(next)
+      if (opts?.scroll) scrollToAppTop()
+    },
+    [scrollToAppTop]
+  )
+
+  const openBlankManualModal = useCallback(() => {
+    setEditingManualId(null)
+    setMStart('')
+    setMEnd('')
+    setMTitle('')
+    setManualOpen(true)
+  }, [])
 
   useEffect(() => {
     if (typeof window === 'undefined') return
@@ -678,24 +720,41 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
 
   const availabilityHourRows = useMemo(() => {
     const normalized = normalizeAvailabilityBounds(availabilityStart, availabilityEnd)
-    if (!normalized) return [] as Array<{ start: Date; end: Date; busy: boolean; title: string }>
+    if (!normalized) return [] as AvailabilityHourRow[]
     const startMs = Date.parse(normalized.startIso)
     const endMs = Date.parse(normalized.endIso)
     if (!Number.isFinite(startMs) || !Number.isFinite(endMs) || endMs <= startMs) return []
     const hostClaims = reservations.filter((r) => r.role === 'host')
     const bufferMs = Math.max(0, buffer) * 60 * 1000
     const overlaps = (aStart: number, aEnd: number, bStart: number, bEnd: number) => aStart < bEnd && bStart < aEnd
-    const rows: Array<{ start: Date; end: Date; busy: boolean; title: string }> = []
+    const selectionPriority = (s: MeResponse['selections'][number]): number => {
+      if (s.kind === 'manual') {
+        const note = (s.note ?? '').trim()
+        if (note && !isMealPresetNote(note)) return 40
+        if (isMealPresetNote(note)) return 20
+        return 10
+      }
+      if (s.kind === 'program') return 30
+      return 0
+    }
+    const selectionTitle = (s: MeResponse['selections'][number]): string => {
+      if (s.kind === 'program') return s.programTitle?.trim() || 'Program session'
+      return s.note?.trim() || 'Busy'
+    }
+    const rows: AvailabilityHourRow[] = []
     for (let t = startMs; t < endMs; t += 60 * 60 * 1000) {
       const slotStart = new Date(t)
       const slotEnd = new Date(Math.min(t + 60 * 60 * 1000, endMs))
       const slotStartMs = slotStart.getTime()
       const slotEndMs = slotEnd.getTime()
-      const covering = (me?.selections ?? []).find((s) => {
-        const sStart = Date.parse(s.startsAt)
-        const sEnd = Date.parse(s.endsAt)
-        return overlaps(sStart - bufferMs, sEnd + bufferMs, slotStartMs, slotEndMs)
-      })
+      const coveringSelections = (me?.selections ?? [])
+        .filter((s) => {
+          const sStart = Date.parse(s.startsAt)
+          const sEnd = Date.parse(s.endsAt)
+          return overlaps(sStart - bufferMs, sEnd + bufferMs, slotStartMs, slotEndMs)
+        })
+        .sort((a, b) => selectionPriority(b) - selectionPriority(a))
+      const covering = coveringSelections[0]
       const coveringClaim = hostClaims.find((r) => {
         const rStart = Date.parse(r.startsAt)
         const rEnd = Date.parse(r.endsAt)
@@ -707,7 +766,8 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
         start: slotStart,
         end: slotEnd,
         busy: isBusy,
-        title: covering?.note?.trim() || claimTitle || (isBusy ? 'Busy' : 'Open'),
+        title: claimTitle || (covering ? selectionTitle(covering) : isBusy ? 'Busy' : 'Open'),
+        editableManualId: covering && covering.kind === 'manual' && !coveringClaim ? covering.id : null,
       })
     }
     return rows
@@ -738,6 +798,73 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
         .sort((a, b) => Date.parse(a.startsAt) - Date.parse(b.startsAt))
         .slice(0, 6),
     [reservations]
+  )
+
+  const blockedTimesPanel = (compact = false) => (
+    <GlassPanel className={compact ? 'p-2.5' : 'p-3'}>
+      <div className="flex flex-wrap items-start justify-between gap-2">
+        <div className="min-w-0 flex-1">
+          <p className={cx('font-semibold uppercase text-slate-300/90', compact ? 'text-[10px] tracking-[0.18em]' : 'text-xs tracking-[0.25em]')}>
+            Your blocked times
+          </p>
+          <p className={cx('mt-1 leading-snug text-slate-300/80', compact ? 'text-[11px]' : 'text-xs')}>
+            Presets and custom blocks currently on your dancecard.
+          </p>
+        </div>
+        <button
+          type="button"
+          className={cx(
+            'shrink-0 rounded-full border border-cyan-300/35 bg-cyan-400/12 font-semibold text-cyan-50 transition hover:border-cyan-200/50 hover:bg-cyan-400/18',
+            compact ? 'px-2.5 py-1.5 text-[11px]' : 'px-3 py-1.5 text-xs'
+          )}
+          onClick={openBlankManualModal}
+        >
+          Add busy time
+        </button>
+      </div>
+      {manualSelections.length ? (
+        <div className={cx('mt-3 space-y-1.5 overflow-y-auto pr-1', compact ? 'max-h-40' : 'max-h-52')}>
+          {manualSelections.slice(0, compact ? 6 : 10).map((s) => (
+            <div
+              key={s.id}
+              className="flex items-center gap-2 rounded-xl border border-slate-600/60 bg-[#0b1426]/80 px-2.5 py-2 shadow-[inset_0_1px_0_rgba(255,255,255,0.035)]"
+            >
+              <button
+                type="button"
+                className="min-h-10 min-w-0 flex-1 text-left text-xs leading-snug text-slate-100 hover:text-white"
+                onClick={() => beginManualEdit(s.id)}
+              >
+                <span className="block font-semibold">{s.note?.trim() || 'Busy'}</span>
+                <span className="block text-slate-300/80">{formatRange(s.startsAt, s.endsAt, tz)}</span>
+              </button>
+              <button
+                type="button"
+                className="min-h-10 rounded-md border border-cyan-300/35 bg-cyan-500/15 px-2.5 py-1.5 text-xs font-semibold text-cyan-100 hover:bg-cyan-500/25"
+                onClick={() => beginManualEdit(s.id)}
+              >
+                Edit
+              </button>
+              <button
+                type="button"
+                className="min-h-10 rounded-md border border-rose-300/35 bg-rose-500/15 px-2.5 py-1.5 text-xs font-semibold text-rose-100 hover:bg-rose-500/25"
+                aria-label="Delete busy time"
+                title="Delete busy time"
+                onClick={() => removeSelection(s.id)}
+              >
+                Delete
+              </button>
+            </div>
+          ))}
+          {manualSelections.length > (compact ? 6 : 10) ? (
+            <p className="text-[10px] text-slate-400">Open Add busy time to manage the rest.</p>
+          ) : null}
+        </div>
+      ) : (
+        <p className="mt-3 rounded-xl border border-slate-600/60 bg-[#0b1426]/80 px-3 py-2 text-xs text-slate-300/80">
+          Nothing blocked yet. Tap green hours below or use Add busy time.
+        </p>
+      )}
+    </GlassPanel>
   )
 
   const availabilityDays = useMemo(() => {
@@ -1030,8 +1157,8 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
     const cur = me?.selections ?? []
     const next = cur.filter((s) => s.id !== id)
     if (next.length === cur.length) return
-    if (await persistWithUndo(next, cur, 'Removed unavailable time.')) {
-      setToast('Removed unavailable time. Undo?')
+    if (await persistWithUndo(next, cur, 'Removed busy time.')) {
+      setToast('Removed busy time. Undo?')
     }
   }
 
@@ -1091,7 +1218,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
     setMTitle('')
   }
 
-  function openManualFromOpenSlot(row: { start: Date; end: Date; busy: boolean }) {
+  function openManualFromOpenSlot(row: AvailabilityHourRow) {
     if (row.busy) return
     setEditingManualId(null)
     setMStart(formatUtcMsAsDatetimeLocalInZone(row.start.getTime(), tz))
@@ -1113,7 +1240,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
 
   async function submitManualBlock() {
     if (!mStart || !mEnd) {
-      setToast('Set both start and end for unavailable time.')
+      setToast('Set both start and end for busy time.')
       return
     }
     const startMs = parseDatetimeLocalInZone(mStart, tz)
@@ -1123,7 +1250,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
       return
     }
     if (endMs <= startMs) {
-      setToast('Unavailable end must be after start.')
+      setToast('Busy time end must be after start.')
       return
     }
     if (manualDateRangeBounds) {
@@ -1131,7 +1258,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
         startMs < manualDateRangeBounds.rangeStartMs ||
         endMs > manualDateRangeBounds.rangeEndMs
       ) {
-        setToast('Unavailable time must stay within your saved date range.')
+        setToast('Busy time must stay within your saved date range.')
         return
       }
     }
@@ -1193,10 +1320,10 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
       await persist(next, buffer, availabilityStart, availabilityEnd)
       setToast(
         merged
-          ? 'Updated unavailable time. Overlapping blocks were merged automatically.'
+          ? 'Updated busy time. Overlapping blocks were merged automatically.'
           : isEditing
-            ? 'Updated unavailable time.'
-            : 'Added unavailable time.'
+            ? 'Updated busy time.'
+            : 'Added busy time.'
       )
     } catch {
       /* persist already toasts and re-syncs /me */
@@ -1236,6 +1363,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
     setMTitle(`Unavailable: ${preset.key}`)
     setMStart(formatUtcMsAsDatetimeLocalInZone(startMs, tz))
     setMEnd(formatUtcMsAsDatetimeLocalInZone(endMs, tz))
+    setToast(`${preset.label} ready for ${dayYmd}. Tap Save to block it once.`)
   }
 
   async function addDailyPresetAcrossAvailability(presetKey: 'break' | 'lunch' | 'dinner') {
@@ -1318,7 +1446,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
     }
     if (await persistWithUndo(next, current, `Added ${preset.key} to every event day.`)) {
       closeManualModal()
-      setToast(`Added ${preset.key} to every event day.`)
+      setToast(`${preset.label} blocked on every event day. You can edit or delete individual blocks.`)
     }
   }
 
@@ -1340,11 +1468,11 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
     const cur = me?.selections ?? []
     const next = cur.filter((s) => !(s.kind === 'manual' && localDateKey(s.startsAt) === selectedDayKey))
     if (next.length === cur.length) {
-      setToast('No unavailable times found for that day.')
+      setToast('No busy times found for that day.')
       return
     }
-    if (await persistWithUndo(next, cur, `Cleared unavailable times for ${selectedDayKey}.`)) {
-      setToast(`Cleared unavailable times for ${selectedDayKey}. Undo?`)
+    if (await persistWithUndo(next, cur, `Cleared busy times for ${selectedDayKey}.`)) {
+      setToast(`Cleared busy times for ${selectedDayKey}. Undo?`)
     }
   }
 
@@ -1359,7 +1487,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
     const prevKey = keys[idx - 1]!
     const source = cur.filter((s) => s.kind === 'manual' && localDateKey(s.startsAt) === prevKey)
     if (!source.length) {
-      setToast('No unavailable times found on the previous day to duplicate.')
+      setToast('No busy times found on the previous day to duplicate.')
       return
     }
     const prevStartMs = utcMillisAtZonedWallClock(tz, prevKey, 0, 0)
@@ -1386,12 +1514,12 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
         return true
       })
     if (!shifted.length) {
-      setToast('Those unavailable times are already on this day.')
+      setToast('Those busy times are already on this day.')
       return
     }
     const next = [...cur, ...shifted]
-    if (await persistWithUndo(next, cur, 'Duplicated yesterday unavailable times.')) {
-      setToast(`Copied ${shifted.length} unavailable time(s) to ${selectedDayKey}. Undo?`)
+    if (await persistWithUndo(next, cur, 'Duplicated yesterday busy times.')) {
+      setToast(`Copied ${shifted.length} busy time(s) to ${selectedDayKey}. Undo?`)
     }
   }
 
@@ -1408,11 +1536,12 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
           : `${window.location.origin.replace(/\/+$/, '')}${path}`
       if (navigator.clipboard?.writeText) {
         await navigator.clipboard.writeText(shareUrl)
-        setToast('Copied share link.')
+        setToast(`Copied share link. Code: ${token}`)
       } else {
         window.prompt('Copy this share link:', shareUrl)
-        setToast('Share link generated. Copy it from the prompt.')
+        setToast(`Share link generated. Code: ${token}`)
       }
+      setLastShareToken(token)
       sessionStorage.setItem(`eck_dc_mutual_${slug}`, token)
       setMutualToken(token)
       setMutualCompareUsername('')
@@ -1470,6 +1599,13 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
         setMutualData(d)
         setMutualToken('')
         mutualTokenRef.current = ''
+        if (typeof window !== 'undefined') {
+          try {
+            window.sessionStorage.removeItem(`eck_dc_mutual_${slug}`)
+          } catch {
+            /* ignore */
+          }
+        }
       } catch (e) {
         setMutualData(null)
         setToast(formatDancecardApiMessage(e))
@@ -1680,7 +1816,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
       })
       setReserveMutualPreview(null)
       setReserveMutualBanner({ kind: 'success' })
-      setToast('Reservation saved — see the confirmation below.')
+      setToast('Saved. View it in Reservations.')
       void loadReservations()
       void refreshMutual()
       void refreshMe()
@@ -1693,18 +1829,9 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
     }
   }
 
-  useEffect(() => {
-    if (tab !== 'mutual') return
-    if (mutualCompareUsername.trim()) {
-      void refreshMutual()
-      return
-    }
-    if (mutualTokenRef.current.trim()) void refreshMutual()
-  }, [tab, refreshMutual, mutualCompareUsername])
-
   // After sign-in, mutual share payload must reload so `viewerYou` + green blocks get click handlers.
   useEffect(() => {
-    if (tab !== 'mutual' || !me) return
+    if (tab !== 'mutual' || !me || !mutualDataRef.current) return
     if (mutualCompareUsername.trim()) {
       void refreshMutual()
       return
@@ -1805,6 +1932,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
         setPasswordConfirm('')
         setDisplayName('')
         setAuthNotice({ kind: 'success', text: 'Account created. Please sign in.' })
+        scrollToAppTop()
         return
       } else {
         const regCode =
@@ -1823,6 +1951,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
       setPassword('')
       setPasswordConfirm('')
       await checkSession()
+      scrollToAppTop()
     } catch (e) {
       setAuthNotice({ kind: 'error', text: e instanceof DancecardApiError ? e.body : 'Auth failed' })
     }
@@ -1911,8 +2040,8 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
     return (
       <>
         <DancecardTopBar />
-        <div className="relative min-h-screen overflow-hidden bg-[#040816] px-4 py-20 text-slate-100">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(56,189,248,0.16),transparent_32%),linear-gradient(180deg,#040816_0%,#070d1e_100%)]" />
+        <div className="relative min-h-screen overflow-hidden bg-[#07101f] px-4 py-20 text-slate-100">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(56,189,248,0.14),transparent_32%),linear-gradient(180deg,#07101f_0%,#0b1426_100%)]" />
           <div className="relative mx-auto flex max-w-lg flex-col items-center gap-3 text-center text-sm text-stone-400">
             <div
               className="h-9 w-9 rounded-full border-2 border-teal-400/30 border-t-teal-300 animate-spin motion-reduce:animate-none"
@@ -1929,8 +2058,8 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
     return (
       <>
         <DancecardTopBar />
-        <div className="relative min-h-screen overflow-hidden bg-[#040816] px-4 py-20 text-slate-100">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(56,189,248,0.16),transparent_32%),linear-gradient(180deg,#040816_0%,#070d1e_100%)]" />
+        <div className="relative min-h-screen overflow-hidden bg-[#07101f] px-4 py-20 text-slate-100">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(56,189,248,0.14),transparent_32%),linear-gradient(180deg,#07101f_0%,#0b1426_100%)]" />
           <div className="relative mx-auto max-w-lg">
             <GlassPanel className="p-6 sm:p-8">
               <p className="text-xs uppercase tracking-[0.3em] text-cyan-200/80">Availability access</p>
@@ -1991,8 +2120,8 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
     return (
       <>
         <DancecardTopBar />
-        <div className="relative min-h-screen overflow-hidden bg-[#040816] px-4 py-20 text-slate-100">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(56,189,248,0.18),transparent_30%),radial-gradient(circle_at_80%_20%,rgba(244,114,182,0.14),transparent_24%),linear-gradient(180deg,#040816_0%,#070d1e_100%)]" />
+        <div className="relative min-h-screen overflow-hidden bg-[#07101f] px-4 py-20 text-slate-100">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(56,189,248,0.16),transparent_30%),radial-gradient(circle_at_80%_20%,rgba(244,114,182,0.12),transparent_24%),linear-gradient(180deg,#07101f_0%,#0b1426_100%)]" />
         <div className="relative mx-auto max-w-6xl">
           <div className="rounded-[32px] border border-white/10 bg-white/[0.04] px-8 py-14 text-center shadow-[0_30px_120px_rgba(2,6,23,0.65)] backdrop-blur-xl">
             <div
@@ -2013,9 +2142,9 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
     return (
       <>
         <DancecardTopBar />
-        <div className="relative min-h-screen overflow-hidden bg-[#040816] text-slate-100">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(34,211,238,0.16),transparent_26%),radial-gradient(circle_at_85%_18%,rgba(236,72,153,0.14),transparent_20%),radial-gradient(circle_at_25%_75%,rgba(251,191,36,0.12),transparent_20%),linear-gradient(180deg,#020617_0%,#081120_100%)]" />
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(148,163,184,0.06)_1px,transparent_1px),linear-gradient(90deg,rgba(148,163,184,0.06)_1px,transparent_1px)] bg-[size:72px_72px] opacity-20" />
+        <div className="relative min-h-screen overflow-hidden bg-[#07101f] text-slate-100">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(34,211,238,0.14),transparent_26%),radial-gradient(circle_at_85%_18%,rgba(167,139,250,0.12),transparent_22%),radial-gradient(circle_at_25%_75%,rgba(20,184,166,0.10),transparent_22%),linear-gradient(180deg,#07101f_0%,#0b1426_56%,#07111f_100%)]" />
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(148,163,184,0.045)_1px,transparent_1px),linear-gradient(90deg,rgba(148,163,184,0.045)_1px,transparent_1px)] bg-[size:72px_72px] opacity-20" />
         <div className="relative mx-auto grid min-h-screen max-w-7xl gap-6 px-4 py-8 sm:px-6 lg:grid-cols-[1.15fr_0.85fr] lg:px-8 lg:py-10">
           <GlassPanel className="overflow-hidden p-8 lg:p-10">
             <div className="max-w-2xl">
@@ -2025,7 +2154,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
               </h1>
               <p className="mt-4 max-w-xl text-base leading-7 text-slate-300">
                 {schedule.meta?.subtitle ||
-                  'A private planning surface for unavailable times, mutual free time, reservations, and calendar export.'}
+                  'A private planning surface for busy times, mutual free time, reservations, and calendar export.'}
               </p>
             </div>
 
@@ -2039,7 +2168,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                 <p className="text-xs uppercase tracking-[0.32em] text-slate-400">Coming up next</p>
                 <div className="mt-3 text-2xl font-semibold text-white">Sign in to personalize this view.</div>
                 <p className="mt-2 text-sm text-slate-400">
-                  Once you log in, this panel will show your next unavailable time or reservation.
+                  Once you log in, this panel will show your next busy time or reservation.
                 </p>
               </div>
             </div>
@@ -2205,14 +2334,15 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
       <>
         <DancecardTopBar />
         <div
+          ref={appTopRef}
           className={cn(
-            'relative min-h-screen overflow-hidden bg-[#050b18] text-slate-100',
+            'relative min-h-screen overflow-hidden bg-[#07101f] text-slate-100',
             tab === 'dancecard' && availabilityDays.length && mobileHostDayDocked
               ? 'pb-[calc(7.25rem+env(safe-area-inset-bottom))] lg:pb-10'
               : 'pb-[calc(3.85rem+env(safe-area-inset-bottom))] lg:pb-10'
           )}
         >
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(34,211,238,0.08),transparent_30%),linear-gradient(180deg,#040a16_0%,#07111e_100%)]" />
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(34,211,238,0.12),transparent_30%),radial-gradient(circle_at_88%_18%,rgba(167,139,250,0.10),transparent_24%),linear-gradient(180deg,#07101f_0%,#0b1426_58%,#07111f_100%)]" />
           <div className="relative z-[1] mx-auto max-w-5xl space-y-2 px-2.5 py-2 sm:space-y-2.5 sm:px-4 sm:py-3 lg:px-6 lg:py-6">
             <GlassPanel className="hidden p-2.5 lg:block">
               <div className="flex flex-wrap gap-1.5" role="tablist" aria-label="Dancecard sections">
@@ -2222,7 +2352,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                     type="button"
                     role="tab"
                     aria-selected={tab === option.key}
-                    onClick={() => setTab(option.key)}
+                    onClick={() => switchTab(option.key, { scroll: true })}
                     className={cx(
                       'flex min-w-0 flex-1 flex-col rounded-xl border px-3 py-2 text-left transition sm:min-w-[120px]',
                       tab === option.key
@@ -2248,14 +2378,14 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                   {schedule.meta?.eventTitle ?? 'Availability'}
                 </h1>
                 <p className="mt-1 text-[11px] leading-snug text-slate-400">
-                  Block unavailable, set buffer, and share your link.{' '}
+                  Block busy time, set buffer, and share your link.{' '}
                   <span className="text-slate-500">· {tz}</span>
                 </p>
                 <button
                   type="button"
                   className="mt-2 touch-manipulation text-left text-[11px] font-semibold text-cyan-200 underline decoration-cyan-400/40 underline-offset-2 transition hover:text-cyan-100"
                   onClick={() => {
-                    setTab('mutual')
+                    switchTab('mutual', { scroll: true })
                     if (typeof window !== 'undefined') {
                       window.history.replaceState(null, '', `${window.location.pathname}${window.location.search}#compare`)
                     }
@@ -2362,7 +2492,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                   type="button"
                   className="rounded-xl border border-cyan-400/35 bg-cyan-500/15 px-3 py-2 text-xs font-semibold text-cyan-50 transition hover:bg-cyan-500/25"
                   onClick={() => {
-                    setTab('mutual')
+                    switchTab('mutual', { scroll: true })
                     if (typeof window !== 'undefined') {
                       window.history.replaceState(null, '', `${window.location.pathname}${window.location.search}#compare`)
                     }
@@ -2380,15 +2510,9 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                 <button
                   type="button"
                   className="rounded-xl border border-white/10 bg-white/[0.04] px-3 py-2 text-xs text-slate-200"
-                  onClick={() => {
-                    setEditingManualId(null)
-                    setMStart('')
-                    setMEnd('')
-                    setMTitle('')
-                    setManualOpen(true)
-                  }}
+                  onClick={openBlankManualModal}
                 >
-                  Unavailable time
+                  Add busy time
                 </button>
                 <button
                   type="button"
@@ -2405,7 +2529,15 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                   Google Calendar
                 </button>
               </div>
+              {lastShareToken ? (
+                <p className="mt-2 text-[10px] leading-snug text-slate-500">
+                  Share code: <span className="font-mono text-slate-200">{lastShareToken}</span>. Paste the code or full link
+                  into Compare under Advanced.
+                </p>
+              ) : null}
             </GlassPanel>
+
+            {blockedTimesPanel(true)}
 
             <GlassPanel className="p-2.5">
               <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500">Claims</p>
@@ -2482,15 +2614,27 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                       </>
                     )
                     return row.busy ? (
-                      <div key={`${row.start.toISOString()}-${idx}`} className={slotCls}>
-                        {inner}
-                      </div>
+                      row.editableManualId ? (
+                        <button
+                          key={`${row.start.toISOString()}-${idx}`}
+                          type="button"
+                          className={slotCls}
+                          aria-label={`Edit busy time ${formatTime(row.start.toISOString(), tz)} to ${formatTime(row.end.toISOString(), tz)}`}
+                          onClick={() => beginManualEdit(row.editableManualId!)}
+                        >
+                          {inner}
+                        </button>
+                      ) : (
+                        <div key={`${row.start.toISOString()}-${idx}`} className={slotCls}>
+                          {inner}
+                        </div>
+                      )
                     ) : (
                       <button
                         key={`${row.start.toISOString()}-${idx}`}
                         type="button"
                         className={slotCls}
-                        aria-label={`Add unavailable time ${formatTime(row.start.toISOString(), tz)} to ${formatTime(row.end.toISOString(), tz)}`}
+                        aria-label={`Add busy time ${formatTime(row.start.toISOString(), tz)} to ${formatTime(row.end.toISOString(), tz)}`}
                         onClick={() => openManualFromOpenSlot(row)}
                       >
                         {inner}
@@ -2514,7 +2658,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                       <div className="flex items-center justify-between gap-2">
                         <p className="text-sm font-semibold text-white">{day.label}</p>
                         <p className="text-xs text-slate-400">
-                          {day.busyCount} unavailable · {day.openCount} open
+                          {day.busyCount} busy · {day.openCount} open
                         </p>
                       </div>
                       <div className="mt-2 max-h-56 space-y-1 overflow-y-auto pr-1">
@@ -2532,15 +2676,27 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                             </>
                           )
                           return row.busy ? (
-                            <div key={`${day.key}-${row.start.toISOString()}-${idx}`} className={slotCls}>
-                              {inner}
-                            </div>
+                            row.editableManualId ? (
+                              <button
+                                key={`${day.key}-${row.start.toISOString()}-${idx}`}
+                                type="button"
+                                className={slotCls}
+                                aria-label={`Edit busy time ${formatTime(row.start.toISOString(), tz)} to ${formatTime(row.end.toISOString(), tz)}`}
+                                onClick={() => beginManualEdit(row.editableManualId!)}
+                              >
+                                {inner}
+                              </button>
+                            ) : (
+                              <div key={`${day.key}-${row.start.toISOString()}-${idx}`} className={slotCls}>
+                                {inner}
+                              </div>
+                            )
                           ) : (
                             <button
                               key={`${day.key}-${row.start.toISOString()}-${idx}`}
                               type="button"
                               className={slotCls}
-                              aria-label={`Add unavailable time ${formatTime(row.start.toISOString(), tz)} to ${formatTime(row.end.toISOString(), tz)}`}
+                              aria-label={`Add busy time ${formatTime(row.start.toISOString(), tz)} to ${formatTime(row.end.toISOString(), tz)}`}
                               onClick={() => openManualFromOpenSlot(row)}
                             >
                               {inner}
@@ -2602,7 +2758,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
         </div>
 
         <nav
-          className="fixed bottom-0 left-0 right-0 z-40 border-t border-slate-800/90 bg-[#050b18]/95 px-1 pb-[max(0.35rem,env(safe-area-inset-bottom))] pt-1.5 backdrop-blur-xl lg:hidden"
+          className="fixed bottom-0 left-0 right-0 z-40 border-t border-slate-700/90 bg-[#07101f]/95 px-1 pb-[max(0.35rem,env(safe-area-inset-bottom))] pt-1.5 shadow-[0_-12px_32px_rgba(2,6,23,0.42)] backdrop-blur-xl lg:hidden"
           aria-label="Dancecard sections"
         >
           <div className="mx-auto flex max-w-5xl gap-0.5">
@@ -2615,7 +2771,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                   'flex min-h-[52px] min-w-0 flex-1 flex-col items-center justify-center rounded-xl px-0.5 py-1 text-center text-[10px] font-semibold leading-tight transition sm:text-[11px]',
                   tab === option.key ? 'bg-cyan-400/20 text-cyan-50' : 'text-slate-400 hover:bg-white/[0.04] hover:text-white'
                 )}
-                onClick={() => setTab(option.key)}
+                onClick={() => switchTab(option.key, { scroll: true })}
               >
                 <span className="truncate">{option.label}</span>
               </button>
@@ -2643,8 +2799,8 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
             <GlassPanel className="flex max-h-[min(90dvh,calc(100dvh-2rem))] w-full max-w-lg flex-col overflow-hidden motion-reduce:transition-none sm:animate-in">
               <div className="flex shrink-0 items-start justify-between gap-3 border-b border-white/10 bg-[#0c1424]/98 px-5 pb-3 pt-5 backdrop-blur-sm sm:px-6 sm:pt-6">
                 <div className="min-w-0 flex-1">
-                  <p className="text-xs uppercase tracking-[0.3em] text-slate-400">Unavailable time</p>
-                  <h3 className="mt-2 font-serif text-2xl text-white sm:text-3xl">Add time unavailable</h3>
+                  <p className="text-xs uppercase tracking-[0.3em] text-slate-400">Busy time</p>
+                  <h3 className="mt-2 font-serif text-2xl text-white sm:text-3xl">Block time on my schedule</h3>
                 </div>
                 <button
                   type="button"
@@ -2665,8 +2821,8 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                     placeholder="Work, gym, commute..."
                   />
                 </div>
-              <div className="mt-3">
-                <p className="mb-2 text-xs uppercase tracking-[0.22em] text-slate-500">Quick presets</p>
+                <div className="mt-3">
+                <p className="mb-2 text-xs uppercase tracking-[0.22em] text-slate-500">Use once</p>
                 <div className="flex flex-wrap gap-2">
                   {mealPresetOptions.map((preset) => (
                     <button
@@ -2678,6 +2834,12 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                       {mealPresetLabel(preset)}
                     </button>
                   ))}
+                </div>
+                <p className="mb-2 mt-3 text-xs uppercase tracking-[0.22em] text-slate-500">Apply every event day</p>
+                <p className="mb-2 text-[11px] leading-snug text-slate-500">
+                  Adds one block per day; edit or delete individual days afterward.
+                </p>
+                <div className="flex flex-wrap gap-2">
                   {mealPresetOptions.map((preset) => (
                     <button
                       key={`daily-${preset.key}`}
@@ -2685,7 +2847,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                       className="rounded-full border border-cyan-300/40 bg-cyan-500/15 px-3 py-1.5 text-xs font-semibold text-cyan-100"
                       onClick={() => void addDailyPresetAcrossAvailability(preset.key)}
                     >
-                      {preset.label} every event day
+                      {preset.label}
                     </button>
                   ))}
                   {!mealPresetOptions.length ? (
@@ -2775,26 +2937,33 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                 </div>
               </div>
               {manualSelections.length ? (
-                <div className="mt-4 rounded-2xl border border-white/10 bg-black/20 p-3">
-                  <p className="text-xs uppercase tracking-[0.22em] text-slate-500">Existing unavailable times</p>
+                <div className="mt-4 rounded-2xl border border-slate-700/70 bg-[#0b1426]/80 p-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.035)]">
+                  <p className="text-xs font-semibold uppercase tracking-[0.22em] text-slate-300/90">Already blocked</p>
                   <div className="mt-2 max-h-32 space-y-1.5 overflow-y-auto pr-1">
                     {manualSelections.slice(0, 8).map((s) => (
                     <div
                       key={s.id}
-                      className="flex items-center gap-2 rounded-lg border border-white/10 bg-white/[0.03] px-2.5 py-2"
+                      className="flex items-center gap-2 rounded-xl border border-slate-600/60 bg-[#101a2d]/85 px-2.5 py-2"
                     >
                       <button
                         type="button"
-                        className="min-h-10 min-w-0 flex-1 text-left text-xs text-slate-200 hover:text-white"
+                        className="min-h-10 min-w-0 flex-1 text-left text-xs text-slate-100 hover:text-white"
                         onClick={() => beginManualEdit(s.id)}
                       >
                         {formatRange(s.startsAt, s.endsAt, tz)} {s.note ? `· ${s.note}` : ''}
                       </button>
                       <button
                         type="button"
+                        className="min-h-10 rounded-md border border-cyan-300/35 bg-cyan-500/15 px-2.5 py-1.5 text-xs font-semibold text-cyan-100 hover:bg-cyan-500/25"
+                        onClick={() => beginManualEdit(s.id)}
+                      >
+                        Edit
+                      </button>
+                      <button
+                        type="button"
                         className="min-h-10 rounded-md border border-rose-300/35 bg-rose-500/15 px-2.5 py-1.5 text-xs font-semibold text-rose-100 hover:bg-rose-500/25"
-                        aria-label="Delete unavailable time"
-                        title="Delete unavailable time"
+                        aria-label="Delete busy time"
+                        title="Delete busy time"
                         onClick={() => removeSelection(s.id)}
                       >
                         Delete
@@ -2816,7 +2985,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                   className="touch-manipulation w-full rounded-2xl bg-[linear-gradient(135deg,#f8fafc_0%,#67e8f9_45%,#a78bfa_100%)] px-4 py-3 text-sm font-semibold text-slate-950"
                   onClick={() => void submitManualBlock()}
                 >
-                  {editingManualId ? 'Save changes' : 'Save unavailable time'}
+                  {editingManualId ? 'Save changes' : 'Save busy time'}
                 </button>
               </div>
             </GlassPanel>
@@ -2850,7 +3019,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
             setReserveMutualOpen(false)
             setReserveMutualPreview(null)
             setReserveMutualBanner(null)
-            setTab('reservations')
+            switchTab('reservations', { scroll: true })
           }}
           onSuccessStayOnCompare={() => {
             setReserveMutualOpen(false)
@@ -2867,15 +3036,16 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
     <>
       <DancecardTopBar />
       <div
+        ref={appTopRef}
         className={cn(
-          'relative min-h-screen overflow-hidden bg-[#050b18] text-slate-100 lg:pb-10',
+          'relative min-h-screen overflow-hidden bg-[#07101f] text-slate-100 lg:pb-10',
           tab === 'dancecard' && availabilityDays.length && mobileHostDayDocked
             ? 'pb-[calc(7.25rem+env(safe-area-inset-bottom))]'
             : 'pb-[calc(3.85rem+env(safe-area-inset-bottom))]'
         )}
       >
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(34,211,238,0.10),transparent_26%),radial-gradient(circle_at_88%_14%,rgba(129,140,248,0.10),transparent_24%),linear-gradient(180deg,#040a16_0%,#081121_55%,#07111e_100%)]" />
-      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(148,163,184,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(148,163,184,0.05)_1px,transparent_1px)] bg-[size:92px_92px] opacity-10" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(34,211,238,0.13),transparent_26%),radial-gradient(circle_at_88%_14%,rgba(167,139,250,0.12),transparent_24%),linear-gradient(180deg,#07101f_0%,#0b1426_55%,#07111f_100%)]" />
+      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(148,163,184,0.045)_1px,transparent_1px),linear-gradient(90deg,rgba(148,163,184,0.045)_1px,transparent_1px)] bg-[size:92px_92px] opacity-10" />
 
       <div className="relative z-[1] mx-auto max-w-7xl px-3 py-3 sm:px-4 sm:py-4 lg:px-6 lg:py-6">
         <GlassPanel className="overflow-hidden p-3 sm:p-4 lg:p-5">
@@ -2883,13 +3053,13 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
             <div className="space-y-4">
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div className="min-w-0 flex-1">
-                  <p className="text-[10px] uppercase tracking-[0.32em] text-cyan-200/75 sm:text-xs sm:tracking-[0.38em]">
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.32em] text-cyan-100/85 sm:text-xs sm:tracking-[0.38em]">
                     {schedule.meta?.productTitle}
                   </p>
                   <h1 className="mt-2 font-serif text-xl leading-tight text-white sm:mt-2 sm:text-3xl lg:text-[2.1rem]">
                     {schedule.meta?.eventTitle}
                   </h1>
-                  <p className="mt-1 hidden max-w-3xl text-sm leading-6 text-slate-300 md:block">
+                  <p className="mt-1 hidden max-w-3xl text-sm leading-6 text-slate-200/85 md:block">
                     Share your availability, compare free windows with someone else, and reserve time without exposing
                     the details of either person&apos;s calendar.
                   </p>
@@ -2904,13 +3074,13 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
               </div>
 
               <div className="grid gap-2 sm:grid-cols-2 sm:gap-3">
-                <div className="rounded-lg border border-white/10 bg-black/20 p-3 sm:rounded-xl sm:p-3.5">
-                  <p className="text-xs uppercase tracking-[0.32em] text-slate-400">Today</p>
+                <div className="rounded-xl border border-slate-700/70 bg-[#0b1426]/75 p-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.035)] sm:p-3.5">
+                  <p className="text-xs font-semibold uppercase tracking-[0.32em] text-slate-300/90">Today</p>
                   <div className="mt-2 font-serif text-lg text-white sm:mt-2 sm:text-2xl">{todayLabel(tz)}</div>
-                  <p className="mt-2 text-xs text-slate-400 sm:text-sm">{tz}</p>
+                  <p className="mt-2 text-xs text-slate-300/80 sm:text-sm">{tz}</p>
                 </div>
-                <div className="rounded-lg border border-white/10 bg-black/20 p-3 sm:rounded-xl sm:p-3.5">
-                  <p className="text-xs uppercase tracking-[0.32em] text-slate-400">Coming up next</p>
+                <div className="rounded-xl border border-slate-700/70 bg-[#0b1426]/75 p-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.035)] sm:p-3.5">
+                  <p className="text-xs font-semibold uppercase tracking-[0.32em] text-slate-300/90">Coming up next</p>
                   {nextAgendaItem ? (
                     nextAgendaItem.type === 'selection' ? (
                       <>
@@ -2919,19 +3089,19 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                             nextAgendaItem.selection,
                             nextAgendaItem.selection.kind === 'program'
                               ? nextAgendaItem.selection.programTitle || 'Scheduled block'
-                              : 'Unavailable time'
+                              : 'Busy time'
                           )}
                         </div>
                         <p className="mt-1 text-sm text-slate-300">
                           {findMatchingStaffShift(nextAgendaItem.selection)
-                            ? 'Imported unavailable time'
+                            ? 'Imported busy time'
                             : `${nextAgendaItem.selection.kind === 'program' && nextAgendaItem.selection.programRoom ? `${nextAgendaItem.selection.programRoom} · ` : ''}${formatRange(nextAgendaItem.selection.startsAt, nextAgendaItem.selection.endsAt, tz)}`}
                         </p>
                       </>
                     ) : (
                       <>
                         <div className="mt-2 text-base font-semibold text-white sm:mt-2 sm:text-xl">
-                          Together with {reservationPartnerName(nextAgendaItem.reservation)}
+                          Scene with {reservationPartnerName(nextAgendaItem.reservation)}
                         </div>
                         <p className="mt-1 text-sm text-slate-300">
                           {formatRange(nextAgendaItem.reservation.startsAt, nextAgendaItem.reservation.endsAt, tz)}
@@ -2941,17 +3111,17 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                   ) : (
                     <>
                       <div className="mt-2 text-base font-semibold text-white sm:text-xl">Nothing scheduled yet.</div>
-                      <p className="mt-1 text-sm text-slate-400">Add times you are unavailable or make a reservation.</p>
+                      <p className="mt-1 text-sm text-slate-300/80">Block busy time or make a reservation.</p>
                     </>
                   )}
                 </div>
               </div>
             </div>
 
-            <div className="rounded-lg border border-white/10 bg-black/20 p-3 sm:rounded-xl sm:p-3.5">
+            <div className="rounded-xl border border-slate-700/70 bg-[#0b1426]/75 p-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.035)] sm:p-3.5">
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0">
-                  <p className="text-xs uppercase tracking-[0.3em] text-slate-400">Signed in</p>
+                  <p className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-300/90">Signed in</p>
                   <h2 className="mt-1 truncate text-base font-semibold text-white sm:text-xl">{me.account.displayName}</h2>
                   <p className="mt-0.5 truncate text-xs text-slate-400 sm:text-sm">@{me.account.username}</p>
                 </div>
@@ -2970,15 +3140,9 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                 <button
                   type="button"
                   className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-xs text-slate-200 transition hover:bg-white/[0.08]"
-                  onClick={() => {
-                    setEditingManualId(null)
-                    setMStart('')
-                    setMEnd('')
-                    setMTitle('')
-                    setManualOpen(true)
-                  }}
+                  onClick={openBlankManualModal}
                 >
-                  Unavailable time
+                  Add busy time
                 </button>
                 <button
                   type="button"
@@ -2986,7 +3150,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                   className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-xs text-slate-200 transition hover:bg-white/[0.08]"
                   onClick={() => void copyShare()}
                 >
-                  Copy code
+                  Copy share link
                 </button>
                 <button
                   type="button"
@@ -3010,7 +3174,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                     type="button"
                     role="tab"
                     aria-selected={tab === option.key}
-                    onClick={() => setTab(option.key)}
+                    onClick={() => switchTab(option.key, { scroll: true })}
                     className={cx(
                       'flex min-w-0 flex-1 flex-col rounded-xl border px-3 py-2.5 text-left transition sm:min-w-[130px]',
                       tab === option.key
@@ -3266,14 +3430,14 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                         <p className="text-xs uppercase tracking-[0.3em] text-slate-400">Availability</p>
                         <h2 className="mt-1 font-serif text-2xl text-white sm:text-[2rem]">Your schedule</h2>
                         <p className="mt-1.5 hidden text-sm leading-6 text-slate-300 sm:block">
-                          Set your range, mark busy time, and share your link.
+                          Set your range, block busy time, and share your link.
                         </p>
                         <p className="mt-1 text-xs text-slate-400">All times shown in {tz}.</p>
                       </div>
                       {showOnboarding ? (
                         <div className="rounded-xl border border-cyan-300/30 bg-cyan-500/10 p-3">
                           <div className="flex items-start justify-between gap-3">
-                            <p className="text-xs text-cyan-50">1) Set range, 2) add unavailable times, 3) share link.</p>
+                            <p className="text-xs text-cyan-50">1) Set range, 2) add busy times, 3) share link.</p>
                             <button
                               type="button"
                               className="rounded-full border border-cyan-200/30 px-2.5 py-1 text-[11px] text-cyan-100"
@@ -3287,9 +3451,9 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                           </div>
                         </div>
                       ) : null}
-                      <div className="rounded-xl border border-slate-800 bg-[#0a1322] p-3">
-                        <label className="block text-xs uppercase tracking-[0.25em] text-slate-400">Buffer</label>
-                        <p className="mt-1 text-xs text-slate-500">Add a small buffer so your unavailable range is realistic.</p>
+                      <div className="rounded-xl border border-slate-700/70 bg-[#0b1426]/80 p-3">
+                        <label className="block text-xs font-semibold uppercase tracking-[0.25em] text-slate-300/90">Buffer</label>
+                        <p className="mt-1 text-xs text-slate-300/70">Add a small buffer so your busy range is realistic.</p>
                         <div className="mt-2 flex flex-wrap gap-1.5">
                           {[0, 15, 30, 45, 60].map((minutes) => (
                             <button
@@ -3299,7 +3463,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                                 'rounded-full border px-3 py-1.5 text-sm transition',
                                 buffer === minutes
                                   ? 'border-cyan-300 bg-cyan-100 text-slate-950'
-                                  : 'border-slate-700 bg-[#111a2c] text-slate-200 hover:border-slate-500'
+                                  : 'border-slate-600/80 bg-[#111a2c] text-slate-200 hover:border-slate-400'
                               )}
                               onClick={() => applyBuffer(minutes)}
                             >
@@ -3309,9 +3473,9 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                         </div>
                       </div>
                       {me ? (
-                        <div className="rounded-xl border border-slate-800 bg-[#0a1322] p-3">
-                          <label className="block text-xs uppercase tracking-[0.25em] text-slate-400">Compare by username</label>
-                          <p className="mt-1 text-xs text-slate-500">
+                        <div className="rounded-xl border border-slate-700/70 bg-[#0b1426]/80 p-3">
+                          <label className="block text-xs font-semibold uppercase tracking-[0.25em] text-slate-300/90">Compare by username</label>
+                          <p className="mt-1 text-xs text-slate-300/70">
                             When on, others signed into this event can use the Compare tab with your login{' '}
                             <span className="text-slate-300">@{me.account.username}</span> instead of a share link.
                           </p>
@@ -3331,18 +3495,18 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                           </button>
                         </div>
                       ) : null}
-                      <div className="rounded-xl border border-slate-800 bg-[#0a1322] p-3">
-                        <label className="block text-xs uppercase tracking-[0.25em] text-slate-400">Date range</label>
+                      <div className="rounded-xl border border-slate-700/70 bg-[#0b1426]/80 p-3">
+                        <label className="block text-xs font-semibold uppercase tracking-[0.25em] text-slate-300/90">Date range</label>
                         <div className="mt-2 grid gap-2">
                           <input
                             type="date"
-                            className="w-full rounded-xl border border-slate-700 bg-[#111a2c] px-3 py-2.5 text-sm text-white outline-none transition focus:border-cyan-300"
+                            className="w-full rounded-xl border border-slate-600/80 bg-[#111a2c] px-3 py-2.5 text-sm text-white outline-none transition focus:border-cyan-300"
                             value={splitLocalDateTime(availabilityStart).date}
                             onChange={(e) => setAvailabilityStart(`${e.target.value}T00:00`)}
                           />
                           <input
                             type="date"
-                            className="w-full rounded-xl border border-slate-700 bg-[#111a2c] px-3 py-2.5 text-sm text-white outline-none transition focus:border-cyan-300"
+                            className="w-full rounded-xl border border-slate-600/80 bg-[#111a2c] px-3 py-2.5 text-sm text-white outline-none transition focus:border-cyan-300"
                             value={splitLocalDateTime(availabilityEnd).date}
                             onChange={(e) => setAvailabilityEnd(`${e.target.value}T00:00`)}
                           />
@@ -3449,19 +3613,20 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                         <button
                           type="button"
                           className="rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-2.5 text-sm text-slate-200"
-                          onClick={() => {
-                            setEditingManualId(null)
-                            setMStart('')
-                            setMEnd('')
-                            setMTitle('')
-                            setManualOpen(true)
-                          }}
+                          onClick={openBlankManualModal}
                         >
-                          Unavailable time
+                          Add busy time
                         </button>
                       </div>
-                      <div className="rounded-xl border border-slate-800 bg-[#0a1322] p-3">
-                        <label className="block text-xs uppercase tracking-[0.2em] text-slate-400">Export calendar</label>
+                      {lastShareToken ? (
+                        <p className="rounded-xl border border-white/10 bg-black/20 px-3 py-2 text-xs leading-relaxed text-slate-400">
+                          Share code: <span className="font-mono text-slate-100">{lastShareToken}</span>. Advanced Compare accepts
+                          either this code or the full share link.
+                        </p>
+                      ) : null}
+                      {blockedTimesPanel()}
+                      <div className="rounded-xl border border-slate-700/70 bg-[#0b1426]/80 p-3">
+                        <label className="block text-xs font-semibold uppercase tracking-[0.2em] text-slate-300/90">Export calendar</label>
                         <div className="mt-2 flex flex-wrap gap-1.5">
                           <button
                             type="button"
@@ -3485,16 +3650,16 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                         ) : (
                           <p className="mt-2 text-xs text-slate-500">{calendarExportCount} event(s) in this export.</p>
                         )}
-                        <p className="mt-2.5 text-xs uppercase tracking-[0.16em] text-slate-500">Unavailable times only</p>
+                        <p className="mt-2.5 text-xs uppercase tracking-[0.16em] text-slate-500">Busy times only</p>
                         {countDancecardIcsEvents(me?.selections ?? [], []) === 0 ? (
-                          <p className="mt-2 text-xs text-slate-500">Add unavailable times first.</p>
+                          <p className="mt-2 text-xs text-slate-500">Add busy times first.</p>
                         ) : (
                           <a
                             href={`/api/dancecard/${slug}/ics`}
                             download
                             className="mt-1.5 inline-flex rounded-xl border border-violet-400/35 bg-violet-500/15 px-3 py-2 text-xs font-medium text-violet-50 transition hover:bg-violet-500/25"
                           >
-                            Download unavailable times (.ics)
+                            Download busy times (.ics)
                           </a>
                         )}
                       </div>
@@ -3546,15 +3711,27 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                                 </>
                               )
                               return row.busy ? (
-                                <div key={`${row.start.toISOString()}-${idx}`} className={slotCls}>
-                                  {inner}
-                                </div>
+                                row.editableManualId ? (
+                                  <button
+                                    key={`${row.start.toISOString()}-${idx}`}
+                                    type="button"
+                                    className={slotCls}
+                                    aria-label={`Edit busy time ${formatTime(row.start.toISOString(), tz)} to ${formatTime(row.end.toISOString(), tz)}`}
+                                    onClick={() => beginManualEdit(row.editableManualId!)}
+                                  >
+                                    {inner}
+                                  </button>
+                                ) : (
+                                  <div key={`${row.start.toISOString()}-${idx}`} className={slotCls}>
+                                    {inner}
+                                  </div>
+                                )
                               ) : (
                                 <button
                                   key={`${row.start.toISOString()}-${idx}`}
                                   type="button"
                                   className={slotCls}
-                                  aria-label={`Add unavailable time ${formatTime(row.start.toISOString(), tz)} to ${formatTime(row.end.toISOString(), tz)}`}
+                                  aria-label={`Add busy time ${formatTime(row.start.toISOString(), tz)} to ${formatTime(row.end.toISOString(), tz)}`}
                                   onClick={() => openManualFromOpenSlot(row)}
                                 >
                                   {inner}
@@ -3571,7 +3748,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                       <GlassPanel className="p-3">
                         <p className="text-xs uppercase tracking-[0.25em] text-slate-400">Hour-by-hour</p>
                         <p className="mt-1 hidden text-[11px] text-slate-500 md:block">
-                          Tap a green <span className="text-emerald-200">open</span> row to add unavailable time.
+                          Tap a green <span className="text-emerald-200">open</span> row to add busy time.
                         </p>
                         <div className="mt-2 max-h-56 space-y-1 overflow-y-auto pr-1 hidden md:block">
                           {availabilityHourRows.length ? (
@@ -3589,15 +3766,27 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                                 </>
                               )
                               return row.busy ? (
-                                <div key={`${row.start.toISOString()}-${idx}`} className={slotCls}>
-                                  {inner}
-                                </div>
+                                row.editableManualId ? (
+                                  <button
+                                    key={`${row.start.toISOString()}-${idx}`}
+                                    type="button"
+                                    className={slotCls}
+                                    aria-label={`Edit busy time ${formatTime(row.start.toISOString(), tz)} to ${formatTime(row.end.toISOString(), tz)}`}
+                                    onClick={() => beginManualEdit(row.editableManualId!)}
+                                  >
+                                    {inner}
+                                  </button>
+                                ) : (
+                                  <div key={`${row.start.toISOString()}-${idx}`} className={slotCls}>
+                                    {inner}
+                                  </div>
+                                )
                               ) : (
                                 <button
                                   key={`${row.start.toISOString()}-${idx}`}
                                   type="button"
                                   className={slotCls}
-                                  aria-label={`Add unavailable time ${formatTime(row.start.toISOString(), tz)} to ${formatTime(row.end.toISOString(), tz)}`}
+                                  aria-label={`Add busy time ${formatTime(row.start.toISOString(), tz)} to ${formatTime(row.end.toISOString(), tz)}`}
                                   onClick={() => openManualFromOpenSlot(row)}
                                 >
                                   {inner}
@@ -3627,7 +3816,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                           }}
                         />
                       ) : (
-                        <GlassPanel className="p-5 text-sm text-slate-400">No unavailable times yet.</GlassPanel>
+                        <GlassPanel className="p-5 text-sm text-slate-400">No busy times yet.</GlassPanel>
                       )}
                     </div>
                   </div>
@@ -3684,8 +3873,8 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
           <GlassPanel className="flex max-h-[min(90dvh,calc(100dvh-2rem))] w-full max-w-lg flex-col overflow-hidden motion-reduce:transition-none sm:animate-in">
             <div className="flex shrink-0 items-start justify-between gap-3 border-b border-white/10 bg-[#0c1424]/98 px-5 pb-3 pt-5 backdrop-blur-sm sm:px-6 sm:pt-6">
               <div className="min-w-0 flex-1">
-                <p className="text-xs uppercase tracking-[0.3em] text-slate-400">Custom block</p>
-                <h3 className="mt-2 font-serif text-2xl text-white sm:text-3xl">Add unavailable time</h3>
+                <p className="text-xs uppercase tracking-[0.3em] text-slate-400">Busy time</p>
+                <h3 className="mt-2 font-serif text-2xl text-white sm:text-3xl">Block time on my schedule</h3>
               </div>
               <button
                 type="button"
@@ -3708,7 +3897,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
               />
             </div>
             <div className="mt-3">
-              <p className="mb-2 text-xs uppercase tracking-[0.22em] text-slate-500">Quick presets</p>
+              <p className="mb-2 text-xs uppercase tracking-[0.22em] text-slate-500">Use once</p>
               <div className="flex flex-wrap gap-2">
                 {mealPresetOptions.map((preset) => (
                   <button
@@ -3720,6 +3909,12 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                     {mealPresetLabel(preset)}
                   </button>
                 ))}
+              </div>
+              <p className="mb-2 mt-3 text-xs uppercase tracking-[0.22em] text-slate-500">Apply every event day</p>
+              <p className="mb-2 text-[11px] leading-snug text-slate-500">
+                Adds one block per day; edit or delete individual days afterward.
+              </p>
+              <div className="flex flex-wrap gap-2">
                 {mealPresetOptions.map((preset) => (
                   <button
                     key={`daily-alt-${preset.key}`}
@@ -3727,7 +3922,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                     className="rounded-full border border-cyan-300/40 bg-cyan-500/15 px-3 py-1.5 text-xs font-semibold text-cyan-100"
                     onClick={() => void addDailyPresetAcrossAvailability(preset.key)}
                   >
-                    {preset.label} every event day
+                    {preset.label}
                   </button>
                 ))}
                 {!mealPresetOptions.length ? (
@@ -3817,26 +4012,33 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
               </div>
             </div>
             {manualSelections.length ? (
-              <div className="mt-4 rounded-2xl border border-white/10 bg-black/20 p-3">
-                <p className="text-xs uppercase tracking-[0.22em] text-slate-500">Existing unavailable times</p>
+              <div className="mt-4 rounded-2xl border border-slate-700/70 bg-[#0b1426]/80 p-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.035)]">
+                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-slate-300/90">Already blocked</p>
                 <div className="mt-2 max-h-32 space-y-1.5 overflow-y-auto pr-1">
                   {manualSelections.slice(0, 8).map((s) => (
                     <div
                       key={s.id}
-                      className="flex items-center gap-2 rounded-lg border border-white/10 bg-white/[0.03] px-2.5 py-2"
+                      className="flex items-center gap-2 rounded-xl border border-slate-600/60 bg-[#101a2d]/85 px-2.5 py-2"
                     >
                       <button
                         type="button"
-                        className="min-h-10 min-w-0 flex-1 text-left text-xs text-slate-200 hover:text-white"
+                        className="min-h-10 min-w-0 flex-1 text-left text-xs text-slate-100 hover:text-white"
                         onClick={() => beginManualEdit(s.id)}
                       >
                         {formatRange(s.startsAt, s.endsAt, tz)} {s.note ? `· ${s.note}` : ''}
                       </button>
                       <button
                         type="button"
+                        className="min-h-10 rounded-md border border-cyan-300/35 bg-cyan-500/15 px-2.5 py-1.5 text-xs font-semibold text-cyan-100 hover:bg-cyan-500/25"
+                        onClick={() => beginManualEdit(s.id)}
+                      >
+                        Edit
+                      </button>
+                      <button
+                        type="button"
                         className="min-h-10 rounded-md border border-rose-300/35 bg-rose-500/15 px-2.5 py-1.5 text-xs font-semibold text-rose-100 hover:bg-rose-500/25"
-                        aria-label="Delete unavailable time"
-                        title="Delete unavailable time"
+                        aria-label="Delete busy time"
+                        title="Delete busy time"
                         onClick={() => removeSelection(s.id)}
                       >
                         Delete
@@ -3858,7 +4060,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                 className="touch-manipulation w-full rounded-2xl bg-[linear-gradient(135deg,#f8fafc_0%,#67e8f9_45%,#a78bfa_100%)] px-4 py-3 text-sm font-semibold text-slate-950 shadow-[0_18px_50px_rgba(103,232,249,0.28)]"
                 onClick={() => void submitManualBlock()}
               >
-                {editingManualId ? 'Save changes' : 'Add unavailable time'}
+                {editingManualId ? 'Save changes' : 'Save busy time'}
               </button>
             </div>
           </GlassPanel>
@@ -3892,14 +4094,14 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
           setReserveMutualOpen(false)
           setReserveMutualPreview(null)
           setReserveMutualBanner(null)
-          setTab('reservations')
+          switchTab('reservations', { scroll: true })
         }}
         onSuccessStayOnCompare={() => {
           setReserveMutualOpen(false)
           setReserveMutualPreview(null)
           setReserveMutualBanner(null)
         }}
-        stayAfterSuccessLabel="Stay on Mutual"
+        stayAfterSuccessLabel="Stay on Compare"
       />
 
       {tab === 'dancecard' && availabilityDays.length && mobileHostDayDocked ? (
@@ -3912,7 +4114,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
       ) : null}
 
       <nav
-        className="fixed bottom-0 left-0 right-0 z-40 border-t border-slate-800/90 bg-[#050b18]/95 px-1 pb-[max(0.35rem,env(safe-area-inset-bottom))] pt-1.5 backdrop-blur-xl lg:hidden"
+        className="fixed bottom-0 left-0 right-0 z-40 border-t border-slate-700/90 bg-[#07101f]/95 px-1 pb-[max(0.35rem,env(safe-area-inset-bottom))] pt-1.5 shadow-[0_-12px_32px_rgba(2,6,23,0.42)] backdrop-blur-xl lg:hidden"
         aria-label="Dancecard sections"
       >
         <div className="mx-auto flex max-w-7xl gap-0.5">
@@ -3925,7 +4127,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                 'flex min-h-[52px] min-w-0 flex-1 flex-col items-center justify-center rounded-xl px-0.5 py-1 text-center text-[10px] font-semibold leading-tight transition sm:text-[11px]',
                 tab === option.key ? 'bg-cyan-400/20 text-cyan-50' : 'text-slate-400 hover:bg-white/[0.04] hover:text-white'
               )}
-              onClick={() => setTab(option.key)}
+              onClick={() => switchTab(option.key, { scroll: true })}
             >
               <span className="truncate">{option.label}</span>
             </button>
@@ -3978,7 +4180,7 @@ function GlassPanel({
   return (
     <div
       className={cx(
-        'rounded-2xl border border-stone-700/50 bg-[#0c1424]/96 shadow-[0_16px_48px_rgba(2,6,23,0.38)] backdrop-blur-sm transition-[box-shadow,border-color] duration-200 motion-reduce:transition-none',
+        'rounded-2xl border border-slate-700/70 bg-[#101a2d]/95 shadow-[0_18px_54px_rgba(2,6,23,0.42),inset_0_1px_0_rgba(255,255,255,0.045)] backdrop-blur-sm transition-[box-shadow,border-color] duration-200 motion-reduce:transition-none',
         className
       )}
     >
@@ -4040,20 +4242,20 @@ function SessionCard(props: {
       aria-pressed={selected}
       aria-label={`${slot.title}. ${addLabel}`}
       className={cx(
-        'group flex w-full min-w-0 flex-1 flex-col rounded-lg border p-1.5 text-left transition focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300 sm:flex-row sm:items-stretch',
+        'group flex w-full min-w-0 flex-1 flex-col rounded-xl border p-2 text-left shadow-[inset_0_1px_0_rgba(255,255,255,0.035)] transition focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300 sm:flex-row sm:items-stretch',
         selected
-          ? 'border-cyan-300/35 bg-cyan-300/12'
+          ? 'border-cyan-300/45 bg-cyan-300/16'
           : hasRoomTint
             ? `${roomChip.border} ${roomChip.surface} hover:bg-white/[0.06]`
-            : 'border-white/10 bg-white/[0.04] hover:border-white/20 hover:bg-white/[0.06]'
+            : 'border-slate-700/70 bg-[#101a2d] hover:border-slate-500/80 hover:bg-[#15213a]'
       )}
     >
       <div className={cx('flex flex-col gap-1.5 sm:items-stretch', showTime ? 'sm:flex-row' : '')}>
         {showTime ? (
-        <div className="min-w-0 shrink-0 rounded-md border border-white/10 bg-black/35 px-2 py-2 sm:min-w-[84px]">
-          <div className="text-[10px] uppercase tracking-[0.28em] text-slate-500">Time</div>
+        <div className="min-w-0 shrink-0 rounded-lg border border-slate-600/60 bg-[#0b1426]/85 px-2 py-2 sm:min-w-[84px]">
+          <div className="text-[10px] font-semibold uppercase tracking-[0.28em] text-slate-300/80">Time</div>
           <div className="mt-1 text-sm font-semibold text-white">{formatTime(slot.startsAt, tz)}</div>
-          <div className="mt-1 text-xs text-slate-400">{formatTime(slot.endsAt, tz)}</div>
+          <div className="mt-1 text-xs text-slate-300/80">{formatTime(slot.endsAt, tz)}</div>
         </div>
         ) : null}
         <div className="min-w-0 flex-1">
@@ -4108,7 +4310,7 @@ function SessionCard(props: {
                 'flex h-7 w-7 shrink-0 items-center justify-center rounded-full border text-[10px] font-semibold',
                 selected
                   ? 'border-cyan-200/40 bg-cyan-300/20 text-cyan-50'
-                  : 'border-white/10 bg-black/20 text-slate-400'
+                  : 'border-slate-600/70 bg-[#0b1426] text-slate-300'
               )}
               aria-hidden
             >
@@ -4116,8 +4318,8 @@ function SessionCard(props: {
             </span>
           </div>
           <div className="mt-1.5 flex items-center justify-between gap-2">
-            <div className="text-[10px] uppercase tracking-[0.14em] text-slate-500">{compactActionLabel}</div>
-            <div className="truncate text-[11px] text-slate-400">{formatRange(slot.startsAt, slot.endsAt, tz)}</div>
+            <div className="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-300/75">{compactActionLabel}</div>
+            <div className="truncate text-[11px] text-slate-300/80">{formatRange(slot.startsAt, slot.endsAt, tz)}</div>
           </div>
         </div>
       </div>
@@ -4189,7 +4391,7 @@ function ReservationsPanel({ slug, tz }: { slug: string; tz: string }) {
             <div key={b.id} className="flex flex-wrap items-start justify-between gap-2">
               <div className="min-w-0 flex-1">
                 <SelectionCard
-                  title={`Together with ${b.role === 'host' ? b.guest.displayName : b.host.displayName}`}
+                  title={`Scene with ${b.role === 'host' ? b.guest.displayName : b.host.displayName}`}
                   meta={`${b.status.toUpperCase()} · ${formatRange(b.startsAt, b.endsAt, tz)}${b.note ? ` · ${b.note}` : ''}`}
                   tone={b.status === 'confirmed' ? 'emerald' : 'amber'}
                 />

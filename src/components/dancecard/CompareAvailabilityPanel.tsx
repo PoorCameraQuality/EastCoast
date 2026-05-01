@@ -61,20 +61,22 @@ export function CompareAvailabilityPanel(props: {
     <>
       {compact ? (
         <div>
-          <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500">Compare</p>
-          <p className="mt-1 text-[11px] leading-snug text-slate-400">
-            Their <span className="text-slate-200">login name</span> if they allow it in My availability, then{' '}
-            <span className="text-slate-200">Compare</span>. <span className="text-emerald-200/90">Green</span> /{' '}
-            <span className="text-rose-200/90">red</span> on the strips. Only a token?{' '}
+          <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-300/90">Shared schedules / Compare</p>
+          <p className="mt-1 text-[11px] leading-snug text-slate-300/80">
+            If someone shared a login name or link, open it here. Their <span className="text-slate-200">login name</span>{' '}
+            loads only when you tap <span className="text-slate-200">Compare</span>.{' '}
+            <span className="text-emerald-200/90">Green</span> / <span className="text-rose-200/90">red</span> on the
+            strips. Only a token?{' '}
             <span className="text-slate-200">Advanced</span>.
           </p>
         </div>
       ) : (
         <div className="max-w-3xl">
-          <p className="text-xs uppercase tracking-[0.3em] text-slate-400">Compare</p>
+          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-300/90">Shared schedules / Compare</p>
           <h2 className="mt-1 font-serif text-xl text-white sm:text-3xl">Availability</h2>
-          <p className="mt-2 text-sm leading-6 text-slate-300">
-            Enter the host’s <span className="text-white">login name</span> (same as they use to sign in here) if they allow
+          <p className="mt-2 text-sm leading-6 text-slate-200/85">
+            If someone gave you a link or login name, open it here. You stay on your own account; their calendar appears as
+            red/green free time. Enter the host’s <span className="text-white">login name</span> if they allow
             compare-by-username in My availability — then tap Compare.{' '}
             <span className="text-emerald-200">Green</span> means open, <span className="text-rose-200">red</span> means busy.
             No class names — just time. If they did not turn that on, use <span className="text-white">Advanced</span> with their
@@ -86,22 +88,24 @@ export function CompareAvailabilityPanel(props: {
         <div className="min-w-0 flex-1">
           <label
             className={cx(
-              'mb-1.5 block font-semibold uppercase tracking-[0.2em] text-slate-500',
+              'mb-1.5 block font-semibold uppercase tracking-[0.2em] text-slate-300/85',
               compact ? 'text-[10px] tracking-[0.18em]' : 'text-[10px]'
             )}
           >
             Host login name
           </label>
           <input
-            className="w-full rounded-2xl border border-white/10 bg-black/25 px-4 py-3.5 text-base text-white placeholder:text-slate-500 sm:py-3 sm:text-sm"
+            className="w-full rounded-2xl border border-slate-600/80 bg-[#0b1426]/90 px-4 py-3.5 text-base text-white placeholder:text-slate-500 outline-none transition focus:border-cyan-300 focus:ring-2 focus:ring-cyan-300/20 sm:py-3 sm:text-sm"
             value={mutualCompareUsername}
             onChange={(e) => {
               const v = e.target.value
               setMutualCompareUsername(v)
+              setMutualToken('')
               const t = v.trim().toLowerCase()
               if (t && typeof window !== 'undefined') {
                 try {
                   window.sessionStorage.setItem(`eck_dc_compare_user_${slug}`, t)
+                  window.sessionStorage.removeItem(`eck_dc_mutual_${slug}`)
                 } catch {
                   /* ignore */
                 }
@@ -142,17 +146,17 @@ export function CompareAvailabilityPanel(props: {
         </div>
       </div>
       {compact ? (
-        <p className="mt-1.5 text-[10px] leading-snug text-slate-500">Login names are case-insensitive.</p>
+        <p className="mt-1.5 text-[10px] leading-snug text-slate-400">Login names are case-insensitive.</p>
       ) : (
-        <p className="mt-2 text-[10px] leading-snug text-slate-500">
-          Names are matched case-insensitively. Clear the field and use Advanced if you only have a share token.
+        <p className="mt-2 text-[10px] leading-snug text-slate-400">
+          Names are matched case-insensitively. A remembered value is not loaded until you tap Compare.
         </p>
       )}
       <div className={cx('border-t border-white/10', compact ? 'mt-2 pt-2' : 'mt-4 pt-4')}>
         <button
           type="button"
           className={cx(
-            'flex w-full touch-manipulation items-center justify-between gap-3 rounded-xl border border-white/10 bg-black/20 px-3 text-left text-slate-200 transition active:bg-white/[0.08] hover:bg-white/[0.06]',
+            'flex w-full touch-manipulation items-center justify-between gap-3 rounded-xl border border-slate-600/70 bg-[#0b1426]/80 px-3 text-left text-slate-100 transition active:bg-white/[0.08] hover:border-slate-500 hover:bg-white/[0.06]',
             compact
               ? 'min-h-10 py-2 text-xs sm:min-h-0'
               : 'min-h-[44px] py-2.5 text-sm sm:min-h-0 sm:py-2'
@@ -163,28 +167,31 @@ export function CompareAvailabilityPanel(props: {
           <span className="min-w-0 flex-1 font-medium leading-snug text-white">
             {compact ? 'Advanced · link or token' : 'Advanced — share link or token'}
           </span>
-          <span className="shrink-0 rounded-full border border-white/10 px-2 py-1 text-xs text-slate-400">
+          <span className="shrink-0 rounded-full border border-slate-600/70 bg-slate-900/40 px-2 py-1 text-xs text-slate-300">
             {mutualAdvancedTokenOpen ? 'Hide' : 'Show'}
           </span>
         </button>
         {mutualAdvancedTokenOpen ? (
           <div className={cx('flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-2', compact ? 'mt-2' : 'mt-3')}>
             <input
-              className="min-w-0 flex-1 rounded-2xl border border-white/10 bg-black/25 px-4 py-3.5 text-base text-white placeholder:text-slate-500 sm:py-3 sm:text-sm"
+              className="min-w-0 flex-1 rounded-2xl border border-slate-600/80 bg-[#0b1426]/90 px-4 py-3.5 text-base text-white placeholder:text-slate-500 outline-none transition focus:border-cyan-300 focus:ring-2 focus:ring-cyan-300/20 sm:py-3 sm:text-sm"
               value={mutualToken}
               onChange={(e) => {
                 const v = e.target.value
                 setMutualToken(v)
+                setMutualCompareUsername('')
                 const clean = extractDancecardShareToken(v).trim() || v.trim()
-                if (clean && typeof window !== 'undefined') {
+                if (typeof window !== 'undefined') {
                   try {
-                    window.sessionStorage.setItem(`eck_dc_mutual_${slug}`, clean)
+                    if (clean) window.sessionStorage.setItem(`eck_dc_mutual_${slug}`, clean)
+                    else window.sessionStorage.removeItem(`eck_dc_mutual_${slug}`)
+                    window.sessionStorage.removeItem(`eck_dc_compare_user_${slug}`)
                   } catch {
                     /* ignore */
                   }
                 }
               }}
-              placeholder="Paste share token or full link…"
+              placeholder="Paste share token, code, or full link…"
               autoComplete="off"
               autoCapitalize="none"
               autoCorrect="off"
@@ -211,10 +218,10 @@ export function CompareAvailabilityPanel(props: {
           </div>
         ) : null}
         {mutualAdvancedTokenOpen ? (
-          <p className={cx('text-[10px] leading-snug text-slate-500', compact ? 'mt-1.5' : 'mt-2')}>
+          <p className={cx('text-[10px] leading-snug text-slate-400', compact ? 'mt-1.5' : 'mt-2')}>
             {compact
-              ? 'Load uses token only (clears login). Remembered on this device.'
-              : 'Load clears the login name field above and uses the token only. The last token is remembered on this device.'}
+              ? 'Load uses link/code only (clears login). Remembered on this device.'
+              : 'Load clears the login name field above and uses the link/code only. The last value is remembered on this device.'}
           </p>
         ) : null}
       </div>
@@ -223,7 +230,7 @@ export function CompareAvailabilityPanel(props: {
         <div className={cx('space-y-4', compact ? 'mt-3' : 'mt-6')}>
           <div
             className={cx(
-              'rounded-2xl border border-cyan-400/25 bg-cyan-950/30 text-cyan-50/95',
+              'rounded-2xl border border-cyan-300/35 bg-cyan-950/45 text-cyan-50/95 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]',
               compact ? 'px-3 py-2 text-[11px] leading-snug' : 'px-4 py-3 text-sm leading-relaxed'
             )}
           >
@@ -232,13 +239,14 @@ export function CompareAvailabilityPanel(props: {
               <p className={cx('text-cyan-100/95', compact ? 'mt-1' : 'mt-1.5')}>
                 {compact ? (
                   <>
-                    <span className="text-white">Tap green</span> = both free (½ hr). Form opens — adjust,{' '}
+                    <span className="text-white">Green</span> = both free (tap to reserve).{' '}
+                    <span className="text-teal-100">Teal</span> = host free but you are busy. Adjust,{' '}
                     <span className="text-white">Check slot</span>, <span className="text-white">Send</span>.
                   </>
                 ) : (
                   <>
-                    <span className="text-white">Tap or click a green block</span> on the strips below — each block is half an
-                    hour when you are both free. That opens a form with those times; adjust the window if you need longer, use{' '}
+                    <span className="text-white">Tap or click a green block</span> on the strips below — green means both schedules
+                    overlap as free. Teal means the host is free but you are busy. Each block is half an hour; adjust the window if you need longer, use{' '}
                     <span className="text-white">Check slot</span>, then <span className="text-white">Send reservation</span>.
                   </>
                 )}
@@ -261,7 +269,7 @@ export function CompareAvailabilityPanel(props: {
               </p>
             )}
           </div>
-          <div className="flex flex-wrap items-center gap-2 text-xs text-slate-300">
+          <div className="flex flex-wrap items-center gap-2 text-xs text-slate-200/85">
             <span className="font-medium text-white">Host:</span> {mutualData.host.displayName}
             {mutualData.viewerYou ? (
               <>
@@ -271,12 +279,17 @@ export function CompareAvailabilityPanel(props: {
                 </span>
               </>
             ) : (
-              <span className="text-slate-500"> · Sign in to compare both calendars.</span>
+              <span className="text-slate-400"> · Sign in to compare both calendars.</span>
             )}
           </div>
-          <div className="flex flex-wrap gap-2 text-[10px] uppercase tracking-[0.2em] text-slate-400">
-            <span className="rounded-full border border-rose-500/30 bg-rose-950/40 px-2 py-1 text-rose-100">Red = busy</span>
-            <span className="rounded-full border border-emerald-500/30 bg-emerald-950/40 px-2 py-1 text-emerald-100">
+          <div className="flex flex-wrap gap-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-slate-300">
+            <span className="rounded-full border border-rose-400/40 bg-rose-950/55 px-2 py-1 text-rose-100">Red = busy</span>
+            {mutualData.viewerYou ? (
+              <span className="rounded-full border border-teal-400/40 bg-teal-950/55 px-2 py-1 text-teal-100">
+                Teal = host free only
+              </span>
+            ) : null}
+            <span className="rounded-full border border-emerald-400/40 bg-emerald-950/55 px-2 py-1 text-emerald-100">
               {mutualData.viewerYou ? 'Green = both free' : 'Green = host free'}
             </span>
           </div>
@@ -288,6 +301,7 @@ export function CompareAvailabilityPanel(props: {
                 rangeStartMs={d.startMs}
                 rangeEndMs={d.endMs}
                 freeIntervals={mutualData.viewerYou ? (mutualData.mutualFreeGaps ?? []) : mutualData.hostFreeGaps}
+                hostFreeIntervals={mutualData.hostFreeGaps}
                 tz={tz}
                 mode={mutualData.viewerYou ? 'mutual' : 'host'}
                 onFreeStepClick={onMutualStripSlotClick}

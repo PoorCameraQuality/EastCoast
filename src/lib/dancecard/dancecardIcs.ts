@@ -107,7 +107,7 @@ function collectEvents(
       uid: `${r.id}@dancecard.eastcoastkinkevents`,
       start: ds,
       end: de,
-      summary: `Together with ${partner}`,
+      summary: `Scene with ${partner}`,
       description: desc,
     })
   }

@@ -104,11 +104,11 @@ export function DancecardCompactList(props: {
           return (
             <div key={`r-${r.id}`}>
               {showDay ? (
-                <div className="mb-2 mt-4 first:mt-0 font-serif text-lg text-white/90">{day}</div>
+                <div className="mb-2 mt-4 first:mt-0 font-serif text-lg text-white">{day}</div>
               ) : null}
               <div
                 className={cx(
-                  'rounded-2xl border border-emerald-400/25 bg-emerald-950/20 px-3 py-3 sm:px-4',
+                  'rounded-2xl border border-emerald-400/35 bg-emerald-950/30 px-3 py-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] sm:px-4',
                   openId === r.id && 'ring-1 ring-emerald-400/30'
                 )}
               >
@@ -117,7 +117,7 @@ export function DancecardCompactList(props: {
                   className="flex w-full flex-wrap items-center gap-2 text-left sm:gap-3"
                   onClick={() => setOpenId((id) => (id === r.id ? null : r.id))}
                 >
-                  <div className="min-w-[7rem] shrink-0 text-sm font-medium text-emerald-100/95">
+                  <div className="min-w-[7rem] shrink-0 text-sm font-semibold text-emerald-50">
                     {formatTime(r.startsAt, tz)} – {formatTime(r.endsAt, tz)}
                   </div>
                   <span
@@ -131,12 +131,12 @@ export function DancecardCompactList(props: {
                     Reservation
                   </span>
                   <div className="min-w-0 flex-1 text-sm font-semibold text-white">
-                    Together with {reservationPartnerName(r)}
+                    Scene with {reservationPartnerName(r)}
                   </div>
                 </button>
                 {openId === r.id ? (
                   <div className="mt-2 space-y-3 border-t border-white/10 pt-2">
-                    <p className="text-xs text-slate-400">{formatRange(r.startsAt, r.endsAt, tz)}</p>
+                    <p className="text-xs text-slate-300/85">{formatRange(r.startsAt, r.endsAt, tz)}</p>
                     {onCancelReservation && r.status === 'confirmed' ? (
                       <button
                         type="button"
@@ -178,12 +178,12 @@ export function DancecardCompactList(props: {
         return (
           <div key={`s-${s.id}`}>
             {showDay ? (
-              <div className="mb-2 mt-4 first:mt-0 font-serif text-lg text-white/90">{day}</div>
+              <div className="mb-2 mt-4 first:mt-0 font-serif text-lg text-white">{day}</div>
             ) : null}
             <div
               className={cx(
-                'rounded-2xl border px-3 py-3 sm:px-4',
-                hasRoomTint ? `${roomColor.border} ${roomColor.surface}` : 'border-white/10 bg-[#0a1322]',
+                'rounded-2xl border px-3 py-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.035)] sm:px-4',
+                hasRoomTint ? `${roomColor.border} ${roomColor.surface}` : 'border-slate-700/70 bg-[#101a2d]',
                 openId === s.id && 'ring-1 ring-cyan-400/25'
               )}
             >
@@ -192,7 +192,7 @@ export function DancecardCompactList(props: {
                 className="flex w-full flex-wrap items-center gap-2 text-left sm:gap-3"
                 onClick={() => setOpenId((id) => (id === s.id ? null : s.id))}
               >
-                <div className="min-w-[7rem] shrink-0 text-sm font-medium text-cyan-100/90">
+                <div className="min-w-[7rem] shrink-0 text-sm font-semibold text-cyan-50">
                   {formatTime(s.startsAt, tz)} – {formatTime(s.endsAt, tz)}
                 </div>
                 {label ? (
@@ -226,10 +226,10 @@ export function DancecardCompactList(props: {
               </button>
               {openId === s.id ? (
                 <div className="mt-3 space-y-3 border-t border-white/10 pt-3">
-                  <p className="text-xs text-slate-400">{meta}</p>
-                  <label className="block text-[10px] uppercase tracking-[0.2em] text-slate-500">Personal note</label>
+                  <p className="text-xs text-slate-300/85">{meta}</p>
+                  <label className="block text-[10px] font-semibold uppercase tracking-[0.2em] text-slate-300/85">Personal note</label>
                   <textarea
-                    className="min-h-[72px] w-full rounded-xl border border-slate-700 bg-[#111a2c] px-3 py-2 text-sm text-white placeholder:text-slate-600"
+                    className="min-h-[72px] w-full rounded-xl border border-slate-600/80 bg-[#0b1426] px-3 py-2 text-sm text-white placeholder:text-slate-500 outline-none transition focus:border-cyan-300 focus:ring-2 focus:ring-cyan-300/20"
                     defaultValue={s.note ?? ''}
                     placeholder="Only you see this note…"
                     onMouseDown={(e) => e.stopPropagation()}
