@@ -5,9 +5,18 @@ import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } fr
 import { dancecardFetch, DancecardApiError, formatDancecardApiMessage } from '@/components/dancecard/api-client'
 import { MutualAvailabilityStrip } from '@/components/dancecard/MutualAvailabilityStrip'
 import { dayRangesFromSchedule } from '@/components/dancecard/eventAvailability'
-import { formatRange, toDatetimeLocalValue } from '@/components/dancecard/time'
+import { formatRange, formatTime, toDatetimeLocalValue } from '@/components/dancecard/time'
 
 const DANCECARD_DISPLAY_TITLE = 'Dancecard'
+
+type OpenWindowSuggestion = {
+  id: string
+  day: string
+  time: string
+  duration: string
+  startMs: number
+  endMs: number
+}
 
 type SharePayload = {
   meta: {
@@ -34,6 +43,41 @@ type SharePayload = {
 
 function shareIntroStorageKey(eventSlug: string, token: string) {
   return `eck_dc_share_intro_v1_${eventSlug}_${token}`
+}
+
+function formatDuration(ms: number): string {
+  const minutes = Math.max(0, Math.round(ms / 60_000))
+  if (minutes < 60) return `${minutes} min`
+  const hours = Math.floor(minutes / 60)
+  const remainder = minutes % 60
+  return remainder ? `${hours}h ${remainder}m` : `${hours}h`
+}
+
+function bestOpenWindows(
+  intervals: { start: string; end: string }[],
+  tz: string
+): OpenWindowSuggestion[] {
+  return intervals
+    .map((interval, index) => {
+      const startMs = Date.parse(interval.start)
+      const endMs = Date.parse(interval.end)
+      const durationMs = endMs - startMs
+      return {
+        id: `${interval.start}-${index}`,
+        day: new Intl.DateTimeFormat('en-US', { weekday: 'short', month: 'short', day: 'numeric', timeZone: tz }).format(
+          new Date(interval.start)
+        ),
+        time: `${formatTime(interval.start, tz)} – ${formatTime(interval.end, tz)}`,
+        duration: formatDuration(durationMs),
+        startMs,
+        endMs,
+        durationMs,
+      }
+    })
+    .filter((item) => Number.isFinite(item.startMs) && Number.isFinite(item.endMs) && item.durationMs >= 60 * 60_000)
+    .sort((a, b) => b.durationMs - a.durationMs || a.startMs - b.startMs)
+    .slice(0, 4)
+    .map(({ durationMs: _durationMs, ...item }) => item)
 }
 
 export function ShareDancecardClient(props: { eventSlug: string; token: string }) {
@@ -79,6 +123,11 @@ export function ShareDancecardClient(props: { eventSlug: string; token: string }
 
     return endMs > startMs ? { startMs, endMs } : null
   }, [data])
+
+  const openWindowSuggestions = useMemo(
+    () => bestOpenWindows(data?.hostFreeGaps ?? [], tz),
+    [data?.hostFreeGaps, tz]
+  )
 
   const loadShare = useCallback(
     async (opts?: { silent?: boolean }) => {
@@ -205,12 +254,27 @@ export function ShareDancecardClient(props: { eventSlug: string; token: string }
 
   if (!data) {
     return (
-      <div className="flex min-h-[40vh] flex-col items-center justify-center gap-3 px-4 py-16 text-stone-300">
-        <div
-          className="h-9 w-9 rounded-full border-2 border-teal-400/30 border-t-teal-300 animate-spin motion-reduce:animate-none"
-          aria-hidden
-        />
-        <p className="text-sm text-stone-400">Loading schedule…</p>
+      <div className="mx-auto max-w-3xl px-4 py-10 text-stone-300 lg:max-w-6xl">
+        <div className="rounded-[28px] border border-white/10 bg-[#0c1424]/95 p-5 shadow-[0_24px_80px_rgba(2,6,23,0.55)] backdrop-blur-xl">
+          <div className="flex items-center gap-3">
+            <div
+              className="h-9 w-9 rounded-full border-2 border-teal-400/30 border-t-teal-300 animate-spin motion-reduce:animate-none"
+              aria-hidden
+            />
+            <div>
+              <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-teal-200/80">{DANCECARD_DISPLAY_TITLE}</p>
+              <p className="mt-1 text-sm text-stone-300">Loading shared availability…</p>
+            </div>
+          </div>
+          <div className="mt-6 space-y-3">
+            {[0, 1, 2].map((i) => (
+              <div key={i} className="rounded-2xl border border-white/10 bg-white/[0.035] p-3">
+                <div className="h-3 w-24 rounded-full bg-white/10" />
+                <div className="mt-3 h-11 rounded-xl bg-slate-800/80" />
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     )
   }
@@ -268,7 +332,7 @@ export function ShareDancecardClient(props: { eventSlug: string; token: string }
           aria-modal="true"
           aria-labelledby="dc-claim-sheet-title"
         >
-          <div className="max-h-[min(92vh,720px)] w-full max-w-lg translate-y-0 overflow-y-auto rounded-t-[28px] border border-white/10 bg-[#0c1424]/98 p-6 shadow-[0_-20px_80px_rgba(2,6,23,0.75)] motion-reduce:transform-none motion-reduce:transition-none sm:translate-y-0 sm:rounded-[28px] sm:shadow-2xl sm:transition-none max-sm:animate-in max-sm:motion-reduce:animate-none">
+          <div className="max-h-[min(92vh,720px)] w-full max-w-lg translate-y-0 overflow-y-auto rounded-t-[32px] border border-white/10 bg-[#0c1424]/98 p-5 shadow-[0_-20px_80px_rgba(2,6,23,0.75)] motion-reduce:transform-none motion-reduce:transition-none sm:translate-y-0 sm:rounded-[32px] sm:p-6 sm:shadow-2xl sm:transition-none max-sm:animate-in max-sm:motion-reduce:animate-none">
             <div className="mx-auto mb-4 h-1 w-10 shrink-0 rounded-full bg-white/15 sm:hidden" aria-hidden />
             <div className="flex items-start justify-between gap-3">
               <div>
@@ -286,11 +350,14 @@ export function ShareDancecardClient(props: { eventSlug: string; token: string }
               </button>
             </div>
             {selectedRangeLabel ? (
-              <p className="mt-3 rounded-2xl border border-emerald-400/25 bg-emerald-950/35 px-3 py-2.5 text-sm text-emerald-50/95">
-                <span className="font-medium text-stone-50">Selected:</span> {selectedRangeLabel}
-              </p>
+              <div className="mt-4 rounded-2xl border border-emerald-400/25 bg-emerald-950/35 p-3 text-emerald-50/95">
+                <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-emerald-200/80">Selected time</p>
+                <p className="mt-1 text-base font-semibold text-stone-50">{selectedRangeLabel}</p>
+              </div>
             ) : (
-              <p className="mt-3 text-sm text-amber-100/90">Choose a time on the schedule above (tap a green slot).</p>
+              <p className="mt-4 rounded-2xl border border-amber-300/20 bg-amber-950/25 px-3 py-2 text-sm text-amber-100/90">
+                Choose a time on the schedule above (tap a green slot).
+              </p>
             )}
             {reserveNotice?.kind === 'ok' ? (
               <div className="mt-4 rounded-2xl border border-emerald-500/40 bg-emerald-950/50 p-4 text-sm text-emerald-50">
@@ -301,9 +368,9 @@ export function ShareDancecardClient(props: { eventSlug: string; token: string }
               <>
                 <div className="mt-4 grid gap-3 sm:grid-cols-2">
                   <div>
-                    <label className="block text-xs font-medium text-stone-400">Duration</label>
+                    <label className="block text-xs font-semibold uppercase tracking-[0.18em] text-stone-400">Duration</label>
                     <select
-                      className="mt-1.5 min-h-touch w-full rounded-xl border border-white/10 bg-black/30 px-3 py-2.5 text-sm text-stone-100"
+                      className="mt-1.5 min-h-touch w-full rounded-2xl border border-white/10 bg-black/30 px-3 py-2.5 text-sm text-stone-100 outline-none focus:border-teal-200/60 focus:ring-2 focus:ring-teal-300/20"
                       value={durationMinutes}
                       onChange={(e) => {
                         setDurationMinutes(Number(e.target.value))
@@ -318,9 +385,9 @@ export function ShareDancecardClient(props: { eventSlug: string; token: string }
                     </select>
                   </div>
                 </div>
-                <label className="mt-3 block text-xs font-medium text-stone-400">Your name</label>
+                <label className="mt-3 block text-xs font-semibold uppercase tracking-[0.18em] text-stone-400">Your name</label>
                 <input
-                  className="mt-1.5 min-h-touch w-full rounded-xl border border-white/10 bg-black/30 px-3 py-2.5 text-sm text-stone-100 placeholder:text-stone-600"
+                  className="mt-1.5 min-h-touch w-full rounded-2xl border border-white/10 bg-black/30 px-3 py-2.5 text-sm text-stone-100 outline-none placeholder:text-stone-600 focus:border-teal-200/60 focus:ring-2 focus:ring-teal-300/20"
                   value={guestName}
                   maxLength={80}
                   autoComplete="name"
@@ -329,9 +396,9 @@ export function ShareDancecardClient(props: { eventSlug: string; token: string }
                     setReserveNotice(null)
                   }}
                 />
-                <label className="mt-3 block text-xs font-medium text-stone-400">Short note (optional)</label>
+                <label className="mt-3 block text-xs font-semibold uppercase tracking-[0.18em] text-stone-400">Short note (optional)</label>
                 <input
-                  className="mt-1.5 min-h-touch w-full rounded-xl border border-white/10 bg-black/30 px-3 py-2.5 text-sm text-stone-100 placeholder:text-stone-600"
+                  className="mt-1.5 min-h-touch w-full rounded-2xl border border-white/10 bg-black/30 px-3 py-2.5 text-sm text-stone-100 outline-none placeholder:text-stone-600 focus:border-teal-200/60 focus:ring-2 focus:ring-teal-300/20"
                   value={description}
                   maxLength={150}
                   placeholder="e.g. topic, location…"
@@ -344,7 +411,7 @@ export function ShareDancecardClient(props: { eventSlug: string; token: string }
                   <button
                     type="button"
                     disabled={claimBusy}
-                    className="min-h-touch flex-1 rounded-2xl bg-gradient-to-br from-stone-100 via-teal-100 to-violet-200 px-4 py-3 text-sm font-semibold text-slate-900 transition hover:opacity-95 disabled:opacity-50"
+                    className="min-h-touch flex-1 rounded-2xl bg-gradient-to-br from-stone-100 via-teal-100 to-violet-200 px-4 py-3 text-sm font-semibold text-slate-900 shadow-lg shadow-teal-950/30 transition hover:-translate-y-0.5 hover:opacity-95 disabled:translate-y-0 disabled:opacity-50"
                     onClick={() => void submitReserve()}
                   >
                     {claimBusy ? 'Saving…' : 'Confirm claim'}
@@ -370,24 +437,60 @@ export function ShareDancecardClient(props: { eventSlug: string; token: string }
           ← Back to availability
         </Link>
       </div>
-      <header className="mb-4 border-b border-white/10 pb-4">
-        <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-teal-200/80">{DANCECARD_DISPLAY_TITLE}</p>
-        <h1 className="font-serif text-xl font-semibold text-stone-50 sm:text-2xl">{DANCECARD_DISPLAY_TITLE}</h1>
-        <p className="mt-1 text-sm text-stone-300">
-          <span className="font-medium text-stone-100">{data.host.displayName}</span>
-          <span className="text-stone-500"> · shared availability</span>
-        </p>
-        <p className="mt-3 rounded-2xl border border-emerald-500/25 bg-emerald-950/25 px-3 py-2.5 text-sm leading-relaxed text-stone-200">
-          <span className="font-semibold text-emerald-100">Tap a green open slot</span> on the strips below. A sheet
-          will open so you can confirm your name and claim the time. No login required.
-        </p>
-        <div className="mt-2 flex flex-wrap items-center gap-2 text-[11px] text-stone-500">
-          <span className="rounded-full border border-white/10 bg-white/[0.04] px-2 py-1">All times in {tz}</span>
-          <span className="rounded-full border border-white/10 bg-white/[0.04] px-2 py-1">
-            {refreshing ? 'Refreshing…' : `Last updated ${lastUpdatedAt ? new Date(lastUpdatedAt).toLocaleTimeString() : 'just now'}`}
-          </span>
+      <header className="mb-5 rounded-[28px] border border-white/10 bg-[#0c1424]/95 p-5 shadow-[0_24px_80px_rgba(2,6,23,0.45)] backdrop-blur-xl">
+        <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+          <div>
+            <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-teal-200/80">{DANCECARD_DISPLAY_TITLE}</p>
+            <h1 className="mt-1 font-serif text-2xl font-semibold text-stone-50 sm:text-3xl">
+              {data.host.displayName}&apos;s open windows
+            </h1>
+            <p className="mt-2 max-w-2xl text-sm leading-relaxed text-stone-300">
+              Pick an open time without seeing private details. Busy time stays private; green windows are available to claim.
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-2 text-[11px] text-stone-400 md:justify-end">
+            <span className="rounded-full border border-white/10 bg-white/[0.04] px-2.5 py-1">All times in {tz}</span>
+            <span className="rounded-full border border-white/10 bg-white/[0.04] px-2.5 py-1">
+              {refreshing ? 'Refreshing…' : `Updated ${lastUpdatedAt ? new Date(lastUpdatedAt).toLocaleTimeString() : 'just now'}`}
+            </span>
+          </div>
+        </div>
+        <div className="mt-4 rounded-2xl border border-emerald-500/25 bg-emerald-950/25 px-3 py-2.5 text-sm leading-relaxed text-stone-200">
+          <span className="font-semibold text-emerald-100">Tap a green open slot</span> or use a suggested window below.
+          A sheet will open so you can confirm your name and claim the time. No login required.
         </div>
       </header>
+
+      {openWindowSuggestions.length ? (
+        <section className="mb-4 rounded-[24px] border border-emerald-300/15 bg-emerald-950/10 p-4">
+          <div className="flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-emerald-200/75">Suggested windows</p>
+              <h2 className="font-serif text-xl font-semibold text-stone-50">Longest open blocks</h2>
+            </div>
+            <p className="text-xs text-stone-400">Uses the same claim flow as the schedule.</p>
+          </div>
+          <div className="mt-3 grid gap-2 sm:grid-cols-2">
+            {openWindowSuggestions.map((w) => (
+              <button
+                key={w.id}
+                type="button"
+                className="group flex min-h-touch items-center gap-3 rounded-2xl border border-white/10 bg-white/[0.04] p-3 text-left transition hover:-translate-y-0.5 hover:border-emerald-200/35 hover:bg-emerald-300/10"
+                onClick={() => fillReserveFromStep(w.startMs, w.endMs)}
+              >
+                <span className="flex h-11 w-12 shrink-0 items-center justify-center rounded-2xl border border-emerald-200/20 bg-emerald-300/10 text-xs font-bold text-emerald-100">
+                  {w.day.split(',')[0]}
+                </span>
+                <span className="min-w-0 flex-1">
+                  <span className="block text-sm font-semibold text-stone-50">{w.time}</span>
+                  <span className="block text-xs text-stone-400">{w.duration} open</span>
+                </span>
+                <span className="text-lg text-emerald-200 transition group-hover:translate-x-0.5">→</span>
+              </button>
+            ))}
+          </div>
+        </section>
+      ) : null}
 
       <div className="flex flex-wrap gap-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-stone-500">
         <span className="rounded-full border border-rose-400/30 bg-rose-950/40 px-2.5 py-1 text-rose-100">Red = busy</span>
