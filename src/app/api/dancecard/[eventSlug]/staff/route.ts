@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getDancecardAdmin, loadEventBySlug, normalizeEventSlug, resolveAccountFromSession } from '@/lib/dancecard/routeCommon'
+import {getDancecardAdmin, loadEventBySlug, normalizeEventSlug, resolveAccountFromSession, jsonFromRouteError } from '@/lib/dancecard/routeCommon'
 
 export const dynamic = 'force-dynamic'
 
@@ -9,6 +9,7 @@ type StaffRow = {
   starts_at: string
   ends_at: string
   sort_order: number
+  shift_status?: string | null
 }
 
 export async function GET(request: NextRequest, context: { params: { eventSlug: string } }) {
@@ -28,13 +29,17 @@ export async function GET(request: NextRequest, context: { params: { eventSlug: 
     }
     const { data: rows, error } = await admin
       .from('dancecard_staff_shifts')
-      .select('person_name, role, starts_at, ends_at, sort_order')
+      .select(
+        'person_name, role, starts_at, ends_at, sort_order, shift_status',
+      )
       .eq('event_id', event.id)
       .order('sort_order', { ascending: true })
     if (error) throw error
 
     const byName = new Map<string, { name: string; shifts: { role: string; startsAt: string; endsAt: string }[] }>()
     for (const r of (rows ?? []) as StaffRow[]) {
+      const st = String(r.shift_status ?? 'assigned')
+      if (st === 'dropped' || st === 'draft') continue
       const name = String(r.person_name ?? '').trim()
       if (!name) continue
       let entry = byName.get(name)
@@ -55,7 +60,6 @@ export async function GET(request: NextRequest, context: { params: { eventSlug: 
       headers: { 'Cache-Control': 'private, no-store, max-age=0' },
     })
   } catch (e) {
-    const msg = e instanceof Error ? e.message : 'Internal error'
-    return NextResponse.json({ error: msg }, { status: 500 })
+    return jsonFromRouteError(e, 'dancecard-[eventSlug]-staff')
   }
 }

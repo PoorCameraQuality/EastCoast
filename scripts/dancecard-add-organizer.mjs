@@ -25,12 +25,12 @@ const slug = (process.argv[3] || 'paf26').trim().toLowerCase()
 const role = (process.argv[4] || 'owner').trim().toLowerCase()
 
 if (!email || !email.includes('@')) {
-  console.error('Usage: node scripts/dancecard-add-organizer.mjs <email> <eventSlug> [owner|editor]')
+  console.error('Usage: node scripts/dancecard-add-organizer.mjs <email> <eventSlug> [owner|editor|viewer]')
   process.exit(1)
 }
 
-if (role !== 'owner' && role !== 'editor') {
-  console.error('role must be owner or editor')
+if (role !== 'owner' && role !== 'editor' && role !== 'viewer') {
+  console.error('role must be owner, editor, or viewer')
   process.exit(1)
 }
 

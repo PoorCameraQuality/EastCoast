@@ -64,5 +64,5 @@ export function formatDayHeader(dayKey: string, timeZone: string): string {
 }
 
 export function formatTimeLabel(iso: string, timeZone: string): string {
-  return formatInTimeZone(new Date(iso), timeZone, 'h:mm a')
+  return formatInTimeZone(new Date(iso), timeZone, 'HH:mm')
 }

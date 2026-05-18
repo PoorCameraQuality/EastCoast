@@ -1,8 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { ZodError } from 'zod'
-import { organizerErrorResponse, requireOrganizerForSlug } from '@/lib/dancecard/organizerAuth'
+import { assertOrganizerCanMutate, organizerErrorResponse, requireOrganizerForSlug } from '@/lib/dancecard/organizerAuth'
+import { isDmStaffRole } from '@/lib/dancecard/dmCoverageScanner'
+import { mapStaffShiftRow } from '@/lib/dancecard/organizerStaffShiftDto'
 import { organizerStaffShiftCreateSchema } from '@/lib/dancecard/organizerSchemas'
 import { assertSlotInsideWindow } from '@/lib/dancecard/organizerSlotValidation'
+import { fetchStaffShiftRowsForEvent } from '@/lib/dancecard/organizerStaffShiftsData'
 import { loadEventBySlugAnyStatus } from '@/lib/dancecard/routeCommon'
 
 export const dynamic = 'force-dynamic'
@@ -14,22 +17,9 @@ export async function GET(_request: NextRequest, context: { params: { eventSlug:
     if (!event || event.id !== eventId) {
       return NextResponse.json({ error: 'Not found' }, { status: 404 })
     }
-    const { data: rows, error } = await admin
-      .from('dancecard_staff_shifts')
-      .select('id, person_name, role, starts_at, ends_at, sort_order')
-      .eq('event_id', eventId)
-      .order('starts_at', { ascending: true })
-      .order('sort_order', { ascending: true })
-    if (error) throw error
+    const rows = await fetchStaffShiftRowsForEvent(admin, eventId)
     return NextResponse.json({
-      shifts: (rows ?? []).map((r) => ({
-        id: r.id,
-        personName: r.person_name,
-        role: r.role,
-        startsAt: r.starts_at,
-        endsAt: r.ends_at,
-        sortOrder: r.sort_order,
-      })),
+      shifts: rows.map((r) => mapStaffShiftRow(r)),
       windowStartsAt: event.window_starts_at,
       windowEndsAt: event.window_ends_at,
       timezone: event.timezone,
@@ -41,13 +31,18 @@ export async function GET(_request: NextRequest, context: { params: { eventSlug:
 
 export async function POST(request: NextRequest, context: { params: { eventSlug: string } }) {
   try {
-    const { admin, eventId } = await requireOrganizerForSlug(context.params.eventSlug)
+    const ctx = await requireOrganizerForSlug(context.params.eventSlug)
+    assertOrganizerCanMutate(ctx)
+    const { admin, eventId } = ctx
     const event = await loadEventBySlugAnyStatus(admin, context.params.eventSlug)
     if (!event || event.id !== eventId) {
       return NextResponse.json({ error: 'Not found' }, { status: 404 })
     }
 
     const body = organizerStaffShiftCreateSchema.parse(await request.json())
+    if (isDmStaffRole(body.role) && !body.locationId) {
+      return NextResponse.json({ error: 'DM shifts must set locationId (play space).' }, { status: 400 })
+    }
     assertSlotInsideWindow({
       windowStartsAt: event.window_starts_at,
       windowEndsAt: event.window_ends_at,
@@ -61,29 +56,30 @@ export async function POST(request: NextRequest, context: { params: { eventSlug:
       .eq('event_id', eventId)
     const sortOrder = body.sortOrder ?? (typeof count === 'number' ? count : 0)
 
+    const insertRow: Record<string, unknown> = {
+      event_id: eventId,
+      person_name: body.personName,
+      role: body.role,
+      starts_at: new Date(body.startsAt).toISOString(),
+      ends_at: new Date(body.endsAt).toISOString(),
+      sort_order: sortOrder,
+      shift_status: body.shiftStatus ?? 'assigned',
+    }
+    if (body.personId !== undefined) insertRow.person_id = body.personId
+    if (body.locationId !== undefined) insertRow.location_id = body.locationId
+    if (body.organizerNotesStaffOnly !== undefined) insertRow.organizer_notes_staff_only = body.organizerNotesStaffOnly
+
     const { data: row, error } = await admin
       .from('dancecard_staff_shifts')
-      .insert({
-        event_id: eventId,
-        person_name: body.personName,
-        role: body.role,
-        starts_at: new Date(body.startsAt).toISOString(),
-        ends_at: new Date(body.endsAt).toISOString(),
-        sort_order: sortOrder,
-      })
-      .select('id, person_name, role, starts_at, ends_at, sort_order')
+      .insert(insertRow)
+      .select(
+        'id, person_name, person_id, role, location_id, starts_at, ends_at, sort_order, shift_status, claimed_by_account_id, organizer_notes_staff_only, dropped_at',
+      )
       .single()
     if (error) throw error
 
     return NextResponse.json({
-      shift: {
-        id: row.id,
-        personName: row.person_name,
-        role: row.role,
-        startsAt: row.starts_at,
-        endsAt: row.ends_at,
-        sortOrder: row.sort_order,
-      },
+      shift: mapStaffShiftRow(row as Record<string, unknown>),
     })
   } catch (e) {
     if (e instanceof ZodError) {

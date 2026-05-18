@@ -11,6 +11,7 @@ import EventCalendarExport from '@/components/EventCalendarExport'
 import { BASE_URL } from '@/lib/seo'
 import MarkdownSimple from '@/components/MarkdownSimple'
 import OutboundWebsiteLink from '@/components/analytics/OutboundWebsiteLink'
+import { DancecardEventCta } from '@/components/dancecard/DancecardEventCta'
 
 // Generate metadata for SEO
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
@@ -260,6 +261,10 @@ function EnhancedEventLayout({ event, breadcrumbItems }: { event: any, breadcrum
               
               {/* Left Column - About & Features */}
               <div className="space-y-6">
+                <DancecardEventCta
+                  eckeSlug={event.slug}
+                  accentClassName={`${colors.accent}`}
+                />
                 {/* About Section */}
                 <div className="bg-gradient-to-br from-gray-900 to-black border border-gray-700 rounded-2xl p-4 sm:p-6">
                   <h2 className="text-xl sm:text-2xl font-serif font-bold text-white mb-4 flex items-center gap-3">

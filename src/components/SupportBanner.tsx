@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import VendorImage from '@/components/vendors/VendorImage'
 import { getSiteSponsorVendor } from '@/data/vendors'
+import { suppressSupportBanner } from '@/lib/dancecard/shellRoutes'
 
 const DISMISS_KEY = 'ecke_support_banner_dismissed_at'
 const SHOW_AFTER_MS = 12000
@@ -31,7 +32,7 @@ export default function SupportBanner() {
     if (!pathname) return true
     if (pathname === '/support') return true
     if (pathname.startsWith('/admin')) return true
-    if (pathname.startsWith('/dancecard')) return true
+    if (suppressSupportBanner(pathname)) return true
     if (pathname === '/login') return true
     return false
   }, [pathname])

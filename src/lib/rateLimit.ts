@@ -11,8 +11,44 @@ interface RateLimitStore {
   }
 }
 
-// In-memory store for development (use Redis in production)
+// In-memory store (fallback when Upstash is not configured)
 const store: RateLimitStore = {}
+
+type UpstashLimiter = {
+  limit: (id: string) => Promise<{ success: boolean; remaining: number; reset: number }>
+}
+
+let upstashLimiters: Map<string, UpstashLimiter> | null = null
+
+async function getUpstashLimiter(key: string, windowMs: number, maxRequests: number): Promise<UpstashLimiter | null> {
+  const url = process.env.UPSTASH_REDIS_REST_URL
+  const token = process.env.UPSTASH_REDIS_REST_TOKEN
+  if (!url || !token) return null
+  if (!upstashLimiters) upstashLimiters = new Map()
+  const cacheKey = `${key}:${windowMs}:${maxRequests}`
+  if (upstashLimiters.has(cacheKey)) return upstashLimiters.get(cacheKey)!
+  try {
+    const { Ratelimit } = await import('@upstash/ratelimit')
+    const { Redis } = await import('@upstash/redis')
+    const redis = new Redis({ url, token })
+    const windowSec = Math.max(1, Math.ceil(windowMs / 1000))
+    const limiter = new Ratelimit({
+      redis,
+      limiter: Ratelimit.slidingWindow(maxRequests, `${windowSec} s`),
+      prefix: `dc:${key}`,
+    })
+    const wrapped: UpstashLimiter = {
+      limit: async (id: string) => {
+        const r = await limiter.limit(id)
+        return { success: r.success, remaining: r.remaining, reset: r.reset }
+      },
+    }
+    upstashLimiters.set(cacheKey, wrapped)
+    return wrapped
+  } catch {
+    return null
+  }
+}
 
 export class RateLimiter {
   private config: RateLimitConfig
@@ -37,6 +73,22 @@ export class RateLimiter {
     resetTime: number
     retryAfter?: number
   }> {
+    const upstashKey = `${this.config.windowMs}:${this.config.maxRequests}`
+    const remote = await getUpstashLimiter(upstashKey, this.config.windowMs, this.config.maxRequests)
+    if (remote) {
+      const r = await remote.limit(identifier)
+      const resetTime = r.reset
+      if (!r.success) {
+        return {
+          allowed: false,
+          remaining: 0,
+          resetTime,
+          retryAfter: Math.max(1, Math.ceil((resetTime - Date.now()) / 1000)),
+        }
+      }
+      return { allowed: true, remaining: r.remaining, resetTime }
+    }
+
     const now = Date.now()
     const key = `rate_limit:${identifier}`
     
@@ -116,7 +168,49 @@ export const rateLimiters = {
     windowMs: 60 * 60 * 1000, // 1 hour
     maxRequests: 5,
     message: 'Too many file uploads. Please try again later.'
-  })
+  }),
+
+  /** Dancecard login, register, entry code, staff unlock */
+  dancecardAuth: new RateLimiter({
+    windowMs: 15 * 60 * 1000,
+    maxRequests: 8,
+    message: 'Too many attempts. Please try again later.',
+  }),
+
+  /** Share link lookup and public claim */
+  dancecardToken: new RateLimiter({
+    windowMs: 15 * 60 * 1000,
+    maxRequests: 40,
+    message: 'Too many requests. Please try again later.',
+  }),
+
+  /** Public forms (vetting applications, handoff) */
+  dancecardPublicForm: new RateLimiter({
+    windowMs: 60 * 60 * 1000,
+    maxRequests: 8,
+    message: 'Too many submissions. Please try again later.',
+  }),
+
+  /** Inbound registrant webhook per IP */
+  dancecardWebhook: new RateLimiter({
+    windowMs: 15 * 60 * 1000,
+    maxRequests: 30,
+    message: 'Too many webhook requests. Please try again later.',
+  }),
+
+  /** Staff shift claim attempts */
+  dancecardStaffClaim: new RateLimiter({
+    windowMs: 15 * 60 * 1000,
+    maxRequests: 20,
+    message: 'Too many shift claim attempts. Please try again later.',
+  }),
+
+  /** Username compare lookups */
+  dancecardCompare: new RateLimiter({
+    windowMs: 15 * 60 * 1000,
+    maxRequests: 40,
+    message: 'Too many compare requests. Please try again later.',
+  }),
 }
 
 // Helper function to get client identifier

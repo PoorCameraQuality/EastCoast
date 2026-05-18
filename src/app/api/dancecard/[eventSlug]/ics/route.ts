@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getDancecardAdmin, loadEventBySlug, normalizeEventSlug, resolveAccountFromSession } from '@/lib/dancecard/routeCommon'
+import {getDancecardAdmin, loadEventBySlug, normalizeEventSlug, resolveAccountFromSession, jsonFromRouteError } from '@/lib/dancecard/routeCommon'
 import { loadSelections } from '@/lib/dancecard/data'
 import { buildDancecardSelectionsOnlyIcs } from '@/lib/dancecard/dancecardIcs'
 
@@ -48,7 +48,6 @@ export async function GET(request: NextRequest, context: { params: { eventSlug: 
       },
     })
   } catch (e) {
-    const msg = e instanceof Error ? e.message : 'Internal error'
-    return NextResponse.json({ error: msg }, { status: 500 })
+    return jsonFromRouteError(e, 'dancecard-[eventSlug]-ics')
   }
 }

@@ -1,7 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { supabase } from '@/lib/supabase'
+import { createSupabaseServerClientForOrganizer } from '@/lib/dancecard/organizerAuth'
+import { rateLimiters, withRateLimit } from '@/lib/rateLimit'
 
 export async function POST(request: NextRequest) {
+  const limited = await withRateLimit(request, rateLimiters.auth)
+  if (limited) return limited
+
   try {
     const { email, password } = await request.json()
 
@@ -12,36 +16,24 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    const client = supabase
-    if (!client) {
-      return NextResponse.json(
-        { error: 'Supabase client not configured' },
-        { status: 500 }
-      )
-    }
-
-    const { data, error } = await client.auth.signInWithPassword({
+    const supabase = createSupabaseServerClientForOrganizer()
+    const { data, error } = await supabase.auth.signInWithPassword({
       email,
-      password
+      password,
     })
 
     if (error) {
-      console.error('Login error:', error)
-      return NextResponse.json(
-        { error: error.message },
-        { status: 401 }
-      )
+      return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 })
     }
 
     return NextResponse.json({
-      user: data.user,
-      session: data.session
+      ok: true,
+      user: data.user
+        ? { id: data.user.id, email: data.user.email }
+        : null,
     })
   } catch (error) {
     console.error('Login route error:', error)
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }

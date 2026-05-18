@@ -236,6 +236,11 @@ const jobs = [
     dest: join(outDir, 'events', 'logo-beyond-vanilla-35.png'),
   },
   {
+    page: 'https://innthrall.com/',
+    direct: 'https://innthrall.com/wp-content/uploads/2023/02/Logo-for-floor.jpg',
+    dest: join(outDir, 'dungeons', 'logo-innthrall-reading-pa.jpg'),
+  },
+  {
     page: 'https://www.rgvbears.org/rgvlw',
     direct:
       'https://static.wixstatic.com/media/d3d593_aa483bd734c245df8cc071eb15b8e24f~mv2.jpg/v1/fill/w_400,h_225,al_c,q_80,usm_0.66_1.00_0.01/d3d593_aa483bd734c245df8cc071eb15b8e24f~mv2.jpg',

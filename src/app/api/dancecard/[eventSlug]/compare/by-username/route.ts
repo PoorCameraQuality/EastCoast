@@ -4,6 +4,8 @@ import { getDancecardAdmin, loadEventBySlug, normalizeEventSlug, resolveAccountF
 import { usernameSchema } from '@/lib/dancecard/schemas'
 import { resolveCompareUsername } from '@/lib/dancecard/mutualHostResolve'
 import { buildMutualSharePayload } from '@/lib/dancecard/mutualSharePayload'
+import { jsonFromRouteError } from '@/lib/dancecard/routeCommon'
+import { rateLimiters, withRateLimit } from '@/lib/rateLimit'
 
 export const dynamic = 'force-dynamic'
 
@@ -15,6 +17,9 @@ export async function POST(
   request: NextRequest,
   context: { params: { eventSlug: string } }
 ) {
+  const limited = await withRateLimit(request, rateLimiters.dancecardCompare)
+  if (limited) return limited
+
   try {
     const admin = getDancecardAdmin()
     const { eventSlug } = context.params
@@ -32,10 +37,10 @@ export async function POST(
     const resolved = await resolveCompareUsername(admin, event.id, username, session.accountId)
     if (!resolved.ok) {
       if (resolved.reason === 'self') {
-        return NextResponse.json({ error: 'You cannot compare with your own username. Enter another attendee or use a share link.' }, { status: 400 })
-      }
-      if (resolved.reason === 'not_enabled') {
-        return NextResponse.json({ error: 'That attendee has not enabled compare by username. Ask them for their share link instead.' }, { status: 404 })
+        return NextResponse.json(
+          { error: 'You cannot compare with your own username. Enter another attendee or use a share link.' },
+          { status: 400 },
+        )
       }
       return NextResponse.json({ error: 'Compare not available for that username.' }, { status: 404 })
     }
@@ -43,18 +48,26 @@ export async function POST(
 
     const { data: host, error: hErr } = await admin
       .from('dancecard_accounts')
-      .select('id, display_name, event_id')
+      .select('id, display_name, username, event_id')
       .eq('id', hostId)
       .maybeSingle()
     if (hErr || !host || host.event_id !== event.id) {
       return NextResponse.json({ error: 'Compare not available for that username.' }, { status: 404 })
     }
 
-    const viewerPayload = { accountId: session.accountId, displayName: session.displayName }
+    const viewerPayload = {
+      accountId: session.accountId,
+      displayName: session.displayName,
+      username: session.username,
+    }
     const payload = await buildMutualSharePayload(
       admin,
       event,
-      { id: host.id, display_name: host.display_name as string },
+      {
+        id: host.id,
+        display_name: host.display_name as string,
+        username: host.username as string,
+      },
       viewerPayload
     )
 
@@ -64,10 +77,6 @@ export async function POST(
       },
     })
   } catch (e) {
-    if (e instanceof ZodError) {
-      return NextResponse.json({ error: 'Validation error', details: e.flatten() }, { status: 400 })
-    }
-    const msg = e instanceof Error ? e.message : 'Internal error'
-    return NextResponse.json({ error: msg }, { status: 500 })
+    return jsonFromRouteError(e, 'compare-by-username')
   }
 }

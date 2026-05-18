@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server'
-import { getDancecardAdmin, loadEventBySlug, normalizeEventSlug } from '@/lib/dancecard/routeCommon'
+import { getEventEntitlements } from '@/lib/dancecard/eventEntitlements'
+import { parseEventProfile } from '@/lib/dancecard/eventProfile'
+import {getDancecardAdmin, loadEventBySlug, normalizeEventSlug, jsonFromRouteError } from '@/lib/dancecard/routeCommon'
 
 export const dynamic = 'force-dynamic'
 
@@ -13,16 +15,18 @@ export async function GET(_request: Request, context: { params: { eventSlug: str
     }
     const { data: row, error } = await admin
       .from('dancecard_events')
-      .select('registration_access_code')
+      .select('registration_access_code, event_profile')
       .eq('id', event.id)
       .maybeSingle()
     if (error) throw error
     const code = String((row as { registration_access_code?: string } | null)?.registration_access_code ?? '').trim()
+    const modules = await getEventEntitlements(admin, event.id)
     return NextResponse.json({
       requiresRegistrationCode: code.length > 0,
+      modules,
+      eventProfile: parseEventProfile((row as { event_profile?: string } | null)?.event_profile),
     })
   } catch (e) {
-    const msg = e instanceof Error ? e.message : 'Internal error'
-    return NextResponse.json({ error: msg }, { status: 500 })
+    return jsonFromRouteError(e, 'dancecard-[eventSlug]-gate')
   }
 }

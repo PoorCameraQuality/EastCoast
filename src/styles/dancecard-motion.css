@@ -1,0 +1,120 @@
+/**
+ * Dancecard motion utilities — honor prefers-reduced-motion (Phase 4 exit criterion).
+ */
+.dc-transition-tab {
+  transition-property: opacity, color, background-color, border-color;
+  transition-duration: var(--dc-duration-tab);
+  transition-timing-function: ease-out;
+}
+
+.dc-transition-drawer {
+  transition-property: opacity, transform;
+  transition-duration: var(--dc-duration-drawer);
+  transition-timing-function: ease-out;
+}
+
+.dc-animate-fade-in {
+  animation: dc-fade-in var(--dc-duration-base) ease-out forwards;
+}
+
+@keyframes dc-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.dc-vestibule-pulse {
+  animation: dc-vestibule-pulse 1s ease-in-out infinite;
+}
+
+.dc-vestibule-fan {
+  animation: dc-vestibule-fan 0.9s ease-in-out infinite alternate;
+}
+
+.dc-skeleton-stagger > * {
+  animation: dc-fade-in var(--dc-duration-base) ease-out both;
+}
+
+.dc-skeleton-stagger > *:nth-child(1) {
+  animation-delay: 0ms;
+}
+.dc-skeleton-stagger > *:nth-child(2) {
+  animation-delay: 50ms;
+}
+.dc-skeleton-stagger > *:nth-child(3) {
+  animation-delay: 100ms;
+}
+.dc-skeleton-stagger > *:nth-child(4) {
+  animation-delay: 150ms;
+}
+.dc-skeleton-stagger > *:nth-child(5) {
+  animation-delay: 200ms;
+}
+.dc-skeleton-stagger > *:nth-child(6) {
+  animation-delay: 250ms;
+}
+
+.dc-conflict-sonar {
+  animation: dc-conflict-sonar 0.8s ease-out 2;
+}
+
+@keyframes dc-vestibule-pulse {
+  0%,
+  100% {
+    opacity: 0.7;
+    transform: scale(0.96);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes dc-vestibule-fan {
+  from {
+    transform: rotate(-4deg) scale(0.95);
+  }
+  to {
+    transform: rotate(4deg) scale(1);
+  }
+}
+
+@keyframes dc-conflict-sonar {
+  0% {
+    box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.45);
+  }
+  70% {
+    box-shadow: 0 0 0 12px rgba(245, 158, 11, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(245, 158, 11, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dc-transition-tab,
+  .dc-transition-drawer {
+    transition-duration: 0.01ms !important;
+  }
+
+  .dc-animate-fade-in,
+  .dc-vestibule-pulse,
+  .dc-vestibule-fan,
+  .dc-skeleton-stagger > *,
+  .dc-conflict-sonar {
+    animation: none;
+    opacity: 1;
+  }
+
+  .dc-transition-drawer {
+    transform: none !important;
+  }
+
+  .dc-vestibule-pulse,
+  .dc-vestibule-fan {
+    transform: none;
+  }
+}

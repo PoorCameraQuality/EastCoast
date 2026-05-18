@@ -27,6 +27,14 @@ export function intervalFullyInsideAnyUnion(
   return union.some((g) => blockStart >= g.start && blockEnd <= g.end)
 }
 
+export function intervalOverlapsAnyUnion(
+  blockStart: number,
+  blockEnd: number,
+  union: { start: number; end: number }[]
+): boolean {
+  return union.some((g) => blockStart < g.end && blockEnd > g.start)
+}
+
 export function buildAvailabilityFlags(
   rangeStart: number,
   rangeEnd: number,

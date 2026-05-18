@@ -1,11 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getDancecardAdmin, loadEventBySlug, normalizeEventSlug } from '@/lib/dancecard/routeCommon'
+import {getDancecardAdmin,
+  loadEventBySlug,
+  normalizeEventSlug,
+  resolveAccountFromSession, jsonFromRouteError } from '@/lib/dancecard/routeCommon'
+import { fetchPublicProgramSlotsForEvent } from '@/lib/dancecard/publicProgramSlotsData'
+import { parseThemeConfig, themeConfigForPublicApi } from '@/lib/dancecard/theme'
 
 /** Always hit origin + Supabase; avoid any edge cache of an empty first response. */
 export const dynamic = 'force-dynamic'
 
 export async function GET(
-  _request: NextRequest,
+  request: NextRequest,
   context: { params: { eventSlug: string } }
 ) {
   try {
@@ -16,13 +21,9 @@ export async function GET(
     if (!event) {
       return NextResponse.json({ error: 'Event not found' }, { status: 404 })
     }
-    const { data: slots, error } = await admin
-      .from('dancecard_program_slots')
-      .select('id, starts_at, ends_at, title, track, room, description, sort_order')
-      .eq('event_id', event.id)
-      .order('starts_at', { ascending: true })
-      .order('sort_order', { ascending: true })
-    if (error) throw error
+    const session = await resolveAccountFromSession(admin, request, slug)
+    const isStaff = Boolean(session?.isStaff)
+    const slots = await fetchPublicProgramSlotsForEvent(admin, event.id, isStaff)
     const body = {
       meta: {
         productTitle: event.product_title,
@@ -34,25 +35,32 @@ export async function GET(
         sharedByLabel: event.shared_by_label,
         sharedByDetail: event.shared_by_detail,
         logoUrl: event.logo_url,
+        theme: themeConfigForPublicApi(parseThemeConfig((event as { theme_config?: unknown }).theme_config)),
       },
-      slots: (slots ?? []).map((s) => ({
+      slots: slots.map((s) => ({
         id: s.id,
-        startsAt: s.starts_at,
-        endsAt: s.ends_at,
+        startsAt: s.startsAt,
+        endsAt: s.endsAt,
         title: s.title,
         track: s.track,
+        trackId: s.trackId,
+        trackDisplay: s.trackDisplay,
         room: s.room,
+        locationId: s.locationId,
         description: s.description,
-        sortOrder: s.sort_order,
+        sortOrder: s.sortOrder,
+        tagNames: s.tagNames,
+        presenters: s.presenters,
+        photoPolicy: s.photoPolicy,
+        locationName: s.locationName,
       })),
     }
     return NextResponse.json(body, {
       headers: {
-        'Cache-Control': 'private, no-store, max-age=0',
+        'Cache-Control': 'private, max-age=0, stale-while-revalidate=120',
       },
     })
   } catch (e) {
-    const msg = e instanceof Error ? e.message : 'Internal error'
-    return NextResponse.json({ error: msg }, { status: 500 })
+    return jsonFromRouteError(e, 'dancecard-[eventSlug]-schedule')
   }
 }

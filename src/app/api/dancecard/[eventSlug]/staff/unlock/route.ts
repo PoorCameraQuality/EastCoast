@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 import { codesEqual } from '@/lib/dancecard/accessCodes'
-import { getDancecardAdmin, loadEventBySlug, normalizeEventSlug, resolveAccountFromSession } from '@/lib/dancecard/routeCommon'
+import { getDancecardAdmin, jsonFromRouteError, loadEventBySlug, normalizeEventSlug, resolveAccountFromSession } from '@/lib/dancecard/routeCommon'
+import { rateLimiters, withRateLimit } from '@/lib/rateLimit'
 
 export const dynamic = 'force-dynamic'
 
@@ -14,6 +15,9 @@ function sleep(ms: number) {
 }
 
 export async function POST(request: NextRequest, context: { params: { eventSlug: string } }) {
+  const limited = await withRateLimit(request, rateLimiters.dancecardAuth)
+  if (limited) return limited
+
   try {
     const admin = getDancecardAdmin()
     const slug = normalizeEventSlug(context.params.eventSlug)
@@ -29,17 +33,6 @@ export async function POST(request: NextRequest, context: { params: { eventSlug:
       return NextResponse.json({ ok: true, alreadyStaff: true })
     }
 
-    const { data: evRow, error: evErr } = await admin
-      .from('dancecard_events')
-      .select('staff_access_code')
-      .eq('id', event.id)
-      .maybeSingle()
-    if (evErr) throw evErr
-    const expected = String((evRow as { staff_access_code?: string } | null)?.staff_access_code ?? '').trim()
-    if (!expected) {
-      return NextResponse.json({ error: 'Staff access is not configured for this event' }, { status: 503 })
-    }
-
     let parsed: z.infer<typeof bodySchema>
     try {
       parsed = bodySchema.parse(await request.json())
@@ -47,9 +40,35 @@ export async function POST(request: NextRequest, context: { params: { eventSlug:
       await sleep(80)
       return NextResponse.json({ error: 'invalid code' }, { status: 401 })
     }
+    const submitted = parsed.code.trim()
 
-    const ok = codesEqual(parsed.code.trim(), expected)
-    if (!ok) {
+    const { data: evRow, error: evErr } = await admin
+      .from('dancecard_events')
+      .select('staff_access_code')
+      .eq('id', event.id)
+      .maybeSingle()
+    if (evErr) throw evErr
+    const eventStaffCode = String((evRow as { staff_access_code?: string } | null)?.staff_access_code ?? '').trim()
+
+    const { data: staffCategories, error: catErr } = await admin
+      .from('dancecard_registration_categories')
+      .select('access_code')
+      .eq('event_id', event.id)
+      .eq('grants_staff_access', true)
+      .not('access_code', 'is', null)
+    if (catErr) throw catErr
+
+    const categoryCodes = (staffCategories ?? [])
+      .map((r) => String((r as { access_code?: string }).access_code ?? '').trim())
+      .filter(Boolean)
+
+    const matchesEventCode = eventStaffCode.length > 0 && codesEqual(submitted, eventStaffCode)
+    const matchesCategoryCode = categoryCodes.some((c) => codesEqual(submitted, c))
+
+    if (!matchesEventCode && !matchesCategoryCode) {
+      if (!eventStaffCode && categoryCodes.length === 0) {
+        return NextResponse.json({ error: 'Staff access is not configured for this event' }, { status: 503 })
+      }
       await sleep(120)
       return NextResponse.json({ error: 'invalid code' }, { status: 401 })
     }
@@ -63,7 +82,6 @@ export async function POST(request: NextRequest, context: { params: { eventSlug:
 
     return NextResponse.json({ ok: true })
   } catch (e) {
-    const msg = e instanceof Error ? e.message : 'Internal error'
-    return NextResponse.json({ error: msg }, { status: 500 })
+    return jsonFromRouteError(e, 'staff-unlock')
   }
 }

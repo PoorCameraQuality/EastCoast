@@ -822,10 +822,10 @@ export const vendors = [
     slug: 'kneel-grain',
     location: 'Online',
     description:
-      'Maker brand Kneel & Grain—follow on Facebook for products, drops, and how to order.',
+      'Maker brand Kneel & Grain—woodworking and mixed-media pieces, commissions, and shop drops via their official Square storefront.',
     story:
-      'Kneel & Grain maintains a public Facebook presence at https://www.facebook.com/people/Kneel-Grain/61582199684459/ (share links may include extra query parameters). The directory uses the official circular badge supplied by the brand. This listing is sourced from the URL provided for the directory.',
-    websiteUrl: 'https://www.facebook.com/people/Kneel-Grain/61582199684459/',
+      'Kneel & Grain sells through their official Square shop at https://kneelandgrain.square.site/. They also maintain a public Facebook page at https://www.facebook.com/people/Kneel-Grain/61582199684459/ for updates and community. The directory uses the official circular badge supplied by the brand.',
+    websiteUrl: 'https://kneelandgrain.square.site/',
     logo125Url: '/images/vendors/kneel-grain/logo-125.jpg',
     tagSlugs: ['woodworking', 'custom-commission-vendor', 'mixed-media-maker'],
     isPaid: false,

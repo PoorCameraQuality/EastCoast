@@ -1,0 +1,334 @@
+{
+  "navLinks": [
+    {
+      "href": "/esys/sc25/",
+      "label": "Home"
+    },
+    {
+      "href": "?rand=0.0263683314198104&func=news",
+      "label": "News"
+    },
+    {
+      "href": "?rand=0.0263683314198104&func=mail",
+      "label": "Inbox"
+    },
+    {
+      "href": "?rand=0.0263683314198104&func=subes",
+      "label": "Invites"
+    },
+    {
+      "href": "?rand=0.0263683314198104&func=profiles",
+      "label": "Profiles"
+    },
+    {
+      "href": "?rand=0.0263683314198104&func=info",
+      "label": "Your Info"
+    },
+    {
+      "href": "/esys/sc25/?logout=1",
+      "label": "Logout"
+    },
+    {
+      "href": "?func=messages",
+      "label": "Your Blog"
+    }
+  ],
+  "report": [
+    {
+      "func": "news",
+      "title": "Brax&#39;s Dark Odyssey Summer Camp Community System",
+      "h1": "Community Page",
+      "hasChore": false,
+      "finalUrl": "https://www.event-systems.com/esys/sc25/?func=news",
+      "linkCount": 6,
+      "sampleLinks": [
+        {
+          "href": "/esys/sc25/",
+          "label": "Home"
+        },
+        {
+          "href": "?rand=0.948495065595377&func=mail",
+          "label": "Inbox"
+        },
+        {
+          "href": "?rand=0.948495065595377&func=subes",
+          "label": "Invites"
+        },
+        {
+          "href": "?rand=0.948495065595377&func=profiles",
+          "label": "Profiles"
+        },
+        {
+          "href": "?rand=0.948495065595377&func=info",
+          "label": "Your Info"
+        },
+        {
+          "href": "/esys/sc25/?logout=1",
+          "label": "Logout"
+        }
+      ]
+    },
+    {
+      "func": "mail",
+      "title": "Brax&#39;s Dark Odyssey Summer Camp Community System",
+      "h1": "Community Page",
+      "hasChore": false,
+      "finalUrl": "https://www.event-systems.com/esys/sc25/?func=mail",
+      "linkCount": 8,
+      "sampleLinks": [
+        {
+          "href": "/esys/sc25/",
+          "label": "Home"
+        },
+        {
+          "href": "?rand=0.248742833913127&func=news",
+          "label": "News"
+        },
+        {
+          "href": "?rand=0.248742833913127&func=mail",
+          "label": "Inbox"
+        },
+        {
+          "href": "?rand=0.248742833913127&func=subes",
+          "label": "Invites"
+        },
+        {
+          "href": "?rand=0.248742833913127&func=profiles",
+          "label": "Profiles"
+        },
+        {
+          "href": "?rand=0.248742833913127&func=info",
+          "label": "Your Info"
+        },
+        {
+          "href": "/esys/sc25/?logout=1",
+          "label": "Logout"
+        },
+        {
+          "href": "?func=mail&sent=1",
+          "label": "Sent Messages"
+        }
+      ]
+    },
+    {
+      "func": "subes",
+      "title": "Brax&#39;s Dark Odyssey Summer Camp Community System",
+      "h1": "Community Page",
+      "hasChore": true,
+      "finalUrl": "https://www.event-systems.com/esys/sc25/?func=subes",
+      "linkCount": 15,
+      "sampleLinks": [
+        {
+          "href": "/esys/sc25/",
+          "label": "Home"
+        },
+        {
+          "href": "?rand=0.886059501136902&func=news",
+          "label": "News"
+        },
+        {
+          "href": "?rand=0.886059501136902&func=mail",
+          "label": "Inbox"
+        },
+        {
+          "href": "?rand=0.886059501136902&func=subes",
+          "label": "Invites"
+        },
+        {
+          "href": "?rand=0.886059501136902&func=subes&tfunc=browse",
+          "label": "Browse Invites"
+        },
+        {
+          "href": "?rand=0.886059501136902&func=subes&tfunc=create",
+          "label": "Create An Invite"
+        },
+        {
+          "href": "?rand=0.886059501136902&func=subes&tfunc=show",
+          "label": "Show Invites"
+        },
+        {
+          "href": "?rand=0.886059501136902&func=profiles",
+          "label": "Profiles"
+        },
+        {
+          "href": "?rand=0.886059501136902&func=info",
+          "label": "Your Info"
+        },
+        {
+          "href": "/esys/sc25/?logout=1",
+          "label": "Logout"
+        },
+        {
+          "href": "/esys/sc25/?func=subes&tfunc=browse&sfunc=Cabin Group",
+          "label": "Cabin Group"
+        },
+        {
+          "href": "/esys/sc25/?func=subes&tfunc=browse&sfunc=Other",
+          "label": "Other"
+        },
+        {
+          "href": "/esys/sc25/?func=subes&tfunc=browse&sfunc=Play Date",
+          "label": "Play Date"
+        },
+        {
+          "href": "/esys/sc25/?func=subes&tfunc=browse&sfunc=Tent City",
+          "label": "Tent City"
+        },
+        {
+          "href": "/esys/sc25/?func=subes&tfunc=browse&sfunc=Party",
+          "label": "Party"
+        }
+      ]
+    },
+    {
+      "func": "profiles",
+      "title": "Brax&#39;s Dark Odyssey Summer Camp Community System",
+      "h1": "Community Page",
+      "hasChore": false,
+      "finalUrl": "https://www.event-systems.com/esys/sc25/?func=profiles",
+      "linkCount": 15,
+      "sampleLinks": [
+        {
+          "href": "/esys/sc25/",
+          "label": "Home"
+        },
+        {
+          "href": "?rand=0.758301385735926&func=news",
+          "label": "News"
+        },
+        {
+          "href": "?rand=0.758301385735926&func=mail",
+          "label": "Inbox"
+        },
+        {
+          "href": "?rand=0.758301385735926&func=subes",
+          "label": "Invites"
+        },
+        {
+          "href": "?rand=0.758301385735926&func=profiles",
+          "label": "Profiles"
+        },
+        {
+          "href": "?rand=0.758301385735926&func=profiles&tfunc=edit",
+          "label": "Edit Your Profile"
+        },
+        {
+          "href": "?rand=0.758301385735926&func=profiles&tfunc=show",
+          "label": "View Your Profile"
+        },
+        {
+          "href": "?rand=0.758301385735926&func=profiles&tfunc=browse",
+          "label": "Browse Profiles"
+        },
+        {
+          "href": "?rand=0.758301385735926&func=profiles&tfunc=browse&sfunc=Personal",
+          "label": "Personal"
+        },
+        {
+          "href": "?rand=0.758301385735926&func=profiles&tfunc=browse&sfunc=Personal&qfunc=recent",
+          "label": "Recent Profiles"
+        },
+        {
+          "href": "?rand=0.758301385735926&func=profiles&tfunc=browse&sfunc=Personal&qfunc=show",
+          "label": "Show Profiles"
+        },
+        {
+          "href": "?rand=0.758301385735926&func=profiles&tfunc=browse&sfunc=Personal&qfunc=search",
+          "label": "Search Profiles"
+        },
+        {
+          "href": "?rand=0.758301385735926&func=info",
+          "label": "Your Info"
+        },
+        {
+          "href": "/esys/sc25/?logout=1",
+          "label": "Logout"
+        },
+        {
+          "href": "/esys/sc25/?func=profiles&tfunc=browse&sfunc=Personal&qfunc=show&atnd=84071",
+          "label": "02"
+        }
+      ]
+    },
+    {
+      "func": "info",
+      "title": "Brax&#39;s Dark Odyssey Summer Camp Community System",
+      "h1": "Community Page",
+      "hasChore": false,
+      "finalUrl": "https://www.event-systems.com/esys/sc25/?func=info",
+      "linkCount": 7,
+      "sampleLinks": [
+        {
+          "href": "/esys/sc25/",
+          "label": "Home"
+        },
+        {
+          "href": "?rand=0.162266698392511&func=news",
+          "label": "News"
+        },
+        {
+          "href": "?rand=0.162266698392511&func=mail",
+          "label": "Inbox"
+        },
+        {
+          "href": "?rand=0.162266698392511&func=subes",
+          "label": "Invites"
+        },
+        {
+          "href": "?rand=0.162266698392511&func=profiles",
+          "label": "Profiles"
+        },
+        {
+          "href": "?rand=0.162266698392511&func=info",
+          "label": "Your Info"
+        },
+        {
+          "href": "/esys/sc25/?logout=1",
+          "label": "Logout"
+        }
+      ]
+    },
+    {
+      "func": "messages",
+      "title": "Brax&#39;s Dark Odyssey Summer Camp Community System",
+      "h1": "Community Page",
+      "hasChore": false,
+      "finalUrl": "https://www.event-systems.com/esys/sc25/?func=messages",
+      "linkCount": 8,
+      "sampleLinks": [
+        {
+          "href": "/esys/sc25/",
+          "label": "Home"
+        },
+        {
+          "href": "?rand=0.678142738435994&func=news",
+          "label": "News"
+        },
+        {
+          "href": "?rand=0.678142738435994&func=mail",
+          "label": "Inbox"
+        },
+        {
+          "href": "?rand=0.678142738435994&func=subes",
+          "label": "Invites"
+        },
+        {
+          "href": "?rand=0.678142738435994&func=profiles",
+          "label": "Profiles"
+        },
+        {
+          "href": "?rand=0.678142738435994&func=info",
+          "label": "Your Info"
+        },
+        {
+          "href": "/esys/sc25/?logout=1",
+          "label": "Logout"
+        },
+        {
+          "href": "/esys/sc25/?&func=messages&tfunc=blog&sfunc=create",
+          "label": "Click here"
+        }
+      ]
+    }
+  ]
+}

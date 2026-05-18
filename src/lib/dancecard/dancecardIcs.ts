@@ -70,7 +70,7 @@ function collectEvents(
     if (Date.parse(s.endsAt) <= Date.parse(s.startsAt)) continue
 
     if (s.kind === 'program') {
-      const title = (s.programTitle ?? 'Program session').trim() || 'Program session'
+      const title = (s.programTitle ?? 'Program activity').trim() || 'Program activity'
       const room = (s.programRoom ?? '').trim()
       const note = (s.note ?? '').trim()
       const desc = [room ? `Room: ${room}` : null, note ? `Note: ${note}` : null, `Event: ${attendeeName}`]
@@ -162,6 +162,60 @@ export function buildDancecardSelectionsOnlyIcs(args: {
     selections: args.selections,
     reservations: emptyReservations,
   })
+}
+
+/** Published program slots for subscribe-style ICS (no PII; same visibility rules as public schedule API). */
+export type PublishedProgramIcsSlot = {
+  id: string
+  startsAt: string
+  endsAt: string
+  title: string
+  trackDisplay: string | null
+  room: string | null
+  description: string | null
+}
+
+export function buildDancecardPublishedProgramIcs(args: {
+  calendarName: string
+  eventLabel: string
+  slots: PublishedProgramIcsSlot[]
+}): string {
+  const stamp = formatUtcForIcs(new Date().toISOString()) ?? '19700101T000000Z'
+  const lines: string[] = [
+    'BEGIN:VCALENDAR',
+    'VERSION:2.0',
+    'PRODID:-//East Coast Kink Events//Dancecard//EN',
+    'CALSCALE:GREGORIAN',
+    'METHOD:PUBLISH',
+    `X-WR-CALNAME:${escapeIcsText(args.calendarName)}`,
+  ]
+
+  const sorted = [...args.slots].sort((a, b) => a.startsAt.localeCompare(b.startsAt))
+  for (const s of sorted) {
+    const ds = formatUtcForIcs(s.startsAt)
+    const de = formatUtcForIcs(s.endsAt)
+    if (!ds || !de) continue
+    if (Date.parse(s.endsAt) <= Date.parse(s.startsAt)) continue
+    const room = (s.room ?? '').trim()
+    const track = (s.trackDisplay ?? '').trim()
+    const descBits = [
+      track ? `Track: ${track}` : null,
+      room ? `Room: ${room}` : null,
+      s.description?.trim() ? s.description.trim().slice(0, 1500) : null,
+      `Event: ${args.eventLabel}`,
+    ].filter(Boolean)
+    lines.push('BEGIN:VEVENT')
+    lines.push(`UID:${s.id}@dancecard-program.eastcoastkinkevents`)
+    lines.push(`DTSTAMP:${stamp}`)
+    lines.push(`DTSTART:${ds}`)
+    lines.push(`DTEND:${de}`)
+    lines.push(`SUMMARY:${escapeIcsText((s.title || 'Session').slice(0, 200))}`)
+    if (descBits.length) lines.push(`DESCRIPTION:${escapeIcsText(descBits.join('\n').slice(0, 2000))}`)
+    lines.push('END:VEVENT')
+  }
+
+  lines.push('END:VCALENDAR')
+  return lines.join('\r\n')
 }
 
 export function downloadIcsFile(filename: string, icsBody: string) {

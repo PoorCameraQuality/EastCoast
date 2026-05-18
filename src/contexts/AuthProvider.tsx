@@ -35,18 +35,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     if (!supabase) return;
 
     try {
-      const { data: { session }, error } = await supabase.auth.getSession();
-      
+      const { data: { user: authUser }, error } = await supabase.auth.getUser();
+
       if (error) {
-        console.error('❌ AUTH PROVIDER: Session error:', error);
+        console.error('❌ AUTH PROVIDER: Auth error:', error);
         setUser(null);
         setIsAdmin(false);
         setLoading(false);
         return;
       }
 
-      if (!session?.user) {
-        console.log('❌ AUTH PROVIDER: No session found');
+      if (!authUser) {
         setUser(null);
         setIsAdmin(false);
         setLoading(false);
@@ -57,7 +56,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       const { data: profile, error: profileError } = await supabase
         .from('profiles')
         .select('id, role, name')
-        .eq('id', session.user.id)
+        .eq('id', authUser.id)
         .single();
 
       if (profileError) {
@@ -77,8 +76,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       }
 
       const userData: User = {
-        id: session.user.id,
-        email: session.user.email || '',
+        id: authUser.id,
+        email: authUser.email || '',
         role: profile.role || 'user',
         name: profile.name
       };

@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 import { codesEqual } from '@/lib/dancecard/accessCodes'
-import { getDancecardAdmin, loadEventBySlug, normalizeEventSlug } from '@/lib/dancecard/routeCommon'
+import { getDancecardAdmin, jsonFromRouteError, loadEventBySlug, normalizeEventSlug } from '@/lib/dancecard/routeCommon'
+import { rateLimiters, withRateLimit } from '@/lib/rateLimit'
 
 export const dynamic = 'force-dynamic'
 
@@ -14,6 +15,9 @@ function sleep(ms: number) {
 }
 
 export async function POST(request: NextRequest, context: { params: { eventSlug: string } }) {
+  const limited = await withRateLimit(request, rateLimiters.dancecardAuth)
+  if (limited) return limited
+
   try {
     const admin = getDancecardAdmin()
     const slug = normalizeEventSlug(context.params.eventSlug)
@@ -48,7 +52,6 @@ export async function POST(request: NextRequest, context: { params: { eventSlug:
 
     return NextResponse.json({ ok: true })
   } catch (e) {
-    const msg = e instanceof Error ? e.message : 'Internal error'
-    return NextResponse.json({ error: msg }, { status: 500 })
+    return jsonFromRouteError(e, 'verify-entry-code')
   }
 }

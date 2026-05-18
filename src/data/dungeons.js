@@ -1499,6 +1499,29 @@ export const dungeons = [
     }
   },
   {
+    "name": "InnThrall",
+    "slug": "innthrall-reading-pa",
+    "location": {
+      "city": "Reading area",
+      "state": "PA",
+      "region": "Berks County — ~1 hour from Philadelphia; within ~3 hours of NYC and ~2 hours of Baltimore",
+      "address": "Private property near Reading, PA — exact location provided upon reservation via innthrall.com"
+    },
+    "category": "Kinky Bed & Breakfast",
+    "excerpt": "InnThrall is a private, sex-positive kinky B&B near Reading, PA—two luxury suites, Libertine Hall playspace, monthly socials, seasonal events, and 5-hour day/evening rentals. Established 2015; East Coast home since 2020.",
+    "description": {
+      "long": "InnThrall — Your Secret Sanctuary (Kinky B&B)\n\nFounded in Seattle in 2015 and relocated to the East Coast in 2020, InnThrall is a private, sex-positive romantic getaway on 14 acres of mostly forested seclusion near Reading, Pennsylvania—about an hour from Philadelphia, roughly three hours from NYC, and under two hours from Baltimore.\n\nSuites & Playspace\n\nThe Inner Sanctum Suite is InnThrall’s flagship contactless stay with a fully equipped playspace and access to Libertine Hall—a private 800 sq ft luxury dungeon-themed space with high-quality gear for your stay. The Spellbound Suite offers a second contactless option on the property. Both suites emphasize privacy, hospitality, and safety standards that exceed typical industry norms.\n\nRentals & Packages\n\nDay or evening rentals are available for up to five hours: The Spellbound Suite from $400, The Inner Sanctum Suite from $600. The Daytime Delights Package runs Sundays after 5pm through Thursdays at midnight for shorter weekday escapes. Request reservations and current availability on innthrall.com.\n\nCommunity & Events\n\nInnThrall hosts socials every month plus events throughout the year. Newsletter subscribers often see offers and events first; join via the signup link on the official site. InnThrall also maintains a Telegram community for guests and friends of the inn.\n\nAmenities\n\nHeated indoor pool (especially inviting at night), contactless check-in options, and a discreet adults-only environment designed for uninterrupted exploration with your partner.\n\nInnKeeper Kathleen Ashford welcomes you to make memories unfit for social media. Confirm all pricing, policies, and reservation details on https://innthrall.com/ before booking."
+    },
+    "website": "https://innthrall.com/",
+    "logo": "/images/dungeons/logo-innthrall-reading-pa.jpg",
+    "images": [],
+    "seo": {
+      "title": "InnThrall - Reading PA Kinky Bed & Breakfast & Playspace | East Coast Kink Events",
+      "description": "InnThrall near Reading, PA: private kinky B&B with Inner Sanctum & Spellbound suites, Libertine Hall playspace, monthly socials, 5-hour rentals, and seasonal events. innthrall.com.",
+      "keywords": "InnThrall, Reading Pennsylvania, kinky bed and breakfast, Berks County B&B, Philadelphia area kink retreat, Libertine Hall, private playspace PA, kink rental suite, sex-positive getaway, innthrall.com"
+    }
+  },
+  {
     "name": "The Vulgarians",
     "slug": "the-vulgarians",
     "location": {

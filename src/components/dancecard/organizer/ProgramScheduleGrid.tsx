@@ -1,14 +1,17 @@
 'use client'
 
 import type { CSSProperties } from 'react'
-import { useCallback, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import {
   DndContext,
+  DragOverlay,
   PointerSensor,
+  closestCenter,
   useDraggable,
   useSensor,
   useSensors,
   type DragEndEvent,
+  type DragStartEvent,
 } from '@dnd-kit/core'
 import { CSS } from '@dnd-kit/utilities'
 import { formatInTimeZone } from 'date-fns-tz'
@@ -20,66 +23,193 @@ import {
   instantFromRow,
   rowIndexForInstant,
 } from '@/components/dancecard/organizer/organizerTimeline'
+import { SessionDetailDrawer } from '@/components/dancecard/organizer/SessionDetailDrawer'
+import {
+  OrganizerConfirmDialog,
+  useOrganizerToast,
+} from '@/components/dancecard/organizer/ui'
+import {
+  ProgramGridDroppableCell,
+  ProgramSlotDragOverlay,
+  ProgramUnassignedPool,
+} from '@/components/dancecard/organizer/program/programScheduleParts'
+import {
+  PROGRAM_UNASSIGNED_POOL_ID,
+  parseProgramCellDropId,
+  parseProgramSlotDragId,
+  programCellDropId,
+  programSlotDragId,
+} from '@/components/dancecard/organizer/program/programScheduleDndIds'
+import type { ProgramSlotRow } from '@/lib/dancecard/organizerProgramSlotDto'
+import { isProgramSlotScheduled, programSlotRoomLabel } from '@/lib/dancecard/organizerProgramSlotDto'
+import { slotCardVisual } from '@/lib/dancecard/trackDisplayColors'
+import { cn } from '@/lib/cn'
 
-export type ProgramSlotRow = {
-  id: string
-  startsAt: string
-  endsAt: string
-  title: string
-  track: string | null
-  room: string | null
-  description: string | null
-  sortOrder: number
-}
+export type { ProgramSlotRow } from '@/lib/dancecard/organizerProgramSlotDto'
 
 const ROW_H = 26
-const COL_MIN_W = 120
+const COL_MIN_W_DEFAULT = 120
+const COL_MIN_W_WIDE = 168
 const GRID_START_HOUR = 6
 const GRID_END_HOUR_EXCL = 25
 const SLOT_STEP = 30
+const DEFAULT_SLOT_DURATION_MS = 60 * 60 * 1000
+
+export type ProgramScheduleGridLabels = {
+  scheduledItem: string
+  scheduledItemPlural: string
+  addItemCta: string
+}
+
+const DEFAULT_GRID_LABELS: ProgramScheduleGridLabels = {
+  scheduledItem: 'activity',
+  scheduledItemPlural: 'activities',
+  addItemCta: 'Add activity',
+}
 
 function clamp(n: number, lo: number, hi: number) {
   return Math.max(lo, Math.min(hi, n))
+}
+
+function displayTrack(slot: ProgramSlotRow) {
+  return (slot.trackName ?? slot.track ?? '').trim()
+}
+
+function capitalizeWords(s: string) {
+  if (!s) return s
+  return s.charAt(0).toUpperCase() + s.slice(1)
 }
 
 function DraggableProgramSlot({
   slot,
   top,
   height,
+  rowH,
   tz,
   colWidth,
+  readOnly,
+  selected,
+  onToggleSelect,
+  onOpenDrawer,
+  hasConflict,
+  sonarPulse,
+  scheduledItemLabel,
 }: {
   slot: ProgramSlotRow
   top: number
   height: number
+  rowH: number
   tz: string
   colWidth: number
+  readOnly?: boolean
+  selected: boolean
+  onToggleSelect: (id: string) => void
+  onOpenDrawer: (slot: ProgramSlotRow) => void
+  hasConflict?: boolean
+  sonarPulse?: boolean
+  scheduledItemLabel: string
 }) {
-  const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({ id: slot.id })
+  const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
+    id: programSlotDragId(slot.id),
+    disabled: readOnly,
+  })
+  const tr = displayTrack(slot)
+  const visual = slotCardVisual({ trackColorHex: slot.trackColor, trackName: tr || 'track' })
+  const room = programSlotRoomLabel(slot)
+  const timeLabel =
+    slot.startsAt && slot.endsAt
+      ? `${formatTimeLabel(slot.startsAt, tz)} – ${formatTimeLabel(slot.endsAt, tz)}`
+      : 'Unscheduled'
+  const rowSpan = height / rowH
+  const compact = rowSpan < 2.5
+  const showRoom = !compact && Boolean(room)
+  const showTrack = rowSpan >= 3.5 && Boolean(tr)
+  const showStatus = rowSpan >= 4
+  const visibilityLabel =
+    slot.visibility === 'staff_only' ? 'staff only' : slot.visibility === 'secret' ? 'hidden' : slot.visibility
+
   const style: CSSProperties = {
     top,
-    height,
+    height: Math.max(height, rowH),
     width: colWidth - 6,
     left: 3,
     transform: transform ? CSS.Translate.toString(transform) : undefined,
-    opacity: isDragging ? 0.85 : 1,
-    zIndex: isDragging ? 20 : 2,
+    opacity: isDragging ? 0.7 : 1,
+    zIndex: isDragging ? 30 : 10,
+    touchAction: 'none',
+    ...visual.style,
   }
   return (
-    <button
-      type="button"
+    <div
       ref={setNodeRef}
       style={style}
-      className="absolute rounded-lg border border-cyan-400/40 bg-gradient-to-br from-cyan-950/90 to-slate-900/95 px-2 py-1 text-left text-[11px] font-medium text-cyan-50 shadow-md hover:border-cyan-300/60"
-      {...listeners}
-      {...attributes}
+      className={cn(
+        'absolute overflow-hidden rounded-lg px-1.5 py-1 text-left',
+        visual.className,
+        hasConflict && '!border-dc-warning ring-2 ring-dc-warning/50',
+        selected && !hasConflict && '!border-dc-accent ring-2 ring-dc-accent/40',
+        hasConflict && sonarPulse && 'dc-conflict-sonar',
+        !slot.isPublished && 'ring-1 ring-dashed ring-dc-warning/60',
+      )}
     >
-      <div className="line-clamp-2">{slot.title}</div>
-      <div className="mt-0.5 text-[10px] text-cyan-200/80">
-        {formatTimeLabel(slot.startsAt, tz)} – {formatTimeLabel(slot.endsAt, tz)}
+      <div className="flex items-start gap-1">
+        {!readOnly ? (
+          <input
+            type="checkbox"
+            className="mt-0.5 h-3.5 w-3.5 shrink-0 accent-dc-accent"
+            checked={selected}
+            aria-label={`Select ${slot.title}`}
+            onChange={() => onToggleSelect(slot.id)}
+            onPointerDown={(e) => e.stopPropagation()}
+          />
+        ) : null}
+        <div className="min-w-0 flex-1">
+          <button
+            type="button"
+            className={cn(
+              'block w-full cursor-grab truncate text-left font-semibold leading-tight text-dc-text active:cursor-grabbing',
+              compact ? 'text-[10px]' : 'text-xs',
+            )}
+            title={`${slot.title} — drag to move`}
+            {...listeners}
+            {...attributes}
+          >
+            {slot.title}
+          </button>
+          <p className="mt-0.5 truncate text-dc-micro leading-tight text-dc-muted" title={timeLabel}>
+            {timeLabel}
+          </p>
+          {showRoom ? (
+            <p className="truncate text-dc-micro leading-tight text-dc-subtle" title={room}>
+              {room}
+            </p>
+          ) : null}
+          {showTrack ? (
+            <p className="truncate text-[0.625rem] leading-tight text-dc-subtle" title={tr}>
+              {tr}
+            </p>
+          ) : null}
+          {showStatus && (!slot.isPublished || slot.visibility !== 'public') ? (
+            <div className="mt-0.5 flex flex-wrap gap-1">
+              {!slot.isPublished ? <span className="text-[9px] font-medium text-dc-warning">draft</span> : null}
+              {slot.visibility !== 'public' ? (
+                <span className="text-[9px] text-dc-muted">{visibilityLabel}</span>
+              ) : null}
+            </div>
+          ) : null}
+        </div>
+        <button
+          type="button"
+          className="shrink-0 rounded p-0.5 text-dc-micro leading-none text-dc-muted hover:bg-dc-surface-muted hover:text-dc-text"
+          aria-label={`Open ${slot.title}`}
+          title={`Open ${scheduledItemLabel} details`}
+          onClick={() => onOpenDrawer(slot)}
+          onPointerDown={(e) => e.stopPropagation()}
+        >
+          ...
+        </button>
       </div>
-      {slot.room ? <div className="truncate text-[10px] text-slate-300">{slot.room}</div> : null}
-    </button>
+    </div>
   )
 }
 
@@ -90,6 +220,16 @@ export function ProgramScheduleGrid({
   windowEndsAt,
   slots,
   onRefresh,
+  readOnly = false,
+  initialSlotId = null,
+  onSlotLinkChange,
+  conflictSlotIds = [],
+  conflictSonarActive = false,
+  onConflictsRefresh,
+  drawerInitialTab,
+  onDrawerTabConsumed,
+  wideCanvas = false,
+  gridLabels,
 }: {
   eventSlug: string
   timezone: string
@@ -97,14 +237,132 @@ export function ProgramScheduleGrid({
   windowEndsAt: string
   slots: ProgramSlotRow[]
   onRefresh: () => Promise<void>
+  readOnly?: boolean
+  initialSlotId?: string | null
+  onSlotLinkChange?: (slotId: string) => void
+  conflictSlotIds?: string[]
+  conflictSonarActive?: boolean
+  onConflictsRefresh?: () => void | Promise<void>
+  drawerInitialTab?: 'overview' | 'edit' | 'location' | 'people' | 'registrants' | 'privacy' | 'notes'
+  onDrawerTabConsumed?: () => void
+  wideCanvas?: boolean
+  gridLabels?: ProgramScheduleGridLabels
 }) {
+  const scheduleNouns = gridLabels ?? DEFAULT_GRID_LABELS
+  const toast = useOrganizerToast()
+  const colMinW = wideCanvas ? COL_MIN_W_WIDE : COL_MIN_W_DEFAULT
+  const [confirmOpen, setConfirmOpen] = useState(false)
+  const [confirmTitle, setConfirmTitle] = useState('')
+  const [confirmMessage, setConfirmMessage] = useState('')
+  const [confirmDestructive, setConfirmDestructive] = useState(false)
+  const confirmActionRef = useRef<(() => Promise<void>) | null>(null)
+  const [search, setSearch] = useState('')
+  const [filterTrack, setFilterTrack] = useState('')
+  const [filterTag, setFilterTag] = useState('')
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(() => new Set())
+  const [drawerSlot, setDrawerSlot] = useState<ProgramSlotRow | null>(null)
+  const [sessionTags, setSessionTags] = useState<{ id: string; name: string }[]>([])
+  const [bulkTagId, setBulkTagId] = useState('')
+  const [zoom, setZoom] = useState(1)
+  const [activeDrawerTab, setActiveDrawerTab] = useState<
+    'overview' | 'edit' | 'location' | 'people' | 'registrants' | 'privacy' | 'notes' | undefined
+  >()
+  const conflictSet = useMemo(() => new Set(conflictSlotIds), [conflictSlotIds])
+  const rowH = ROW_H * zoom
+
+  useEffect(() => {
+    if (!initialSlotId || !slots.length) return
+    const match = slots.find((s) => s.id === initialSlotId)
+    if (match) setDrawerSlot(match)
+  }, [initialSlotId, slots])
+
+  useEffect(() => {
+    const drawerId = drawerSlot?.id
+    if (!drawerId) return
+    const fresh = slots.find((s) => s.id === drawerId)
+    if (fresh) setDrawerSlot(fresh)
+  }, [slots, drawerSlot?.id])
+
+  useEffect(() => {
+    if (drawerInitialTab) setActiveDrawerTab(drawerInitialTab)
+  }, [drawerInitialTab])
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === '?' && !e.metaKey && !e.ctrlKey && !e.altKey) {
+        const t = e.target as HTMLElement | null
+        if (t?.tagName === 'INPUT' || t?.tagName === 'TEXTAREA' || t?.isContentEditable) return
+        window.dispatchEvent(new CustomEvent('dc-organizer-show-shortcuts'))
+      }
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [])
+
+  function askConfirm(title: string, message: string, action: () => Promise<void>, destructive = false) {
+    setConfirmTitle(title)
+    setConfirmMessage(message)
+    setConfirmDestructive(destructive)
+    confirmActionRef.current = action
+    setConfirmOpen(true)
+  }
+
+  useEffect(() => {
+    let cancelled = false
+    ;(async () => {
+      try {
+        const res = await organizerDancecardFetch<{ tags: { id: string; name: string; scope: string }[] }>(
+          eventSlug,
+          '/tags',
+        )
+        if (cancelled) return
+        setSessionTags((res.tags ?? []).filter((t) => t.scope === 'session'))
+      } catch {
+        if (!cancelled) setSessionTags([])
+      }
+    })()
+    return () => {
+      cancelled = true
+    }
+  }, [eventSlug])
+
+  const trackOptions = useMemo(() => {
+    const set = new Set<string>()
+    for (const s of slots) {
+      const d = displayTrack(s)
+      if (d) set.add(d)
+    }
+    return Array.from(set).sort()
+  }, [slots])
+
+  const tagNameOptions = useMemo(() => {
+    const set = new Set<string>()
+    for (const s of slots) {
+      for (const n of s.tagNames) set.add(n)
+    }
+    return Array.from(set).sort()
+  }, [slots])
+
+  const filteredSlots = useMemo(() => {
+    const q = search.trim().toLowerCase()
+    return slots.filter((s) => {
+      if (filterTrack && displayTrack(s) !== filterTrack) return false
+      if (filterTag && !s.tagNames.includes(filterTag)) return false
+      if (q) {
+        const blob = `${s.title} ${s.description ?? ''} ${programSlotRoomLabel(s)} ${displayTrack(s)}`.toLowerCase()
+        if (!blob.includes(q)) return false
+      }
+      return true
+    })
+  }, [slots, search, filterTrack, filterTag])
+
   const dayKeys = useMemo(
     () => dayKeysInWindow(windowStartsAt, windowEndsAt, timezone),
-    [windowStartsAt, windowEndsAt, timezone]
+    [windowStartsAt, windowEndsAt, timezone],
   )
   const rowsPerDay = useMemo(
     () => Math.max(1, Math.ceil(((GRID_END_HOUR_EXCL - GRID_START_HOUR) * 60) / SLOT_STEP)),
-    []
+    [],
   )
   const rowLabels = useMemo(() => {
     const labels: string[] = []
@@ -112,10 +370,7 @@ export function ProgramScheduleGrid({
       const mins = GRID_START_HOUR * 60 + r * SLOT_STEP
       const h = Math.floor(mins / 60)
       const m = mins % 60
-      const wall = new Date(2000, 0, 1, h, m, 0, 0)
-      labels.push(
-        new Intl.DateTimeFormat('en-US', { hour: 'numeric', minute: '2-digit' }).format(wall)
-      )
+      labels.push(`${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`)
     }
     return labels
   }, [rowsPerDay])
@@ -130,29 +385,81 @@ export function ProgramScheduleGrid({
   const [formDesc, setFormDesc] = useState('')
   const [busy, setBusy] = useState(false)
   const [err, setErr] = useState<string | null>(null)
+  const [dragActiveSlot, setDragActiveSlot] = useState<ProgramSlotRow | null>(null)
+  const [draftModal, setDraftModal] = useState(false)
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: { distance: 6 },
-    })
+    }),
+  )
+
+  const scheduledSlots = useMemo(
+    () => filteredSlots.filter((s) => isProgramSlotScheduled(s)),
+    [filteredSlots],
+  )
+  const unassignedSlots = useMemo(
+    () => filteredSlots.filter((s) => !isProgramSlotScheduled(s)),
+    [filteredSlots],
   )
 
   const layoutForSlot = useCallback(
     (slot: ProgramSlotRow) => {
+      if (!slot.startsAt || !slot.endsAt) return null
       const startDay = formatInTimeZone(new Date(slot.startsAt), timezone, 'yyyy-MM-dd')
       const col = dayKeys.indexOf(startDay)
       if (col < 0) return null
       const r0 = clamp(rowIndexForInstant(slot.startsAt, startDay, timezone, GRID_START_HOUR, SLOT_STEP), 0, rowsPerDay - 1)
       const r1Raw = rowIndexForInstant(slot.endsAt, startDay, timezone, GRID_START_HOUR, SLOT_STEP)
       const r1 = clamp(Math.max(r0 + 1, r1Raw), r0 + 1, rowsPerDay)
-      const top = r0 * ROW_H
-      const bottom = r1 * ROW_H
-      return { col, top, height: Math.max(ROW_H, bottom - top) }
+      const top = r0 * rowH
+      const bottom = r1 * rowH
+      return { col, top, height: Math.max(rowH, bottom - top) }
     },
-    [dayKeys, rowsPerDay, timezone]
+    [dayKeys, rowsPerDay, timezone, rowH],
   )
 
+  const toggleSelect = (id: string) => {
+    setSelectedIds((prev) => {
+      const n = new Set(prev)
+      if (n.has(id)) n.delete(id)
+      else n.add(id)
+      return n
+    })
+  }
+
+  const clearGridSelection = () => setSel(null)
+
+  const selectedList = useMemo(() => filteredSlots.filter((s) => selectedIds.has(s.id)), [filteredSlots, selectedIds])
+
+  const runBulk = async (bodyObj: Record<string, unknown>) => {
+    if (readOnly) return
+    const ids = (bodyObj.ids as string[]) ?? []
+    if (!ids.length) {
+      setErr(`Select at least one ${scheduleNouns.scheduledItem}.`)
+      return
+    }
+    setBusy(true)
+    setErr(null)
+    try {
+      await organizerDancecardFetch(eventSlug, '/program-slots/bulk', {
+        method: 'PATCH',
+        body: JSON.stringify(bodyObj),
+      })
+      setSelectedIds(new Set())
+      await onRefresh()
+      if (bodyObj.op === 'publish') {
+        window.dispatchEvent(new CustomEvent('dc-publish-drumroll', { detail: { eventSlug } }))
+      }
+    } catch (e) {
+      setErr(e instanceof Error ? e.message : 'Bulk action failed')
+    } finally {
+      setBusy(false)
+    }
+  }
+
   const onPointerDownCell = (day: string, row: number) => {
+    if (readOnly) return
     anchor.current = { day, row }
     setDragging(true)
     setSel({ day, r0: row, r1: row })
@@ -182,6 +489,7 @@ export function ProgramScheduleGrid({
   }
 
   const saveNewSlot = async () => {
+    if (readOnly) return
     if (!modal) return
     const title = formTitle.trim()
     if (!title) {
@@ -213,49 +521,418 @@ export function ProgramScheduleGrid({
     }
   }
 
-  const handleDragEnd = async (event: DragEndEvent) => {
-    const id = String(event.active.id)
-    const slot = slots.find((s) => s.id === id)
-    if (!slot || !event.delta) return
-    const rowDelta = Math.round(event.delta.y / ROW_H)
-    if (rowDelta === 0) return
-    const startMs = new Date(slot.startsAt).getTime() + rowDelta * SLOT_STEP * 60 * 1000
-    const endMs = new Date(slot.endsAt).getTime() + rowDelta * SLOT_STEP * 60 * 1000
+  const patchSlotTimes = async (
+    slotId: string,
+    startsAt: string | null,
+    endsAt: string | null,
+  ) => {
+    await organizerDancecardFetch(eventSlug, `/program-slots/${slotId}`, {
+      method: 'PATCH',
+      body: JSON.stringify({ startsAt, endsAt }),
+    })
+    await onRefresh()
+  }
+
+  const scheduleSlotAtCell = async (slot: ProgramSlotRow, day: string, row: number) => {
+    const durationMs =
+      slot.startsAt && slot.endsAt
+        ? Math.max(SLOT_STEP * 60 * 1000, new Date(slot.endsAt).getTime() - new Date(slot.startsAt).getTime())
+        : DEFAULT_SLOT_DURATION_MS
+    const start = instantFromRow(day, row, timezone, GRID_START_HOUR, SLOT_STEP)
+    const end = new Date(start.getTime() + durationMs)
     const ws = new Date(windowStartsAt).getTime()
     const we = new Date(windowEndsAt).getTime()
-    const clampedStart = clamp(startMs, ws, we - SLOT_STEP * 60 * 1000)
-    const clampedEnd = clamp(endMs, clampedStart + SLOT_STEP * 60 * 1000, we)
+    if (start.getTime() < ws || end.getTime() > we) {
+      setErr('That time is outside the event window.')
+      return
+    }
+    setErr(null)
+    await patchSlotTimes(slot.id, start.toISOString(), end.toISOString())
+  }
+
+  const handleDragStart = (event: DragStartEvent) => {
+    const slotId = parseProgramSlotDragId(String(event.active.id))
+    if (!slotId) return
+    const slot = slots.find((s) => s.id === slotId) ?? null
+    setDragActiveSlot(slot)
+  }
+
+  const handleDragEnd = async (event: DragEndEvent) => {
+    setDragActiveSlot(null)
+    if (readOnly) return
+    const slotId = parseProgramSlotDragId(String(event.active.id))
+    if (!slotId) return
+    const slot = slots.find((s) => s.id === slotId)
+    if (!slot) return
+
+    const overId = event.over?.id ? String(event.over.id) : null
+    if (overId === PROGRAM_UNASSIGNED_POOL_ID) {
+      if (!isProgramSlotScheduled(slot)) return
+      setErr(null)
+      try {
+        await patchSlotTimes(slotId, null, null)
+      } catch (e) {
+        setErr(e instanceof Error ? e.message : 'Could not unschedule')
+      }
+      return
+    }
+
+    const cell = overId ? parseProgramCellDropId(overId) : null
+    if (cell) {
+      try {
+        await scheduleSlotAtCell(slot, cell.day, cell.row)
+      } catch (e) {
+        setErr(e instanceof Error ? e.message : `Could not schedule ${scheduleNouns.scheduledItem}`)
+      }
+      return
+    }
+
+    if (!isProgramSlotScheduled(slot) || !event.delta) return
+    const rowDelta = Math.round(event.delta.y / rowH)
+    const dayDelta = Math.round(event.delta.x / colMinW)
+    if (rowDelta === 0 && dayDelta === 0) return
+    const originalStartMs = new Date(slot.startsAt!).getTime()
+    const originalEndMs = new Date(slot.endsAt!).getTime()
+    const durationMs = Math.max(SLOT_STEP * 60 * 1000, originalEndMs - originalStartMs)
+    const startMs = originalStartMs + rowDelta * SLOT_STEP * 60 * 1000 + dayDelta * 24 * 60 * 60 * 1000
+    const endMs = startMs + durationMs
+    const ws = new Date(windowStartsAt).getTime()
+    const we = new Date(windowEndsAt).getTime()
+    if (startMs < ws || endMs > we) {
+      setErr('Move stays inside the event window; that drop would land outside it.')
+      return
+    }
+    setErr(null)
     try {
-      await organizerDancecardFetch(eventSlug, `/program-slots/${id}`, {
-        method: 'PATCH',
+      await patchSlotTimes(slotId, new Date(startMs).toISOString(), new Date(endMs).toISOString())
+    } catch (e) {
+      setErr(
+        e instanceof Error
+          ? `Could not move ${scheduleNouns.scheduledItem}: ${e.message}`
+          : `Could not move ${scheduleNouns.scheduledItem}`,
+      )
+    }
+  }
+
+  const saveDraftSlot = async () => {
+    if (readOnly) return
+    const title = formTitle.trim()
+    if (!title) {
+      setErr('Title is required')
+      return
+    }
+    setBusy(true)
+    setErr(null)
+    try {
+      await organizerDancecardFetch(eventSlug, '/program-slots', {
+        method: 'POST',
         body: JSON.stringify({
-          startsAt: new Date(clampedStart).toISOString(),
-          endsAt: new Date(clampedEnd).toISOString(),
+          title,
+          room: formRoom.trim() || null,
+          track: formTrack.trim() || null,
+          description: formDesc.trim() || null,
         }),
       })
+      setDraftModal(false)
+      setFormTitle('')
+      setFormRoom('')
+      setFormTrack('')
+      setFormDesc('')
       await onRefresh()
-    } catch {
-      setErr('Could not move session')
+    } catch (e) {
+      setErr(e instanceof Error ? e.message : 'Save failed')
+    } finally {
+      setBusy(false)
     }
   }
 
   const deleteSlot = async (id: string) => {
-    if (!window.confirm('Delete this program slot? Attendee picks for this slot will be removed.')) return
-    try {
-      await organizerDancecardFetch(eventSlug, `/program-slots/${id}`, { method: 'DELETE' })
-      await onRefresh()
-    } catch {
-      setErr('Delete failed')
-    }
+    if (readOnly) return
+    askConfirm(
+      `Delete ${scheduleNouns.scheduledItem}?`,
+      `Attendee picks for this ${scheduleNouns.scheduledItem} will be removed.`,
+      async () => {
+        await organizerDancecardFetch(eventSlug, `/program-slots/${id}`, { method: 'DELETE' })
+        await onRefresh()
+      },
+      true,
+    )
   }
 
   return (
     <div className="space-y-3">
+      <OrganizerConfirmDialog
+        open={confirmOpen}
+        title={confirmTitle}
+        message={confirmMessage}
+        destructive={confirmDestructive}
+        confirmLabel={confirmDestructive ? 'Delete' : 'Confirm'}
+        onCancel={() => setConfirmOpen(false)}
+        onConfirm={() => {
+          setConfirmOpen(false)
+          void confirmActionRef.current?.()
+        }}
+      />
       {err ? <p className="text-sm text-rose-300">{err}</p> : null}
-      <DndContext sensors={sensors} onDragEnd={(e) => void handleDragEnd(e)}>
-        <div className="overflow-x-auto rounded-xl border border-white/10 bg-black/30 p-2">
+
+      <div className="flex flex-wrap items-end gap-2 rounded-xl border border-white/10 bg-black/25 p-3">
+        <label className="text-xs text-slate-400">
+          Search
+          <input
+            className="mt-1 block min-w-[140px] rounded-lg border border-white/10 bg-black/40 px-2 py-1 text-sm text-white"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Title, room, track…"
+          />
+        </label>
+        <label className="text-xs text-slate-400">
+          Track
+          <select
+            className="mt-1 block rounded-lg border border-white/10 bg-black/40 px-2 py-1 text-sm text-white"
+            value={filterTrack}
+            onChange={(e) => setFilterTrack(e.target.value)}
+          >
+            <option value="">All</option>
+            {trackOptions.map((t) => (
+              <option key={t} value={t}>
+                {t}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label className="text-xs text-slate-400">
+          Tag
+          <select
+            className="mt-1 block rounded-lg border border-white/10 bg-black/40 px-2 py-1 text-sm text-white"
+            value={filterTag}
+            onChange={(e) => setFilterTag(e.target.value)}
+          >
+            <option value="">All</option>
+            {tagNameOptions.map((t) => (
+              <option key={t} value={t}>
+                {t}
+              </option>
+            ))}
+          </select>
+        </label>
+        <div className="flex items-end gap-1">
+          <button type="button" className="rounded-lg border border-dc-border px-2 py-1 text-dc-micro" onClick={() => setZoom((z) => Math.max(0.75, z - 0.25))}>−</button>
+          <button type="button" className="rounded-lg border border-dc-border px-2 py-1 text-dc-micro" onClick={() => setZoom((z) => Math.min(2, z + 0.25))}>+</button>
+          {onConflictsRefresh ? (
+            <button type="button" className="rounded-lg border border-dc-border px-2 py-1 text-dc-micro" onClick={() => onConflictsRefresh()}>Scan</button>
+          ) : null}
+        </div>
+      </div>
+
+      {!readOnly && selectedList.length > 0 ? (
+        <div className="flex flex-wrap items-center gap-2 rounded-xl border border-dc-accent-border bg-dc-accent-muted px-3 py-2 text-sm text-dc-text">
+          <span className="font-medium">{selectedList.length} selected</span>
+          <button
+            type="button"
+            disabled={busy}
+            className="rounded-full border border-white/20 px-3 py-1 text-xs hover:bg-white/10 disabled:opacity-40"
+            onClick={() => void runBulk({ op: 'publish', ids: selectedList.map((s) => s.id) })}
+          >
+            Publish
+          </button>
+          <button
+            type="button"
+            disabled={busy}
+            className="rounded-full border border-white/20 px-3 py-1 text-xs hover:bg-white/10 disabled:opacity-40"
+            onClick={() => void runBulk({ op: 'unpublish', ids: selectedList.map((s) => s.id) })}
+          >
+            Unpublish
+          </button>
+          <button
+            type="button"
+            disabled={busy}
+            className="rounded-full border border-white/20 px-3 py-1 text-xs hover:bg-white/10 disabled:opacity-40"
+            onClick={() =>
+              void runBulk({
+                op: 'setVisibility',
+                ids: selectedList.map((s) => s.id),
+                visibility: 'public',
+              })
+            }
+          >
+            Vis: public
+          </button>
+          <button
+            type="button"
+            disabled={busy}
+            className="rounded-full border border-white/20 px-3 py-1 text-xs hover:bg-white/10 disabled:opacity-40"
+            onClick={() =>
+              void runBulk({
+                op: 'setVisibility',
+                ids: selectedList.map((s) => s.id),
+                visibility: 'staff_only',
+              })
+            }
+          >
+            Vis: staff
+          </button>
+          <button
+            type="button"
+            disabled={busy}
+            className="rounded-full border border-white/20 px-3 py-1 text-xs hover:bg-white/10 disabled:opacity-40"
+            onClick={() =>
+              void runBulk({
+                op: 'setVisibility',
+                ids: selectedList.map((s) => s.id),
+                visibility: 'secret',
+              })
+            }
+          >
+            Vis: secret
+          </button>
+          <button
+            type="button"
+            disabled={busy}
+            className="rounded-full border border-white/20 px-3 py-1 text-xs hover:bg-white/10 disabled:opacity-40"
+            onClick={() => void runBulk({ op: 'freeze', ids: selectedList.map((s) => s.id) })}
+          >
+            Freeze
+          </button>
+          <button
+            type="button"
+            disabled={busy}
+            className="rounded-full border border-white/20 px-3 py-1 text-xs hover:bg-white/10 disabled:opacity-40"
+            onClick={() => void runBulk({ op: 'unfreeze', ids: selectedList.map((s) => s.id) })}
+          >
+            Unfreeze
+          </button>
+          <button
+            type="button"
+            disabled={busy}
+            className="rounded-full border border-white/20 px-3 py-1 text-xs hover:bg-white/10 disabled:opacity-40"
+            onClick={() => void runBulk({ op: 'duplicate', ids: selectedList.map((s) => s.id) })}
+          >
+            Duplicate
+          </button>
+          <button
+            type="button"
+            disabled={busy}
+            className="rounded-full border border-rose-400/30 px-3 py-1 text-xs text-rose-100 hover:bg-rose-500/10 disabled:opacity-40"
+            onClick={() => {
+              const ids = selectedList.map((s) => s.id)
+              const snapshot = selectedList.map((s) => ({ ...s }))
+              askConfirm(
+                `Delete ${ids.length} ${ids.length === 1 ? scheduleNouns.scheduledItem : scheduleNouns.scheduledItemPlural}?`,
+                'This cannot be undone from the grid. You may undo immediately after delete.',
+                async () => {
+                  await runBulk({ op: 'delete', ids })
+                  toast.push(`Deleted ${ids.length} ${ids.length === 1 ? scheduleNouns.scheduledItem : scheduleNouns.scheduledItemPlural}.`, {
+                    undoLabel: 'Undo',
+                    onUndo: () => {
+                      void (async () => {
+                        for (const s of snapshot) {
+                          await organizerDancecardFetch(eventSlug, '/program-slots', {
+                            method: 'POST',
+                            body: JSON.stringify({
+                              startsAt: s.startsAt,
+                              endsAt: s.endsAt,
+                              title: s.title,
+                              track: s.track,
+                              trackId: s.trackId,
+                              room: s.room,
+                              locationId: s.locationId,
+                              description: s.description,
+                              isPublished: s.isPublished,
+                              visibility: s.visibility,
+                              isFrozen: s.isFrozen,
+                            }),
+                          })
+                        }
+                        await onRefresh()
+                      })()
+                    },
+                  })
+                },
+                true,
+              )
+            }}
+          >
+            Delete
+          </button>
+          <div className="flex items-center gap-1">
+            <select
+              className="rounded-lg border border-white/10 bg-black/40 px-2 py-1 text-xs text-white"
+              value={bulkTagId}
+              onChange={(e) => setBulkTagId(e.target.value)}
+            >
+              <option value="">Tag…</option>
+              {sessionTags.map((t) => (
+                <option key={t.id} value={t.id}>
+                  {t.name}
+                </option>
+              ))}
+            </select>
+            <button
+              type="button"
+              disabled={busy || !bulkTagId}
+              className="rounded-full border border-white/20 px-2 py-1 text-xs hover:bg-white/10 disabled:opacity-40"
+              onClick={() => {
+                if (!bulkTagId) return
+                void runBulk({
+                  op: 'tagAdd',
+                  ids: selectedList.map((s) => s.id),
+                  tagIds: [bulkTagId],
+                })
+              }}
+            >
+              Add tag
+            </button>
+            <button
+              type="button"
+              disabled={busy || !bulkTagId}
+              className="rounded-full border border-white/20 px-2 py-1 text-xs hover:bg-white/10 disabled:opacity-40"
+              onClick={() => {
+                if (!bulkTagId) return
+                void runBulk({
+                  op: 'tagRemove',
+                  ids: selectedList.map((s) => s.id),
+                  tagIds: [bulkTagId],
+                })
+              }}
+            >
+              Remove tag
+            </button>
+          </div>
+          <button type="button" className="ml-auto text-xs text-slate-400 underline" onClick={() => setSelectedIds(new Set())}>
+            Clear selection
+          </button>
+        </div>
+      ) : null}
+
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCenter}
+        onDragStart={handleDragStart}
+        onDragEnd={(e) => void handleDragEnd(e)}
+      >
+        <div className="flex flex-col gap-3 lg:flex-row lg:items-start">
+          <ProgramUnassignedPool
+            readOnly={readOnly}
+            slots={unassignedSlots}
+            scheduledItemLabel={scheduleNouns.scheduledItem}
+            scheduledItemPlural={scheduleNouns.scheduledItemPlural}
+            onOpenDrawer={setDrawerSlot}
+            onCreateDraft={() => {
+              setFormTitle('')
+              setFormRoom('')
+              setFormTrack('')
+              setFormDesc('')
+              setErr(null)
+              setDraftModal(true)
+            }}
+            busy={busy}
+          />
           <div
-            className="inline-flex min-w-full gap-0"
+            data-dc-program-grid
+            className="min-w-0 flex-1 overflow-x-auto rounded-xl border border-dc-border bg-dc-surface-muted/40 p-2"
+          >
+          <div
+            className={cn('gap-0', wideCanvas ? 'flex w-full min-w-full' : 'inline-flex min-w-full')}
             onPointerLeave={() => {
               if (dragging) endSelect()
             }}
@@ -268,7 +945,7 @@ export function ProgramScheduleGrid({
               style={{ width: 52, paddingTop: 22 }}
             >
               {rowLabels.map((lb, i) => (
-                <div key={lb + i} style={{ height: ROW_H }} className="pr-1 leading-none">
+                <div key={lb + i} style={{ height: rowH }} className="pr-1 leading-none">
                   {lb}
                 </div>
               ))}
@@ -276,36 +953,44 @@ export function ProgramScheduleGrid({
             {dayKeys.map((day) => (
               <div
                 key={day}
-                className="relative shrink-0 border-r border-white/10"
-                style={{ width: COL_MIN_W, minHeight: rowsPerDay * ROW_H + 22 }}
+                className={cn('relative border-r border-dc-border', wideCanvas ? 'min-w-0 flex-1' : 'shrink-0')}
+                style={
+                  wideCanvas
+                    ? { minWidth: colMinW, flex: '1 1 0%', minHeight: rowsPerDay * rowH + 22 }
+                    : { width: colMinW, minHeight: rowsPerDay * rowH + 22 }
+                }
               >
-                <div className="sticky top-0 z-10 border-b border-white/10 bg-slate-900/95 px-1 py-1 text-center text-[11px] font-semibold text-slate-200">
+                <div className="sticky top-0 z-10 border-b border-dc-border-subtle bg-dc-elevated/95 px-1 py-1.5 text-center text-[11px] font-semibold text-dc-text">
                   {formatDayHeader(day, timezone)}
                 </div>
-                <div className="relative" style={{ height: rowsPerDay * ROW_H }}>
+                <div className="relative" style={{ height: rowsPerDay * rowH }}>
                   {Array.from({ length: rowsPerDay }).map((_, row) => (
-                    <div
+                    <ProgramGridDroppableCell
                       key={row}
-                      role="presentation"
-                      className="absolute left-0 right-0 border-b border-slate-800/80 bg-slate-950/40 hover:bg-slate-800/30"
-                      style={{ top: row * ROW_H, height: ROW_H }}
+                      id={programCellDropId(day, row)}
+                      className={cn(
+                        'absolute left-0 right-0 border-b border-dc-border-subtle/60',
+                        row % 2 === 0 ? 'bg-dc-surface/30' : 'bg-dc-surface-muted/20',
+                        'hover:bg-dc-accent-muted/25',
+                      )}
+                      style={{ top: row * rowH, height: rowH }}
                       onPointerDown={() => onPointerDownCell(day, row)}
                       onPointerEnter={() => onPointerEnterCell(day, row)}
                     />
                   ))}
                   {sel && sel.day === day
                     ? (() => {
-                        const top = Math.min(sel.r0, sel.r1) * ROW_H
-                        const h = (Math.abs(sel.r1 - sel.r0) + 1) * ROW_H
+                        const top = Math.min(sel.r0, sel.r1) * rowH
+                        const h = (Math.abs(sel.r1 - sel.r0) + 1) * rowH
                         return (
                           <div
-                            className="pointer-events-none absolute left-1 right-1 rounded-md border border-cyan-400/50 bg-cyan-500/20"
+                            className="pointer-events-none absolute left-1 right-1 rounded-md border border-dc-accent-border bg-dc-accent-muted"
                             style={{ top, height: h, zIndex: 1 }}
                           />
                         )
                       })()
                     : null}
-                  {slots.map((slot) => {
+                  {scheduledSlots.map((slot) => {
                     const L = layoutForSlot(slot)
                     if (!L || L.col !== dayKeys.indexOf(day)) return null
                     return (
@@ -314,8 +999,16 @@ export function ProgramScheduleGrid({
                         slot={slot}
                         top={L.top}
                         height={L.height}
+                        rowH={rowH}
                         tz={timezone}
-                        colWidth={COL_MIN_W}
+                        colWidth={colMinW}
+                        readOnly={readOnly}
+                        selected={selectedIds.has(slot.id)}
+                        onToggleSelect={toggleSelect}
+                        onOpenDrawer={setDrawerSlot}
+                        hasConflict={conflictSet.has(slot.id)}
+                        sonarPulse={conflictSonarActive}
+                        scheduledItemLabel={scheduleNouns.scheduledItem}
                       />
                     )
                   })}
@@ -323,22 +1016,26 @@ export function ProgramScheduleGrid({
               </div>
             ))}
           </div>
+          </div>
         </div>
+        <DragOverlay dropAnimation={null}>
+          {dragActiveSlot ? <ProgramSlotDragOverlay slot={dragActiveSlot} tz={timezone} /> : null}
+        </DragOverlay>
       </DndContext>
 
-      {sel ? (
+      {sel && !readOnly ? (
         <div className="flex flex-wrap gap-2">
           <button
             type="button"
-            className="rounded-full bg-cyan-500/20 px-4 py-2 text-sm font-medium text-cyan-100 ring-1 ring-cyan-400/40 hover:bg-cyan-500/30"
+            className="rounded-full bg-dc-accent-muted px-4 py-2 text-sm font-medium text-dc-text ring-1 ring-dc-accent-border hover:bg-dc-accent/30"
             onClick={() => openCreateModal()}
           >
-            Create session in selection
+            {scheduleNouns.addItemCta} in selection
           </button>
           <button
             type="button"
             className="rounded-full border border-white/15 px-4 py-2 text-sm text-slate-300 hover:bg-white/5"
-            onClick={() => setSel(null)}
+            onClick={() => clearGridSelection()}
           >
             Clear selection
           </button>
@@ -348,17 +1045,17 @@ export function ProgramScheduleGrid({
       {modal ? (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4">
           <div className="w-full max-w-md rounded-2xl border border-white/10 bg-slate-950 p-5 shadow-2xl">
-            <h3 className="font-serif text-xl text-white">New program session</h3>
+            <h3 className="font-serif text-xl text-dc-text">New {scheduleNouns.scheduledItem}</h3>
             <p className="mt-1 text-xs text-slate-400">
               {formatDayHeader(modal.day, timezone)} ·{' '}
               {formatTimeLabel(
                 instantFromRow(modal.day, modal.startRow, timezone, GRID_START_HOUR, SLOT_STEP).toISOString(),
-                timezone
+                timezone,
               )}{' '}
               –{' '}
               {formatTimeLabel(
                 instantFromRow(modal.day, modal.endRow + 1, timezone, GRID_START_HOUR, SLOT_STEP).toISOString(),
-                timezone
+                timezone,
               )}
             </p>
             <div className="mt-4 space-y-3">
@@ -407,7 +1104,7 @@ export function ProgramScheduleGrid({
               <button
                 type="button"
                 disabled={busy}
-                className="rounded-full bg-cyan-600 px-4 py-2 text-sm font-semibold text-white hover:bg-cyan-500 disabled:opacity-50"
+                className="rounded-full bg-dc-accent px-4 py-2 text-sm font-semibold text-dc-accent-foreground hover:bg-dc-accent-hover disabled:opacity-50"
                 onClick={() => void saveNewSlot()}
               >
                 {busy ? 'Saving…' : 'Save'}
@@ -417,27 +1114,125 @@ export function ProgramScheduleGrid({
         </div>
       ) : null}
 
-      <div className="rounded-xl border border-white/10 bg-black/25 p-3">
-        <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">Edit existing</p>
-        <ul className="mt-2 max-h-48 space-y-2 overflow-y-auto text-sm text-slate-200">
-          {slots.map((s) => (
-            <li key={s.id} className="flex items-center justify-between gap-2 border-b border-white/5 py-1">
-              <span className="min-w-0 truncate">
-                {formatTimeLabel(s.startsAt, timezone)} — {s.title}
-              </span>
+      {draftModal ? (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4">
+          <div className="w-full max-w-md rounded-2xl border border-dc-border bg-dc-elevated p-5 shadow-2xl">
+            <h3 className="font-serif text-xl text-dc-text">Add to library</h3>
+            <p className="mt-1 text-xs text-dc-muted">
+              Creates an unscheduled {scheduleNouns.scheduledItem}. Drag it onto the grid when you know the time.
+            </p>
+            <div className="mt-4 space-y-3">
+              <label className="block text-xs uppercase tracking-wide text-dc-muted">
+                Title
+                <input
+                  className="mt-1 w-full rounded-lg border border-dc-border bg-dc-surface-muted px-3 py-2 text-sm text-dc-text"
+                  value={formTitle}
+                  onChange={(e) => setFormTitle(e.target.value)}
+                />
+              </label>
+              <label className="block text-xs uppercase tracking-wide text-dc-muted">
+                Room / location
+                <input
+                  className="mt-1 w-full rounded-lg border border-dc-border bg-dc-surface-muted px-3 py-2 text-sm text-dc-text"
+                  value={formRoom}
+                  onChange={(e) => setFormRoom(e.target.value)}
+                />
+              </label>
+              <label className="block text-xs uppercase tracking-wide text-dc-muted">
+                Track
+                <input
+                  className="mt-1 w-full rounded-lg border border-dc-border bg-dc-surface-muted px-3 py-2 text-sm text-dc-text"
+                  value={formTrack}
+                  onChange={(e) => setFormTrack(e.target.value)}
+                />
+              </label>
+            </div>
+            {err ? <p className="mt-3 text-sm text-rose-300">{err}</p> : null}
+            <div className="mt-5 flex justify-end gap-2">
               <button
                 type="button"
-                className="shrink-0 text-xs text-rose-300 hover:text-rose-200"
-                onClick={() => void deleteSlot(s.id)}
+                className="rounded-full border border-dc-border px-4 py-2 text-sm text-dc-muted"
+                onClick={() => setDraftModal(false)}
               >
-                Delete
+                Cancel
               </button>
+              <button
+                type="button"
+                disabled={busy}
+                className="rounded-full bg-dc-accent px-4 py-2 text-sm font-semibold text-dc-accent-foreground hover:bg-dc-accent-hover disabled:opacity-50"
+                onClick={() => void saveDraftSlot()}
+              >
+                {busy ? 'Saving…' : 'Save'}
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : null}
+
+      {drawerSlot ? (
+        <SessionDetailDrawer
+          eventSlug={eventSlug}
+          timezone={timezone}
+          slot={drawerSlot}
+          readOnly={readOnly}
+          initialTab={activeDrawerTab ?? 'overview'}
+          onClose={() => {
+            setDrawerSlot(null)
+            setActiveDrawerTab(undefined)
+            onDrawerTabConsumed?.()
+          }}
+          onSaved={onRefresh}
+          onCopySessionLink={
+            onSlotLinkChange
+              ? () => {
+                  onSlotLinkChange(drawerSlot.id)
+                  const url = `${window.location.origin}/organizer/dancecard/${eventSlug}?tab=program&slot=${drawerSlot.id}`
+                  void navigator.clipboard.writeText(url)
+                  toast.push(`${capitalizeWords(scheduleNouns.scheduledItem)} link copied.`)
+                }
+              : undefined
+          }
+        />
+      ) : null}
+
+      <div className="rounded-xl border border-white/10 bg-black/25 p-3">
+        <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">Edit existing</p>
+        <ul className="mt-2 space-y-2 text-sm text-dc-text">
+          {filteredSlots.map((s) => (
+            <li key={s.id} className="flex items-center justify-between gap-2 border-b border-white/5 py-1">
+              <label className="flex min-w-0 flex-1 cursor-pointer items-center gap-2">
+                {readOnly ? null : (
+                  <input
+                    type="checkbox"
+                    className="accent-dc-accent"
+                    checked={selectedIds.has(s.id)}
+                    onChange={() => toggleSelect(s.id)}
+                  />
+                )}
+                <span className="min-w-0 truncate">
+                  {s.startsAt ? formatTimeLabel(s.startsAt, timezone) : 'Unscheduled'} — {s.title}
+                </span>
+              </label>
+              <div className="flex shrink-0 gap-2">
+                <button type="button" className="text-xs text-dc-accent hover:text-dc-accent-hover" onClick={() => setDrawerSlot(s)}>
+                  Open
+                </button>
+                {readOnly ? null : (
+                  <button
+                    type="button"
+                    className="text-xs text-rose-300 hover:text-rose-200"
+                    onClick={() => void deleteSlot(s.id)}
+                  >
+                    Delete
+                  </button>
+                )}
+              </div>
             </li>
           ))}
         </ul>
-        <p className="mt-2 text-[11px] text-slate-500">
-          Drag a colored card vertically to shift time (snaps to {SLOT_STEP}-minute steps). Sessions are clipped to the
-          same calendar day column as their start time.
+        <p className="mt-2 text-[11px] text-dc-muted">
+          Drag {scheduleNouns.scheduledItemPlural} between time slots or into Unassigned. Colors follow track settings. Use
+          checkboxes for bulk publish, visibility, freeze, tag, duplicate, or delete.
         </p>
       </div>
     </div>

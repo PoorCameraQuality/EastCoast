@@ -1,21 +1,42 @@
 import type { Metadata } from 'next'
+import { Suspense } from 'react'
 import { DancecardClient } from '@/components/dancecard/DancecardClient'
+import { PreviewRoleBanner } from '@/components/dancecard/PreviewRoleBanner'
 import { BASE_URL } from '@/lib/seo'
+import { getDancecardAdmin, loadEventBySlug, normalizeEventSlug } from '@/lib/dancecard/routeCommon'
 
 const DANCECARD_SOCIAL_IMAGE = `${BASE_URL}/images/dancecard/dancecard-social.png`
 const DANCECARD_TITLE = 'Dancecard'
 const DANCECARD_DESCRIPTION =
   'Share availability, compare mutual free time, and reserve plans privately with Dancecard.'
 
+async function resolveEventTitle(eventSlug: string): Promise<string | null> {
+  try {
+    const admin = getDancecardAdmin()
+    const event = await loadEventBySlug(admin, normalizeEventSlug(eventSlug))
+    const title = event?.event_title?.trim()
+    return title || null
+  } catch {
+    return null
+  }
+}
+
 export async function generateMetadata({ params }: { params: { eventSlug: string } }): Promise<Metadata> {
-  const url = `${BASE_URL}/dancecard/${encodeURIComponent(params.eventSlug.toLowerCase())}`
+  const slug = params.eventSlug.toLowerCase()
+  const url = `${BASE_URL}/dancecard/${encodeURIComponent(slug)}`
+  const eventTitle = await resolveEventTitle(slug)
+  const title = eventTitle ? `${eventTitle} | Dancecard` : DANCECARD_TITLE
+  const description = eventTitle
+    ? `Share availability, compare mutual free time, and reserve plans privately for ${eventTitle} with Dancecard.`
+    : DANCECARD_DESCRIPTION
+
   return {
-    title: DANCECARD_TITLE,
-    description: DANCECARD_DESCRIPTION,
+    title,
+    description,
     alternates: { canonical: url },
     openGraph: {
-      title: DANCECARD_TITLE,
-      description: DANCECARD_DESCRIPTION,
+      title,
+      description,
       url,
       type: 'website',
       siteName: 'East Coast Kink Events',
@@ -24,14 +45,16 @@ export async function generateMetadata({ params }: { params: { eventSlug: string
           url: DANCECARD_SOCIAL_IMAGE,
           width: 1024,
           height: 1024,
-          alt: 'Dancecard availability sharing preview',
+          alt: eventTitle
+            ? `Dancecard availability sharing for ${eventTitle}`
+            : 'Dancecard availability sharing preview',
         },
       ],
     },
     twitter: {
       card: 'summary_large_image',
-      title: DANCECARD_TITLE,
-      description: DANCECARD_DESCRIPTION,
+      title,
+      description,
       images: [DANCECARD_SOCIAL_IMAGE],
     },
   }
@@ -39,5 +62,12 @@ export async function generateMetadata({ params }: { params: { eventSlug: string
 
 export default function DancecardEventPage({ params }: { params: { eventSlug: string } }) {
   const slug = params.eventSlug.toLowerCase()
-  return <DancecardClient eventSlug={slug} />
+  return (
+    <>
+      <Suspense fallback={null}>
+        <PreviewRoleBanner />
+      </Suspense>
+      <DancecardClient eventSlug={slug} />
+    </>
+  )
 }

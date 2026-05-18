@@ -1,5 +1,10 @@
 import type { SupabaseClient } from '@supabase/supabase-js'
 import {
+  buildPublicProfile,
+  parseAttendeeProfileConfig,
+  type AttendeePublicProfile,
+} from '@/lib/dancecard/attendeeProfile'
+import {
   loadAvailabilityRange,
   loadPrefs,
   loadReservationsForAccount,
@@ -24,19 +29,23 @@ type EventRow = {
   shared_by_label: string
   shared_by_detail: string | null
   logo_url: string | null
+  attendee_profile_config?: unknown
 }
 
 type ViewerSession = {
   accountId: string
   displayName: string
+  username: string
 }
 
 export async function buildMutualSharePayload(
   admin: SupabaseClient,
   event: EventRow,
-  host: { id: string; display_name: string },
+  host: { id: string; display_name: string; username: string },
   viewer: ViewerSession | null
 ) {
+  const profileConfig = parseAttendeeProfileConfig(event.attendee_profile_config)
+
   const { data: slots } = await admin
     .from('dancecard_program_slots')
     .select('id, starts_at, ends_at, title, track, room, description, sort_order')
@@ -74,13 +83,27 @@ export async function buildMutualSharePayload(
     host.id
   )
 
+  const hostProfile: AttendeePublicProfile = buildPublicProfile({
+    displayName: host.display_name,
+    username: host.username,
+    stored: hostPrefs.profile,
+    config: profileConfig,
+  })
+
   let mutualFree: { start: string; end: string }[] | null = null
   let viewerYou: string | null = null
+  let viewerProfile: AttendeePublicProfile | null = null
   if (viewer && viewer.accountId !== host.id) {
     viewerYou = viewer.displayName
     const vb = await loadPrefs(admin, viewer.accountId)
     const vs = await loadSelections(admin, viewer.accountId)
     const vr = await loadReservationsForAccount(admin, event.id, viewer.accountId)
+    viewerProfile = buildPublicProfile({
+      displayName: viewer.displayName,
+      username: viewer.username,
+      stored: vb.profile,
+      config: profileConfig,
+    })
     const m = computeMutualFree(
       window,
       hostPrefs.bufferMinutes,
@@ -108,7 +131,9 @@ export async function buildMutualSharePayload(
       logoUrl: event.logo_url,
     },
     host: { id: host.id, displayName: host.display_name as string },
+    hostProfile,
     viewerYou,
+    viewerProfile,
     hostFreeGaps: hostFree.map((g) => ({ start: g.start.toISOString(), end: g.end.toISOString() })),
     hostBusy: hostBusy.map((g) => ({ start: g.start.toISOString(), end: g.end.toISOString() })),
     mutualFreeGaps: mutualFree,

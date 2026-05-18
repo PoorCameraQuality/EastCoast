@@ -1,15 +1,17 @@
 import type { SupabaseClient } from '@supabase/supabase-js'
+import { parseProfileStored, type AttendeeProfileStored } from '@/lib/dancecard/attendeeProfile'
 import type { ReservationRow, SelectionRow } from './busy'
 
 export type DancecardPrefsLoaded = {
   bufferMinutes: number
   allowCompareByUsername: boolean
+  profile: AttendeeProfileStored
 }
 
 export async function loadPrefs(admin: SupabaseClient, accountId: string): Promise<DancecardPrefsLoaded> {
   const { data, error } = await admin
     .from('dancecard_prefs')
-    .select('buffer_minutes, allow_compare_by_username')
+    .select('buffer_minutes, allow_compare_by_username, profile_json')
     .eq('account_id', accountId)
     .maybeSingle()
   if (error) {
@@ -21,14 +23,50 @@ export async function loadPrefs(admin: SupabaseClient, accountId: string): Promi
         .eq('account_id', accountId)
         .maybeSingle()
       if (e2) throw e2
-      return { bufferMinutes: d2?.buffer_minutes ?? 0, allowCompareByUsername: false }
+      return { bufferMinutes: d2?.buffer_minutes ?? 0, allowCompareByUsername: false, profile: {} }
     }
     throw error
   }
+  const row = data as { buffer_minutes?: number; allow_compare_by_username?: boolean; profile_json?: unknown }
   return {
-    bufferMinutes: data?.buffer_minutes ?? 0,
-    allowCompareByUsername: Boolean((data as { allow_compare_by_username?: boolean }).allow_compare_by_username),
+    bufferMinutes: row?.buffer_minutes ?? 0,
+    allowCompareByUsername: Boolean(row?.allow_compare_by_username),
+    profile: parseProfileStored(row?.profile_json),
   }
+}
+
+export async function saveAccountProfile(
+  admin: SupabaseClient,
+  accountId: string,
+  profile: AttendeeProfileStored
+): Promise<{ ok: true } | { ok: false; reason: 'profile_column_missing' }> {
+  const updatedAt = new Date().toISOString()
+  const { data: updated, error: upErr } = await admin
+    .from('dancecard_prefs')
+    .update({ profile_json: profile, updated_at: updatedAt })
+    .eq('account_id', accountId)
+    .select('account_id')
+    .maybeSingle()
+
+  if (upErr) {
+    const code = (upErr as { code?: string }).code
+    if (code === '42703') return { ok: false, reason: 'profile_column_missing' }
+    throw upErr
+  }
+  if (updated) return { ok: true }
+
+  const { error: insErr } = await admin.from('dancecard_prefs').insert({
+    account_id: accountId,
+    buffer_minutes: 0,
+    profile_json: profile,
+    updated_at: updatedAt,
+  })
+  if (insErr) {
+    const code = (insErr as { code?: string }).code
+    if (code === '42703') return { ok: false, reason: 'profile_column_missing' }
+    throw insErr
+  }
+  return { ok: true }
 }
 
 export type SetPrefsAllowCompareResult =

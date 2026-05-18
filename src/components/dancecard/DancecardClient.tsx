@@ -1,6 +1,8 @@
 'use client'
 
-import type { ReactNode } from 'react'
+import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import type { Dispatch, ReactNode, SetStateAction } from 'react'
 import { forwardRef, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { dancecardFetch, DancecardApiError, formatDancecardApiMessage } from '@/components/dancecard/api-client'
 import {
@@ -26,12 +28,46 @@ import {
 } from '@/lib/dancecard/dancecardIcs'
 import { CompareAvailabilityPanel } from '@/components/dancecard/CompareAvailabilityPanel'
 import { MutualReserveTogetherModal } from '@/components/dancecard/MutualReserveTogetherModal'
+import {
+  RescheduleReservationModal,
+  type RescheduleReservationRow,
+} from '@/components/dancecard/RescheduleReservationModal'
 import { dayRangesFromSchedule } from '@/components/dancecard/eventAvailability'
-import { DancecardTopBar } from '@/components/dancecard/DancecardTopBar'
+import { DancecardEventNav } from '@/components/dancecard/attendee/DancecardEventNav'
+import { LoadingPhase } from '@/components/dancecard/attendee/LoadingPhase'
+import { ScheduleChangeNotifications } from '@/components/dancecard/attendee/ScheduleChangeNotifications'
+import { StaffOpenShiftsPanel } from '@/components/dancecard/attendee/StaffOpenShiftsPanel'
+import { ShiftSwapPanel } from '@/components/dancecard/attendee/ShiftSwapPanel'
+import { VettingApplicationForm } from '@/components/dancecard/attendee/VettingApplicationForm'
+import { useConfirmDialog } from '@/components/dancecard/organizer/ui'
+import type { DancecardModules } from '@/lib/dancecard/eventEntitlements'
 import { DancecardCompactList } from '@/components/dancecard/DancecardCompactList'
 import { roleColor } from '@/lib/dancecard/roleColors'
 import { locationColor } from '@/lib/dancecard/locationColors'
 import { cn } from '@/lib/cn'
+import { DancecardAttendeeShellSkeleton } from '@/components/dancecard/organizer/ui'
+import { AttendeeBottomNav, type AttendeeNavTab } from '@/components/dancecard/attendee/AttendeeBottomNav'
+import { AttendeeProfileTab } from '@/components/dancecard/attendee/AttendeeProfileTab'
+import {
+  DEFAULT_ATTENDEE_PROFILE_CONFIG,
+  type AttendeeProfileConfig,
+  type AttendeeProfileStored,
+  type AttendeePublicProfile,
+} from '@/lib/dancecard/attendeeProfile'
+import { GateTrustPanel } from '@/components/dancecard/attendee/GateTrustPanel'
+import { HappeningNowRibbon } from '@/components/dancecard/attendee/program/HappeningNowRibbon'
+import { VestibuleLoader } from '@/components/dancecard/loaders/VestibuleLoader'
+import { SessionDetailSheet } from '@/components/dancecard/attendee/program/SessionDetailSheet'
+import { MyScheduleView } from '@/components/dancecard/attendee/program/MyScheduleView'
+import { PresenterDirectory } from '@/components/dancecard/attendee/program/PresenterDirectory'
+import { VirtualProgramList } from '@/components/dancecard/attendee/program/VirtualProgramList'
+import { PhotoPolicyChip } from '@/components/dancecard/attendee/PhotoPolicyChip'
+import { AttendeeAnnouncements } from '@/components/dancecard/attendee/AttendeeAnnouncements'
+import { AttendeeWeekendGuide } from '@/components/dancecard/attendee/AttendeeWeekendGuide'
+import { PublicDancecardLanding } from '@/components/dancecard/attendee/PublicDancecardLanding'
+import { PublicDancecardSignInPanel } from '@/components/dancecard/attendee/PublicDancecardSignInPanel'
+import type { PublicProgramSlotDto } from '@/lib/dancecard/publicProgramSlotsData'
+import { resolveEventDisplayTitles } from '@/lib/dancecard/eventDisplay'
 
 type ScheduleMeta = {
   productTitle: string
@@ -51,9 +87,16 @@ type ProgramSlot = {
   endsAt: string
   title: string
   track: string | null
+  trackId?: string | null
+  trackDisplay?: string | null
   room: string | null
+  locationId?: string | null
   description: string | null
   sortOrder: number
+  tagNames?: string[]
+  presenters?: { sceneName: string; role: string }[]
+  photoPolicy?: 'allowed' | 'restricted' | 'none'
+  locationName?: string | null
 }
 
 type MeResponse = {
@@ -63,7 +106,10 @@ type MeResponse = {
     availabilityStartsAt: string
     availabilityEndsAt: string
     allowCompareByUsername?: boolean
+    profile?: AttendeeProfileStored
   }
+  attendeeProfileConfig?: AttendeeProfileConfig
+  publicProfile?: AttendeePublicProfile
   selections: {
     id: string
     kind: string
@@ -81,14 +127,16 @@ type MeResponse = {
 type MutualSharePayload = {
   meta: ScheduleMeta | null
   host: { displayName: string; id?: string }
+  hostProfile?: AttendeePublicProfile | null
+  viewerProfile?: AttendeePublicProfile | null
   viewerYou: string | null
   hostFreeGaps: { start: string; end: string }[]
   hostBusy: { start: string; end: string }[]
   mutualFreeGaps: { start: string; end: string }[] | null
 }
 
-type Tab = 'program' | 'dancecard' | 'mutual' | 'reservations'
-type ScheduleView = 'simple' | 'venue' | 'grid'
+type Tab = AttendeeNavTab
+type ScheduleView = 'simple' | 'venue' | 'grid' | 'list'
 type AvailabilityDisplayMode = 'all' | 'free'
 type ManualPresetKey = 'break' | 'lunch' | 'dinner' | 'sleep'
 
@@ -130,7 +178,13 @@ function scrubEventBrand(value: string | null | undefined, fallback = ''): strin
 }
 
 const TAB_OPTIONS: Array<{ key: Tab; label: string; blurb: string }> = [
+  {
+    key: 'program',
+    label: 'Program',
+    blurb: 'Browse the official schedule and add or remove activities on your dancecard.',
+  },
   { key: 'dancecard', label: 'My availability', blurb: 'Block off time, share your code, and export your plans.' },
+  { key: 'profile', label: 'Profile', blurb: 'Photo, bio, contacts, and how others see you on Compare.' },
   {
     key: 'mutual',
     label: 'Compare',
@@ -143,6 +197,7 @@ const VIEW_OPTIONS: Array<{ key: ScheduleView; label: string }> = [
   { key: 'simple', label: 'Timeline' },
   { key: 'venue', label: 'By venue' },
   { key: 'grid', label: 'Grid' },
+  { key: 'list', label: 'List' },
 ]
 
 function cx(...values: Array<string | false | null | undefined>) {
@@ -166,7 +221,7 @@ const PROGRAM_POLICY_RULES: Array<{ key: string; label: string; tone: ProgramPol
 function programPoliciesForSlots(slots: ProgramSlot[]): ProgramPolicy[] {
   const found = new Map<string, ProgramPolicy>()
   for (const slot of slots) {
-    const text = `${slot.title} ${slot.description ?? ''}`.toLowerCase()
+    const text = `${slot.title} ${slot.description ?? ''} ${slot.trackDisplay ?? ''} ${slot.track ?? ''}`.toLowerCase()
     for (const rule of PROGRAM_POLICY_RULES) {
       if (rule.patterns.some((p) => text.includes(p))) {
         found.set(rule.key, { key: rule.key, label: rule.label, tone: rule.tone })
@@ -191,16 +246,6 @@ function reservationPartnerName(r: ReservationRow): string {
 
 function isMealPresetNote(note: string | null | undefined): boolean {
   return /^Unavailable: (breakfast|break|lunch|dinner|sleep)$/i.test((note ?? '').trim())
-}
-
-function eventWindowLabel(meta: ScheduleMeta | null) {
-  if (!meta) return ''
-  const fmt = new Intl.DateTimeFormat('en-US', {
-    month: 'short',
-    day: 'numeric',
-    timeZone: meta.timezone || 'America/New_York',
-  })
-  return `${fmt.format(new Date(meta.windowStartsAt))} - ${fmt.format(new Date(meta.windowEndsAt))}`
 }
 
 function todayLabel(tz: string) {
@@ -268,8 +313,8 @@ const HostMobileDayChipsRow = forwardRef<
           className={cn(
             'shrink-0 touch-manipulation rounded-full border px-2.5 py-1.5 text-[10px] font-semibold transition active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100',
             activeKey === day.key
-              ? 'border-cyan-300 bg-cyan-100 text-slate-950'
-              : 'border-white/12 bg-white/[0.05] text-slate-200 hover:border-white/20'
+              ? 'border-dc-accent-border bg-dc-accent text-dc-accent-foreground'
+              : 'border-white/12 bg-white/[0.05] text-dc-text hover:border-white/20'
           )}
           onClick={() => onSelect(day.key)}
         >
@@ -294,7 +339,7 @@ function MobileDayStripBar(props: {
     <nav
       aria-label="Select schedule day"
       className={cn(
-        'fixed inset-x-0 z-[42] border-t border-slate-700/80 bg-[#07101f]/96 shadow-[0_-10px_36px_rgba(2,6,23,0.55)] backdrop-blur-md md:hidden',
+        'fixed inset-x-0 z-[42] border-t border-dc-border bg-dc-surface/96 shadow-[0_-10px_36px_rgba(2,6,23,0.55)] backdrop-blur-md md:hidden',
         positionClassName ??
           'bottom-0 pb-[max(0.35rem,env(safe-area-inset-bottom))] pt-1.5'
       )}
@@ -311,12 +356,16 @@ function MobileDayStripBar(props: {
 
 export function DancecardClient({ eventSlug }: { eventSlug: string }) {
   const slug = eventSlug.toLowerCase()
+  const router = useRouter()
   const useMinimalLayout = process.env.NEXT_PUBLIC_DANCECARD_CLASSIC_UI !== '1'
   const entryGateKey = `eck_dc_entry_gate_${slug}`
   const regCodeKey = useMemo(() => `eck_dc_reg_code_${slug}`, [slug])
   const [schedule, setSchedule] = useState<{ meta: ScheduleMeta | null; slots: ProgramSlot[] } | null>(null)
   const [staffRoster, setStaffRoster] = useState<StaffShiftRoster | null>(null)
   const [loadErr, setLoadErr] = useState<string | null>(null)
+  const [loadErrStatus, setLoadErrStatus] = useState<number | null>(null)
+  const [eventModules, setEventModules] = useState<DancecardModules | null>(null)
+  const [eventProfile, setEventProfile] = useState<'camp' | 'hotel' | 'party' | 'conference' | null>(null)
   const [me, setMe] = useState<MeResponse | null>(null)
   const [authChecked, setAuthChecked] = useState(false)
   const [tab, setTab] = useState<Tab>('dancecard')
@@ -325,6 +374,13 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
   const [selectedStaffName, setSelectedStaffName] = useState('')
   const [trackFilter, setTrackFilter] = useState('')
   const [roomFilter, setRoomFilter] = useState('')
+  const [presenterFilter, setPresenterFilter] = useState('')
+  const [programSearch, setProgramSearch] = useState('')
+  const [programDayFilter, setProgramDayFilter] = useState('')
+  const [programTagFilters, setProgramTagFilters] = useState<Set<string>>(() => new Set())
+  const { ask, dialog: confirmDialog } = useConfirmDialog()
+  const [renameOpen, setRenameOpen] = useState(false)
+  const [renameValue, setRenameValue] = useState('')
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [passwordConfirm, setPasswordConfirm] = useState('')
@@ -343,6 +399,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
   const [entryGateErr, setEntryGateErr] = useState<string | null>(null)
   const [entryGateUnlocked, setEntryGateUnlocked] = useState(false)
   const [gateReady, setGateReady] = useState(false)
+  const [showAttendeeVestibule, setShowAttendeeVestibule] = useState(true)
   const [buffer, setBuffer] = useState(0)
   const [availabilityStart, setAvailabilityStart] = useState('')
   const [availabilityEnd, setAvailabilityEnd] = useState('')
@@ -379,9 +436,11 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
   const appTopRef = useRef<HTMLDivElement | null>(null)
 
   const tz = schedule?.meta?.timezone ?? 'America/New_York'
-  const displayProductTitle = DANCECARD_DISPLAY_TITLE
-  const displayEventTitle = DANCECARD_DISPLAY_TITLE
-  const displaySubtitle = DANCECARD_DISPLAY_SUBTITLE
+  const {
+    productTitle: displayProductTitle,
+    eventTitle: displayEventTitle,
+    subtitle: displaySubtitle,
+  } = useMemo(() => resolveEventDisplayTitles(schedule?.meta ?? null, slug), [schedule?.meta, slug])
 
   const splitLocalDateTime = useCallback((value: string) => {
     const [date = '', rawTime = ''] = value.split('T')
@@ -519,6 +578,13 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
     setShowOnboarding(!seen)
   }, [slug])
 
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    if (window.sessionStorage.getItem(`dc-vestibule-attendee:${slug}`) === '1') {
+      setShowAttendeeVestibule(false)
+    }
+  }, [slug])
+
   useEffect(
     () => () => {
       if (undoTimerRef.current) window.clearTimeout(undoTimerRef.current)
@@ -535,8 +601,14 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
     let cancelled = false
     ;(async () => {
       try {
-        const g = await dancecardFetch<{ requiresRegistrationCode: boolean }>(slug, '/gate')
+        const g = await dancecardFetch<{
+          requiresRegistrationCode: boolean
+          modules?: DancecardModules
+          eventProfile?: 'camp' | 'hotel' | 'party' | 'conference'
+        }>(slug, '/gate')
         if (cancelled) return
+        if (g.modules) setEventModules(g.modules)
+        if (g.eventProfile) setEventProfile(g.eventProfile)
         if (!g.requiresRegistrationCode) {
           setEntryGateUnlocked(true)
         } else if (typeof window !== 'undefined') {
@@ -555,15 +627,57 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
     }
   }, [slug, entryGateKey, regCodeKey])
 
+  const hiddenAttendeeTabs = useMemo((): AttendeeNavTab[] => {
+    const hidden: AttendeeNavTab[] = []
+    if (!me) hidden.push('profile')
+    if (eventProfile === 'camp' || eventProfile === 'party') {
+      hidden.push('mutual', 'reservations')
+    } else if (eventModules && !eventModules.shift_swaps) {
+      hidden.push('reservations')
+    }
+    return hidden
+  }, [eventProfile, eventModules, me])
+
   const loadSchedule = useCallback(async () => {
     try {
       const s = await dancecardFetch<{ meta: ScheduleMeta | null; slots: ProgramSlot[] }>(slug, '/schedule')
       setSchedule(s)
       setLoadErr(null)
+      setLoadErrStatus(null)
     } catch (e) {
-      setLoadErr(e instanceof DancecardApiError ? e.body : 'Could not load schedule')
+      if (e instanceof DancecardApiError) {
+        setLoadErrStatus(e.status)
+        setLoadErr(formatDancecardApiMessage(e))
+      } else {
+        setLoadErrStatus(null)
+        setLoadErr('Could not load schedule. Check your connection and try again.')
+      }
     }
   }, [slug])
+
+  function renderTopBar(options?: { luxury?: boolean }) {
+    const title = schedule?.meta?.eventTitle?.trim() || displayEventTitle || slug
+    return (
+      <DancecardEventNav
+        eventSlug={slug}
+        eventTitle={title}
+        variant={options?.luxury ? 'luxury' : 'default'}
+      />
+    )
+  }
+
+  useEffect(() => {
+    void loadSchedule()
+    const onVis = () => {
+      if (document.visibilityState === 'visible') void loadSchedule()
+    }
+    document.addEventListener('visibilitychange', onVis)
+    const interval = window.setInterval(() => void loadSchedule(), 120_000)
+    return () => {
+      document.removeEventListener('visibilitychange', onVis)
+      window.clearInterval(interval)
+    }
+  }, [loadSchedule])
 
   const loadStaffRoster = useCallback(async () => {
     try {
@@ -599,10 +713,6 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
   }, [slug, availabilityStateFromServer])
 
   useEffect(() => {
-    void loadSchedule()
-  }, [loadSchedule])
-
-  useEffect(() => {
     if (me?.account.isStaff) void loadStaffRoster()
     else setStaffRoster(null)
   }, [me?.account.isStaff, loadStaffRoster])
@@ -629,24 +739,85 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
 
   const tracks = useMemo(() => {
     const s = schedule?.slots ?? []
-    return Array.from(new Set(s.map((x) => scrubEventBrand(x.track, '').trim()).filter(Boolean))) as string[]
+    return Array.from(
+      new Set(
+        s
+          .map((x) => scrubEventBrand((x.trackDisplay ?? x.track) as string | null, '').trim())
+          .filter(Boolean),
+      ),
+    ) as string[]
   }, [schedule])
 
-  const rooms = useMemo(() => {
+  const programRoomsAll = useMemo(() => {
     const s = schedule?.slots ?? []
-    return Array.from(new Set(s.map((x) => x.room).filter(Boolean))) as string[]
+    return Array.from(new Set(s.map((x) => (x.room ?? '').trim()).filter(Boolean))).sort() as string[]
+  }, [schedule])
+
+  const presenterNames = useMemo(() => {
+    const s = schedule?.slots ?? []
+    const set = new Set<string>()
+    for (const x of s) {
+      for (const p of x.presenters ?? []) {
+        const n = scrubEventBrand(p.sceneName, '').trim()
+        if (n) set.add(n)
+      }
+    }
+    return Array.from(set).sort()
+  }, [schedule])
+
+  const programDayKeys = useMemo(() => {
+    const s = schedule?.slots ?? []
+    const keys = new Set<string>()
+    for (const x of s) {
+      keys.add(zonedCalendarDateFromUtc(Date.parse(x.startsAt), tz))
+    }
+    return Array.from(keys).sort()
+  }, [schedule, tz])
+
+  const programTagOptions = useMemo(() => {
+    const s = schedule?.slots ?? []
+    const tags = new Set<string>()
+    for (const slot of s) {
+      for (const tag of slot.tagNames ?? []) {
+        const t = tag.trim()
+        if (t) tags.add(t)
+      }
+    }
+    return Array.from(tags).sort((a, b) => a.localeCompare(b))
   }, [schedule])
 
   const filteredSlots = useMemo(() => {
     let s = (schedule?.slots ?? []).map((slot) => ({
       ...slot,
-      title: scrubEventBrand(slot.title, 'Program session'),
+      title: scrubEventBrand(slot.title, 'Program activity'),
       track: slot.track ? scrubEventBrand(slot.track, '') || null : null,
+      trackDisplay: slot.trackDisplay
+        ? scrubEventBrand(slot.trackDisplay, '') || null
+        : slot.track
+          ? scrubEventBrand(slot.track, '') || null
+          : null,
     }))
-    if (trackFilter) s = s.filter((x) => (x.track ?? '') === trackFilter)
+    if (trackFilter) s = s.filter((x) => ((x.trackDisplay ?? x.track) ?? '') === trackFilter)
     if (roomFilter) s = s.filter((x) => (x.room ?? '') === roomFilter)
+    if (presenterFilter) {
+      s = s.filter((x) => (x.presenters ?? []).some((p) => scrubEventBrand(p.sceneName, '').trim() === presenterFilter))
+    }
+    if (programSearch.trim()) {
+      const q = programSearch.trim().toLowerCase()
+      s = s.filter((x) => {
+        const pres = (x.presenters ?? []).map((p) => p.sceneName).join(' ')
+        const blob = `${x.title} ${x.description ?? ''} ${x.room ?? ''} ${(x.trackDisplay ?? x.track) ?? ''} ${(x.tagNames ?? []).join(' ')} ${pres}`.toLowerCase()
+        return blob.includes(q)
+      })
+    }
+    if (programDayFilter) {
+      s = s.filter((x) => zonedCalendarDateFromUtc(Date.parse(x.startsAt), tz) === programDayFilter)
+    }
+    if (programTagFilters.size > 0) {
+      s = s.filter((x) => (x.tagNames ?? []).some((tag) => programTagFilters.has(tag.trim())))
+    }
     return s
-  }, [schedule, trackFilter, roomFilter])
+  }, [schedule, trackFilter, roomFilter, presenterFilter, programSearch, programDayFilter, programTagFilters, tz])
 
   const grouped = useMemo(() => groupSlotsByDay(filteredSlots, tz), [filteredSlots, tz])
   const venueGroups = useMemo(() => groupByVenue(filteredSlots), [filteredSlots])
@@ -667,6 +838,15 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
     () => (me?.selections ?? []).filter((s) => s.kind === 'program').length,
     [me]
   )
+
+  const toggleProgramTag = useCallback((tag: string) => {
+    setProgramTagFilters((prev) => {
+      const next = new Set(prev)
+      if (next.has(tag)) next.delete(tag)
+      else next.add(tag)
+      return next
+    })
+  }, [])
 
   const manualSelectionCount = useMemo(
     () => (me?.selections ?? []).filter((s) => s.kind === 'manual').length,
@@ -764,7 +944,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
       return 0
     }
     const selectionTitle = (s: MeResponse['selections'][number]): string => {
-      if (s.kind === 'program') return scrubEventBrand(s.programTitle, 'Program session')
+      if (s.kind === 'program') return scrubEventBrand(s.programTitle, 'Program activity')
       return s.note?.trim() || 'Busy'
     }
     const rows: AvailabilityHourRow[] = []
@@ -830,17 +1010,17 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
     <GlassPanel className={compact ? 'p-2.5' : 'p-3'}>
       <div className="flex flex-wrap items-start justify-between gap-2">
         <div className="min-w-0 flex-1">
-          <p className={cx('font-semibold uppercase text-slate-300/90', compact ? 'text-[10px] tracking-[0.18em]' : 'text-xs tracking-[0.25em]')}>
+          <p className={cx('font-semibold uppercase text-dc-muted/90', compact ? 'text-[10px] tracking-[0.18em]' : 'text-xs tracking-[0.25em]')}>
             Your blocked times
           </p>
-          <p className={cx('mt-1 leading-snug text-slate-300/80', compact ? 'text-[11px]' : 'text-xs')}>
+          <p className={cx('mt-1 leading-snug text-dc-muted/80', compact ? 'text-[11px]' : 'text-xs')}>
             Presets and custom blocks currently on your dancecard.
           </p>
         </div>
         <button
           type="button"
           className={cx(
-            'shrink-0 rounded-full border border-cyan-300/35 bg-cyan-400/12 font-semibold text-cyan-50 transition hover:border-cyan-200/50 hover:bg-cyan-400/18',
+            'shrink-0 rounded-full border border-dc-accent-border bg-dc-accent-muted font-semibold text-dc-accent transition hover:border-dc-accent hover:bg-dc-accent-muted/80',
             compact ? 'px-2.5 py-1.5 text-[11px]' : 'px-3 py-1.5 text-xs'
           )}
           onClick={openBlankManualModal}
@@ -853,19 +1033,19 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
           {manualSelections.map((s) => (
             <div
               key={s.id}
-              className="flex items-center gap-2 rounded-xl border border-slate-600/60 bg-[#0b1426]/80 px-2.5 py-2 shadow-[inset_0_1px_0_rgba(255,255,255,0.035)]"
+              className="flex items-center gap-2 rounded-xl border border-dc-border bg-dc-elevated/80 px-2.5 py-2 shadow-[inset_0_1px_0_rgba(255,255,255,0.035)]"
             >
               <button
                 type="button"
-                className="min-h-10 min-w-0 flex-1 text-left text-xs leading-snug text-slate-100 hover:text-white"
+                className="min-h-10 min-w-0 flex-1 text-left text-xs leading-snug text-dc-text hover:text-white"
                 onClick={() => beginManualEdit(s.id)}
               >
                 <span className="block font-semibold">{s.note?.trim() || 'Busy'}</span>
-                <span className="block text-slate-300/80">{formatRange(s.startsAt, s.endsAt, tz)}</span>
+                <span className="block text-dc-muted/80">{formatRange(s.startsAt, s.endsAt, tz)}</span>
               </button>
               <button
                 type="button"
-                className="min-h-10 rounded-md border border-cyan-300/35 bg-cyan-500/15 px-2.5 py-1.5 text-xs font-semibold text-cyan-100 hover:bg-cyan-500/25"
+                className="min-h-10 rounded-md border border-dc-accent-border bg-dc-accent-muted px-2.5 py-1.5 text-xs font-semibold text-dc-accent hover:bg-dc-accent-muted/80"
                 onClick={() => beginManualEdit(s.id)}
               >
                 Edit
@@ -883,7 +1063,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
           ))}
         </div>
       ) : (
-        <p className="mt-3 rounded-xl border border-slate-600/60 bg-[#0b1426]/80 px-3 py-2 text-xs text-slate-300/80">
+        <p className="mt-3 rounded-xl border border-dc-border bg-dc-elevated/80 px-3 py-2 text-xs text-dc-muted/80">
           Nothing blocked yet. Tap green hours below or use Add busy time.
         </p>
       )}
@@ -953,8 +1133,8 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
           className={cx(
             'rounded-full border px-2.5 py-1 text-[11px] font-semibold transition',
             availabilityDisplayMode === option.key
-              ? 'border-cyan-300 bg-cyan-100 text-slate-950'
-              : 'border-slate-700 bg-[#111a2c] text-slate-200 hover:border-slate-500'
+              ? 'border-dc-accent-border bg-dc-accent text-dc-accent-foreground'
+              : 'border-dc-border bg-dc-elevated text-dc-text hover:border-dc-border-strong'
           )}
           onClick={() => setAvailabilityDisplayMode(option.key)}
         >
@@ -1036,6 +1216,16 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
 
     return endMs > startMs ? { startMs, endMs } : null
   }, [schedule])
+
+  const mutualSelectedRangeMs = useMemo(() => {
+    if (!reserveMutualStart || !reserveMutualEnd) return { startMs: null as number | null, endMs: null as number | null }
+    const startMs = new Date(reserveMutualStart).getTime()
+    const endMs = new Date(reserveMutualEnd).getTime()
+    if (!Number.isFinite(startMs) || !Number.isFinite(endMs) || endMs <= startMs) {
+      return { startMs: null, endMs: null }
+    }
+    return { startMs, endMs }
+  }, [reserveMutualStart, reserveMutualEnd])
 
   const staffPeople = useMemo(() => staffRoster?.people ?? [], [staffRoster])
   const selectedStaffEntry = useMemo(
@@ -1152,6 +1342,19 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
       }, 450)
     },
     [persist, availabilityStart, availabilityEnd]
+  )
+
+  const updateProgramNote = useCallback(
+    (slotId: string, note: string) => {
+      const cur = me?.selections ?? []
+      const trimmed = note.trim() ? note.trim().slice(0, 1000) : ''
+      const next = cur.map((s) =>
+        s.kind === 'program' && s.slotId === slotId ? { ...s, note: trimmed || null } : s,
+      )
+      setMe((m) => (m ? { ...m, selections: next } : m))
+      queueSave(next, buffer)
+    },
+    [me, buffer, queueSave],
   )
 
   function toggleProgram(slot: ProgramSlot) {
@@ -1374,7 +1577,13 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
   }
 
   async function cancelReservation(reservationId: string) {
-    if (!window.confirm('Cancel this reservation? The time will become available again.')) return
+    const ok = await ask({
+      title: 'Cancel reservation?',
+      message: 'The time will become available again.',
+      destructive: true,
+      confirmLabel: 'Cancel reservation',
+    })
+    if (!ok) return
     try {
       await dancecardFetch(slug, '/reservations', {
         method: 'PATCH',
@@ -1420,12 +1629,10 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
     let nextSelections = selectionsRef.current
     const outside = selectionsOutsideRange(nextSelections, rangeStartMs, rangeEndMs)
     if (outside.length) {
-      const ok =
-        typeof window !== 'undefined' &&
-        window.confirm(
-          `${outside.length} saved block(s) fall outside that date range. ` +
-            'Choose OK to trim or remove those blocks and save the shorter range, or Cancel to keep your current range.'
-        )
+      const ok = await ask({
+        title: 'Trim blocks outside range?',
+        message: `${outside.length} saved block(s) fall outside that date range. Confirm to trim or remove those blocks and save the shorter range.`,
+      })
       if (!ok) {
         setToast('Date range unchanged.')
         return
@@ -1728,36 +1935,46 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
   }
 
   async function copyShare() {
+    if (!me) {
+      setToast('Sign in to create a share link.')
+      return
+    }
+    let token: string
+    let shareUrl: string
     try {
       const res = await dancecardFetch<{ token: string; url?: string }>(slug, '/share', { method: 'POST' })
-      const token = res.token.trim()
+      token = res.token.trim()
       const path = `/dancecard/${encodeURIComponent(slug)}/s/${encodeURIComponent(token)}`
       const canon = process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/+$/, '').trim()
-      const shareUrl = canon
+      shareUrl = canon
         ? `${canon}${path}`
         : res.url?.trim()
           ? res.url.trim()
           : `${window.location.origin.replace(/\/+$/, '')}${path}`
+    } catch (e) {
+      setToast(formatDancecardApiMessage(e))
+      return
+    }
+    try {
       if (navigator.clipboard?.writeText) {
         await navigator.clipboard.writeText(shareUrl)
         setToast(`Copied share link. Code: ${token}`)
       } else {
-        window.prompt('Copy this share link:', shareUrl)
-        setToast(`Share link generated. Code: ${token}`)
-      }
-      setLastShareToken(token)
-      sessionStorage.setItem(`eck_dc_mutual_${slug}`, token)
-      setMutualToken(token)
-      setMutualCompareUsername('')
-      if (typeof window !== 'undefined') {
-        try {
-          window.sessionStorage.removeItem(`eck_dc_compare_user_${slug}`)
-        } catch {
-          /* ignore */
-        }
+        setToast(`Share link: ${shareUrl}`)
       }
     } catch {
-      setToast('Could not create share link.')
+      setToast(`Share link ready (copy manually): ${shareUrl}`)
+    }
+    setLastShareToken(token)
+    sessionStorage.setItem(`eck_dc_mutual_${slug}`, token)
+    setMutualToken(token)
+    setMutualCompareUsername('')
+    if (typeof window !== 'undefined') {
+      try {
+        window.sessionStorage.removeItem(`eck_dc_compare_user_${slug}`)
+      } catch {
+        /* ignore */
+      }
     }
   }
 
@@ -1769,7 +1986,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
       return
     }
     const body = buildDancecardIcs({
-      calendarName: `${DANCECARD_DISPLAY_TITLE} — availability`,
+      calendarName: `${displayEventTitle} — availability`,
       attendeeDisplayName: me.account.displayName,
       selections: me.selections ?? [],
       reservations,
@@ -1872,7 +2089,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
         await navigator.clipboard.writeText(text)
         setToast('Copied summary — paste into Discord, Signal, or a text.')
       } else {
-        window.prompt('Copy this text:', text)
+        setToast(text)
       }
     } catch {
       setToast('Could not copy — select and copy manually.')
@@ -2040,10 +2257,29 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
 
   useEffect(() => {
     if (typeof window === 'undefined') return
-    const h = window.location.hash.toLowerCase()
-    if (h === '#compare') setTab('mutual')
-    if (h === '#reservations') setTab('reservations')
-  }, [])
+    const applyHash = () => {
+      const h = window.location.hash.toLowerCase()
+      if (h === '#map' || h.startsWith('#map-')) {
+        const locationId = h.startsWith('#map-') ? decodeURIComponent(h.slice(5)) : null
+        const path = locationId
+          ? `/dancecard/${slug}/map?locationId=${encodeURIComponent(locationId)}`
+          : `/dancecard/${slug}/map`
+        router.replace(path)
+        return
+      }
+      if (h === '#policies') {
+        router.replace(`/dancecard/${slug}/policies`)
+        return
+      }
+      if (h === '#program') setTab('program')
+      else if (h === '#profile') setTab('profile')
+      else if (h === '#compare') setTab('mutual')
+      else if (h === '#reservations') setTab('reservations')
+    }
+    applyHash()
+    window.addEventListener('hashchange', applyHash)
+    return () => window.removeEventListener('hashchange', applyHash)
+  }, [router, slug])
 
   function findMatchingStaffShift(selection: MeResponse['selections'][number]): StaffShift | null {
     if (!selectedStaffEntry || selection.kind !== 'manual') return null
@@ -2183,18 +2419,57 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
     }
   }
 
-  async function rename() {
-    const next = window.prompt('New display name', me?.account.displayName ?? '')
+  function openRename() {
+    setRenameValue(me?.account.displayName ?? '')
+    setRenameOpen(true)
+  }
+
+  async function submitRename() {
+    const next = renameValue.trim()
     if (!next) return
     try {
       await dancecardFetch(slug, '/me', {
         method: 'PATCH',
         body: JSON.stringify({ displayName: next }),
       })
+      setRenameOpen(false)
       await refreshMe()
+      setToast('Display name updated.')
     } catch {
       setToast('Rename failed.')
     }
+  }
+
+  useEffect(() => {
+    function onKey(e: KeyboardEvent) {
+      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return
+      if (e.key === '1') switchTab('program', { scroll: true })
+      if (e.key === '2') switchTab('dancecard', { scroll: true })
+      if (e.key === '3') switchTab('profile', { scroll: true })
+      if (e.key === '4') switchTab('mutual', { scroll: true })
+      if (e.key === '5') switchTab('reservations', { scroll: true })
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [switchTab])
+
+  function copyTabLink() {
+    if (typeof window === 'undefined') return
+    const hash =
+      tab === 'program'
+        ? '#program'
+        : tab === 'profile'
+          ? '#profile'
+          : tab === 'mutual'
+            ? '#compare'
+            : tab === 'reservations'
+              ? '#reservations'
+              : ''
+    const url = `${window.location.origin}${window.location.pathname}${window.location.search}${hash}`
+    void navigator.clipboard?.writeText(url).then(
+      () => setToast('Tab link copied.'),
+      () => setToast(url),
+    )
   }
 
   async function setAllowCompareByUsername(next: boolean) {
@@ -2215,6 +2490,51 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
       setToast(formatDancecardApiMessage(e))
     }
   }
+
+  const saveAttendeeProfile = useCallback(
+    async (patch: {
+      displayName?: string
+      profile?: AttendeeProfileStored
+      allowCompareByUsername?: boolean
+    }) => {
+      const res = await dancecardFetch<{
+        account?: { displayName: string }
+        prefs?: {
+          profile?: AttendeeProfileStored
+          publicProfile?: AttendeePublicProfile
+          allowCompareByUsername?: boolean
+        }
+      }>(slug, '/me', {
+        method: 'PATCH',
+        body: JSON.stringify(patch),
+      })
+      setMe((m) => {
+        if (!m) return m
+        return {
+          ...m,
+          account: res.account ? { ...m.account, displayName: res.account.displayName } : m.account,
+          prefs: {
+            ...m.prefs,
+            ...(res.prefs?.profile !== undefined ? { profile: res.prefs.profile } : {}),
+            ...(res.prefs?.allowCompareByUsername !== undefined
+              ? { allowCompareByUsername: res.prefs.allowCompareByUsername }
+              : {}),
+          },
+          publicProfile: res.prefs?.publicProfile ?? m.publicProfile,
+        }
+      })
+      if (patch.allowCompareByUsername !== undefined) {
+        setToast(
+          patch.allowCompareByUsername
+            ? 'Compare by username is on.'
+            : 'Compare by username is off. Share links still work.'
+        )
+      } else {
+        setToast('Profile saved.')
+      }
+    },
+    [slug]
+  )
 
   async function unlockEntryGate() {
     setEntryGateErr(null)
@@ -2237,16 +2557,10 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
   if (!gateReady) {
     return (
       <>
-        <DancecardTopBar />
-        <div className="relative min-h-screen overflow-hidden bg-[#07101f] px-4 py-20 text-slate-100">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(56,189,248,0.14),transparent_32%),linear-gradient(180deg,#07101f_0%,#0b1426_100%)]" />
-          <div className="relative mx-auto flex max-w-lg flex-col items-center gap-3 text-center text-sm text-stone-400">
-            <div
-              className="h-9 w-9 rounded-full border-2 border-teal-400/30 border-t-teal-300 animate-spin motion-reduce:animate-none"
-              aria-hidden
-            />
-            <span>Loading…</span>
-          </div>
+        {renderTopBar()}
+        <div className="relative min-h-screen overflow-hidden bg-dc-surface px-4 py-20 text-dc-text">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(198,167,94,0.14),transparent_32%),linear-gradient(180deg,var(--dc-surface)_0%,var(--dc-surface-muted)_100%)]" />
+          <LoadingPhase phase="gate" />
         </div>
       </>
     )
@@ -2255,14 +2569,14 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
   if (!entryGateUnlocked) {
     return (
       <>
-        <DancecardTopBar />
-        <div className="relative min-h-screen overflow-hidden bg-[#07101f] px-4 py-20 text-slate-100">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(56,189,248,0.14),transparent_32%),linear-gradient(180deg,#07101f_0%,#0b1426_100%)]" />
+        {renderTopBar()}
+        <div className="relative min-h-screen overflow-hidden bg-dc-surface px-4 py-20 text-dc-text">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(198,167,94,0.14),transparent_32%),linear-gradient(180deg,var(--dc-surface)_0%,var(--dc-surface-muted)_100%)]" />
           <div className="relative mx-auto max-w-lg">
             <GlassPanel className="p-6 sm:p-8">
-              <p className="text-xs uppercase tracking-[0.3em] text-cyan-200/80">Availability access</p>
+              <p className="text-xs uppercase tracking-[0.3em] text-dc-accent/80">Availability access</p>
               <h1 className="mt-2 font-serif text-2xl text-white sm:text-3xl">Enter event password</h1>
-              <p className="mt-3 text-sm leading-6 text-slate-300">
+              <p className="mt-3 text-sm leading-6 text-dc-muted">
                 This event requires a password before sign-in or registration.
               </p>
               <form
@@ -2275,7 +2589,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                 <input
                   type="password"
                   autoComplete="off"
-                  className="w-full rounded-2xl border border-white/10 bg-black/25 px-4 py-3 text-sm text-white placeholder:text-slate-500"
+                  className="w-full rounded-2xl border border-white/10 bg-black/25 px-4 py-3 text-sm text-white placeholder:text-dc-subtle"
                   value={entryGateInput}
                   onChange={(e) => {
                     setEntryGateInput(e.target.value)
@@ -2285,12 +2599,16 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                 />
                 <button
                   type="submit"
-                  className="w-full rounded-2xl bg-[linear-gradient(135deg,#f8fafc_0%,#67e8f9_45%,#a78bfa_100%)] px-4 py-3 text-sm font-semibold text-slate-950 shadow-[0_18px_50px_rgba(103,232,249,0.28)]"
+                  className="w-full rounded-2xl bg-gradient-to-br from-dc-accent-hover via-dc-accent to-dc-accent px-4 py-3 text-sm font-semibold text-dc-accent-foreground shadow-[0_18px_50px_rgba(198,167,94,0.28)]"
                 >
                   Unlock availability
                 </button>
               </form>
-              {entryGateErr ? <p className="mt-3 text-sm text-rose-300">{entryGateErr}</p> : null}
+              {entryGateErr ? (
+                <div className="mt-3">
+                  <GateTrustPanel message={entryGateErr} onRetry={() => void unlockEntryGate()} />
+                </div>
+              ) : null}
             </GlassPanel>
           </div>
         </div>
@@ -2301,13 +2619,24 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
   if (!schedule && loadErr) {
     return (
       <>
-        <DancecardTopBar />
-        <div className="mx-auto max-w-lg px-4 py-12 text-slate-100">
-        <div className="rounded-xl border border-cyan-500/30 bg-[#0b1426] p-6 text-center">
-          <h1 className="text-lg font-semibold text-cyan-100">Dance card temporarily disabled</h1>
-          <p className="mt-2 text-sm text-slate-300">
-            The event is disabled for now. Please check back later.
-          </p>
+        {renderTopBar()}
+        <div className="mx-auto max-w-lg px-4 py-12 text-dc-text">
+        <div className="rounded-xl border border-rose-500/30 bg-dc-elevated p-6 text-center">
+          <h1 className="text-lg font-semibold text-rose-100">
+            {loadErrStatus === 404
+              ? 'Event not found'
+              : !loadErrStatus || loadErrStatus >= 500
+                ? 'Could not reach the server'
+                : 'Could not load schedule'}
+          </h1>
+          <p className="mt-2 text-sm text-dc-muted">{loadErr}</p>
+          <button
+            type="button"
+            className="mt-4 rounded-full bg-dc-accent px-4 py-2 text-sm font-semibold text-dc-accent-foreground"
+            onClick={() => void loadSchedule()}
+          >
+            Try again
+          </button>
         </div>
       </div>
       </>
@@ -2317,209 +2646,83 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
   if (!schedule || !authChecked) {
     return (
       <>
-        <DancecardTopBar />
-        <div className="relative min-h-screen overflow-hidden bg-[#07101f] px-4 py-20 text-slate-100">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(56,189,248,0.16),transparent_30%),radial-gradient(circle_at_80%_20%,rgba(244,114,182,0.12),transparent_24%),linear-gradient(180deg,#07101f_0%,#0b1426_100%)]" />
-        <div className="relative mx-auto max-w-6xl">
-          <div className="rounded-[32px] border border-white/10 bg-white/[0.04] px-8 py-14 text-center shadow-[0_30px_120px_rgba(2,6,23,0.65)] backdrop-blur-xl">
-            <div
-              className="mx-auto h-12 w-12 rounded-full border-2 border-teal-400/30 border-t-teal-300 animate-spin motion-reduce:animate-none"
-              aria-hidden
-            />
-            <p className="text-xs uppercase tracking-[0.35em] text-teal-200/75">Loading availability</p>
-            <h1 className="mt-4 font-serif text-3xl text-stone-50">Preparing your private planning view…</h1>
-            <p className="mt-2 text-sm text-stone-400">Polished schedule view — almost ready.</p>
-          </div>
+        {renderTopBar()}
+        <div className="relative min-h-screen overflow-hidden bg-dc-surface text-dc-text">
+          <DancecardAttendeeShellSkeleton />
         </div>
-      </div>
       </>
     )
   }
 
   if (!me) {
+    if (!schedule.meta) {
+      return (
+        <>
+          {renderTopBar()}
+          <div className="relative min-h-screen bg-dc-surface px-4 py-16 text-dc-text">
+            <p className="mx-auto max-w-lg text-center text-sm text-dc-muted">Loading event details…</p>
+          </div>
+        </>
+      )
+    }
     return (
       <>
-        <DancecardTopBar />
-        <div className="relative min-h-screen overflow-hidden bg-[#07101f] text-slate-100">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(34,211,238,0.14),transparent_26%),radial-gradient(circle_at_85%_18%,rgba(167,139,250,0.12),transparent_22%),radial-gradient(circle_at_25%_75%,rgba(20,184,166,0.10),transparent_22%),linear-gradient(180deg,#07101f_0%,#0b1426_56%,#07111f_100%)]" />
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(148,163,184,0.045)_1px,transparent_1px),linear-gradient(90deg,rgba(148,163,184,0.045)_1px,transparent_1px)] bg-[size:72px_72px] opacity-20" />
-        <div className="relative mx-auto grid min-h-screen max-w-7xl gap-6 px-4 py-8 sm:px-6 lg:grid-cols-[1.15fr_0.85fr] lg:px-8 lg:py-10">
-          <GlassPanel className="overflow-hidden p-8 lg:p-10">
-            <div className="max-w-2xl">
-              <p className="text-xs uppercase tracking-[0.4em] text-cyan-200/75">{displayProductTitle}</p>
-              <h1 className="mt-4 font-serif text-4xl leading-tight text-white sm:text-5xl">
-                {displayEventTitle}
-              </h1>
-              <p className="mt-4 max-w-xl text-base leading-7 text-slate-300">{displaySubtitle}</p>
-            </div>
+        {renderTopBar({ luxury: true })}
+        <PublicDancecardLanding
+          eventSlug={slug}
+          meta={schedule.meta}
+          productTitle={displayProductTitle}
+          eventTitle={displayEventTitle}
+          subtitle={displaySubtitle}
+          programSlots={schedule.slots}
+          onCreateAccount={() => {
+            setAuthMode('register')
+            setPasswordConfirm('')
+            setShowPassword(false)
+            setAuthNotice(null)
+          }}
+          signInPanel={
+            <PublicDancecardSignInPanel
+              compact
+              authMode={authMode}
+              setAuthMode={setAuthMode}
+              username={username}
+              setUsername={setUsername}
+              password={password}
+              setPassword={setPassword}
+              passwordConfirm={passwordConfirm}
+              setPasswordConfirm={setPasswordConfirm}
+              showPassword={showPassword}
+              setShowPassword={setShowPassword}
+              displayName={displayName}
+              setDisplayName={setDisplayName}
+              authNotice={authNotice}
+              setAuthNotice={setAuthNotice}
+              onSubmit={() => void submitAuth()}
+            />
+          }
+        />
+      </>
+    )
+  }
 
-            <div className="mt-8 grid gap-4 lg:grid-cols-[0.8fr_1.2fr]">
-              <div className="rounded-[28px] border border-white/10 bg-black/20 p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]">
-                <p className="text-xs uppercase tracking-[0.32em] text-slate-400">Today</p>
-                <div className="mt-3 font-serif text-3xl text-white sm:text-4xl">{todayLabel(tz)}</div>
-                <p className="mt-3 text-sm text-slate-400">{tz}</p>
-              </div>
-              <div className="rounded-[28px] border border-white/10 bg-black/20 p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]">
-                <p className="text-xs uppercase tracking-[0.32em] text-slate-400">Coming up next</p>
-                <div className="mt-3 text-2xl font-semibold text-white">Sign in to personalize this view.</div>
-                <p className="mt-2 text-sm text-slate-400">
-                  Once you log in, this panel will show your next busy time or reservation.
-                </p>
-              </div>
-            </div>
+  const attendeeShellReady = Boolean(schedule && authChecked && me)
 
-            <div className="mt-8 rounded-[28px] border border-white/10 bg-black/20 p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]">
-              <div className="flex flex-wrap items-center justify-between gap-3">
-                <div>
-                  <p className="text-xs uppercase tracking-[0.3em] text-slate-400">Preview the experience</p>
-                  <h2 className="mt-2 font-serif text-2xl text-white">How availability sharing works</h2>
-                </div>
-                <div className="rounded-full border border-emerald-400/30 bg-emerald-400/10 px-3 py-1 text-xs font-medium text-emerald-200">
-                  Calendar details stay private
-                </div>
-              </div>
-              <div className="mt-5 grid gap-3 sm:grid-cols-3">
-                {[
-                  ['1', 'Block busy time', 'Add the windows you are not available.'],
-                  ['2', 'Compare privately', 'Paste a share code to see only red/green free time.'],
-                  ['3', 'Reserve together', 'Confirm a mutual window and export it to your calendar.'],
-                ].map(([step, title, body]) => (
-                  <div key={step} className="rounded-[22px] border border-white/10 bg-white/[0.03] p-4 shadow-[0_15px_45px_rgba(2,6,23,0.32)]">
-                    <div className="flex h-9 w-9 items-center justify-center rounded-2xl border border-cyan-300/20 bg-cyan-300/10 text-sm font-semibold text-cyan-50">
-                      {step}
-                    </div>
-                    <div className="mt-3 text-base font-semibold text-white">{title}</div>
-                    <p className="mt-2 text-sm leading-6 text-slate-400">{body}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </GlassPanel>
-
-          <GlassPanel className="self-center p-6 sm:p-8">
-            <div className="flex items-center justify-between gap-3">
-              <div>
-                <p className="text-xs uppercase tracking-[0.35em] text-slate-400">Access</p>
-                <h2 className="mt-2 font-serif text-3xl text-white">Enter availability</h2>
-              </div>
-              <div className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-xs text-slate-300">
-                Username + password only
-              </div>
-            </div>
-
-            <div className="mt-6 inline-flex rounded-full border border-white/10 bg-black/20 p-1">
-              {(['login', 'register'] as const).map((mode) => (
-                <button
-                  key={mode}
-                  type="button"
-                  className={cx(
-                    'rounded-full px-4 py-2 text-sm font-medium transition',
-                    authMode === mode ? 'bg-white text-slate-950 shadow-lg' : 'text-slate-300 hover:text-white'
-                  )}
-                  onClick={() => {
-                    setAuthMode(mode)
-                    setPasswordConfirm('')
-                    setShowPassword(false)
-                    setAuthNotice(null)
-                  }}
-                >
-                  {mode === 'login' ? 'Sign in' : 'Register'}
-                </button>
-              ))}
-            </div>
-
-            <form
-              className="mt-6 space-y-4"
-              onSubmit={(e) => {
-                e.preventDefault()
-                void submitAuth()
-              }}
-            >
-              <div>
-                <label className="mb-2 block text-xs uppercase tracking-[0.25em] text-slate-400">Username</label>
-                <input
-                  className="w-full rounded-2xl border border-white/10 bg-black/25 px-4 py-3 text-sm text-white placeholder:text-slate-500"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  autoComplete="username"
-                  placeholder="rope-dreamer"
-                />
-              </div>
-              <div>
-                <div className="mb-2 flex items-center justify-between gap-2">
-                  <label className="block text-xs uppercase tracking-[0.25em] text-slate-400">Password</label>
-                  <button
-                    type="button"
-                    className="text-[11px] font-medium text-cyan-300/90 hover:text-cyan-200"
-                    onClick={() => setShowPassword((v) => !v)}
-                  >
-                    {showPassword ? 'Hide' : 'Show'}
-                  </button>
-                </div>
-                <input
-                  type={showPassword ? 'text' : 'password'}
-                  className="w-full rounded-2xl border border-white/10 bg-black/25 px-4 py-3 text-sm text-white placeholder:text-slate-500"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  autoComplete={authMode === 'register' ? 'new-password' : 'current-password'}
-                  placeholder="Enter your password"
-                />
-              </div>
-              {authMode === 'register' ? (
-                <>
-                  <div>
-                    <div className="mb-2 flex items-center justify-between gap-2">
-                      <label className="block text-xs uppercase tracking-[0.25em] text-slate-400">Confirm password</label>
-                      <button
-                        type="button"
-                        className="text-[11px] font-medium text-cyan-300/90 hover:text-cyan-200"
-                        onClick={() => setShowPassword((v) => !v)}
-                      >
-                        {showPassword ? 'Hide' : 'Show'}
-                      </button>
-                    </div>
-                    <input
-                      type={showPassword ? 'text' : 'password'}
-                      className="w-full rounded-2xl border border-white/10 bg-black/25 px-4 py-3 text-sm text-white placeholder:text-slate-500"
-                      value={passwordConfirm}
-                      onChange={(e) => setPasswordConfirm(e.target.value)}
-                      autoComplete="new-password"
-                      placeholder="Re-enter your password"
-                    />
-                  </div>
-                  <div>
-                    <label className="mb-2 block text-xs uppercase tracking-[0.25em] text-slate-400">Display name</label>
-                    <input
-                      className="w-full rounded-2xl border border-white/10 bg-black/25 px-4 py-3 text-sm text-white placeholder:text-slate-500"
-                      value={displayName}
-                      onChange={(e) => setDisplayName(e.target.value)}
-                      placeholder="How friends see you"
-                    />
-                  </div>
-                  <div className="rounded-2xl border border-amber-500/35 bg-amber-950/40 p-4 text-sm leading-6 text-amber-50/95">
-                    <p className="font-semibold text-amber-100">There is no password reset.</p>
-                    <p className="mt-2 text-amber-50/90">
-                      If you forget this password you will need to create a brand new account and re-enter your availability.
-                      Write it down or save it in a password manager before you continue.
-                    </p>
-                  </div>
-                </>
-              ) : null}
-              <button
-                type="submit"
-                className="w-full rounded-2xl bg-[linear-gradient(135deg,#f8fafc_0%,#67e8f9_45%,#a78bfa_100%)] px-4 py-3 text-sm font-semibold text-slate-950 shadow-[0_18px_50px_rgba(103,232,249,0.28)] transition hover:scale-[1.01]"
-              >
-                {authMode === 'register' ? 'Create private access' : 'Open availability'}
-              </button>
-            </form>
-            {authNotice ? (
-              <p className={`mt-4 text-sm ${authNotice.kind === 'success' ? 'text-emerald-300' : 'text-rose-300'}`}>
-                {authNotice.text}
-              </p>
-            ) : null}
-          </GlassPanel>
+  if (attendeeShellReady && showAttendeeVestibule) {
+    return (
+      <>
+        {renderTopBar()}
+        <div className="relative min-h-screen bg-dc-surface px-4 py-12 text-dc-text">
+          <VestibuleLoader
+            variant="attendee-shuffle"
+            onComplete={() => {
+              if (typeof window !== 'undefined') {
+                window.sessionStorage.setItem(`dc-vestibule-attendee:${eventSlug.toLowerCase()}`, '1')
+              }
+              setShowAttendeeVestibule(false)
+            }}
+          />
         </div>
-      </div>
       </>
     )
   }
@@ -2527,18 +2730,41 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
   if (useMinimalLayout) {
     return (
       <>
-        <DancecardTopBar />
+        {confirmDialog}
+        {renameOpen ? (
+          <div className="fixed inset-0 z-[120] flex items-center justify-center bg-dc-surface/80 p-4 backdrop-blur-md">
+            <GlassPanel className="w-full max-w-md p-6">
+              <h3 className="font-serif text-xl text-white">Display name</h3>
+              <input
+                className="mt-3 w-full rounded-xl border border-white/10 bg-black/30 px-3 py-2 text-white"
+                value={renameValue}
+                onChange={(e) => setRenameValue(e.target.value)}
+              />
+              <div className="mt-4 flex justify-end gap-2">
+                <button type="button" className="rounded-full border border-white/15 px-4 py-2 text-sm text-dc-muted" onClick={() => setRenameOpen(false)}>
+                  Cancel
+                </button>
+                <button type="button" className="rounded-full bg-dc-accent px-4 py-2 text-sm font-semibold text-dc-accent-foreground" onClick={() => void submitRename()}>
+                  Save
+                </button>
+              </div>
+            </GlassPanel>
+          </div>
+        ) : null}
+        {renderTopBar()}
         <div
           ref={appTopRef}
           className={cn(
-            'relative min-h-screen overflow-hidden bg-[#07101f] text-slate-100',
+            'relative min-h-screen overflow-hidden bg-dc-surface text-dc-text',
             tab === 'dancecard' && availabilityDays.length && mobileHostDayDocked
               ? 'pb-[calc(7.25rem+env(safe-area-inset-bottom))] lg:pb-10'
               : 'pb-[calc(3.85rem+env(safe-area-inset-bottom))] lg:pb-10'
           )}
         >
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(34,211,238,0.12),transparent_30%),radial-gradient(circle_at_88%_18%,rgba(167,139,250,0.10),transparent_24%),linear-gradient(180deg,#07101f_0%,#0b1426_58%,#07111f_100%)]" />
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(198,167,94,0.12),transparent_30%),radial-gradient(circle_at_88%_18%,rgba(198,167,94,0.08),transparent_24%),linear-gradient(180deg,var(--dc-surface)_0%,var(--dc-surface-muted)_58%,var(--dc-surface)_100%)]" />
           <div className="relative z-[1] mx-auto max-w-5xl space-y-2 px-2.5 py-2 sm:space-y-2.5 sm:px-4 sm:py-3 lg:px-6 lg:py-6">
+            <AttendeeWeekendGuide eventSlug={slug} variant="organizer-classic" />
+            <AttendeeAnnouncements eventSlug={slug} className="mt-2" variant="feed" />
             <GlassPanel className="hidden p-2.5 lg:block">
               <div className="flex flex-wrap gap-1.5" role="tablist" aria-label="Dancecard sections">
                 {TAB_OPTIONS.map((option) => (
@@ -2551,34 +2777,41 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                     className={cx(
                       'flex min-w-0 flex-1 flex-col rounded-xl border px-3 py-2 text-left transition sm:min-w-[120px]',
                       tab === option.key
-                        ? 'border-cyan-300/30 bg-white text-slate-950'
-                        : 'border-white/10 bg-white/[0.03] text-slate-200 hover:bg-white/[0.06]'
+                        ? 'border-dc-accent-border bg-dc-accent text-dc-accent-foreground'
+                        : 'border-white/10 bg-white/[0.03] text-dc-text hover:bg-white/[0.06]'
                     )}
                   >
                     <span className="text-sm font-medium">{option.label}</span>
-                    <span className={cx('mt-0.5 text-[10px] leading-tight', tab === option.key ? 'text-slate-600' : 'text-slate-400')}>
+                    <span className={cx('mt-0.5 text-[10px] leading-tight', tab === option.key ? 'text-dc-accent-foreground/70' : 'text-dc-muted')}>
                       {option.blurb}
                     </span>
                   </button>
                 ))}
               </div>
+              <button
+                type="button"
+                className="mt-2 text-[11px] font-semibold text-dc-accent underline decoration-dc-accent-border"
+                onClick={copyTabLink}
+              >
+                Copy link to this tab
+              </button>
             </GlassPanel>
 
             {tab === 'dancecard' ? (
               <>
             <GlassPanel className="space-y-2.5 p-3">
               <div>
-                <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-slate-500">Your schedule</p>
+                <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-dc-subtle">Your schedule</p>
                 <h1 className="mt-0.5 font-serif text-lg leading-snug text-white sm:text-2xl">
                   {displayEventTitle}
                 </h1>
-                <p className="mt-1 text-[11px] leading-snug text-slate-400">
+                <p className="mt-1 text-[11px] leading-snug text-dc-muted">
                   Block busy time, set buffer, and share your link.{' '}
-                  <span className="text-slate-500">· {tz}</span>
+                  <span className="text-dc-subtle">· {tz}</span>
                 </p>
                 <button
                   type="button"
-                  className="mt-2 touch-manipulation text-left text-[11px] font-semibold text-cyan-200 underline decoration-cyan-400/40 underline-offset-2 transition hover:text-cyan-100"
+                  className="mt-2 touch-manipulation text-left text-[11px] font-semibold text-dc-accent underline decoration-dc-accent-border underline-offset-2 transition hover:text-dc-accent-hover"
                   onClick={() => {
                     switchTab('mutual', { scroll: true })
                     if (typeof window !== 'undefined') {
@@ -2590,13 +2823,13 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                 </button>
               </div>
               {showOnboarding ? (
-                <div className="flex items-start justify-between gap-2 rounded-lg border border-cyan-400/25 bg-cyan-950/40 px-2 py-1.5">
-                  <p className="text-[11px] leading-snug text-cyan-50/95">
-                    <span className="font-semibold text-cyan-100">Tip:</span> dates → busy blocks → share.
+                <div className="flex items-start justify-between gap-2 rounded-lg border border-dc-accent-border bg-dc-accent-muted px-2 py-1.5">
+                  <p className="text-[11px] leading-snug text-dc-text/95">
+                    <span className="font-semibold text-dc-accent">Tip:</span> dates → busy blocks → share.
                   </p>
                   <button
                     type="button"
-                    className="shrink-0 rounded-full border border-cyan-200/30 px-2 py-0.5 text-[10px] text-cyan-100"
+                    className="shrink-0 rounded-full border border-dc-accent-border px-2 py-0.5 text-[10px] text-dc-accent"
                     onClick={() => {
                       setShowOnboarding(false)
                       if (typeof window !== 'undefined') window.localStorage.setItem(`eck_dc_onboard_seen_${slug}`, '1')
@@ -2608,19 +2841,19 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
               ) : null}
               <div className="grid grid-cols-2 gap-2">
                 <div>
-                  <label className="block text-[10px] font-semibold uppercase tracking-[0.12em] text-slate-500">Start</label>
+                  <label className="block text-[10px] font-semibold uppercase tracking-[0.12em] text-dc-subtle">Start</label>
                   <input
                     type="date"
-                    className="mt-1 w-full rounded-lg border border-slate-700 bg-[#111a2c] px-2 py-2 text-xs text-white outline-none transition focus:border-cyan-300 sm:text-sm"
+                    className="mt-1 w-full rounded-lg border border-dc-border bg-dc-elevated px-2 py-2 text-xs text-white outline-none transition focus:border-dc-accent sm:text-sm"
                     value={splitLocalDateTime(availabilityStart).date}
                     onChange={(e) => setAvailabilityStart(`${e.target.value}T00:00`)}
                   />
                 </div>
                 <div>
-                  <label className="block text-[10px] font-semibold uppercase tracking-[0.12em] text-slate-500">End</label>
+                  <label className="block text-[10px] font-semibold uppercase tracking-[0.12em] text-dc-subtle">End</label>
                   <input
                     type="date"
-                    className="mt-1 w-full rounded-lg border border-slate-700 bg-[#111a2c] px-2 py-2 text-xs text-white outline-none transition focus:border-cyan-300 sm:text-sm"
+                    className="mt-1 w-full rounded-lg border border-dc-border bg-dc-elevated px-2 py-2 text-xs text-white outline-none transition focus:border-dc-accent sm:text-sm"
                     value={splitLocalDateTime(availabilityEnd).date}
                     onChange={(e) => setAvailabilityEnd(`${e.target.value}T00:00`)}
                   />
@@ -2629,12 +2862,12 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
               <div className="flex flex-wrap items-center gap-1.5 border-t border-white/5 pt-2">
                 <button
                   type="button"
-                  className="rounded-lg border border-cyan-400/35 bg-cyan-500/15 px-2.5 py-1.5 text-xs font-semibold text-cyan-50 transition hover:bg-cyan-500/25"
+                  className="rounded-lg border border-dc-accent-border bg-dc-accent-muted px-2.5 py-1.5 text-xs font-semibold text-dc-accent transition hover:bg-dc-accent-muted/80"
                   onClick={() => void saveAvailabilityRange()}
                 >
                   Save dates
                 </button>
-                <span className="w-full pl-0.5 text-[9px] font-semibold uppercase tracking-[0.14em] text-slate-500 sm:w-auto">
+                <span className="w-full pl-0.5 text-[9px] font-semibold uppercase tracking-[0.14em] text-dc-subtle sm:w-auto">
                   Buffer
                 </span>
                 {[0, 15, 30, 45, 60].map((minutes) => (
@@ -2644,8 +2877,8 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                     className={cx(
                       'rounded-full border px-2 py-1 text-[11px] font-medium transition',
                       buffer === minutes
-                        ? 'border-cyan-300 bg-cyan-100 text-slate-950'
-                        : 'border-slate-700 bg-[#111a2c] text-slate-200 hover:border-slate-500'
+                        ? 'border-dc-accent-border bg-dc-accent text-dc-accent-foreground'
+                        : 'border-dc-border bg-dc-elevated text-dc-text hover:border-dc-border-strong'
                     )}
                     onClick={() => applyBuffer(minutes)}
                   >
@@ -2653,39 +2886,24 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                   </button>
                 ))}
               </div>
-              {me ? (
-                <div className="mt-2 flex items-center justify-between gap-2 rounded-lg border border-white/10 bg-black/20 px-2 py-2 sm:items-start sm:py-1.5">
-                  <div className="min-w-0 pr-1">
-                    <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-500">Compare by username</p>
-                    <p className="mt-0.5 text-[10px] leading-snug text-slate-400">
-                      Allow others on this event to open your availability using your login{' '}
-                      <span className="text-slate-300">@{me.account.username}</span> (no share link).
-                    </p>
-                  </div>
-                  <button
-                    type="button"
-                    role="switch"
-                    aria-checked={Boolean(me.prefs.allowCompareByUsername)}
-                    className={cn(
-                      'shrink-0 touch-manipulation self-center rounded-full border px-3 py-2.5 text-xs font-semibold transition sm:py-1 sm:text-[10px]',
-                      me.prefs.allowCompareByUsername
-                        ? 'border-cyan-400/50 bg-cyan-500/25 text-cyan-50'
-                        : 'border-slate-600 bg-[#111a2c] text-slate-300'
-                    )}
-                    onClick={() => void setAllowCompareByUsername(!Boolean(me.prefs.allowCompareByUsername))}
-                  >
-                    {me.prefs.allowCompareByUsername ? 'On' : 'Off'}
-                  </button>
-                </div>
-              ) : null}
+              <p className="mt-2 text-[10px] text-dc-subtle">
+                Public card & compare-by-username:{' '}
+                <button
+                  type="button"
+                  className="font-semibold text-dc-accent underline underline-offset-2"
+                  onClick={() => switchTab('profile', { scroll: true })}
+                >
+                  Profile tab
+                </button>
+              </p>
             </GlassPanel>
 
             <GlassPanel className="p-2.5">
-              <p className="mb-2 text-[10px] leading-snug text-slate-500">{SHARE_LINK_PRIVACY_BLURB}</p>
+              <p className="mb-2 text-[10px] leading-snug text-dc-subtle">{SHARE_LINK_PRIVACY_BLURB}</p>
               <div className="flex flex-wrap gap-1.5">
                 <button
                   type="button"
-                  className="rounded-xl border border-cyan-400/35 bg-cyan-500/15 px-3 py-2 text-xs font-semibold text-cyan-50 transition hover:bg-cyan-500/25"
+                  className="rounded-xl border border-dc-accent-border bg-dc-accent-muted px-3 py-2 text-xs font-semibold text-dc-accent transition hover:bg-dc-accent-muted/80"
                   onClick={() => {
                     switchTab('mutual', { scroll: true })
                     if (typeof window !== 'undefined') {
@@ -2697,21 +2915,21 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                 </button>
                 <button
                   type="button"
-                  className="rounded-xl bg-[linear-gradient(135deg,#f8fafc_0%,#67e8f9_45%,#a78bfa_100%)] px-3 py-2 text-xs font-semibold text-slate-950"
+                  className="rounded-xl bg-gradient-to-br from-dc-accent-hover via-dc-accent to-dc-accent px-3 py-2 text-xs font-semibold text-dc-accent-foreground"
                   onClick={() => void copyShare()}
                 >
                   Share link
                 </button>
                 <button
                   type="button"
-                  className="rounded-xl border border-white/10 bg-white/[0.04] px-3 py-2 text-xs text-slate-200"
+                  className="rounded-xl border border-white/10 bg-white/[0.04] px-3 py-2 text-xs text-dc-text"
                   onClick={openBlankManualModal}
                 >
                   Add busy time
                 </button>
                 <button
                   type="button"
-                  className="rounded-xl border border-white/10 bg-white/[0.04] px-3 py-2 text-xs text-slate-200"
+                  className="rounded-xl border border-white/10 bg-white/[0.04] px-3 py-2 text-xs text-dc-text"
                   onClick={() => exportDancecardCalendar('ical')}
                 >
                   Apple / iCal (.ics)
@@ -2725,8 +2943,8 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                 </button>
               </div>
               {lastShareToken ? (
-                <p className="mt-2 text-[10px] leading-snug text-slate-500">
-                  Share code: <span className="font-mono text-slate-200">{lastShareToken}</span>. Paste the code or full link
+                <p className="mt-2 text-[10px] leading-snug text-dc-subtle">
+                  Share code: <span className="font-mono text-dc-text">{lastShareToken}</span>. Paste the code or full link
                   into Compare under Advanced.
                 </p>
               ) : null}
@@ -2735,7 +2953,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
             {blockedTimesPanel(true)}
 
             <GlassPanel className="p-2.5">
-              <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500">Claims</p>
+              <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-dc-subtle">Scene Reservations</p>
               <div className="mt-1.5 space-y-1.5">
                 {upcomingHostClaims.length ? (
                   upcomingHostClaims.map((r) => (
@@ -2745,9 +2963,9 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                     >
                       <div className="min-w-0 flex-1">
                         <p className="truncate font-semibold text-white">{r.guest.displayName}</p>
-                        <p className="text-[10px] text-slate-400">{formatRange(r.startsAt, r.endsAt, tz)}</p>
+                        <p className="text-[10px] text-dc-muted">{formatRange(r.startsAt, r.endsAt, tz)}</p>
                       </div>
-                      {r.note ? <span className="max-w-full truncate text-[10px] text-slate-300 sm:max-w-[45%]">{r.note}</span> : null}
+                      {r.note ? <span className="max-w-full truncate text-[10px] text-dc-muted sm:max-w-[45%]">{r.note}</span> : null}
                       <button
                         type="button"
                         className="shrink-0 rounded-full border border-rose-400/30 bg-rose-500/15 px-2 py-1 text-[10px] font-medium text-rose-100 hover:bg-rose-500/25"
@@ -2758,14 +2976,14 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                     </div>
                   ))
                 ) : (
-                  <p className="text-xs text-slate-500">No claims yet.</p>
+                  <p className="text-xs text-dc-subtle">No scene reservations yet.</p>
                 )}
               </div>
             </GlassPanel>
 
             <GlassPanel className="p-2.5 md:hidden">
               <div className="flex flex-wrap items-center justify-between gap-2">
-                <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500">Day schedule</p>
+                <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-dc-subtle">Day schedule</p>
                 {availabilityDisplayToggle}
               </div>
               {availabilityDays.length ? (
@@ -2789,7 +3007,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                   </p>
                   <button
                     type="button"
-                    className="rounded-full border border-cyan-300/40 bg-cyan-500/15 px-2.5 py-1 text-[11px] font-semibold text-cyan-100"
+                    className="rounded-full border border-dc-accent-border bg-dc-accent-muted px-2.5 py-1 text-[11px] font-semibold text-dc-accent"
                     onClick={() => void blockSelectedDay()}
                   >
                     Block whole day
@@ -2801,7 +3019,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                 className="mt-1.5 max-h-[min(58vh,calc(100dvh-11.5rem))] space-y-1 overflow-y-auto pr-0.5 sm:max-h-[min(58vh,calc(100dvh-12rem))]"
               >
                 {mobileSchedulePanel.rows.length === 0 ? (
-                  <p className="py-6 text-center text-xs leading-relaxed text-slate-500">
+                  <p className="py-6 text-center text-xs leading-relaxed text-dc-subtle">
                     {availabilityDays.length
                       ? availabilityDisplayMode === 'free'
                         ? 'No free hours in your saved date range for this day.'
@@ -2852,7 +3070,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                   })
                 )}
               </div>
-              <p className="mt-2 border-t border-white/5 pt-2 text-[10px] leading-snug text-slate-500">
+              <p className="mt-2 border-t border-white/5 pt-2 text-[10px] leading-snug text-dc-subtle">
                 Tap <span className="text-emerald-200">green</span> hours to mark busy; tap editable red hours to free them.
                 Times are for the highlighted day.
               </p>
@@ -2860,7 +3078,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
 
             <GlassPanel className="hidden p-3 md:block">
               <div className="flex flex-wrap items-center justify-between gap-2">
-                <p className="text-xs uppercase tracking-[0.25em] text-slate-400">Calendar by day</p>
+                <p className="text-xs uppercase tracking-[0.25em] text-dc-muted">Calendar by day</p>
                 {availabilityDisplayToggle}
               </div>
               {desktopDayGroups.length ? (
@@ -2870,12 +3088,12 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                       <div className="flex items-center justify-between gap-2">
                         <p className="text-sm font-semibold text-white">{day.label}</p>
                         <div className="flex items-center gap-2">
-                          <p className="text-xs text-slate-400">
+                          <p className="text-xs text-dc-muted">
                             {day.busyCount} busy · {day.openCount} open
                           </p>
                           <button
                             type="button"
-                            className="rounded-full border border-cyan-300/40 bg-cyan-500/15 px-2 py-1 text-[10px] font-semibold text-cyan-100"
+                            className="rounded-full border border-dc-accent-border bg-dc-accent-muted px-2 py-1 text-[10px] font-semibold text-dc-accent"
                             onClick={() => void blockDay(day.key)}
                           >
                             Block day
@@ -2924,7 +3142,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                             </button>
                           )
                         }) : (
-                          <p className="py-3 text-xs text-slate-500">
+                          <p className="py-3 text-xs text-dc-subtle">
                             {availabilityDisplayMode === 'free' ? 'No free hours on this day.' : 'No hours in this day.'}
                           </p>
                         )}
@@ -2933,10 +3151,78 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                   ))}
                 </div>
               ) : (
-                <p className="mt-2 text-xs text-slate-400">Set a date range to show times.</p>
+                <p className="mt-2 text-xs text-dc-muted">Set a date range to show times.</p>
               )}
             </GlassPanel>
+            {eventModules?.shift_swaps && me?.account.isStaff ? (
+              <StaffOpenShiftsPanel eventSlug={slug} timezone={tz} isStaff />
+            ) : null}
+            {eventModules?.shift_swaps ? (
+              <ShiftSwapPanel eventSlug={slug} modules={eventModules} myShiftIds={[]} />
+            ) : null}
+            {eventModules?.vetting_applications ? (
+              <VettingApplicationForm eventSlug={slug} modules={eventModules} />
+            ) : null}
               </>
+            ) : tab === 'program' && schedule ? (
+              <>
+              <ScheduleChangeNotifications eventSlug={slug} />
+              <DancecardProgramTabBody
+                scheduleView={scheduleView}
+                setScheduleView={setScheduleView}
+                grouped={grouped}
+                venueGroups={venueGroups}
+                uniqueRoomsForGrid={uniqueRoomsForGrid}
+                filteredSlots={filteredSlots}
+                schedule={schedule}
+                tz={tz}
+                programSelected={programSelected}
+                toggleProgram={toggleProgram}
+                programSearch={programSearch}
+                setProgramSearch={setProgramSearch}
+                programDayFilter={programDayFilter}
+                setProgramDayFilter={setProgramDayFilter}
+                programDayKeys={programDayKeys}
+                selectedProgramCount={selectedProgramCount}
+                trackFilter={trackFilter}
+                setTrackFilter={setTrackFilter}
+                roomFilter={roomFilter}
+                setRoomFilter={setRoomFilter}
+                presenterFilter={presenterFilter}
+                setPresenterFilter={setPresenterFilter}
+                trackOptions={tracks}
+                roomOptions={programRoomsAll}
+                presenterOptions={presenterNames}
+                programTagOptions={programTagOptions}
+                programTagFilters={programTagFilters}
+                onToggleProgramTag={toggleProgramTag}
+                eventSlug={slug}
+                programSelections={me?.selections ?? []}
+                onUpdateProgramNote={updateProgramNote}
+              />
+              </>
+            ) : tab === 'program' ? (
+              <GlassPanel className="p-3 sm:p-4">
+                <p className="text-sm text-dc-muted">Loading program…</p>
+              </GlassPanel>
+            ) : tab === 'profile' && me ? (
+              <GlassPanel className="p-3 sm:p-4">
+                <AttendeeProfileTab
+                  username={me.account.username}
+                  displayName={me.account.displayName}
+                  stored={me.prefs.profile ?? {}}
+                  config={me.attendeeProfileConfig ?? DEFAULT_ATTENDEE_PROFILE_CONFIG}
+                  allowCompareByUsername={Boolean(me.prefs.allowCompareByUsername)}
+                  onSave={async (patch) => {
+                    try {
+                      await saveAttendeeProfile(patch)
+                    } catch (e) {
+                      setToast(formatDancecardApiMessage(e))
+                    }
+                  }}
+                  onRenameClick={openRename}
+                />
+              </GlassPanel>
             ) : tab === 'mutual' ? (
               <GlassPanel className="space-y-2 p-3 sm:p-4">
                 <CompareAvailabilityPanel
@@ -2956,6 +3242,10 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                   mutualPlayableWindow={mutualPlayableWindow}
                   onMutualStripSlotClick={onMutualStripSlotClick}
                   me={me}
+                  windowStartMs={schedule?.meta ? Date.parse(schedule.meta.windowStartsAt) : undefined}
+                  windowEndMs={schedule?.meta ? Date.parse(schedule.meta.windowEndsAt) : undefined}
+                  selectedStartMs={mutualSelectedRangeMs.startMs}
+                  selectedEndMs={mutualSelectedRangeMs.endMs}
                 />
               </GlassPanel>
             ) : (
@@ -2968,41 +3258,26 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
           {toast ? (
             <div
               className={cn(
-                'fixed left-4 right-4 z-[100] mx-auto flex max-w-lg items-center justify-between gap-3 rounded-[22px] border border-white/10 bg-slate-950/95 px-4 py-3 text-sm text-white shadow-[0_18px_55px_rgba(2,6,23,0.75)] backdrop-blur-xl lg:bottom-4',
+                'fixed left-4 right-4 z-[100] mx-auto flex max-w-lg items-center justify-between gap-3 rounded-[22px] border border-white/10 bg-dc-surface/95 px-4 py-3 text-sm text-white shadow-[0_18px_55px_rgba(2,6,23,0.75)] backdrop-blur-xl lg:bottom-4',
                 tab === 'dancecard' && availabilityDays.length && mobileHostDayDocked
                   ? 'bottom-[calc(7rem+env(safe-area-inset-bottom))]'
                   : 'bottom-[calc(4.35rem+env(safe-area-inset-bottom))]'
               )}
             >
               <span>{toast}</span>
-              <button type="button" className="rounded-full border border-white/10 px-3 py-1 text-xs text-slate-300" onClick={() => setToast(null)}>
+              <button type="button" className="rounded-full border border-white/10 px-3 py-1 text-xs text-dc-muted" onClick={() => setToast(null)}>
                 Dismiss
               </button>
             </div>
           ) : null}
         </div>
 
-        <nav
-          className="fixed bottom-0 left-0 right-0 z-40 border-t border-slate-700/90 bg-[#07101f]/95 px-1 pb-[max(0.35rem,env(safe-area-inset-bottom))] pt-1.5 shadow-[0_-12px_32px_rgba(2,6,23,0.42)] backdrop-blur-xl lg:hidden"
-          aria-label="Dancecard sections"
-        >
-          <div className="mx-auto flex max-w-5xl gap-0.5">
-            {TAB_OPTIONS.map((option) => (
-              <button
-                key={option.key}
-                type="button"
-                aria-current={tab === option.key ? 'page' : undefined}
-                className={cx(
-                  'flex min-h-[52px] min-w-0 flex-1 flex-col items-center justify-center rounded-xl px-0.5 py-1 text-center text-[10px] font-semibold leading-tight transition sm:text-[11px]',
-                  tab === option.key ? 'bg-cyan-400/20 text-cyan-50' : 'text-slate-400 hover:bg-white/[0.04] hover:text-white'
-                )}
-                onClick={() => switchTab(option.key, { scroll: true })}
-              >
-                <span className="truncate">{option.label}</span>
-              </button>
-            ))}
-          </div>
-        </nav>
+        <AttendeeBottomNav
+          active={tab}
+          onSelect={(t) => switchTab(t, { scroll: true })}
+          badges={{ program: selectedProgramCount > 0 ? selectedProgramCount : undefined }}
+          hiddenTabs={hiddenAttendeeTabs}
+        />
 
         {tab === 'dancecard' && mobileHostDayDocked && availabilityDays.length ? (
           <MobileDayStripBar
@@ -3015,21 +3290,21 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
 
         {manualOpen ? (
           <div
-            className="fixed inset-0 z-[70] flex items-end justify-center overflow-y-auto overscroll-y-contain bg-slate-950/70 p-4 pb-[max(1rem,env(safe-area-inset-bottom))] backdrop-blur-md transition-opacity duration-200 motion-reduce:transition-none sm:items-center sm:py-8"
+            className="fixed inset-0 z-[70] flex items-end justify-center overflow-y-auto overscroll-y-contain bg-dc-surface/80 p-4 pb-[max(1rem,env(safe-area-inset-bottom))] backdrop-blur-md transition-opacity duration-200 motion-reduce:transition-none sm:items-center sm:py-8"
             role="presentation"
             onClick={(e) => {
               if (e.target === e.currentTarget) closeManualModal()
             }}
           >
             <GlassPanel className="flex max-h-[min(90dvh,calc(100dvh-2rem))] w-full max-w-lg flex-col overflow-hidden motion-reduce:transition-none sm:animate-in">
-              <div className="flex shrink-0 items-start justify-between gap-3 border-b border-white/10 bg-[#0c1424]/98 px-5 pb-3 pt-5 backdrop-blur-sm sm:px-6 sm:pt-6">
+              <div className="flex shrink-0 items-start justify-between gap-3 border-b border-white/10 bg-dc-elevated/98 px-5 pb-3 pt-5 backdrop-blur-sm sm:px-6 sm:pt-6">
                 <div className="min-w-0 flex-1">
-                  <p className="text-xs uppercase tracking-[0.3em] text-slate-400">Busy time</p>
+                  <p className="text-xs uppercase tracking-[0.3em] text-dc-muted">Busy time</p>
                   <h3 className="mt-2 font-serif text-2xl text-white sm:text-3xl">Block time on my schedule</h3>
                 </div>
                 <button
                   type="button"
-                  className="shrink-0 touch-manipulation rounded-full border border-white/10 px-4 py-2.5 text-sm font-medium text-slate-300"
+                  className="shrink-0 touch-manipulation rounded-full border border-white/10 px-4 py-2.5 text-sm font-medium text-dc-muted"
                   onClick={closeManualModal}
                 >
                   Close
@@ -3037,7 +3312,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
               </div>
               <div className="min-h-0 flex-1 overflow-y-auto px-5 py-4 sm:px-6">
                 <div>
-                  <label className="mb-2 block text-xs uppercase tracking-[0.25em] text-slate-400">Title</label>
+                  <label className="mb-2 block text-xs uppercase tracking-[0.25em] text-dc-muted">Title</label>
                   <input
                     className="w-full rounded-2xl border border-white/10 bg-black/25 px-4 py-3 text-white"
                     value={mTitle}
@@ -3048,7 +3323,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                 </div>
                 {availabilityDays.length ? (
                   <div className="mt-3">
-                    <p className="mb-2 text-xs uppercase tracking-[0.22em] text-slate-500">Pick day</p>
+                    <p className="mb-2 text-xs uppercase tracking-[0.22em] text-dc-subtle">Pick day</p>
                     <HostMobileDayChipsRow
                       days={availabilityDays.map((d) => ({ key: d.key, label: d.label }))}
                       activeKey={selectedDayKey}
@@ -3060,7 +3335,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                     />
                     <button
                       type="button"
-                      className="mt-2 rounded-full border border-cyan-300/40 bg-cyan-500/15 px-3 py-1.5 text-xs font-semibold text-cyan-100"
+                      className="mt-2 rounded-full border border-dc-accent-border bg-dc-accent-muted px-3 py-1.5 text-xs font-semibold text-dc-accent"
                       onClick={() => void blockSelectedDay()}
                     >
                       Block whole day ({selectedDayLabel})
@@ -3068,21 +3343,21 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                   </div>
                 ) : null}
                 <div className="mt-3">
-                <p className="mb-2 text-xs uppercase tracking-[0.22em] text-slate-500">Use once</p>
+                <p className="mb-2 text-xs uppercase tracking-[0.22em] text-dc-subtle">Use once</p>
                 <div className="flex flex-wrap gap-2">
                   {mealPresetOptions.map((preset) => (
                     <button
                       key={`once-${preset.key}`}
                       type="button"
-                      className="rounded-full border border-white/15 bg-white/[0.04] px-3 py-1.5 text-xs text-slate-200"
+                      className="rounded-full border border-white/15 bg-white/[0.04] px-3 py-1.5 text-xs text-dc-text"
                       onClick={() => applyManualPreset(preset.key)}
                     >
                       {mealPresetLabel(preset)}
                     </button>
                   ))}
                 </div>
-                <p className="mb-2 mt-3 text-xs uppercase tracking-[0.22em] text-slate-500">Apply every event day</p>
-                <p className="mb-2 text-[11px] leading-snug text-slate-500">
+                <p className="mb-2 mt-3 text-xs uppercase tracking-[0.22em] text-dc-subtle">Apply every event day</p>
+                <p className="mb-2 text-[11px] leading-snug text-dc-subtle">
                   Adds one block per day; edit or delete individual days afterward.
                 </p>
                 <div className="flex flex-wrap gap-2">
@@ -3090,34 +3365,34 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                     <button
                       key={`daily-${preset.key}`}
                       type="button"
-                      className="rounded-full border border-cyan-300/40 bg-cyan-500/15 px-3 py-1.5 text-xs font-semibold text-cyan-100"
+                      className="rounded-full border border-dc-accent-border bg-dc-accent-muted px-3 py-1.5 text-xs font-semibold text-dc-accent"
                       onClick={() => void addDailyPresetAcrossAvailability(preset.key)}
                     >
                       {preset.label}
                     </button>
                   ))}
                   {!mealPresetOptions.length ? (
-                    <p className="text-xs text-slate-500">No presets.</p>
+                    <p className="text-xs text-dc-subtle">No presets.</p>
                   ) : null}
                 </div>
                 <div className="mt-2 flex flex-wrap gap-2">
                   <button
                     type="button"
-                    className="rounded-full border border-white/15 bg-white/[0.04] px-3 py-1.5 text-xs text-slate-200"
+                    className="rounded-full border border-white/15 bg-white/[0.04] px-3 py-1.5 text-xs text-dc-text"
                     onClick={() => void clearMealPresetsAcrossAvailability()}
                   >
                     Clear presets
                   </button>
                   <button
                     type="button"
-                    className="rounded-full border border-white/15 bg-white/[0.04] px-3 py-1.5 text-xs text-slate-200"
+                    className="rounded-full border border-white/15 bg-white/[0.04] px-3 py-1.5 text-xs text-dc-text"
                     onClick={() => void clearUnavailableForSelectedDay()}
                   >
                     Clear day ({selectedDayKey})
                   </button>
                   <button
                     type="button"
-                    className="rounded-full border border-white/15 bg-white/[0.04] px-3 py-1.5 text-xs text-slate-200"
+                    className="rounded-full border border-white/15 bg-white/[0.04] px-3 py-1.5 text-xs text-dc-text"
                     onClick={() => void duplicateYesterdayToSelectedDay()}
                   >
                     Duplicate yesterday to {selectedDayKey}
@@ -3126,7 +3401,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
               </div>
               <div className="mt-6 grid gap-4 sm:grid-cols-2">
                 <div>
-                  <label className="mb-2 block text-xs uppercase tracking-[0.25em] text-slate-400">Start</label>
+                  <label className="mb-2 block text-xs uppercase tracking-[0.25em] text-dc-muted">Start</label>
                   <div className="mb-2 grid grid-cols-2 gap-2">
                     <input
                       type="date"
@@ -3154,7 +3429,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                   />
                 </div>
                 <div>
-                  <label className="mb-2 block text-xs uppercase tracking-[0.25em] text-slate-400">End</label>
+                  <label className="mb-2 block text-xs uppercase tracking-[0.25em] text-dc-muted">End</label>
                   <div className="mb-2 grid grid-cols-2 gap-2">
                     <input
                       type="date"
@@ -3183,24 +3458,24 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                 </div>
               </div>
               {manualSelections.length ? (
-                <div className="mt-4 rounded-2xl border border-slate-700/70 bg-[#0b1426]/80 p-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.035)]">
-                  <p className="text-xs font-semibold uppercase tracking-[0.22em] text-slate-300/90">Already blocked</p>
+                <div className="mt-4 rounded-2xl border border-dc-border bg-dc-elevated/80 p-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.035)]">
+                  <p className="text-xs font-semibold uppercase tracking-[0.22em] text-dc-muted/90">Already blocked</p>
                   <div className="mt-2 max-h-32 space-y-1.5 overflow-y-auto pr-1">
                     {manualSelections.map((s) => (
                     <div
                       key={s.id}
-                      className="flex items-center gap-2 rounded-xl border border-slate-600/60 bg-[#101a2d]/85 px-2.5 py-2"
+                      className="flex items-center gap-2 rounded-xl border border-dc-border bg-dc-elevated/85 px-2.5 py-2"
                     >
                       <button
                         type="button"
-                        className="min-h-10 min-w-0 flex-1 text-left text-xs text-slate-100 hover:text-white"
+                        className="min-h-10 min-w-0 flex-1 text-left text-xs text-dc-text hover:text-white"
                         onClick={() => beginManualEdit(s.id)}
                       >
                         {formatRange(s.startsAt, s.endsAt, tz)} {s.note ? `· ${s.note}` : ''}
                       </button>
                       <button
                         type="button"
-                        className="min-h-10 rounded-md border border-cyan-300/35 bg-cyan-500/15 px-2.5 py-1.5 text-xs font-semibold text-cyan-100 hover:bg-cyan-500/25"
+                        className="min-h-10 rounded-md border border-dc-accent-border bg-dc-accent-muted px-2.5 py-1.5 text-xs font-semibold text-dc-accent hover:bg-dc-accent-muted/80"
                         onClick={() => beginManualEdit(s.id)}
                       >
                         Edit
@@ -3220,15 +3495,15 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                 </div>
               ) : null}
               {manualDraftSummary ? (
-                <p className="mt-3 text-xs text-slate-400">
+                <p className="mt-3 text-xs text-dc-muted">
                   This will block about {manualDraftSummary.hours.toFixed(2)} hour(s) across {manualDraftSummary.days} day(s).
                 </p>
               ) : null}
               </div>
-              <div className="shrink-0 border-t border-white/10 bg-[#0c1424]/98 px-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-3 backdrop-blur-sm sm:px-6">
+              <div className="shrink-0 border-t border-white/10 bg-dc-elevated/98 px-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-3 backdrop-blur-sm sm:px-6">
                 <button
                   type="button"
-                  className="touch-manipulation w-full rounded-2xl bg-[linear-gradient(135deg,#f8fafc_0%,#67e8f9_45%,#a78bfa_100%)] px-4 py-3 text-sm font-semibold text-slate-950"
+                  className="touch-manipulation w-full rounded-2xl bg-gradient-to-br from-dc-accent-hover via-dc-accent to-dc-accent px-4 py-3 text-sm font-semibold text-dc-accent-foreground"
                   onClick={() => void submitManualBlock()}
                 >
                   {editingManualId ? 'Save changes' : 'Save busy time'}
@@ -3280,18 +3555,39 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
 
   return (
     <>
-      <DancecardTopBar />
+      {confirmDialog}
+      {renameOpen ? (
+        <div className="fixed inset-0 z-[120] flex items-center justify-center bg-dc-surface/80 p-4 backdrop-blur-md">
+          <GlassPanel className="w-full max-w-md p-6">
+            <h3 className="font-serif text-xl text-white">Display name</h3>
+            <input
+              className="mt-3 w-full rounded-xl border border-white/10 bg-black/30 px-3 py-2 text-white"
+              value={renameValue}
+              onChange={(e) => setRenameValue(e.target.value)}
+            />
+            <div className="mt-4 flex justify-end gap-2">
+              <button type="button" className="rounded-full border border-white/15 px-4 py-2 text-sm text-dc-muted" onClick={() => setRenameOpen(false)}>
+                Cancel
+              </button>
+              <button type="button" className="rounded-full bg-dc-accent px-4 py-2 text-sm font-semibold text-dc-accent-foreground" onClick={() => void submitRename()}>
+                Save
+              </button>
+            </div>
+          </GlassPanel>
+        </div>
+      ) : null}
+      {renderTopBar()}
       <div
         ref={appTopRef}
         className={cn(
-          'relative min-h-screen overflow-hidden bg-[#07101f] text-slate-100 lg:pb-10',
+          'relative min-h-screen overflow-hidden bg-dc-surface text-dc-text lg:pb-10',
           tab === 'dancecard' && availabilityDays.length && mobileHostDayDocked
             ? 'pb-[calc(7.25rem+env(safe-area-inset-bottom))]'
             : 'pb-[calc(3.85rem+env(safe-area-inset-bottom))]'
         )}
       >
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(34,211,238,0.13),transparent_26%),radial-gradient(circle_at_88%_14%,rgba(167,139,250,0.12),transparent_24%),linear-gradient(180deg,#07101f_0%,#0b1426_55%,#07111f_100%)]" />
-      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(148,163,184,0.045)_1px,transparent_1px),linear-gradient(90deg,rgba(148,163,184,0.045)_1px,transparent_1px)] bg-[size:92px_92px] opacity-10" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(198,167,94,0.13),transparent_26%),radial-gradient(circle_at_88%_14%,rgba(198,167,94,0.08),transparent_24%),linear-gradient(180deg,var(--dc-surface)_0%,var(--dc-surface-muted)_55%,var(--dc-surface)_100%)]" />
+      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(198,167,94,0.045)_1px,transparent_1px),linear-gradient(90deg,rgba(198,167,94,0.045)_1px,transparent_1px)] bg-[size:92px_92px] opacity-10" />
 
       <div className="relative z-[1] mx-auto max-w-7xl px-3 py-3 sm:px-4 sm:py-4 lg:px-6 lg:py-6">
         <GlassPanel className="overflow-hidden p-3 sm:p-4 lg:p-5">
@@ -3299,20 +3595,20 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
             <div className="space-y-4">
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div className="min-w-0 flex-1">
-                  <p className="text-[10px] font-semibold uppercase tracking-[0.32em] text-cyan-100/85 sm:text-xs sm:tracking-[0.38em]">
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.32em] text-dc-accent/85 sm:text-xs sm:tracking-[0.38em]">
                     {displayProductTitle}
                   </p>
                   <h1 className="mt-2 font-serif text-xl leading-tight text-white sm:mt-2 sm:text-3xl lg:text-[2.1rem]">
                     {displayEventTitle}
                   </h1>
-                  <p className="mt-1 hidden max-w-3xl text-sm leading-6 text-slate-200/85 md:block">
+                  <p className="mt-1 hidden max-w-3xl text-sm leading-6 text-dc-text/85 md:block">
                     Share your availability, compare free windows with someone else, and reserve time without exposing
                     the details of either person&apos;s calendar.
                   </p>
                 </div>
                 <button
                   type="button"
-                  className="shrink-0 rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 text-xs text-slate-200 transition hover:bg-white/[0.08]"
+                  className="shrink-0 rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 text-xs text-dc-text transition hover:bg-white/[0.08]"
                   onClick={() => void loadSchedule()}
                 >
                   Refresh
@@ -3320,13 +3616,13 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
               </div>
 
               <div className="grid gap-2 sm:grid-cols-2 sm:gap-3">
-                <div className="rounded-xl border border-slate-700/70 bg-[#0b1426]/75 p-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.035)] sm:p-3.5">
-                  <p className="text-xs font-semibold uppercase tracking-[0.32em] text-slate-300/90">Today</p>
+                <div className="rounded-xl border border-dc-border bg-dc-elevated/75 p-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.035)] sm:p-3.5">
+                  <p className="text-xs font-semibold uppercase tracking-[0.32em] text-dc-muted/90">Today</p>
                   <div className="mt-2 font-serif text-lg text-white sm:mt-2 sm:text-2xl">{todayLabel(tz)}</div>
-                  <p className="mt-2 text-xs text-slate-300/80 sm:text-sm">{tz}</p>
+                  <p className="mt-2 text-xs text-dc-muted/80 sm:text-sm">{tz}</p>
                 </div>
-                <div className="rounded-xl border border-slate-700/70 bg-[#0b1426]/75 p-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.035)] sm:p-3.5">
-                  <p className="text-xs font-semibold uppercase tracking-[0.32em] text-slate-300/90">Coming up next</p>
+                <div className="rounded-xl border border-dc-border bg-dc-elevated/75 p-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.035)] sm:p-3.5">
+                  <p className="text-xs font-semibold uppercase tracking-[0.32em] text-dc-muted/90">Coming up next</p>
                   {nextAgendaItem ? (
                     nextAgendaItem.type === 'selection' ? (
                       <>
@@ -3338,7 +3634,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                               : 'Busy time'
                           )}
                         </div>
-                        <p className="mt-1 text-sm text-slate-300">
+                        <p className="mt-1 text-sm text-dc-muted">
                           {findMatchingStaffShift(nextAgendaItem.selection)
                             ? 'Imported busy time'
                             : `${nextAgendaItem.selection.kind === 'program' && nextAgendaItem.selection.programRoom ? `${nextAgendaItem.selection.programRoom} · ` : ''}${formatRange(nextAgendaItem.selection.startsAt, nextAgendaItem.selection.endsAt, tz)}`}
@@ -3349,7 +3645,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                         <div className="mt-2 text-base font-semibold text-white sm:mt-2 sm:text-xl">
                           Scene with {reservationPartnerName(nextAgendaItem.reservation)}
                         </div>
-                        <p className="mt-1 text-sm text-slate-300">
+                        <p className="mt-1 text-sm text-dc-muted">
                           {formatRange(nextAgendaItem.reservation.startsAt, nextAgendaItem.reservation.endsAt, tz)}
                         </p>
                       </>
@@ -3357,19 +3653,19 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                   ) : (
                     <>
                       <div className="mt-2 text-base font-semibold text-white sm:text-xl">Nothing scheduled yet.</div>
-                      <p className="mt-1 text-sm text-slate-300/80">Block busy time or make a reservation.</p>
+                      <p className="mt-1 text-sm text-dc-muted/80">Block busy time or make a reservation.</p>
                     </>
                   )}
                 </div>
               </div>
             </div>
 
-            <div className="rounded-xl border border-slate-700/70 bg-[#0b1426]/75 p-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.035)] sm:p-3.5">
+            <div className="rounded-xl border border-dc-border bg-dc-elevated/75 p-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.035)] sm:p-3.5">
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0">
-                  <p className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-300/90">Signed in</p>
+                  <p className="text-xs font-semibold uppercase tracking-[0.3em] text-dc-muted/90">Signed in</p>
                   <h2 className="mt-1 truncate text-base font-semibold text-white sm:text-xl">{me.account.displayName}</h2>
-                  <p className="mt-0.5 truncate text-xs text-slate-400 sm:text-sm">@{me.account.username}</p>
+                  <p className="mt-0.5 truncate text-xs text-dc-muted sm:text-sm">@{me.account.username}</p>
                 </div>
                 <div className="shrink-0 rounded-full border border-emerald-400/25 bg-emerald-400/10 px-2 py-0.5 text-[10px] font-medium text-emerald-200 sm:px-3 sm:text-xs">
                   Live
@@ -3378,14 +3674,14 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
               <div className="mt-3 flex flex-wrap gap-1.5">
                 <button
                   type="button"
-                  className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-xs text-slate-200 transition hover:bg-white/[0.08]"
-                  onClick={() => void rename()}
+                  className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-xs text-dc-text transition hover:bg-white/[0.08]"
+                  onClick={openRename}
                 >
                   Rename
                 </button>
                 <button
                   type="button"
-                  className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-xs text-slate-200 transition hover:bg-white/[0.08]"
+                  className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-xs text-dc-text transition hover:bg-white/[0.08]"
                   onClick={openBlankManualModal}
                 >
                   Add busy time
@@ -3393,7 +3689,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                 <button
                   type="button"
                   title={SHARE_LINK_PRIVACY_BLURB}
-                  className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-xs text-slate-200 transition hover:bg-white/[0.08]"
+                  className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-xs text-dc-text transition hover:bg-white/[0.08]"
                   onClick={() => void copyShare()}
                 >
                   Copy share link
@@ -3412,6 +3708,8 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
 
         <div className="mt-4 grid gap-4 xl:grid-cols-[minmax(0,1fr)_300px]">
           <div className="space-y-4">
+            <AttendeeWeekendGuide eventSlug={slug} variant="organizer-classic" />
+            <AttendeeAnnouncements eventSlug={slug} className="mt-2" variant="feed" />
             <GlassPanel className="hidden p-2.5 lg:block">
               <div className="flex flex-wrap gap-1.5" role="tablist">
                 {TAB_OPTIONS.map((option) => (
@@ -3424,12 +3722,12 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                     className={cx(
                       'flex min-w-0 flex-1 flex-col rounded-xl border px-3 py-2.5 text-left transition sm:min-w-[130px]',
                       tab === option.key
-                        ? 'border-cyan-300/30 bg-white text-slate-950'
-                        : 'border-white/10 bg-white/[0.03] text-slate-200 hover:bg-white/[0.06]'
+                        ? 'border-dc-accent-border bg-dc-accent text-dc-accent-foreground'
+                        : 'border-white/10 bg-white/[0.03] text-dc-text hover:bg-white/[0.06]'
                     )}
                   >
                     <span className="font-medium">{option.label}</span>
-                    <span className={cx('mt-0.5 text-[11px]', tab === option.key ? 'text-slate-600' : 'text-slate-400')}>
+                    <span className={cx('mt-0.5 text-[11px]', tab === option.key ? 'text-dc-accent-foreground/70' : 'text-dc-muted')}>
                       {option.blurb}
                     </span>
                   </button>
@@ -3437,234 +3735,45 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
               </div>
             </GlassPanel>
 
-            {tab === 'program' ? (
-              <div className="space-y-4">
-                <GlassPanel className="p-3 sm:p-4">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <span className="text-xs uppercase tracking-[0.3em] text-slate-400">View</span>
-                    <div className="flex min-w-0 flex-1 flex-wrap gap-2">
-                      {VIEW_OPTIONS.map((option) => (
-                        <button
-                          key={option.key}
-                          type="button"
-                          className={cx(
-                            'rounded-full px-3 py-2 text-xs transition sm:px-4 sm:text-sm',
-                            scheduleView === option.key
-                              ? 'bg-white text-slate-950'
-                              : 'border border-white/10 bg-white/[0.03] text-slate-300 hover:bg-white/[0.07]'
-                          )}
-                          onClick={() => setScheduleView(option.key)}
-                        >
-                          {option.label}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                  {grouped.length > 1 && scheduleView !== 'venue' && scheduleView !== 'grid' ? (
-                    <nav className="mt-5 flex flex-wrap gap-2">
-                      {grouped.map((g, idx) => (
-                        <a
-                          key={g.day}
-                          href={`#dc-day-${idx}`}
-                          className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 text-xs font-medium uppercase tracking-[0.25em] text-slate-300 transition hover:bg-white/[0.08]"
-                        >
-                          {shortDayLabel(g.day)}
-                        </a>
-                      ))}
-                    </nav>
-                  ) : null}
-                </GlassPanel>
-
-                {scheduleView === 'venue' ? (
-                  <div className="space-y-5">
-                    {venueGroups.map((vg) => (
-                      <GlassPanel key={vg.room} className="p-5 sm:p-6">
-                        <div className="mb-4 flex items-center justify-between gap-3">
-                          <div>
-                            <p className="text-xs uppercase tracking-[0.28em] text-slate-400">Venue</p>
-                            <h3 className="mt-2 font-serif text-2xl text-white">{vg.room}</h3>
-                          </div>
-                          <div className="rounded-full border border-slate-800 bg-[#111a2c] px-3 py-1 text-xs text-slate-300">
-                            Focused by venue
-                          </div>
-                        </div>
-                        <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-2">
-                          {vg.items.map((slot) => (
-                            <SessionCard
-                              key={slot.id}
-                              slot={slot}
-                              tz={tz}
-                              selected={programSelected.has(slot.id)}
-                              onToggle={() => toggleProgram(slot)}
-                            />
-                          ))}
-                        </div>
-                      </GlassPanel>
-                    ))}
-                  </div>
-                ) : scheduleView === 'grid' ? (
-                  <>
-                  <GlassPanel className="hidden overflow-hidden p-3 lg:block">
-                    <div className="overflow-x-auto">
-                      <table className="min-w-full border-separate border-spacing-2 text-left text-xs">
-                        <thead>
-                          <tr>
-                            <th className="rounded-2xl bg-white/[0.05] p-3 text-slate-400">Time</th>
-                            {uniqueRoomsForGrid.map((room) => (
-                              <th key={room} className="rounded-2xl bg-white/[0.05] p-3 text-slate-200">
-                                {room}
-                              </th>
-                            ))}
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {groupSlotsByStart(filteredSlots).map(([startIso, slotsAt]) => (
-                            <tr key={startIso}>
-                              <td className="min-w-[110px] rounded-2xl border border-white/10 bg-black/30 p-3 align-top">
-                                <div className="text-[10px] uppercase tracking-[0.28em] text-slate-500">Time</div>
-                                <div className="mt-1 text-base font-semibold text-white">{formatTime(startIso, tz)}</div>
-                              </td>
-                              {uniqueRoomsForGrid.map((room) => {
-                                const slot = slotsAt.find((s) => (s.room || 'Other') === room)
-                                return (
-                                  <td key={room} className="min-w-[180px] align-top">
-                                    {slot ? (
-                                      <button
-                                        type="button"
-                                        className={cx(
-                                          'h-full w-full rounded-[24px] border p-3 text-left transition',
-                                          programSelected.has(slot.id)
-                                            ? 'border-cyan-300/35 bg-cyan-400/12 shadow-[0_20px_45px_rgba(34,211,238,0.12)]'
-                                            : 'border-white/10 bg-white/[0.04] hover:bg-white/[0.07]'
-                                        )}
-                                        onClick={() => toggleProgram(slot)}
-                                      >
-                                        <div className="text-sm font-semibold text-white">{slot.title}</div>
-                                        <div className="mt-2 text-[11px] text-slate-400">{room}</div>
-                                      </button>
-                                    ) : (
-                                      <div className="rounded-[24px] border border-white/5 bg-black/20 p-3 text-slate-600">—</div>
-                                    )}
-                                  </td>
-                                )
-                              })}
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-                  </GlassPanel>
-                  <GlassPanel className="border-amber-400/25 bg-amber-400/10 p-4 lg:hidden">
-                    <p className="text-sm text-amber-50">
-                      Grid view is built for wider screens. On your phone, use <strong>Timeline</strong> for the easiest
-                      browsing.
-                    </p>
-                    <button
-                      type="button"
-                      className="mt-3 w-full rounded-2xl bg-white px-4 py-3 text-sm font-semibold text-slate-950"
-                      onClick={() => setScheduleView('simple')}
-                    >
-                      Switch to timeline
-                    </button>
-                  </GlassPanel>
-                  </>
-                ) : (
-                  grouped.map((g, dayIdx) => (
-                    <GlassPanel key={g.day} className="scroll-mt-24 p-3 sm:p-4" >
-                      <section id={`dc-day-${dayIdx}`}>
-                        <div className="flex flex-wrap items-end justify-between gap-3">
-                          <div>
-                            <p className="text-xs uppercase tracking-[0.28em] text-slate-400">Day {dayIdx + 1}</p>
-                            <h3 className="mt-1.5 font-serif text-2xl text-white">{g.day}</h3>
-                          </div>
-                          <div className="rounded-full border border-slate-800 bg-[#111a2c] px-3 py-1 text-xs text-slate-300">{tz}</div>
-                        </div>
-                        <div className="mt-4 space-y-2.5">
-                          {groupSlotsByStart(g.items).map(([startIso, slotsAt]) => {
-                            const policies = programPoliciesForSlots(slotsAt)
-                            const hasPolicy = policies.length > 0
-                            return (
-                            <div
-                              key={startIso}
-                              className="grid grid-cols-1 gap-2 rounded-xl border border-white/8 bg-black/20 p-2.5 md:grid-cols-[96px_minmax(0,1fr)]"
-                            >
-                              <button
-                                type="button"
-                                onClick={() => {
-                                  const first = slotsAt[0]
-                                  if (!first) return
-                                  const target = document.getElementById(`dc-slot-${first.id}`)
-                                  target?.scrollIntoView({ behavior: 'smooth', block: 'center' })
-                                }}
-                                className={cx(
-                                  'rounded-lg border px-2.5 py-2 text-left transition hover:bg-white/10',
-                                  hasPolicy
-                                    ? 'border-amber-300/25 bg-amber-500/10'
-                                    : 'border-cyan-300/15 bg-cyan-300/10'
-                                )}
-                                aria-label={`Jump to ${formatTime(startIso, tz)} sessions`}
-                              >
-                                <div
-                                  className={cx(
-                                    'text-[9px] uppercase tracking-[0.24em]',
-                                    hasPolicy ? 'text-amber-100/80' : 'text-cyan-100/70'
-                                  )}
-                                >
-                                  Start
-                                </div>
-                                <div className="mt-1 text-lg font-semibold text-white">{formatTime(startIso, tz)}</div>
-                                {hasPolicy ? (
-                                  <div className="mt-1.5 flex flex-wrap gap-1">
-                                    {policies.slice(0, 2).map((policy) => (
-                                      <span
-                                        key={policy.key}
-                                        className={cx(
-                                          'rounded-full border px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-[0.1em]',
-                                          policyChipClass(policy.tone)
-                                        )}
-                                      >
-                                        {policy.label}
-                                      </span>
-                                    ))}
-                                  </div>
-                                ) : (
-                                  <div className="mt-1.5 text-[10px] text-cyan-100/70">Tap to jump</div>
-                                )}
-                              </button>
-                              <div className="grid grid-cols-1 gap-2 xl:grid-cols-2">
-                                {slotsAt.map((slot) => (
-                                  <SessionCard
-                                    key={slot.id}
-                                    htmlId={`dc-slot-${slot.id}`}
-                                    slot={slot}
-                                    tz={tz}
-                                    showTime={false}
-                                    selected={programSelected.has(slot.id)}
-                                    onToggle={() => toggleProgram(slot)}
-                                  />
-                                ))}
-                              </div>
-                            </div>
-                          )})}
-                        </div>
-                      </section>
-                    </GlassPanel>
-                  ))
-                )}
-
-                {!schedule.slots.length ? (
-                  <GlassPanel className="border-amber-400/20 bg-amber-400/10 p-5 text-sm text-amber-50">
-                    <p className="font-medium text-amber-100">No program is loaded for this event yet.</p>
-                    <p className="mt-2 text-amber-50/80">
-                      The schedule API returned an empty list for this event. Common causes: no rows in{' '}
-                      <code className="rounded bg-black/30 px-1">dancecard_program_slots</code>, production env pointed at
-                      a different project, or the live deploy is older than the latest Dancecard routes.
-                    </p>
-                  </GlassPanel>
-                ) : !filteredSlots.length ? (
-                  <GlassPanel className="p-5 text-sm text-slate-400">No sessions match the current filters.</GlassPanel>
-                ) : null}
-              </div>
+            {tab === 'program' && schedule ? (
+              <>
+                <ScheduleChangeNotifications eventSlug={slug} />
+                <DancecardProgramTabBody
+                  scheduleView={scheduleView}
+                  setScheduleView={setScheduleView}
+                  grouped={grouped}
+                  venueGroups={venueGroups}
+                  uniqueRoomsForGrid={uniqueRoomsForGrid}
+                  filteredSlots={filteredSlots}
+                  schedule={schedule}
+                  tz={tz}
+                  programSelected={programSelected}
+                  toggleProgram={toggleProgram}
+                  programSearch={programSearch}
+                  setProgramSearch={setProgramSearch}
+                  programDayFilter={programDayFilter}
+                  setProgramDayFilter={setProgramDayFilter}
+                  programDayKeys={programDayKeys}
+                  selectedProgramCount={selectedProgramCount}
+                  trackFilter={trackFilter}
+                  setTrackFilter={setTrackFilter}
+                  roomFilter={roomFilter}
+                  setRoomFilter={setRoomFilter}
+                  presenterFilter={presenterFilter}
+                  setPresenterFilter={setPresenterFilter}
+                  trackOptions={tracks}
+                  roomOptions={programRoomsAll}
+                  presenterOptions={presenterNames}
+                  programTagOptions={programTagOptions}
+                  programTagFilters={programTagFilters}
+                  onToggleProgramTag={toggleProgramTag}
+                  eventSlug={slug}
+                  programSelections={me?.selections ?? []}
+                  onUpdateProgramNote={updateProgramNote}
+                />
+              </>
+            ) : tab === 'program' ? (
+              <GlassPanel className="p-5 text-sm text-dc-muted">Loading program…</GlassPanel>
             ) : null}
 
             {tab === 'dancecard' ? (
@@ -3673,20 +3782,20 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                   <div className="grid gap-4 lg:grid-cols-[300px_minmax(0,1fr)] lg:items-start">
                     <div className="space-y-3">
                       <div>
-                        <p className="text-xs uppercase tracking-[0.3em] text-slate-400">Availability</p>
+                        <p className="text-xs uppercase tracking-[0.3em] text-dc-muted">Availability</p>
                         <h2 className="mt-1 font-serif text-2xl text-white sm:text-[2rem]">Your schedule</h2>
-                        <p className="mt-1.5 hidden text-sm leading-6 text-slate-300 sm:block">
+                        <p className="mt-1.5 hidden text-sm leading-6 text-dc-muted sm:block">
                           Set your range, block busy time, and share your link.
                         </p>
-                        <p className="mt-1 text-xs text-slate-400">All times shown in {tz}.</p>
+                        <p className="mt-1 text-xs text-dc-muted">All times shown in {tz}.</p>
                       </div>
                       {showOnboarding ? (
-                        <div className="rounded-xl border border-cyan-300/30 bg-cyan-500/10 p-3">
+                        <div className="rounded-xl border border-dc-accent-border bg-dc-accent-muted p-3">
                           <div className="flex items-start justify-between gap-3">
-                            <p className="text-xs text-cyan-50">1) Set range, 2) add busy times, 3) share link.</p>
+                            <p className="text-xs text-dc-text">1) Set range, 2) add busy times, 3) share link.</p>
                             <button
                               type="button"
-                              className="rounded-full border border-cyan-200/30 px-2.5 py-1 text-[11px] text-cyan-100"
+                              className="rounded-full border border-dc-accent-border px-2.5 py-1 text-[11px] text-dc-accent"
                               onClick={() => {
                                 setShowOnboarding(false)
                                 if (typeof window !== 'undefined') window.localStorage.setItem(`eck_dc_onboard_seen_${slug}`, '1')
@@ -3697,9 +3806,9 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                           </div>
                         </div>
                       ) : null}
-                      <div className="rounded-xl border border-slate-700/70 bg-[#0b1426]/80 p-3">
-                        <label className="block text-xs font-semibold uppercase tracking-[0.25em] text-slate-300/90">Buffer</label>
-                        <p className="mt-1 text-xs text-slate-300/70">Add a small buffer so your busy range is realistic.</p>
+                      <div className="rounded-xl border border-dc-border bg-dc-elevated/80 p-3">
+                        <label className="block text-xs font-semibold uppercase tracking-[0.25em] text-dc-muted/90">Buffer</label>
+                        <p className="mt-1 text-xs text-dc-muted/70">Add a small buffer so your busy range is realistic.</p>
                         <div className="mt-2 flex flex-wrap gap-1.5">
                           {[0, 15, 30, 45, 60].map((minutes) => (
                             <button
@@ -3708,8 +3817,8 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                               className={cx(
                                 'rounded-full border px-3 py-1.5 text-sm transition',
                                 buffer === minutes
-                                  ? 'border-cyan-300 bg-cyan-100 text-slate-950'
-                                  : 'border-slate-600/80 bg-[#111a2c] text-slate-200 hover:border-slate-400'
+                                  ? 'border-dc-accent-border bg-dc-accent text-dc-accent-foreground'
+                                  : 'border-dc-border bg-dc-elevated text-dc-text hover:border-dc-border-strong'
                               )}
                               onClick={() => applyBuffer(minutes)}
                             >
@@ -3719,11 +3828,11 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                         </div>
                       </div>
                       {me ? (
-                        <div className="rounded-xl border border-slate-700/70 bg-[#0b1426]/80 p-3">
-                          <label className="block text-xs font-semibold uppercase tracking-[0.25em] text-slate-300/90">Compare by username</label>
-                          <p className="mt-1 text-xs text-slate-300/70">
+                        <div className="rounded-xl border border-dc-border bg-dc-elevated/80 p-3">
+                          <label className="block text-xs font-semibold uppercase tracking-[0.25em] text-dc-muted/90">Compare by username</label>
+                          <p className="mt-1 text-xs text-dc-muted/70">
                             When on, others signed into this event can use the Compare tab with your login{' '}
-                            <span className="text-slate-300">@{me.account.username}</span> instead of a share link.
+                            <span className="text-dc-muted">@{me.account.username}</span> instead of a share link.
                           </p>
                           <button
                             type="button"
@@ -3732,8 +3841,8 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                             className={cn(
                               'mt-2 min-h-[44px] w-full touch-manipulation rounded-xl border px-3 py-2.5 text-sm font-semibold transition sm:min-h-0 sm:w-auto sm:rounded-full sm:py-1.5 sm:text-xs',
                               me.prefs.allowCompareByUsername
-                                ? 'border-cyan-400/50 bg-cyan-500/20 text-cyan-50'
-                                : 'border-slate-600 bg-[#111a2c] text-slate-300'
+                                ? 'border-dc-accent-border bg-dc-accent-muted text-dc-accent'
+                                : 'border-dc-border bg-dc-elevated text-dc-muted'
                             )}
                             onClick={() => void setAllowCompareByUsername(!Boolean(me.prefs.allowCompareByUsername))}
                           >
@@ -3741,24 +3850,24 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                           </button>
                         </div>
                       ) : null}
-                      <div className="rounded-xl border border-slate-700/70 bg-[#0b1426]/80 p-3">
-                        <label className="block text-xs font-semibold uppercase tracking-[0.25em] text-slate-300/90">Date range</label>
+                      <div className="rounded-xl border border-dc-border bg-dc-elevated/80 p-3">
+                        <label className="block text-xs font-semibold uppercase tracking-[0.25em] text-dc-muted/90">Date range</label>
                         <div className="mt-2 grid gap-2">
                           <input
                             type="date"
-                            className="w-full rounded-xl border border-slate-600/80 bg-[#111a2c] px-3 py-2.5 text-sm text-white outline-none transition focus:border-cyan-300"
+                            className="w-full rounded-xl border border-dc-border bg-dc-elevated px-3 py-2.5 text-sm text-white outline-none transition focus:border-dc-accent"
                             value={splitLocalDateTime(availabilityStart).date}
                             onChange={(e) => setAvailabilityStart(`${e.target.value}T00:00`)}
                           />
                           <input
                             type="date"
-                            className="w-full rounded-xl border border-slate-600/80 bg-[#111a2c] px-3 py-2.5 text-sm text-white outline-none transition focus:border-cyan-300"
+                            className="w-full rounded-xl border border-dc-border bg-dc-elevated px-3 py-2.5 text-sm text-white outline-none transition focus:border-dc-accent"
                             value={splitLocalDateTime(availabilityEnd).date}
                             onChange={(e) => setAvailabilityEnd(`${e.target.value}T00:00`)}
                           />
                           <button
                             type="button"
-                            className="rounded-xl border border-cyan-400/35 bg-cyan-500/15 px-3 py-2 text-sm font-semibold text-cyan-50 transition hover:bg-cyan-500/25"
+                            className="rounded-xl border border-dc-accent-border bg-dc-accent-muted px-3 py-2 text-sm font-semibold text-dc-accent transition hover:bg-dc-accent-muted/80"
                             onClick={() => void saveAvailabilityRange()}
                           >
                             Save date range
@@ -3766,17 +3875,17 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                         </div>
                       </div>
                       {false && !me?.account.isStaff ? (
-                        <div className="rounded-xl border border-slate-800 bg-[#0a1322] p-3">
-                          <label className="block text-xs uppercase tracking-[0.25em] text-slate-400">
+                        <div className="rounded-xl border border-dc-border bg-dc-surface-muted p-3">
+                          <label className="block text-xs uppercase tracking-[0.25em] text-dc-muted">
                             Staff only — unlock roster
                           </label>
-                          <p className="mt-2 text-sm leading-6 text-slate-300">
+                          <p className="mt-2 text-sm leading-6 text-dc-muted">
                             Enter your staff access code once.
                           </p>
                           <input
                             type="password"
                             autoComplete="off"
-                            className="mt-2 w-full rounded-xl border border-slate-700 bg-[#111a2c] px-3 py-2.5 text-sm text-white outline-none transition focus:border-cyan-300"
+                            className="mt-2 w-full rounded-xl border border-dc-border bg-dc-elevated px-3 py-2.5 text-sm text-white outline-none transition focus:border-dc-accent"
                             value={staffUnlockCode}
                             onChange={(e) => {
                               setStaffUnlockCode(e.target.value)
@@ -3788,27 +3897,27 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                           <button
                             type="button"
                             disabled={staffUnlockBusy || !staffUnlockCode.trim()}
-                            className="mt-2.5 w-full rounded-xl border border-cyan-400/40 bg-cyan-500/15 px-3 py-2.5 text-sm font-semibold text-cyan-50 transition hover:bg-cyan-500/25 disabled:cursor-not-allowed disabled:opacity-40"
+                            className="mt-2.5 w-full rounded-xl border border-dc-accent-border bg-dc-accent-muted px-3 py-2.5 text-sm font-semibold text-dc-accent transition hover:bg-dc-accent-muted/80 disabled:cursor-not-allowed disabled:opacity-40"
                             onClick={() => void unlockStaff()}
                           >
                             {staffUnlockBusy ? 'Unlocking…' : 'Unlock staff autofill'}
                           </button>
                         </div>
                       ) : false && staffPeople.length ? (
-                        <div className="rounded-xl border border-slate-800 bg-[#0a1322] p-3">
+                        <div className="rounded-xl border border-dc-border bg-dc-surface-muted p-3">
                           <label
                             htmlFor="staff-schedule"
-                            className="block text-xs uppercase tracking-[0.25em] text-slate-400"
+                            className="block text-xs uppercase tracking-[0.25em] text-dc-muted"
                           >
                             Staff and volunteer autofill
                           </label>
-                          <p className="mt-2 text-sm leading-6 text-slate-300">
+                          <p className="mt-2 text-sm leading-6 text-dc-muted">
                             Choose your official staff/volunteer name.
                           </p>
                           <select
                             id="staff-schedule"
                             value={selectedStaffName}
-                            className="mt-2 w-full rounded-xl border border-slate-700 bg-[#111a2c] px-3 py-2.5 text-sm text-white outline-none transition focus:border-cyan-300"
+                            className="mt-2 w-full rounded-xl border border-dc-border bg-dc-elevated px-3 py-2.5 text-sm text-white outline-none transition focus:border-dc-accent"
                             onChange={(event) => void applyStaffSchedule(event.target.value)}
                           >
                             <option value="">Choose your staff or volunteer name</option>
@@ -3820,14 +3929,14 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                           </select>
                           {selectedStaffEntry ? (
                             <div className="mt-2.5 space-y-2 border-t border-white/10 pt-2.5">
-                              <p className="text-xs uppercase tracking-[0.24em] text-cyan-200">
+                              <p className="text-xs uppercase tracking-[0.24em] text-dc-accent">
                                 {selectedStaffEntry?.shifts.length ?? 0} shifts ready
                               </p>
                               <ul className="space-y-2">
                                 {(selectedStaffEntry?.shifts ?? []).map((sh, i) => {
                                   const rc = roleColor(sh.role)
                                   return (
-                                    <li key={`${sh.startsAt}-${i}`} className="flex flex-wrap items-center gap-2 text-xs text-slate-300">
+                                    <li key={`${sh.startsAt}-${i}`} className="flex flex-wrap items-center gap-2 text-xs text-dc-muted">
                                       <span
                                         className={cx(
                                           'rounded-full border px-2 py-0.5 font-semibold ring-1',
@@ -3838,7 +3947,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                                       >
                                         {sh.role}
                                       </span>
-                                      <span className="text-slate-400">{formatStaffShiftTitle(sh, tz)}</span>
+                                      <span className="text-dc-muted">{formatStaffShiftTitle(sh, tz)}</span>
                                     </li>
                                   )
                                 })}
@@ -3847,32 +3956,32 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                           ) : null}
                         </div>
                       ) : null}
-                      <p className="max-w-prose text-[11px] leading-relaxed text-slate-500">{SHARE_LINK_PRIVACY_BLURB}</p>
+                      <p className="max-w-prose text-[11px] leading-relaxed text-dc-subtle">{SHARE_LINK_PRIVACY_BLURB}</p>
                       <div className="flex flex-wrap gap-3">
                         <button
                           type="button"
-                          className="rounded-2xl bg-[linear-gradient(135deg,#f8fafc_0%,#67e8f9_45%,#a78bfa_100%)] px-4 py-2.5 text-sm font-semibold text-slate-950 shadow-[0_18px_50px_rgba(103,232,249,0.28)]"
+                          className="rounded-2xl bg-gradient-to-br from-dc-accent-hover via-dc-accent to-dc-accent px-4 py-2.5 text-sm font-semibold text-dc-accent-foreground shadow-[0_18px_50px_rgba(198,167,94,0.28)]"
                           onClick={() => void copyShare()}
                         >
                           Share link
                         </button>
                         <button
                           type="button"
-                          className="rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-2.5 text-sm text-slate-200"
+                          className="rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-2.5 text-sm text-dc-text"
                           onClick={openBlankManualModal}
                         >
                           Add busy time
                         </button>
                       </div>
                       {lastShareToken ? (
-                        <p className="rounded-xl border border-white/10 bg-black/20 px-3 py-2 text-xs leading-relaxed text-slate-400">
-                          Share code: <span className="font-mono text-slate-100">{lastShareToken}</span>. Advanced Compare accepts
+                        <p className="rounded-xl border border-white/10 bg-black/20 px-3 py-2 text-xs leading-relaxed text-dc-muted">
+                          Share code: <span className="font-mono text-dc-text">{lastShareToken}</span>. Advanced Compare accepts
                           either this code or the full share link.
                         </p>
                       ) : null}
                       {blockedTimesPanel()}
-                      <div className="rounded-xl border border-slate-700/70 bg-[#0b1426]/80 p-3">
-                        <label className="block text-xs font-semibold uppercase tracking-[0.2em] text-slate-300/90">Export calendar</label>
+                      <div className="rounded-xl border border-dc-border bg-dc-elevated/80 p-3">
+                        <label className="block text-xs font-semibold uppercase tracking-[0.2em] text-dc-muted/90">Export calendar</label>
                         <div className="mt-2 flex flex-wrap gap-1.5">
                           <button
                             type="button"
@@ -3892,13 +4001,13 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                           </button>
                         </div>
                         {calendarExportCount === 0 ? (
-                          <p className="mt-2 text-xs text-slate-500">Nothing to export yet.</p>
+                          <p className="mt-2 text-xs text-dc-subtle">Nothing to export yet.</p>
                         ) : (
-                          <p className="mt-2 text-xs text-slate-500">{calendarExportCount} event(s) in this export.</p>
+                          <p className="mt-2 text-xs text-dc-subtle">{calendarExportCount} event(s) in this export.</p>
                         )}
-                        <p className="mt-2.5 text-xs uppercase tracking-[0.16em] text-slate-500">Busy times only</p>
+                        <p className="mt-2.5 text-xs uppercase tracking-[0.16em] text-dc-subtle">Busy times only</p>
                         {countDancecardIcsEvents(me?.selections ?? [], []) === 0 ? (
-                          <p className="mt-2 text-xs text-slate-500">Add busy times first.</p>
+                          <p className="mt-2 text-xs text-dc-subtle">Add busy times first.</p>
                         ) : (
                           <a
                             href={`/api/dancecard/${slug}/ics`}
@@ -3913,7 +4022,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                     <div className="space-y-3">
                       <GlassPanel className="p-3 md:hidden">
                         <div className="flex flex-wrap items-center justify-between gap-2">
-                          <p className="text-xs uppercase tracking-[0.25em] text-slate-400">Day schedule</p>
+                          <p className="text-xs uppercase tracking-[0.25em] text-dc-muted">Day schedule</p>
                           {availabilityDisplayToggle}
                         </div>
                         {availabilityDays.length ? (
@@ -3937,7 +4046,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                             </p>
                             <button
                               type="button"
-                              className="rounded-full border border-cyan-300/40 bg-cyan-500/15 px-2.5 py-1 text-[11px] font-semibold text-cyan-100"
+                              className="rounded-full border border-dc-accent-border bg-dc-accent-muted px-2.5 py-1 text-[11px] font-semibold text-dc-accent"
                               onClick={() => void blockSelectedDay()}
                             >
                               Block whole day
@@ -3949,7 +4058,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                           className="mt-2 max-h-[min(52vh,calc(100dvh-15rem))] space-y-1.5 overflow-y-auto pr-1"
                         >
                           {mobileSchedulePanel.rows.length === 0 ? (
-                            <p className="py-6 text-center text-xs leading-relaxed text-slate-500">
+                            <p className="py-6 text-center text-xs leading-relaxed text-dc-subtle">
                               {availabilityDays.length
                                 ? availabilityDisplayMode === 'free'
                                   ? 'No free hours in your saved date range for this day.'
@@ -4000,17 +4109,17 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                             })
                           )}
                         </div>
-                        <p className="mt-2 border-t border-white/5 pt-2 text-[11px] leading-snug text-slate-500">
+                        <p className="mt-2 border-t border-white/5 pt-2 text-[11px] leading-snug text-dc-subtle">
                           Tap <span className="text-emerald-200">green</span> hours to mark busy; tap editable red hours to free them.
                           Day chips are above.
                         </p>
                       </GlassPanel>
                       <GlassPanel className="p-3">
                         <div className="flex flex-wrap items-center justify-between gap-2">
-                          <p className="text-xs uppercase tracking-[0.25em] text-slate-400">Hour-by-hour</p>
+                          <p className="text-xs uppercase tracking-[0.25em] text-dc-muted">Hour-by-hour</p>
                           {availabilityDisplayToggle}
                         </div>
-                        <p className="mt-1 hidden text-[11px] text-slate-500 md:block">
+                        <p className="mt-1 hidden text-[11px] text-dc-subtle md:block">
                           Tap green rows to mark busy; tap editable red rows to free that hour.
                         </p>
                         <div className="mt-2 max-h-56 space-y-1 overflow-y-auto pr-1 hidden md:block">
@@ -4057,7 +4166,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                               )
                             })
                           ) : (
-                            <p className="text-xs text-slate-400">
+                            <p className="text-xs text-dc-muted">
                               {availabilityHourRows.length && availabilityDisplayMode === 'free'
                                 ? 'No free hours in this range.'
                                 : 'Set availability start and end to build hour blocks.'}
@@ -4083,12 +4192,41 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                           }}
                         />
                       ) : (
-                        <GlassPanel className="p-5 text-sm text-slate-400">No busy times yet.</GlassPanel>
+                        <GlassPanel className="p-5 text-sm text-dc-muted">No busy times yet.</GlassPanel>
                       )}
                     </div>
                   </div>
                 </GlassPanel>
+                {eventModules?.shift_swaps && me?.account.isStaff ? (
+                  <StaffOpenShiftsPanel eventSlug={slug} timezone={tz} isStaff />
+                ) : null}
+                {eventModules?.shift_swaps ? (
+                  <ShiftSwapPanel eventSlug={slug} modules={eventModules} myShiftIds={[]} />
+                ) : null}
+                {eventModules?.vetting_applications ? (
+                  <VettingApplicationForm eventSlug={slug} modules={eventModules} />
+                ) : null}
               </div>
+            ) : null}
+
+            {tab === 'profile' && me ? (
+              <GlassPanel className="p-3 sm:p-5">
+                <AttendeeProfileTab
+                  username={me.account.username}
+                  displayName={me.account.displayName}
+                  stored={me.prefs.profile ?? {}}
+                  config={me.attendeeProfileConfig ?? DEFAULT_ATTENDEE_PROFILE_CONFIG}
+                  allowCompareByUsername={Boolean(me.prefs.allowCompareByUsername)}
+                  onSave={async (patch) => {
+                    try {
+                      await saveAttendeeProfile(patch)
+                    } catch (e) {
+                      setToast(formatDancecardApiMessage(e))
+                    }
+                  }}
+                  onRenameClick={openRename}
+                />
+              </GlassPanel>
             ) : null}
 
             {tab === 'mutual' ? (
@@ -4109,6 +4247,10 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                   mutualPlayableWindow={mutualPlayableWindow}
                   onMutualStripSlotClick={onMutualStripSlotClick}
                   me={me}
+                  windowStartMs={schedule?.meta ? Date.parse(schedule.meta.windowStartsAt) : undefined}
+                  windowEndMs={schedule?.meta ? Date.parse(schedule.meta.windowEndsAt) : undefined}
+                  selectedStartMs={mutualSelectedRangeMs.startMs}
+                  selectedEndMs={mutualSelectedRangeMs.endMs}
                 />
               </GlassPanel>
             ) : null}
@@ -4118,9 +4260,9 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
 
           <aside className="hidden xl:block">
             <GlassPanel className="p-5">
-              <p className="text-xs uppercase tracking-[0.3em] text-slate-400">About availability</p>
+              <p className="text-xs uppercase tracking-[0.3em] text-dc-muted">About availability</p>
               <h2 className="mt-2 font-serif text-2xl text-white">Private planning</h2>
-              <p className="mt-4 text-sm leading-relaxed text-slate-300">
+              <p className="mt-4 text-sm leading-relaxed text-dc-muted">
                 Compare only the windows that matter: busy time stays abstract, mutual free time is easy to reserve,
                 and confirmed plans can be exported to your calendar.
               </p>
@@ -4131,30 +4273,30 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
 
       {manualOpen ? (
         <div
-          className="fixed inset-0 z-[70] flex items-end justify-center overflow-y-auto overscroll-y-contain bg-slate-950/70 p-4 pb-[max(1rem,env(safe-area-inset-bottom))] backdrop-blur-md transition-opacity duration-200 motion-reduce:transition-none sm:items-center sm:py-8"
+          className="fixed inset-0 z-[70] flex items-end justify-center overflow-y-auto overscroll-y-contain bg-dc-surface/80 p-4 pb-[max(1rem,env(safe-area-inset-bottom))] backdrop-blur-md transition-opacity duration-200 motion-reduce:transition-none sm:items-center sm:py-8"
           role="presentation"
           onClick={(e) => {
             if (e.target === e.currentTarget) closeManualModal()
           }}
         >
           <GlassPanel className="flex max-h-[min(90dvh,calc(100dvh-2rem))] w-full max-w-lg flex-col overflow-hidden motion-reduce:transition-none sm:animate-in">
-            <div className="flex shrink-0 items-start justify-between gap-3 border-b border-white/10 bg-[#0c1424]/98 px-5 pb-3 pt-5 backdrop-blur-sm sm:px-6 sm:pt-6">
+            <div className="flex shrink-0 items-start justify-between gap-3 border-b border-white/10 bg-dc-elevated/98 px-5 pb-3 pt-5 backdrop-blur-sm sm:px-6 sm:pt-6">
               <div className="min-w-0 flex-1">
-                <p className="text-xs uppercase tracking-[0.3em] text-slate-400">Busy time</p>
+                <p className="text-xs uppercase tracking-[0.3em] text-dc-muted">Busy time</p>
                 <h3 className="mt-2 font-serif text-2xl text-white sm:text-3xl">Block time on my schedule</h3>
               </div>
               <button
                 type="button"
-                className="shrink-0 touch-manipulation rounded-full border border-white/10 px-4 py-2.5 text-sm font-medium text-slate-300"
+                className="shrink-0 touch-manipulation rounded-full border border-white/10 px-4 py-2.5 text-sm font-medium text-dc-muted"
                 onClick={closeManualModal}
               >
                 Close
               </button>
             </div>
             <div className="min-h-0 flex-1 overflow-y-auto px-5 py-4 sm:px-6">
-            <p className="text-sm text-slate-400">Times use the event timezone ({tz}) and are stored as UTC.</p>
+            <p className="text-sm text-dc-muted">Times use the event timezone ({tz}) and are stored as UTC.</p>
             <div className="mt-4">
-              <label className="mb-2 block text-xs uppercase tracking-[0.25em] text-slate-400">Title</label>
+              <label className="mb-2 block text-xs uppercase tracking-[0.25em] text-dc-muted">Title</label>
               <input
                 className="w-full rounded-2xl border border-white/10 bg-black/25 px-4 py-3 text-white"
                 value={mTitle}
@@ -4165,7 +4307,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
             </div>
             {availabilityDays.length ? (
               <div className="mt-3">
-                <p className="mb-2 text-xs uppercase tracking-[0.22em] text-slate-500">Pick day</p>
+                <p className="mb-2 text-xs uppercase tracking-[0.22em] text-dc-subtle">Pick day</p>
                 <HostMobileDayChipsRow
                   days={availabilityDays.map((d) => ({ key: d.key, label: d.label }))}
                   activeKey={selectedDayKey}
@@ -4177,7 +4319,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                 />
                 <button
                   type="button"
-                  className="mt-2 rounded-full border border-cyan-300/40 bg-cyan-500/15 px-3 py-1.5 text-xs font-semibold text-cyan-100"
+                  className="mt-2 rounded-full border border-dc-accent-border bg-dc-accent-muted px-3 py-1.5 text-xs font-semibold text-dc-accent"
                   onClick={() => void blockSelectedDay()}
                 >
                   Block whole day ({selectedDayLabel})
@@ -4185,21 +4327,21 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
               </div>
             ) : null}
             <div className="mt-3">
-              <p className="mb-2 text-xs uppercase tracking-[0.22em] text-slate-500">Use once</p>
+              <p className="mb-2 text-xs uppercase tracking-[0.22em] text-dc-subtle">Use once</p>
               <div className="flex flex-wrap gap-2">
                 {mealPresetOptions.map((preset) => (
                   <button
                     key={`once-alt-${preset.key}`}
                     type="button"
-                    className="rounded-full border border-white/15 bg-white/[0.04] px-3 py-1.5 text-xs text-slate-200"
+                    className="rounded-full border border-white/15 bg-white/[0.04] px-3 py-1.5 text-xs text-dc-text"
                     onClick={() => applyManualPreset(preset.key)}
                   >
                     {mealPresetLabel(preset)}
                   </button>
                 ))}
               </div>
-              <p className="mb-2 mt-3 text-xs uppercase tracking-[0.22em] text-slate-500">Apply every event day</p>
-              <p className="mb-2 text-[11px] leading-snug text-slate-500">
+              <p className="mb-2 mt-3 text-xs uppercase tracking-[0.22em] text-dc-subtle">Apply every event day</p>
+              <p className="mb-2 text-[11px] leading-snug text-dc-subtle">
                 Adds one block per day; edit or delete individual days afterward.
               </p>
               <div className="flex flex-wrap gap-2">
@@ -4207,34 +4349,34 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                   <button
                     key={`daily-alt-${preset.key}`}
                     type="button"
-                    className="rounded-full border border-cyan-300/40 bg-cyan-500/15 px-3 py-1.5 text-xs font-semibold text-cyan-100"
+                    className="rounded-full border border-dc-accent-border bg-dc-accent-muted px-3 py-1.5 text-xs font-semibold text-dc-accent"
                     onClick={() => void addDailyPresetAcrossAvailability(preset.key)}
                   >
                     {preset.label}
                   </button>
                 ))}
                 {!mealPresetOptions.length ? (
-                  <p className="text-xs text-slate-500">No presets.</p>
+                  <p className="text-xs text-dc-subtle">No presets.</p>
                 ) : null}
               </div>
               <div className="mt-2 flex flex-wrap gap-2">
                 <button
                   type="button"
-                  className="rounded-full border border-white/15 bg-white/[0.04] px-3 py-1.5 text-xs text-slate-200"
+                  className="rounded-full border border-white/15 bg-white/[0.04] px-3 py-1.5 text-xs text-dc-text"
                   onClick={() => void clearMealPresetsAcrossAvailability()}
                 >
                   Clear presets
                 </button>
                 <button
                   type="button"
-                  className="rounded-full border border-white/15 bg-white/[0.04] px-3 py-1.5 text-xs text-slate-200"
+                  className="rounded-full border border-white/15 bg-white/[0.04] px-3 py-1.5 text-xs text-dc-text"
                   onClick={() => void clearUnavailableForSelectedDay()}
                 >
                   Clear day ({selectedDayKey})
                 </button>
                 <button
                   type="button"
-                  className="rounded-full border border-white/15 bg-white/[0.04] px-3 py-1.5 text-xs text-slate-200"
+                  className="rounded-full border border-white/15 bg-white/[0.04] px-3 py-1.5 text-xs text-dc-text"
                   onClick={() => void duplicateYesterdayToSelectedDay()}
                 >
                   Duplicate yesterday to {selectedDayKey}
@@ -4243,7 +4385,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
             </div>
             <div className="mt-6 grid gap-4 sm:grid-cols-2">
               <div>
-                <label className="mb-2 block text-xs uppercase tracking-[0.25em] text-slate-400">Start</label>
+                <label className="mb-2 block text-xs uppercase tracking-[0.25em] text-dc-muted">Start</label>
                 <div className="mb-2 grid grid-cols-2 gap-2">
                   <input
                     type="date"
@@ -4271,7 +4413,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                 />
               </div>
               <div>
-                <label className="mb-2 block text-xs uppercase tracking-[0.25em] text-slate-400">End</label>
+                <label className="mb-2 block text-xs uppercase tracking-[0.25em] text-dc-muted">End</label>
                 <div className="mb-2 grid grid-cols-2 gap-2">
                   <input
                     type="date"
@@ -4300,24 +4442,24 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
               </div>
             </div>
             {manualSelections.length ? (
-              <div className="mt-4 rounded-2xl border border-slate-700/70 bg-[#0b1426]/80 p-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.035)]">
-                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-slate-300/90">Already blocked</p>
+              <div className="mt-4 rounded-2xl border border-dc-border bg-dc-elevated/80 p-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.035)]">
+                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-dc-muted/90">Already blocked</p>
                 <div className="mt-2 max-h-32 space-y-1.5 overflow-y-auto pr-1">
                   {manualSelections.map((s) => (
                     <div
                       key={s.id}
-                      className="flex items-center gap-2 rounded-xl border border-slate-600/60 bg-[#101a2d]/85 px-2.5 py-2"
+                      className="flex items-center gap-2 rounded-xl border border-dc-border bg-dc-elevated/85 px-2.5 py-2"
                     >
                       <button
                         type="button"
-                        className="min-h-10 min-w-0 flex-1 text-left text-xs text-slate-100 hover:text-white"
+                        className="min-h-10 min-w-0 flex-1 text-left text-xs text-dc-text hover:text-white"
                         onClick={() => beginManualEdit(s.id)}
                       >
                         {formatRange(s.startsAt, s.endsAt, tz)} {s.note ? `· ${s.note}` : ''}
                       </button>
                       <button
                         type="button"
-                        className="min-h-10 rounded-md border border-cyan-300/35 bg-cyan-500/15 px-2.5 py-1.5 text-xs font-semibold text-cyan-100 hover:bg-cyan-500/25"
+                        className="min-h-10 rounded-md border border-dc-accent-border bg-dc-accent-muted px-2.5 py-1.5 text-xs font-semibold text-dc-accent hover:bg-dc-accent-muted/80"
                         onClick={() => beginManualEdit(s.id)}
                       >
                         Edit
@@ -4337,15 +4479,15 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
               </div>
             ) : null}
             {manualDraftSummary ? (
-              <p className="mt-3 text-xs text-slate-400">
+              <p className="mt-3 text-xs text-dc-muted">
                 This will block about {manualDraftSummary.hours.toFixed(2)} hour(s) across {manualDraftSummary.days} day(s).
               </p>
             ) : null}
             </div>
-            <div className="shrink-0 border-t border-white/10 bg-[#0c1424]/98 px-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-3 backdrop-blur-sm sm:px-6">
+            <div className="shrink-0 border-t border-white/10 bg-dc-elevated/98 px-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-3 backdrop-blur-sm sm:px-6">
               <button
                 type="button"
-                className="touch-manipulation w-full rounded-2xl bg-[linear-gradient(135deg,#f8fafc_0%,#67e8f9_45%,#a78bfa_100%)] px-4 py-3 text-sm font-semibold text-slate-950 shadow-[0_18px_50px_rgba(103,232,249,0.28)]"
+                className="touch-manipulation w-full rounded-2xl bg-gradient-to-br from-dc-accent-hover via-dc-accent to-dc-accent px-4 py-3 text-sm font-semibold text-dc-accent-foreground shadow-[0_18px_50px_rgba(198,167,94,0.28)]"
                 onClick={() => void submitManualBlock()}
               >
                 {editingManualId ? 'Save changes' : 'Save busy time'}
@@ -4402,7 +4544,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
       ) : null}
 
       <nav
-        className="fixed bottom-0 left-0 right-0 z-40 border-t border-slate-700/90 bg-[#07101f]/95 px-1 pb-[max(0.35rem,env(safe-area-inset-bottom))] pt-1.5 shadow-[0_-12px_32px_rgba(2,6,23,0.42)] backdrop-blur-xl lg:hidden"
+        className="fixed bottom-0 left-0 right-0 z-40 border-t border-dc-border/90 bg-dc-surface/95 px-1 pb-[max(0.35rem,env(safe-area-inset-bottom))] pt-1.5 shadow-[0_-12px_32px_rgba(2,6,23,0.42)] backdrop-blur-xl lg:hidden"
         aria-label="Dancecard sections"
       >
         <div className="mx-auto flex max-w-7xl gap-0.5">
@@ -4413,7 +4555,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
               aria-current={tab === option.key ? 'page' : undefined}
               className={cx(
                 'flex min-h-[52px] min-w-0 flex-1 flex-col items-center justify-center rounded-xl px-0.5 py-1 text-center text-[10px] font-semibold leading-tight transition sm:text-[11px]',
-                tab === option.key ? 'bg-cyan-400/20 text-cyan-50' : 'text-slate-400 hover:bg-white/[0.04] hover:text-white'
+                tab === option.key ? 'bg-dc-accent-muted text-dc-accent' : 'text-dc-muted hover:bg-dc-elevated-muted hover:text-dc-text'
               )}
               onClick={() => switchTab(option.key, { scroll: true })}
             >
@@ -4426,14 +4568,14 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
       {toast ? (
         <div
           className={cn(
-            'fixed left-4 right-4 z-[100] mx-auto flex max-w-lg items-center justify-between gap-3 rounded-[22px] border border-white/10 bg-slate-950/95 px-4 py-3 text-sm text-white shadow-[0_18px_55px_rgba(2,6,23,0.75)] backdrop-blur-xl lg:bottom-4',
+            'fixed left-4 right-4 z-[100] mx-auto flex max-w-lg items-center justify-between gap-3 rounded-[22px] border border-white/10 bg-dc-surface/95 px-4 py-3 text-sm text-white shadow-[0_18px_55px_rgba(2,6,23,0.75)] backdrop-blur-xl lg:bottom-4',
             tab === 'dancecard' && availabilityDays.length && mobileHostDayDocked
               ? 'bottom-[calc(7rem+env(safe-area-inset-bottom))]'
               : 'bottom-[calc(4.35rem+env(safe-area-inset-bottom))]'
           )}
         >
           <span>{toast}</span>
-          <button type="button" className="rounded-full border border-white/10 px-3 py-1 text-xs text-slate-300" onClick={() => setToast(null)}>
+          <button type="button" className="rounded-full border border-white/10 px-3 py-1 text-xs text-dc-muted" onClick={() => setToast(null)}>
             Dismiss
           </button>
         </div>
@@ -4441,14 +4583,14 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
       {undoSnapshot ? (
         <div
           className={cn(
-            'fixed left-4 right-4 z-[101] mx-auto flex max-w-lg items-center justify-between gap-3 rounded-[18px] border border-cyan-300/35 bg-cyan-500/15 px-4 py-2.5 text-sm text-cyan-50 backdrop-blur-xl lg:bottom-20',
+            'fixed left-4 right-4 z-[101] mx-auto flex max-w-lg items-center justify-between gap-3 rounded-[18px] border border-dc-accent-border bg-dc-accent-muted px-4 py-2.5 text-sm text-dc-accent backdrop-blur-xl lg:bottom-20',
             tab === 'dancecard' && availabilityDays.length && mobileHostDayDocked
               ? 'bottom-[calc(8.5rem+env(safe-area-inset-bottom))]'
               : 'bottom-[calc(5.75rem+env(safe-area-inset-bottom))]'
           )}
         >
           <span>{undoSnapshot.label}</span>
-          <button type="button" className="rounded-full border border-cyan-200/35 px-3 py-1 text-xs" onClick={() => void undoLastSelectionChange()}>
+          <button type="button" className="rounded-full border border-dc-accent-border px-3 py-1 text-xs" onClick={() => void undoLastSelectionChange()}>
             Undo
           </button>
         </div>
@@ -4468,7 +4610,7 @@ function GlassPanel({
   return (
     <div
       className={cx(
-        'rounded-2xl border border-slate-700/70 bg-[#101a2d]/95 shadow-[0_18px_54px_rgba(2,6,23,0.42),inset_0_1px_0_rgba(255,255,255,0.045)] backdrop-blur-sm transition-[box-shadow,border-color] duration-200 motion-reduce:transition-none',
+        'rounded-2xl border border-dc-border bg-dc-elevated/95 shadow-[0_18px_54px_rgba(2,6,23,0.42),inset_0_1px_0_rgba(255,255,255,0.045)] backdrop-blur-sm transition-[box-shadow,border-color] duration-200 motion-reduce:transition-none',
         className
       )}
     >
@@ -4495,13 +4637,13 @@ function SelectionCard({
         ? 'border-amber-300/20 bg-amber-300/10'
         : tone === 'emerald'
           ? 'border-emerald-300/20 bg-emerald-300/10'
-          : 'border-cyan-300/20 bg-cyan-300/10'
+          : 'border-dc-accent-border bg-dc-accent-muted'
 
   return (
     <div className={cx('flex items-start justify-between gap-3 rounded-xl border p-3', toneClass)}>
       <div className="min-w-0 flex-1">
         <div className="text-[15px] font-semibold leading-5 text-white">{title}</div>
-        <div className="mt-1 text-xs text-slate-200/85 sm:text-sm">{meta}</div>
+        <div className="mt-1 text-xs text-dc-text/85 sm:text-sm">{meta}</div>
       </div>
       {action ? <div className="shrink-0">{action}</div> : null}
     </div>
@@ -4510,62 +4652,69 @@ function SelectionCard({
 
 function SessionCard(props: {
   htmlId?: string
+  eventSlug: string
   slot: ProgramSlot
   tz: string
   showTime?: boolean
   selected: boolean
   onToggle: () => void
 }) {
-  const { htmlId, slot, tz, showTime = true, selected, onToggle } = props
+  const { htmlId, eventSlug, slot, tz, showTime = true, selected, onToggle } = props
   const addLabel = selected ? 'On your dancecard — click to remove' : 'Click to add to My dancecard'
   const compactActionLabel = selected ? 'Added' : 'Tap to add'
   const policyTags = programPoliciesForSlots([slot])
   const roomChip = locationColor(slot.room)
   const hasRoomTint = Boolean(slot.room)
+  const mapHref =
+    slot.locationId != null && String(slot.locationId).trim()
+      ? `/dancecard/${encodeURIComponent(eventSlug)}/map?locationId=${encodeURIComponent(String(slot.locationId))}`
+      : null
   return (
-    <button
-      id={htmlId}
-      type="button"
-      onClick={onToggle}
-      aria-pressed={selected}
-      aria-label={`${slot.title}. ${addLabel}`}
-      className={cx(
-        'group flex w-full min-w-0 flex-1 flex-col rounded-xl border p-2 text-left shadow-[inset_0_1px_0_rgba(255,255,255,0.035)] transition focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300 sm:flex-row sm:items-stretch',
-        selected
-          ? 'border-cyan-300/45 bg-cyan-300/16'
-          : hasRoomTint
-            ? `${roomChip.border} ${roomChip.surface} hover:bg-white/[0.06]`
-            : 'border-slate-700/70 bg-[#101a2d] hover:border-slate-500/80 hover:bg-[#15213a]'
-      )}
-    >
-      <div className={cx('flex flex-col gap-1.5 sm:items-stretch', showTime ? 'sm:flex-row' : '')}>
-        {showTime ? (
-        <div className="min-w-0 shrink-0 rounded-lg border border-slate-600/60 bg-[#0b1426]/85 px-2 py-2 sm:min-w-[84px]">
-          <div className="text-[10px] font-semibold uppercase tracking-[0.28em] text-slate-300/80">Time</div>
-          <div className="mt-1 text-sm font-semibold text-white">{formatTime(slot.startsAt, tz)}</div>
-          <div className="mt-1 text-xs text-slate-300/80">{formatTime(slot.endsAt, tz)}</div>
-        </div>
-        ) : null}
-        <div className="min-w-0 flex-1">
-          <div className="flex items-start justify-between gap-3">
-            <div className="min-w-0 flex-1">
-              <div className="text-sm font-semibold leading-5 text-white">{slot.title}</div>
-              <div className="mt-1 flex flex-wrap gap-1 text-[10px]">
-                {slot.room ? (
-                  <span
-                    className={cx(
-                      'rounded-full border px-1.5 py-0.5 text-[10px] font-semibold ring-1',
-                      roomChip.bg,
-                      roomChip.fg,
-                      roomChip.ring
-                    )}
-                  >
-                    {slot.room}
-                  </span>
-                ) : null}
-                {slot.track ? (
-                  (() => {
-                    const rc = roleColor(slot.track)
+    <div className="flex w-full min-w-0 items-stretch gap-2">
+      <button
+        id={htmlId}
+        type="button"
+        onClick={onToggle}
+        aria-pressed={selected}
+        aria-label={`${slot.title}. ${addLabel}`}
+        className={cx(
+          'group flex min-h-0 min-w-0 flex-1 flex-col rounded-xl border p-2 text-left shadow-[inset_0_1px_0_rgba(255,255,255,0.035)] transition focus:outline-none focus-visible:ring-2 focus-visible:ring-dc-accent sm:flex-row sm:items-stretch',
+          selected
+            ? 'border-dc-accent-border bg-dc-accent-muted'
+            : hasRoomTint
+              ? `${roomChip.border} ${roomChip.surface} hover:bg-dc-elevated-muted`
+              : 'border-dc-border bg-dc-elevated hover:border-dc-border-strong/80 hover:bg-dc-elevated-muted'
+        )}
+      >
+        <div className={cx('flex flex-col gap-1.5 sm:items-stretch', showTime ? 'sm:flex-row' : '')}>
+          {showTime ? (
+            <div className="min-w-0 shrink-0 rounded-lg border border-dc-border bg-dc-elevated/85 px-2 py-2 sm:min-w-[84px]">
+              <div className="text-[10px] font-semibold uppercase tracking-[0.28em] text-dc-muted/80">Time</div>
+              <div className="mt-1 text-sm font-semibold text-white">{formatTime(slot.startsAt, tz)}</div>
+              <div className="mt-1 text-xs text-dc-muted/80">{formatTime(slot.endsAt, tz)}</div>
+            </div>
+          ) : null}
+          <div className="min-w-0 flex-1">
+            <div className="flex items-start justify-between gap-3">
+              <div className="min-w-0 flex-1">
+                <div className="text-sm font-semibold leading-5 text-white">{slot.title}</div>
+                <div className="mt-1 flex flex-wrap gap-1 text-[10px]">
+                  {slot.room ? (
+                    <span
+                      className={cx(
+                        'rounded-full border px-1.5 py-0.5 text-[10px] font-semibold ring-1',
+                        roomChip.bg,
+                        roomChip.fg,
+                        roomChip.ring
+                      )}
+                    >
+                      {slot.room}
+                    </span>
+                  ) : null}
+                  {(() => {
+                    const tr = (slot.trackDisplay ?? slot.track)?.trim()
+                    if (!tr) return null
+                    const rc = roleColor(tr)
                     return (
                       <span
                         className={cx(
@@ -4575,61 +4724,530 @@ function SessionCard(props: {
                           rc.ring
                         )}
                       >
-                        {slot.track}
+                        {tr}
                       </span>
                     )
-                  })()
-                ) : null}
-                {policyTags.map((policy) => (
-                  <span
-                    key={policy.key}
-                    className={cx(
-                      'rounded-full border px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-[0.08em]',
-                      policyChipClass(policy.tone)
-                    )}
-                  >
-                    {policy.label}
-                  </span>
-                ))}
+                  })()}
+                  {slot.photoPolicy && slot.photoPolicy !== 'allowed' ? <PhotoPolicyChip policy={slot.photoPolicy} /> : null}
+                  {policyTags.map((policy) => (
+                    <span
+                      key={policy.key}
+                      className={cx(
+                        'rounded-full border px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-[0.08em]',
+                        policyChipClass(policy.tone)
+                      )}
+                    >
+                      {policy.label}
+                    </span>
+                  ))}
+                </div>
               </div>
+              <span
+                className={cx(
+                  'flex h-7 w-7 shrink-0 items-center justify-center rounded-full border text-[10px] font-semibold',
+                  selected
+                    ? 'border-dc-accent-border bg-dc-accent-muted text-dc-accent'
+                    : 'border-dc-border/70 bg-dc-elevated text-dc-muted'
+                )}
+                aria-hidden
+              >
+                {selected ? '✓' : '+'}
+              </span>
             </div>
-            <span
-              className={cx(
-                'flex h-7 w-7 shrink-0 items-center justify-center rounded-full border text-[10px] font-semibold',
-                selected
-                  ? 'border-cyan-200/40 bg-cyan-300/20 text-cyan-50'
-                  : 'border-slate-600/70 bg-[#0b1426] text-slate-300'
-              )}
-              aria-hidden
-            >
-              {selected ? '✓' : '+'}
-            </span>
-          </div>
-          <div className="mt-1.5 flex items-center justify-between gap-2">
-            <div className="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-300/75">{compactActionLabel}</div>
-            <div className="truncate text-[11px] text-slate-300/80">{formatRange(slot.startsAt, slot.endsAt, tz)}</div>
+            <div className="mt-1.5 flex items-center justify-between gap-2">
+              <div className="text-[10px] font-semibold uppercase tracking-[0.14em] text-dc-muted/75">{compactActionLabel}</div>
+              <div className="truncate text-[11px] text-dc-muted/80">{formatRange(slot.startsAt, slot.endsAt, tz)}</div>
+            </div>
           </div>
         </div>
-      </div>
-    </button>
+      </button>
+      {mapHref ? (
+        <Link
+          href={mapHref}
+          prefetch={false}
+          className="flex w-11 shrink-0 flex-col items-center justify-center rounded-xl border border-dc-accent-border bg-dc-accent-muted px-1 text-[10px] font-semibold uppercase tracking-wide text-dc-accent hover:bg-dc-accent-muted/80"
+        >
+          Map
+        </Link>
+      ) : null}
+    </div>
+  )
+}
+
+type DancecardProgramTabBodyProps = {
+  scheduleView: ScheduleView
+  setScheduleView: Dispatch<SetStateAction<ScheduleView>>
+  grouped: { day: string; items: ProgramSlot[] }[]
+  venueGroups: { room: string; items: ProgramSlot[] }[]
+  uniqueRoomsForGrid: string[]
+  filteredSlots: ProgramSlot[]
+  schedule: { meta: ScheduleMeta | null; slots: ProgramSlot[] }
+  tz: string
+  programSelected: Set<string>
+  toggleProgram: (slot: ProgramSlot) => void
+  programSearch: string
+  setProgramSearch: Dispatch<SetStateAction<string>>
+  programDayFilter: string
+  setProgramDayFilter: Dispatch<SetStateAction<string>>
+  programDayKeys: string[]
+  selectedProgramCount: number
+  trackFilter: string
+  setTrackFilter: Dispatch<SetStateAction<string>>
+  roomFilter: string
+  setRoomFilter: Dispatch<SetStateAction<string>>
+  presenterFilter: string
+  setPresenterFilter: Dispatch<SetStateAction<string>>
+  trackOptions: string[]
+  roomOptions: string[]
+  presenterOptions: string[]
+  programTagOptions: string[]
+  programTagFilters: Set<string>
+  onToggleProgramTag: (tag: string) => void
+  eventSlug: string
+  programSelections: MeResponse['selections']
+  onUpdateProgramNote: (slotId: string, note: string) => void
+}
+
+function DancecardProgramTabBody({
+  scheduleView,
+  setScheduleView,
+  grouped,
+  venueGroups,
+  uniqueRoomsForGrid,
+  filteredSlots,
+  schedule,
+  tz,
+  programSelected,
+  toggleProgram,
+  programSearch,
+  setProgramSearch,
+  programDayFilter,
+  setProgramDayFilter,
+  programDayKeys,
+  selectedProgramCount,
+  trackFilter,
+  setTrackFilter,
+  roomFilter,
+  setRoomFilter,
+  presenterFilter,
+  setPresenterFilter,
+  trackOptions,
+  roomOptions,
+  presenterOptions,
+  programTagOptions,
+  programTagFilters,
+  onToggleProgramTag,
+  eventSlug,
+  programSelections,
+  onUpdateProgramNote,
+}: DancecardProgramTabBodyProps) {
+  const slots = schedule.slots
+  const [detailSlot, setDetailSlot] = useState<ProgramSlot | null>(null)
+  const publicSlots = slots as PublicProgramSlotDto[]
+  return (
+    <div className="space-y-4">
+      <HappeningNowRibbon
+        eventSlug={eventSlug}
+        slots={publicSlots}
+        timezone={tz}
+        onSelectSlot={(id) => {
+          const s = slots.find((x) => x.id === id)
+          if (s) setDetailSlot(s)
+        }}
+      />
+      <MyScheduleView
+        slots={slots}
+        selections={programSelections}
+        selectedIds={programSelected}
+        timezone={tz}
+        onToggle={toggleProgram}
+      />
+      <PresenterDirectory
+        slots={slots}
+        onSelectSlot={(id) => {
+          const s = slots.find((x) => x.id === id)
+          if (s) setDetailSlot(s)
+        }}
+      />
+      <SessionDetailSheet
+        open={detailSlot != null}
+        slot={detailSlot}
+        eventSlug={eventSlug}
+        timezone={tz}
+        onClose={() => setDetailSlot(null)}
+      />
+      <GlassPanel className="p-3 sm:p-4">
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="text-xs uppercase tracking-[0.3em] text-dc-muted">View</span>
+          <div className="flex min-w-0 flex-1 flex-wrap gap-2">
+            {VIEW_OPTIONS.map((option) => (
+              <button
+                key={option.key}
+                type="button"
+                className={cx(
+                  'rounded-full px-3 py-2 text-xs transition sm:px-4 sm:text-sm',
+                  scheduleView === option.key
+                    ? 'bg-white text-dc-accent-foreground'
+                    : 'border border-white/10 bg-white/[0.03] text-dc-muted hover:bg-white/[0.07]'
+                )}
+                onClick={() => setScheduleView(option.key)}
+              >
+                {option.label}
+              </button>
+            ))}
+          </div>
+          <span className="rounded-full border border-dc-accent-border bg-dc-accent-muted px-3 py-1 text-[11px] font-medium text-dc-accent">
+            My schedule: {selectedProgramCount}
+          </span>
+        </div>
+        <div className="mt-4 flex flex-wrap items-end gap-2 border-t border-white/10 pt-4">
+          <label className="text-[11px] text-dc-muted">
+            Search
+            <input
+              className="mt-1 block min-w-[160px] rounded-lg border border-white/10 bg-black/30 px-2 py-1.5 text-sm text-white"
+              value={programSearch}
+              onChange={(e) => setProgramSearch(e.target.value)}
+              placeholder="Title, tags, room…"
+            />
+          </label>
+          <label className="text-[11px] text-dc-muted">
+            Day
+            <select
+              className="mt-1 block rounded-lg border border-white/10 bg-black/30 px-2 py-1.5 text-sm text-white"
+              value={programDayFilter}
+              onChange={(e) => setProgramDayFilter(e.target.value)}
+            >
+              <option value="">All days</option>
+              {programDayKeys.map((d) => (
+                <option key={d} value={d}>
+                  {d}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label className="text-[11px] text-dc-muted">
+            Track
+            <select
+              className="mt-1 block min-w-[120px] rounded-lg border border-white/10 bg-black/30 px-2 py-1.5 text-sm text-white"
+              value={trackFilter}
+              onChange={(e) => setTrackFilter(e.target.value)}
+            >
+              <option value="">All tracks</option>
+              {trackOptions.map((t) => (
+                <option key={t} value={t}>
+                  {t}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label className="text-[11px] text-dc-muted">
+            Room
+            <select
+              className="mt-1 block min-w-[120px] rounded-lg border border-white/10 bg-black/30 px-2 py-1.5 text-sm text-white"
+              value={roomFilter}
+              onChange={(e) => setRoomFilter(e.target.value)}
+            >
+              <option value="">All rooms</option>
+              {roomOptions.map((r) => (
+                <option key={r} value={r}>
+                  {r}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label className="text-[11px] text-dc-muted">
+            Presenter
+            <select
+              className="mt-1 block min-w-[140px] rounded-lg border border-white/10 bg-black/30 px-2 py-1.5 text-sm text-white"
+              value={presenterFilter}
+              onChange={(e) => setPresenterFilter(e.target.value)}
+            >
+              <option value="">All</option>
+              {presenterOptions.map((n) => (
+                <option key={n} value={n}>
+                  {n}
+                </option>
+              ))}
+            </select>
+          </label>
+        </div>
+        {programTagOptions.length > 0 ? (
+          <div className="mt-4 flex flex-wrap items-center gap-2 border-t border-white/10 pt-4">
+            <span className="w-full text-[11px] text-dc-muted">Tags</span>
+            {programTagOptions.map((tag) => {
+              const active = programTagFilters.has(tag)
+              return (
+                <button
+                  key={tag}
+                  type="button"
+                  className={cx(
+                    'shrink-0 rounded-full border px-3 py-1.5 text-xs font-medium transition',
+                    active
+                      ? 'border-dc-accent-border bg-dc-accent text-dc-accent-foreground'
+                      : 'border-white/10 bg-white/[0.03] text-dc-muted hover:bg-white/[0.07]'
+                  )}
+                  onClick={() => onToggleProgramTag(tag)}
+                >
+                  {tag}
+                </button>
+              )
+            })}
+          </div>
+        ) : null}
+        {grouped.length > 1 && scheduleView !== 'venue' && scheduleView !== 'grid' && scheduleView !== 'list' ? (
+          <nav className="mt-5 flex flex-wrap gap-2">
+            {grouped.map((g, idx) => (
+              <a
+                key={g.day}
+                href={`#dc-day-${idx}`}
+                className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 text-xs font-medium uppercase tracking-[0.25em] text-dc-muted transition hover:bg-white/[0.08]"
+              >
+                {shortDayLabel(g.day)}
+              </a>
+            ))}
+          </nav>
+        ) : null}
+      </GlassPanel>
+
+      {programSelections.some((s) => s.kind === 'program' && s.slotId) ? (
+        <GlassPanel className="p-4 sm:p-5">
+          <p className="text-xs uppercase tracking-[0.28em] text-dc-muted">Personal notes</p>
+          <p className="mt-1 text-xs text-dc-subtle">Private to your account; saved with your dancecard.</p>
+          <div className="mt-3 space-y-3">
+            {programSelections
+              .filter((s) => s.kind === 'program' && s.slotId)
+              .map((sel) => {
+                const slot = slots.find((x) => x.id === sel.slotId)
+                return (
+                  <label key={sel.id} className="block text-sm text-dc-text">
+                    <span className="text-xs text-dc-muted">{slot?.title ?? 'Activity'}</span>
+                    <textarea
+                      className="mt-1 w-full rounded-lg border border-white/10 bg-black/30 px-2 py-1.5 text-sm text-white"
+                      rows={2}
+                      value={sel.note ?? ''}
+                      onChange={(e) => onUpdateProgramNote(String(sel.slotId), e.target.value)}
+                    />
+                  </label>
+                )
+              })}
+          </div>
+        </GlassPanel>
+      ) : null}
+
+      {scheduleView === 'venue' ? (
+        <div className="space-y-5">
+          {venueGroups.map((vg) => (
+            <GlassPanel key={vg.room} className="p-5 sm:p-6">
+              <div className="mb-4 flex items-center justify-between gap-3">
+                <div>
+                  <p className="text-xs uppercase tracking-[0.28em] text-dc-muted">Venue</p>
+                  <h3 className="mt-2 font-serif text-2xl text-white">{vg.room}</h3>
+                </div>
+                <div className="rounded-full border border-dc-border bg-dc-elevated px-3 py-1 text-xs text-dc-muted">
+                  Focused by venue
+                </div>
+              </div>
+              <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-2">
+                {vg.items.map((slot) => (
+                  <SessionCard
+                    key={slot.id}
+                    eventSlug={eventSlug}
+                    slot={slot}
+                    tz={tz}
+                    selected={programSelected.has(slot.id)}
+                    onToggle={() => toggleProgram(slot)}
+                  />
+                ))}
+              </div>
+            </GlassPanel>
+          ))}
+        </div>
+      ) : scheduleView === 'grid' ? (
+        <>
+          <GlassPanel className="hidden overflow-hidden p-3 lg:block">
+            <div className="overflow-x-auto">
+              <table className="min-w-full border-separate border-spacing-2 text-left text-xs">
+                <thead>
+                  <tr>
+                    <th className="rounded-2xl bg-white/[0.05] p-3 text-dc-muted">Time</th>
+                    {uniqueRoomsForGrid.map((room) => (
+                      <th key={room} className="rounded-2xl bg-white/[0.05] p-3 text-dc-text">
+                        {room}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {groupSlotsByStart(filteredSlots).map(([startIso, slotsAt]) => (
+                    <tr key={startIso}>
+                      <td className="min-w-[110px] rounded-2xl border border-white/10 bg-black/30 p-3 align-top">
+                        <div className="text-[10px] uppercase tracking-[0.28em] text-dc-subtle">Time</div>
+                        <div className="mt-1 text-base font-semibold text-white">{formatTime(startIso, tz)}</div>
+                      </td>
+                      {uniqueRoomsForGrid.map((room) => {
+                        const slot = slotsAt.find((s) => (s.room || 'Other') === room)
+                        return (
+                          <td key={room} className="min-w-[180px] align-top">
+                            {slot ? (
+                              <button
+                                type="button"
+                                className={cx(
+                                  'h-full w-full rounded-[24px] border p-3 text-left transition',
+                                  programSelected.has(slot.id)
+                                    ? 'border-dc-accent-border bg-dc-accent-muted shadow-[0_20px_45px_rgba(198,167,94,0.12)]'
+                                    : 'border-dc-border bg-dc-elevated-muted hover:bg-dc-elevated'
+                                )}
+                                onClick={() => toggleProgram(slot)}
+                              >
+                                <div className="text-sm font-semibold text-white">{slot.title}</div>
+                                <div className="mt-2 text-[11px] text-dc-muted">{room}</div>
+                              </button>
+                            ) : (
+                              <div className="rounded-[24px] border border-white/5 bg-black/20 p-3 text-dc-accent-foreground/70">—</div>
+                            )}
+                          </td>
+                        )
+                      })}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </GlassPanel>
+          <GlassPanel className="border-amber-400/25 bg-amber-400/10 p-4 lg:hidden">
+            <p className="text-sm text-amber-50">
+              Grid view is built for wider screens. On your phone, use <strong>Timeline</strong> for the easiest
+              browsing.
+            </p>
+            <button
+              type="button"
+              className="mt-3 w-full rounded-2xl bg-white px-4 py-3 text-sm font-semibold text-dc-accent-foreground"
+              onClick={() => setScheduleView('simple')}
+            >
+              Switch to timeline
+            </button>
+          </GlassPanel>
+        </>
+      ) : scheduleView === 'list' ? (
+        <GlassPanel className="p-4 sm:p-5">
+          <p className="text-xs uppercase tracking-[0.28em] text-dc-muted">All activities</p>
+          <div className="mt-4">
+            <VirtualProgramList
+              slots={filteredSlots}
+              timezone={tz}
+              selectedIds={programSelected}
+              onToggle={toggleProgram}
+              onOpenDetail={setDetailSlot}
+            />
+          </div>
+        </GlassPanel>
+      ) : (
+        grouped.map((g, dayIdx) => (
+          <GlassPanel key={g.day} className="scroll-mt-24 p-3 sm:p-4">
+            <section id={`dc-day-${dayIdx}`}>
+              <div className="flex flex-wrap items-end justify-between gap-3">
+                <div>
+                  <p className="text-xs uppercase tracking-[0.28em] text-dc-muted">Day {dayIdx + 1}</p>
+                  <h3 className="mt-1.5 font-serif text-2xl text-white">{g.day}</h3>
+                </div>
+                <div className="rounded-full border border-dc-border bg-dc-elevated px-3 py-1 text-xs text-dc-muted">{tz}</div>
+              </div>
+              <div className="mt-4 space-y-2.5">
+                {groupSlotsByStart(g.items).map(([startIso, slotsAt]) => {
+                  const policies = programPoliciesForSlots(slotsAt)
+                  const hasPolicy = policies.length > 0
+                  return (
+                    <div
+                      key={startIso}
+                      className="grid grid-cols-1 gap-2 rounded-xl border border-white/8 bg-black/20 p-2.5 md:grid-cols-[96px_minmax(0,1fr)]"
+                    >
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const first = slotsAt[0]
+                          if (!first) return
+                          const target = document.getElementById(`dc-slot-${first.id}`)
+                          target?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+                        }}
+                        className={cx(
+                          'rounded-lg border px-2.5 py-2 text-left transition hover:bg-white/10',
+                          hasPolicy ? 'border-amber-300/25 bg-amber-500/10' : 'border-dc-accent-border/60 bg-dc-accent-muted'
+                        )}
+                        aria-label={`Jump to ${formatTime(startIso, tz)} activities`}
+                      >
+                        <div
+                          className={cx(
+                            'text-[9px] uppercase tracking-[0.24em]',
+                            hasPolicy ? 'text-amber-100/80' : 'text-dc-accent/70'
+                          )}
+                        >
+                          Start
+                        </div>
+                        <div className="mt-1 text-lg font-semibold text-white">{formatTime(startIso, tz)}</div>
+                        {hasPolicy ? (
+                          <div className="mt-1.5 flex flex-wrap gap-1">
+                            {policies.slice(0, 2).map((policy) => (
+                              <span
+                                key={policy.key}
+                                className={cx(
+                                  'rounded-full border px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-[0.1em]',
+                                  policyChipClass(policy.tone)
+                                )}
+                              >
+                                {policy.label}
+                              </span>
+                            ))}
+                          </div>
+                        ) : (
+                          <div className="mt-1.5 text-[10px] text-dc-accent/70">Tap to jump</div>
+                        )}
+                      </button>
+                      <div className="grid grid-cols-1 gap-2 xl:grid-cols-2">
+                        {slotsAt.map((slot) => (
+                          <SessionCard
+                            key={slot.id}
+                            htmlId={`dc-slot-${slot.id}`}
+                            eventSlug={eventSlug}
+                            slot={slot}
+                            tz={tz}
+                            showTime={false}
+                            selected={programSelected.has(slot.id)}
+                            onToggle={() => toggleProgram(slot)}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+            </section>
+          </GlassPanel>
+        ))
+      )}
+
+      {!slots.length ? (
+        <GlassPanel className="border-amber-400/20 bg-amber-400/10 p-5 text-sm text-amber-50">
+          <p className="font-medium text-amber-100">No program is loaded for this event yet.</p>
+          <p className="mt-2 text-amber-50/80">
+            The schedule API returned an empty list for this event. Common causes: no rows in{' '}
+            <code className="rounded bg-black/30 px-1">dancecard_program_slots</code>, production env pointed at a
+            different project, or the live deploy is older than the latest Dancecard routes.
+          </p>
+        </GlassPanel>
+      ) : !filteredSlots.length ? (
+        <GlassPanel className="p-5 text-sm text-dc-muted">No activities match the current filters.</GlassPanel>
+      ) : null}
+    </div>
   )
 }
 
 function ReservationsPanel({ slug, tz }: { slug: string; tz: string }) {
-  const [rows, setRows] = useState<
-    {
-      id: string
-      status: string
-      startsAt: string
-      endsAt: string
-      note: string | null
-      role: string
-      host: { id: string; displayName: string }
-      guest: { id: string; displayName: string }
-    }[]
-  >([])
+  const { ask, dialog } = useConfirmDialog()
+  const [rows, setRows] = useState<RescheduleReservationRow[]>([])
   const [cancelId, setCancelId] = useState<string | null>(null)
+  const [rescheduleRow, setRescheduleRow] = useState<RescheduleReservationRow | null>(null)
   const [panelErr, setPanelErr] = useState<string | null>(null)
+  const [panelMsg, setPanelMsg] = useState<string | null>(null)
 
   const load = useCallback(async () => {
     const r = await dancecardFetch<{ reservations: typeof rows }>(slug, '/reservations')
@@ -4640,9 +5258,21 @@ function ReservationsPanel({ slug, tz }: { slug: string; tz: string }) {
     void load().catch(() => null)
   }, [load])
 
+  function canReschedule(b: RescheduleReservationRow): boolean {
+    const partnerId = b.role === 'host' ? b.guest.id : b.host.id
+    return Boolean(partnerId && !partnerId.startsWith('guest:'))
+  }
+
   async function cancelReservationRow(id: string) {
-    if (!window.confirm('Cancel this reservation?')) return
+    const ok = await ask({
+      title: 'Cancel reservation?',
+      message: 'The time will become available again.',
+      destructive: true,
+      confirmLabel: 'Cancel',
+    })
+    if (!ok) return
     setPanelErr(null)
+    setPanelMsg(null)
     setCancelId(id)
     try {
       await dancecardFetch(slug, '/reservations', {
@@ -4659,20 +5289,33 @@ function ReservationsPanel({ slug, tz }: { slug: string; tz: string }) {
 
   return (
     <GlassPanel className="p-4 sm:p-6">
+      {dialog}
+      <RescheduleReservationModal
+        open={Boolean(rescheduleRow)}
+        slug={slug}
+        tz={tz}
+        row={rescheduleRow}
+        onClose={() => setRescheduleRow(null)}
+        onSent={() => {
+          setPanelMsg('Reschedule request sent.')
+          setPanelErr(null)
+        }}
+      />
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <p className="text-xs uppercase tracking-[0.3em] text-slate-400">Scheduling</p>
+          <p className="text-xs uppercase tracking-[0.3em] text-dc-muted">Scheduling</p>
           <h2 className="mt-1 font-serif text-2xl text-white sm:text-3xl">Reservations</h2>
         </div>
         <button
           type="button"
-          className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-2 text-xs text-slate-200 sm:px-4 sm:text-sm"
+          className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-2 text-xs text-dc-text sm:px-4 sm:text-sm"
           onClick={() => void load()}
         >
           Refresh
         </button>
       </div>
       {panelErr ? <p className="mb-3 text-sm text-rose-200">{panelErr}</p> : null}
+      {panelMsg ? <p className="mb-3 text-sm text-emerald-200">{panelMsg}</p> : null}
       <div className="mt-4 space-y-3 text-sm sm:mt-5">
         {rows.length ? (
           rows.map((b) => (
@@ -4685,19 +5328,33 @@ function ReservationsPanel({ slug, tz }: { slug: string; tz: string }) {
                 />
               </div>
               {b.status === 'confirmed' ? (
-                <button
-                  type="button"
-                  disabled={cancelId === b.id}
-                  className="shrink-0 rounded-full border border-rose-400/30 bg-rose-500/15 px-3 py-1.5 text-xs font-medium text-rose-100 hover:bg-rose-500/25 disabled:opacity-50"
-                  onClick={() => void cancelReservationRow(b.id)}
-                >
-                  {cancelId === b.id ? 'Cancelling…' : 'Cancel'}
-                </button>
+                <div className="flex shrink-0 flex-wrap gap-1.5">
+                  {canReschedule(b) ? (
+                    <button
+                      type="button"
+                      className="rounded-full border border-amber-400/35 bg-amber-500/15 px-3 py-1.5 text-xs font-medium text-amber-100 hover:bg-amber-500/25"
+                      onClick={() => {
+                        setPanelMsg(null)
+                        setRescheduleRow(b)
+                      }}
+                    >
+                      Reschedule
+                    </button>
+                  ) : null}
+                  <button
+                    type="button"
+                    disabled={cancelId === b.id}
+                    className="rounded-full border border-rose-400/30 bg-rose-500/15 px-3 py-1.5 text-xs font-medium text-rose-100 hover:bg-rose-500/25 disabled:opacity-50"
+                    onClick={() => void cancelReservationRow(b.id)}
+                  >
+                    {cancelId === b.id ? 'Cancelling…' : 'Cancel'}
+                  </button>
+                </div>
               ) : null}
             </div>
           ))
         ) : (
-          <div className="rounded-[24px] border border-white/10 bg-black/20 p-5 text-slate-400">No reservations yet.</div>
+          <div className="rounded-[24px] border border-white/10 bg-black/20 p-5 text-dc-muted">No reservations yet.</div>
         )}
       </div>
     </GlassPanel>

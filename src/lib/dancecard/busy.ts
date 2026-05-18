@@ -4,7 +4,6 @@ import {
   clipAndMergeBusy,
   freeGapsFromBusy,
   intersectFree,
-  mergeBusyUnion,
 } from './intervals'
 
 export type SelectionRow = {
@@ -85,22 +84,6 @@ export function computeMutualFree(
   const hostFree = computeFreeGapsForAccount(window, bufferHost, selHost, resHost, hostId)
   const guestFree = computeFreeGapsForAccount(window, bufferGuest, selGuest, resGuest, guestId)
   return intersectFree(hostFree, guestFree)
-}
-
-export function computeConflictOverlay(
-  window: Interval,
-  bufferA: number,
-  selA: SelectionRow[],
-  resA: ReservationRow[],
-  idA: string,
-  bufferB: number,
-  selB: SelectionRow[],
-  resB: ReservationRow[],
-  idB: string
-): Interval[] {
-  const busyA = computeBusyForAccount(window, bufferA, selA, resA, idA)
-  const busyB = computeBusyForAccount(window, bufferB, selB, resB, idB)
-  return mergeBusyUnion(busyA, busyB, window)
 }
 
 export { intersectFree, intervalFullyInsideWindow, freeGapsFromBusy } from './intervals'

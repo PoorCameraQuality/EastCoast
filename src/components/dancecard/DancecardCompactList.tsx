@@ -107,12 +107,26 @@ export function DancecardCompactList(props: {
     return roleColor(shift?.role ?? 'Busy')
   }
 
+  function agendaToneForRow(row: CompactAgendaRow) {
+    if (row.type === 'reservation') {
+      return { rail: 'bg-emerald-200/75', surface: 'border-emerald-200/15 bg-emerald-950/10' }
+    }
+    const s = row.selection
+    if (s.kind === 'program') return { rail: 'bg-dc-accent/80', surface: 'border-dc-accent-border/15 bg-dc-accent-muted/40' }
+    if (findMatchingStaffShift(s)) return { rail: 'bg-blue-300/80', surface: 'border-blue-200/15 bg-blue-950/10' }
+    if ((s.programTitle ?? s.note ?? '').toLowerCase().includes('sleep')) {
+      return { rail: 'bg-dc-muted/70', surface: 'border-dc-border/30 bg-dc-elevated-muted' }
+    }
+    return { rail: 'bg-violet-300/80', surface: 'border-violet-200/15 bg-violet-950/10' }
+  }
+
   return (
     <div className="space-y-2">
       {withDayBreaks.map(({ row, showDay, day }) => {
         if (row.type === 'reservation') {
           const r = row.reservation
           const rc = chipColorForRow(row)
+          const agendaTone = agendaToneForRow(row)
           return (
             <div key={`r-${r.id}`}>
               {showDay ? (
@@ -120,10 +134,12 @@ export function DancecardCompactList(props: {
               ) : null}
               <div
                 className={cx(
-                  'rounded-2xl border border-emerald-400/35 bg-emerald-950/30 px-3 py-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] sm:px-4',
+                  'relative overflow-hidden rounded-2xl border py-3 pl-5 pr-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] sm:pl-6 sm:pr-4',
+                  agendaTone.surface,
                   openId === r.id && 'ring-1 ring-emerald-400/30'
                 )}
               >
+                <span className={cx('absolute inset-y-3 left-3 w-1 rounded-full', agendaTone.rail)} aria-hidden />
                 <button
                   type="button"
                   className="flex w-full flex-wrap items-center gap-2 text-left sm:gap-3"
@@ -148,7 +164,7 @@ export function DancecardCompactList(props: {
                 </button>
                 {openId === r.id ? (
                   <div className="mt-2 space-y-3 border-t border-white/10 pt-2">
-                    <p className="text-xs text-slate-300/85">{formatRange(r.startsAt, r.endsAt, tz)}</p>
+                    <p className="text-xs text-dc-muted/85">{formatRange(r.startsAt, r.endsAt, tz)}</p>
                     {onCancelReservation && r.status === 'confirmed' ? (
                       <button
                         type="button"
@@ -172,7 +188,7 @@ export function DancecardCompactList(props: {
         const title = staffManualBlockTitle(
           s,
           s.kind === 'program'
-            ? scrubEventBrand(s.programTitle, 'Program session')
+            ? scrubEventBrand(s.programTitle, 'Program activity')
             : s.kind === 'manual'
               ? 'Manual busy block'
               : s.kind
@@ -183,6 +199,7 @@ export function DancecardCompactList(props: {
           : `${s.kind === 'program' && s.programRoom ? `${s.programRoom} · ` : ''}${formatRange(s.startsAt, s.endsAt, tz)}`
         const label = roleLabel(row)
         const rc = chipColorForRow(row)
+        const agendaTone = agendaToneForRow(row)
         const roomColor = locationColor(s.programRoom)
         const hasRoomTint = s.kind === 'program' && Boolean(s.programRoom)
         const hasNote = Boolean((s.note ?? '').trim())
@@ -194,17 +211,18 @@ export function DancecardCompactList(props: {
             ) : null}
             <div
               className={cx(
-                'rounded-2xl border px-3 py-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.035)] sm:px-4',
-                hasRoomTint ? `${roomColor.border} ${roomColor.surface}` : 'border-slate-700/70 bg-[#101a2d]',
-                openId === s.id && 'ring-1 ring-cyan-400/25'
+                'relative overflow-hidden rounded-2xl border py-3 pl-5 pr-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.035)] sm:pl-6 sm:pr-4',
+                hasRoomTint ? `${roomColor.border} ${roomColor.surface}` : agendaTone.surface,
+                openId === s.id && 'ring-1 ring-dc-accent-border'
               )}
             >
+              <span className={cx('absolute inset-y-3 left-3 w-1 rounded-full', agendaTone.rail)} aria-hidden />
               <button
                 type="button"
                 className="flex w-full flex-wrap items-center gap-2 text-left sm:gap-3"
                 onClick={() => setOpenId((id) => (id === s.id ? null : s.id))}
               >
-                <div className="min-w-[7rem] shrink-0 text-sm font-semibold text-cyan-50">
+                <div className="min-w-[7rem] shrink-0 text-sm font-semibold text-dc-accent">
                   {formatTime(s.startsAt, tz)} – {formatTime(s.endsAt, tz)}
                 </div>
                 {label ? (
@@ -238,10 +256,10 @@ export function DancecardCompactList(props: {
               </button>
               {openId === s.id ? (
                 <div className="mt-3 space-y-3 border-t border-white/10 pt-3">
-                  <p className="text-xs text-slate-300/85">{meta}</p>
-                  <label className="block text-[10px] font-semibold uppercase tracking-[0.2em] text-slate-300/85">Personal note</label>
+                  <p className="text-xs text-dc-muted/85">{meta}</p>
+                  <label className="block text-[10px] font-semibold uppercase tracking-[0.2em] text-dc-muted/85">Personal note</label>
                   <textarea
-                    className="min-h-[72px] w-full rounded-xl border border-slate-600/80 bg-[#0b1426] px-3 py-2 text-sm text-white placeholder:text-slate-500 outline-none transition focus:border-cyan-300 focus:ring-2 focus:ring-cyan-300/20"
+                    className="min-h-[72px] w-full rounded-xl border border-dc-border bg-dc-elevated px-3 py-2 text-sm text-white placeholder:text-dc-subtle outline-none transition focus:border-dc-accent focus:ring-2 focus:ring-dc-accent-border/20"
                     defaultValue={s.note ?? ''}
                     placeholder="Only you see this note…"
                     onMouseDown={(e) => e.stopPropagation()}

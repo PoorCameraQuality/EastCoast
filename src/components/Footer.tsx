@@ -1,6 +1,9 @@
-// src/components/Footer.tsx
+'use client'
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { CONTACT_US_LABEL } from "@/lib/submissionContact";
+import { suppressEckeFooter } from "@/lib/dancecard/shellRoutes";
 
 const DISCORD_INVITE_URL = "https://discord.gg/xcnGGyGsmT";
 
@@ -48,6 +51,11 @@ const L = ({
 );
 
 export default function Footer() {
+  const pathname = usePathname()
+  if (suppressEckeFooter(pathname)) {
+    return null
+  }
+
   return (
     <footer className="bg-gradient-to-b from-black to-dark-900 text-gray-300 border-t border-dark-700/50">
       <div className="container-custom py-12 md:py-16">
@@ -115,6 +123,8 @@ export default function Footer() {
             </Section>
 
             <Section title="Community">
+              <L href="/dancecard">Dancecard</L>
+              <L href="/dancecard/organizers">Organizer console</L>
               <L href="/contact">{CONTACT_US_LABEL}</L>
               <L href="/about">About</L>
               <L href="/guidelines">Guidelines</L>

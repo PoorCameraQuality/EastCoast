@@ -31,6 +31,40 @@ module.exports = {
         'social-hover': 'var(--ecke-accent-social-hover)',
         /** Matches `tokens.css` --ecke-focus; use with `ring-ecke-focus` for focus rings */
         'ecke-focus': 'var(--ecke-focus)',
+        dc: {
+          surface: 'var(--dc-surface)',
+          'surface-muted': 'var(--dc-surface-muted)',
+          elevated: 'var(--dc-elevated-solid)',
+          'elevated-solid': 'var(--dc-elevated-solid)',
+          'elevated-muted': 'var(--dc-elevated-muted)',
+          text: 'var(--dc-text)',
+          muted: 'var(--dc-text-muted)',
+          subtle: 'var(--dc-text-subtle)',
+          accent: {
+            DEFAULT: 'var(--event-accent, var(--dc-accent))',
+            hover: 'var(--dc-accent-hover)',
+            muted: 'var(--dc-accent-muted)',
+            border: 'var(--dc-accent-border)',
+            foreground: 'var(--dc-accent-foreground)',
+          },
+          border: {
+            DEFAULT: 'var(--dc-border-subtle)',
+            strong: 'var(--dc-border-strong)',
+          },
+          danger: {
+            DEFAULT: 'var(--dc-danger)',
+            muted: 'var(--dc-danger-muted)',
+            border: 'var(--dc-danger-border)',
+          },
+          success: {
+            DEFAULT: 'var(--dc-success)',
+            muted: 'var(--dc-success-muted)',
+          },
+          warning: {
+            DEFAULT: 'var(--dc-warning)',
+            muted: 'var(--dc-warning-muted)',
+          },
+        },
         dark: {
           50: '#f8fafc',
           100: '#f1f5f9',
@@ -90,6 +124,17 @@ module.exports = {
       transitionTimingFunction: {
         'ecke-out': 'ease-out',
         'ecke-in-out': 'ease-in-out',
+      },
+      zIndex: {
+        'dc-chrome': 'var(--z-dc-chrome)',
+        'dc-day-strip': 'var(--z-dc-day-strip)',
+        'dc-drawer': 'var(--z-dc-drawer)',
+        'dc-modal': 'var(--z-dc-modal)',
+        'dc-confirm': 'var(--z-dc-confirm)',
+        'dc-toast': 'var(--z-dc-toast)',
+      },
+      fontSize: {
+        'dc-micro': ['0.6875rem', { lineHeight: '1.25' }],
       },
       animation: {
         'fade-in-up': 'fadeInUp 0.8s ease-out forwards',

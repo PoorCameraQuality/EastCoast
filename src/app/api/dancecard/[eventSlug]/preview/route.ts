@@ -9,12 +9,17 @@ import { previewBodySchema } from '@/lib/dancecard/schemas'
 import { resolveReserveHostId } from '@/lib/dancecard/mutualHostResolve'
 import { loadPrefs, loadReservationsForAccount, loadSelections, selectionsToBusyInput } from '@/lib/dancecard/data'
 import { computeMutualFree, eventWindowFromRow, parseIso, intervalFullyInsideWindow } from '@/lib/dancecard/busy'
+import { rateLimiters, withRateLimit } from '@/lib/rateLimit'
+import { toClientError } from '@/lib/security/safeApiError'
 import { ZodError } from 'zod'
 
 export async function POST(
   request: NextRequest,
   context: { params: { eventSlug: string } }
 ) {
+  const limited = await withRateLimit(request, rateLimiters.dancecardToken)
+  if (limited) return limited
+
   try {
     const admin = getDancecardAdmin()
     const { eventSlug } = context.params
@@ -75,7 +80,7 @@ export async function POST(
     if (e instanceof ZodError) {
       return NextResponse.json({ error: 'Validation error', details: e.flatten() }, { status: 400 })
     }
-    const msg = e instanceof Error ? e.message : 'Internal error'
-    return NextResponse.json({ error: msg }, { status: 500 })
+    const { status, body } = toClientError(e, 'dancecard-preview')
+    return NextResponse.json(body, { status })
   }
 }

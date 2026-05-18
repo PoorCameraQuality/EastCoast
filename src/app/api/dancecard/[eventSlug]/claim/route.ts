@@ -3,12 +3,18 @@ import { getDancecardAdmin, loadEventBySlug, normalizeEventSlug } from '@/lib/da
 import { publicClaimBodySchema } from '@/lib/dancecard/schemas'
 import { loadAvailabilityRange, loadPrefs, loadReservationsForAccount, loadSelections, selectionsToBusyInput } from '@/lib/dancecard/data'
 import { computeFreeGapsForAccount, eventWindowFromRow, intervalFullyInsideWindow, parseIso } from '@/lib/dancecard/busy'
+import { resolveHostIdFromShareToken } from '@/lib/dancecard/mutualHostResolve'
+import { rateLimiters, withRateLimit } from '@/lib/rateLimit'
+import { toClientError } from '@/lib/security/safeApiError'
 import { ZodError } from 'zod'
 
 export async function POST(
   request: NextRequest,
   context: { params: { eventSlug: string } }
 ) {
+  const limited = await withRateLimit(request, rateLimiters.dancecardToken)
+  if (limited) return limited
+
   try {
     const admin = getDancecardAdmin()
     const { eventSlug } = context.params
@@ -19,17 +25,10 @@ export async function POST(
     }
 
     const body = publicClaimBodySchema.parse(await request.json())
-    const { data: link } = await admin
-      .from('dancecard_share_links')
-      .select('account_id')
-      .eq('token', body.shareToken)
-      .is('revoked_at', null)
-      .maybeSingle()
-    if (!link) {
+    const hostId = await resolveHostIdFromShareToken(admin, event.id, body.shareToken)
+    if (!hostId) {
       return NextResponse.json({ error: 'Share token not found' }, { status: 404 })
     }
-
-    const hostId = link.account_id
     const eventWindow = eventWindowFromRow({
       window_starts_at: event.window_starts_at,
       window_ends_at: event.window_ends_at,
@@ -110,8 +109,8 @@ export async function POST(
     if (e instanceof ZodError) {
       return NextResponse.json({ error: 'Validation error', details: e.flatten() }, { status: 400 })
     }
-    const msg = e instanceof Error ? e.message : 'Internal error'
-    return NextResponse.json({ error: msg }, { status: 500 })
+    const { status, body: errBody } = toClientError(e, 'dancecard-claim')
+    return NextResponse.json(errBody, { status })
   }
 }
 

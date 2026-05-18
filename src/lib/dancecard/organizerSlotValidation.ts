@@ -1,9 +1,10 @@
 export function assertSlotInsideWindow(args: {
   windowStartsAt: string
   windowEndsAt: string
-  startsAt: string
-  endsAt: string
+  startsAt: string | null | undefined
+  endsAt: string | null | undefined
 }): void {
+  if (args.startsAt == null || args.endsAt == null) return
   const ws = new Date(args.windowStartsAt).getTime()
   const we = new Date(args.windowEndsAt).getTime()
   const s = new Date(args.startsAt).getTime()

@@ -6,6 +6,8 @@ import {
   resolveAccountFromSession,
 } from '@/lib/dancecard/routeCommon'
 import { buildMutualSharePayload } from '@/lib/dancecard/mutualSharePayload'
+import { rateLimiters, withRateLimit } from '@/lib/rateLimit'
+import { toClientError } from '@/lib/security/safeApiError'
 
 export const dynamic = 'force-dynamic'
 
@@ -13,6 +15,9 @@ export async function GET(
   request: NextRequest,
   context: { params: { eventSlug: string; token: string } }
 ) {
+  const limited = await withRateLimit(request, rateLimiters.dancecardToken)
+  if (limited) return limited
+
   try {
     const admin = getDancecardAdmin()
     const { eventSlug, token } = context.params
@@ -35,7 +40,7 @@ export async function GET(
 
     const { data: host, error: hErr } = await admin
       .from('dancecard_accounts')
-      .select('id, display_name, event_id')
+      .select('id, display_name, username, event_id')
       .eq('id', link.account_id)
       .maybeSingle()
     if (hErr || !host || host.event_id !== event.id) {
@@ -44,12 +49,22 @@ export async function GET(
 
     const viewer = await resolveAccountFromSession(admin, request, slug)
     const viewerPayload =
-      viewer && viewer.accountId !== host.id ? { accountId: viewer.accountId, displayName: viewer.displayName } : null
+      viewer && viewer.accountId !== host.id
+        ? {
+            accountId: viewer.accountId,
+            displayName: viewer.displayName,
+            username: viewer.username,
+          }
+        : null
 
     const payload = await buildMutualSharePayload(
       admin,
       event,
-      { id: host.id, display_name: host.display_name as string },
+      {
+        id: host.id,
+        display_name: host.display_name as string,
+        username: host.username as string,
+      },
       viewerPayload
     )
 
@@ -59,7 +74,7 @@ export async function GET(
       },
     })
   } catch (e) {
-    const msg = e instanceof Error ? e.message : 'Internal error'
-    return NextResponse.json({ error: msg }, { status: 500 })
+    const { status, body } = toClientError(e, 'dancecard-share')
+    return NextResponse.json(body, { status })
   }
 }

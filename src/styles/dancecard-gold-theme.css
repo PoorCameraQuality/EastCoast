@@ -1,0 +1,39 @@
+/**
+ * Global Dancecard gold UI utilities (attendee, organizer, marketing under dc-theme).
+ */
+
+[data-dc-theme='event'] .dc-btn-primary,
+[data-dc-theme='event'] button.bg-dc-accent:not(.dc-btn-ghost) {
+  background: linear-gradient(135deg, #a8894a 0%, #e8d5a8 45%, #c6a75e 100%);
+  color: var(--dc-accent-foreground);
+  box-shadow: 0 12px 32px rgba(198, 167, 94, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+}
+
+[data-dc-theme='event'] .dc-btn-primary:hover,
+[data-dc-theme='event'] button.bg-dc-accent:not(.dc-btn-ghost):hover {
+  filter: brightness(1.06);
+}
+
+[data-dc-theme='event'] .dc-panel {
+  border: 1px solid var(--dc-border-subtle);
+  background: linear-gradient(165deg, rgba(24, 21, 18, 0.9) 0%, rgba(12, 11, 9, 0.95) 100%);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+/* Organizer / marketing pages without data-dc-theme wrapper */
+.dc-gold-chrome {
+  --dc-surface: #050504;
+  --dc-surface-muted: #0a0908;
+  --dc-elevated-solid: #0e0d0b;
+  --dc-text: #f7f3eb;
+  --dc-muted: #9a9288;
+  --dc-accent: #c6a75e;
+  --dc-accent-hover: #e8d5a8;
+  --dc-accent-muted: rgba(198, 167, 94, 0.12);
+  --dc-accent-border: rgba(198, 167, 94, 0.38);
+  --dc-accent-foreground: #1a1510;
+  --dc-border-subtle: rgba(198, 167, 94, 0.22);
+  --event-accent: #c6a75e;
+  background-color: var(--dc-surface);
+  color: var(--dc-text);
+}

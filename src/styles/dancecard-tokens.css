@@ -1,0 +1,174 @@
+/**
+ * Dancecard design tokens — champagne & ink (global product theme).
+ * Override per event via DancecardThemeProvider (--event-* vars).
+ */
+:root,
+[data-dc-theme='event'] {
+  --dc-surface: #050504;
+  --dc-surface-muted: #0a0908;
+  --dc-elevated: rgba(18, 16, 14, 0.85);
+  --dc-elevated-solid: #0e0d0b;
+  --dc-elevated-muted: rgba(12, 11, 9, 0.72);
+
+  --dc-text: #f7f3eb;
+  --dc-text-muted: #9a9288;
+  --dc-text-subtle: #8a7348;
+
+  --dc-accent: #c6a75e;
+  --dc-accent-hover: #e8d5a8;
+  --dc-accent-muted: rgba(198, 167, 94, 0.12);
+  --dc-accent-border: rgba(198, 167, 94, 0.38);
+  --dc-accent-foreground: #1a1510;
+
+  --dc-border-subtle: rgba(198, 167, 94, 0.22);
+  --dc-border-strong: rgba(198, 167, 94, 0.35);
+
+  --dc-danger: #e8a4a4;
+  --dc-danger-muted: rgba(232, 164, 164, 0.12);
+  --dc-danger-border: rgba(232, 164, 164, 0.35);
+
+  --dc-success: #9cb88a;
+  --dc-success-muted: rgba(156, 184, 138, 0.12);
+
+  --dc-warning: #e8c87a;
+  --dc-warning-muted: rgba(232, 200, 122, 0.12);
+
+  --dc-muted: #9a9288;
+
+  --dc-slot-published: #c6a75e;
+
+  /* Compare / mutual timeline (legend + strips) */
+  --dc-compare-mutual: #9cb88a;
+  --dc-compare-busy: #c97b7b;
+  --dc-compare-busy-ring: rgba(201, 123, 123, 0.55);
+  --dc-compare-host-only: #1a2744;
+  --dc-compare-host-only-ring: rgba(74, 95, 138, 0.65);
+  --dc-compare-outside: #0a0908;
+  --dc-compare-selected: rgba(198, 167, 94, 0.28);
+
+  /* Event skin overrides (set by DancecardThemeProvider) */
+  --event-accent: var(--dc-accent);
+  --event-surface: var(--dc-surface);
+  --event-elevated: var(--dc-elevated-solid);
+  --event-slot-published: var(--dc-slot-published);
+
+  /* Stacking (see docs/dancecard-design-tokens.md) */
+  --z-dc-chrome: 40;
+  --z-dc-day-strip: 45;
+  --z-dc-drawer: 70;
+  --z-dc-modal: 80;
+  --z-dc-confirm: 95;
+  --z-dc-toast: 100;
+
+  --dc-duration-tab: 150ms;
+  --dc-duration-drawer: 300ms;
+  --dc-duration-base: 300ms;
+}
+
+/* In-app dancecard typography (Cormorant + DM Sans via event layout) */
+[data-dc-theme='event'] {
+  font-family: var(--font-dc-sans, var(--font-ecke-sans)), system-ui, sans-serif;
+  font-feature-settings: 'kern' 1, 'liga' 1;
+  -webkit-font-smoothing: antialiased;
+}
+
+[data-dc-theme='event'] .font-serif {
+  font-family: var(--font-dc-display, var(--font-ecke-serif)), 'Cormorant Garamond', Georgia, serif;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}
+
+/* Hallway mode: high contrast, larger targets */
+[data-dc-hallway='true'] {
+  --dc-border-subtle: rgba(232, 213, 168, 0.32);
+  --dc-border-strong: rgba(232, 213, 168, 0.45);
+}
+
+[data-dc-hallway='true'] .dc-session-title,
+[data-dc-hallway='true'] .dc-hallway-target {
+  font-size: 1rem;
+  line-height: 1.4;
+}
+
+[data-dc-hallway='true'] .dc-hallway-touch {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+/* Privacy panic — blur sensitive attendee labels */
+[data-dc-privacy-panic='true'] [data-dc-privacy-sensitive],
+[data-dc-privacy-panic='true'] .dc-privacy-sensitive {
+  filter: blur(7px);
+  user-select: none;
+  pointer-events: none;
+}
+
+[data-dc-privacy-panic='true'] img.dc-privacy-sensitive,
+[data-dc-privacy-panic='true'] img[data-dc-privacy-sensitive] {
+  filter: blur(12px);
+}
+
+[data-dc-theme='event'] .bg-dc-compare-mutual {
+  background-color: var(--dc-compare-mutual);
+}
+[data-dc-theme='event'] .bg-dc-compare-busy {
+  background-color: var(--dc-compare-busy);
+}
+[data-dc-theme='event'] .ring-dc-compare-busy-ring {
+  --tw-ring-color: var(--dc-compare-busy-ring);
+}
+[data-dc-theme='event'] .bg-dc-compare-host-only {
+  background-color: var(--dc-compare-host-only);
+}
+[data-dc-theme='event'] .ring-dc-compare-host-only-ring {
+  --tw-ring-color: var(--dc-compare-host-only-ring);
+}
+[data-dc-theme='event'] .bg-dc-compare-outside {
+  background-color: var(--dc-compare-outside);
+}
+[data-dc-theme='event'] .bg-dc-compare-selected {
+  background-color: var(--dc-compare-selected);
+}
+
+/* Text fields: force dark surface + light text (avoids autofill gold-on-white) */
+[data-dc-theme='event'] .dc-field-input {
+  color-scheme: dark;
+  background-color: var(--dc-surface-muted);
+  color: var(--dc-text);
+  caret-color: var(--dc-text);
+}
+
+[data-dc-theme='event'] .dc-field-input::placeholder {
+  color: var(--dc-text-muted);
+  opacity: 1;
+}
+
+[data-dc-theme='event'] .dc-field-input:-webkit-autofill,
+[data-dc-theme='event'] .dc-field-input:-webkit-autofill:hover,
+[data-dc-theme='event'] .dc-field-input:-webkit-autofill:focus,
+[data-dc-theme='event'] .dc-field-input:-webkit-autofill:active {
+  -webkit-text-fill-color: var(--dc-text) !important;
+  caret-color: var(--dc-text);
+  -webkit-box-shadow: 0 0 0 1000px var(--dc-surface-muted) inset !important;
+  box-shadow: 0 0 0 1000px var(--dc-surface-muted) inset !important;
+  border-color: var(--dc-border-subtle);
+}
+
+/* datetime-local: brighten native picker icon on dark fields */
+.dc-datetime-local-input {
+  color-scheme: dark;
+}
+
+.dc-datetime-local-input::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  opacity: 0.85;
+  width: 1.25rem;
+  height: 1.25rem;
+  margin-right: 0.15rem;
+  filter: invert(0.9) sepia(0.35) saturate(4) hue-rotate(5deg) brightness(1.15);
+}
+
+.dc-datetime-local-input::-webkit-calendar-picker-indicator:hover {
+  opacity: 1;
+  filter: invert(0.95) sepia(0.5) saturate(5) hue-rotate(5deg) brightness(1.25);
+}

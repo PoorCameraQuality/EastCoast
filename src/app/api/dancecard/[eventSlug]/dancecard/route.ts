@@ -1,12 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
-import {
-  getDancecardAdmin,
+import {getDancecardAdmin,
   loadEventBySlug,
   normalizeEventSlug,
-  resolveAccountFromSession,
-} from '@/lib/dancecard/routeCommon'
+  resolveAccountFromSession, jsonFromRouteError } from '@/lib/dancecard/routeCommon'
 import { dancecardPutSchema } from '@/lib/dancecard/schemas'
 import { eventWindowFromRow, parseIso } from '@/lib/dancecard/busy'
+import { slotVisibleToAttendee } from '@/lib/dancecard/programSlotPublication'
 import { ZodError } from 'zod'
 
 export async function PUT(
@@ -25,6 +24,7 @@ export async function PUT(
     if (!session) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
+    const isStaff = Boolean(session.isStaff)
     const body = dancecardPutSchema.parse(await request.json())
     if (body.bufferMinutes % 15 !== 0) {
       return NextResponse.json({ error: 'bufferMinutes must be a multiple of 15' }, { status: 400 })
@@ -43,6 +43,20 @@ export async function PUT(
     if (availabilityEnd <= availabilityStart) {
       return NextResponse.json({ error: 'Availability range must overlap the event window' }, { status: 400 })
     }
+
+    const { data: currentRows, error: curErr } = await admin
+      .from('dancecard_selections')
+      .select('slot_id, kind')
+      .eq('account_id', session.accountId)
+    if (curErr) throw curErr
+    const prevProgramSlotIds = new Set(
+      (currentRows ?? [])
+        .filter((r) => r.kind === 'program' && r.slot_id)
+        .map((r) => r.slot_id as string),
+    )
+    const nextProgramSlotIds = new Set(
+      body.selections.filter((s) => s.kind === 'program' && s.slotId).map((s) => s.slotId as string),
+    )
 
     const normalized: {
       slot_id: string | null
@@ -67,13 +81,21 @@ export async function PUT(
         }
         const { data: slot, error: slotErr } = await admin
           .from('dancecard_program_slots')
-          .select('id, starts_at, ends_at')
+          .select('id, starts_at, ends_at, is_published, visibility, is_frozen')
           .eq('id', sel.slotId)
           .eq('event_id', event.id)
           .maybeSingle()
         if (slotErr) throw slotErr
         if (!slot) {
           return NextResponse.json({ error: `Unknown slot ${sel.slotId}` }, { status: 400 })
+        }
+        const pub = {
+          is_published: slot.is_published !== undefined ? Boolean(slot.is_published) : true,
+          visibility: (slot.visibility as string) || 'public',
+          is_frozen: Boolean(slot.is_frozen),
+        }
+        if (!slotVisibleToAttendee(pub, isStaff)) {
+          return NextResponse.json({ error: `Slot ${sel.slotId} is not available for your account` }, { status: 400 })
         }
         const slotStart = parseIso(slot.starts_at as string)
         const slotEnd = parseIso(slot.ends_at as string)
@@ -103,6 +125,39 @@ export async function PUT(
       }
     }
 
+    for (const id of Array.from(prevProgramSlotIds)) {
+      if (nextProgramSlotIds.has(id)) continue
+      const { data: slot, error: sErr } = await admin
+        .from('dancecard_program_slots')
+        .select('is_frozen')
+        .eq('id', id)
+        .eq('event_id', event.id)
+        .maybeSingle()
+      if (sErr) throw sErr
+      if (slot?.is_frozen) {
+        return NextResponse.json(
+          { error: 'Cannot remove frozen program sessions from your dancecard. Ask an organizer to unfreeze first.' },
+          { status: 400 },
+        )
+      }
+    }
+    for (const id of Array.from(nextProgramSlotIds)) {
+      if (prevProgramSlotIds.has(id)) continue
+      const { data: slot, error: sErr } = await admin
+        .from('dancecard_program_slots')
+        .select('is_frozen')
+        .eq('id', id)
+        .eq('event_id', event.id)
+        .maybeSingle()
+      if (sErr) throw sErr
+      if (slot?.is_frozen) {
+        return NextResponse.json(
+          { error: 'Cannot add frozen program sessions to your dancecard. Ask an organizer to unfreeze first.' },
+          { status: 400 },
+        )
+      }
+    }
+
     const { error: delErr } = await admin
       .from('dancecard_selections')
       .delete()
@@ -129,7 +184,7 @@ export async function PUT(
           ends_at: n.ends_at,
           kind: n.kind,
           note: n.note,
-        }))
+        })),
       )
       if (insErr) throw insErr
     }
@@ -139,7 +194,6 @@ export async function PUT(
     if (e instanceof ZodError) {
       return NextResponse.json({ error: 'Validation error', details: e.flatten() }, { status: 400 })
     }
-    const msg = e instanceof Error ? e.message : 'Internal error'
-    return NextResponse.json({ error: msg }, { status: 500 })
+    return jsonFromRouteError(e, 'dancecard-[eventSlug]-dancecard')
   }
 }

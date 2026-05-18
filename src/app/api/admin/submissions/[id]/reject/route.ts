@@ -1,11 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getSupabaseAdminClient } from '@/lib/supabase'
+import { getSupabaseAdminClient } from '@/lib/supabaseAdmin'
+import { requireSiteAdmin, siteAdminAuthErrorResponse } from '@/lib/security/apiAuth'
 
 export async function POST(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
+    await requireSiteAdmin()
     const { id } = params
     const body = await request.json()
 
@@ -71,6 +73,8 @@ export async function POST(
 
     return NextResponse.json({ success: true })
   } catch (error) {
+    const authResp = siteAdminAuthErrorResponse(error)
+    if (authResp) return authResp
     console.error('Error in reject submission:', error)
     return NextResponse.json(
       { error: 'Internal server error' },

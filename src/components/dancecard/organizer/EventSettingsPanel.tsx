@@ -1,45 +1,87 @@
 'use client'
 
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { organizerDancecardFetch } from '@/components/dancecard/organizer/organizerApi'
+import { LocationsSettingsSection } from '@/components/dancecard/organizer/LocationsSettingsSection'
+import { MapsSettingsSection } from '@/components/dancecard/organizer/MapsSettingsSection'
+import { RegistrationSettingsSection } from '@/components/dancecard/organizer/RegistrationSettingsSection'
+import { TracksTagsSettingsSection } from '@/components/dancecard/organizer/TracksTagsSettingsSection'
+import { PoliciesAgreementsPanel } from '@/components/dancecard/organizer/settings/PoliciesAgreementsPanel'
+import { AttendeeGuideSettingsSection } from '@/components/dancecard/organizer/settings/AttendeeGuideSettingsSection'
+import { AttendeeProfileSettingsSection } from '@/components/dancecard/organizer/settings/AttendeeProfileSettingsSection'
+import { EventSetupWizard } from '@/components/dancecard/organizer/settings/EventSetupWizard'
+import { EventSettingsAdvancedForm } from '@/components/dancecard/organizer/settings/EventSettingsAdvancedForm'
+import { EventSettingsBasicsForm } from '@/components/dancecard/organizer/settings/EventSettingsBasicsForm'
+import { EventSettingsBrandingForm } from '@/components/dancecard/organizer/settings/EventSettingsBrandingForm'
+import type { EventSettingsEventDto } from '@/components/dancecard/organizer/settings/EventSettingsEventDto'
+import { hasEventWindow } from '@/components/dancecard/organizer/settings/EventSettingsEventDto'
+import {
+  EVENT_SETTINGS_ESSENTIAL,
+  EVENT_SETTINGS_MORE,
+  EVENT_SETTINGS_PANEL_PARAM,
+  EVENT_SETTINGS_PANELS,
+  normalizeSettingsPanelId,
+  type EventSettingsPanelId,
+} from '@/components/dancecard/organizer/settings/eventSettingsConfig'
+import { useEventSettingsWizard } from '@/components/dancecard/organizer/settings/useEventSettingsWizard'
+import type { OrganizerRoleForClient } from '@/lib/dancecard/organizerRoles'
+import { Panel } from '@/components/dancecard/ui/Panel'
+import { cn } from '@/lib/cn'
 
-type EventDto = {
-  id: string
-  slug: string
-  productTitle: string
-  eventTitle: string
-  subtitle: string | null
-  timezone: string
-  windowStartsAt: string
-  windowEndsAt: string
-  sharedByLabel: string
-  sharedByDetail: string | null
-  logoUrl: string | null
-  status: string
-  staffAccessCode: string
-  registrationAccessCode: string
+type ActiveSettingsView = EventSettingsPanelId | 'guide'
+
+function resolveActivePanel(v: string | null): ActiveSettingsView {
+  if (v === 'guide') return 'guide'
+  const norm = normalizeSettingsPanelId(v)
+  return norm ?? 'basics'
 }
 
-function toLocalInput(iso: string) {
-  const d = new Date(iso)
-  if (Number.isNaN(d.getTime())) return ''
-  const pad = (n: number) => String(n).padStart(2, '0')
-  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`
-}
+export function EventSettingsPanel({
+  eventSlug,
+  organizerRole,
+}: {
+  eventSlug: string
+  organizerRole: OrganizerRoleForClient | null
+}) {
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const { wizardDone, wizardReady, markWizardDone, resetWizard } = useEventSettingsWizard(eventSlug)
 
-export function EventSettingsPanel({ eventSlug }: { eventSlug: string }) {
-  const [event, setEvent] = useState<EventDto | null>(null)
+  const [event, setEvent] = useState<EventSettingsEventDto | null>(null)
+  const [badgeLayoutDraft, setBadgeLayoutDraft] = useState('{}')
   const [loadErr, setLoadErr] = useState<string | null>(null)
   const [saving, setSaving] = useState(false)
   const [msg, setMsg] = useState<string | null>(null)
 
+  const canEdit = organizerRole !== 'viewer' && organizerRole !== null
+  const canOwnerSettings = organizerRole === 'owner' || organizerRole === 'admin'
+
+  const panelFromUrl = searchParams.get(EVENT_SETTINGS_PANEL_PARAM)
+  const activePanel: ActiveSettingsView = useMemo(() => resolveActivePanel(panelFromUrl), [panelFromUrl])
+
+  const setPanel = useCallback(
+    (id: ActiveSettingsView) => {
+      const params = new URLSearchParams(searchParams.toString())
+      params.set('tab', 'settings')
+      params.set(EVENT_SETTINGS_PANEL_PARAM, id)
+      const href = `/organizer/dancecard/${eventSlug}?${params.toString()}`
+      router.replace(href, { scroll: false })
+      if (typeof window !== 'undefined') {
+        window.history.replaceState(null, '', href)
+      }
+    },
+    [eventSlug, router, searchParams],
+  )
+
   const load = useCallback(async () => {
     setLoadErr(null)
     try {
-      const res = await organizerDancecardFetch<{ event: EventDto }>(eventSlug, '/event')
+      const res = await organizerDancecardFetch<{ event: EventSettingsEventDto }>(eventSlug, '/event')
       setEvent(res.event)
+      setBadgeLayoutDraft(JSON.stringify(res.event.badgeLayoutJson ?? {}, null, 2))
     } catch (e) {
-      setLoadErr(e instanceof Error ? e.message : 'Failed to load')
+      setLoadErr(e instanceof Error ? e.message : 'Failed to load settings')
     }
   }, [eventSlug])
 
@@ -47,169 +89,345 @@ export function EventSettingsPanel({ eventSlug }: { eventSlug: string }) {
     void load()
   }, [load])
 
-  async function save(patch: Partial<EventDto>) {
-    if (!event) return
-    setSaving(true)
-    setMsg(null)
-    try {
-      const body: Record<string, unknown> = {}
-      if (patch.productTitle !== undefined) body.productTitle = patch.productTitle
-      if (patch.eventTitle !== undefined) body.eventTitle = patch.eventTitle
-      if (patch.subtitle !== undefined) body.subtitle = patch.subtitle
-      if (patch.timezone !== undefined) body.timezone = patch.timezone
-      if (patch.windowStartsAt !== undefined) body.windowStartsAt = patch.windowStartsAt
-      if (patch.windowEndsAt !== undefined) body.windowEndsAt = patch.windowEndsAt
-      if (patch.sharedByLabel !== undefined) body.sharedByLabel = patch.sharedByLabel
-      if (patch.sharedByDetail !== undefined) body.sharedByDetail = patch.sharedByDetail
-      if (patch.logoUrl !== undefined) body.logoUrl = patch.logoUrl
-      if (patch.status !== undefined) body.status = patch.status
-      if (patch.staffAccessCode !== undefined) body.staffAccessCode = patch.staffAccessCode
-      if (patch.registrationAccessCode !== undefined) body.registrationAccessCode = patch.registrationAccessCode
+  const save = useCallback(
+    async (patch: Partial<EventSettingsEventDto>) => {
+      if (!event || !canEdit) return
+      setSaving(true)
+      setMsg(null)
+      try {
+        const body: Record<string, unknown> = {}
+        if (patch.productTitle !== undefined) body.productTitle = patch.productTitle
+        if (patch.eventTitle !== undefined) body.eventTitle = patch.eventTitle
+        if (patch.subtitle !== undefined) body.subtitle = patch.subtitle
+        if (patch.timezone !== undefined) body.timezone = patch.timezone
+        if (patch.windowStartsAt !== undefined) body.windowStartsAt = patch.windowStartsAt
+        if (patch.windowEndsAt !== undefined) body.windowEndsAt = patch.windowEndsAt
+        if (patch.sharedByLabel !== undefined) body.sharedByLabel = patch.sharedByLabel
+        if (patch.sharedByDetail !== undefined) body.sharedByDetail = patch.sharedByDetail
+        if (patch.logoUrl !== undefined) body.logoUrl = patch.logoUrl
+        if (patch.status !== undefined && canOwnerSettings) body.status = patch.status
+        if (patch.staffAccessCode !== undefined && canOwnerSettings) body.staffAccessCode = patch.staffAccessCode
+        if (patch.registrationAccessCode !== undefined && canOwnerSettings)
+          body.registrationAccessCode = patch.registrationAccessCode
+        if (patch.badgeLayoutJson !== undefined) body.badgeLayoutJson = patch.badgeLayoutJson
+        if (patch.themeConfig !== undefined) body.themeConfig = patch.themeConfig
+        if (patch.eventProfile !== undefined) body.eventProfile = patch.eventProfile
+        if (patch.attendeeGuideJson !== undefined) body.attendeeGuideJson = patch.attendeeGuideJson
+        if (patch.agreementsConfig !== undefined) body.agreementsConfig = patch.agreementsConfig
+        if (patch.attendeeProfileConfig !== undefined) body.attendeeProfileConfig = patch.attendeeProfileConfig
 
-      const res = await organizerDancecardFetch<{ event: EventDto }>(eventSlug, '/event', {
-        method: 'PATCH',
-        body: JSON.stringify(body),
-      })
-      setEvent(res.event)
-      setMsg('Saved.')
-    } catch (e) {
-      setMsg(e instanceof Error ? e.message : 'Save failed')
-    } finally {
-      setSaving(false)
-    }
-  }
+        const res = await organizerDancecardFetch<{ event: EventSettingsEventDto }>(eventSlug, '/event', {
+          method: 'PATCH',
+          body: JSON.stringify(body),
+        })
+        setEvent(res.event)
+        setBadgeLayoutDraft(JSON.stringify(res.event.badgeLayoutJson ?? {}, null, 2))
+        setMsg('Saved.')
+      } catch (e) {
+        setMsg(e instanceof Error ? e.message : 'Save failed')
+      } finally {
+        setSaving(false)
+      }
+    },
+    [canEdit, canOwnerSettings, event, eventSlug],
+  )
 
   if (loadErr) {
-    return <p className="text-sm text-rose-300">{loadErr}</p>
-  }
-  if (!event) {
-    return <p className="text-sm text-slate-400">Loading…</p>
+    return (
+      <Panel className="border-dc-danger/30">
+        <p className="text-sm text-dc-danger">{loadErr}</p>
+        <button type="button" className="mt-3 text-sm text-dc-accent hover:underline" onClick={() => void load()}>
+          Try again
+        </button>
+      </Panel>
+    )
   }
 
+  if (!event || !wizardReady) {
+    return <p className="text-sm text-dc-muted">Loading settings…</p>
+  }
+
+  const needsDates = !hasEventWindow(event)
+
   return (
-    <div className="mx-auto max-w-2xl space-y-5">
-      {msg ? <p className="text-sm text-cyan-200/90">{msg}</p> : null}
-      <div className="grid gap-4 rounded-xl border border-white/10 bg-black/30 p-4">
-        <label className="text-xs uppercase tracking-wide text-slate-400">
-          Status
-          <select
-            className="mt-1 w-full rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-sm text-white"
-            value={event.status}
-            onChange={(e) => {
-              const status = e.target.value as 'draft' | 'published'
-              setEvent({ ...event, status })
-              void save({ status })
-            }}
-            disabled={saving}
+    <div className="mx-auto max-w-3xl space-y-5">
+      <header>
+        <h1 className="font-serif text-2xl text-dc-text sm:text-3xl">Event settings</h1>
+        <p className="mt-2 max-w-2xl text-sm leading-relaxed text-dc-muted">
+          Configure this event once, then use Program and People for day-to-day work. Use the setup guide for a first
+          pass, or jump to a section below.
+        </p>
+      </header>
+
+      {needsDates ? (
+        <Panel className="border-dc-warning/30 bg-dc-warning-muted/40">
+          <p className="text-sm font-medium text-dc-warning">Set your event dates first</p>
+          <p className="mt-1 text-sm text-dc-muted">
+            Program, rooms, and imports need a start and end time. Open Basics or run the setup guide.
+          </p>
+          <button
+            type="button"
+            className="mt-3 text-sm font-semibold text-dc-accent hover:underline"
+            onClick={() => setPanel('basics')}
           >
-            <option value="draft">draft</option>
-            <option value="published">published</option>
-          </select>
-        </label>
-        <label className="text-xs uppercase tracking-wide text-slate-400">
-          Timezone (IANA)
-          <input
-            className="mt-1 w-full rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-sm text-white"
-            value={event.timezone}
-            onChange={(e) => setEvent({ ...event, timezone: e.target.value })}
-            onBlur={() => void save({ timezone: event.timezone })}
-          />
-        </label>
-        <label className="text-xs uppercase tracking-wide text-slate-400">
-          Window start
-          <input
-            type="datetime-local"
-            className="mt-1 w-full rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-sm text-white"
-            value={toLocalInput(event.windowStartsAt)}
-            onChange={(e) =>
-              setEvent({ ...event, windowStartsAt: new Date(e.target.value).toISOString() })
-            }
-            onBlur={() => void save({ windowStartsAt: event.windowStartsAt })}
-          />
-        </label>
-        <label className="text-xs uppercase tracking-wide text-slate-400">
-          Window end
-          <input
-            type="datetime-local"
-            className="mt-1 w-full rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-sm text-white"
-            value={toLocalInput(event.windowEndsAt)}
-            onChange={(e) =>
-              setEvent({ ...event, windowEndsAt: new Date(e.target.value).toISOString() })
-            }
-            onBlur={() => void save({ windowEndsAt: event.windowEndsAt })}
-          />
-        </label>
-        <label className="text-xs uppercase tracking-wide text-slate-400">
-          Event title
-          <input
-            className="mt-1 w-full rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-sm text-white"
-            value={event.eventTitle}
-            onChange={(e) => setEvent({ ...event, eventTitle: e.target.value })}
-            onBlur={() => void save({ eventTitle: event.eventTitle })}
-          />
-        </label>
-        <label className="text-xs uppercase tracking-wide text-slate-400">
-          Product title
-          <input
-            className="mt-1 w-full rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-sm text-white"
-            value={event.productTitle}
-            onChange={(e) => setEvent({ ...event, productTitle: e.target.value })}
-            onBlur={() => void save({ productTitle: event.productTitle })}
-          />
-        </label>
-        <label className="text-xs uppercase tracking-wide text-slate-400">
-          Subtitle
-          <input
-            className="mt-1 w-full rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-sm text-white"
-            value={event.subtitle ?? ''}
-            onChange={(e) => setEvent({ ...event, subtitle: e.target.value || null })}
-            onBlur={() => void save({ subtitle: event.subtitle })}
-          />
-        </label>
-        <label className="text-xs uppercase tracking-wide text-slate-400">
-          Shared-by label
-          <input
-            className="mt-1 w-full rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-sm text-white"
-            value={event.sharedByLabel}
-            onChange={(e) => setEvent({ ...event, sharedByLabel: e.target.value })}
-            onBlur={() => void save({ sharedByLabel: event.sharedByLabel })}
-          />
-        </label>
-        <label className="text-xs uppercase tracking-wide text-slate-400">
-          Logo URL
-          <input
-            className="mt-1 w-full rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-sm text-white"
-            value={event.logoUrl ?? ''}
-            onChange={(e) => setEvent({ ...event, logoUrl: e.target.value || null })}
-            onBlur={() => void save({ logoUrl: event.logoUrl })}
-          />
-        </label>
-        <label className="text-xs uppercase tracking-wide text-slate-400">
-          Registration access code (empty = no gate)
-          <input
-            className="mt-1 w-full rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-sm text-white"
-            value={event.registrationAccessCode}
-            onChange={(e) => setEvent({ ...event, registrationAccessCode: e.target.value })}
-            onBlur={() => void save({ registrationAccessCode: event.registrationAccessCode })}
-          />
-        </label>
-        <label className="text-xs uppercase tracking-wide text-slate-400">
-          Staff / volunteer unlock code
-          <input
-            className="mt-1 w-full rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-sm text-white"
-            value={event.staffAccessCode}
-            onChange={(e) => setEvent({ ...event, staffAccessCode: e.target.value })}
-            onBlur={() => void save({ staffAccessCode: event.staffAccessCode })}
-          />
-        </label>
-        <button
-          type="button"
-          className="rounded-full border border-white/15 px-4 py-2 text-sm text-slate-300 hover:bg-white/5"
-          onClick={() => void load()}
+            Go to basics →
+          </button>
+        </Panel>
+      ) : null}
+
+      {!canEdit ? (
+        <Panel className="border-dc-warning/25 bg-dc-warning-muted/30">
+          <p className="text-sm text-dc-warning">Read-only access for this event.</p>
+        </Panel>
+      ) : null}
+
+      {msg ? (
+        <p className={cn('text-sm', msg.includes('fail') || msg.includes('invalid') ? 'text-dc-danger' : 'text-dc-success')}>
+          {msg}
+        </p>
+      ) : null}
+
+      <div className="space-y-3">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <p className="text-xs font-semibold uppercase tracking-wide text-dc-muted">Essentials</p>
+          <button
+            type="button"
+            className="text-xs font-semibold text-dc-accent hover:underline"
+            onClick={() => setPanel('guide')}
+          >
+            Quick setup (10 min)
+          </button>
+        </div>
+        <nav
+          className="-mx-1 flex flex-nowrap gap-2 overflow-x-auto px-1 pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          aria-label="Essential settings"
         >
-          Reload
-        </button>
+          {EVENT_SETTINGS_ESSENTIAL.map((p) => (
+            <button
+              key={p.id}
+              type="button"
+              title={p.description}
+              className={cn(
+                'shrink-0 rounded-full border px-3 py-1.5 text-sm transition-colors',
+                activePanel === p.id
+                  ? 'border-dc-accent-border bg-dc-accent-muted text-dc-accent'
+                  : 'border-dc-border text-dc-muted hover:border-dc-accent-border/50 hover:text-dc-text',
+              )}
+              onClick={() => setPanel(p.id)}
+            >
+              {p.label}
+            </button>
+          ))}
+        </nav>
+        <p className="text-xs font-semibold uppercase tracking-wide text-dc-muted">More</p>
+        <nav
+          className="-mx-1 flex flex-nowrap gap-2 overflow-x-auto px-1 pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          aria-label="More settings"
+        >
+          {EVENT_SETTINGS_MORE.map((p) => (
+            <button
+              key={p.id}
+              type="button"
+              title={p.description}
+              className={cn(
+                'shrink-0 rounded-full border px-3 py-1.5 text-sm transition-colors',
+                activePanel === p.id
+                  ? 'border-dc-accent-border bg-dc-accent-muted text-dc-accent'
+                  : 'border-dc-border text-dc-muted hover:border-dc-accent-border/50 hover:text-dc-text',
+              )}
+              onClick={() => setPanel(p.id)}
+            >
+              {p.label}
+            </button>
+          ))}
+        </nav>
+        <details className="rounded-xl border border-dc-border bg-dc-elevated-muted/40 px-3 py-2">
+          <summary className="cursor-pointer text-sm font-medium text-dc-text">Advanced</summary>
+          <button
+            type="button"
+            className={cn(
+              'mt-2 rounded-full border px-3 py-1.5 text-sm',
+              activePanel === 'advanced'
+                ? 'border-dc-accent-border bg-dc-accent-muted text-dc-accent'
+                : 'border-dc-border text-dc-muted',
+            )}
+            onClick={() => setPanel('advanced')}
+          >
+            Open advanced settings
+          </button>
+        </details>
       </div>
+
+      <p className="text-xs text-dc-muted">
+        {activePanel === 'guide'
+          ? 'Step-by-step first-time setup.'
+          : EVENT_SETTINGS_PANELS.find((p) => p.id === activePanel)?.description}
+      </p>
+
+      {activePanel === 'guide' ? (
+        <EventSetupWizard
+          eventSlug={eventSlug}
+          event={event}
+          setEvent={setEvent}
+          canEdit={canEdit}
+          canOwnerSettings={canOwnerSettings}
+          saving={saving}
+          onSave={save}
+          onComplete={() => {
+            markWizardDone()
+            setPanel('basics')
+          }}
+          onOpenPanel={() => {
+            markWizardDone()
+            setPanel('basics')
+          }}
+        />
+      ) : null}
+
+      {activePanel === 'basics' ? (
+        <EventSettingsBasicsForm
+          event={event}
+          setEvent={setEvent}
+          canEdit={canEdit}
+          canOwnerSettings={canOwnerSettings}
+          saveOnBlur={(patch) => void save(patch)}
+        />
+      ) : null}
+
+      {activePanel === 'branding' ? (
+        <EventSettingsBrandingForm
+          event={event}
+          setEvent={setEvent}
+          canEdit={canEdit}
+          saveOnBlur={(patch) => void save(patch)}
+        />
+      ) : null}
+
+      {activePanel === 'registration' ? (
+        <Panel className="!p-0 overflow-hidden">
+          <RegistrationSettingsSection eventSlug={eventSlug} canEdit={canEdit} />
+        </Panel>
+      ) : null}
+
+      {activePanel === 'venue' ? (
+        <div className="space-y-4">
+          <Panel className="!p-0 overflow-hidden">
+            <LocationsSettingsSection eventSlug={eventSlug} canEdit={canEdit} />
+          </Panel>
+          <Panel className="!p-0 overflow-hidden">
+            <MapsSettingsSection eventSlug={eventSlug} canEdit={canEdit} />
+          </Panel>
+        </div>
+      ) : null}
+
+      {activePanel === 'program' ? (
+        <Panel className="!p-0 overflow-hidden">
+          <TracksTagsSettingsSection eventSlug={eventSlug} canEdit={canEdit} />
+        </Panel>
+      ) : null}
+
+      {activePanel === 'policies-agreements' ? (
+        <div className="space-y-4">
+          <PoliciesAgreementsPanel
+            eventSlug={eventSlug}
+            config={event.agreementsConfig}
+            onConfigChange={(next) => setEvent((e) => (e ? { ...e, agreementsConfig: next } : e))}
+            readOnly={!canEdit}
+          />
+          {canEdit ? (
+            <button
+              type="button"
+              disabled={saving}
+              className="rounded-full bg-dc-accent px-4 py-2 text-sm font-semibold text-white disabled:opacity-40"
+              onClick={() => void save({ agreementsConfig: event.agreementsConfig })}
+            >
+              Save agreements settings
+            </button>
+          ) : null}
+        </div>
+      ) : null}
+
+      {activePanel === 'attendee-guide' ? (
+        <div className="space-y-4">
+          <AttendeeGuideSettingsSection
+            guide={event.attendeeGuideJson}
+            onChange={(next) => setEvent((e) => (e ? { ...e, attendeeGuideJson: next } : e))}
+            disabled={!canEdit}
+          />
+          {canEdit ? (
+            <div className="flex flex-wrap gap-2">
+              <button
+                type="button"
+                disabled={saving}
+                className="rounded-full bg-dc-accent px-4 py-2 text-sm font-semibold text-white disabled:opacity-40"
+                onClick={() => void save({ attendeeGuideJson: event.attendeeGuideJson })}
+              >
+                Save attendee guide
+              </button>
+            </div>
+          ) : null}
+        </div>
+      ) : null}
+
+      {activePanel === 'attendee-profile' ? (
+        <div className="space-y-4">
+          <Panel>
+            <AttendeeProfileSettingsSection
+              config={event.attendeeProfileConfig}
+              onChange={(next) => setEvent((e) => (e ? { ...e, attendeeProfileConfig: next } : e))}
+              disabled={!canEdit}
+            />
+          </Panel>
+          {canEdit ? (
+            <button
+              type="button"
+              disabled={saving}
+              className="rounded-full bg-dc-accent px-4 py-2 text-sm font-semibold text-white disabled:opacity-40"
+              onClick={() => void save({ attendeeProfileConfig: event.attendeeProfileConfig })}
+            >
+              Save attendee profile settings
+            </button>
+          ) : null}
+        </div>
+      ) : null}
+
+      {activePanel === 'advanced' ? (
+        <EventSettingsAdvancedForm
+          event={event}
+          setEvent={setEvent}
+          canEdit={canEdit}
+          canOwnerSettings={canOwnerSettings}
+          badgeLayoutDraft={badgeLayoutDraft}
+          setBadgeLayoutDraft={setBadgeLayoutDraft}
+          onSave={save}
+          onMessage={setMsg}
+          saving={saving}
+        />
+      ) : null}
+
+      {activePanel !== 'guide' ? (
+        <div className="flex flex-wrap items-center justify-between gap-3 border-t border-dc-border pt-4 text-sm">
+          <button type="button" className="text-dc-muted hover:text-dc-text" onClick={() => void load()}>
+            Reload settings
+          </button>
+          {!wizardDone ? (
+            <button type="button" className="text-dc-accent hover:underline" onClick={() => setPanel('guide')}>
+              Resume setup guide
+            </button>
+          ) : (
+            <button
+              type="button"
+              className="text-dc-muted hover:text-dc-text"
+              onClick={() => {
+                resetWizard()
+                setPanel('guide')
+              }}
+            >
+              Run setup guide again
+            </button>
+          )}
+        </div>
+      ) : null}
     </div>
   )
 }

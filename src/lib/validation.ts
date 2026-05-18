@@ -37,51 +37,9 @@ export const eventSchema = z.object({
   organizerName: z.string().max(120).optional(),
 })
 
-// File upload validation
-export const fileUploadSchema = z.object({
-  file: z.instanceof(File).refine(
-    (file) => file.size <= 5 * 1024 * 1024, // 5MB limit
-    'File size must be less than 5MB'
-  ).refine(
-    (file) => ['image/jpeg', 'image/png', 'image/webp'].includes(file.type),
-    'Only JPEG, PNG, and WebP files are allowed'
-  )
-})
-
-// Contact form schema
-export const contactSchema = z.object({
-  name: z.string().min(1, 'Name is required').max(100, 'Name too long'),
-  email: z.string().email('Invalid email address'),
-  subject: z.string().min(1, 'Subject is required').max(200, 'Subject too long'),
-  message: z.string().min(10, 'Message too short').max(1000, 'Message too long')
-})
-
-// Education article schema
-export const articleSchema = z.object({
-  title: z.string().min(1, 'Title is required').max(100, 'Title too long'),
-  slug: z.string().min(1, 'Slug is required').regex(/^[a-z0-9-]+$/, 'Slug must contain only lowercase letters, numbers, and hyphens'),
-  excerpt: z.string().min(10, 'Excerpt too short').max(200, 'Excerpt too long'),
-  content: z.string().min(50, 'Content too short'),
-  category: z.string().min(1, 'Category is required'),
-  author: z.string().min(1, 'Author is required').max(100, 'Author name too long'),
-  status: z.enum(['draft', 'published', 'archived']).default('draft')
-})
-
 // Validation helper functions
 export function validateEvent(data: unknown) {
   return eventSchema.safeParse(data)
-}
-
-export function validateFileUpload(file: File) {
-  return fileUploadSchema.safeParse({ file })
-}
-
-export function validateContact(data: unknown) {
-  return contactSchema.safeParse(data)
-}
-
-export function validateArticle(data: unknown) {
-  return articleSchema.safeParse(data)
 }
 
 // Sanitization helper

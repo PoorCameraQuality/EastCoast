@@ -3,7 +3,8 @@ import { loadPrefs } from '@/lib/dancecard/data'
 
 export async function resolveHostIdFromShareToken(
   admin: SupabaseClient,
-  shareToken: string
+  eventId: string,
+  shareToken: string,
 ): Promise<string | null> {
   const { data: link, error } = await admin
     .from('dancecard_share_links')
@@ -12,14 +13,22 @@ export async function resolveHostIdFromShareToken(
     .is('revoked_at', null)
     .maybeSingle()
   if (error) throw error
-  return link?.account_id ?? null
+  if (!link?.account_id) return null
+
+  const { data: host, error: hErr } = await admin
+    .from('dancecard_accounts')
+    .select('id, event_id')
+    .eq('id', link.account_id)
+    .maybeSingle()
+  if (hErr || !host || host.event_id !== eventId) return null
+  return host.id
 }
 
 /**
  * Host account id for username-based compare when the host opted in.
  * Returns null if not found, self-compare, or not opted in (same response for privacy).
  */
-export async function resolveHostIdFromCompareUsername(
+async function resolveHostIdFromCompareUsername(
   admin: SupabaseClient,
   eventId: string,
   rawUsername: string,
@@ -80,7 +89,7 @@ export async function resolveReserveHostId(
 ): Promise<ReserveHostResolution> {
   const tok = body.shareToken?.trim()
   if (tok) {
-    const hostId = await resolveHostIdFromShareToken(admin, tok)
+    const hostId = await resolveHostIdFromShareToken(admin, eventId, tok)
     if (!hostId) return { ok: false, reason: 'not_found' }
     if (hostId === sessionAccountId) return { ok: false, reason: 'self' }
     return { ok: true, hostId }

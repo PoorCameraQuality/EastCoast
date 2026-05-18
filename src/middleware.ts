@@ -90,46 +90,54 @@ export async function middleware(req: NextRequest) {
     return NextResponse.redirect(url, 308)
   }
 
-  // Strip unwanted query parameters (keep functional filters + attribution for GA/ads)
-  const allowedParams = new Set(['page', 'q', 'tag', 'view', 'track', 'day', 'room'])
-  const marketingParams = new Set([
-    'gclid',
-    'gbraid',
-    'wbraid',
-    'fbclid',
-    'msclkid',
-    'twclid',
-    'yclid',
-    'mc_cid',
-    'mc_eid',
-    '_ga',
-    '_gl',
-  ])
-  const isAllowedQueryKey = (key: string) =>
-    allowedParams.has(key) ||
-    key === 'format' ||
-    key === 'category' ||
-    key.startsWith('utm_') ||
-    marketingParams.has(key)
+  // Strip unwanted query parameters (keep functional filters + attribution for GA/ads).
+  // Organizer/dancecard consoles use many internal params (tab, peopleTab, slot, guide, etc.).
+  const skipQueryStrip =
+    pathLower.startsWith('/organizer') || pathLower.startsWith('/dancecard')
 
-  let paramsChanged = false
-  const keysToDelete: string[] = []
-  url.searchParams.forEach((value, key) => {
-    if (!isAllowedQueryKey(key)) {
-      keysToDelete.push(key)
+  if (!skipQueryStrip) {
+    const allowedParams = new Set(['page', 'q', 'tag', 'view', 'track', 'day', 'room'])
+    const marketingParams = new Set([
+      'gclid',
+      'gbraid',
+      'wbraid',
+      'fbclid',
+      'msclkid',
+      'twclid',
+      'yclid',
+      'mc_cid',
+      'mc_eid',
+      '_ga',
+      '_gl',
+    ])
+    const isAllowedQueryKey = (key: string) =>
+      allowedParams.has(key) ||
+      key === 'format' ||
+      key === 'category' ||
+      key.startsWith('utm_') ||
+      marketingParams.has(key)
+
+    let paramsChanged = false
+    const keysToDelete: string[] = []
+    url.searchParams.forEach((value, key) => {
+      if (!isAllowedQueryKey(key)) {
+        keysToDelete.push(key)
+      }
+    })
+    keysToDelete.forEach(key => {
+      url.searchParams.delete(key)
+      paramsChanged = true
+    })
+    if (paramsChanged) {
+      return NextResponse.redirect(url, 308)
     }
-  })
-  keysToDelete.forEach(key => {
-    url.searchParams.delete(key)
-    paramsChanged = true
-  })
-  if (paramsChanged) {
-    return NextResponse.redirect(url, 308)
   }
 
   // Check for required environment variables
   if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
-    console.log('⚠️ MIDDLEWARE: Missing Supabase environment variables - continuing without auth')
+    if (pathname.startsWith('/admin')) {
+      return NextResponse.redirect(new URL('/login', req.url))
+    }
     return NextResponse.next()
   }
 
@@ -175,19 +183,16 @@ export async function middleware(req: NextRequest) {
         }
       )
 
-      // Get session
-      const { data: { session }, error } = await supabase.auth.getSession()
-      
-      if (error || !session) {
-        console.log('❌ MIDDLEWARE: No valid session for admin route, redirecting to login')
+      const { data: { user }, error } = await supabase.auth.getUser()
+
+      if (error || !user) {
         return NextResponse.redirect(new URL('/login', req.url))
       }
 
-      // Verify admin role
       const { data: profile, error: profileError } = await supabase
         .from('profiles')
         .select('id, role')
-        .eq('id', session.user.id)
+        .eq('id', user.id)
         .single()
 
       if (profileError || !profile || profile.role !== 'admin') {
@@ -195,7 +200,7 @@ export async function middleware(req: NextRequest) {
         return NextResponse.redirect(new URL('/unauthorized', req.url))
       }
 
-      console.log('✅ MIDDLEWARE: Valid admin session for:', session.user.email)
+      console.log('✅ MIDDLEWARE: Valid admin session for:', user.email)
     } catch (error) {
       console.error('❌ MIDDLEWARE: Error checking admin access:', error)
       // On error, redirect to login to be safe

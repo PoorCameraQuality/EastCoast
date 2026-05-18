@@ -1,11 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { ZodError } from 'zod'
-import {
-  getDancecardAdmin,
+import {getDancecardAdmin,
   loadEventBySlug,
   normalizeEventSlug,
-  resolveAccountFromSession,
-} from '@/lib/dancecard/routeCommon'
+  resolveAccountFromSession, jsonFromRouteError } from '@/lib/dancecard/routeCommon'
 import { cancelReservationBodySchema } from '@/lib/dancecard/schemas'
 
 export async function GET(
@@ -59,8 +57,7 @@ export async function GET(
       })),
     })
   } catch (e) {
-    const msg = e instanceof Error ? e.message : 'Internal error'
-    return NextResponse.json({ error: msg }, { status: 500 })
+    return jsonFromRouteError(e, 'dancecard-[eventSlug]-reservations')
   }
 }
 
@@ -114,7 +111,6 @@ export async function PATCH(
     if (e instanceof ZodError) {
       return NextResponse.json({ error: 'Validation error', details: e.flatten() }, { status: 400 })
     }
-    const msg = e instanceof Error ? e.message : 'Internal error'
-    return NextResponse.json({ error: msg }, { status: 500 })
+    return jsonFromRouteError(e, 'dancecard-[eventSlug]-reservations-post')
   }
 }

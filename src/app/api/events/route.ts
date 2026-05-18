@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { validateEvent, sanitizeInput } from '@/lib/validation'
-import { isAdmin } from '@/lib/auth'
 import { withRateLimit, rateLimiters } from '@/lib/rateLimit'
 import { supabase } from '@/lib/supabase'
+import { createSupabaseServerClientForOrganizer, isUserSiteAdmin } from '@/lib/dancecard/organizerAuth'
 
 // Missing logo files that need to be created:
 // - ohiosmart.png (Ohio SMART Fetish Flea)
@@ -75,8 +75,11 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Check if user is admin (for admin submissions)
-    const isAdminUser = await isAdmin()
+    const supabaseServer = createSupabaseServerClientForOrganizer()
+    const {
+      data: { user },
+    } = await supabaseServer.auth.getUser()
+    const isAdminUser = user ? await isUserSiteAdmin(user.id) : false
     
     // Save to database
     const client = supabase

@@ -4,12 +4,25 @@ import bcrypt from 'bcryptjs'
 import { codesEqual } from '@/lib/dancecard/accessCodes'
 import { getDancecardAdmin, loadEventBySlug, normalizeEventSlug } from '@/lib/dancecard/routeCommon'
 import { loginBodySchema } from '@/lib/dancecard/schemas'
-import { newSessionToken, hashToken, DANCECARD_SESSION_COOKIE, DANCECARD_COOKIE_PATH, SESSION_DAYS } from '@/lib/dancecard/session'
+import { resolveRegistrantForDancecardAccount } from '@/lib/dancecard/ensureSelfServiceRegistrant'
+import {
+  newSessionToken,
+  hashToken,
+  DANCECARD_SESSION_COOKIE,
+  DANCECARD_COOKIE_PATH,
+  SESSION_DAYS,
+  revokeAllSessionsForAccount,
+} from '@/lib/dancecard/session'
+import { rateLimiters, withRateLimit } from '@/lib/rateLimit'
+import { toClientError } from '@/lib/security/safeApiError'
 
 export async function POST(
   request: NextRequest,
   context: { params: { eventSlug: string } }
 ) {
+  const limited = await withRateLimit(request, rateLimiters.dancecardAuth)
+  if (limited) return limited
+
   try {
     const admin = getDancecardAdmin()
     const { eventSlug } = context.params
@@ -38,6 +51,16 @@ export async function POST(
       }
     }
 
+    await resolveRegistrantForDancecardAccount(
+      admin,
+      event.id,
+      account.id as string,
+      account.display_name as string,
+      { ensure: true },
+    )
+
+    await revokeAllSessionsForAccount(admin, account.id as string)
+
     const token = newSessionToken()
     const tokenHash = hashToken(token)
     const expiresAt = new Date(Date.now() + SESSION_DAYS * 86400_000).toISOString()
@@ -63,7 +86,7 @@ export async function POST(
     if (e instanceof ZodError) {
       return NextResponse.json({ error: 'Validation error', details: e.flatten() }, { status: 400 })
     }
-    const msg = e instanceof Error ? e.message : 'Internal error'
-    return NextResponse.json({ error: msg }, { status: 500 })
+    const { status, body } = toClientError(e, 'dancecard-login')
+    return NextResponse.json(body, { status })
   }
 }

@@ -1538,6 +1538,8 @@ export const events = [
   {
     "name": "Primal Arts Festival",
     "slug": "primal-arts-festival",
+    "dancecardSlug": "paf26",
+    "dancecardEnabled": true,
     "date": {
       "start": "2026-05-07",
       "end": "2026-05-11",

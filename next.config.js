@@ -68,6 +68,7 @@ const nextConfig = {
       { source: '/calendar/', destination: '/calendar', permanent: true },
       { source: '/states/', destination: '/states', permanent: true },
       { source: '/vendors/', destination: '/vendors', permanent: true },
+      { source: '/products/dancecard', destination: '/dancecard', permanent: true },
 
       // Explicit trailing slash removal for detail pages
       { source: '/events/:slug/', destination: '/events/:slug', permanent: true },
@@ -339,7 +340,22 @@ const nextConfig = {
   async headers() {
     return [
       {
-        source: '/(.*)',
+        source: '/embed/:path*',
+        headers: [
+          {
+            key: 'Content-Security-Policy',
+            value:
+              "default-src 'none'; style-src 'unsafe-inline'; img-src https: data: blob:; base-uri 'none'; frame-ancestors *",
+          },
+          { key: 'X-Content-Type-Options', value: 'nosniff' },
+          {
+            key: 'Strict-Transport-Security',
+            value: 'max-age=31536000; includeSubDomains',
+          },
+        ],
+      },
+      {
+        source: '/((?!embed/).*)',
         headers: [
           { key: 'X-Robots-Tag', value: 'index, follow' },
           {

@@ -1,10 +1,21 @@
 import type { SupabaseClient } from '@supabase/supabase-js'
 import type { NextRequest } from 'next/server'
-import { getSupabaseAdminClient } from '@/lib/supabase'
+import { NextResponse } from 'next/server'
+import { ZodError } from 'zod'
+import { getSupabaseAdminClient } from '@/lib/supabaseAdmin'
 import { hashToken, DANCECARD_SESSION_COOKIE } from './session'
+import { normalizeEventSlug } from './slug'
+import { toClientError } from '@/lib/security/safeApiError'
 
-export function normalizeEventSlug(raw: string): string {
-  return raw.trim().toLowerCase()
+export { normalizeEventSlug } from './slug'
+
+/** Safe JSON error for dancecard API catch blocks. */
+export function jsonFromRouteError(e: unknown, logPrefix: string): NextResponse {
+  if (e instanceof ZodError) {
+    return NextResponse.json({ error: 'Validation error', details: e.flatten() }, { status: 400 })
+  }
+  const { status, body } = toClientError(e, logPrefix)
+  return NextResponse.json(body, { status })
 }
 
 export function getDancecardAdmin(): SupabaseClient {

@@ -1,11 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getDancecardAdmin, loadEventBySlug, normalizeEventSlug, resolveAccountFromSession } from '@/lib/dancecard/routeCommon'
+import {getDancecardAdmin, loadEventBySlug, normalizeEventSlug, resolveAccountFromSession, jsonFromRouteError } from '@/lib/dancecard/routeCommon'
 import {
   loadPrefs,
   loadSelections,
   loadAvailabilityRange,
+  saveAccountProfile,
   setPrefsAllowCompareByUsername,
 } from '@/lib/dancecard/data'
+import {
+  mergeProfileStored,
+  parseAttendeeProfileConfig,
+  profilePatchForConfig,
+  buildPublicProfile,
+  attendeeProfileStoredSchema,
+} from '@/lib/dancecard/attendeeProfile'
 import { z, ZodError } from 'zod'
 import { displayNameSchema } from '@/lib/dancecard/schemas'
 
@@ -28,6 +36,15 @@ export async function GET(
     const prefs = await loadPrefs(admin, session.accountId)
     const availability = await loadAvailabilityRange(admin, session.accountId)
     const selections = await loadSelections(admin, session.accountId)
+    const attendeeProfileConfig = parseAttendeeProfileConfig(
+      (event as { attendee_profile_config?: unknown }).attendee_profile_config
+    )
+    const publicProfile = buildPublicProfile({
+      displayName: session.displayName,
+      username: session.username,
+      stored: prefs.profile,
+      config: attendeeProfileConfig,
+    })
     return NextResponse.json({
       account: {
         id: session.accountId,
@@ -40,7 +57,10 @@ export async function GET(
         allowCompareByUsername: prefs.allowCompareByUsername,
         availabilityStartsAt: availability?.startsAt ?? event.window_starts_at,
         availabilityEndsAt: availability?.endsAt ?? event.window_ends_at,
+        profile: prefs.profile,
       },
+      attendeeProfileConfig,
+      publicProfile,
       selections: selections.map((s) => ({
         id: s.id,
         kind: s.kind,
@@ -54,10 +74,11 @@ export async function GET(
       })),
     })
   } catch (e) {
-    const msg = e instanceof Error ? e.message : 'Internal error'
-    return NextResponse.json({ error: msg }, { status: 500 })
+    return jsonFromRouteError(e, 'dancecard-[eventSlug]-me')
   }
 }
+
+const profilePatchSchema = attendeeProfileStoredSchema.partial()
 
 export async function PATCH(
   request: NextRequest,
@@ -75,14 +96,23 @@ export async function PATCH(
     if (!session) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
+    const attendeeProfileConfig = parseAttendeeProfileConfig(
+      (event as { attendee_profile_config?: unknown }).attendee_profile_config
+    )
+
     const patchSchema = z
       .object({
         displayName: displayNameSchema.optional(),
         allowCompareByUsername: z.boolean().optional(),
+        profile: profilePatchSchema.optional(),
       })
-      .refine((b) => b.displayName !== undefined || b.allowCompareByUsername !== undefined, {
-        message: 'No updates provided',
-      })
+      .refine(
+        (b) =>
+          b.displayName !== undefined ||
+          b.allowCompareByUsername !== undefined ||
+          b.profile !== undefined,
+        { message: 'No updates provided' }
+      )
     const body = patchSchema.parse(await request.json())
 
     let accountOut: { id: string; displayName: string } | undefined
@@ -97,7 +127,12 @@ export async function PATCH(
       accountOut = { id: data.id, displayName: data.display_name }
     }
 
-    let prefsOut: { allowCompareByUsername: boolean } | undefined
+    let prefsOut: {
+      allowCompareByUsername?: boolean
+      profile?: Record<string, unknown>
+      publicProfile?: ReturnType<typeof buildPublicProfile>
+    } | undefined
+
     if (body.allowCompareByUsername !== undefined) {
       const prefRes = await setPrefsAllowCompareByUsername(
         admin,
@@ -108,12 +143,39 @@ export async function PATCH(
         return NextResponse.json(
           {
             error:
-              'Database is missing column dancecard_prefs.allow_compare_by_username. Apply migration 20260430130000_dancecard_allow_compare_by_username.sql (or run: npm run dancecard:apply-migrations).',
+              'Database is missing column dancecard_prefs.allow_compare_by_username. Apply migration dancecard_006_allow_compare_by_username.sql.',
           },
           { status: 503 }
         )
       }
-      prefsOut = { allowCompareByUsername: body.allowCompareByUsername }
+      prefsOut = { ...(prefsOut ?? {}), allowCompareByUsername: body.allowCompareByUsername }
+    }
+
+    if (body.profile !== undefined) {
+      const current = await loadPrefs(admin, session.accountId)
+      const filtered = profilePatchForConfig(body.profile, attendeeProfileConfig)
+      const merged = mergeProfileStored(current.profile, filtered)
+      const saveRes = await saveAccountProfile(admin, session.accountId, merged)
+      if (!saveRes.ok && saveRes.reason === 'profile_column_missing') {
+        return NextResponse.json(
+          {
+            error:
+              'Database is missing column dancecard_prefs.profile_json. Apply migration dancecard_039_attendee_profile.sql.',
+          },
+          { status: 503 }
+        )
+      }
+      const displayName = accountOut?.displayName ?? session.displayName
+      prefsOut = {
+        ...(prefsOut ?? {}),
+        profile: merged,
+        publicProfile: buildPublicProfile({
+          displayName,
+          username: session.username,
+          stored: merged,
+          config: attendeeProfileConfig,
+        }),
+      }
     }
 
     return NextResponse.json({
@@ -124,7 +186,6 @@ export async function PATCH(
     if (e instanceof ZodError) {
       return NextResponse.json({ error: 'Validation error', details: e.flatten() }, { status: 400 })
     }
-    const msg = e instanceof Error ? e.message : 'Internal error'
-    return NextResponse.json({ error: msg }, { status: 500 })
+    return jsonFromRouteError(e, 'dancecard-[eventSlug]-me-patch')
   }
 }

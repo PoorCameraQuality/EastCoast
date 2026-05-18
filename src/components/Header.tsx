@@ -5,8 +5,10 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import UserMenu from './auth/UserMenu'
 import { CONTACT_US_LABEL } from '@/lib/submissionContact'
+import { suppressEckeHeader } from '@/lib/dancecard/shellRoutes'
 
 const NAV_LINKS = [
+  { href: '/dancecard', label: 'Dancecard' },
   { href: '/events', label: 'Events' },
   { href: '/dungeons', label: 'Dungeons & clubs' },
   { href: '/education', label: 'Education' },
@@ -50,7 +52,7 @@ export default function Header() {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  if (pathname?.startsWith('/dancecard')) {
+  if (suppressEckeHeader(pathname)) {
     return null
   }
 

@@ -768,6 +768,12 @@
   }
 }
 
+@layer utilities {
+  .font-tabular {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
 .prose .table-wrap {
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
