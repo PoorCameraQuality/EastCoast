@@ -1,3 +1,4 @@
+import { redirect } from 'next/navigation'
 import { listOrganizerHubEvents, organizerDevBypassEnabled, getAuthedUserId } from '@/lib/dancecard/organizerAuth'
 import { getDancecardAdmin } from '@/lib/dancecard/routeCommon'
 import { enrichHubEventsWithProgramStats } from '@/lib/dancecard/organizerHubStats'
@@ -7,6 +8,12 @@ export const dynamic = 'force-dynamic'
 
 export default async function OrganizerDancecardHubPage() {
   const bypass = organizerDevBypassEnabled()
+  if (!bypass) {
+    const authed = await getAuthedUserId()
+    if (!authed) {
+      redirect(`/organizer/login?next=${encodeURIComponent('/organizer/dancecard')}`)
+    }
+  }
   const userId = bypass ? null : await getAuthedUserId()
   const events = await listOrganizerHubEvents(userId)
   const eventsWithStats = await enrichHubEventsWithProgramStats(getDancecardAdmin(), events)

@@ -1,5 +1,7 @@
 # Dancecard Handoff — 2026-05-17
 
+> **Superseded for deploy / repo status:** see [dancecard-handoff-2026-05-18.md](./dancecard-handoff-2026-05-18.md) and [PROJECT_STATUS.md](./PROJECT_STATUS.md). This file remains useful for **local dev UX fixes** from the 2026-05-17 session.
+
 ## Summary
 
 This session completed the **Generic Dancecard platform** push (north star: [GENERIC_DANCECARD_PRODUCT_VISION.md](./GENERIC_DANCECARD_PRODUCT_VISION.md)), applied migrations **030–031**, verified schema (**102/102 PASS**), and fixed **local dev / organizer UX** issues (CSS not loading, dead clicks, gray program grid).
@@ -155,7 +157,7 @@ Last two migrations from this push:
 - **Hydration warnings** in Cursor browser tooling (`data-cursor-ref`) — dev-only noise.
 - **Program grid colors** — track-based via `roleColor`; room-based accent not yet on organizer cards (attendee side uses `locationColor` in places).
 - **Import workflow** — still partially local-state when migration 007 absent (see [dancecard-handoff-2026-05-12.md](./dancecard-handoff-2026-05-12.md)).
-- **No git commit** from agent session unless user requested — confirm branch state before deploy.
+- **Git:** Platform push landed in **`931bc94`** on 2026-05-18 — see [dancecard-handoff-2026-05-18.md](./dancecard-handoff-2026-05-18.md).
 
 ---
 

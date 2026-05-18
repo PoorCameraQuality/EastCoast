@@ -12,6 +12,29 @@ export { assertProductionNoOrganizerBypass } from '@/lib/security/apiAuth'
 /** Placeholder user id when `organizerDevBypassEnabled()` (API audit only; never in production). */
 const DEV_BYPASS_USER_ID = '00000000-0000-4000-8000-000000000001'
 
+/** Placeholder user id for anonymous public sandbox demo (slug `sandbox` only). */
+const PUBLIC_SANDBOX_DEMO_USER_ID = '00000000-0000-4000-8000-000000000002'
+
+/** Seeded demo event slug (`npm run dancecard:seed-sandbox`). */
+export const PUBLIC_SANDBOX_SLUG = 'sandbox'
+
+export function isPublicSandboxSlug(eventSlug: string): boolean {
+  return normalizeEventSlug(eventSlug) === PUBLIC_SANDBOX_SLUG
+}
+
+/**
+ * Production: allow unauthenticated organizer console for slug `sandbox` only.
+ * Disable with `DANCECARD_PUBLIC_SANDBOX_DEMO=0` on Vercel.
+ */
+export function publicSandboxOrganizerDemoEnabled(): boolean {
+  if (process.env.DANCECARD_PUBLIC_SANDBOX_DEMO === '0') return false
+  return true
+}
+
+export function allowPublicSandboxOrganizerAccess(eventSlug: string): boolean {
+  return publicSandboxOrganizerDemoEnabled() && isPublicSandboxSlug(eventSlug)
+}
+
 /**
  * Local preview only: `next dev` + `.env.local` must set BOTH:
  *   DANCECARD_ORGANIZER_DEV_BYPASS=1
@@ -143,6 +166,8 @@ export function assertOrganizerCanExportPii(ctx: OrganizerContext) {
 }
 
 export async function isUserOrganizerForSlug(userId: string, eventSlug: string): Promise<boolean> {
+  if (allowPublicSandboxOrganizerAccess(eventSlug)) return true
+
   const admin = getDancecardAdmin()
   const slug = normalizeEventSlug(eventSlug)
   const { data: ev, error: evErr } = await admin.from('dancecard_events').select('id').eq('slug', slug).maybeSingle()
@@ -179,6 +204,22 @@ export async function requireOrganizerForSlug(eventSlug: string): Promise<Organi
       throw err
     }
     return { userId: DEV_BYPASS_USER_ID, admin, eventId: (ev as { id: string }).id, slug, organizerRole: 'admin' }
+  }
+
+  if (allowPublicSandboxOrganizerAccess(slug)) {
+    const { data: ev, error: evErr } = await admin.from('dancecard_events').select('id').eq('slug', slug).maybeSingle()
+    if (evErr || !ev) {
+      const err = new Error('NOT_FOUND')
+      ;(err as Error & { status: number }).status = 404
+      throw err
+    }
+    return {
+      userId: PUBLIC_SANDBOX_DEMO_USER_ID,
+      admin,
+      eventId: (ev as { id: string }).id,
+      slug,
+      organizerRole: 'admin',
+    }
   }
 
   const userId = await getAuthedUserId()

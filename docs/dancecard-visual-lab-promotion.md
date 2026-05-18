@@ -1,6 +1,8 @@
 # Dancecard visual lab → design system promotion map
 
-Source: `src/app/dancecard-visual-lab/page.tsx` (legacy lab). Target: `src/components/dancecard/ui/*` and `src/components/dancecard/styleguide/*`.
+> **Historical (2026-05-18):** The visual lab, prototype, and styleguide **routes were removed** from the repo in commit `931bc94`. Patterns below were promoted to production components; use `src/components/dancecard/ui/*` as the source of truth.
+
+Source (removed): `src/app/dancecard-visual-lab/page.tsx`. Target: `src/components/dancecard/ui/*`.
 
 ## Promote → `ui/*`
 

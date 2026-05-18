@@ -2,8 +2,8 @@
 
 **For:** Any ECKE organizer (campouts, hotel takeovers, retreats, parties, cons)  
 **About:** Dancecard organizer console + attendee dancecard in EastCoast-master  
-**Status:** Planning document, May 2026  
-**Implementation status:** [`GENERIC_DANCECARD_IMPLEMENTATION_TRACKER.md`](./GENERIC_DANCECARD_IMPLEMENTATION_TRACKER.md)  
+**Status:** Planning document, May 2026 — **implementation shipped** to GitHub `931bc94` (2026-05-18); production deploy pending.  
+**Implementation status:** [`GENERIC_DANCECARD_IMPLEMENTATION_TRACKER.md`](./GENERIC_DANCECARD_IMPLEMENTATION_TRACKER.md) · **Deploy:** [`PROJECT_STATUS.md`](./PROJECT_STATUS.md)  
 **Companion docs:**
 
 - Technical UI backlog: [`DANCECARD_UI_UX_MASTER_PLAN.md`](./DANCECARD_UI_UX_MASTER_PLAN.md)

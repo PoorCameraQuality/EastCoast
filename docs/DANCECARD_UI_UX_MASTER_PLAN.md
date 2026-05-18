@@ -2,7 +2,7 @@
 
 **Purpose:** Single planning document for **all UI/UX work** from standalone release through C2K integration. Point sprints, design reviews, and hiring at **UI Phases 1–8** below.
 
-**Status:** Planning baseline — May 2026. Backend product phases **0–7 are implemented**; this plan covers **interface and experience** only.
+**Status:** Planning baseline — May 2026. Backend product phases **0–7 are implemented** (on GitHub `931bc94`); this plan covers **interface and experience** only. Deploy: [PROJECT_STATUS.md](./PROJECT_STATUS.md).
 
 **Companion docs (do not duplicate here):**
 

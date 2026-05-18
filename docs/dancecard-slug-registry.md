@@ -7,7 +7,7 @@ Maps **East Coast Kink Events** directory slugs (`/events/[slug]`) and **Coast t
 | ECKE slug (`events.js`) | Dancecard slug | Notes |
 | --- | --- | --- |
 | `primal-arts-festival` | `paf26` | Demo / seeded event (`dancecard_seed_paf26_demo.sql`) |
-| *(sandbox QA)* | `sandbox` | Full synthetic demo (`npm run dancecard:seed-sandbox`) |
+| *(sandbox QA)* | `sandbox` | Full synthetic demo (`npm run dancecard:seed-sandbox`); **public organizer demo** at `/organizer/dancecard/sandbox` (no login; shared sample data) |
 
 ## C2K conventions
 

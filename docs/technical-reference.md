@@ -1,6 +1,8 @@
 ## Technical Reference
 
-This repo powers the `eastcoastkinkevents.com` Next.js site: Events, Dungeons, States, Education, Calendar, About, Contact, and “Add Event” flows. See the live navigation at `https://www.eastcoastkinkevents.com/`.
+This repo powers the `eastcoastkinkevents.com` Next.js site: Events, Dungeons, States, Education, Calendar, About, Contact, **Dancecard** (event operations), and “Add Event” flows. See the live navigation at `https://www.eastcoastkinkevents.com/`.
+
+**Project status (2026-05-18):** [docs/PROJECT_STATUS.md](./PROJECT_STATUS.md) — Dancecard platform on GitHub `master` @ `931bc94`; production deploy pending.
 
 ### Runtime and tooling
 
@@ -13,12 +15,16 @@ This repo powers the `eastcoastkinkevents.com` Next.js site: Events, Dungeons, S
 ### Key directories
 
 - `src/app/`: Next.js App Router pages, layouts, and route handlers (API).
-- `src/components/`: UI components (including admin and submission UI).
+- `src/app/dancecard/`, `src/app/organizer/dancecard/`, `src/app/embed/dancecard/`: Dancecard attendee, organizer, and embed surfaces.
+- `src/components/dancecard/`: Dancecard UI (organizer shell, attendee client, shared `ui/` primitives).
+- `src/lib/dancecard/`: Dancecard domain logic (conflicts, imports, registrants, embeds, theme, etc.).
+- `src/components/`: ECKE marketing UI (admin, submissions, vendors).
 - `src/contexts/`: Client providers (Auth, GA4 tracking).
 - `src/data/`: Static seed data (events/dungeons/education).
-- `src/lib/`: Shared utilities (Supabase clients, auth helpers, validation, SEO, IndexNow).
-- `public/`: Static assets (logos, OG image, IndexNow key file, sitemap fallback).
-- `scripts/`: Node scripts for maintenance (dates cleanup/validation, indexing utilities).
+- `src/lib/`: Shared utilities (Supabase, auth, validation, SEO, IndexNow, `security/`).
+- `database/`: Dancecard SQL migrations (`dancecard_007` … `040`, bundle, verify script).
+- `public/`: Static assets (logos, OG image, Dancecard walkthrough images, IndexNow key).
+- `scripts/`: Node scripts (dates, Dancecard smoke/seed/migrations, indexing).
 
 ### Mobile-first UI uplift
 
@@ -69,6 +75,17 @@ Defined in `package.json`:
 - `npm run update:dates`: `scripts/updateEventDates.mjs`
 - `npm run validate:dates`: `scripts/validateEventDates.mjs`
 - `npm run cleanup:events`: `scripts/cleanupEvents.mjs`
+- `npm run clean`: remove `.next` cache (`scripts/clean-next-cache.mjs`)
+- `npm run dancecard:smoke` / `dancecard:smoke:prod`: HTTP smoke against local or production base URL
+- `npm run dancecard:seed-sandbox`: reset sandbox demo event in Supabase
+- `npm run dancecard:apply-migrations`: apply `database/dancecard_*.sql` via `DATABASE_URL`
+- `npm run test:dancecard-conflicts`, `test:dancecard-registrant-rbac`: unit selftests
+
+### Dancecard
+
+- **Docs:** [PROJECT_STATUS.md](./PROJECT_STATUS.md), [dancecard-handoff-2026-05-18.md](./dancecard-handoff-2026-05-18.md), [database/README_DANCECARD.md](../database/README_DANCECARD.md)
+- **Local organizer bypass:** `DANCECARD_ORGANIZER_DEV_BYPASS=1` in `.env.local` only — must be **unset** for `npm run build` (production assert).
+- **Dev rule:** one `npm run dev` on port **3000**; multiple instances cause broken CSS chunk URLs.
 
 ### SEO, redirects, and indexing
 

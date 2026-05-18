@@ -93,4 +93,15 @@ Edits in **`DANCECARD_UI_FACELIFT_BACKLOG.md`:**
 
 ---
 
-*This audit is a snapshot; update or supersede it when major features land.*
+---
+
+## 2026-05-18 update (post-push)
+
+- **Git:** Full Dancecard platform + dead-code cleanup on `master` @ **`931bc94`** — see [dancecard-handoff-2026-05-18.md](./dancecard-handoff-2026-05-18.md), [PROJECT_STATUS.md](./PROJECT_STATUS.md).
+- **Migrations in repo:** **`007`–`040`** (including **039** attendee profile, **040** ops-summary embed). [database/README_DANCECARD.md](../database/README_DANCECARD.md) updated for **040** apply order.
+- **Removed from tree:** `dancecard-prototype`, `dancecard-attendee-prototype`, `dancecard-visual-lab`, `src/components/dancecard/prototype/`, `styleguide/` — [dancecard-visual-lab-promotion.md](./dancecard-visual-lab-promotion.md) marked historical.
+- **Verify script:** Re-run / extend `dancecard_verify_schema.sql` for **039–040** on production after SQL apply.
+- **Production smoke:** `dancecard:smoke:prod` expected to pass only **after** Vercel deploy + prod Supabase migrations.
+
+*Prior 2026-05-14 snapshot content above remains valid for roadmap §3.x alignment; use this section for deploy state.*
+

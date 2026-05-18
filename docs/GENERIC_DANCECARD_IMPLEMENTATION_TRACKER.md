@@ -1,6 +1,7 @@
 # Generic Dancecard — Implementation Tracker
 
-**North star:** [GENERIC_DANCECARD_PRODUCT_VISION.md](./GENERIC_DANCECARD_PRODUCT_VISION.md)
+**North star:** [GENERIC_DANCECARD_PRODUCT_VISION.md](./GENERIC_DANCECARD_PRODUCT_VISION.md)  
+**Deploy status (2026-05-18):** Code on GitHub `master` @ `931bc94`. Production deploy + Supabase migrations **007–040** still pending — [dancecard-handoff-2026-05-18.md](./dancecard-handoff-2026-05-18.md).
 
 | Agent | Scope | Status |
 | --- | --- | --- |
@@ -22,6 +23,8 @@
 | Wave 2 | OrganizerDancecardClient integration | done |
 | Vision doc | Agreements dual-path in GENERIC vision | done |
 
-**Migrations to apply:** `database/dancecard_030_attendee_guide.sql`, `database/dancecard_031_agreements.sql` (included in `dancecard_full_bundle.sql`).
+**Migrations to apply (production):** full set **`dancecard_007` … `040`** — see [database/README_DANCECARD.md](../database/README_DANCECARD.md) and `dancecard_full_bundle.sql`. Wave 0 slices **030–031** are included.
 
-**Verify locally:** `npm run build`, `npm run dancecard:smoke`, organizer sandbox walkthrough at `/organizer/dancecard/sandbox`.
+**Verify locally:** `npm run build` (no `DANCECARD_ORGANIZER_DEV_BYPASS`), `npm run test:dancecard-conflicts`, `npm run test:dancecard-registrant-rbac`, then `npm run dancecard:smoke:prod` **after** Vercel deploy.
+
+**Dead-code cleanup (2026-05-18):** prototype/visual-lab routes removed; see handoff § “Removed dev islands”.

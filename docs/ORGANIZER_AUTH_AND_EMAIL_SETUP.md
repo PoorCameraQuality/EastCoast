@@ -64,6 +64,18 @@ For production volume and deliverability, many teams use **Custom SMTP** (Resend
 - Confirm email: recommended **on** for production
 - Secure password change: **on**
 
+### Public sandbox demo (slug `sandbox`)
+
+The organizers marketing page links to `/organizer/dancecard/sandbox` for **anonymous** exploration. This is enabled in production by default for slug **`sandbox` only** (not a global auth bypass).
+
+| Item | Notes |
+| --- | --- |
+| Seed data | Run `npm run dancecard:seed-sandbox` against production Supabase once (creates slug `sandbox`). |
+| Disable | Set `DANCECARD_PUBLIC_SANDBOX_DEMO=0` on Vercel to turn off public demo access. |
+| Real events | All other slugs still require sign-in + `dancecard_event_organizers` row (or site admin). |
+
+Attendee preview: `/dancecard/sandbox` (separate attendee auth).
+
 ### Test password reset
 
 1. Open `/organizer/login` → **Forgot password?**

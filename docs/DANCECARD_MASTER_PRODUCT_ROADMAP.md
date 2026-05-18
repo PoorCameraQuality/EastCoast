@@ -1,5 +1,7 @@
 # Dancecard Master Product Roadmap
 
+**Deploy snapshot (2026-05-18):** Phases **0–7** implementation is on GitHub `master` @ `931bc94`. Production Vercel + Supabase **007–040** apply still pending — [PROJECT_STATUS.md](./PROJECT_STATUS.md), [dancecard-handoff-2026-05-18.md](./dancecard-handoff-2026-05-18.md).
+
 **Purpose:** Long-term reference plan for evolving Dancecard from a personal schedule / mutual availability app into a full event operations platform for kink events, hotel takeovers, campgrounds, presenter-led programming, staff/volunteer coordination, and attendee registration.
 
 **Primary inputs:**

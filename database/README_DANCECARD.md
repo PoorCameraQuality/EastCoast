@@ -4,12 +4,12 @@ Schema expectations and app-side delivery notes: **§3.3** (Phase 0), **§3.4** 
 
 ## One-shot Supabase SQL editor
 
-- **`dancecard_full_bundle.sql`** — concatenates **000 → 001 → 002–038 → PAF26 seed** in order. Paste the entire file into the Supabase SQL editor once (mostly idempotent). **Remove or skip the final seed block** if you do not use slug `paf26`.
+- **`dancecard_full_bundle.sql`** — concatenates **000 → 001 → 002–040 → PAF26 seed** in order. Paste the entire file into the Supabase SQL editor once (mostly idempotent). **Remove or skip the final seed block** if you do not use slug `paf26`. Regenerate after editing slices: `npm run dancecard:build-migration-bundle`.
 - **Regenerate** after editing any slice: `npm run dancecard:build-migration-bundle` (writes `database/dancecard_full_bundle.sql`).
 
 ## Verify schema (Supabase SQL editor)
 
-After migrations **000–038**, paste and run **`dancecard_verify_schema.sql`** (read-only). Failures list first; the last row should be **`SUMMARY` → `PASS (000–038)`**. It checks core `dancecard_*` tables, columns through **038** (check-in, map pins, trusted roles), nullable program slots (**032**), indexes, triggers, and bump/touch functions. It does **not** create Storage buckets.
+After migrations **000–040**, paste and run **`dancecard_verify_schema.sql`** (read-only). Failures list first; the last row should be **`SUMMARY` → `PASS (000–040)`** (or the highest version your verify file targets). It checks core `dancecard_*` tables, columns through **040** (attendee profile, ops-summary embed), nullable program slots (**032**), indexes, triggers, and bump/touch functions. It does **not** create Storage buckets.
 
 ## Phase 3 increment (existing DB already on 012)
 
@@ -60,14 +60,16 @@ If **`028`–`038`** are not yet applied, run in order:
 6. `dancecard_036_registrant_checkin.sql` — check-in windows and registrant check-in fields.
 7. `dancecard_037_map_pin_rotation.sql` — map pin `rotation_deg` (+ check constraint).
 8. `dancecard_038_trusted_roles.sql` — trusted roles and applications.
+9. `dancecard_039_attendee_profile.sql` — attendee profile fields on events / prefs.
+10. `dancecard_040_ops_summary_embed.sql` — `ops_summary` embed token kind.
 
-Then run **`dancecard_verify_schema.sql`** and confirm **`PASS (000–038)`**.
+Then run **`dancecard_verify_schema.sql`** and confirm **`PASS (000–040)`**.
 
 ## Apply via Postgres (`npm run dancecard:apply-migrations`)
 
 Requires `DATABASE_URL` or `DIRECT_URL` in `.env.local` (database password from Supabase → Project Settings → Database, not API keys).
 
-Default order: **000, 001, 002 … 038**. Optional: set **`DANCECARD_APPLY_SEED=1`** to also run `dancecard_seed_paf26_demo.sql` (upserts `paf26` event metadata).
+Default order: **000, 001, 002 … 040**. Optional: set **`DANCECARD_APPLY_SEED=1`** to also run `dancecard_seed_paf26_demo.sql` (upserts `paf26` event metadata).
 
 **Maps uploads:** create a Storage bucket (default name **`dancecard-maps`**, or set **`DANCECARD_MAPS_BUCKET`**); allow service-role uploads and signed/public read per your security model. Organizer uploads use `POST /api/organizer/dancecard/[eventSlug]/maps/upload`.
 
@@ -112,10 +114,10 @@ Default order: **000, 001, 002 … 038**. Optional: set **`DANCECARD_APPLY_SEED=
 - `dancecard_036_registrant_checkin.sql` — category check-in windows; registrant `checked_in_at` / `checked_in_timing`.
 - `dancecard_037_map_pin_rotation.sql` — `rotation_deg` on map pins.
 - `dancecard_038_trusted_roles.sql` — trusted roles, questionnaire, vetting link column.
-- `dancecard_verify_schema.sql` — read-only Postgres checks; paste in Supabase after **038** (expect `PASS (000–038)`).
-- `dancecard_seed_paf26_demo.sql` — upserts event `paf26` (no program rows; use `npm run dancecard:import`).
-
+- `dancecard_039_attendee_profile.sql` — attendee profile config and display fields.
 - `dancecard_040_ops_summary_embed.sql` — `ops_summary` embed token kind (separate from schedule/map).
+- `dancecard_verify_schema.sql` — read-only Postgres checks; paste in Supabase after **040** (expect `PASS (000–040)`).
+- `dancecard_seed_paf26_demo.sql` — upserts event `paf26` (no program rows; use `npm run dancecard:import`).
 
 See [docs/dancecard-first-run.md](../docs/dancecard-first-run.md) for smoke tests and program import.
 
