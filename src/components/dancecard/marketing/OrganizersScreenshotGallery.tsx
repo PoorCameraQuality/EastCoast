@@ -95,14 +95,14 @@ function ScreenshotLightbox({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex flex-col bg-dc-text/50 sm:justify-center sm:bg-dc-text/45 sm:p-6 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-dc-text/50 p-3 backdrop-blur-sm sm:bg-dc-text/45 sm:p-6"
       role="dialog"
       aria-modal="true"
       aria-label={`${shot.feature.title} screenshot enlarged`}
       onClick={onClose}
     >
       <div
-        className="relative flex min-h-0 w-full flex-1 flex-col sm:max-h-[92vh] sm:max-w-6xl"
+        className="relative flex max-h-[min(92vh,100%)] w-full max-w-6xl flex-col"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex shrink-0 items-start justify-between gap-3 border-b border-dc-border px-3 pb-3 pt-[max(0.75rem,env(safe-area-inset-top))] sm:mb-3 sm:border-0 sm:px-0 sm:pt-0">
@@ -125,7 +125,7 @@ function ScreenshotLightbox({
           Pinch or drag to zoom · scroll sideways for detail
         </p>
 
-        <div className="min-h-0 flex-1 overflow-auto overscroll-contain px-1 pb-[max(0.5rem,env(safe-area-inset-bottom))] sm:overflow-hidden sm:rounded-xl sm:border sm:border-dc-border sm:bg-dc-surface-muted sm:px-0 sm:shadow-2xl sm:ring-1 sm:ring-dc-border">
+        <div className="flex min-h-0 flex-1 items-center justify-center overflow-auto overscroll-contain px-1 pb-[max(0.5rem,env(safe-area-inset-bottom))] sm:rounded-xl sm:border sm:border-dc-border sm:bg-dc-surface-muted sm:px-2 sm:shadow-2xl sm:ring-1 sm:ring-dc-border">
           {/* Native img: full-resolution file + scroll/pinch on mobile */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
@@ -135,8 +135,7 @@ function ScreenshotLightbox({
             height={SHOT_HEIGHT}
             decoding="async"
             draggable={false}
-            className="mx-auto block h-auto w-auto min-w-[min(100%,1920px)] max-w-none select-none sm:h-auto sm:max-h-[calc(92vh-9rem)] sm:w-full sm:min-w-0 sm:object-contain"
-            style={{ width: 'max(100%, min(1920px, 140vw))' }}
+            className="mx-auto block h-auto max-h-[min(70vh,1200px)] w-auto max-w-full select-none object-contain"
           />
         </div>
 
