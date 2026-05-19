@@ -7,6 +7,7 @@ import type { OrganizerRoleForClient } from '@/lib/dancecard/organizerRoles'
 import type { DancecardModules } from '@/lib/dancecard/eventEntitlements'
 import { EmbedSkinPreview } from '@/components/dancecard/organizer/integrations/EmbedSkinPreview'
 import { IsoModerationPanel } from '@/components/dancecard/organizer/IsoModerationPanel'
+import { AttendeeGroupsModerationPanel } from '@/components/dancecard/organizer/AttendeeGroupsModerationPanel'
 import { SessionFeedbackConfigPanel } from '@/components/dancecard/organizer/SessionFeedbackConfigPanel'
 
 const MODULE_KEYS: { key: keyof DancecardModules; label: string }[] = [
@@ -17,6 +18,7 @@ const MODULE_KEYS: { key: keyof DancecardModules; label: string }[] = [
   { key: 'policy_public_summary', label: 'Public policy summary' },
   { key: 'iso_board', label: 'ISO / practice partner board' },
   { key: 'session_feedback', label: 'Post-event session feedback' },
+  { key: 'attendee_groups', label: 'Attendee groups' },
 ]
 
 type ApiKeyRow = {
@@ -338,6 +340,9 @@ export function IntegrationsPanel({
       </section>
 
       {modules?.iso_board ? <IsoModerationPanel eventSlug={eventSlug} readOnly={false} /> : null}
+      {modules?.attendee_groups ? (
+        <AttendeeGroupsModerationPanel eventSlug={eventSlug} readOnly={!ownerOrAdmin} />
+      ) : null}
       {modules?.session_feedback ? <SessionFeedbackConfigPanel eventSlug={eventSlug} readOnly={false} /> : null}
 
       <section className="rounded-xl border border-dc-border bg-dc-elevated-muted p-4">

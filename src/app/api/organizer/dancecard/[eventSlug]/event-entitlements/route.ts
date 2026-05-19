@@ -23,6 +23,7 @@ const patchSchema = z.object({
       rabbitsign_sync: z.boolean().optional(),
       iso_board: z.boolean().optional(),
       session_feedback: z.boolean().optional(),
+      attendee_groups: z.boolean().optional(),
     })
     .strict(),
 })

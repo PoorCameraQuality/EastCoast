@@ -10,6 +10,7 @@ export type DancecardModules = {
   rabbitsign_sync?: boolean
   iso_board?: boolean
   session_feedback?: boolean
+  attendee_groups?: boolean
 }
 
 const DEFAULT_MODULES: Required<DancecardModules> = {
@@ -22,6 +23,7 @@ const DEFAULT_MODULES: Required<DancecardModules> = {
   rabbitsign_sync: false,
   iso_board: false,
   session_feedback: false,
+  attendee_groups: false,
 }
 
 export async function getEventEntitlements(

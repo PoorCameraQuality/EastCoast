@@ -79,4 +79,5 @@ export const ATTENDEE_TAB_SHORT_LABEL: Record<AttendeeNavTab, string> = {
   mutual: 'Compare',
   reservations: 'Reserve',
   iso: 'ISO',
+  attendee_groups: 'Groups',
 }

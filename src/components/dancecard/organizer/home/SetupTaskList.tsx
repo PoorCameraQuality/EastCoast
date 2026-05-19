@@ -7,7 +7,7 @@ import { cn } from '@/lib/cn'
 function statusTag(status: ResolvedSetupTask['status']) {
   if (status === 'complete') {
     return (
-      <span className="rounded-full bg-dc-success-muted px-2 py-0.5 text-dc-micro font-semibold uppercase tracking-wide text-dc-success">
+      <span className="rounded-full border border-dc-accent-border bg-dc-accent-muted px-2 py-0.5 text-dc-micro font-semibold uppercase tracking-wide text-dc-accent">
         Done
       </span>
     )

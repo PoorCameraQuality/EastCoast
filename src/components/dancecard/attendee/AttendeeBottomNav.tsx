@@ -2,7 +2,14 @@
 
 import { cn } from '@/lib/cn'
 
-export type AttendeeNavTab = 'program' | 'dancecard' | 'profile' | 'mutual' | 'reservations' | 'iso'
+export type AttendeeNavTab =
+  | 'program'
+  | 'dancecard'
+  | 'profile'
+  | 'mutual'
+  | 'reservations'
+  | 'iso'
+  | 'attendee_groups'
 
 const TABS: Array<{ key: AttendeeNavTab; label: string; short: string; shortcut: string }> = [
   { key: 'program', label: 'Program', short: 'Program', shortcut: '1' },
@@ -11,6 +18,7 @@ const TABS: Array<{ key: AttendeeNavTab; label: string; short: string; shortcut:
   { key: 'mutual', label: 'Compare', short: 'Compare', shortcut: '4' },
   { key: 'reservations', label: 'Reservations', short: 'Reserve', shortcut: '5' },
   { key: 'iso', label: 'ISO board', short: 'ISO', shortcut: '6' },
+  { key: 'attendee_groups', label: 'Attendee groups', short: 'Groups', shortcut: '7' },
 ]
 
 type Props = {

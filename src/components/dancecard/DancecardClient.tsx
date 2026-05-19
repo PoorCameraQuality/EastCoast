@@ -63,6 +63,7 @@ import { MyScheduleView } from '@/components/dancecard/attendee/program/MySchedu
 import { ProgramSessionCard } from '@/components/dancecard/attendee/program/ProgramSessionCard'
 import { policyChipClass, programPoliciesForSlots } from '@/lib/dancecard/programSlotPolicies'
 import { IsoBoardTab } from '@/components/dancecard/attendee/iso/IsoBoardTab'
+import { AttendeeGroupsTab } from '@/components/dancecard/attendee/attendee-groups/AttendeeGroupsTab'
 import { IsoMarquee } from '@/components/dancecard/attendee/iso/IsoMarquee'
 import { SessionFeedbackPanel } from '@/components/dancecard/attendee/SessionFeedbackPanel'
 import { CompareRequestsInbox } from '@/components/dancecard/attendee/CompareRequestsInbox'
@@ -215,6 +216,11 @@ const TAB_OPTIONS: Array<{ key: Tab; label: string; blurb: string }> = [
     key: 'iso',
     label: 'ISO board',
     blurb: 'Connection posts and threaded discussion.',
+  },
+  {
+    key: 'attendee_groups',
+    label: 'Attendee groups',
+    blurb: 'Tent cities, room blocks, chores, and bring lists.',
   },
 ]
 
@@ -377,6 +383,9 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
   const [followedPersonIds, setFollowedPersonIds] = useState<Set<string>>(() => new Set())
   const [scheduleStaleAt, setScheduleStaleAt] = useState<string | null>(null)
   const [compareRequestCount, setCompareRequestCount] = useState(0)
+  const [attendeeGroupsBadge, setAttendeeGroupsBadge] = useState(0)
+  const [groupsInviteToken, setGroupsInviteToken] = useState<string | null>(null)
+  const [groupsDeepGroupId, setGroupsDeepGroupId] = useState<string | null>(null)
   const [scheduleChangeNotifyCount, setScheduleChangeNotifyCount] = useState(0)
   const { ask, dialog: confirmDialog } = useConfirmDialog()
   const [renameOpen, setRenameOpen] = useState(false)
@@ -560,6 +569,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
   const tabHash = useCallback((t: Tab): string => {
     if (t === 'mutual') return '#compare'
     if (t === 'dancecard') return ''
+    if (t === 'attendee_groups') return '#groups'
     return `#${t}`
   }, [])
 
@@ -651,6 +661,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
     const hidden: AttendeeNavTab[] = []
     if (!me) hidden.push('profile')
     if (!eventModules?.iso_board) hidden.push('iso')
+    if (!eventModules?.attendee_groups) hidden.push('attendee_groups')
     return hidden
   }, [eventModules, me])
 
@@ -735,6 +746,23 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
       window.clearInterval(interval)
     }
   }, [loadScheduleChangeNotifyCount])
+
+  const loadAttendeeGroupsBadge = useCallback(async () => {
+    if (!me || !eventModules?.attendee_groups) {
+      setAttendeeGroupsBadge(0)
+      return
+    }
+    try {
+      const res = await dancecardFetch<{ pendingOwnerCount: number }>(slug, '/attendee-groups/mine')
+      setAttendeeGroupsBadge(res.pendingOwnerCount ?? 0)
+    } catch {
+      setAttendeeGroupsBadge(0)
+    }
+  }, [slug, me, eventModules?.attendee_groups])
+
+  useEffect(() => {
+    void loadAttendeeGroupsBadge()
+  }, [loadAttendeeGroupsBadge])
 
   const loadStaffRoster = useCallback(async () => {
     try {
@@ -2388,11 +2416,26 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
       else if (h === '#compare' || h === '#mutual') setTab('mutual')
       else if (h === '#reservations') setTab('reservations')
       else if (h === '#iso' && eventModules?.iso_board) setTab('iso')
+      else if ((h === '#groups' || h.startsWith('#groups')) && eventModules?.attendee_groups) {
+        setTab('attendee_groups')
+        const raw = h.slice(1)
+        const qIdx = raw.indexOf('?')
+        if (qIdx >= 0) {
+          const params = new URLSearchParams(raw.slice(qIdx + 1))
+          const invite = params.get('invite')
+          if (invite) setGroupsInviteToken(invite)
+        }
+        const pathPart = qIdx >= 0 ? raw.slice(0, qIdx) : raw
+        if (pathPart.startsWith('groups/')) {
+          const gid = pathPart.slice('groups/'.length).split('/')[0]
+          if (gid) setGroupsDeepGroupId(gid)
+        }
+      }
     }
     applyHash()
     window.addEventListener('hashchange', applyHash)
     return () => window.removeEventListener('hashchange', applyHash)
-  }, [router, slug, me, eventModules?.iso_board])
+  }, [router, slug, me, eventModules?.iso_board, eventModules?.attendee_groups])
 
   function findMatchingStaffShift(selection: MeResponse['selections'][number]): StaffShift | null {
     if (!selectedStaffEntry || selection.kind !== 'manual') return null
@@ -2578,10 +2621,11 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
       if (e.key === '4') switchTab('mutual', { scroll: true })
       if (e.key === '5') switchTab('reservations', { scroll: true })
       if (e.key === '6' && eventModules?.iso_board) switchTab('iso', { scroll: true })
+      if (e.key === '7' && eventModules?.attendee_groups) switchTab('attendee_groups', { scroll: true })
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [switchTab, eventModules?.iso_board])
+  }, [switchTab, eventModules?.iso_board, eventModules?.attendee_groups])
 
   function copyTabLink() {
     if (typeof window === 'undefined') return
@@ -2596,7 +2640,9 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
               ? '#reservations'
               : tab === 'iso'
                 ? '#iso'
-                : ''
+                : tab === 'attendee_groups'
+                  ? '#groups'
+                  : ''
     const url = `${window.location.origin}${window.location.pathname}${window.location.search}${hash}`
     void navigator.clipboard?.writeText(url).then(
       () => setToast('Tab link copied.'),
@@ -3448,6 +3494,16 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
               </GlassPanel>
             ) : tab === 'iso' ? (
               <IsoBoardTab eventSlug={slug} signedIn={Boolean(me)} />
+            ) : tab === 'attendee_groups' ? (
+              <GlassPanel className="p-3 sm:p-4">
+                <AttendeeGroupsTab
+                  eventSlug={slug}
+                  signedIn={Boolean(me)}
+                  eventProfile={eventProfile ?? undefined}
+                  initialGroupId={groupsDeepGroupId}
+                  initialInviteToken={groupsInviteToken}
+                />
+              </GlassPanel>
             ) : (
               <GlassPanel className="p-3 sm:p-4">
                 <ReservationsPanel slug={slug} tz={tz} />
@@ -3483,6 +3539,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                   ? selectedProgramCount
                   : undefined,
             mutual: compareRequestCount > 0 ? compareRequestCount : undefined,
+            attendee_groups: attendeeGroupsBadge > 0 ? attendeeGroupsBadge : undefined,
           }}
           hiddenTabs={hiddenAttendeeTabs}
         />
@@ -4479,6 +4536,15 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
 
             {tab === 'reservations' ? <ReservationsPanel slug={slug} tz={tz} /> : null}
             {tab === 'iso' ? <IsoBoardTab eventSlug={slug} signedIn={Boolean(me)} /> : null}
+            {tab === 'attendee_groups' ? (
+              <AttendeeGroupsTab
+                eventSlug={slug}
+                signedIn={Boolean(me)}
+                eventProfile={eventProfile ?? undefined}
+                initialGroupId={groupsDeepGroupId}
+                initialInviteToken={groupsInviteToken}
+              />
+            ) : null}
           </div>
 
           <aside className="hidden xl:block">

@@ -5,7 +5,7 @@ import type { ReactNode } from 'react'
 
 export function OrganizerAuthShell({ children }: { children: ReactNode }) {
   return (
-    <div className="min-h-[100dvh] bg-dc-surface text-dc-text">
+    <div className="dc-gold-chrome min-h-[100dvh] bg-dc-surface text-dc-text" data-dc-theme="event">
       <div
         className="pointer-events-none fixed inset-x-0 top-0 h-56 bg-gradient-to-b from-dc-accent/10 to-transparent"
         aria-hidden

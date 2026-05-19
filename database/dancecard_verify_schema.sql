@@ -62,6 +62,15 @@ expected_tables AS (
     'dancecard_iso_posts',
     'dancecard_iso_interests',
     'dancecard_iso_comments',
+    'dancecard_attendee_groups',
+    'dancecard_attendee_group_members',
+    'dancecard_attendee_group_join_requests',
+    'dancecard_attendee_group_invites',
+    'dancecard_attendee_group_questions',
+    'dancecard_attendee_group_chores',
+    'dancecard_attendee_group_bring_items',
+    'dancecard_attendee_group_announcements',
+    'dancecard_attendee_group_reports',
     'dancecard_session_feedback',
     'dancecard_person_follows'
   ])::text AS table_name

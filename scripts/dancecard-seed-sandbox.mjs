@@ -162,6 +162,7 @@ async function main() {
       policy_public_summary: true,
       ecke_sign: true,
       iso_board: true,
+      attendee_groups: true,
       session_feedback: true,
     },
   })

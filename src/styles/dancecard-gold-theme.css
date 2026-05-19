@@ -39,6 +39,10 @@
   --event-accent: #8b6914;
   --dc-shadow-soft: 0 12px 32px rgba(45, 38, 28, 0.1);
   --dc-shadow-panel: 0 20px 48px rgba(45, 38, 28, 0.14);
+  --ecke-link: var(--dc-accent);
+  --ecke-link-visited: var(--dc-accent-hover);
+  --ecke-focus: var(--dc-accent-border);
+  --ecke-focus-ring: rgba(139, 105, 20, 0.35);
   background-color: var(--dc-surface);
   color: var(--dc-text);
   color-scheme: light;

@@ -69,6 +69,9 @@ export function useEventProfileLabels(opts: {
       space: labelFor(profile, 'space'),
       volunteerBlock: labelFor(profile, 'volunteerBlock'),
       addItemCta: labelFor(profile, 'addItemCta'),
+      attendeeGroup: labelFor(profile, 'attendeeGroup'),
+      attendeeGroupType: labelFor(profile, 'attendeeGroupType'),
+      attendeeGroupRecruitment: labelFor(profile, 'attendeeGroupRecruitment'),
     }),
     [profile],
   )

@@ -279,7 +279,7 @@ export function OrganizerEventDashboard({
           <div className="flex flex-wrap gap-2">
             <Link
               href={`/organizer/dancecard/${encodeURIComponent(eventSlug)}/door`}
-              className="rounded-xl border border-dc-accent-border bg-dc-accent-muted px-4 py-2 text-sm font-semibold text-dc-accent-hover hover:bg-dc-accent-muted/80"
+              className="rounded-xl border border-dc-accent-border bg-dc-accent-muted px-4 py-2 text-sm font-semibold text-dc-accent hover:bg-dc-accent-muted/80 hover:text-dc-accent-hover"
             >
               Door mode
             </Link>
