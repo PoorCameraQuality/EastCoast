@@ -17,6 +17,7 @@ export const dynamic = 'force-dynamic'
 const postSchema = z.object({
   username: usernameSchema,
   message: z.string().max(280).optional(),
+  intent: z.enum(['practice', 'social', 'schedule']).optional(),
 })
 
 export async function GET(request: NextRequest, context: { params: { eventSlug: string } }) {
@@ -80,7 +81,7 @@ export async function POST(request: NextRequest, context: { params: { eventSlug:
     const session = await resolveAccountFromSession(admin, request, slug)
     if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
-    const { username, message } = postSchema.parse(await request.json())
+    const { username, message, intent } = postSchema.parse(await request.json())
 
     const { data: target, error: tErr } = await admin
       .from('dancecard_accounts')
@@ -116,15 +117,18 @@ export async function POST(request: NextRequest, context: { params: { eventSlug:
       return NextResponse.json({ ok: true, requestId: existing.id, duplicate: true })
     }
 
+    const insertRow: Record<string, unknown> = {
+      event_id: event.id,
+      from_account_id: session.accountId,
+      to_account_id: target.id,
+      message: message?.trim() || null,
+      status: 'pending',
+    }
+    if (intent) insertRow.intent = intent
+
     const { data: inserted, error } = await admin
       .from('dancecard_compare_requests')
-      .insert({
-        event_id: event.id,
-        from_account_id: session.accountId,
-        to_account_id: target.id,
-        message: message?.trim() || null,
-        status: 'pending',
-      })
+      .insert(insertRow)
       .select('id')
       .single()
     if (error) throw error

@@ -5,6 +5,7 @@ import { dancecardFetch } from '@/components/dancecard/api-client'
 import { AttendeeProfileCard } from '@/components/dancecard/attendee/AttendeeProfileCard'
 import { ProfilePhotoField } from '@/components/dancecard/attendee/ProfilePhotoField'
 import type { AttendeeProfileConfig, AttendeeProfileStored, AttendeePublicProfile } from '@/lib/dancecard/attendeeProfile'
+import type { CompareVisibility } from '@/lib/dancecard/comparePrivacy'
 import { buildPublicProfile } from '@/lib/dancecard/attendeeProfile'
 import { cn } from '@/lib/cn'
 
@@ -17,6 +18,7 @@ type Props = {
   stored: AttendeeProfileStored
   config: AttendeeProfileConfig
   allowCompareByUsername: boolean
+  compareVisibility?: CompareVisibility
   showInCompareDirectory?: boolean
   hideBusyDetailsInCompare?: boolean
   icsRemindBeforeMinutes?: number
@@ -27,6 +29,7 @@ type Props = {
     displayName?: string
     profile?: AttendeeProfileStored
     allowCompareByUsername?: boolean
+    compareVisibility?: CompareVisibility
     showInCompareDirectory?: boolean
     hideBusyDetailsInCompare?: boolean
     icsRemindBeforeMinutes?: number
@@ -41,6 +44,7 @@ export function AttendeeProfileTab({
   stored,
   config,
   allowCompareByUsername,
+  compareVisibility: initialCompareVisibility,
   showInCompareDirectory = false,
   hideBusyDetailsInCompare = false,
   icsRemindBeforeMinutes = 15,
@@ -59,7 +63,9 @@ export function AttendeeProfileTab({
   const [discord, setDiscord] = useState(stored.discord ?? '')
   const [telegram, setTelegram] = useState(stored.telegram ?? '')
   const [emailOnCard, setEmailOnCard] = useState(stored.emailOnCard ?? '')
-  const [compareByUsername, setCompareByUsername] = useState(allowCompareByUsername)
+  const [compareVis, setCompareVis] = useState<CompareVisibility>(
+    initialCompareVisibility ?? (allowCompareByUsername ? 'username' : 'off'),
+  )
   const [inDirectory, setInDirectory] = useState(showInCompareDirectory)
   const [hideBusy, setHideBusy] = useState(hideBusyDetailsInCompare)
   const [icsRemind, setIcsRemind] = useState(icsRemindBeforeMinutes)
@@ -110,7 +116,8 @@ export function AttendeeProfileTab({
       await onSave({
         displayName: displayName.trim() !== initialDisplayName.trim() ? displayName.trim() : undefined,
         profile,
-        allowCompareByUsername: compareByUsername !== allowCompareByUsername ? compareByUsername : undefined,
+        compareVisibility: compareVis !== (initialCompareVisibility ?? (allowCompareByUsername ? 'username' : 'off')) ? compareVis : undefined,
+        allowCompareByUsername: compareVis === 'username' ? true : compareVis === 'off' ? false : undefined,
         showInCompareDirectory: inDirectory !== showInCompareDirectory ? inDirectory : undefined,
         hideBusyDetailsInCompare: hideBusy !== hideBusyDetailsInCompare ? hideBusy : undefined,
         icsRemindBeforeMinutes: icsRemind !== icsRemindBeforeMinutes ? icsRemind : undefined,
@@ -264,27 +271,34 @@ export function AttendeeProfileTab({
       )}
 
       <div className="rounded-2xl border border-dc-border bg-dc-elevated/95 p-3">
-        <div className="flex items-center justify-between gap-2 rounded-lg border border-dc-border bg-dc-elevated-muted px-2 py-2">
-          <div className="min-w-0">
-            <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-dc-subtle">Compare by username</p>
-            <p className="mt-0.5 text-[10px] leading-snug text-dc-muted">
-              Let others open your calendar with <span className="text-dc-text">@{username}</span> (no share link required).
-            </p>
-          </div>
-          <button
-            type="button"
-            role="switch"
-            aria-checked={compareByUsername}
-            className={cn(
-              'shrink-0 rounded-full border px-3 py-1 text-[10px] font-semibold transition',
-              compareByUsername
-                ? 'border-dc-accent-border bg-dc-accent-muted text-dc-accent'
-                : 'border-dc-border bg-dc-elevated text-dc-muted'
-            )}
-            onClick={() => setCompareByUsername((v) => !v)}
-          >
-            {compareByUsername ? 'On' : 'Off'}
-          </button>
+        <div className="mt-2 space-y-2">
+          {(
+            [
+              { v: 'off' as const, label: 'Off', hint: 'No username or link compare' },
+              { v: 'username' as const, label: 'By username', hint: `@${username} in directory` },
+              { v: 'link_only' as const, label: 'Share link only', hint: 'Only people with your link' },
+            ] as const
+          ).map((opt) => (
+            <label
+              key={opt.v}
+              className={cn(
+                'flex cursor-pointer gap-2 rounded-lg border px-3 py-2',
+                compareVis === opt.v ? 'border-dc-accent-border bg-dc-accent-muted/50' : 'border-dc-border',
+              )}
+            >
+              <input
+                type="radio"
+                name="compare-vis"
+                checked={compareVis === opt.v}
+                onChange={() => setCompareVis(opt.v)}
+                className="mt-0.5"
+              />
+              <span>
+                <span className="text-sm font-medium text-dc-text">{opt.label}</span>
+                <span className="mt-0.5 block text-[10px] text-dc-muted">{opt.hint}</span>
+              </span>
+            </label>
+          ))}
         </div>
         <p className="mt-2 text-[10px] text-dc-subtle">Save profile to apply privacy changes.</p>
         <label className="mt-3 flex items-center justify-between gap-2 text-[10px] text-dc-muted">

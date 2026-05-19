@@ -13,6 +13,7 @@ import type { OrganizerStaffShiftDto } from '@/lib/dancecard/organizerStaffShift
 import { isDmStaffRole } from '@/lib/dancecard/dmCoverageScanner'
 import { DatetimeLocalField, useConfirmDialog } from '@/components/dancecard/organizer/ui'
 import { TrustedRoleWorkflowCallout } from '@/components/dancecard/organizer/TrustedRoleWorkflowCallout'
+import { cn } from '@/lib/cn'
 
 type DmReq = {
   id: string
@@ -514,9 +515,11 @@ export function DmCoveragePanel({
                       return (
                         <td
                           key={l.id}
-                          className={`border border-dc-border px-2 py-1.5 text-center ${
-                            isGap ? 'bg-red-100 text-red-700' : 'text-emerald-800'
-                          } ${isGap && !readOnly ? 'cursor-pointer hover:ring-1 hover:ring-rose-300/50' : ''}`}
+                          className={cn(
+                            'border border-dc-border px-2 py-1.5 text-center',
+                            isGap ? 'bg-dc-danger-muted text-dc-danger' : 'bg-dc-success-muted/80 text-dc-success',
+                            isGap && !readOnly && 'cursor-pointer hover:ring-1 hover:ring-dc-danger-border',
+                          )}
                           title={
                             isGap
                               ? 'Uncovered — click to see available staff and scheduled hours'
@@ -553,7 +556,7 @@ export function DmCoveragePanel({
             Refresh from Staff tab
           </button>
         </div>
-        <ul className="max-h-64 divide-y divide-white/5 overflow-y-auto">
+        <ul className="max-h-64 divide-y divide-dc-border overflow-y-auto">
           {dmShifts.map((s) => (
             <li key={s.id} className="px-3 py-2 text-xs text-dc-muted">
               <span className="text-dc-text">{s.personName}</span> ·{' '}
@@ -604,7 +607,11 @@ export function DmCoveragePanel({
               {gapPick.needFloat > 0 ? ` (+${gapPick.needFloat} backup)` : ''}; currently {gapPick.assigned} scheduled in
               this block. Click a name to assign — conflicts will be flagged before you can override.
             </p>
-            {assignOk ? <p className="mt-2 text-sm text-emerald-700">{assignOk}</p> : null}
+            {assignOk ? (
+              <p className="mt-2 rounded-lg border border-dc-success/30 bg-dc-success-muted px-3 py-2 text-sm text-dc-success">
+                {assignOk}
+              </p>
+            ) : null}
             <ul className="mt-4 max-h-64 space-y-2 overflow-y-auto">
               {gapCandidates.length === 0 ? (
                 <li className="text-sm text-dc-muted">No staff shifts on file yet. Add people on Staff shifts first.</li>
@@ -617,24 +624,36 @@ export function DmCoveragePanel({
                       <button
                         type="button"
                         disabled={busy || !!assignBusyKey}
-                        className="w-full rounded-lg border border-dc-border bg-dc-surface px-3 py-2 text-left text-sm transition-colors hover:border-dc-accent-border hover:bg-dc-elevated-muted disabled:opacity-50"
-                        style={{ backgroundColor: busy ? undefined : 'var(--dc-compare-host-only)' }}
+                        className={cn(
+                          'w-full rounded-lg border px-3 py-2 text-left text-sm transition-colors disabled:opacity-50',
+                          busy
+                            ? 'border-dc-accent-border bg-dc-accent-muted'
+                            : hasBlockConflict
+                              ? 'border-dc-warning/45 bg-dc-warning-muted hover:border-dc-warning'
+                              : p.dmCapable
+                                ? 'border-dc-accent-border/50 bg-dc-accent-muted/40 hover:border-dc-accent-border hover:bg-dc-accent-muted/70'
+                                : 'border-dc-border bg-dc-elevated-solid hover:border-dc-accent-border/40 hover:bg-dc-surface-muted',
+                        )}
                         onClick={() => void assignCoverage(p)}
                       >
                         <p className="font-medium text-dc-text">
                           {busy ? 'Assigning…' : p.personName}
                           {p.dmCapable ? (
-                            <span className="ml-2 text-[10px] font-normal text-dc-accent">coverage role</span>
+                            <span className="ml-2 rounded-full bg-dc-accent-muted px-1.5 py-0.5 text-[10px] font-semibold text-dc-accent">
+                              coverage role
+                            </span>
                           ) : null}
                           {hasBlockConflict ? (
-                            <span className="ml-2 text-[10px] font-normal text-amber-300">busy this block</span>
+                            <span className="ml-2 rounded-full border border-dc-warning/40 bg-dc-warning-muted px-1.5 py-0.5 text-[10px] font-semibold text-dc-warning">
+                              busy this block
+                            </span>
                           ) : null}
                         </p>
                         <p className="mt-0.5 text-xs text-dc-muted">
                           {p.totalH.toFixed(1)} h scheduled this weekend
                           {p.sliceH > 0 ? ` · ${p.sliceH.toFixed(1)} h in this block` : ' · free in this block'}
                         </p>
-                        <p className="mt-0.5 text-[10px] text-dc-subtle">
+                        <p className="mt-0.5 text-[10px] text-dc-muted">
                           {hasBlockConflict
                             ? 'Likely conflict — you can still assign with override if needed.'
                             : 'Click to assign and update their dancecard when an account matches.'}
@@ -648,7 +667,7 @@ export function DmCoveragePanel({
             <div className="mt-4 flex flex-wrap justify-end gap-2">
               <button
                 type="button"
-                className="rounded-lg border border-dc-border px-4 py-2 text-sm text-dc-muted"
+                className="rounded-lg border border-dc-border bg-dc-elevated-solid px-4 py-2 text-sm text-dc-text hover:bg-dc-surface-muted"
                 onClick={() => {
                   setGapPick(null)
                   setAssignOk(null)

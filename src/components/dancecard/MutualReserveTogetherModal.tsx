@@ -14,7 +14,7 @@ const fieldInputClass =
   'dc-field-input dc-datetime-local-input w-full rounded-2xl border border-dc-border px-4 py-3 text-sm text-dc-text'
 
 const ghostBtnClass =
-  'rounded-2xl border border-dc-border bg-dc-elevated-muted/80 px-4 py-2.5 text-sm font-medium text-dc-accent-foreground transition hover:border-dc-accent-border hover:bg-dc-accent-muted/40 disabled:opacity-50'
+  'rounded-2xl border border-dc-border bg-dc-elevated-solid px-4 py-2.5 text-sm font-semibold text-dc-accent transition hover:border-dc-accent-border hover:bg-dc-accent-muted disabled:opacity-50'
 
 const primaryBtnClass =
   'dc-btn-primary rounded-2xl bg-gradient-to-br from-dc-accent-hover via-dc-accent to-dc-accent px-4 py-3 text-sm font-semibold text-dc-accent-foreground shadow-[0_18px_50px_rgba(198,167,94,0.28)] transition hover:brightness-105 disabled:opacity-50'
@@ -113,7 +113,7 @@ export function MutualReserveTogetherModal(props: {
                 ? ' Open the Reservations tab anytime to see it together with other holds.'
                 : ' You can close this window — your dancecard is updated.'}
             </p>
-            <p className="mt-3 text-xs leading-relaxed text-dc-subtle">
+            <p className="mt-3 text-xs leading-relaxed text-dc-muted">
               Add it to your calendar (.ics includes 15-minute reminders for saved program sessions when enabled in Profile) or paste a summary into Signal or Discord — the web app does not send push
               reminders for you.
             </p>
@@ -125,7 +125,7 @@ export function MutualReserveTogetherModal(props: {
                 Copy text summary
               </button>
             </div>
-            <p className="mt-3 text-[11px] leading-relaxed text-dc-subtle">
+            <p className="mt-3 text-[11px] leading-relaxed text-dc-muted">
               To download <span className="text-dc-text">.ics</span> for Apple Calendar or get{' '}
               <span className="text-dc-text">Google Calendar</span> import steps for your full dancecard, use{' '}
               <span className="text-dc-text">Share link / export</span> on your availability screen (after this window

@@ -10,6 +10,7 @@ import {
   formatScheduleChangeMessage,
   type SlotScheduleSnapshot,
 } from '@/lib/dancecard/scheduleChangeImpact'
+import { insertAccountNotification } from '@/lib/dancecard/accountNotifications'
 
 export const dynamic = 'force-dynamic'
 
@@ -132,6 +133,55 @@ export async function POST(
     const { error: insertErr } = await admin.from('dancecard_schedule_change_notifications').insert(notices)
     if (insertErr) throw insertErr
 
+    await Promise.all(
+      accountIds.map((accountId) =>
+        insertAccountNotification(admin, {
+          eventId,
+          accountId,
+          kind: 'schedule_change',
+          payload: { slotId, message, programLink: `/dancecard/${context.params.eventSlug}#program` },
+        }),
+      ),
+    )
+
+    let emailDraftCampaignId: string | null = null
+    if (body.createEmailDraft) {
+      const { data: tpl } = await admin
+        .from('dancecard_message_templates')
+        .select('id')
+        .eq('event_id', eventId)
+        .ilike('name', '%schedule%')
+        .limit(1)
+        .maybeSingle()
+      let templateId = tpl?.id as string | undefined
+      if (!templateId) {
+        const { data: created } = await admin
+          .from('dancecard_message_templates')
+          .insert({
+            event_id: eventId,
+            name: 'Schedule update',
+            subject: 'Schedule update',
+            body_text: message,
+          })
+          .select('id')
+          .single()
+        templateId = created?.id as string | undefined
+      }
+      if (templateId) {
+        const { data: campaign } = await admin
+          .from('dancecard_message_campaigns')
+          .insert({
+            event_id: eventId,
+            template_id: templateId,
+            status: 'draft',
+            created_by_user_id: ctx.userId ?? null,
+          })
+          .select('id')
+          .single()
+        emailDraftCampaignId = (campaign?.id as string) ?? null
+      }
+    }
+
     await insertProgramSlotAudit(admin, {
       eventId,
       slotId,
@@ -141,7 +191,11 @@ export async function POST(
       afterJson: { message },
     })
 
-    return NextResponse.json({ ok: true, notified: accountIds.length })
+    return NextResponse.json({
+      ok: true,
+      notified: accountIds.length,
+      emailDraftCampaignId,
+    })
   } catch (e) {
     if (e instanceof ZodError) {
       return NextResponse.json({ error: 'Validation error', details: e.flatten() }, { status: 400 })

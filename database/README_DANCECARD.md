@@ -120,7 +120,11 @@ Default order: **000, 001, 002 … 053**. Optional: set **`DANCECARD_APPLY_SEED=
 - `dancecard_042_safety_incidents.sql` — safety incident log table.
 - `dancecard_043_program_slot_audit.sql` — organizer forensic audit for program slot edits.
 - `dancecard_044_registration_question_categories.sql` — `required_for_category_ids` on registration questions.
-- `dancecard_045_ics_reminders.sql` through `dancecard_054_attendee_groups.sql` — ICS reminders, follows, compare privacy/requests, ISO board, session feedback, badge fields, ISO comments, attendee groups (tent cities / room blocks).
+- `dancecard_045_ics_reminders.sql` through `dancecard_055_chore_bring_signups.sql` — ICS reminders, follows, compare privacy/requests, ISO board, session feedback, badge fields, ISO comments, attendee groups (tent cities / room blocks), multi-slot chore/bring signups.
+- `dancecard_056_account_notifications.sql` — unified in-app notification inbox.
+- `dancecard_057_compare_social_prefs.sql` — compare request intent, attendee directory opt-in, favorited slots.
+- `dancecard_058_meal_signups.sql` — event-scale meal periods and kitchen signups.
+- `dancecard_059_exhibitors.sql` — exhibitor / sponsor directory.
 - `dancecard_verify_schema.sql` — read-only Postgres checks; paste in Supabase after **053** (expect `PASS (000–053)`).
 - `dancecard_seed_paf26_demo.sql` — upserts event `paf26` (no program rows; use `npm run dancecard:import`).
 

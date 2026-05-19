@@ -14,6 +14,70 @@ const bodySchema = z.object({
   note: z.string().max(1000).optional().nullable(),
 })
 
+export async function GET(request: NextRequest, context: { params: { eventSlug: string } }) {
+  try {
+    const admin = getDancecardAdmin()
+    const account = await resolveAccountFromSession(admin, request, context.params.eventSlug)
+    if (!account) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+
+    const { data, error } = await admin
+      .from('dancecard_reschedule_requests')
+      .select(
+        'id, requester_account_id, recipient_account_id, reservation_id, proposed_starts_at, proposed_ends_at, note, status, created_at, responded_at',
+      )
+      .eq('event_id', account.eventId)
+      .or(
+        `requester_account_id.eq.${account.accountId},recipient_account_id.eq.${account.accountId}`,
+      )
+      .order('created_at', { ascending: false })
+      .limit(40)
+
+    if (error) throw error
+
+    const accountIds = new Set<string>()
+    for (const r of data ?? []) {
+      accountIds.add(r.requester_account_id as string)
+      accountIds.add(r.recipient_account_id as string)
+    }
+    const { data: accounts } = await admin
+      .from('dancecard_accounts')
+      .select('id, username, display_name')
+      .in('id', Array.from(accountIds))
+
+    const nameById = new Map(
+      (accounts ?? []).map((a) => [a.id as string, { username: a.username, displayName: a.display_name }]),
+    )
+
+    const requests = (data ?? []).map((r) => {
+      const req = nameById.get(r.requester_account_id as string)
+      const rec = nameById.get(r.recipient_account_id as string)
+      return {
+        id: r.id,
+        reservationId: r.reservation_id,
+        proposedStartsAt: r.proposed_starts_at,
+        proposedEndsAt: r.proposed_ends_at,
+        note: r.note,
+        status: r.status,
+        createdAt: r.created_at,
+        respondedAt: r.responded_at,
+        direction:
+          r.requester_account_id === account.accountId ? ('outgoing' as const) : ('incoming' as const),
+        requester: req
+          ? { username: req.username, displayName: req.displayName }
+          : { username: '', displayName: 'Someone' },
+        recipient: rec
+          ? { username: rec.username, displayName: rec.displayName }
+          : { username: '', displayName: 'Someone' },
+      }
+    })
+
+    return NextResponse.json({ requests })
+  } catch (e) {
+    const { status, body } = toClientError(e, 'reschedule-requests-list')
+    return NextResponse.json(body, { status })
+  }
+}
+
 export async function POST(request: NextRequest, context: { params: { eventSlug: string } }) {
   const limited = await withRateLimit(request, rateLimiters.dancecardToken)
   if (limited) return limited

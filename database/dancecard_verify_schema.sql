@@ -1,5 +1,5 @@
 -- Dancecard schema health check (read-only). Run in Supabase SQL editor.
--- Expect every row status = 'OK' (or 'SKIP' where noted). Final row: SUMMARY → PASS (000–053).
+-- Expect every row status = 'OK' (or 'SKIP' where noted). Final row: SUMMARY → PASS (000–059).
 -- Schema: public. See database/README_DANCECARD.md.
 
 WITH
@@ -71,6 +71,8 @@ expected_tables AS (
     'dancecard_attendee_group_bring_items',
     'dancecard_attendee_group_announcements',
     'dancecard_attendee_group_reports',
+    'dancecard_attendee_group_chore_signups',
+    'dancecard_attendee_group_bring_claims',
     'dancecard_session_feedback',
     'dancecard_person_follows'
   ])::text AS table_name
@@ -323,5 +325,5 @@ SELECT
   'SUMMARY',
   'migration_health',
   (SELECT ok_count::text || ' ok, ' || fail_count::text || ' fail, ' || total_count::text || ' checked' FROM summary),
-  CASE WHEN (SELECT fail_count FROM summary) = 0 THEN 'PASS (000–053)' ELSE 'FAIL' END
+  CASE WHEN (SELECT fail_count FROM summary) = 0 THEN 'PASS (000–059)' ELSE 'FAIL' END
 ORDER BY CASE kind WHEN 'SUMMARY' THEN 1 ELSE 0 END, kind, name, detail NULLS FIRST;

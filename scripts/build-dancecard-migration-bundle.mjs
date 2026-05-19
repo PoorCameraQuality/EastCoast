@@ -69,6 +69,7 @@ const files = [
   'dancecard_052_badge_logo.sql',
   'dancecard_053_iso_comments.sql',
   'dancecard_054_attendee_groups.sql',
+  'dancecard_055_chore_bring_signups.sql',
   'dancecard_seed_paf26_demo.sql',
 ]
 

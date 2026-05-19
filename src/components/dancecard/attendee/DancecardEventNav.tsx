@@ -6,13 +6,21 @@ export function DancecardEventNav({
   eventSlug,
   eventTitle,
   variant = 'default',
+  newsUnreadCount = 0,
+  showNews = true,
 }: {
   eventSlug: string
   eventTitle?: string | null
   variant?: 'default' | 'luxury'
+  /** Shown on News link when signed in and announcements exist */
+  newsUnreadCount?: number
+  showNews?: boolean
 }) {
   const slug = eventSlug.toLowerCase()
   const luxury = variant === 'luxury'
+  const linkClass = luxury
+    ? 'shrink-0 text-[var(--lux-champagne)] hover:text-[var(--lux-cream)] hover:underline'
+    : 'shrink-0 text-dc-muted hover:text-dc-text hover:underline'
   return (
     <header
       data-dc-nav={luxury ? 'luxury' : undefined}
@@ -60,10 +68,23 @@ export function DancecardEventNav({
           >
             Activities
           </Link>
-          <Link href={`/dancecard/${slug}/map`} className="shrink-0 text-dc-muted hover:text-dc-text hover:underline">
+          <Link href={`/dancecard/${slug}/activity`} className={linkClass}>
+            Activity
+          </Link>
+          {showNews ? (
+            <Link href={`/dancecard/${slug}/news`} className={`relative ${linkClass}`}>
+              News
+              {newsUnreadCount > 0 ? (
+                <span className="absolute -right-2 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-dc-accent px-1 text-[9px] font-bold text-dc-accent-foreground">
+                  {newsUnreadCount > 9 ? '9+' : newsUnreadCount}
+                </span>
+              ) : null}
+            </Link>
+          ) : null}
+          <Link href={`/dancecard/${slug}/map`} className={linkClass}>
             Map
           </Link>
-          <Link href={`/dancecard/${slug}/policies`} className="shrink-0 text-dc-muted hover:text-dc-text hover:underline">
+          <Link href={`/dancecard/${slug}/policies`} className={linkClass}>
             Policies
           </Link>
         </nav>

@@ -205,6 +205,7 @@ export function IsoBoardTab({ eventSlug, signedIn }: Props) {
   const [commentBusy, setCommentBusy] = useState(false)
   const [err, setErr] = useState<string | null>(null)
   const [composeOpen, setComposeOpen] = useState(false)
+  const [toast, setToast] = useState<string | null>(null)
 
   const loadList = useCallback(async () => {
     try {
@@ -269,11 +270,28 @@ export function IsoBoardTab({ eventSlug, signedIn }: Props) {
     }
   }
 
+  async function patchPostStatus(postId: string, status: 'filled' | 'withdrawn') {
+    try {
+      await dancecardFetch(eventSlug, `/iso/${postId}`, {
+        method: 'PATCH',
+        body: JSON.stringify({ status }),
+      })
+      await loadDetail(postId)
+      await loadList()
+      setSelectedId(null)
+      setToast(status === 'filled' ? 'Marked as filled.' : 'Post withdrawn.')
+      window.setTimeout(() => setToast(null), 3000)
+    } catch (e) {
+      setErr(formatDancecardApiMessage(e))
+    }
+  }
+
   async function expressInterest(postId: string) {
     try {
       await dancecardFetch(eventSlug, `/iso/${postId}/interest`, { method: 'POST' })
       setErr(null)
-      alert('Interest sent. The poster can accept to share their contact card.')
+      setToast('Interest sent. The poster can accept to share their contact card.')
+      window.setTimeout(() => setToast(null), 4000)
     } catch (e) {
       setErr(formatDancecardApiMessage(e))
     }
@@ -341,6 +359,29 @@ export function IsoBoardTab({ eventSlug, signedIn }: Props) {
               Open contact link
             </a>
           </p>
+        ) : null}
+        {toast ? (
+          <p className="rounded-lg border border-dc-accent-border/50 bg-dc-accent-muted/50 px-3 py-2 text-sm text-dc-accent">
+            {toast}
+          </p>
+        ) : null}
+        {p.isMine ? (
+          <div className="flex flex-wrap gap-2">
+            <button
+              type="button"
+              className="rounded-xl border border-dc-border px-4 py-2 text-sm font-semibold text-dc-text"
+              onClick={() => void patchPostStatus(p.id, 'filled')}
+            >
+              Mark filled
+            </button>
+            <button
+              type="button"
+              className="rounded-xl border border-dc-border px-4 py-2 text-sm text-dc-muted"
+              onClick={() => void patchPostStatus(p.id, 'withdrawn')}
+            >
+              Withdraw
+            </button>
+          </div>
         ) : null}
         {!p.isMine ? (
           <button

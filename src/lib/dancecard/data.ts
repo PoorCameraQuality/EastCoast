@@ -10,7 +10,15 @@ export type DancecardPrefsLoaded = {
   showInCompareDirectory: boolean
   hideBusyDetailsInCompare: boolean
   icsRemindBeforeMinutes: number
+  favoritedSlotIds: string[]
+  showInAttendeeDirectory: boolean
+  showAttendingStatus: boolean
   profile: AttendeeProfileStored
+}
+
+function parseFavoritedSlotIds(raw: unknown): string[] {
+  if (!Array.isArray(raw)) return []
+  return raw.filter((x): x is string => typeof x === 'string' && x.length > 0)
 }
 
 function parseCompareVisibility(raw: unknown, allowCompareLegacy: boolean): CompareVisibility {
@@ -22,7 +30,7 @@ export async function loadPrefs(admin: SupabaseClient, accountId: string): Promi
   const { data, error } = await admin
     .from('dancecard_prefs')
     .select(
-      'buffer_minutes, allow_compare_by_username, profile_json, compare_visibility, show_in_compare_directory, hide_busy_details_in_compare, ics_remind_before_minutes'
+      'buffer_minutes, allow_compare_by_username, profile_json, compare_visibility, show_in_compare_directory, hide_busy_details_in_compare, ics_remind_before_minutes, favorited_slot_ids, show_in_attendee_directory, show_attending_status'
     )
     .eq('account_id', accountId)
     .maybeSingle()
@@ -43,6 +51,9 @@ export async function loadPrefs(admin: SupabaseClient, accountId: string): Promi
         showInCompareDirectory: false,
         hideBusyDetailsInCompare: false,
         icsRemindBeforeMinutes: 15,
+        favoritedSlotIds: [],
+        showInAttendeeDirectory: false,
+        showAttendingStatus: false,
         profile: parseProfileStored(d2?.profile_json),
       }
     }
@@ -56,6 +67,9 @@ export async function loadPrefs(admin: SupabaseClient, accountId: string): Promi
     show_in_compare_directory?: boolean
     hide_busy_details_in_compare?: boolean
     ics_remind_before_minutes?: number
+    favorited_slot_ids?: unknown
+    show_in_attendee_directory?: boolean
+    show_attending_status?: boolean
   }
   const allowLegacy = Boolean(row?.allow_compare_by_username)
   const visibility = parseCompareVisibility(row?.compare_visibility, allowLegacy)
@@ -67,8 +81,33 @@ export async function loadPrefs(admin: SupabaseClient, accountId: string): Promi
     hideBusyDetailsInCompare: Boolean(row?.hide_busy_details_in_compare),
     icsRemindBeforeMinutes:
       typeof row?.ics_remind_before_minutes === 'number' ? row.ics_remind_before_minutes : 15,
+    favoritedSlotIds: parseFavoritedSlotIds(row?.favorited_slot_ids),
+    showInAttendeeDirectory: Boolean(row?.show_in_attendee_directory),
+    showAttendingStatus: Boolean(row?.show_attending_status),
     profile: parseProfileStored(row?.profile_json),
   }
+}
+
+export async function setPrefsSocialFields(
+  admin: SupabaseClient,
+  accountId: string,
+  patch: {
+    favoritedSlotIds?: string[]
+    showInAttendeeDirectory?: boolean
+    showAttendingStatus?: boolean
+  },
+): Promise<SetPrefsPatchResult> {
+  const payload: Record<string, unknown> = {}
+  if (patch.favoritedSlotIds !== undefined) {
+    payload.favorited_slot_ids = patch.favoritedSlotIds
+  }
+  if (patch.showInAttendeeDirectory !== undefined) {
+    payload.show_in_attendee_directory = patch.showInAttendeeDirectory
+  }
+  if (patch.showAttendingStatus !== undefined) {
+    payload.show_attending_status = patch.showAttendingStatus
+  }
+  return upsertPrefsPatch(admin, accountId, payload)
 }
 
 export async function saveAccountProfile(

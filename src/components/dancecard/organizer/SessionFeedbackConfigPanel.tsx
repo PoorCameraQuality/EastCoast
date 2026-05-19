@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { organizerDancecardFetch } from '@/components/dancecard/organizer/organizerApi'
 import { Panel } from '@/components/dancecard/ui/Panel'
+import { supportCopy } from '@/lib/dancecard/supportCopy'
 
 type FeedbackConfig = {
   enabled?: boolean
@@ -20,22 +21,22 @@ export function SessionFeedbackConfigPanel({
   const [config, setConfig] = useState<FeedbackConfig>({ enabled: false })
   const [err, setErr] = useState<string | null>(null)
   const [busy, setBusy] = useState(false)
-  const [needsMigration, setNeedsMigration] = useState<string | null>(null)
+  const [needsMigration, setNeedsMigration] = useState(false)
 
   const load = useCallback(async () => {
     setErr(null)
-    setNeedsMigration(null)
+    setNeedsMigration(false)
     try {
       const res = await organizerDancecardFetch<{
         feedbackConfig: FeedbackConfig
         needsMigration?: string
       }>(eventSlug, '/session-feedback')
       setConfig(res.feedbackConfig ?? { enabled: false })
-      if (res.needsMigration) setNeedsMigration(res.needsMigration)
+      if (res.needsMigration) setNeedsMigration(true)
     } catch (e) {
       const msg = e instanceof Error ? e.message : 'Failed to load feedback settings'
       if (msg.includes('050') || msg.includes('migration')) {
-        setNeedsMigration('dancecard_050_session_feedback.sql')
+        setNeedsMigration(true)
       }
       setErr(msg)
     }
@@ -69,9 +70,7 @@ export function SessionFeedbackConfigPanel({
         Attendees can rate sessions after they end. Enable the module under Event modules, then turn on collection here.
       </p>
       {needsMigration ? (
-        <p className="mt-3 text-sm text-amber-800">
-          Apply migration <code className="text-xs">{needsMigration}</code>.
-        </p>
+        <p className="mt-3 text-sm text-amber-800">{supportCopy.sessionFeedbackNotReady}</p>
       ) : null}
       {err ? <p className="mt-3 text-sm text-red-700">{err}</p> : null}
       <label className="mt-4 flex items-center gap-2 text-sm text-dc-text">

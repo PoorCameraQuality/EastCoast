@@ -615,8 +615,8 @@ export function SessionDetailDrawer({
               </p>
               {notesMigration ? (
                 <p className="text-xs text-amber-800">
-                  Database update required for organizer activity notes. Apply the latest Dancecard migration in
-                  Supabase, then refresh.
+                  Session notes are not available until your event setup is finished. Contact your platform
+                  administrator, then refresh.
                 </p>
               ) : null}
               <label className="block text-xs uppercase tracking-wide text-dc-muted">

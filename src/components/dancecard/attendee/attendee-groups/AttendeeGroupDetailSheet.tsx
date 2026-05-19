@@ -4,7 +4,9 @@ import { useCallback, useEffect, useState } from 'react'
 import ReactMarkdown from 'react-markdown'
 import { dancecardFetch, formatDancecardApiMessage } from '@/components/dancecard/api-client'
 import { AttendeeGroupApplyForm } from '@/components/dancecard/attendee/attendee-groups/AttendeeGroupApplyForm'
-import { cn } from '@/lib/cn'
+import { GroupAnnouncementsPanel } from '@/components/dancecard/attendee/attendee-groups/GroupAnnouncementsPanel'
+import { GroupBringPanel, GroupChoresPanel } from '@/components/dancecard/attendee/attendee-groups/GroupTaskPanels'
+import { GroupSubTabs } from '@/components/dancecard/attendee/attendee-groups/GroupSubTabs'
 
 type GroupDetail = {
   id: string
@@ -26,7 +28,7 @@ type GroupDetail = {
   ownerDisplayName: string
 }
 
-type SubTab = 'overview' | 'members' | 'chores' | 'bring' | 'settings'
+type SubTab = 'overview' | 'members' | 'announcements' | 'chores' | 'bring' | 'settings'
 
 type Props = {
   eventSlug: string
@@ -39,6 +41,7 @@ type Props = {
 const SUB_TABS: { key: SubTab; label: string; memberOnly?: boolean; adminOnly?: boolean }[] = [
   { key: 'overview', label: 'Overview' },
   { key: 'members', label: 'Members', memberOnly: true },
+  { key: 'announcements', label: 'Announcements', memberOnly: true },
   { key: 'chores', label: 'Chores', memberOnly: true },
   { key: 'bring', label: 'Bring list', memberOnly: true },
   { key: 'settings', label: 'Settings', adminOnly: true },
@@ -97,21 +100,11 @@ export function AttendeeGroupDetailSheet({ eventSlug, groupId, signedIn, onClose
         <p className="text-sm text-dc-muted">Loading…</p>
       ) : (
         <>
-          <div className="mb-3 flex flex-wrap gap-1 border-b border-dc-border pb-2">
-            {visibleTabs.map((t) => (
-              <button
-                key={t.key}
-                type="button"
-                className={cn(
-                  'rounded-lg px-2.5 py-1 text-xs font-semibold',
-                  subTab === t.key ? 'bg-dc-accent-muted text-dc-accent' : 'text-dc-muted hover:bg-dc-surface-muted',
-                )}
-                onClick={() => setSubTab(t.key)}
-              >
-                {t.label}
-              </button>
-            ))}
-          </div>
+          <GroupSubTabs
+            tabs={visibleTabs.map((t) => ({ key: t.key, label: t.label }))}
+            active={subTab}
+            onSelect={setSubTab}
+          />
           <div className="flex-1 overflow-y-auto">
             {subTab === 'overview' ? (
               <OverviewPanel
@@ -124,11 +117,17 @@ export function AttendeeGroupDetailSheet({ eventSlug, groupId, signedIn, onClose
                   onChanged()
                 }}
                 eventSlug={eventSlug}
+                onChanged={onChanged}
               />
             ) : null}
-            {subTab === 'members' ? <MembersPanel eventSlug={eventSlug} groupId={group.id} isAdmin={group.isAdmin} /> : null}
-            {subTab === 'chores' ? <ChoresPanel eventSlug={eventSlug} groupId={group.id} /> : null}
-            {subTab === 'bring' ? <BringPanel eventSlug={eventSlug} groupId={group.id} signedIn={signedIn} /> : null}
+            {subTab === 'members' ? (
+              <MembersPanel eventSlug={eventSlug} groupId={group.id} isAdmin={group.isAdmin} onChanged={onChanged} />
+            ) : null}
+            {subTab === 'announcements' ? (
+              <GroupAnnouncementsPanel eventSlug={eventSlug} groupId={group.id} />
+            ) : null}
+            {subTab === 'chores' ? <GroupChoresPanel eventSlug={eventSlug} groupId={group.id} /> : null}
+            {subTab === 'bring' ? <GroupBringPanel eventSlug={eventSlug} groupId={group.id} /> : null}
             {subTab === 'settings' ? (
               <SettingsPanel eventSlug={eventSlug} group={group} onSaved={() => { void load(); onChanged() }} />
             ) : null}
@@ -177,6 +176,7 @@ function OverviewPanel({
   onJoin,
   onApplied,
   eventSlug,
+  onChanged,
 }: {
   group: GroupDetail
   signedIn: boolean
@@ -184,7 +184,10 @@ function OverviewPanel({
   onJoin: () => void
   onApplied: () => void
   eventSlug: string
+  onChanged: () => void
 }) {
+  const [reportReason, setReportReason] = useState('')
+  const [reportMsg, setReportMsg] = useState<string | null>(null)
   const full = group.spotsLeft === 0
   const canOpenJoin = signedIn && !group.isMember && group.joinMode === 'open' && !full
   const canApply = signedIn && !group.isMember && group.joinMode === 'apply' && !full
@@ -197,9 +200,11 @@ function OverviewPanel({
       </p>
       {group.description ? <p className="text-dc-text">{group.description}</p> : null}
       {group.expectationsMd ? (
-        <div className="rounded-xl border border-dc-border bg-dc-surface-muted/50 p-3 prose prose-sm max-w-none text-dc-text">
-          <p className="mb-1 text-xs font-semibold uppercase text-dc-muted">Expectations</p>
-          <ReactMarkdown>{group.expectationsMd}</ReactMarkdown>
+        <div className="rounded-xl border border-dc-accent-border/50 bg-dc-accent-muted/35 p-4">
+          <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-dc-accent">Expectations</p>
+          <div className="prose prose-sm max-w-none text-dc-text prose-headings:text-dc-text prose-p:leading-relaxed prose-p:text-dc-text prose-strong:text-dc-text prose-li:text-dc-text">
+            <ReactMarkdown>{group.expectationsMd}</ReactMarkdown>
+          </div>
         </div>
       ) : null}
       {group.isMember ? (
@@ -228,7 +233,44 @@ function OverviewPanel({
       ) : null}
       {canApply ? <AttendeeGroupApplyForm eventSlug={eventSlug} groupId={group.id} onSuccess={onApplied} /> : null}
       {!signedIn ? <p className="text-dc-muted">Sign in to join or apply.</p> : null}
-      {group.isMember ? <p className="text-emerald-700">You are a member ({group.myRole}).</p> : null}
+      {group.isMember ? (
+        <p className="rounded-lg border border-dc-accent-border/40 bg-dc-accent-muted/50 px-3 py-2 text-sm font-medium text-dc-accent">
+          You are a member ({group.myRole}).
+        </p>
+      ) : null}
+      {signedIn && !group.isMember ? (
+        <div className="rounded-xl border border-dc-border p-3">
+          <p className="text-xs font-semibold uppercase text-dc-muted">Report this group</p>
+          <textarea
+            className="mt-2 w-full rounded-lg border border-dc-border bg-dc-elevated px-2 py-1.5 text-sm"
+            rows={2}
+            value={reportReason}
+            onChange={(e) => setReportReason(e.target.value)}
+            placeholder="Why are you reporting?"
+          />
+          <button
+            type="button"
+            className="mt-2 text-xs text-dc-accent underline"
+            onClick={async () => {
+              if (!reportReason.trim()) return
+              try {
+                await dancecardFetch(eventSlug, `/attendee-groups/${group.id}/report`, {
+                  method: 'POST',
+                  body: JSON.stringify({ reason: reportReason.trim() }),
+                })
+                setReportMsg('Report submitted.')
+                setReportReason('')
+                onChanged()
+              } catch (e) {
+                setReportMsg(formatDancecardApiMessage(e))
+              }
+            }}
+          >
+            Submit report
+          </button>
+          {reportMsg ? <p className="mt-1 text-xs text-dc-muted">{reportMsg}</p> : null}
+        </div>
+      ) : null}
     </div>
   )
 }
@@ -237,10 +279,12 @@ function MembersPanel({
   eventSlug,
   groupId,
   isAdmin,
+  onChanged,
 }: {
   eventSlug: string
   groupId: string
   isAdmin: boolean
+  onChanged: () => void
 }) {
   const [members, setMembers] = useState<
     { accountId: string; role: string; displayName: string; username: string }[]
@@ -311,12 +355,29 @@ function MembersPanel({
       ) : null}
       <ul className="space-y-2">
         {members.map((m) => (
-          <li key={m.accountId} className="flex justify-between text-sm">
+          <li key={m.accountId} className="flex flex-wrap items-center justify-between gap-2 text-sm">
             <span>
               {m.displayName}
               {m.username ? ` (@${m.username})` : ''}
             </span>
-            <span className="text-xs uppercase text-dc-muted">{m.role}</span>
+            <span className="flex items-center gap-2">
+              <span className="text-xs uppercase text-dc-muted">{m.role}</span>
+              {isAdmin && m.role !== 'owner' ? (
+                <button
+                  type="button"
+                  className="text-xs text-red-700 underline"
+                  onClick={async () => {
+                    await dancecardFetch(eventSlug, `/attendee-groups/${groupId}/members?accountId=${m.accountId}`, {
+                      method: 'DELETE',
+                    })
+                    await load()
+                    onChanged()
+                  }}
+                >
+                  Remove
+                </button>
+              ) : null}
+            </span>
           </li>
         ))}
       </ul>
@@ -324,154 +385,6 @@ function MembersPanel({
   )
 }
 
-function ChoresPanel({ eventSlug, groupId }: { eventSlug: string; groupId: string }) {
-  const [chores, setChores] = useState<{ id: string; title: string; done: boolean; assignedDisplayName: string | null }[]>([])
-  const [title, setTitle] = useState('')
-
-  const load = useCallback(async () => {
-    const res = await dancecardFetch<{ chores: typeof chores }>(eventSlug, `/attendee-groups/${groupId}/chores`)
-    setChores(res.chores ?? [])
-  }, [eventSlug, groupId])
-
-  useEffect(() => {
-    void load()
-  }, [load])
-
-  async function add() {
-    if (!title.trim()) return
-    await dancecardFetch(eventSlug, `/attendee-groups/${groupId}/chores`, {
-      method: 'POST',
-      body: JSON.stringify({ title: title.trim() }),
-    })
-    setTitle('')
-    await load()
-  }
-
-  async function toggle(id: string, done: boolean) {
-    await dancecardFetch(eventSlug, `/attendee-groups/${groupId}/chores/${id}`, {
-      method: 'PATCH',
-      body: JSON.stringify({ done: !done }),
-    })
-    await load()
-  }
-
-  return (
-    <div className="space-y-3 text-sm">
-      <div className="flex gap-2">
-        <input
-          className="min-w-0 flex-1 rounded-lg border border-dc-border bg-dc-elevated px-3 py-2"
-          placeholder="New chore"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-        />
-        <button type="button" className="rounded-lg bg-dc-accent px-3 py-2 text-xs font-semibold text-dc-accent-foreground" onClick={() => void add()}>
-          Add
-        </button>
-      </div>
-      <ul className="space-y-2">
-        {chores.map((c) => (
-          <li key={c.id} className="flex items-center gap-2">
-            <input type="checkbox" checked={c.done} onChange={() => void toggle(c.id, c.done)} />
-            <span className={c.done ? 'line-through text-dc-muted' : ''}>{c.title}</span>
-            {c.assignedDisplayName ? <span className="text-xs text-dc-muted">· {c.assignedDisplayName}</span> : null}
-          </li>
-        ))}
-      </ul>
-    </div>
-  )
-}
-
-function BringPanel({ eventSlug, groupId, signedIn }: { eventSlug: string; groupId: string; signedIn: boolean }) {
-  const [items, setItems] = useState<
-    { id: string; itemLabel: string; claimedDisplayName: string | null; claimedByAccountId: string | null }[]
-  >([])
-  const [label, setLabel] = useState('')
-  const [myAccountId, setMyAccountId] = useState<string | null>(null)
-
-  useEffect(() => {
-    if (!signedIn) return
-    void dancecardFetch<{ account?: { id: string }; id?: string }>(eventSlug, '/me').then((res) => {
-      setMyAccountId(res.account?.id ?? res.id ?? null)
-    })
-  }, [eventSlug, signedIn])
-
-  const load = useCallback(async () => {
-    const res = await dancecardFetch<{ items: typeof items }>(eventSlug, `/attendee-groups/${groupId}/bring-items`)
-    setItems(res.items ?? [])
-  }, [eventSlug, groupId])
-
-  useEffect(() => {
-    void load()
-  }, [load])
-
-  async function add() {
-    if (!label.trim()) return
-    await dancecardFetch(eventSlug, `/attendee-groups/${groupId}/bring-items`, {
-      method: 'POST',
-      body: JSON.stringify({ itemLabel: label.trim() }),
-    })
-    setLabel('')
-    await load()
-  }
-
-  async function claim(id: string, claim: boolean, accountId: string | null) {
-    await dancecardFetch(eventSlug, `/attendee-groups/${groupId}/bring-items/${id}`, {
-      method: 'PATCH',
-      body: JSON.stringify({ claimedByAccountId: claim ? accountId : null }),
-    })
-    await load()
-  }
-
-  return (
-    <div className="space-y-3 text-sm">
-      <BringAddRow label={label} setLabel={setLabel} onAdd={() => void add()} />
-      <ul className="space-y-2">
-        {items.map((i) => (
-          <li key={i.id} className="flex items-center justify-between gap-2">
-            <span>{i.itemLabel}</span>
-            {i.claimedDisplayName ? (
-              <span className="text-xs text-dc-muted">{i.claimedDisplayName}</span>
-            ) : signedIn ? (
-              <button
-                type="button"
-                className="text-xs text-dc-accent"
-                onClick={() => myAccountId && void claim(i.id, true, myAccountId)}
-              >
-                I&apos;ll bring this
-              </button>
-            ) : (
-              <span className="text-xs text-dc-muted">Unclaimed</span>
-            )}
-          </li>
-        ))}
-      </ul>
-    </div>
-  )
-}
-
-function BringAddRow({
-  label,
-  setLabel,
-  onAdd,
-}: {
-  label: string
-  setLabel: (v: string) => void
-  onAdd: () => void
-}) {
-  return (
-    <div className="flex gap-2">
-      <input
-        className="min-w-0 flex-1 rounded-lg border border-dc-border bg-dc-elevated px-3 py-2"
-        placeholder="Item to bring"
-        value={label}
-        onChange={(e) => setLabel(e.target.value)}
-      />
-      <button type="button" className="rounded-lg bg-dc-accent px-3 py-2 text-xs font-semibold text-dc-accent-foreground" onClick={onAdd}>
-        Add
-      </button>
-    </div>
-  )
-}
 
 function SettingsPanel({
   eventSlug,
@@ -550,7 +463,85 @@ function SettingsPanel({
       {group.inviteToken ? (
         <InviteBlock inviteUrl={inviteUrl} onRegenerate={() => void regenerateLink()} busy={busy} />
       ) : null}
+      {group.myRole === 'owner' ? (
+        <TransferOwnerBlock eventSlug={eventSlug} groupId={group.id} onDone={onSaved} />
+      ) : null}
+      {group.isMember ? (
+        <button
+          type="button"
+          disabled={busy}
+          className="w-full rounded-xl border border-red-500/40 px-4 py-2 text-sm text-red-700"
+          onClick={async () => {
+            if (!window.confirm('Leave this group?')) return
+            setBusy(true)
+            try {
+              await dancecardFetch(eventSlug, `/attendee-groups/${group.id}/leave`, { method: 'POST', body: '{}' })
+              onSaved()
+            } catch (e) {
+              setMsg(formatDancecardApiMessage(e))
+            } finally {
+              setBusy(false)
+            }
+          }}
+        >
+          Leave group
+        </button>
+      ) : null}
       {msg ? <p className="text-dc-muted">{msg}</p> : null}
+    </div>
+  )
+}
+
+function TransferOwnerBlock({
+  eventSlug,
+  groupId,
+  onDone,
+}: {
+  eventSlug: string
+  groupId: string
+  onDone: () => void
+}) {
+  const [accountId, setAccountId] = useState('')
+  const [members, setMembers] = useState<{ accountId: string; displayName: string }[]>([])
+
+  useEffect(() => {
+    void dancecardFetch<{ members: { accountId: string; displayName: string; role: string }[] }>(
+      eventSlug,
+      `/attendee-groups/${groupId}/members`,
+    ).then((d) => {
+      setMembers((d.members ?? []).filter((m) => m.role !== 'owner').map((m) => ({ accountId: m.accountId, displayName: m.displayName })))
+    })
+  }, [eventSlug, groupId])
+
+  return (
+    <div className="rounded-xl border border-dc-border p-3">
+      <p className="text-xs font-semibold uppercase text-dc-muted">Transfer ownership</p>
+      <select
+        className="mt-2 w-full rounded-lg border border-dc-border bg-dc-elevated px-2 py-1.5 text-sm"
+        value={accountId}
+        onChange={(e) => setAccountId(e.target.value)}
+      >
+        <option value="">Select member…</option>
+        {members.map((m) => (
+          <option key={m.accountId} value={m.accountId}>
+            {m.displayName}
+          </option>
+        ))}
+      </select>
+      <button
+        type="button"
+        disabled={!accountId}
+        className="mt-2 rounded-lg bg-dc-accent px-3 py-1.5 text-xs font-semibold text-dc-accent-foreground disabled:opacity-50"
+        onClick={async () => {
+          await dancecardFetch(eventSlug, `/attendee-groups/${groupId}/transfer-owner`, {
+            method: 'POST',
+            body: JSON.stringify({ newOwnerAccountId: accountId }),
+          })
+          onDone()
+        }}
+      >
+        Transfer
+      </button>
     </div>
   )
 }
@@ -576,3 +567,5 @@ function InviteBlock({
     </div>
   )
 }
+
+

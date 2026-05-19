@@ -6,6 +6,7 @@ import { TrustedRolesPanel } from '@/components/dancecard/organizer/TrustedRoles
 import { TrustedRoleWorkflowCallout } from '@/components/dancecard/organizer/TrustedRoleWorkflowCallout'
 import type { OrganizerRoleForClient } from '@/lib/dancecard/organizerRoles'
 import { organizerRoleCanEditVettingSafetyNotes, organizerRoleCanMutate } from '@/lib/dancecard/organizerRoles'
+import { supportCopy } from '@/lib/dancecard/supportCopy'
 import { applicationAnswerEntries } from '@/lib/dancecard/vettingApplicationDisplay'
 
 type ApplicationRow = {
@@ -106,8 +107,7 @@ export function VettingQueuePanel({
       <div className="rounded-xl border border-amber-200/25 bg-amber-100 px-4 py-5 text-sm text-amber-900">
         <p className="font-medium">Trusted roles and applications are not enabled yet</p>
         <p className="mt-2 text-amber-900/80">
-          Apply migrations <code className="text-amber-900">dancecard_027</code> and{' '}
-          <code className="text-amber-900">dancecard_038_trusted_roles.sql</code>, then refresh.
+          {supportCopy.vettingNotReady} Refresh this page after setup is complete.
         </p>
       </div>
     )

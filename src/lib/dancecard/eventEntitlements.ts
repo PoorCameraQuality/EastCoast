@@ -11,6 +11,10 @@ export type DancecardModules = {
   iso_board?: boolean
   session_feedback?: boolean
   attendee_groups?: boolean
+  meal_signups?: boolean
+  exhibitor_directory?: boolean
+  attendee_directory?: boolean
+  activity_feed?: boolean
 }
 
 const DEFAULT_MODULES: Required<DancecardModules> = {
@@ -24,6 +28,10 @@ const DEFAULT_MODULES: Required<DancecardModules> = {
   iso_board: false,
   session_feedback: false,
   attendee_groups: false,
+  meal_signups: false,
+  exhibitor_directory: false,
+  attendee_directory: false,
+  activity_feed: true,
 }
 
 export async function getEventEntitlements(

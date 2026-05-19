@@ -6,6 +6,7 @@ import { organizerDancecardFetch } from '@/components/dancecard/organizer/organi
 import { VenueMapCanvas, type VenueMapPin } from '@/components/dancecard/organizer/venue/VenueMapCanvas'
 import { Panel } from '@/components/dancecard/ui/Panel'
 import type { ProgramSlotRow } from '@/lib/dancecard/organizerProgramSlotDto'
+import { supportCopy } from '@/lib/dancecard/supportCopy'
 
 type MapRow = { id: string; title: string; imageUrl: string | null }
 
@@ -87,7 +88,7 @@ export function VenueMapAssignPanel({
   if (needsMigration) {
     return (
       <Panel variant="muted" className="text-sm text-dc-muted">
-        Floor plans need database migration <code className="text-dc-accent">dancecard_014</code>.
+        {supportCopy.floorPlansNotReady}
       </Panel>
     )
   }

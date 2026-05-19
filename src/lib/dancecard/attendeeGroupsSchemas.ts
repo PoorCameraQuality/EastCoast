@@ -69,14 +69,20 @@ export const choreSchema = z.object({
   assignedAccountId: z.string().uuid().nullable().optional(),
   done: z.boolean().optional(),
   sortOrder: z.number().int().min(0).optional(),
+  slotsNeeded: z.number().int().min(1).max(30).optional(),
+  scheduleLabel: z.string().max(80).optional(),
 })
 
-export const patchChoreSchema = choreSchema.partial()
+export const patchChoreSchema = choreSchema.partial().extend({
+  signUp: z.boolean().optional(),
+})
 
 export const bringItemSchema = z.object({
   itemLabel: z.string().min(1).max(200),
   quantity: z.number().int().min(1).nullable().optional(),
   notes: z.string().max(500).optional(),
+  slotsNeeded: z.number().int().min(1).max(30).optional(),
+  scheduleLabel: z.string().max(80).optional(),
 })
 
 export const patchBringItemSchema = z.object({
@@ -84,6 +90,9 @@ export const patchBringItemSchema = z.object({
   quantity: z.number().int().min(1).nullable().optional(),
   notes: z.string().max(500).optional(),
   claimedByAccountId: z.string().uuid().nullable().optional(),
+  claim: z.boolean().optional(),
+  slotsNeeded: z.number().int().min(1).max(30).optional(),
+  scheduleLabel: z.string().max(80).optional(),
 })
 
 export const announcementSchema = z.object({

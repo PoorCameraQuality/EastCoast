@@ -47,6 +47,7 @@ export function CompareAvailabilityPanel(props: {
   compact?: boolean
   selectedStartMs?: number | null
   selectedEndMs?: number | null
+  reserveModalOpen?: boolean
 }) {
   const {
     slug,
@@ -68,6 +69,7 @@ export function CompareAvailabilityPanel(props: {
     compact,
     selectedStartMs,
     selectedEndMs,
+    reserveModalOpen,
   } = props
 
   return (
@@ -272,6 +274,7 @@ export function CompareAvailabilityPanel(props: {
           windowEndMs={windowEndMs}
           selectedStartMs={selectedStartMs}
           selectedEndMs={selectedEndMs}
+          reserveModalOpen={reserveModalOpen}
         />
       ) : null}
     </>

@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { AttendeeProfileCard } from '@/components/dancecard/attendee/AttendeeProfileCard'
 import { GoldRule, PremiumSectionLabel } from '@/components/dancecard/attendee/compare/ComparePageBreaks'
 import { CompareLegend } from '@/components/dancecard/attendee/compare/CompareLegend'
@@ -28,6 +28,7 @@ export function CompareConnectionBoard({
   windowEndMs,
   selectedStartMs,
   selectedEndMs,
+  reserveModalOpen,
 }: {
   tz: string
   compact?: boolean
@@ -41,8 +42,14 @@ export function CompareConnectionBoard({
   windowEndMs?: number
   selectedStartMs?: number | null
   selectedEndMs?: number | null
+  /** When false, clear ephemeral "Pick" highlight (draft was dismissed without sending). */
+  reserveModalOpen?: boolean
 }) {
   const [pickedId, setPickedId] = useState<string | null>(null)
+
+  useEffect(() => {
+    if (!reserveModalOpen) setPickedId(null)
+  }, [reserveModalOpen])
   const meetWindows = useMemo(
     () => bestOpenWindows(mutualData.mutualFreeGaps ?? [], tz, 4),
     [mutualData.mutualFreeGaps, tz]

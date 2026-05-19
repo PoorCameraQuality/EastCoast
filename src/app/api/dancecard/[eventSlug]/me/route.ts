@@ -8,6 +8,7 @@ import {
   setPrefsAllowCompareByUsername,
   setPrefsComparePrivacy,
   setPrefsIcsRemindBeforeMinutes,
+  setPrefsSocialFields,
 } from '@/lib/dancecard/data'
 import type { CompareVisibility } from '@/lib/dancecard/comparePrivacy'
 import {
@@ -77,6 +78,9 @@ export async function GET(
         showInCompareDirectory: prefs.showInCompareDirectory,
         hideBusyDetailsInCompare: prefs.hideBusyDetailsInCompare,
         icsRemindBeforeMinutes: prefs.icsRemindBeforeMinutes,
+        favoritedSlotIds: prefs.favoritedSlotIds,
+        showInAttendeeDirectory: prefs.showInAttendeeDirectory,
+        showAttendingStatus: prefs.showAttendingStatus,
         availabilityStartsAt: availability?.startsAt ?? event.window_starts_at,
         availabilityEndsAt: availability?.endsAt ?? event.window_ends_at,
         profile: prefs.profile,
@@ -135,6 +139,9 @@ export async function PATCH(
         icsRemindBeforeMinutes: z.number().int().min(0).max(1440).optional(),
         profile: profilePatchSchema.optional(),
         badgeTagline: z.string().max(200).nullable().optional(),
+        favoritedSlotIds: z.array(z.string().uuid()).max(500).optional(),
+        showInAttendeeDirectory: z.boolean().optional(),
+        showAttendingStatus: z.boolean().optional(),
       })
       .refine(
         (b) =>
@@ -145,7 +152,10 @@ export async function PATCH(
           b.hideBusyDetailsInCompare !== undefined ||
           b.icsRemindBeforeMinutes !== undefined ||
           b.profile !== undefined ||
-          b.badgeTagline !== undefined,
+          b.badgeTagline !== undefined ||
+          b.favoritedSlotIds !== undefined ||
+          b.showInAttendeeDirectory !== undefined ||
+          b.showAttendingStatus !== undefined,
         { message: 'No updates provided' }
       )
     const body = patchSchema.parse(await request.json())
@@ -168,6 +178,9 @@ export async function PATCH(
       showInCompareDirectory?: boolean
       hideBusyDetailsInCompare?: boolean
       icsRemindBeforeMinutes?: number
+      favoritedSlotIds?: string[]
+      showInAttendeeDirectory?: boolean
+      showAttendingStatus?: boolean
       profile?: Record<string, unknown>
       publicProfile?: Awaited<ReturnType<typeof buildPublicProfileResolved>>
     } | undefined
@@ -235,6 +248,33 @@ export async function PATCH(
         )
       }
       prefsOut = { ...(prefsOut ?? {}), icsRemindBeforeMinutes: body.icsRemindBeforeMinutes }
+    }
+
+    if (
+      body.favoritedSlotIds !== undefined ||
+      body.showInAttendeeDirectory !== undefined ||
+      body.showAttendingStatus !== undefined
+    ) {
+      const socialRes = await setPrefsSocialFields(admin, session.accountId, {
+        favoritedSlotIds: body.favoritedSlotIds,
+        showInAttendeeDirectory: body.showInAttendeeDirectory,
+        showAttendingStatus: body.showAttendingStatus,
+      })
+      if (!socialRes.ok) {
+        return NextResponse.json(
+          { error: 'Database is missing social prefs columns. Apply migration dancecard_057_compare_social_prefs.sql.' },
+          { status: 503 },
+        )
+      }
+      if (body.favoritedSlotIds !== undefined) {
+        prefsOut = { ...(prefsOut ?? {}), favoritedSlotIds: body.favoritedSlotIds }
+      }
+      if (body.showInAttendeeDirectory !== undefined) {
+        prefsOut = { ...(prefsOut ?? {}), showInAttendeeDirectory: body.showInAttendeeDirectory }
+      }
+      if (body.showAttendingStatus !== undefined) {
+        prefsOut = { ...(prefsOut ?? {}), showAttendingStatus: body.showAttendingStatus }
+      }
     }
 
     if (body.profile !== undefined) {

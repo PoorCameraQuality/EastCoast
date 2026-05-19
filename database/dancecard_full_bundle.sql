@@ -1774,3 +1774,115 @@ ON CONFLICT (slug) DO UPDATE SET
   shared_by_detail = EXCLUDED.shared_by_detail,
   logo_url = EXCLUDED.logo_url,
   status = EXCLUDED.status;
+
+-- ============================================================================
+-- dancecard_056_account_notifications.sql
+-- ============================================================================
+
+-- Unified in-app notification inbox (schedule change, reservations, reschedule, etc.)
+
+CREATE TABLE IF NOT EXISTS dancecard_account_notifications (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  event_id uuid NOT NULL REFERENCES dancecard_events (id) ON DELETE CASCADE,
+  account_id uuid NOT NULL REFERENCES dancecard_accounts (id) ON DELETE CASCADE,
+  kind text NOT NULL CHECK (
+    kind IN (
+      'schedule_change',
+      'reservation',
+      'reschedule',
+      'swap',
+      'announcement',
+      'starting_soon'
+    )
+  ),
+  payload jsonb NOT NULL DEFAULT '{}'::jsonb,
+  status text NOT NULL DEFAULT 'unread' CHECK (status IN ('unread', 'read', 'dismissed')),
+  created_at timestamptz NOT NULL DEFAULT now(),
+  read_at timestamptz
+);
+
+CREATE INDEX IF NOT EXISTS dancecard_account_notifications_account_idx
+  ON dancecard_account_notifications (account_id, status, created_at DESC);
+
+CREATE INDEX IF NOT EXISTS dancecard_account_notifications_event_idx
+  ON dancecard_account_notifications (event_id, created_at DESC);
+
+-- ============================================================================
+-- dancecard_057_compare_social_prefs.sql
+-- ============================================================================
+
+-- Compare request intent, attendee directory opt-in, attending badge
+
+ALTER TABLE dancecard_compare_requests
+  ADD COLUMN IF NOT EXISTS intent text NOT NULL DEFAULT 'schedule'
+    CHECK (intent IN ('practice', 'social', 'schedule'));
+
+ALTER TABLE dancecard_prefs
+  ADD COLUMN IF NOT EXISTS show_in_attendee_directory boolean NOT NULL DEFAULT false;
+
+ALTER TABLE dancecard_prefs
+  ADD COLUMN IF NOT EXISTS show_attending_status boolean NOT NULL DEFAULT false;
+
+ALTER TABLE dancecard_prefs
+  ADD COLUMN IF NOT EXISTS favorited_slot_ids jsonb NOT NULL DEFAULT '[]'::jsonb;
+
+COMMENT ON COLUMN dancecard_prefs.favorited_slot_ids IS 'Program slot UUIDs starred for itinerary (not dancecard selections).';
+
+-- ============================================================================
+-- dancecard_058_meal_signups.sql
+-- ============================================================================
+
+-- Event-scale meal periods and attendee signups (kitchen rollup)
+
+CREATE TABLE IF NOT EXISTS dancecard_meal_periods (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  event_id uuid NOT NULL REFERENCES dancecard_events (id) ON DELETE CASCADE,
+  label text NOT NULL,
+  starts_at timestamptz,
+  ends_at timestamptz,
+  sort_order int NOT NULL DEFAULT 0,
+  created_at timestamptz NOT NULL DEFAULT now()
+);
+
+CREATE INDEX IF NOT EXISTS dancecard_meal_periods_event_idx
+  ON dancecard_meal_periods (event_id, sort_order);
+
+CREATE TABLE IF NOT EXISTS dancecard_meal_signups (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  event_id uuid NOT NULL REFERENCES dancecard_events (id) ON DELETE CASCADE,
+  meal_period_id uuid NOT NULL REFERENCES dancecard_meal_periods (id) ON DELETE CASCADE,
+  account_id uuid NOT NULL REFERENCES dancecard_accounts (id) ON DELETE CASCADE,
+  meal_choice text NOT NULL DEFAULT 'standard',
+  dietary_notes text,
+  status text NOT NULL DEFAULT 'confirmed' CHECK (status IN ('confirmed', 'cancelled')),
+  created_at timestamptz NOT NULL DEFAULT now(),
+  UNIQUE (meal_period_id, account_id)
+);
+
+CREATE INDEX IF NOT EXISTS dancecard_meal_signups_period_idx
+  ON dancecard_meal_signups (meal_period_id, status);
+
+-- ============================================================================
+-- dancecard_059_exhibitors.sql
+-- ============================================================================
+
+-- Exhibitor / sponsor directory (con-style)
+
+CREATE TABLE IF NOT EXISTS dancecard_exhibitors (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  event_id uuid NOT NULL REFERENCES dancecard_events (id) ON DELETE CASCADE,
+  name text NOT NULL,
+  booth text,
+  hours text,
+  description text,
+  logo_path text,
+  tags text[] NOT NULL DEFAULT '{}',
+  specials text,
+  sort_order int NOT NULL DEFAULT 0,
+  view_count int NOT NULL DEFAULT 0,
+  is_published boolean NOT NULL DEFAULT true,
+  created_at timestamptz NOT NULL DEFAULT now()
+);
+
+CREATE INDEX IF NOT EXISTS dancecard_exhibitors_event_idx
+  ON dancecard_exhibitors (event_id, sort_order) WHERE is_published = true;

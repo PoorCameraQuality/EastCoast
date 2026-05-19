@@ -8,6 +8,7 @@ import type { EventSettingsEventDto } from '@/components/dancecard/organizer/set
 import { WIZARD_STORAGE_KEY } from '@/components/dancecard/organizer/settings/eventSettingsConfig'
 import type { OrganizerTab, PeopleSubTab } from '@/components/dancecard/organizer/shell/organizerNavConfig'
 import type { ProgramSlotRow } from '@/lib/dancecard/organizerProgramSlotDto'
+import { supportCopy } from '@/lib/dancecard/supportCopy'
 import {
   readImportSkipped,
   resolveSetupTasks,
@@ -122,7 +123,7 @@ export function OrganizerEventDashboard({
       const raw = e instanceof Error ? e.message : 'Could not load overview'
       setSummaryErr(
         raw === 'Internal error'
-          ? 'We could not load setup status. Try Refresh. If this persists, your database may need the latest dancecard migrations.'
+          ? supportCopy.dashboardLoadFailed
           : raw,
       )
     }
@@ -141,7 +142,7 @@ export function OrganizerEventDashboard({
         const raw = e instanceof Error ? e.message : 'Could not run full pre-flight checks'
         setFullErr(
           raw === 'Internal error'
-            ? 'Full pre-flight checks failed. Try again or confirm your database has the latest dancecard migrations.'
+            ? supportCopy.preflightFailed
             : raw,
         )
       } finally {

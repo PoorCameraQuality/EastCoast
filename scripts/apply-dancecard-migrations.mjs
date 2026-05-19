@@ -95,6 +95,7 @@ const baseMigrationFiles = [
   path.join(root, 'database', 'dancecard_052_badge_logo.sql'),
   path.join(root, 'database', 'dancecard_053_iso_comments.sql'),
   path.join(root, 'database', 'dancecard_054_attendee_groups.sql'),
+  path.join(root, 'database', 'dancecard_055_chore_bring_signups.sql'),
 ]
 
 const defaultFiles =

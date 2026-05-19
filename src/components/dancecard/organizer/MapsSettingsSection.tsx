@@ -11,6 +11,7 @@ import {
   mapZoneShapeLabel,
   type MapZoneShape,
 } from '@/lib/dancecard/mapPinZones'
+import { formatPinPlacementLabel, supportCopy } from '@/lib/dancecard/supportCopy'
 
 type MapRow = {
   id: string
@@ -84,7 +85,7 @@ export function MapsSettingsSection({ eventSlug, canEdit }: { eventSlug: string;
         organizerDancecardFetch<{ locations: OrganizerLocationDto[] }>(eventSlug, '/locations'),
       ])
       if (m.needsMigration) {
-        setMsg('Maps require migration dancecard_014_venue_maps_pins.sql.')
+        setMsg(supportCopy.mapsNotReady)
       }
       setMaps(m.maps ?? [])
       setLocations(loc.locations ?? [])
@@ -240,10 +241,7 @@ export function MapsSettingsSection({ eventSlug, canEdit }: { eventSlug: string;
     <div className="rounded-xl border border-dc-border bg-dc-surface-muted p-4">
       {dialog}
       <h3 className="font-serif text-lg text-dc-text">Venue maps</h3>
-      <p className="mt-1 text-xs text-dc-muted">
-        Upload a floor plan image (Supabase Storage bucket <code className="text-dc-accent">dancecard-maps</code>).
-        Attendees: <code className="text-dc-accent">/dancecard/[slug]/map</code>
-      </p>
+      <p className="mt-1 text-xs text-dc-muted">{supportCopy.mapsUploadIntro}</p>
       {msg ? <p className="mt-2 text-sm text-amber-800">{msg}</p> : null}
       <label className="mt-3 block text-sm text-dc-muted">
         Upload map image
@@ -281,12 +279,7 @@ export function MapsSettingsSection({ eventSlug, canEdit }: { eventSlug: string;
       {selectedMapId ? (
         <div className="mt-6 border-t border-dc-border pt-4">
           <h4 className="text-sm font-semibold text-dc-text">Place room zones</h4>
-          <p className="mt-1 text-xs text-dc-muted">
-            Select a room, pick a shape, click the map to place (or drag the zone). Adjust width and height to fit
-            barns, halls, and dungeons. Use rotation for angled rooms. Zoom in for detail. Requires migrations{' '}
-            <code className="text-dc-accent">dancecard_035_map_pin_zone_shapes.sql</code> and{' '}
-            <code className="text-dc-accent">dancecard_037_map_pin_rotation.sql</code>.
-          </p>
+          <p className="mt-1 text-xs text-dc-muted">{supportCopy.placeRoomZonesIntro}</p>
           {selectedMap?.imageUrl ? (
             <div className="mt-3 grid gap-4 lg:grid-cols-2">
               <VenueMapCanvas
@@ -334,7 +327,7 @@ export function MapsSettingsSection({ eventSlug, canEdit }: { eventSlug: string;
                   >
                     <span className="w-28 truncate font-medium text-dc-muted">{loc.name}</span>
                     <span className="text-dc-muted">
-                      {pinDraft[loc.id]?.x ?? '0.5'}, {pinDraft[loc.id]?.y ?? '0.5'}
+                      {formatPinPlacementLabel(pinDraft[loc.id]?.x, pinDraft[loc.id]?.y)}
                     </span>
                   </button>
                 ))}
@@ -348,7 +341,7 @@ export function MapsSettingsSection({ eventSlug, canEdit }: { eventSlug: string;
               <div key={loc.id} className="flex flex-wrap items-center gap-2">
                 <span className="w-32 truncate text-dc-muted">{loc.name}</span>
                 <label className="text-dc-muted">
-                  x
+                  Left %
                   <input
                     className="ml-1 w-14 rounded border border-dc-border bg-dc-surface-muted px-1 text-dc-text"
                     value={pinDraft[loc.id]?.x ?? '0.5'}
@@ -363,7 +356,7 @@ export function MapsSettingsSection({ eventSlug, canEdit }: { eventSlug: string;
                   />
                 </label>
                 <label className="text-dc-muted">
-                  y
+                  Top %
                   <input
                     className="ml-1 w-14 rounded border border-dc-border bg-dc-surface-muted px-1 text-dc-text"
                     value={pinDraft[loc.id]?.y ?? '0.5'}
@@ -416,7 +409,7 @@ export function MapsSettingsSection({ eventSlug, canEdit }: { eventSlug: string;
                   ))}
                 </select>
                 <label className="text-dc-muted">
-                  w
+                  Width %
                   <input
                     type="number"
                     min={4}
@@ -438,7 +431,7 @@ export function MapsSettingsSection({ eventSlug, canEdit }: { eventSlug: string;
                   />
                 </label>
                 <label className="text-dc-muted">
-                  h
+                  Height %
                   <input
                     type="number"
                     min={4}
@@ -460,7 +453,7 @@ export function MapsSettingsSection({ eventSlug, canEdit }: { eventSlug: string;
                   />
                 </label>
                 <label className="text-dc-muted">
-                  °
+                  Rotate
                   <input
                     type="number"
                     min={-180}

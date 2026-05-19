@@ -22,6 +22,7 @@ type MapData = {
   heightPx?: number | null
   pins: MapZonePin[]
   locationNames?: Record<string, string>
+  locationDetails?: Record<string, { directionsPublic: string | null; accessibilityNotes: string | null }>
 }
 
 function mapAspectStyle(widthPx?: number | null, heightPx?: number | null): CSSProperties {
@@ -110,6 +111,12 @@ function DancecardVenueMapInner() {
   const [sessionsAtPin, setSessionsAtPin] = useState<
     { title: string; photoPolicy?: 'allowed' | 'restricted' | 'none' }[]
   >([])
+
+  useEffect(() => {
+    if ('serviceWorker' in navigator) {
+      void navigator.serviceWorker.register('/sw-dancecard-maps.js').catch(() => undefined)
+    }
+  }, [])
 
   useEffect(() => {
     let cancelled = false
@@ -288,6 +295,36 @@ function DancecardVenueMapInner() {
             <p className="text-sm font-semibold text-dc-text">
               {mapPinDisplayName(activePin, m?.locationNames ?? {})}
             </p>
+            {(() => {
+              const det = m?.locationDetails?.[activePin.locationId]
+              if (!det?.directionsPublic && !det?.accessibilityNotes) return null
+              return (
+                <div className="mt-2 space-y-2 text-sm text-dc-subtle">
+                  {det.directionsPublic ? (
+                    <p>
+                      <span className="font-medium text-dc-muted">Directions: </span>
+                      {det.directionsPublic}
+                      {det.directionsPublic.startsWith('http') ? (
+                        <a
+                          href={det.directionsPublic}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="ml-2 text-dc-accent underline"
+                        >
+                          Open in maps
+                        </a>
+                      ) : null}
+                    </p>
+                  ) : null}
+                  {det.accessibilityNotes ? (
+                    <p>
+                      <span className="font-medium text-dc-muted">Accessibility: </span>
+                      {det.accessibilityNotes}
+                    </p>
+                  ) : null}
+                </div>
+              )
+            })()}
             {sessionsAtPin.length ? (
               <ul className="mt-2 space-y-1 text-xs text-dc-muted">
                 {sessionsAtPin.map((s) => (

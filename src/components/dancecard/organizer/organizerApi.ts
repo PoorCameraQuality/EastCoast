@@ -1,3 +1,5 @@
+import { supportCopy, toUserFacingErrorMessage } from '@/lib/dancecard/supportCopy'
+
 export class OrganizerApiError extends Error {
   status: number
   body: string
@@ -12,16 +14,16 @@ function messageFromBody(status: number, body: string) {
   if (!body) return `HTTP ${status}`
   try {
     const parsed = JSON.parse(body) as { error?: unknown }
-    if (typeof parsed.error === 'string' && parsed.error.trim()) return parsed.error
+    if (typeof parsed.error === 'string' && parsed.error.trim()) {
+      return toUserFacingErrorMessage(parsed.error)
+    }
   } catch {
     // Non-JSON errors, like a Next 404 HTML page, are normalized below.
   }
   if (/<!doctype html|<html/i.test(body)) {
-    return status === 404
-      ? 'Organizer API route was not found. Refresh the dev server or use the current local preview port.'
-      : `Organizer API returned HTML instead of JSON (HTTP ${status}).`
+    return supportCopy.serviceUnavailable
   }
-  return body.length > 220 ? `${body.slice(0, 220)}...` : body
+  return toUserFacingErrorMessage(body.length > 220 ? `${body.slice(0, 220)}...` : body)
 }
 
 function base(slug: string) {

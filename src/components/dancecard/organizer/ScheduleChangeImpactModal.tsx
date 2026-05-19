@@ -36,6 +36,7 @@ export function ScheduleChangeImpactModal({
   const [selected, setSelected] = useState<Set<string>>(() => defaultSelectedIds(payload))
   const [busy, setBusy] = useState(false)
   const [err, setErr] = useState<string | null>(null)
+  const [createEmailDraft, setCreateEmailDraft] = useState(false)
 
   const programLink = useMemo(() => {
     if (typeof window === 'undefined') return `/dancecard/${eventSlug}#program`
@@ -80,6 +81,7 @@ export function ScheduleChangeImpactModal({
             accountIds,
             before: payload.before,
             after: payload.after,
+            createEmailDraft,
           }),
         },
       )
@@ -148,6 +150,11 @@ export function ScheduleChangeImpactModal({
       </ImpactSection>
 
       {err ? <p className="mt-2 text-xs text-red-600">{err}</p> : null}
+
+      <label className="mt-4 flex items-center gap-2 text-xs text-dc-muted">
+        <input type="checkbox" checked={createEmailDraft} onChange={(e) => setCreateEmailDraft(e.target.checked)} />
+        Also create email campaign draft (Messaging tab)
+      </label>
 
       <div className="mt-5 flex flex-wrap justify-end gap-2">
         <button

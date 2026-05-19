@@ -62,10 +62,10 @@ export function OrganizerDancecardClient({ eventSlug }: { eventSlug: string }) {
   const humanizeLoadMessage = useCallback((message: string, context: 'program' | 'staff' | 'event') => {
     if (message === 'Internal error') {
       if (context === 'program') {
-        return 'Schedule data failed to load. Program and room tools may be limited until you refresh or apply the latest dancecard database migrations.'
+        return 'Schedule data failed to load. Program and room tools may be limited until you refresh the page or contact support.'
       }
       if (context === 'staff') {
-        return 'Staff shifts could not load. Open Staff shifts to retry, or apply the latest dancecard database migrations.'
+        return 'Staff shifts could not load. Open Staff shifts to retry, or contact support if the problem continues.'
       }
       return 'Something went wrong loading event data. Try refreshing the page.'
     }

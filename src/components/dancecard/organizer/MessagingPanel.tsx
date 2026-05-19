@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { fetchAllOrganizerRegistrants, organizerDancecardFetch } from '@/components/dancecard/organizer/organizerApi'
 import { useConfirmDialog, useOrganizerToast } from '@/components/dancecard/organizer/ui'
 import { copy } from '@/lib/dancecard/productCopy'
+import { supportCopy } from '@/lib/dancecard/supportCopy'
 
 type Template = { id: string; name: string; subject: string; bodyText: string; updatedAt: string }
 type Campaign = {
@@ -232,7 +233,7 @@ export function MessagingPanel({ eventSlug, readOnly }: { eventSlug: string; rea
       </div>
       {needsMigration ? (
         <p className="text-xs text-amber-800">
-          Database update required to enable messaging. Apply the latest Dancecard migration in Supabase.
+          {supportCopy.messagingNotReady}
         </p>
       ) : null}
       {err ? <p className="text-sm text-red-700">{err}</p> : null}

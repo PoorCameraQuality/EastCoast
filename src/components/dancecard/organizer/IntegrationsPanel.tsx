@@ -7,8 +7,11 @@ import type { OrganizerRoleForClient } from '@/lib/dancecard/organizerRoles'
 import type { DancecardModules } from '@/lib/dancecard/eventEntitlements'
 import { EmbedSkinPreview } from '@/components/dancecard/organizer/integrations/EmbedSkinPreview'
 import { IsoModerationPanel } from '@/components/dancecard/organizer/IsoModerationPanel'
+import { KitchenMealPanel } from '@/components/dancecard/organizer/KitchenMealPanel'
+import { ExhibitorsOrganizerPanel } from '@/components/dancecard/organizer/ExhibitorsOrganizerPanel'
 import { AttendeeGroupsModerationPanel } from '@/components/dancecard/organizer/AttendeeGroupsModerationPanel'
 import { SessionFeedbackConfigPanel } from '@/components/dancecard/organizer/SessionFeedbackConfigPanel'
+import { supportCopy } from '@/lib/dancecard/supportCopy'
 
 const MODULE_KEYS: { key: keyof DancecardModules; label: string }[] = [
   { key: 'schedule_embed', label: 'Schedule embed' },
@@ -19,6 +22,9 @@ const MODULE_KEYS: { key: keyof DancecardModules; label: string }[] = [
   { key: 'iso_board', label: 'ISO / practice partner board' },
   { key: 'session_feedback', label: 'Post-event session feedback' },
   { key: 'attendee_groups', label: 'Attendee groups' },
+  { key: 'meal_signups', label: 'Meal signups (kitchen)' },
+  { key: 'exhibitor_directory', label: 'Exhibitor directory' },
+  { key: 'attendee_directory', label: 'Attendee directory' },
 ]
 
 type ApiKeyRow = {
@@ -339,6 +345,10 @@ export function IntegrationsPanel({
         )}
       </section>
 
+      {modules?.meal_signups ? <KitchenMealPanel eventSlug={eventSlug} readOnly={!ownerOrAdmin} /> : null}
+      {modules?.exhibitor_directory ? (
+        <ExhibitorsOrganizerPanel eventSlug={eventSlug} readOnly={!ownerOrAdmin} />
+      ) : null}
       {modules?.iso_board ? <IsoModerationPanel eventSlug={eventSlug} readOnly={false} /> : null}
       {modules?.attendee_groups ? (
         <AttendeeGroupsModerationPanel eventSlug={eventSlug} readOnly={!ownerOrAdmin} />
@@ -491,7 +501,7 @@ export function IntegrationsPanel({
         </p>
         {embedNeedsMigration ? (
           <p className="mt-2 text-xs text-amber-800">
-            Database update required to enable embed tokens. Apply the latest Dancecard migration in Supabase.
+            {supportCopy.embedTokensNotReady}
           </p>
         ) : null}
         <div className="mt-3 flex flex-col gap-2 sm:flex-row sm:flex-wrap">

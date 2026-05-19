@@ -69,6 +69,14 @@ import { SessionFeedbackPanel } from '@/components/dancecard/attendee/SessionFee
 import { CompareRequestsInbox } from '@/components/dancecard/attendee/CompareRequestsInbox'
 import { readScheduleSnapshot, writeScheduleSnapshot } from '@/lib/dancecard/scheduleCache'
 import { VirtualProgramList } from '@/components/dancecard/attendee/program/VirtualProgramList'
+import { PresenterDirectory } from '@/components/dancecard/attendee/program/PresenterDirectory'
+import { FollowingFeed } from '@/components/dancecard/attendee/program/FollowingFeed'
+import { NotificationsInboxPanel } from '@/components/dancecard/attendee/NotificationsInboxPanel'
+import { RescheduleInboxPanel } from '@/components/dancecard/attendee/RescheduleInboxPanel'
+import { MyVolunteerShiftsPanel } from '@/components/dancecard/attendee/MyVolunteerShiftsPanel'
+import { MealSignupsPanel } from '@/components/dancecard/attendee/MealSignupsPanel'
+import { StartingSoonBanner } from '@/components/dancecard/attendee/StartingSoonBanner'
+
 import { PhotoPolicyChip } from '@/components/dancecard/attendee/PhotoPolicyChip'
 import { AttendeeAnnouncements } from '@/components/dancecard/attendee/AttendeeAnnouncements'
 import { AttendeeWeekendGuide } from '@/components/dancecard/attendee/AttendeeWeekendGuide'
@@ -126,6 +134,9 @@ type MeResponse = {
     showInCompareDirectory?: boolean
     hideBusyDetailsInCompare?: boolean
     icsRemindBeforeMinutes?: number
+    favoritedSlotIds?: string[]
+    showInAttendeeDirectory?: boolean
+    showAttendingStatus?: boolean
     profile?: AttendeeProfileStored
   }
   attendeeProfileConfig?: AttendeeProfileConfig
@@ -157,7 +168,7 @@ type MutualSharePayload = {
 }
 
 type Tab = AttendeeNavTab
-type ScheduleView = 'simple' | 'venue' | 'grid' | 'list'
+type ScheduleView = 'simple' | 'venue' | 'grid' | 'list' | 'presenters' | 'following' | 'itinerary'
 type AvailabilityDisplayMode = 'all' | 'free'
 type ManualPresetKey = 'break' | 'lunch' | 'dinner' | 'sleep'
 
@@ -225,9 +236,12 @@ const TAB_OPTIONS: Array<{ key: Tab; label: string; blurb: string }> = [
 ]
 
 const VIEW_OPTIONS: Array<{ key: ScheduleView; label: string }> = [
+  { key: 'itinerary', label: 'Itinerary' },
   { key: 'simple', label: 'Timeline' },
   { key: 'venue', label: 'By venue' },
   { key: 'grid', label: 'Grid' },
+  { key: 'presenters', label: 'Presenters' },
+  { key: 'following', label: 'Following' },
   { key: 'list', label: 'List' },
 ]
 
@@ -381,6 +395,8 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
   const [programTagFilters, setProgramTagFilters] = useState<Set<string>>(() => new Set())
   const [programFollowingOnly, setProgramFollowingOnly] = useState(false)
   const [followedPersonIds, setFollowedPersonIds] = useState<Set<string>>(() => new Set())
+  const [newsUnreadCount, setNewsUnreadCount] = useState(0)
+  const [inboxUnreadCount, setInboxUnreadCount] = useState(0)
   const [scheduleStaleAt, setScheduleStaleAt] = useState<string | null>(null)
   const [compareRequestCount, setCompareRequestCount] = useState(0)
   const [attendeeGroupsBadge, setAttendeeGroupsBadge] = useState(0)
@@ -704,6 +720,8 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
         eventSlug={slug}
         eventTitle={title}
         variant={options?.luxury ? 'luxury' : 'default'}
+        newsUnreadCount={newsUnreadCount + inboxUnreadCount}
+        showNews={Boolean(me)}
       />
     )
   }
@@ -1343,15 +1361,21 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
     return endMs > startMs ? { startMs, endMs } : null
   }, [schedule])
 
-  const mutualSelectedRangeMs = useMemo(() => {
-    if (!reserveMutualStart || !reserveMutualEnd) return { startMs: null as number | null, endMs: null as number | null }
-    const startMs = new Date(reserveMutualStart).getTime()
-    const endMs = new Date(reserveMutualEnd).getTime()
-    if (!Number.isFinite(startMs) || !Number.isFinite(endMs) || endMs <= startMs) {
-      return { startMs: null, endMs: null }
-    }
-    return { startMs, endMs }
-  }, [reserveMutualStart, reserveMutualEnd])
+  /** Draft times in the reserve modal must not paint the compare strip until POST /reserve succeeds. */
+  const mutualSelectedRangeMs = { startMs: null as number | null, endMs: null as number | null }
+
+  const resetMutualReserveDraft = useCallback(() => {
+    setReserveMutualStart('')
+    setReserveMutualEnd('')
+    setReserveMutualNote('')
+    setReserveMutualPreview(null)
+    setReserveMutualBanner(null)
+  }, [])
+
+  const dismissMutualReserveModal = useCallback(() => {
+    setReserveMutualOpen(false)
+    resetMutualReserveDraft()
+  }, [resetMutualReserveDraft])
 
   const staffPeople = useMemo(() => staffRoster?.people ?? [], [staffRoster])
   const selectedStaffEntry = useMemo(
@@ -2704,9 +2728,13 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
       displayName?: string
       profile?: AttendeeProfileStored
       allowCompareByUsername?: boolean
+      compareVisibility?: 'off' | 'username' | 'link_only'
       showInCompareDirectory?: boolean
       hideBusyDetailsInCompare?: boolean
       icsRemindBeforeMinutes?: number
+      favoritedSlotIds?: string[]
+      showInAttendeeDirectory?: boolean
+      showAttendingStatus?: boolean
       badgeTagline?: string | null
     }) => {
       const res = await dancecardFetch<{
@@ -2716,9 +2744,13 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
           profile?: AttendeeProfileStored
           publicProfile?: AttendeePublicProfile
           allowCompareByUsername?: boolean
+          compareVisibility?: 'off' | 'username' | 'link_only'
           showInCompareDirectory?: boolean
           hideBusyDetailsInCompare?: boolean
           icsRemindBeforeMinutes?: number
+          favoritedSlotIds?: string[]
+          showInAttendeeDirectory?: boolean
+          showAttendingStatus?: boolean
         }
       }>(slug, '/me', {
         method: 'PATCH',
@@ -2735,6 +2767,9 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
             ...(res.prefs?.allowCompareByUsername !== undefined
               ? { allowCompareByUsername: res.prefs.allowCompareByUsername }
               : {}),
+            ...(res.prefs?.compareVisibility !== undefined
+              ? { compareVisibility: res.prefs.compareVisibility }
+              : {}),
             ...(res.prefs?.showInCompareDirectory !== undefined
               ? { showInCompareDirectory: res.prefs.showInCompareDirectory }
               : {}),
@@ -2743,6 +2778,15 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
               : {}),
             ...(res.prefs?.icsRemindBeforeMinutes !== undefined
               ? { icsRemindBeforeMinutes: res.prefs.icsRemindBeforeMinutes }
+              : {}),
+            ...(res.prefs?.favoritedSlotIds !== undefined
+              ? { favoritedSlotIds: res.prefs.favoritedSlotIds }
+              : {}),
+            ...(res.prefs?.showInAttendeeDirectory !== undefined
+              ? { showInAttendeeDirectory: res.prefs.showInAttendeeDirectory }
+              : {}),
+            ...(res.prefs?.showAttendingStatus !== undefined
+              ? { showAttendingStatus: res.prefs.showAttendingStatus }
               : {}),
           },
           registrant: res.registrant ?? m.registrant,
@@ -3436,6 +3480,10 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                 <p className="text-sm text-dc-muted">Loading program…</p>
               </GlassPanel>
             ) : tab === 'profile' && me ? (
+              <div className="space-y-3">
+                <NotificationsInboxPanel eventSlug={slug} />
+                <MyVolunteerShiftsPanel eventSlug={slug} />
+                {eventModules?.meal_signups ? <MealSignupsPanel eventSlug={slug} /> : null}
               <GlassPanel className="p-3 sm:p-4">
                 <AttendeeProfileTab
                   username={me.account.username}
@@ -3443,6 +3491,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                   stored={me.prefs.profile ?? {}}
                   config={me.attendeeProfileConfig ?? DEFAULT_ATTENDEE_PROFILE_CONFIG}
                   allowCompareByUsername={Boolean(me.prefs.allowCompareByUsername)}
+                  compareVisibility={me.prefs.compareVisibility}
                   showInCompareDirectory={Boolean(me.prefs.showInCompareDirectory)}
                   hideBusyDetailsInCompare={Boolean(me.prefs.hideBusyDetailsInCompare)}
                   icsRemindBeforeMinutes={me.prefs.icsRemindBeforeMinutes ?? 15}
@@ -3459,6 +3508,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                   onRenameClick={openRename}
                 />
               </GlassPanel>
+              </div>
             ) : tab === 'mutual' ? (
               <GlassPanel className="space-y-2 p-3 sm:p-4">
                 <CompareRequestsInbox
@@ -3490,6 +3540,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                   windowEndMs={schedule?.meta ? Date.parse(schedule.meta.windowEndsAt) : undefined}
                   selectedStartMs={mutualSelectedRangeMs.startMs}
                   selectedEndMs={mutualSelectedRangeMs.endMs}
+                  reserveModalOpen={reserveMutualOpen}
                 />
               </GlassPanel>
             ) : tab === 'iso' ? (
@@ -3507,6 +3558,10 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
             ) : (
               <GlassPanel className="p-3 sm:p-4">
                 <ReservationsPanel slug={slug} tz={tz} />
+                <div className="mt-4">
+                  <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-dc-muted">Reschedule requests</p>
+                  <RescheduleInboxPanel eventSlug={slug} />
+                </div>
               </GlassPanel>
             )}
           </div>
@@ -3780,11 +3835,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
 
         <MutualReserveTogetherModal
           open={reserveMutualOpen}
-          onDismiss={() => {
-            setReserveMutualOpen(false)
-            setReserveMutualPreview(null)
-            setReserveMutualBanner(null)
-          }}
+          onDismiss={dismissMutualReserveModal}
           hostDisplayName={mutualData?.host.displayName ?? 'the host'}
           reserveMutualStart={reserveMutualStart}
           setReserveMutualStart={setReserveMutualStart}
@@ -3802,15 +3853,11 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
           openMutualReserveInGoogleCalendar={openMutualReserveInGoogleCalendar}
           copyMutualReservationSummary={copyMutualReservationSummary}
           onSuccessGoReservations={() => {
-            setReserveMutualOpen(false)
-            setReserveMutualPreview(null)
-            setReserveMutualBanner(null)
+            dismissMutualReserveModal()
             switchTab('reservations', { scroll: true })
           }}
           onSuccessStayOnCompare={() => {
-            setReserveMutualOpen(false)
-            setReserveMutualPreview(null)
-            setReserveMutualBanner(null)
+            dismissMutualReserveModal()
           }}
           stayAfterSuccessLabel="Stay on Compare"
         />
@@ -4474,6 +4521,9 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
             ) : null}
 
             {tab === 'profile' && me ? (
+              <div className="space-y-3">
+                <NotificationsInboxPanel eventSlug={slug} />
+                <MyVolunteerShiftsPanel eventSlug={slug} />
               <GlassPanel className="p-3 sm:p-5">
                 <AttendeeProfileTab
                   username={me.account.username}
@@ -4481,6 +4531,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                   stored={me.prefs.profile ?? {}}
                   config={me.attendeeProfileConfig ?? DEFAULT_ATTENDEE_PROFILE_CONFIG}
                   allowCompareByUsername={Boolean(me.prefs.allowCompareByUsername)}
+                  compareVisibility={me.prefs.compareVisibility}
                   showInCompareDirectory={Boolean(me.prefs.showInCompareDirectory)}
                   hideBusyDetailsInCompare={Boolean(me.prefs.hideBusyDetailsInCompare)}
                   icsRemindBeforeMinutes={me.prefs.icsRemindBeforeMinutes ?? 15}
@@ -4497,6 +4548,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                   onRenameClick={openRename}
                 />
               </GlassPanel>
+              </div>
             ) : null}
 
             {tab === 'mutual' ? (
@@ -4529,12 +4581,21 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                     windowEndMs={schedule?.meta ? Date.parse(schedule.meta.windowEndsAt) : undefined}
                     selectedStartMs={mutualSelectedRangeMs.startMs}
                     selectedEndMs={mutualSelectedRangeMs.endMs}
+                    reserveModalOpen={reserveMutualOpen}
                   />
                 </GlassPanel>
               </div>
             ) : null}
 
-            {tab === 'reservations' ? <ReservationsPanel slug={slug} tz={tz} /> : null}
+            {tab === 'reservations' ? (
+              <>
+                <ReservationsPanel slug={slug} tz={tz} />
+                <div className="mt-4">
+                  <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-dc-muted">Reschedule requests</p>
+                  <RescheduleInboxPanel eventSlug={slug} />
+                </div>
+              </>
+            ) : null}
             {tab === 'iso' ? <IsoBoardTab eventSlug={slug} signedIn={Boolean(me)} /> : null}
             {tab === 'attendee_groups' ? (
               <AttendeeGroupsTab
@@ -4788,11 +4849,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
 
       <MutualReserveTogetherModal
         open={reserveMutualOpen}
-        onDismiss={() => {
-          setReserveMutualOpen(false)
-          setReserveMutualPreview(null)
-          setReserveMutualBanner(null)
-        }}
+        onDismiss={dismissMutualReserveModal}
         hostDisplayName={mutualData?.host.displayName ?? 'the host'}
         reserveMutualStart={reserveMutualStart}
         setReserveMutualStart={setReserveMutualStart}
@@ -4810,15 +4867,11 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
         openMutualReserveInGoogleCalendar={openMutualReserveInGoogleCalendar}
         copyMutualReservationSummary={copyMutualReservationSummary}
         onSuccessGoReservations={() => {
-          setReserveMutualOpen(false)
-          setReserveMutualPreview(null)
-          setReserveMutualBanner(null)
+          dismissMutualReserveModal()
           switchTab('reservations', { scroll: true })
         }}
         onSuccessStayOnCompare={() => {
-          setReserveMutualOpen(false)
-          setReserveMutualPreview(null)
-          setReserveMutualBanner(null)
+          dismissMutualReserveModal()
         }}
         stayAfterSuccessLabel="Stay on Compare"
       />
@@ -5020,6 +5073,7 @@ function DancecardProgramTabBody({
   const publicSlots = slots as PublicProgramSlotDto[]
   return (
     <div className="space-y-4">
+      <StartingSoonBanner slots={slots} selectedIds={programSelected} />
       <HappeningNowRibbon
         eventSlug={eventSlug}
         slots={publicSlots}
@@ -5340,6 +5394,45 @@ function DancecardProgramTabBody({
               onOpenDetail={setDetailSlot}
             />
           </div>
+        </GlassPanel>
+      ) : scheduleView === 'itinerary' ? (
+        <GlassPanel className="p-4 sm:p-5">
+          <p className="text-xs uppercase tracking-[0.28em] text-dc-muted">My itinerary</p>
+          <p className="mt-1 text-sm text-dc-subtle">Starred favorites plus sessions on your dancecard.</p>
+          <div className="mt-4">
+            <VirtualProgramList
+              slots={filteredSlots.filter((s) => programSelected.has(s.id))}
+              timezone={tz}
+              selectedIds={programSelected}
+              onToggle={toggleProgram}
+              onOpenDetail={setDetailSlot}
+            />
+          </div>
+        </GlassPanel>
+      ) : scheduleView === 'presenters' ? (
+        <GlassPanel className="p-4 sm:p-5">
+          <PresenterDirectory
+            slots={slots}
+            eventSlug={eventSlug}
+            timezone={tz}
+            followedPersonIds={followedPersonIds}
+            onToggleFollow={onToggleFollow}
+            onSelectSlot={(id) => {
+              const s = slots.find((x) => x.id === id)
+              if (s) setDetailSlot(s)
+            }}
+          />
+        </GlassPanel>
+      ) : scheduleView === 'following' ? (
+        <GlassPanel className="p-4 sm:p-5">
+          <FollowingFeed
+            slots={filteredSlots}
+            followedPersonIds={followedPersonIds}
+            onSelectSlot={(id) => {
+              const s = slots.find((x) => x.id === id)
+              if (s) setDetailSlot(s)
+            }}
+          />
         </GlassPanel>
       ) : (
         grouped.map((g, dayIdx) => (

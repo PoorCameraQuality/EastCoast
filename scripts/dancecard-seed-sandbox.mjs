@@ -164,6 +164,10 @@ async function main() {
       iso_board: true,
       attendee_groups: true,
       session_feedback: true,
+      meal_signups: true,
+      exhibitor_directory: true,
+      attendee_directory: true,
+      activity_feed: true,
     },
   })
 

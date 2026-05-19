@@ -9,6 +9,7 @@ import { reserveBodySchema } from '@/lib/dancecard/schemas'
 import { resolveReserveHostId } from '@/lib/dancecard/mutualHostResolve'
 import { loadPrefs, loadReservationsForAccount, loadSelections, selectionsToBusyInput } from '@/lib/dancecard/data'
 import { computeMutualFree, eventWindowFromRow, parseIso, intervalFullyInsideWindow } from '@/lib/dancecard/busy'
+import { insertAccountNotification } from '@/lib/dancecard/accountNotifications'
 import { rateLimiters, withRateLimit } from '@/lib/rateLimit'
 import { toClientError } from '@/lib/security/safeApiError'
 import { ZodError } from 'zod'
@@ -96,6 +97,21 @@ export async function POST(
         return NextResponse.json({ error: 'Could not reserve (conflict)' }, { status: 409 })
       }
       throw insErr
+    }
+
+    if (hostId !== session.accountId) {
+      await insertAccountNotification(admin, {
+        eventId: event.id,
+        accountId: hostId,
+        kind: 'reservation',
+        payload: {
+          reservationId: row?.id,
+          guestAccountId: session.accountId,
+          startsAt: body.startsAt,
+          endsAt: body.endsAt,
+          note: body.note ?? null,
+        },
+      })
     }
 
     return NextResponse.json({

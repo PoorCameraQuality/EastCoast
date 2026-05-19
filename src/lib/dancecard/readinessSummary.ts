@@ -128,7 +128,7 @@ export async function buildReadinessSummaryChecks(
       id: 'staff-load-failed',
       severity: 'info',
       title: 'Staff shift list could not be checked',
-      detail: 'If you use volunteer shifts, open Staff shifts to confirm they loaded. A database migration may be pending.',
+      detail: 'If you use volunteer shifts, open Staff shifts to confirm they loaded. Setup may still be finishing.',
       action: READINESS_ACTION.peopleStaff,
     })
   } else if (staffRows.length === 0) {

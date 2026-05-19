@@ -78,6 +78,7 @@ export const organizerNotifyScheduleChangeSchema = z.object({
   message: z.string().max(4000).optional(),
   before: slotScheduleSnapshotSchema.optional(),
   after: slotScheduleSnapshotSchema.optional(),
+  createEmailDraft: z.boolean().optional(),
 })
 
 export const organizerProgramSlotPatchSchema = z

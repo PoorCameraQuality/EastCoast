@@ -1,3 +1,5 @@
+import { supportCopy, toUserFacingErrorMessage } from '@/lib/dancecard/supportCopy'
+
 export class DancecardApiError extends Error {
   status: number
   body: string
@@ -16,16 +18,18 @@ export function formatDancecardApiMessage(e: unknown): string {
     try {
       const j = JSON.parse(raw) as { error?: string; message?: string; hint?: string }
       if (typeof j.error === 'string' && j.error) {
-        return typeof j.hint === 'string' && j.hint ? `${j.error} ${j.hint}` : j.error
+        const combined =
+          typeof j.hint === 'string' && j.hint ? `${j.error} ${j.hint}` : j.error
+        return toUserFacingErrorMessage(combined)
       }
-      if (typeof j.message === 'string' && j.message) return j.message
+      if (typeof j.message === 'string' && j.message) return toUserFacingErrorMessage(j.message)
     } catch {
-      if (raw.length < 400 && !raw.startsWith('<')) return raw
+      if (raw.length < 400 && !raw.startsWith('<')) return toUserFacingErrorMessage(raw)
     }
-    return 'Request failed. Please try again.'
+    return supportCopy.tryAgainLater
   }
-  if (e instanceof Error && e.message.trim()) return e.message.trim()
-  return 'Something went wrong. Please try again.'
+  if (e instanceof Error && e.message.trim()) return toUserFacingErrorMessage(e.message.trim())
+  return supportCopy.tryAgainLater
 }
 
 function apiBase(slug: string): string {
@@ -51,22 +55,14 @@ export async function dancecardFetch<T>(
   if (!res.ok) {
     const t = text.trimStart()
     if (t.startsWith('<!') || t.startsWith('<html')) {
-      throw new DancecardApiError(
-        res.status,
-        `Expected JSON from ${apiBase(slug)}${path} but got an HTML page (HTTP ${res.status}). ` +
-          `If this is the public site, the latest deploy may be missing dancecard API routes — ` +
-          `redeploy from GitHub master and confirm Vercel build output lists /api/dancecard/[eventSlug]/schedule.`,
-      )
+      throw new DancecardApiError(res.status, supportCopy.serviceUnavailable)
     }
     throw new DancecardApiError(res.status, text)
   }
   if (text) {
     const t = text.trimStart()
     if (t.startsWith('<!') || t.startsWith('<html')) {
-      throw new DancecardApiError(
-        res.status,
-        `Expected JSON from ${apiBase(slug)}${path} but received HTML. Check deployment and URL.`,
-      )
+      throw new DancecardApiError(res.status, supportCopy.serviceUnavailable)
     }
     return JSON.parse(text) as T
   }

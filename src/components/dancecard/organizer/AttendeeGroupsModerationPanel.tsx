@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { organizerDancecardFetch } from '@/components/dancecard/organizer/organizerApi'
 import { Panel } from '@/components/dancecard/ui/Panel'
+import { supportCopy } from '@/lib/dancecard/supportCopy'
 
 type GroupRow = {
   id: string
@@ -34,11 +35,11 @@ export function AttendeeGroupsModerationPanel({
   const [reports, setReports] = useState<ReportRow[]>([])
   const [err, setErr] = useState<string | null>(null)
   const [busyId, setBusyId] = useState<string | null>(null)
-  const [needsMigration, setNeedsMigration] = useState<string | null>(null)
+  const [needsMigration, setNeedsMigration] = useState(false)
 
   const load = useCallback(async () => {
     setErr(null)
-    setNeedsMigration(null)
+    setNeedsMigration(false)
     try {
       const res = await organizerDancecardFetch<{ groups: GroupRow[]; reports: ReportRow[]; needsMigration?: string }>(
         eventSlug,
@@ -46,11 +47,11 @@ export function AttendeeGroupsModerationPanel({
       )
       setGroups(res.groups ?? [])
       setReports(res.reports ?? [])
-      if (res.needsMigration) setNeedsMigration(res.needsMigration)
+      if (res.needsMigration) setNeedsMigration(true)
     } catch (e) {
       const msg = e instanceof Error ? e.message : 'Failed to load attendee groups'
       if (msg.includes('054') || msg.includes('migration')) {
-        setNeedsMigration('dancecard_054_attendee_groups.sql')
+        setNeedsMigration(true)
       }
       setErr(msg)
       setGroups([])
@@ -82,9 +83,7 @@ export function AttendeeGroupsModerationPanel({
     <Panel>
       <ModerationHeader onRefresh={() => void load()} />
       {needsMigration ? (
-        <p className="mb-3 text-sm text-amber-800">
-          Apply migration <code className="text-xs">{needsMigration}</code> to enable attendee groups moderation.
-        </p>
+        <p className="mb-3 text-sm text-amber-800">{supportCopy.groupsModerationNotReady}</p>
       ) : null}
       {err ? <p className="mb-3 text-sm text-red-700">{err}</p> : null}
       {reports.length ? (

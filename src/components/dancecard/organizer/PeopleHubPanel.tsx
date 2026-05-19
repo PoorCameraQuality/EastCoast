@@ -8,6 +8,7 @@ import { VettingQueuePanel } from '@/components/dancecard/organizer/VettingQueue
 import { BadgesPrintPanel } from '@/components/dancecard/organizer/BadgesPrintPanel'
 import { DmCoveragePanel } from '@/components/dancecard/organizer/DmCoveragePanel'
 import { SafetyIncidentsPanel } from '@/components/dancecard/organizer/SafetyIncidentsPanel'
+import { VolunteerCompliancePanel } from '@/components/dancecard/organizer/VolunteerCompliancePanel'
 import { usePeopleSubTab } from '@/components/dancecard/organizer/usePeopleSubTab'
 import type { OrganizerStaffShiftDto } from '@/lib/dancecard/organizerStaffShiftDto'
 import type { OrganizerRoleForClient } from '@/lib/dancecard/organizerRoles'
@@ -23,6 +24,7 @@ const TAB_LABELS: Record<string, string> = {
   badges: 'Badges',
   coverage: 'Coverage & assignments',
   incidents: 'Safety incidents',
+  compliance: 'Volunteer compliance',
 }
 
 type Props = {
@@ -104,6 +106,7 @@ export function PeopleHubPanel({
       {peopleTab === 'incidents' ? (
         <SafetyIncidentsPanel eventSlug={eventSlug} organizerRole={organizerRole ?? 'viewer'} readOnly={readOnly} />
       ) : null}
+      {peopleTab === 'compliance' ? <VolunteerCompliancePanel eventSlug={eventSlug} /> : null}
       {peopleTab === 'coverage' ? (
         hasEventWindow ? (
           <DmCoveragePanel

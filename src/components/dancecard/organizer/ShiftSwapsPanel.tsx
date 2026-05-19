@@ -94,7 +94,7 @@ export function ShiftSwapsPanel({
       <div className="rounded-xl border border-amber-200/25 bg-amber-100 px-4 py-5 text-sm text-amber-900">
         <p className="font-medium">Shift trades are not enabled yet</p>
         <p className="mt-2 text-amber-900/80">
-          Ask your administrator to apply the latest Dancecard migration, then refresh this page.
+          Shift swaps are not set up for this event yet. Contact your platform administrator, then refresh this page.
         </p>
       </div>
     )
@@ -110,7 +110,7 @@ export function ShiftSwapsPanel({
           staffed appropriately.
         </p>
         <p className="mt-2 text-xs text-dc-muted">
-          Coming soon for attendees: staff will be able to propose swaps from their schedule view. You approve trades here.
+          Attendees with shift swaps enabled can propose swaps from their dancecard. You approve trades here.
         </p>
       </div>
       {err ? <p className="text-red-700">{err}</p> : null}

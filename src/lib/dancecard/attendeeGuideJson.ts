@@ -7,11 +7,19 @@ const sectionSchema = z.object({
   enabled: z.boolean().optional().default(true),
 })
 
+const conductCheckpointSchema = z.object({
+  id: z.string().min(1).max(80),
+  title: z.string().min(1).max(200),
+  body: z.string().max(10000).optional().default(''),
+  requiredAck: z.boolean().optional().default(true),
+})
+
 export const attendeeGuideJsonSchema = z.object({
   ticketingUrl: z.string().url().max(2000).optional().or(z.literal('')),
   rabbitsignUrl: z.string().url().max(2000).optional().or(z.literal('')),
   checkInMarkdown: z.string().max(20000).optional().default(''),
   sections: z.array(sectionSchema).max(24).optional().default([]),
+  conductCheckpoints: z.array(conductCheckpointSchema).max(12).optional().default([]),
 })
 
 export type AttendeeGuideJson = z.infer<typeof attendeeGuideJsonSchema>
@@ -27,7 +35,7 @@ export function parseAttendeeGuideJson(raw: unknown): AttendeeGuideJson {
       rabbitsignUrl: v.rabbitsignUrl === '' ? undefined : v.rabbitsignUrl,
     }
   }
-  return { sections: [], checkInMarkdown: '' }
+  return { sections: [], checkInMarkdown: '', conductCheckpoints: [] }
 }
 
 /** Safe subset for public dancecard APIs. */
@@ -37,6 +45,7 @@ export function publicAttendeeGuideJson(guide: AttendeeGuideJson) {
     rabbitsignUrl: guide.rabbitsignUrl ?? null,
     checkInMarkdown: guide.checkInMarkdown ?? '',
     sections: (guide.sections ?? []).filter((s) => s.enabled !== false),
+    conductCheckpoints: guide.conductCheckpoints ?? [],
   }
 }
 

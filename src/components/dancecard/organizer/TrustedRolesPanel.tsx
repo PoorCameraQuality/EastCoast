@@ -6,6 +6,7 @@ import { InlineSuccessBanner, useOrganizerToast } from '@/components/dancecard/o
 import { QUESTION_TYPES } from '@/lib/dancecard/questionnaireTypes'
 import { applySlugFromName, publicTrustedRoleApplyPath } from '@/lib/dancecard/trustedRoles'
 import type { OrganizerRoleForClient } from '@/lib/dancecard/organizerRoles'
+import { supportCopy } from '@/lib/dancecard/supportCopy'
 import { organizerRoleCanMutate } from '@/lib/dancecard/organizerRoles'
 
 type QuestionDraft = {
@@ -265,11 +266,8 @@ export function TrustedRolesPanel({
   if (needsMigration) {
     return (
       <div className="rounded-xl border border-amber-200/25 bg-amber-100 px-4 py-5 text-sm text-amber-900">
-        <p className="font-medium">Trusted roles need a database update</p>
-        <p className="mt-2 text-amber-900/80">
-          Run migration <code className="text-amber-900">database/dancecard_038_trusted_roles.sql</code> in Supabase, then
-          refresh.
-        </p>
+        <p className="font-medium">Trusted roles are not set up yet</p>
+        <p className="mt-2 text-amber-900/80">{supportCopy.trustedRolesNotReady} Refresh this page after setup is complete.</p>
       </div>
     )
   }

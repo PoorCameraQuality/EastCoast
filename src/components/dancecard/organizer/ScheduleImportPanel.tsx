@@ -18,6 +18,7 @@ import { useConfirmDialog } from '@/components/dancecard/organizer/ui'
 import { Panel } from '@/components/dancecard/ui/Panel'
 import { importDiffHeadline, summarizeImportRows } from '@/lib/dancecard/importDiffSummary'
 import { IMPORT_SKIP_STORAGE_KEY } from '@/lib/dancecard/setupTasks'
+import { supportCopy } from '@/lib/dancecard/supportCopy'
 import {
   activeDragFromDndId,
   cellDropId,
@@ -684,9 +685,7 @@ export function ScheduleImportPanel({
       const message = e instanceof Error ? e.message : 'Import failed'
       if (message.includes('requires dancecard_007') || message.includes('409')) {
         setErr(
-          'Organizer import requires migration dancecard_007 (and related). Apply locally: npm run dancecard:apply-migrations ' +
-            '(set DATABASE_URL in .env.local), or run database/dancecard_007_organizer_import_workflow.sql in the Supabase SQL editor. ' +
-            'You can still use “Load … demo” below to explore the board without a database.'
+          `${supportCopy.importNotReady} You can still use “Load … demo” below to explore the board while setup finishes.`,
         )
       } else {
         setErr(message)
@@ -719,7 +718,7 @@ export function ScheduleImportPanel({
     if (readOnly) return
     if (!batch) return
     if (batch.id.startsWith('local-')) {
-      setErr('Publishing requires the organizer import migration. This local board is for drag/drop review only.')
+      setErr('Publishing is not available in demo mode. This board is for drag-and-drop review only.')
       return
     }
     if (
@@ -1067,12 +1066,8 @@ export function ScheduleImportPanel({
       >
       {locationsNeedsMigration ? (
         <div className="mb-4 rounded-2xl border border-amber-400/35 bg-amber-100 p-4 text-sm text-amber-900">
-          <p className="font-semibold text-amber-900">Locations need database migration 007</p>
-          <p className="mt-1 text-amber-900/90">
-            Apply <code className="rounded bg-dc-surface-muted px-1">database/dancecard_007_organizer_import_workflow.sql</code> in
-            Supabase (or <code className="rounded bg-dc-surface-muted px-1">npm run dancecard:apply-migrations</code>). Until then,
-            saved rooms are unavailable and add-location may fail.
-          </p>
+          <p className="font-semibold text-amber-900">Rooms are not set up yet</p>
+          <p className="mt-1 text-amber-900/90">{supportCopy.locationsNotReady}</p>
         </div>
       ) : null}
       <LocationManagerPanel

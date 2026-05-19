@@ -21,7 +21,7 @@ export type ReadinessCheck = {
       | 'messaging'
       | 'badges'
     /** When tab is `people`, opens this sub-tab in the People hub. */
-    peopleTab?: 'signups' | 'roster' | 'staff' | 'applications' | 'swaps' | 'badges' | 'coverage' | 'incidents'
+    peopleTab?: 'signups' | 'roster' | 'staff' | 'applications' | 'swaps' | 'badges' | 'coverage' | 'incidents' | 'compliance'
     settingsPanel?: string
   }
 }

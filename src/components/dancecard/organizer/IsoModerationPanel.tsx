@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { organizerDancecardFetch } from '@/components/dancecard/organizer/organizerApi'
 import { Panel } from '@/components/dancecard/ui/Panel'
+import { supportCopy } from '@/lib/dancecard/supportCopy'
 
 type IsoPost = {
   id: string
@@ -14,26 +15,39 @@ type IsoPost = {
   authorUsername: string
 }
 
+type IsoComment = {
+  id: string
+  postId: string
+  body: string
+  status: string
+  authorName: string
+  authorUsername: string | null
+}
+
 export function IsoModerationPanel({ eventSlug, readOnly }: { eventSlug: string; readOnly: boolean }) {
   const [posts, setPosts] = useState<IsoPost[]>([])
+  const [comments, setComments] = useState<IsoComment[]>([])
   const [err, setErr] = useState<string | null>(null)
   const [busyId, setBusyId] = useState<string | null>(null)
-  const [needsMigration, setNeedsMigration] = useState<string | null>(null)
+  const [needsMigration, setNeedsMigration] = useState(false)
 
   const load = useCallback(async () => {
     setErr(null)
-    setNeedsMigration(null)
+    setNeedsMigration(false)
     try {
-      const res = await organizerDancecardFetch<{ posts: IsoPost[]; needsMigration?: string }>(
-        eventSlug,
-        '/iso',
-      )
+      const [res, comm] = await Promise.all([
+        organizerDancecardFetch<{ posts: IsoPost[]; needsMigration?: string }>(eventSlug, '/iso'),
+        organizerDancecardFetch<{ comments: IsoComment[] }>(eventSlug, '/iso/comments').catch(() => ({
+          comments: [],
+        })),
+      ])
       setPosts(res.posts ?? [])
-      if (res.needsMigration) setNeedsMigration(res.needsMigration)
+      setComments(comm.comments ?? [])
+      if (res.needsMigration) setNeedsMigration(true)
     } catch (e) {
       const msg = e instanceof Error ? e.message : 'Failed to load ISO posts'
       if (msg.includes('migration') || msg.includes('049')) {
-        setNeedsMigration('dancecard_049_iso_board.sql')
+        setNeedsMigration(true)
       }
       setErr(msg)
       setPosts([])
@@ -77,9 +91,7 @@ export function IsoModerationPanel({ eventSlug, readOnly }: { eventSlug: string;
         </button>
       </div>
       {needsMigration ? (
-        <p className="mb-3 text-sm text-amber-800">
-          Apply migration <code className="text-xs">{needsMigration}</code> to enable ISO moderation.
-        </p>
+        <p className="mb-3 text-sm text-amber-800">{supportCopy.isoModerationNotReady}</p>
       ) : null}
       {err ? <p className="mb-3 text-sm text-red-700">{err}</p> : null}
       {!posts.length && !err ? <p className="text-sm text-dc-muted">No ISO posts yet.</p> : null}
@@ -139,6 +151,36 @@ export function IsoModerationPanel({ eventSlug, readOnly }: { eventSlug: string;
           </li>
         ))}
       </ul>
+      {comments.length > 0 ? (
+        <div className="mt-6 border-t border-dc-border pt-4">
+          <h4 className="text-sm font-semibold text-dc-text">Comments</h4>
+          <ul className="mt-2 space-y-2">
+            {comments.map((c) => (
+              <li key={c.id} className="rounded-lg border border-dc-border px-3 py-2 text-xs">
+                <p className="text-dc-muted">
+                  {c.authorName}
+                  {c.authorUsername ? ` @${c.authorUsername}` : ''} · {c.status}
+                </p>
+                <p className="mt-1 text-dc-text">{c.body}</p>
+                {!readOnly && c.status !== 'hidden' ? (
+                  <button
+                    type="button"
+                    className="mt-2 text-dc-accent hover:underline"
+                    onClick={() =>
+                      void organizerDancecardFetch(eventSlug, `/iso/comments/${c.id}`, {
+                        method: 'PATCH',
+                        body: JSON.stringify({ status: 'hidden' }),
+                      }).then(() => load())
+                    }
+                  >
+                    Hide
+                  </button>
+                ) : null}
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : null}
     </Panel>
   )
 }

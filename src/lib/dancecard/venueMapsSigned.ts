@@ -21,6 +21,7 @@ export type SignedVenueMapDto = {
   heightPx: number | null
   pins: VenueMapPinDto[]
   locationNames: Record<string, string>
+  locationDetails: Record<string, { directionsPublic: string | null; accessibilityNotes: string | null }>
 }
 
 export async function fetchSignedVenueMapsForEvent(
@@ -36,11 +37,20 @@ export async function fetchSignedVenueMapsForEvent(
     .limit(limit)
   if (mErr) return []
 
-  const { data: locRows } = await admin.from('dancecard_locations').select('id, name').eq('event_id', eventId)
+  const { data: locRows } = await admin
+    .from('dancecard_locations')
+    .select('id, name, directions_public, accessibility_notes')
+    .eq('event_id', eventId)
   const locationNames: Record<string, string> = {}
+  const locationDetails: Record<string, { directionsPublic: string | null; accessibilityNotes: string | null }> = {}
   for (const l of locRows ?? []) {
+    const id = l.id as string
     const name = String(l.name ?? '').trim()
-    if (name) locationNames[l.id as string] = name
+    if (name) locationNames[id] = name
+    locationDetails[id] = {
+      directionsPublic: (l.directions_public as string | null) ?? null,
+      accessibilityNotes: (l.accessibility_notes as string | null) ?? null,
+    }
   }
 
   const mapList = maps ?? []
@@ -80,6 +90,7 @@ export async function fetchSignedVenueMapsForEvent(
         widthPx: (m.width_px as number | null) ?? null,
         heightPx: (m.height_px as number | null) ?? null,
         locationNames,
+        locationDetails,
         pins: pinsByMapId.get(m.id as string) ?? [],
       }
     }),

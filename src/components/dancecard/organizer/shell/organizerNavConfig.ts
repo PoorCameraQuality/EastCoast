@@ -47,6 +47,7 @@ export type PeopleSubTab =
   | 'badges'
   | 'coverage'
   | 'incidents'
+  | 'compliance'
 
 
 
@@ -71,6 +72,8 @@ export const ALL_PEOPLE_SUB_TABS: PeopleSubTab[] = [
   'coverage',
 
   'incidents',
+
+  'compliance',
 
 ]
 

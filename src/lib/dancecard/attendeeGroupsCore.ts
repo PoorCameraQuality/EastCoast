@@ -1,5 +1,13 @@
 import { randomBytes } from 'node:crypto'
 import type { SupabaseClient } from '@supabase/supabase-js'
+import {
+  DEFAULT_ATTENDEE_PROFILE_CONFIG,
+  parseAttendeeProfileConfig,
+  parseProfileStored,
+  type AttendeeProfileConfig,
+} from '@/lib/dancecard/attendeeProfile'
+import { buildPublicProfileResolved } from '@/lib/dancecard/profilePhotoUrl'
+import { isMissingTable } from '@/lib/dancecard/supabaseColumnFallback'
 import { assertHttpsUrl } from '@/lib/security/safeUrl'
 import { groupTypeLabel, type AttendeeGroupTypeId } from '@/lib/dancecard/eventProfile'
 
@@ -81,19 +89,127 @@ export function isGroupOwner(role: string | null | undefined) {
   return role === 'owner'
 }
 
+export type AccountBrief = {
+  displayName: string
+  username: string
+  avatarUrl: string | null
+}
+
 export async function loadAccountsBrief(
   admin: SupabaseClient,
   accountIds: string[],
 ): Promise<Map<string, { displayName: string; username: string }>> {
+  const withAvatars = await loadAccountsWithAvatars(admin, accountIds, DEFAULT_ATTENDEE_PROFILE_CONFIG)
+  return new Map(
+    Array.from(withAvatars.entries()).map(([id, a]) => [id, { displayName: a.displayName, username: a.username }]),
+  )
+}
+
+export async function loadAccountsWithAvatars(
+  admin: SupabaseClient,
+  accountIds: string[],
+  profileConfig: AttendeeProfileConfig = DEFAULT_ATTENDEE_PROFILE_CONFIG,
+): Promise<Map<string, AccountBrief>> {
   const unique = Array.from(new Set(accountIds.filter(Boolean)))
   if (!unique.length) return new Map()
-  const { data } = await admin.from('dancecard_accounts').select('id, display_name, username').in('id', unique)
-  return new Map(
-    (data ?? []).map((a) => [
-      a.id as string,
-      { displayName: (a.display_name as string) ?? 'Attendee', username: (a.username as string) ?? '' },
-    ]),
+
+  const { data: accounts } = await admin.from('dancecard_accounts').select('id, display_name, username').in('id', unique)
+  const prefsByAccount = new Map<string, unknown>()
+  const { data: prefs, error: prefsErr } = await admin
+    .from('dancecard_prefs')
+    .select('account_id, profile_json')
+    .in('account_id', unique)
+  if (!prefsErr) {
+    for (const row of prefs ?? []) {
+      prefsByAccount.set(row.account_id as string, row.profile_json)
+    }
+  }
+
+  const out = new Map<string, AccountBrief>()
+  await Promise.all(
+    (accounts ?? []).map(async (a) => {
+      const id = a.id as string
+      const stored = parseProfileStored(prefsByAccount.get(id))
+      const profile = await buildPublicProfileResolved(admin, {
+        displayName: (a.display_name as string) ?? 'Attendee',
+        username: (a.username as string) ?? '',
+        stored,
+        config: profileConfig,
+      })
+      out.set(id, {
+        displayName: profile.displayName,
+        username: profile.loginName,
+        avatarUrl: profile.avatarUrl ?? null,
+      })
+    }),
   )
+  return out
+}
+
+export function mapSignupRows(
+  accountIds: string[],
+  accounts: Map<string, AccountBrief>,
+): { accountId: string; displayName: string; username: string; avatarUrl: string | null }[] {
+  return accountIds.map((accountId) => {
+    const a = accounts.get(accountId)
+    return {
+      accountId,
+      displayName: a?.displayName ?? 'Attendee',
+      username: a?.username ?? '',
+      avatarUrl: a?.avatarUrl ?? null,
+    }
+  })
+}
+
+export async function loadChoreSignupMap(
+  admin: SupabaseClient,
+  choreIds: string[],
+): Promise<Map<string, string[]>> {
+  const map = new Map<string, string[]>()
+  if (!choreIds.length) return map
+  const { data, error } = await admin
+    .from('dancecard_attendee_group_chore_signups')
+    .select('chore_id, account_id')
+    .in('chore_id', choreIds)
+  if (error) {
+    if (isMissingTable(error, 'dancecard_attendee_group_chore_signups')) return map
+    throw error
+  }
+  for (const row of data ?? []) {
+    const choreId = row.chore_id as string
+    const list = map.get(choreId) ?? []
+    list.push(row.account_id as string)
+    map.set(choreId, list)
+  }
+  return map
+}
+
+export async function loadBringClaimMap(
+  admin: SupabaseClient,
+  itemIds: string[],
+): Promise<Map<string, string[]>> {
+  const map = new Map<string, string[]>()
+  if (!itemIds.length) return map
+  const { data, error } = await admin
+    .from('dancecard_attendee_group_bring_claims')
+    .select('item_id, account_id')
+    .in('item_id', itemIds)
+  if (error) {
+    if (isMissingTable(error, 'dancecard_attendee_group_bring_claims')) return map
+    throw error
+  }
+  for (const row of data ?? []) {
+    const itemId = row.item_id as string
+    const list = map.get(itemId) ?? []
+    list.push(row.account_id as string)
+    map.set(itemId, list)
+  }
+  return map
+}
+
+export function readProfileConfigFromEvent(event: unknown): AttendeeProfileConfig {
+  if (!event || typeof event !== 'object') return DEFAULT_ATTENDEE_PROFILE_CONFIG
+  return parseAttendeeProfileConfig((event as { attendee_profile_config?: unknown }).attendee_profile_config)
 }
 
 export function mapPublicGroupListItem(

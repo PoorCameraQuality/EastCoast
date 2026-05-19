@@ -6,6 +6,7 @@ import {getDancecardAdmin,
 import { dancecardPutSchema } from '@/lib/dancecard/schemas'
 import { eventWindowFromRow, parseIso } from '@/lib/dancecard/busy'
 import { slotVisibleToAttendee } from '@/lib/dancecard/programSlotPublication'
+import { detectPersonalScheduleConflicts } from '@/lib/dancecard/personalScheduleConflicts'
 import { ZodError } from 'zod'
 
 export const dynamic = 'force-dynamic'
@@ -191,7 +192,15 @@ export async function PUT(
       if (insErr) throw insErr
     }
 
-    return NextResponse.json({ ok: true })
+    const conflictBlocks = normalized.map((n) => ({
+      id: n.slot_id ?? `manual-${n.starts_at}`,
+      title: n.kind === 'program' ? 'Class' : 'Busy',
+      startMs: Date.parse(n.starts_at),
+      endMs: Date.parse(n.ends_at),
+    }))
+    const warnings = detectPersonalScheduleConflicts(conflictBlocks, body.bufferMinutes)
+
+    return NextResponse.json({ ok: true, warnings })
   } catch (e) {
     if (e instanceof ZodError) {
       return NextResponse.json({ error: 'Validation error', details: e.flatten() }, { status: 400 })
