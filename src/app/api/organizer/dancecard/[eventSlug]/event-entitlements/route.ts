@@ -19,6 +19,10 @@ const patchSchema = z.object({
       shift_swaps: z.boolean().optional(),
       vetting_applications: z.boolean().optional(),
       policy_public_summary: z.boolean().optional(),
+      ecke_sign: z.boolean().optional(),
+      rabbitsign_sync: z.boolean().optional(),
+      iso_board: z.boolean().optional(),
+      session_feedback: z.boolean().optional(),
     })
     .strict(),
 })

@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { PROFILE_PHOTO_STORAGE_PREFIX } from '@/lib/dancecard/profilePhotoConstants'
 import { assertHttpsImageUrl, assertHttpsUrl } from '@/lib/security/safeUrl'
 
 export type AttendeeContactKind = 'fetlife' | 'discord' | 'telegram' | 'email'
@@ -81,8 +82,10 @@ export function buildPublicProfile(input: {
   username: string
   stored: AttendeeProfileStored
   config: AttendeeProfileConfig
+  /** Signed URL when photoUrl is a storage: reference. */
+  resolvedPhotoUrl?: string | null
 }): AttendeePublicProfile {
-  const { displayName, username, stored, config } = input
+  const { displayName, username, stored, config, resolvedPhotoUrl } = input
   const contacts: AttendeeContactLink[] = []
 
   if (config.fetlife && stored.fetlife?.trim()) {
@@ -115,7 +118,10 @@ export function buildPublicProfile(input: {
     bio: bio || undefined,
     avatarUrl:
       config.photo && stored.photoUrl?.trim()
-        ? assertHttpsImageUrl(stored.photoUrl.trim()) ?? undefined
+        ? resolvedPhotoUrl ??
+          (stored.photoUrl.trim().startsWith(PROFILE_PHOTO_STORAGE_PREFIX)
+            ? undefined
+            : assertHttpsImageUrl(stored.photoUrl.trim()) ?? undefined)
         : undefined,
     contacts,
   }
@@ -134,7 +140,9 @@ export function profilePatchForConfig(
   }
   if (config.photo && body.photoUrl !== undefined) {
     const raw = body.photoUrl?.trim() || null
-    out.photoUrl = raw ? assertHttpsImageUrl(raw) : null
+    if (!raw) out.photoUrl = null
+    else if (raw.startsWith(PROFILE_PHOTO_STORAGE_PREFIX)) out.photoUrl = raw
+    else out.photoUrl = assertHttpsImageUrl(raw)
   }
   if (config.fetlife && body.fetlife !== undefined) out.fetlife = body.fetlife?.trim() || null
   if (config.discord && body.discord !== undefined) out.discord = body.discord?.trim() || null

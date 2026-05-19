@@ -41,10 +41,10 @@ export function MapZoneOverlay({
   const active = focused || highlighted
 
   const fillTone = active
-    ? 'rgba(42, 40, 38, 0.62)'
+    ? 'rgba(139, 105, 20, 0.28)'
     : highlighted
-      ? 'rgba(36, 34, 32, 0.58)'
-      : 'rgba(28, 26, 24, 0.52)'
+      ? 'rgba(61, 90, 128, 0.22)'
+      : 'rgba(79, 72, 63, 0.18)'
 
   const shell = cn(
     'absolute flex items-center justify-center overflow-visible transition-[transform,box-shadow,border-color] duration-150',
@@ -76,8 +76,8 @@ export function MapZoneOverlay({
     z.shape === 'square' && 'rounded-sm',
     z.shape === 'rectangle' && 'rounded-md',
     active
-      ? 'border-dc-warning shadow-[0_0_0_2px_rgba(232,200,122,0.35),0_4px_16px_rgba(0,0,0,0.55),0_0_20px_rgba(0,0,0,0.45),inset_0_1px_0_rgba(255,255,255,0.12)]'
-      : 'border-white/75 shadow-[0_3px_14px_rgba(0,0,0,0.55),0_0_16px_rgba(20,18,16,0.65),inset_0_1px_0_rgba(255,255,255,0.1)]',
+      ? 'border-dc-warning shadow-[0_0_0_2px_rgba(139,105,20,0.25),0_4px_12px_rgba(45,38,28,0.12)]'
+      : 'border-dc-border shadow-[0_2px_8px_rgba(45,38,28,0.1),inset_0_1px_0_rgba(255,255,255,0.85)]',
   )
 
   const Tag = onClick || onPointerDown ? 'button' : 'div'
@@ -108,16 +108,16 @@ export function MapZoneOverlay({
       >
         <span
           className={cn(
-            'whitespace-nowrap rounded-md border px-2 py-0.5 text-xs font-semibold leading-snug shadow-lg backdrop-blur-sm',
+            'max-w-[11rem] truncate whitespace-nowrap rounded-md border px-1.5 py-0.5 text-[10px] font-semibold leading-snug shadow-lg backdrop-blur-sm sm:max-w-[14rem] sm:px-2 sm:text-xs',
             active
-              ? 'border-dc-warning/60 bg-black/85 text-dc-warning'
-              : 'border-white/20 bg-black/85 text-dc-text',
+              ? 'border-dc-warning/60 bg-dc-elevated-solid/95 text-dc-warning'
+              : 'border-dc-border bg-dc-elevated-solid/95 text-dc-text',
           )}
         >
           {displayName}
         </span>
         {isDrop ? (
-          <span className="whitespace-nowrap rounded border border-white/15 bg-black/75 px-1.5 py-px text-[9px] font-medium text-dc-text-muted">
+          <span className="whitespace-nowrap rounded border border-dc-border bg-dc-elevated-solid/90 px-1.5 py-px text-[9px] font-medium text-dc-muted">
             Drop here
           </span>
         ) : null}

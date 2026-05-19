@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { assertOrganizerCanMutate, organizerErrorResponse, requireOrganizerForSlug } from '@/lib/dancecard/organizerAuth'
-import { DANCECARD_MAPS_BUCKET } from '@/lib/dancecard/dancecardMapsConstants'
+import { createSignedStorageUrl, DANCECARD_MAPS_BUCKET } from '@/lib/dancecard/dancecardStorage'
 import { loadEventBySlugAnyStatus } from '@/lib/dancecard/routeCommon'
 
 export const dynamic = 'force-dynamic'
@@ -33,12 +33,12 @@ export async function GET(_request: NextRequest, context: { params: { eventSlug:
     }[] = []
     for (const row of data ?? []) {
       const path = row.image_path as string
-      const signed = await admin.storage.from(DANCECARD_MAPS_BUCKET).createSignedUrl(path, 3600)
+      const imageUrl = await createSignedStorageUrl(admin, path, DANCECARD_MAPS_BUCKET, 3600)
       out.push({
         id: row.id as string,
         title: row.title as string,
         imagePath: path,
-        imageUrl: signed.data?.signedUrl ?? null,
+        imageUrl,
         widthPx: (row.width_px as number | null) ?? null,
         heightPx: (row.height_px as number | null) ?? null,
         sortOrder: Number(row.sort_order ?? 0),

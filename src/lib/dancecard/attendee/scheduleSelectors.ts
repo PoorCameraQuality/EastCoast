@@ -35,8 +35,11 @@ export function nextUp(slots: SlotLike[], nowMs: number = Date.now()): SlotLike 
 }
 
 export type PresenterEntry = {
+  personId?: string
   sceneName: string
   role: string
+  publicBio: string | null
+  photoUrl: string | null
   slotIds: string[]
 }
 
@@ -47,11 +50,27 @@ export function buildPresenterIndex(
   const byKey = new Map<string, PresenterEntry>()
   for (const slot of slots) {
     for (const p of slot.presenters ?? []) {
-      const key = `${p.sceneName}::${p.role}`
-      const row = byKey.get(key) ?? { sceneName: p.sceneName, role: p.role, slotIds: [] }
+      const key = `${p.personId ?? p.sceneName}::${p.role}`
+      const row =
+        byKey.get(key) ??
+        ({
+          personId: p.personId,
+          sceneName: p.sceneName,
+          role: p.role,
+          publicBio: p.publicBio ?? null,
+          photoUrl: p.photoUrl ?? null,
+          slotIds: [],
+        } satisfies PresenterEntry)
       if (!row.slotIds.includes(slot.id)) row.slotIds.push(slot.id)
       byKey.set(key, row)
     }
   }
   return Array.from(byKey.values()).sort((a, b) => a.sceneName.localeCompare(b.sceneName))
+}
+
+export function bioExcerpt(bio: string | null | undefined, maxLen = 120): string | null {
+  const t = (bio ?? '').trim()
+  if (!t) return null
+  if (t.length <= maxLen) return t
+  return `${t.slice(0, maxLen).trimEnd()}…`
 }

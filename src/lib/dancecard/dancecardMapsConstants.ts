@@ -1,6 +1,12 @@
-/** Supabase Storage bucket for floor / camp maps (create in dashboard + public read or signed URLs). */
-export const DANCECARD_MAPS_BUCKET = process.env.DANCECARD_MAPS_BUCKET ?? 'dancecard-maps'
-
-export function sanitizeMapObjectName(name: string): string {
-  return name.replace(/[^a-zA-Z0-9._-]+/g, '_').slice(0, 120) || 'map.bin'
-}
+/**
+ * @deprecated Import from `@/lib/dancecard/dancecardStorage` instead.
+ * Re-exports kept so existing imports keep working.
+ */
+export {
+  DANCECARD_MAPS_BUCKET,
+  DANCECARD_EVENT_ASSETS_BUCKET,
+  DANCECARD_PROFILE_PHOTOS_BUCKET,
+  DANCECARD_LEGACY_STORAGE_BUCKET,
+  sanitizeMapObjectName,
+  sanitizeStorageObjectName,
+} from '@/lib/dancecard/dancecardStorage'

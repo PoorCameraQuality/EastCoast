@@ -9,7 +9,7 @@ const variantClass: Record<ButtonVariant, string> = {
     'border-dc-accent-border bg-dc-accent text-dc-accent-foreground hover:bg-dc-accent-hover focus-visible:ring-dc-accent',
   secondary:
     'border-dc-border bg-dc-elevated-muted/80 text-dc-text hover:border-dc-border-strong focus-visible:ring-dc-accent',
-  ghost: 'border-transparent bg-transparent text-dc-text hover:bg-dc-accent-muted focus-visible:ring-dc-accent',
+  ghost: 'border-transparent bg-transparent text-dc-accent-foreground hover:bg-dc-accent-muted focus-visible:ring-dc-accent',
   danger:
     'border-dc-danger-border bg-dc-danger-muted text-dc-danger hover:bg-dc-danger/20 focus-visible:ring-dc-danger',
 }

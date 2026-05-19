@@ -87,7 +87,7 @@ See [dancecard-embed.md](./dancecard-embed.md).
 
 ## What stays in C2K only
 
-Forums, chat, announcements, ISO board, org hub — per design guide §12. Dancecard is **ops layer** (program, registrants, integrations, exports), not community hub.
+Forums, chat, announcements, org hub — per design guide §12. **ISO / practice partner board** runs in Dancecard when the event entitlement `iso_board` is enabled (attendee tab + organizer moderation). Dancecard remains the **ops layer** (program, registrants, integrations, exports).
 
 ---
 

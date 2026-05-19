@@ -26,6 +26,19 @@
   }
 }
 
+.dc-iso-marquee-scroll {
+  animation: dc-iso-marquee-scroll linear infinite;
+}
+
+@keyframes dc-iso-marquee-scroll {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-50%);
+  }
+}
+
 .dc-vestibule-pulse {
   animation: dc-vestibule-pulse 1s ease-in-out infinite;
 }
@@ -95,6 +108,9 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .dc-iso-marquee-scroll {
+    animation: none;
+  }
   .dc-transition-tab,
   .dc-transition-drawer {
     transition-duration: 0.01ms !important;

@@ -22,7 +22,41 @@ type Question = {
   sortOrder: number
   optionsJson: unknown
   visibilityRulesJson: Record<string, unknown>
+  requiredForCategoryIds: string[]
 }
+
+function optionsToText(optionsJson: unknown): string {
+  if (!Array.isArray(optionsJson)) return ''
+  return optionsJson.map((o) => (typeof o === 'string' ? o : String(o))).join('\n')
+}
+
+function textToOptions(text: string): string[] {
+  return text
+    .split('\n')
+    .map((l) => l.trim())
+    .filter(Boolean)
+}
+
+function visibilityRulesToText(rules: Record<string, unknown>): string {
+  if (!rules || Object.keys(rules).length === 0) return ''
+  try {
+    return JSON.stringify(rules, null, 2)
+  } catch {
+    return ''
+  }
+}
+
+function textToVisibilityRules(text: string): Record<string, unknown> {
+  const trimmed = text.trim()
+  if (!trimmed) return {}
+  const parsed = JSON.parse(trimmed) as unknown
+  if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) {
+    throw new Error('Visibility rules must be a JSON object')
+  }
+  return parsed as Record<string, unknown>
+}
+
+const CHOICE_TYPES = new Set(['single_choice', 'multi_choice', 'dropdown'])
 
 type FormState = {
   id: string | null
@@ -105,6 +139,11 @@ export function RegistrationSettingsSection({
           sortOrder: q.sortOrder,
           optionsJson: q.optionsJson ?? [],
           visibilityRulesJson: (q.visibilityRulesJson as Record<string, unknown>) ?? {},
+          requiredForCategoryIds: Array.isArray(
+            (q as { requiredForCategoryIds?: string[] }).requiredForCategoryIds,
+          )
+            ? (q as { requiredForCategoryIds: string[] }).requiredForCategoryIds
+            : [],
         })),
       })
     }
@@ -120,6 +159,13 @@ export function RegistrationSettingsSection({
     setBusy(true)
     setErr(null)
     try {
+      for (const q of form.questions) {
+        if (q.visibilityRulesJson && '__raw' in q.visibilityRulesJson) {
+          setErr('Fix invalid visibility rules JSON before saving.')
+          setBusy(false)
+          return
+        }
+      }
       await organizerDancecardFetch(eventSlug, '/registration-form', {
         method: 'PUT',
         body: JSON.stringify({
@@ -134,6 +180,7 @@ export function RegistrationSettingsSection({
             sortOrder: q.sortOrder ?? i,
             optionsJson: q.optionsJson,
             visibilityRulesJson: q.visibilityRulesJson,
+            requiredForCategoryIds: q.requiredForCategoryIds,
           })),
         }),
       })
@@ -158,6 +205,7 @@ export function RegistrationSettingsSection({
           sortOrder: f.questions.length,
           optionsJson: [],
           visibilityRulesJson: {},
+          requiredForCategoryIds: [],
         },
       ],
     }))
@@ -168,7 +216,7 @@ export function RegistrationSettingsSection({
       {(msg || err) && (
         <div
           className={`rounded-lg border px-3 py-2 text-sm ${
-            err ? 'border-dc-danger-border bg-dc-danger-muted text-dc-danger' : 'border-dc-accent-border bg-dc-accent-muted text-dc-text'
+            err ? 'border-dc-danger-border bg-dc-danger-muted text-dc-danger' : 'border-dc-accent-border bg-dc-accent-muted text-dc-accent-foreground'
           }`}
           role="status"
         >
@@ -215,7 +263,10 @@ export function RegistrationSettingsSection({
       <div className="grid gap-6 xl:grid-cols-2">
         <Panel>
           <h3 className="text-sm font-semibold text-dc-text">Registration form builder</h3>
-          <p className="mt-1 text-xs text-dc-muted">Intro, confirmation, and custom questions. Live preview →</p>
+          <p className="mt-1 text-xs text-dc-muted">
+            Intro, confirmation, and custom questions. Attendees register on the main event page (Member access →
+            Register) using optional comp codes from categories below. Live preview →
+          </p>
           <div className="mt-4 grid gap-3">
             <label className={SETTINGS_LABEL_CLASS}>
               Status
@@ -324,7 +375,82 @@ export function RegistrationSettingsSection({
                       }))
                     }
                   />
-                  Required
+                  Required (all categories)
+                </label>
+                {categories.length > 0 ? (
+                  <label className={SETTINGS_LABEL_CLASS}>
+                    Required for categories (hold Ctrl/Cmd to select multiple)
+                    <select
+                      multiple
+                      className={`${SETTINGS_FIELD_CLASS} min-h-[4rem]`}
+                      disabled={!canEdit}
+                      value={q.requiredForCategoryIds}
+                      onChange={(e) => {
+                        const selected = Array.from(e.target.selectedOptions).map((o) => o.value)
+                        setForm((f) => ({
+                          ...f,
+                          questions: f.questions.map((x, i) =>
+                            i === idx ? { ...x, requiredForCategoryIds: selected } : x,
+                          ),
+                        }))
+                      }}
+                    >
+                      {categories.map((c) => (
+                        <option key={c.id} value={c.id}>
+                          {c.name}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+                ) : null}
+                {CHOICE_TYPES.has(q.type) ? (
+                  <label className={SETTINGS_LABEL_CLASS}>
+                    Options (one per line)
+                    <textarea
+                      className={`${SETTINGS_FIELD_CLASS} min-h-[60px] font-mono text-xs`}
+                      disabled={!canEdit}
+                      value={optionsToText(q.optionsJson)}
+                      onChange={(e) =>
+                        setForm((f) => ({
+                          ...f,
+                          questions: f.questions.map((x, i) =>
+                            i === idx ? { ...x, optionsJson: textToOptions(e.target.value) } : x,
+                          ),
+                        }))
+                      }
+                    />
+                  </label>
+                ) : null}
+                <label className={SETTINGS_LABEL_CLASS}>
+                  Visibility rules (JSON)
+                  <textarea
+                    className={`${SETTINGS_FIELD_CLASS} min-h-[72px] font-mono text-xs`}
+                    disabled={!canEdit}
+                    placeholder={'{\n  "categoryIdIn": ["uuid"],\n  "answerEquals": { "question-id": "value" }\n}'}
+                    value={visibilityRulesToText(q.visibilityRulesJson)}
+                    onChange={(e) => {
+                      try {
+                        const rules = textToVisibilityRules(e.target.value)
+                        setForm((f) => ({
+                          ...f,
+                          questions: f.questions.map((x, i) =>
+                            i === idx ? { ...x, visibilityRulesJson: rules } : x,
+                          ),
+                        }))
+                        setErr(null)
+                      } catch {
+                        setForm((f) => ({
+                          ...f,
+                          questions: f.questions.map((x, i) =>
+                            i === idx ? { ...x, visibilityRulesJson: { __raw: e.target.value } } : x,
+                          ),
+                        }))
+                      }
+                    }}
+                  />
+                  <span className="mt-1 block text-[10px] text-dc-muted">
+                    Optional. Show when category is in list and/or when another answer equals a value.
+                  </span>
                 </label>
                 {canEdit ? (
                   <div className="flex flex-wrap gap-2">

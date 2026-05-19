@@ -173,6 +173,7 @@ export async function PATCH(request: NextRequest, context: { params: { eventSlug
     if (body.importedPaymentStatus !== undefined) patch.imported_payment_status = body.importedPaymentStatus
     if (body.externalSourceRef !== undefined) patch.external_source_ref = body.externalSourceRef
     if (body.pronouns !== undefined) patch.pronouns = body.pronouns
+    if (body.badgeTagline !== undefined) patch.badge_tagline = body.badgeTagline
     if (body.vettingStatus !== undefined) patch.vetting_status = body.vettingStatus
     if (body.vettingSafetyNotes !== undefined) patch.vetting_safety_notes = body.vettingSafetyNotes
     if (body.rabbitsignStatus !== undefined) patch.rabbitsign_status = body.rabbitsignStatus

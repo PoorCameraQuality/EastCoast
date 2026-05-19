@@ -1,13 +1,23 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { ZodError } from 'zod'
 import bcrypt from 'bcryptjs'
+import type { SupabaseClient } from '@supabase/supabase-js'
 import { codesEqual } from '@/lib/dancecard/accessCodes'
 import { getDancecardAdmin, loadEventBySlug, normalizeEventSlug } from '@/lib/dancecard/routeCommon'
 import { registerBodySchema } from '@/lib/dancecard/schemas'
 import { resolveRegistrantForDancecardAccount } from '@/lib/dancecard/ensureSelfServiceRegistrant'
+import { resolveRegistrationCategoryFromCompCode } from '@/lib/dancecard/resolveRegistrationCategoryFromCompCode'
 import { newSessionToken, hashToken, DANCECARD_SESSION_COOKIE, DANCECARD_COOKIE_PATH, SESSION_DAYS } from '@/lib/dancecard/session'
 import { rateLimiters, withRateLimit } from '@/lib/rateLimit'
 import { toClientError } from '@/lib/security/safeApiError'
+
+export const dynamic = 'force-dynamic'
+
+async function deleteOrphanAccount(admin: SupabaseClient, accountId: string) {
+  await admin.from('dancecard_sessions').delete().eq('account_id', accountId)
+  await admin.from('dancecard_prefs').delete().eq('account_id', accountId)
+  await admin.from('dancecard_accounts').delete().eq('id', accountId)
+}
 
 export async function POST(
   request: NextRequest,
@@ -32,6 +42,14 @@ export async function POST(
         return NextResponse.json({ error: 'Invalid or missing event access code' }, { status: 401 })
       }
     }
+
+    const trimmedComp = String(body.compCode ?? '').trim()
+    const category = await resolveRegistrationCategoryFromCompCode(
+      admin,
+      event.id,
+      trimmedComp || null,
+    )
+
     const passwordHash = await bcrypt.hash(body.password, 10)
 
     const { data: account, error: insErr } = await admin
@@ -51,38 +69,59 @@ export async function POST(
       throw insErr
     }
 
+    const accountId = account.id as string
+
     const { error: prefErr } = await admin.from('dancecard_prefs').insert({
-      account_id: account.id,
+      account_id: accountId,
       buffer_minutes: 0,
     })
-    if (prefErr) throw prefErr
+    if (prefErr) {
+      await deleteOrphanAccount(admin, accountId)
+      throw prefErr
+    }
 
-    await resolveRegistrantForDancecardAccount(admin, event.id, account.id as string, body.displayName, {
-      ensure: true,
-      sceneName: body.displayName,
-    })
+    try {
+      await resolveRegistrantForDancecardAccount(admin, event.id, accountId, body.displayName, {
+        ensure: true,
+        sceneName: body.displayName,
+        categoryId: category.categoryId,
+        updateCategoryOnLink: Boolean(trimmedComp),
+      })
+      if (category.grantsStaffAccess) {
+        const { error: staffErr } = await admin
+          .from('dancecard_accounts')
+          .update({ is_staff: true })
+          .eq('id', accountId)
+          .eq('event_id', event.id)
+        if (staffErr) throw staffErr
+      }
 
-    const token = newSessionToken()
-    const tokenHash = hashToken(token)
-    const expiresAt = new Date(Date.now() + SESSION_DAYS * 86400_000).toISOString()
-    const { error: sessErr } = await admin.from('dancecard_sessions').insert({
-      account_id: account.id,
-      token_hash: tokenHash,
-      expires_at: expiresAt,
-    })
-    if (sessErr) throw sessErr
+      const token = newSessionToken()
+      const tokenHash = hashToken(token)
+      const expiresAt = new Date(Date.now() + SESSION_DAYS * 86400_000).toISOString()
+      const { error: sessErr } = await admin.from('dancecard_sessions').insert({
+        account_id: accountId,
+        token_hash: tokenHash,
+        expires_at: expiresAt,
+      })
+      if (sessErr) throw sessErr
 
-    const res = NextResponse.json({
-      account: { id: account.id, username: account.username, displayName: account.display_name },
-    })
-    res.cookies.set(DANCECARD_SESSION_COOKIE, token, {
-      httpOnly: true,
-      path: DANCECARD_COOKIE_PATH,
-      sameSite: 'lax',
-      secure: process.env.NODE_ENV === 'production',
-      maxAge: SESSION_DAYS * 86400,
-    })
-    return res
+      const res = NextResponse.json({
+        account: { id: account.id, username: account.username, displayName: account.display_name },
+        registration: { categoryName: category.categoryName, roleKind: category.roleKind },
+      })
+      res.cookies.set(DANCECARD_SESSION_COOKIE, token, {
+        httpOnly: true,
+        path: DANCECARD_COOKIE_PATH,
+        sameSite: 'lax',
+        secure: process.env.NODE_ENV === 'production',
+        maxAge: SESSION_DAYS * 86400,
+      })
+      return res
+    } catch (e) {
+      await deleteOrphanAccount(admin, accountId)
+      throw e
+    }
   } catch (e) {
     if (e instanceof ZodError) {
       return NextResponse.json({ error: 'Validation error', details: e.flatten() }, { status: 400 })

@@ -1,4 +1,5 @@
 import type { SupabaseClient } from '@supabase/supabase-js'
+import { compareVisibilityAllowsUsername, isCompareBlocked } from '@/lib/dancecard/comparePrivacy'
 import { loadPrefs } from '@/lib/dancecard/data'
 
 export async function resolveHostIdFromShareToken(
@@ -44,8 +45,9 @@ async function resolveHostIdFromCompareUsername(
     .maybeSingle()
   if (error) throw error
   if (!acc?.id || acc.id === viewerAccountId) return null
+  if (await isCompareBlocked(admin, eventId, viewerAccountId, acc.id)) return null
   const prefs = await loadPrefs(admin, acc.id)
-  if (!prefs.allowCompareByUsername) return null
+  if (!compareVisibilityAllowsUsername(prefs.compareVisibility)) return null
   return acc.id
 }
 
@@ -71,9 +73,25 @@ export async function resolveCompareUsername(
   if (error) throw error
   if (!acc?.id) return { ok: false, reason: 'not_found' }
   if (acc.id === viewerAccountId) return { ok: false, reason: 'self' }
+  if (await isCompareBlocked(admin, eventId, viewerAccountId, acc.id)) {
+    return { ok: false, reason: 'not_found' }
+  }
   const prefs = await loadPrefs(admin, acc.id)
-  if (!prefs.allowCompareByUsername) return { ok: false, reason: 'not_enabled' }
-  return { ok: true, hostId: acc.id }
+  if (compareVisibilityAllowsUsername(prefs.compareVisibility)) {
+    return { ok: true, hostId: acc.id }
+  }
+  const { data: accepted, error: reqErr } = await admin
+    .from('dancecard_compare_requests')
+    .select('id')
+    .eq('event_id', eventId)
+    .eq('from_account_id', viewerAccountId)
+    .eq('to_account_id', acc.id)
+    .eq('status', 'accepted')
+    .limit(1)
+    .maybeSingle()
+  if (reqErr && !String(reqErr.message).includes('does not exist')) throw reqErr
+  if (accepted?.id) return { ok: true, hostId: acc.id }
+  return { ok: false, reason: 'not_enabled' }
 }
 
 export type ReserveHostResolution =

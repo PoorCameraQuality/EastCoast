@@ -3,7 +3,7 @@
 import { useMemo, useState } from 'react'
 
 const glassClass =
-  'rounded-2xl border border-stone-700/50 bg-[#0c1424]/96 shadow-[0_16px_48px_rgba(2,6,23,0.38)] backdrop-blur-sm'
+  'rounded-2xl border border-dc-border bg-dc-elevated-solid/98 shadow-[0_16px_48px_rgba(45,38,28,0.14)] backdrop-blur-sm'
 
 export type EntityPickerOption = { id: string; label: string; sublabel?: string }
 
@@ -38,14 +38,14 @@ export function EntityPickerModal({
   if (!open) return null
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-end justify-center bg-slate-950/70 p-4 backdrop-blur-md sm:items-center">
+    <div className="fixed inset-0 z-[100] flex items-end justify-center bg-dc-elevated-solid/70 p-4 backdrop-blur-md sm:items-center">
       <div className={`flex max-h-[min(85dvh,560px)] w-full max-w-lg flex-col ${glassClass}`}>
-        <div className="border-b border-white/10 px-5 py-4">
-          <h2 className="font-serif text-xl text-white">{title}</h2>
+        <div className="border-b border-dc-border px-5 py-4">
+          <h2 className="font-serif text-xl text-dc-text">{title}</h2>
           <input
             type="search"
             autoFocus
-            className="mt-3 w-full rounded-xl border border-white/10 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-slate-500"
+            className="mt-3 w-full rounded-xl border border-dc-border bg-dc-surface-muted px-3 py-2 text-sm text-dc-text placeholder:text-dc-muted"
             placeholder="Search…"
             value={q}
             onChange={(e) => setQ(e.target.value)}
@@ -63,19 +63,19 @@ export function EntityPickerModal({
                     setQ('')
                   }}
                 >
-                  <span className="block text-sm font-medium text-white">{o.label}</span>
-                  {o.sublabel ? <span className="block text-xs text-slate-400">{o.sublabel}</span> : null}
+                  <span className="block text-sm font-medium text-dc-text">{o.label}</span>
+                  {o.sublabel ? <span className="block text-xs text-dc-muted">{o.sublabel}</span> : null}
                 </button>
               </li>
             ))
           ) : (
-            <li className="px-3 py-6 text-center text-sm text-slate-400">{emptyLabel}</li>
+            <li className="px-3 py-6 text-center text-sm text-dc-muted">{emptyLabel}</li>
           )}
         </ul>
-        <div className="border-t border-white/10 px-5 py-3">
+        <div className="border-t border-dc-border px-5 py-3">
           <button
             type="button"
-            className="w-full rounded-full border border-white/15 py-2 text-sm text-slate-200 hover:bg-white/5"
+            className="w-full rounded-full border border-dc-border py-2 text-sm text-dc-text hover:bg-white/5"
             onClick={() => {
               setQ('')
               onCancel()

@@ -11,12 +11,15 @@ export async function DELETE(
   try {
     const ctx = await requireOrganizerForSlug(context.params.eventSlug)
     assertOrganizerOwnerOrAdmin(ctx)
-    const { error } = await ctx.admin
+    const { data: row, error } = await ctx.admin
       .from('dancecard_api_keys')
       .update({ revoked_at: new Date().toISOString() })
       .eq('id', context.params.keyId)
       .eq('event_id', ctx.eventId)
+      .select('id')
+      .maybeSingle()
     if (error) throw error
+    if (!row) return NextResponse.json({ error: 'Not found' }, { status: 404 })
     await insertDancecardAuditLog(ctx.admin, {
       actorUserId: ctx.userId,
       eventId: ctx.eventId,

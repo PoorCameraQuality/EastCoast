@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import {getDancecardAdmin, loadEventBySlug, normalizeEventSlug, resolveAccountFromSession, jsonFromRouteError } from '@/lib/dancecard/routeCommon'
-import { loadSelections } from '@/lib/dancecard/data'
+import { loadPrefs, loadSelections } from '@/lib/dancecard/data'
 import { buildDancecardSelectionsOnlyIcs } from '@/lib/dancecard/dancecardIcs'
 
 export const dynamic = 'force-dynamic'
@@ -21,7 +21,10 @@ export async function GET(request: NextRequest, context: { params: { eventSlug: 
     if (!session) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
-    const rows = await loadSelections(admin, session.accountId)
+    const [rows, prefs] = await Promise.all([
+      loadSelections(admin, session.accountId),
+      loadPrefs(admin, session.accountId),
+    ])
     const selections = rows.map((s) => ({
       id: s.id,
       kind: s.kind,
@@ -36,6 +39,7 @@ export async function GET(request: NextRequest, context: { params: { eventSlug: 
       calendarName: 'Dancecard',
       attendeeDisplayName: session.displayName,
       selections,
+      programRemindBeforeMinutes: prefs.icsRemindBeforeMinutes,
     })
 
     const fn = `dancecard-${slug}-${safeFilenamePart(session.username)}.ics`

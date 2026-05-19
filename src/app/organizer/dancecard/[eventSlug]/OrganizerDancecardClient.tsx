@@ -221,6 +221,15 @@ export function OrganizerDancecardClient({ eventSlug }: { eventSlug: string }) {
   }, [searchParams])
 
   useEffect(() => {
+    if (!initialSlotId || !slots.length) return
+    if (slots.some((s) => s.id === initialSlotId)) return
+    setNotice(
+      'That activity link is outdated (the schedule may have been reset). Open the session again from the grid or list.',
+    )
+    switchTab(tab, { slotId: null })
+  }, [initialSlotId, slots, switchTab, tab])
+
+  useEffect(() => {
     if (tab !== 'people' && LEGACY_PEOPLE_TABS.includes(tab)) {
       const sub = legacyTabToPeopleSubTab(tab)
       if (!sub) return
@@ -310,7 +319,7 @@ export function OrganizerDancecardClient({ eventSlug }: { eventSlug: string }) {
           <C2kFromBanner />
 
           {tab === 'program' ? <GhostCursorRehearsal eventSlug={slug} /> : null}
-          {loadErr && tab !== 'dashboard' ? (
+          {loadErr ? (
             <p className="mb-4 text-sm text-dc-danger">{loadErr}</p>
           ) : null}
           {notice && tab !== 'dashboard' ? (

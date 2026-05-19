@@ -1,6 +1,7 @@
 'use client'
 
 import { CompareConnectionBoard } from '@/components/dancecard/attendee/compare/CompareConnectionBoard'
+import { CompareDirectoryDiscover } from '@/components/dancecard/attendee/compare/CompareDirectoryDiscover'
 import { CompareOnboardingCarousel } from '@/components/dancecard/attendee/compare/CompareOnboardingCarousel'
 import type { AttendeePublicProfile } from '@/lib/dancecard/attendeeProfile'
 import { extractDancecardShareToken } from '@/components/dancecard/time'
@@ -72,6 +73,24 @@ export function CompareAvailabilityPanel(props: {
   return (
     <>
       <CompareOnboardingCarousel eventSlug={slug} />
+      <CompareDirectoryDiscover
+        eventSlug={slug}
+        compact={compact}
+        onPickUsername={(username) => {
+          setMutualCompareUsername(username)
+          setMutualToken('')
+          const t = username.trim().toLowerCase()
+          if (t && typeof window !== 'undefined') {
+            try {
+              window.sessionStorage.setItem(`eck_dc_compare_user_${slug}`, t)
+              window.sessionStorage.removeItem(`eck_dc_mutual_${slug}`)
+            } catch {
+              /* ignore */
+            }
+          }
+          void refreshMutual()
+        }}
+      />
       {compact ? (
         <div>
           <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-dc-muted">Shared schedules / Compare</p>
@@ -150,7 +169,7 @@ export function CompareAvailabilityPanel(props: {
           <button
             type="button"
             disabled={!mutualCompareUsername.trim()}
-            className="min-h-[44px] touch-manipulation rounded-2xl border border-white/15 bg-white/[0.06] px-4 py-3 text-sm font-medium text-dc-text transition hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-40 sm:min-h-0"
+            className="min-h-[44px] touch-manipulation rounded-2xl border border-dc-border bg-dc-elevated-solid/80 px-4 py-3 text-sm font-medium text-dc-text shadow-sm transition hover:border-dc-accent-border hover:bg-dc-accent-muted hover:text-dc-accent disabled:cursor-not-allowed disabled:opacity-40 sm:min-h-0"
             onClick={() => void refreshMutual()}
             title="Reload using this login name"
           >
@@ -165,11 +184,11 @@ export function CompareAvailabilityPanel(props: {
           Names are matched case-insensitively. A remembered value is not loaded until you tap Compare.
         </p>
       )}
-      <div className={cx('border-t border-white/10', compact ? 'mt-2 pt-2' : 'mt-4 pt-4')}>
+      <div className={cx('border-t border-dc-border', compact ? 'mt-2 pt-2' : 'mt-4 pt-4')}>
         <button
           type="button"
           className={cx(
-            'flex w-full touch-manipulation items-center justify-between gap-3 rounded-xl border border-dc-border bg-dc-elevated-solid/80 px-3 text-left text-dc-text transition active:bg-dc-accent-muted/30 hover:border-dc-accent-border hover:bg-dc-accent-muted/20',
+            'flex w-full touch-manipulation items-center justify-between gap-3 rounded-xl border border-dc-border bg-dc-elevated-solid/80 px-3 text-left text-dc-text shadow-sm transition active:bg-dc-accent-muted/30 hover:border-dc-accent-border hover:bg-dc-accent-muted/20',
             compact
               ? 'min-h-10 py-2 text-xs sm:min-h-0'
               : 'min-h-[44px] py-2.5 text-sm sm:min-h-0 sm:py-2'
@@ -221,7 +240,7 @@ export function CompareAvailabilityPanel(props: {
               <button
                 type="button"
                 disabled={!mutualToken.trim()}
-                className="min-h-[44px] touch-manipulation rounded-2xl border border-white/15 bg-white/[0.06] px-4 py-3 text-sm font-medium text-dc-text transition hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-40 sm:min-h-0"
+                className="min-h-[44px] touch-manipulation rounded-2xl border border-dc-border bg-dc-elevated-solid/80 px-4 py-3 text-sm font-medium text-dc-text shadow-sm transition hover:border-dc-accent-border hover:bg-dc-accent-muted hover:text-dc-accent disabled:cursor-not-allowed disabled:opacity-40 sm:min-h-0"
                 onClick={() => void refreshMutual({ mode: 'token' })}
                 title="Reload from this token (ignores login name above)"
               >

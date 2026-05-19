@@ -59,12 +59,15 @@ export async function DELETE(_request: NextRequest, context: { params: { eventSl
     const ctx = await requireOrganizerForSlug(context.params.eventSlug)
     assertOrganizerCanMutate(ctx)
     const { admin, eventId } = ctx
-    const { error } = await admin
+    const { data: deleted, error } = await admin
       .from('dancecard_policy_documents')
       .delete()
       .eq('id', context.params.policyId)
       .eq('event_id', eventId)
+      .select('id')
+      .maybeSingle()
     if (error) throw error
+    if (!deleted) return NextResponse.json({ error: 'Not found' }, { status: 404 })
     return NextResponse.json({ ok: true })
   } catch (e) {
     return organizerErrorResponse(e)

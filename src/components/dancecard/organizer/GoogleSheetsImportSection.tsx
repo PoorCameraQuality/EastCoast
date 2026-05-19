@@ -185,8 +185,8 @@ export function GoogleSheetsImportSection({
 
   if (!canConfigureGoogle) {
     return (
-      <div className="rounded-2xl border border-dashed border-white/15 bg-black/15 p-4">
-        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">Google Sheets</p>
+      <div className="rounded-2xl border border-dashed border-dc-border bg-dc-elevated-muted p-4">
+        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-dc-muted">Google Sheets</p>
         <p className="mt-2 text-sm text-dc-muted">
           Connecting Google Sheets requires event owner or admin access. You can still upload a CSV or XLSX export
           below, or ask an owner to connect the live sheet on this tab.
@@ -197,11 +197,11 @@ export function GoogleSheetsImportSection({
 
   if (!oauthConfigured) {
     return (
-      <div className="rounded-2xl border border-dashed border-amber-400/25 bg-amber-950/20 p-4">
-        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-amber-200/90">Google Sheets</p>
-        <p className="mt-2 text-sm text-amber-100/90">
+      <div className="rounded-2xl border border-dashed border-amber-400/25 bg-amber-100 p-4">
+        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-amber-800/90">Google Sheets</p>
+        <p className="mt-2 text-sm text-amber-900/90">
           Google OAuth is not configured on this server. Export your sheet as CSV or XLSX and upload below, or ask your
-          host to set <code className="rounded bg-black/30 px-1 text-xs">GOOGLE_OAUTH_CLIENT_ID</code> and related env
+          host to set <code className="rounded bg-dc-surface-muted px-1 text-xs">GOOGLE_OAUTH_CLIENT_ID</code> and related env
           vars.
         </p>
       </div>
@@ -211,7 +211,7 @@ export function GoogleSheetsImportSection({
   const connectHref = `/api/organizer/dancecard/${encodeURIComponent(eventSlug)}/google-sheets/oauth/start?returnTo=import`
 
   return (
-    <div className="rounded-2xl border border-violet-300/20 bg-violet-950/20 p-4">
+    <div className="rounded-2xl border border-violet-300/20 bg-violet-100 p-4">
       <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <p className="text-xs font-semibold uppercase tracking-[0.18em] text-violet-200/90">Or pull from Google Sheets</p>
@@ -224,8 +224,8 @@ export function GoogleSheetsImportSection({
           className={cx(
             'shrink-0 rounded-full border px-2.5 py-1 text-dc-micro font-semibold uppercase tracking-wide',
             connection?.connected
-              ? 'border-emerald-400/35 bg-emerald-500/10 text-emerald-100'
-              : 'border-white/15 text-slate-400',
+              ? 'border-emerald-400/35 bg-emerald-100 text-emerald-800'
+              : 'border-dc-border text-dc-muted',
           )}
         >
           {connection?.connected ? 'Google connected' : 'Not connected'}
@@ -235,13 +235,13 @@ export function GoogleSheetsImportSection({
       {!connection?.connected ? (
         <a
           href={connectHref}
-          className="mt-4 inline-flex rounded-lg border border-violet-300/35 bg-violet-500/15 px-4 py-2 text-sm font-semibold text-violet-100 hover:bg-violet-500/25"
+          className="mt-4 inline-flex rounded-lg border border-violet-300/35 bg-violet-500/15 px-4 py-2 text-sm font-semibold text-violet-800 hover:bg-violet-500/25"
         >
           Connect Google account
         </a>
       ) : (
         <div className="mt-4 space-y-3">
-          <label className="block text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">
+          <label className="block text-xs font-semibold uppercase tracking-[0.18em] text-dc-muted">
             Spreadsheet URL or ID
             <input
               type="text"
@@ -252,12 +252,12 @@ export function GoogleSheetsImportSection({
               onChange={(e) => setSheetInput(e.target.value)}
             />
             {sheetInput.trim() && !parsedId ? (
-              <span className="mt-1 block text-xs font-normal normal-case text-rose-200">
+              <span className="mt-1 block text-xs font-normal normal-case text-red-700">
                 Could not read a spreadsheet ID from that value.
               </span>
             ) : null}
           </label>
-          <label className="block text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">
+          <label className="block text-xs font-semibold uppercase tracking-[0.18em] text-dc-muted">
             Cell range (A1 notation)
             <input
               type="text"
@@ -277,7 +277,7 @@ export function GoogleSheetsImportSection({
             <button
               type="button"
               disabled={readOnly || busy || !parsedId}
-              className="rounded-lg border border-white/15 px-3 py-2 text-sm font-semibold text-slate-200 hover:bg-white/5 disabled:opacity-50"
+              className="rounded-lg border border-dc-border px-3 py-2 text-sm font-semibold text-dc-text hover:bg-white/5 disabled:opacity-50"
               onClick={() => void saveSpreadsheet()}
             >
               Save spreadsheet
@@ -285,7 +285,7 @@ export function GoogleSheetsImportSection({
             <button
               type="button"
               disabled={readOnly || busy || !parsedId}
-              className="rounded-lg border border-violet-300/30 px-3 py-2 text-sm font-semibold text-violet-100 hover:bg-violet-500/10 disabled:opacity-50"
+              className="rounded-lg border border-violet-300/30 px-3 py-2 text-sm font-semibold text-violet-800 hover:bg-violet-500/10 disabled:opacity-50"
               onClick={() => void runPreview()}
             >
               Preview cells
@@ -293,17 +293,17 @@ export function GoogleSheetsImportSection({
             <button
               type="button"
               disabled={readOnly || busy || !parsedId}
-              className="rounded-lg bg-violet-500 px-4 py-2 text-sm font-semibold text-white hover:bg-violet-400 disabled:opacity-50"
+              className="rounded-lg bg-violet-500 px-4 py-2 text-sm font-semibold text-dc-text hover:bg-violet-400 disabled:opacity-50"
               onClick={() => void loadFromSheet()}
             >
               {busy ? 'Loading…' : 'Load from Google Sheet'}
             </button>
           </div>
           {showPreview && preview?.preview ? (
-            <pre className="max-h-48 overflow-auto rounded-lg border border-white/10 bg-black/30 p-2 text-[10px] text-slate-300">
+            <pre className="max-h-48 overflow-auto rounded-lg border border-dc-border bg-dc-surface-muted p-2 text-[10px] text-dc-muted">
               {JSON.stringify(preview.preview, null, 2)}
               {preview.rowCount > preview.preview.length ? (
-                <span className="mt-2 block text-slate-500">
+                <span className="mt-2 block text-dc-muted">
                   Showing first {preview.preview.length} of {preview.rowCount} rows ({preview.range}).
                 </span>
               ) : null}
@@ -316,7 +316,7 @@ export function GoogleSheetsImportSection({
         API keys and registrant webhooks stay on{' '}
         <Link
           href={`/organizer/dancecard/${encodeURIComponent(eventSlug)}?tab=integrations`}
-          className="font-semibold text-violet-200 underline underline-offset-2 hover:text-violet-100"
+          className="font-semibold text-violet-200 underline underline-offset-2 hover:text-violet-800"
         >
           Integrations
         </Link>

@@ -86,13 +86,18 @@ async function grantOrganizer(eventId, email) {
 
 async function uploadMapImage(eventId) {
   const candidates = [
+    path.join(root, 'public', 'dancecard', 'sandbox-floorplan.svg'),
+    path.join(root, 'public', 'dancecard', 'sandbox-floorplan.png'),
     path.join(root, 'public', 'og-image.png'),
     path.join(root, 'public', 'favicon.svg'),
   ]
   const filePath = candidates.find((p) => fs.existsSync(p))
   if (!filePath) {
-    console.warn('No public/og-image.png for map; skip map image upload')
+    console.warn('No sandbox floor plan asset; skip map image upload (add public/dancecard/sandbox-floorplan.svg)')
     return null
+  }
+  if (filePath.includes('og-image')) {
+    console.warn('Using og-image.png as map fallback — prefer public/dancecard/sandbox-floorplan.svg for demos')
   }
   const buf = fs.readFileSync(filePath)
   const ext = path.extname(filePath) || '.png'
@@ -155,6 +160,9 @@ async function main() {
       shift_swaps: true,
       vetting_applications: true,
       policy_public_summary: true,
+      ecke_sign: true,
+      iso_board: true,
+      session_feedback: true,
     },
   })
 
@@ -307,36 +315,74 @@ async function main() {
         sort_order: i,
       })),
     )
-    .select('id, title')
+    .select('id, title, starts_at, ends_at')
   if (slotErr) throw slotErr
 
-  const alex = personRows.find((p) => p.scene_name === 'Alex Anchor')
-  const blair = personRows.find((p) => p.scene_name === 'Blair Rigger')
-  const ropeSlot = slotRows.find((s) => s.title === 'Rope 101')
-  if (alex && ropeSlot) {
-    await supabase.from('dancecard_program_slot_persons').insert({
-      slot_id: ropeSlot.id,
-      person_id: alex.id,
-      role: 'lead_presenter',
-    })
-  }
-  if (blair && ropeSlot) {
-    await supabase.from('dancecard_program_slot_persons').insert({
-      slot_id: ropeSlot.id,
-      person_id: blair.id,
-      role: 'co_presenter',
-    })
-  }
-
   const categories = [
-    { name: 'Weekend pass', capacity: 200 },
-    { name: 'Staff', capacity: 30 },
-    { name: 'Volunteer', capacity: 50 },
-    { name: 'Day pass', capacity: 80 },
+    {
+      name: 'Weekend pass',
+      capacity: 200,
+      role_kind: 'attendee',
+      access_code: null,
+      grants_staff_access: false,
+    },
+    {
+      name: 'Staff',
+      capacity: 30,
+      role_kind: 'staff',
+      access_code: 'SANDBOX-STAFF-REG',
+      grants_staff_access: true,
+    },
+    {
+      name: 'Volunteer',
+      capacity: 50,
+      role_kind: 'volunteer',
+      access_code: 'SANDBOX-VOL-REG',
+      grants_staff_access: true,
+    },
+    { name: 'Day pass', capacity: 80, role_kind: 'attendee', access_code: null, grants_staff_access: false },
+    {
+      name: 'Presenter',
+      capacity: 40,
+      role_kind: 'presenter',
+      access_code: 'SANDBOX-PRESENTER',
+      grants_staff_access: false,
+    },
+    {
+      name: 'Photographer',
+      capacity: 12,
+      role_kind: 'photographer',
+      access_code: 'SANDBOX-PHOTO',
+      grants_staff_access: false,
+    },
+    {
+      name: 'Vendor',
+      capacity: 25,
+      role_kind: 'vendor',
+      access_code: 'SANDBOX-VENDOR',
+      grants_staff_access: false,
+    },
+    {
+      name: 'Comp guest',
+      capacity: 15,
+      role_kind: 'comp',
+      access_code: 'SANDBOX-COMP',
+      grants_staff_access: false,
+    },
   ]
   const { data: catRows, error: catErr } = await supabase
     .from('dancecard_registration_categories')
-    .insert(categories.map((c, i) => ({ event_id: eventId, name: c.name, capacity: c.capacity, sort_order: i })))
+    .insert(
+      categories.map((c, i) => ({
+        event_id: eventId,
+        name: c.name,
+        capacity: c.capacity,
+        sort_order: i,
+        role_kind: c.role_kind,
+        access_code: c.access_code,
+        grants_staff_access: c.grants_staff_access,
+      })),
+    )
     .select('id, name')
   if (catErr) throw catErr
   const catWeekend = catRows.find((c) => c.name === 'Weekend pass')?.id
@@ -372,16 +418,17 @@ async function main() {
   if (qErr) throw qErr
 
   const registrantSeeds = []
-  for (let i = 1; i <= 20; i++) {
+  for (let i = 1; i <= 8; i++) {
     registrantSeeds.push({
       event_id: eventId,
       category_id: catWeekend,
-      status: i <= 15 ? 'confirmed' : 'pending',
+      status: i <= 6 ? 'confirmed' : 'pending',
       scene_display_name: `Attendee ${i}`,
       email: `attendee${i}@sandbox.demo`,
+      pronouns: i % 2 === 0 ? 'they/them' : 'she/her',
     })
   }
-  for (let i = 1; i <= 4; i++) {
+  for (let i = 1; i <= 2; i++) {
     registrantSeeds.push({
       event_id: eventId,
       category_id: catStaff,
@@ -390,11 +437,11 @@ async function main() {
       email: `staff${i}@sandbox.demo`,
     })
   }
-  for (let i = 1; i <= 6; i++) {
+  for (let i = 1; i <= 3; i++) {
     registrantSeeds.push({
       event_id: eventId,
       category_id: catVol,
-      status: i <= 4 ? 'confirmed' : 'waitlisted',
+      status: i <= 2 ? 'confirmed' : 'waitlisted',
       scene_display_name: `Volunteer ${i}`,
       email: `volunteer${i}@sandbox.demo`,
     })
@@ -430,6 +477,7 @@ async function main() {
       ends_at: iso(s.end),
       location_id: locByName[s.loc],
       sort_order: i,
+      shift_status: i === 1 || i === 3 ? 'open' : 'assigned',
     })),
   )
   if (shiftErr) throw shiftErr
@@ -593,6 +641,31 @@ async function main() {
     console.log('Map +', pins.length, 'pins')
   }
 
+  const catByName = Object.fromEntries(catRows.map((r) => [r.name, r.id]))
+  const accountIds = {}
+  const { seedSandboxFeatures, printSandboxDemoAccounts } = await import('./dancecard-seed-sandbox-features.mjs')
+  const { seedSandboxProfiles, printSandboxProfileAccounts } = await import('./dancecard-seed-sandbox-profiles.mjs')
+  await seedSandboxProfiles(supabase, {
+    eventId,
+    windowStart,
+    windowEnd,
+    catByName,
+    slotRows,
+    locByName,
+    personRows,
+    accountIds,
+  })
+  await seedSandboxFeatures(supabase, {
+    eventId,
+    windowStart,
+    windowEnd,
+    catByName,
+    slotRows,
+    locByName,
+    personRows,
+    accountIds,
+  })
+
   if (emailArg) await grantOrganizer(eventId, emailArg)
 
   console.log('\nSandbox seed complete.')
@@ -608,6 +681,13 @@ async function main() {
     console.log('\nGrant yourself access:')
     console.log(`  node scripts/dancecard-add-organizer.mjs YOUR_EMAIL ${SLUG} owner`)
   }
+
+  const base =
+    process.env.DANCECARD_SMOKE_URL?.replace(/\/$/, '') ||
+    process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, '') ||
+    'http://localhost:3000'
+  printSandboxProfileAccounts()
+  printSandboxDemoAccounts(base)
 }
 
 main().catch((e) => {

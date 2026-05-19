@@ -4,7 +4,12 @@ import { assertOrganizerCanMutate, organizerErrorResponse, requireOrganizerForSl
 import { organizerProgramSlotPatchSchema } from '@/lib/dancecard/organizerSchemas'
 import { assertSlotInsideWindow } from '@/lib/dancecard/organizerSlotValidation'
 import { fetchOrganizerProgramSlotById } from '@/lib/dancecard/organizerProgramSlotsData'
+import { insertProgramSlotAudit } from '@/lib/dancecard/programSlotAudit'
 import { loadEventBySlugAnyStatus } from '@/lib/dancecard/routeCommon'
+import {
+  buildSlotSnapshots,
+  computeScheduleChangeImpact,
+} from '@/lib/dancecard/scheduleChangeImpact'
 
 export const dynamic = 'force-dynamic'
 
@@ -92,11 +97,35 @@ export async function PATCH(
     const { error } = await admin.from('dancecard_program_slots').update(patch).eq('id', slotId).eq('event_id', eventId)
     if (error) throw error
 
+    await insertProgramSlotAudit(admin, {
+      eventId,
+      slotId,
+      actorUserId: ctx.userId ?? null,
+      action: 'patch',
+      beforeJson: existing as Record<string, unknown>,
+      afterJson: { ...existing, ...patch } as Record<string, unknown>,
+    })
+
     const dto = await fetchOrganizerProgramSlotById(admin, eventId, slotId)
     if (!dto) {
       return NextResponse.json({ error: 'Slot not found' }, { status: 404 })
     }
-    return NextResponse.json({ slot: dto })
+
+    const afterRow = { ...existing, ...patch }
+    const { before, after } = await buildSlotSnapshots(admin, eventId, existing as Record<string, unknown>, afterRow)
+    const scheduleImpact = await computeScheduleChangeImpact(
+      admin,
+      eventId,
+      slotId,
+      before,
+      after,
+      event.timezone,
+    )
+
+    return NextResponse.json({
+      slot: dto,
+      ...(scheduleImpact.scheduleChanged ? { scheduleImpact } : {}),
+    })
   } catch (e) {
     if (e instanceof ZodError) {
       return NextResponse.json({ error: 'Validation error', details: e.flatten() }, { status: 400 })
@@ -111,16 +140,29 @@ export async function DELETE(_request: NextRequest, context: { params: { eventSl
     assertOrganizerCanMutate(ctx)
     const { admin, eventId } = ctx
     const slotId = context.params.slotId
-    const { data, error } = await admin
+    const { data: existing, error: exErr } = await admin
       .from('dancecard_program_slots')
-      .delete()
+      .select('id, title, starts_at, ends_at, location_id, room')
       .eq('id', slotId)
       .eq('event_id', eventId)
-      .select('id')
-    if (error) throw error
-    if (!data?.length) {
+      .maybeSingle()
+    if (exErr) throw exErr
+    if (!existing) {
       return NextResponse.json({ error: 'Slot not found' }, { status: 404 })
     }
+
+    const { error } = await admin.from('dancecard_program_slots').delete().eq('id', slotId).eq('event_id', eventId)
+    if (error) throw error
+
+    await insertProgramSlotAudit(admin, {
+      eventId,
+      slotId,
+      actorUserId: ctx.userId ?? null,
+      action: 'delete',
+      beforeJson: existing as Record<string, unknown>,
+      afterJson: null,
+    })
+
     return NextResponse.json({ ok: true })
   } catch (e) {
     return organizerErrorResponse(e)

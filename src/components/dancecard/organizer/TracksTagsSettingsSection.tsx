@@ -108,26 +108,26 @@ export function TracksTagsSettingsSection({
   }
 
   return (
-    <div className="rounded-xl border border-white/10 bg-black/30 p-4">
+    <div className="rounded-xl border border-dc-border bg-dc-surface-muted p-4">
       {dialog}
-      <h3 className="font-serif text-lg text-white">Tracks and session tags</h3>
-      <p className="mt-1 text-xs text-slate-400">
+      <h3 className="font-serif text-lg text-dc-text">Tracks and session tags</h3>
+      <p className="mt-1 text-xs text-dc-muted">
         Tracks power color grouping; session tags can be bulk-applied on the program grid.
       </p>
-      {msg ? <p className="mt-2 text-sm text-amber-200">{msg}</p> : null}
+      {msg ? <p className="mt-2 text-sm text-amber-800">{msg}</p> : null}
 
       <div className="mt-4 grid gap-4 sm:grid-cols-2">
         <div>
-          <p className="text-xs font-semibold uppercase text-slate-500">Tracks</p>
-          <ul className="mt-2 max-h-40 space-y-1 overflow-y-auto text-sm text-slate-200">
+          <p className="text-xs font-semibold uppercase text-dc-muted">Tracks</p>
+          <ul className="mt-2 max-h-40 space-y-1 overflow-y-auto text-sm text-dc-text">
             {tracks.map((t) => (
-              <li key={t.id} className="flex items-center justify-between gap-2 rounded border border-white/5 bg-black/20 px-2 py-1">
+              <li key={t.id} className="flex items-center justify-between gap-2 rounded border border-dc-border/50 bg-dc-elevated-muted px-2 py-1">
                 <span className="flex items-center gap-2 truncate">
                   <span className="h-2 w-2 shrink-0 rounded-full" style={{ background: t.color }} />
                   {t.name}
                 </span>
                 {canEdit ? (
-                  <button type="button" className="shrink-0 text-xs text-rose-300 hover:text-rose-200" onClick={() => void delTrack(t.id)}>
+                  <button type="button" className="shrink-0 text-xs text-red-700 hover:text-red-700" onClick={() => void delTrack(t.id)}>
                     Delete
                   </button>
                 ) : null}
@@ -137,7 +137,7 @@ export function TracksTagsSettingsSection({
           {canEdit ? (
             <div className="mt-2 flex gap-2">
               <input
-                className="min-w-0 flex-1 rounded-lg border border-white/10 bg-black/40 px-2 py-1 text-sm text-white"
+                className="min-w-0 flex-1 rounded-lg border border-dc-border bg-dc-surface-muted px-2 py-1 text-sm text-dc-text"
                 placeholder="New track name"
                 value={newTrack}
                 onChange={(e) => setNewTrack(e.target.value)}
@@ -149,13 +149,13 @@ export function TracksTagsSettingsSection({
           ) : null}
         </div>
         <div>
-          <p className="text-xs font-semibold uppercase text-slate-500">Session tags</p>
-          <ul className="mt-2 max-h-40 space-y-1 overflow-y-auto text-sm text-slate-200">
+          <p className="text-xs font-semibold uppercase text-dc-muted">Session tags</p>
+          <ul className="mt-2 max-h-40 space-y-1 overflow-y-auto text-sm text-dc-text">
             {tags.map((t) => (
-              <li key={t.id} className="flex items-center justify-between gap-2 rounded border border-white/5 bg-black/20 px-2 py-1">
+              <li key={t.id} className="flex items-center justify-between gap-2 rounded border border-dc-border/50 bg-dc-elevated-muted px-2 py-1">
                 <span className="truncate">{t.name}</span>
                 {canEdit ? (
-                  <button type="button" className="shrink-0 text-xs text-rose-300 hover:text-rose-200" onClick={() => void delTag(t.id)}>
+                  <button type="button" className="shrink-0 text-xs text-red-700 hover:text-red-700" onClick={() => void delTag(t.id)}>
                     Delete
                   </button>
                 ) : null}
@@ -165,7 +165,7 @@ export function TracksTagsSettingsSection({
           {canEdit ? (
             <div className="mt-2 flex gap-2">
               <input
-                className="min-w-0 flex-1 rounded-lg border border-white/10 bg-black/40 px-2 py-1 text-sm text-white"
+                className="min-w-0 flex-1 rounded-lg border border-dc-border bg-dc-surface-muted px-2 py-1 text-sm text-dc-text"
                 placeholder="New tag"
                 value={newTag}
                 onChange={(e) => setNewTag(e.target.value)}

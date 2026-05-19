@@ -237,15 +237,15 @@ export function MapsSettingsSection({ eventSlug, canEdit }: { eventSlug: string;
   }
 
   return (
-    <div className="rounded-xl border border-white/10 bg-black/30 p-4">
+    <div className="rounded-xl border border-dc-border bg-dc-surface-muted p-4">
       {dialog}
-      <h3 className="font-serif text-lg text-white">Venue maps</h3>
-      <p className="mt-1 text-xs text-slate-400">
+      <h3 className="font-serif text-lg text-dc-text">Venue maps</h3>
+      <p className="mt-1 text-xs text-dc-muted">
         Upload a floor plan image (Supabase Storage bucket <code className="text-dc-accent">dancecard-maps</code>).
         Attendees: <code className="text-dc-accent">/dancecard/[slug]/map</code>
       </p>
-      {msg ? <p className="mt-2 text-sm text-amber-200">{msg}</p> : null}
-      <label className="mt-3 block text-sm text-slate-300">
+      {msg ? <p className="mt-2 text-sm text-amber-800">{msg}</p> : null}
+      <label className="mt-3 block text-sm text-dc-muted">
         Upload map image
         <input
           type="file"
@@ -258,12 +258,12 @@ export function MapsSettingsSection({ eventSlug, canEdit }: { eventSlug: string;
       </label>
       <ul className="mt-4 space-y-2">
         {maps.map((m) => (
-          <li key={m.id} className="flex flex-wrap items-center gap-3 rounded-lg border border-white/10 bg-black/20 p-2">
+          <li key={m.id} className="flex flex-wrap items-center gap-3 rounded-lg border border-dc-border bg-dc-elevated-muted p-2">
             {m.imageUrl ? (
               // eslint-disable-next-line @next/next/no-img-element
-              <img src={m.imageUrl} alt="" className="h-16 w-auto rounded border border-white/10" />
+              <img src={m.imageUrl} alt="" className="h-16 w-auto rounded border border-dc-border" />
             ) : null}
-            <span className="text-sm text-white">{m.title}</span>
+            <span className="text-sm text-dc-text">{m.title}</span>
             <button
               type="button"
               className="text-xs text-dc-accent hover:underline"
@@ -271,7 +271,7 @@ export function MapsSettingsSection({ eventSlug, canEdit }: { eventSlug: string;
             >
               Edit pins
             </button>
-            <button type="button" className="text-xs text-rose-300 hover:underline" onClick={() => void delMap(m.id)}>
+            <button type="button" className="text-xs text-red-700 hover:underline" onClick={() => void delMap(m.id)}>
               Delete
             </button>
           </li>
@@ -279,9 +279,9 @@ export function MapsSettingsSection({ eventSlug, canEdit }: { eventSlug: string;
       </ul>
 
       {selectedMapId ? (
-        <div className="mt-6 border-t border-white/10 pt-4">
-          <h4 className="text-sm font-semibold text-white">Place room zones</h4>
-          <p className="mt-1 text-xs text-slate-500">
+        <div className="mt-6 border-t border-dc-border pt-4">
+          <h4 className="text-sm font-semibold text-dc-text">Place room zones</h4>
+          <p className="mt-1 text-xs text-dc-muted">
             Select a room, pick a shape, click the map to place (or drag the zone). Adjust width and height to fit
             barns, halls, and dungeons. Use rotation for angled rooms. Zoom in for detail. Requires migrations{' '}
             <code className="text-dc-accent">dancecard_035_map_pin_zone_shapes.sql</code> and{' '}
@@ -328,12 +328,12 @@ export function MapsSettingsSection({ eventSlug, canEdit }: { eventSlug: string;
                     className={`flex w-full flex-wrap items-center gap-2 rounded-lg border px-2 py-1.5 text-left ${
                       editingLocId === loc.id
                         ? 'border-dc-accent-border bg-dc-accent-muted'
-                        : 'border-white/10 bg-black/20 hover:border-white/20'
+                        : 'border-dc-border bg-dc-elevated-muted hover:border-dc-border'
                     }`}
                     onClick={() => setEditingLocId(loc.id)}
                   >
-                    <span className="w-28 truncate font-medium text-slate-300">{loc.name}</span>
-                    <span className="text-slate-600">
+                    <span className="w-28 truncate font-medium text-dc-muted">{loc.name}</span>
+                    <span className="text-dc-muted">
                       {pinDraft[loc.id]?.x ?? '0.5'}, {pinDraft[loc.id]?.y ?? '0.5'}
                     </span>
                   </button>
@@ -341,16 +341,16 @@ export function MapsSettingsSection({ eventSlug, canEdit }: { eventSlug: string;
               </div>
             </div>
           ) : (
-            <p className="mt-2 text-xs text-slate-500">Map image missing — re-upload the floor plan.</p>
+            <p className="mt-2 text-xs text-dc-muted">Map image missing — re-upload the floor plan.</p>
           )}
           <div className="mt-4 max-h-40 space-y-2 overflow-y-auto text-xs">
             {locations.map((loc) => (
               <div key={loc.id} className="flex flex-wrap items-center gap-2">
-                <span className="w-32 truncate text-slate-400">{loc.name}</span>
-                <label className="text-slate-500">
+                <span className="w-32 truncate text-dc-muted">{loc.name}</span>
+                <label className="text-dc-muted">
                   x
                   <input
-                    className="ml-1 w-14 rounded border border-white/10 bg-black/40 px-1 text-white"
+                    className="ml-1 w-14 rounded border border-dc-border bg-dc-surface-muted px-1 text-dc-text"
                     value={pinDraft[loc.id]?.x ?? '0.5'}
                     disabled={!canEdit}
                     onChange={(e) => {
@@ -362,10 +362,10 @@ export function MapsSettingsSection({ eventSlug, canEdit }: { eventSlug: string;
                     }}
                   />
                 </label>
-                <label className="text-slate-500">
+                <label className="text-dc-muted">
                   y
                   <input
-                    className="ml-1 w-14 rounded border border-white/10 bg-black/40 px-1 text-white"
+                    className="ml-1 w-14 rounded border border-dc-border bg-dc-surface-muted px-1 text-dc-text"
                     value={pinDraft[loc.id]?.y ?? '0.5'}
                     disabled={!canEdit}
                     onChange={(e) => {
@@ -378,7 +378,7 @@ export function MapsSettingsSection({ eventSlug, canEdit }: { eventSlug: string;
                   />
                 </label>
                 <input
-                  className="min-w-[120px] flex-1 rounded border border-white/10 bg-black/40 px-1 text-white"
+                  className="min-w-[120px] flex-1 rounded border border-dc-border bg-dc-surface-muted px-1 text-dc-text"
                   placeholder="Map label (optional)"
                   value={pinDraft[loc.id]?.label ?? ''}
                   disabled={!canEdit}
@@ -391,7 +391,7 @@ export function MapsSettingsSection({ eventSlug, canEdit }: { eventSlug: string;
                   }}
                 />
                 <select
-                  className="rounded border border-white/10 bg-black/40 px-1 text-white"
+                  className="rounded border border-dc-border bg-dc-surface-muted px-1 text-dc-text"
                   value={pinDraft[loc.id]?.shape ?? 'circle'}
                   disabled={!canEdit}
                   onChange={(e) => {
@@ -415,14 +415,14 @@ export function MapsSettingsSection({ eventSlug, canEdit }: { eventSlug: string;
                     </option>
                   ))}
                 </select>
-                <label className="text-slate-500">
+                <label className="text-dc-muted">
                   w
                   <input
                     type="number"
                     min={4}
                     max={75}
                     step={1}
-                    className="ml-1 w-12 rounded border border-white/10 bg-black/40 px-1 text-white"
+                    className="ml-1 w-12 rounded border border-dc-border bg-dc-surface-muted px-1 text-dc-text"
                     value={Math.round((Number(pinDraft[loc.id]?.width) || 0.12) * 100)}
                     disabled={!canEdit}
                     onChange={(e) => {
@@ -437,14 +437,14 @@ export function MapsSettingsSection({ eventSlug, canEdit }: { eventSlug: string;
                     }}
                   />
                 </label>
-                <label className="text-slate-500">
+                <label className="text-dc-muted">
                   h
                   <input
                     type="number"
                     min={4}
                     max={75}
                     step={1}
-                    className="ml-1 w-12 rounded border border-white/10 bg-black/40 px-1 text-white"
+                    className="ml-1 w-12 rounded border border-dc-border bg-dc-surface-muted px-1 text-dc-text"
                     value={Math.round((Number(pinDraft[loc.id]?.height) || 0.12) * 100)}
                     disabled={!canEdit}
                     onChange={(e) => {
@@ -459,14 +459,14 @@ export function MapsSettingsSection({ eventSlug, canEdit }: { eventSlug: string;
                     }}
                   />
                 </label>
-                <label className="text-slate-500">
+                <label className="text-dc-muted">
                   °
                   <input
                     type="number"
                     min={-180}
                     max={180}
                     step={1}
-                    className="ml-1 w-12 rounded border border-white/10 bg-black/40 px-1 text-white"
+                    className="ml-1 w-12 rounded border border-dc-border bg-dc-surface-muted px-1 text-dc-text"
                     value={pinDraft[loc.id]?.rotation ?? '0'}
                     disabled={!canEdit}
                     title="Rotation in degrees"
@@ -485,7 +485,7 @@ export function MapsSettingsSection({ eventSlug, canEdit }: { eventSlug: string;
               </div>
             ))}
           </div>
-          <div className="mt-4 flex flex-wrap items-center gap-3 border-t border-white/10 pt-4">
+          <div className="mt-4 flex flex-wrap items-center gap-3 border-t border-dc-border pt-4">
             <button
               type="button"
               disabled={!canEdit || pinSaving}
@@ -495,13 +495,13 @@ export function MapsSettingsSection({ eventSlug, canEdit }: { eventSlug: string;
               {pinSaving ? 'Saving pins…' : 'Save pins'}
             </button>
             {pinSaving ? (
-              <span className="text-sm text-slate-400" aria-live="polite">
+              <span className="text-sm text-dc-muted" aria-live="polite">
                 Writing pin positions to the database…
               </span>
             ) : null}
             {pinSaveFeedback && !pinSaving ? (
               <p
-                className={`text-sm ${pinSaveFeedback.kind === 'success' ? 'text-emerald-300' : 'text-rose-300'}`}
+                className={`text-sm ${pinSaveFeedback.kind === 'success' ? 'text-emerald-700' : 'text-red-700'}`}
                 role="status"
                 aria-live="polite"
               >

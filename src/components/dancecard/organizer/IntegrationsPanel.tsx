@@ -6,6 +6,8 @@ import { InlineSuccessBanner, useConfirmDialog } from '@/components/dancecard/or
 import type { OrganizerRoleForClient } from '@/lib/dancecard/organizerRoles'
 import type { DancecardModules } from '@/lib/dancecard/eventEntitlements'
 import { EmbedSkinPreview } from '@/components/dancecard/organizer/integrations/EmbedSkinPreview'
+import { IsoModerationPanel } from '@/components/dancecard/organizer/IsoModerationPanel'
+import { SessionFeedbackConfigPanel } from '@/components/dancecard/organizer/SessionFeedbackConfigPanel'
 
 const MODULE_KEYS: { key: keyof DancecardModules; label: string }[] = [
   { key: 'schedule_embed', label: 'Schedule embed' },
@@ -13,6 +15,8 @@ const MODULE_KEYS: { key: keyof DancecardModules; label: string }[] = [
   { key: 'shift_swaps', label: 'Shift swaps' },
   { key: 'vetting_applications', label: 'Vetting applications' },
   { key: 'policy_public_summary', label: 'Public policy summary' },
+  { key: 'iso_board', label: 'ISO / practice partner board' },
+  { key: 'session_feedback', label: 'Post-event session feedback' },
 ]
 
 type ApiKeyRow = {
@@ -131,6 +135,18 @@ export function IntegrationsPanel({
         body: JSON.stringify({ modules: { [key]: enabled } }),
       })
       setModules(res.modules)
+      if (key === 'session_feedback' && enabled) {
+        try {
+          await organizerDancecardFetch(eventSlug, '/session-feedback', {
+            method: 'PATCH',
+            body: JSON.stringify({
+              feedbackConfig: { enabled: true, windowHoursAfterEnd: 24, showAggregatesToOrganizers: true },
+            }),
+          })
+        } catch {
+          /* config patch is best-effort when column exists */
+        }
+      }
     } catch (e) {
       setErr(e instanceof Error ? e.message : 'Could not update module')
     } finally {
@@ -257,53 +273,53 @@ export function IntegrationsPanel({
   }
 
   if (!ownerOrAdmin) {
-    return <p className="text-sm text-slate-400">Integrations are limited to event owners and site admins.</p>
+    return <p className="text-sm text-dc-muted">Integrations are limited to event owners and site admins.</p>
   }
 
   return (
-    <div className="space-y-8 text-sm text-slate-200">
+    <div className="space-y-8 text-sm text-dc-text">
       {dialog}
       {successBanner ? (
         <InlineSuccessBanner message={successBanner} onDismiss={() => setSuccessBanner(null)} />
       ) : null}
-      <p className="text-slate-400">
+      <p className="text-dc-muted">
         Connect your event to other tools. Each section below explains what it does before you create keys or tokens.
       </p>
 
       <div className="grid gap-3 sm:grid-cols-3">
-        <div className="rounded-xl border border-white/10 bg-black/25 p-4">
-          <h3 className="text-sm font-semibold text-white">Embeds</h3>
-          <p className="mt-2 text-xs leading-relaxed text-slate-400">
+        <div className="rounded-xl border border-dc-border bg-dc-elevated-muted p-4">
+          <h3 className="text-sm font-semibold text-dc-text">Embeds</h3>
+          <p className="mt-2 text-xs leading-relaxed text-dc-muted">
             Put a live schedule or map on your festival website with a simple iframe snippet. You control which parent
             sites may use the token.
           </p>
         </div>
-        <div className="rounded-xl border border-white/10 bg-black/25 p-4">
-          <h3 className="text-sm font-semibold text-white">API keys</h3>
-          <p className="mt-2 text-xs leading-relaxed text-slate-400">
+        <div className="rounded-xl border border-dc-border bg-dc-elevated-muted p-4">
+          <h3 className="text-sm font-semibold text-dc-text">API keys</h3>
+          <p className="mt-2 text-xs leading-relaxed text-dc-muted">
             Let trusted scripts read the program or import registrants without using the organizer UI. Keys are scoped so
             automation only gets the access you choose.
           </p>
         </div>
-        <div className="rounded-xl border border-white/10 bg-black/25 p-4">
-          <h3 className="text-sm font-semibold text-white">Google Sheets</h3>
-          <p className="mt-2 text-xs leading-relaxed text-slate-400">
+        <div className="rounded-xl border border-dc-border bg-dc-elevated-muted p-4">
+          <h3 className="text-sm font-semibold text-dc-text">Google Sheets</h3>
+          <p className="mt-2 text-xs leading-relaxed text-dc-muted">
             Pull schedule drafts from a spreadsheet you already maintain. Setup lives on the Import tab; this page covers
             API keys and webhooks.
           </p>
         </div>
       </div>
 
-      {err ? <p className="text-rose-300 whitespace-pre-wrap">{err}</p> : null}
+      {err ? <p className="text-red-700 whitespace-pre-wrap">{err}</p> : null}
 
-      <section className="rounded-xl border border-white/10 bg-black/25 p-4">
-        <h2 className="text-lg font-semibold text-white">Optional features for this event</h2>
-        <p className="mt-1 text-xs text-slate-500">Turn on extra attendee-facing tools (embeds, applications, swaps, etc.).</p>
+      <section className="rounded-xl border border-dc-border bg-dc-elevated-muted p-4">
+        <h2 className="text-lg font-semibold text-dc-text">Optional features for this event</h2>
+        <p className="mt-1 text-xs text-dc-muted">Turn on extra attendee-facing tools (embeds, applications, swaps, etc.).</p>
         {modules ? (
           <ul className="mt-4 space-y-2">
             {MODULE_KEYS.map(({ key, label }) => (
               <li key={key} className="flex items-center justify-between gap-2 text-xs">
-                <span className="text-slate-200">{label}</span>
+                <span className="text-dc-text">{label}</span>
                 <label className="flex items-center gap-2">
                   <input
                     type="checkbox"
@@ -311,47 +327,50 @@ export function IntegrationsPanel({
                     disabled={entitlementsBusy}
                     onChange={(e) => void toggleModule(key, e.target.checked)}
                   />
-                  <span className="text-slate-500">{modules[key] ? 'On' : 'Off'}</span>
+                  <span className="text-dc-muted">{modules[key] ? 'On' : 'Off'}</span>
                 </label>
               </li>
             ))}
           </ul>
         ) : (
-          <p className="mt-3 text-xs text-slate-500">Loading module flags…</p>
+          <p className="mt-3 text-xs text-dc-muted">Loading module flags…</p>
         )}
       </section>
 
-      <section className="rounded-xl border border-white/10 bg-black/25 p-4">
-        <h2 className="text-lg font-semibold text-white">Usage (30 days)</h2>
+      {modules?.iso_board ? <IsoModerationPanel eventSlug={eventSlug} readOnly={false} /> : null}
+      {modules?.session_feedback ? <SessionFeedbackConfigPanel eventSlug={eventSlug} readOnly={false} /> : null}
+
+      <section className="rounded-xl border border-dc-border bg-dc-elevated-muted p-4">
+        <h2 className="text-lg font-semibold text-dc-text">Usage (30 days)</h2>
         {usage ? (
           <dl className="mt-3 grid gap-2 text-xs sm:grid-cols-3">
-            <div className="rounded-lg border border-white/10 bg-black/30 px-3 py-2">
-              <dt className="text-slate-500">Active API keys</dt>
-              <dd className="mt-1 text-lg font-semibold text-white">{usage.activeApiKeys}</dd>
+            <div className="rounded-lg border border-dc-border bg-dc-surface-muted px-3 py-2">
+              <dt className="text-dc-muted">Active API keys</dt>
+              <dd className="mt-1 text-lg font-semibold text-dc-text">{usage.activeApiKeys}</dd>
             </div>
-            <div className="rounded-lg border border-white/10 bg-black/30 px-3 py-2">
-              <dt className="text-slate-500">Keys used</dt>
-              <dd className="mt-1 text-lg font-semibold text-white">{usage.apiKeysUsedInWindow}</dd>
+            <div className="rounded-lg border border-dc-border bg-dc-surface-muted px-3 py-2">
+              <dt className="text-dc-muted">Keys used</dt>
+              <dd className="mt-1 text-lg font-semibold text-dc-text">{usage.apiKeysUsedInWindow}</dd>
             </div>
-            <div className="rounded-lg border border-white/10 bg-black/30 px-3 py-2">
-              <dt className="text-slate-500">Webhook deliveries</dt>
-              <dd className="mt-1 text-lg font-semibold text-white">{usage.webhookDeliveries30d}</dd>
+            <div className="rounded-lg border border-dc-border bg-dc-surface-muted px-3 py-2">
+              <dt className="text-dc-muted">Webhook deliveries</dt>
+              <dd className="mt-1 text-lg font-semibold text-dc-text">{usage.webhookDeliveries30d}</dd>
             </div>
           </dl>
         ) : (
-          <p className="mt-3 text-xs text-slate-500">Loading usage…</p>
+          <p className="mt-3 text-xs text-dc-muted">Loading usage…</p>
         )}
       </section>
 
-      <section className="rounded-xl border border-white/10 bg-black/25 p-4">
-        <h2 className="text-lg font-semibold text-white">Automation keys</h2>
-        <p className="mt-1 text-xs leading-relaxed text-slate-400">
+      <section className="rounded-xl border border-dc-border bg-dc-elevated-muted p-4">
+        <h2 className="text-lg font-semibold text-dc-text">Automation keys</h2>
+        <p className="mt-1 text-xs leading-relaxed text-dc-muted">
           For spreadsheets or custom tools that read your schedule or upload registrants without using this website.
           Create a key, copy it once, and choose what it may access below.
         </p>
         <div className="mt-4 flex flex-wrap gap-2">
           <input
-            className="min-w-[10rem] flex-1 rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-white"
+            className="min-w-[10rem] flex-1 rounded-lg border border-dc-border bg-dc-surface-muted px-3 py-2 text-dc-text"
             placeholder="Key label"
             value={keyName}
             onChange={(e) => setKeyName(e.target.value)}
@@ -398,11 +417,11 @@ export function IntegrationsPanel({
           </button>
         </div>
         {lastMintedKey ? (
-          <p className="mt-3 rounded-lg bg-amber-950/40 p-2 text-xs text-amber-100">
+          <p className="mt-3 rounded-lg bg-amber-100 p-2 text-xs text-amber-900">
             Copy now (shown once): <code className="break-all">{lastMintedKey}</code>
           </p>
         ) : null}
-        <ul className="mt-4 space-y-1 text-xs text-slate-400">
+        <ul className="mt-4 space-y-1 text-xs text-dc-muted">
           {keys.map((k) => (
             <li key={k.id}>
               {k.name} — {k.scopes.join(', ')} — {k.last_used_at ? `last used ${k.last_used_at}` : 'never used'}
@@ -412,21 +431,21 @@ export function IntegrationsPanel({
         </ul>
       </section>
 
-      <section className="rounded-xl border border-white/10 bg-black/25 p-4">
-        <h2 className="text-lg font-semibold text-white">Notify another website when something changes</h2>
-        <p className="mt-1 text-xs leading-relaxed text-slate-400">
+      <section className="rounded-xl border border-dc-border bg-dc-elevated-muted p-4">
+        <h2 className="text-lg font-semibold text-dc-text">Notify another website when something changes</h2>
+        <p className="mt-1 text-xs leading-relaxed text-dc-muted">
           We can POST to your URL when registrants are imported (more event types later). You verify each message with the
           signing secret we show once when you add a webhook.
         </p>
         <div className="mt-3 flex flex-col gap-2 sm:flex-row">
           <input
-            className="flex-1 rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-white"
+            className="flex-1 rounded-lg border border-dc-border bg-dc-surface-muted px-3 py-2 text-dc-text"
             placeholder="https://example.com/hooks/dancecard"
             value={hookUrl}
             onChange={(e) => setHookUrl(e.target.value)}
           />
           <input
-            className="sm:w-56 rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-white"
+            className="sm:w-56 rounded-lg border border-dc-border bg-dc-surface-muted px-3 py-2 text-dc-text"
             placeholder="event types, comma-separated"
             value={hookTypes}
             onChange={(e) => setHookTypes(e.target.value)}
@@ -434,45 +453,45 @@ export function IntegrationsPanel({
           <button
             type="button"
             disabled={busy || !hookUrl.trim()}
-            className="rounded-full border border-white/20 px-4 py-2 text-xs text-white hover:bg-white/5"
+            className="rounded-full border border-dc-border px-4 py-2 text-xs text-dc-text hover:bg-white/5"
             onClick={() => void createHook()}
           >
             Add webhook
           </button>
         </div>
         {lastHookSecret ? (
-          <p className="mt-3 rounded-lg bg-amber-950/40 p-2 text-xs text-amber-100">
+          <p className="mt-3 rounded-lg bg-amber-100 p-2 text-xs text-amber-900">
             Signing secret (once): <code className="break-all">{lastHookSecret}</code>
           </p>
         ) : null}
         <ul className="mt-4 space-y-2">
           {hooks.map((h) => (
-            <li key={h.id} className="flex flex-wrap items-center justify-between gap-2 text-xs text-slate-400">
+            <li key={h.id} className="flex flex-wrap items-center justify-between gap-2 text-xs text-dc-muted">
               <span className="break-all">{h.url}</span>
               <span>{h.event_types.join(', ')}</span>
-              <button type="button" className="text-rose-300 hover:underline" onClick={() => void revokeHook(h.id)}>
+              <button type="button" className="text-red-700 hover:underline" onClick={() => void revokeHook(h.id)}>
                 Revoke
               </button>
             </li>
           ))}
-          {!hooks.length ? <li className="text-slate-500">No webhooks.</li> : null}
+          {!hooks.length ? <li className="text-dc-muted">No webhooks.</li> : null}
         </ul>
       </section>
 
-      <section className="rounded-xl border border-white/10 bg-black/25 p-4">
-        <h2 className="text-lg font-semibold text-white">Embed schedule or map on your website</h2>
-        <p className="mt-1 text-xs leading-relaxed text-slate-400">
+      <section className="rounded-xl border border-dc-border bg-dc-elevated-muted p-4">
+        <h2 className="text-lg font-semibold text-dc-text">Embed schedule or map on your website</h2>
+        <p className="mt-1 text-xs leading-relaxed text-dc-muted">
           Create an embed code you paste into your festival site (iframe). Optional allowed domains (one per line) stop
           other sites from reusing your link.
         </p>
         {embedNeedsMigration ? (
-          <p className="mt-2 text-xs text-amber-200">
+          <p className="mt-2 text-xs text-amber-800">
             Database update required to enable embed tokens. Apply the latest Dancecard migration in Supabase.
           </p>
         ) : null}
         <div className="mt-3 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
           <input
-            className="min-w-[10rem] flex-1 rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-white"
+            className="min-w-[10rem] flex-1 rounded-lg border border-dc-border bg-dc-surface-muted px-3 py-2 text-dc-text"
             placeholder="Label (e.g. Marketing site)"
             value={embedLabel}
             onChange={(e) => setEmbedLabel(e.target.value)}
@@ -488,7 +507,7 @@ export function IntegrationsPanel({
           <button
             type="button"
             disabled={busy || embedNeedsMigration}
-            className="rounded-full border border-white/20 px-4 py-2 text-xs text-white hover:bg-white/5 disabled:opacity-40"
+            className="rounded-full border border-dc-border px-4 py-2 text-xs text-dc-text hover:bg-white/5 disabled:opacity-40"
             onClick={() => void mintEmbed('map')}
           >
             Mint map embed
@@ -496,16 +515,16 @@ export function IntegrationsPanel({
           <button
             type="button"
             disabled={busy || embedNeedsMigration}
-            className="rounded-full border border-white/20 px-4 py-2 text-xs text-white hover:bg-white/5 disabled:opacity-40"
+            className="rounded-full border border-dc-border px-4 py-2 text-xs text-dc-text hover:bg-white/5 disabled:opacity-40"
             onClick={() => void mintEmbed('ops_summary')}
           >
             Mint ops summary embed
           </button>
         </div>
-        <label className="mt-3 block text-xs text-slate-500">
+        <label className="mt-3 block text-xs text-dc-muted">
           Allowed parent origins (optional, one per line)
           <textarea
-            className="mt-1 w-full rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-xs text-white"
+            className="mt-1 w-full rounded-lg border border-dc-border bg-dc-surface-muted px-3 py-2 text-xs text-dc-text"
             rows={2}
             value={embedOriginsText}
             onChange={(e) => setEmbedOriginsText(e.target.value)}
@@ -513,45 +532,45 @@ export function IntegrationsPanel({
           />
         </label>
         {lastEmbedToken ? (
-          <p className="mt-3 rounded-lg bg-amber-950/40 p-2 text-xs text-amber-100">
+          <p className="mt-3 rounded-lg bg-amber-100 p-2 text-xs text-amber-900">
             Embed token (once): <code className="break-all">{lastEmbedToken}</code>
-            <span className="mt-1 block text-slate-400">
+            <span className="mt-1 block text-dc-muted">
               Example:{' '}
-              <code className="break-all text-slate-200">
+              <code className="break-all text-dc-text">
                 {`${origin}/embed/dancecard/${encodeURIComponent(eventSlug)}/schedule?token=${lastEmbedToken}`}
               </code>
             </span>
           </p>
         ) : null}
         <EmbedSkinPreview eventSlug={eventSlug} token={lastEmbedToken} kind="schedule" />
-        <ul className="mt-4 space-y-2 text-xs text-slate-400">
+        <ul className="mt-4 space-y-2 text-xs text-dc-muted">
           {embedTokens.map((t) => (
             <li key={t.id} className="flex flex-wrap items-center justify-between gap-2">
               <span>
-                <span className="font-mono text-slate-200">{t.embedKind}</span>
+                <span className="font-mono text-dc-text">{t.embedKind}</span>
                 {t.label ? <span> — {t.label}</span> : null}
                 {t.allowedOrigins?.length ? (
-                  <span className="block text-slate-500">origins: {t.allowedOrigins.join(', ')}</span>
+                  <span className="block text-dc-muted">origins: {t.allowedOrigins.join(', ')}</span>
                 ) : null}
               </span>
-              <button type="button" className="text-rose-300 hover:underline" onClick={() => void revokeEmbedToken(t.id)}>
+              <button type="button" className="text-red-700 hover:underline" onClick={() => void revokeEmbedToken(t.id)}>
                 Revoke
               </button>
             </li>
           ))}
-          {!embedTokens.length && !embedNeedsMigration ? <li className="text-slate-500">No active embed tokens.</li> : null}
+          {!embedTokens.length && !embedNeedsMigration ? <li className="text-dc-muted">No active embed tokens.</li> : null}
         </ul>
       </section>
 
-      <section className="rounded-xl border border-white/10 bg-black/25 p-4">
-        <h2 className="text-lg font-semibold text-white">RabbitSign (inbound)</h2>
-        <p className="mt-1 text-xs text-slate-500">
+      <section className="rounded-xl border border-dc-border bg-dc-elevated-muted p-4">
+        <h2 className="text-lg font-semibold text-dc-text">RabbitSign (inbound)</h2>
+        <p className="mt-1 text-xs text-dc-muted">
           Configure RabbitSign automations to POST status updates here. The shared secret must match{' '}
           <code className="text-dc-accent">agreementsConfig.webhookSecret</code> on the event (or fallback env{' '}
           <code className="text-dc-accent">DANCECARD_RABBITSIGN_WEBHOOK_SECRET</code>).
         </p>
         <p className="mt-3 break-all text-xs text-dc-accent/80">{`${origin}/api/webhooks/rabbitsign`}</p>
-        <pre className="mt-2 max-w-full overflow-x-auto rounded-lg border border-white/10 bg-black/40 p-3 text-[11px] text-slate-300">
+        <pre className="mt-2 max-w-full overflow-x-auto rounded-lg border border-dc-border bg-dc-surface-muted p-3 text-[11px] text-dc-muted">
           {`POST ${origin}/api/webhooks/rabbitsign
 Content-Type: application/json
 
@@ -564,10 +583,10 @@ Content-Type: application/json
         </pre>
       </section>
 
-      <section className="rounded-xl border border-white/10 bg-black/25 p-4">
-        <h2 className="text-lg font-semibold text-white">Inbound registrant webhook</h2>
+      <section className="rounded-xl border border-dc-border bg-dc-elevated-muted p-4">
+        <h2 className="text-lg font-semibold text-dc-text">Inbound registrant webhook</h2>
         <p className="mt-1 break-all text-xs text-dc-accent/80">{inboundUrl}</p>
-        <p className="mt-2 text-xs text-slate-500">
+        <p className="mt-2 text-xs text-dc-muted">
           <code>Authorization: Bearer &lt;minted secret&gt;</code>. Body: <code>{'{ "rows": […] }'}</code> or{' '}
           <code>{'{ "eventbrite": { …attendee } }'}</code>.
         </p>
@@ -581,15 +600,15 @@ Content-Type: application/json
           Mint / rotate inbound secret
         </button>
         {lastMintedInbound ? (
-          <p className="mt-3 rounded-lg bg-amber-950/40 p-2 text-xs text-amber-100">
+          <p className="mt-3 rounded-lg bg-amber-100 p-2 text-xs text-amber-900">
             Bearer token (once): <code className="break-all">{lastMintedInbound}</code>
           </p>
         ) : null}
       </section>
 
-      <section className="rounded-xl border border-white/10 bg-black/25 p-4">
-        <h2 className="text-lg font-semibold text-white">Google Sheets (schedule)</h2>
-        <p className="mt-2 text-xs leading-relaxed text-slate-400">
+      <section className="rounded-xl border border-dc-border bg-dc-elevated-muted p-4">
+        <h2 className="text-lg font-semibold text-dc-text">Google Sheets (schedule)</h2>
+        <p className="mt-2 text-xs leading-relaxed text-dc-muted">
           Connect Google, link your workbook, and load program or staff drafts on the{' '}
           <a
             href={`/organizer/dancecard/${encodeURIComponent(eventSlug)}?tab=import`}

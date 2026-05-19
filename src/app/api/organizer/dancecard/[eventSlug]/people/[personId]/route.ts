@@ -31,6 +31,121 @@ async function loadPersonTagIds(admin: SupabaseClient, personId: string): Promis
   return (data ?? []).map((r) => r.tag_id as string)
 }
 
+type PersonProgramSlot = {
+  id: string
+  title: string
+  startsAt: string | null
+  endsAt: string | null
+  role: string
+  locationName: string | null
+  trackDisplay: string | null
+}
+
+async function loadPersonProgramSlots(
+  admin: SupabaseClient,
+  eventId: string,
+  personId: string,
+): Promise<PersonProgramSlot[]> {
+  const { data: assigns, error: assignErr } = await admin
+    .from('dancecard_program_slot_persons')
+    .select('slot_id, role, sort_order')
+    .eq('person_id', personId)
+    .order('sort_order', { ascending: true })
+  if (assignErr) throw assignErr
+  const slotIds = Array.from(new Set((assigns ?? []).map((a) => a.slot_id as string)))
+  if (!slotIds.length) return []
+
+  const roleBySlot = new Map((assigns ?? []).map((a) => [a.slot_id as string, String(a.role ?? '')]))
+
+  const { data: slots, error: slotsErr } = await admin
+    .from('dancecard_program_slots')
+    .select('id, title, starts_at, ends_at, track, room, location_id, track_id')
+    .in('id', slotIds)
+    .eq('event_id', eventId)
+  if (slotsErr) throw slotsErr
+
+  const trackIds = Array.from(new Set((slots ?? []).map((s) => s.track_id as string | null).filter(Boolean))) as string[]
+  const trackNameById: Record<string, string> = {}
+  if (trackIds.length) {
+    const { data: tracks, error: trackErr } = await admin
+      .from('dancecard_tracks')
+      .select('id, name')
+      .in('id', trackIds)
+      .eq('event_id', eventId)
+    if (trackErr) throw trackErr
+    for (const t of tracks ?? []) trackNameById[t.id as string] = String(t.name)
+  }
+
+  const locationIds = Array.from(
+    new Set((slots ?? []).map((s) => s.location_id as string | null).filter(Boolean)),
+  ) as string[]
+  const locNameById: Record<string, string> = {}
+  if (locationIds.length) {
+    const { data: locs, error: locErr } = await admin
+      .from('dancecard_locations')
+      .select('id, name')
+      .in('id', locationIds)
+      .eq('event_id', eventId)
+    if (locErr) throw locErr
+    for (const loc of locs ?? []) locNameById[loc.id as string] = String(loc.name)
+  }
+
+  return (slots ?? [])
+    .map((s) => {
+      const locId = (s.location_id as string | null) ?? null
+      const trackName = s.track_id ? trackNameById[s.track_id as string] ?? null : null
+      return {
+        id: s.id as string,
+        title: s.title as string,
+        startsAt: (s.starts_at as string | null) ?? null,
+        endsAt: (s.ends_at as string | null) ?? null,
+        role: roleBySlot.get(s.id as string) ?? '',
+        locationName: locId ? locNameById[locId] ?? null : ((s.room as string | null) ?? null),
+        trackDisplay: trackName ?? ((s.track as string | null) ?? null),
+      }
+    })
+    .sort((a, b) => {
+      const aStart = a.startsAt ?? ''
+      const bStart = b.startsAt ?? ''
+      return aStart.localeCompare(bStart)
+    })
+}
+
+async function loadLinkedRegistrant(
+  admin: SupabaseClient,
+  eventId: string,
+  personId: string,
+): Promise<{ id: string; sceneDisplayName: string; status: string; categoryName: string | null } | null> {
+  const { data: row, error } = await admin
+    .from('dancecard_registrants')
+    .select('id, scene_display_name, status, category_id')
+    .eq('event_id', eventId)
+    .eq('person_id', personId)
+    .neq('status', 'cancelled')
+    .order('created_at', { ascending: false })
+    .limit(1)
+    .maybeSingle()
+  if (error) throw error
+  if (!row) return null
+
+  let categoryName: string | null = null
+  if (row.category_id) {
+    const { data: cat } = await admin
+      .from('dancecard_registration_categories')
+      .select('name')
+      .eq('id', row.category_id as string)
+      .maybeSingle()
+    categoryName = (cat?.name as string | null) ?? null
+  }
+
+  return {
+    id: row.id as string,
+    sceneDisplayName: String(row.scene_display_name ?? ''),
+    status: String(row.status ?? ''),
+    categoryName,
+  }
+}
+
 export async function GET(_request: NextRequest, context: { params: { eventSlug: string; personId: string } }) {
   try {
     const { admin, eventId } = await requireOrganizerForSlug(context.params.eventSlug)
@@ -50,7 +165,15 @@ export async function GET(_request: NextRequest, context: { params: { eventSlug:
     if (error) throw error
     if (!row) return NextResponse.json({ error: 'Not found' }, { status: 404 })
     const tagIds = await loadPersonTagIds(admin, personId)
-    return NextResponse.json({ person: { ...mapPersonRow(row as Record<string, unknown>), tagIds } })
+    const [programSlots, registrant] = await Promise.all([
+      loadPersonProgramSlots(admin, eventId, personId),
+      loadLinkedRegistrant(admin, eventId, personId),
+    ])
+    return NextResponse.json({
+      person: { ...mapPersonRow(row as Record<string, unknown>), tagIds },
+      programSlots,
+      registrant,
+    })
   } catch (e) {
     return organizerErrorResponse(e)
   }

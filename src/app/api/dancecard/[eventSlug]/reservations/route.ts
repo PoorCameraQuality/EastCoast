@@ -6,6 +6,8 @@ import {getDancecardAdmin,
   resolveAccountFromSession, jsonFromRouteError } from '@/lib/dancecard/routeCommon'
 import { cancelReservationBodySchema } from '@/lib/dancecard/schemas'
 
+export const dynamic = 'force-dynamic'
+
 export async function GET(
   request: NextRequest,
   context: { params: { eventSlug: string } }

@@ -33,6 +33,7 @@ export function mapOrganizerRegistrantRow(
     vettingStatus: (r.vetting_status as string | undefined) ?? 'none',
     vettingSafetyNotes: showSafety ? ((r.vetting_safety_notes as string | null) ?? null) : null,
     pronouns: (r.pronouns as string | null) ?? null,
+    badgeTagline: (r.badge_tagline as string | null) ?? null,
     consentWaiverAckAt: (r.consent_waiver_ack_at as string | null) ?? null,
     consentPhotoAckAt: (r.consent_photo_ack_at as string | null) ?? null,
     importedPaymentStatus: (r.imported_payment_status as string | null) ?? null,

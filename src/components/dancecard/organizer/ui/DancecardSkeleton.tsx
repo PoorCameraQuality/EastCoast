@@ -1,12 +1,12 @@
 'use client'
 
 function Bone({ className }: { className?: string }) {
-  return <div className={`animate-pulse rounded-lg bg-white/10 motion-reduce:animate-none ${className ?? ''}`} />
+  return <div className={`dc-skeleton-bone animate-pulse rounded-lg motion-reduce:animate-none ${className ?? ''}`} />
 }
 
 export function DancecardPanelSkeleton({ lines = 4 }: { lines?: number }) {
   return (
-    <div className="space-y-3 rounded-2xl border border-white/10 bg-white/[0.04] p-5">
+    <div className="space-y-3 rounded-2xl border border-dc-border bg-dc-elevated-muted p-5">
       <Bone className="h-4 w-32" />
       <Bone className="h-8 w-2/3 max-w-xs" />
       {Array.from({ length: lines }).map((_, i) => (

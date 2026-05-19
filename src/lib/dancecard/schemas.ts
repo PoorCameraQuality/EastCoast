@@ -21,12 +21,16 @@ export const registerBodySchema = z.object({
   displayName: displayNameSchema,
   /** Required when the event has `registration_access_code` set. */
   registrationAccessCode: z.string().min(1).max(200).optional(),
+  /** Optional per-category comp code; empty means default attendee registration type. */
+  compCode: z.string().max(200).optional(),
 })
 
 export const loginBodySchema = z.object({
   username: usernameSchema,
   password: passwordSchema,
   registrationAccessCode: z.string().min(1).max(200).optional(),
+  /** Optional per-category comp code when ensuring a registrant on login. */
+  compCode: z.string().max(200).optional(),
 })
 
 const isoLike = z.string().refine((s) => !Number.isNaN(Date.parse(s)), 'Invalid ISO datetime')

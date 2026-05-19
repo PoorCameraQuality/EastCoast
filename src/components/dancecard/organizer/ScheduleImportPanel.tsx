@@ -119,9 +119,9 @@ function importActionBorderClass(action: string): string {
     case 'delete':
       return 'border-rose-400/50'
     case 'unchanged':
-      return 'border-white/10 opacity-75'
+      return 'border-dc-border opacity-75'
     default:
-      return 'border-white/10'
+      return 'border-dc-border'
   }
 }
 
@@ -890,13 +890,13 @@ export function ScheduleImportPanel({
         </p>
       </Panel>
       {dialog}
-      {err ? <p className="rounded-2xl border border-rose-200/20 bg-rose-300/10 px-4 py-3 text-sm text-rose-100">{err}</p> : null}
-      {message ? <p className="rounded-2xl border border-dc-accent-border bg-dc-accent-muted px-4 py-3 text-sm text-dc-text">{message}</p> : null}
+      {err ? <p className="rounded-2xl border border-red-200 bg-red-100 px-4 py-3 text-sm text-red-800">{err}</p> : null}
+      {message ? <p className="rounded-2xl border border-dc-accent-border bg-dc-accent-muted px-4 py-3 text-sm text-dc-accent">{message}</p> : null}
       {batch && rows.length ? (
-        <div className="rounded-2xl border border-sky-300/25 bg-sky-950/40 px-4 py-3 text-sm text-sky-50">
-          <p className="text-xs font-semibold uppercase tracking-wide text-sky-200/90">Draft diff summary</p>
-          <p className="mt-1 font-medium text-sky-50">{importDiffHeadline(diffSummary)}</p>
-          <p className="mt-2 text-xs text-sky-200/85">
+        <div className="rounded-2xl border border-sky-300 bg-sky-100 px-4 py-3 text-sm text-sky-900">
+          <p className="text-xs font-semibold uppercase tracking-wide text-sky-800">Draft diff summary</p>
+          <p className="mt-1 font-medium text-sky-900">{importDiffHeadline(diffSummary)}</p>
+          <p className="mt-2 text-xs text-sky-800/90">
             {diffSummary.total} rows · {diffSummary.newCount} new · {diffSummary.updatedCount} updated ·{' '}
             {diffSummary.removedCount} removed · {diffSummary.unchangedCount} unchanged · {diffSummary.invalidCount}{' '}
             invalid · {diffSummary.conflictCount} conflict hints
@@ -904,7 +904,7 @@ export function ScheduleImportPanel({
         </div>
       ) : null}
 
-      <div className="rounded-3xl border border-white/10 bg-[#151c27] p-4">
+      <div className="rounded-3xl border border-dc-border bg-dc-elevated-solid p-4">
         <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
           <div>
             <p className="text-dc-micro font-semibold uppercase tracking-wide text-dc-muted">Import schedule</p>
@@ -943,7 +943,7 @@ export function ScheduleImportPanel({
                 type="button"
                 className={cx(
                   'rounded-full border px-3 py-1.5 text-sm font-semibold capitalize',
-                  kind === option ? 'border-dc-accent-border bg-dc-accent-muted text-dc-text' : 'border-dc-border text-dc-text-muted'
+                  kind === option ? 'border-dc-accent-border bg-dc-accent-muted text-dc-accent' : 'border-dc-border text-dc-text-muted'
                 )}
                 onClick={() => setKind(option)}
               >
@@ -1000,12 +1000,12 @@ export function ScheduleImportPanel({
         <p className="mt-6 text-center text-xs font-semibold uppercase tracking-[0.2em] text-dc-muted">or upload a file</p>
 
         <div className="mt-4 grid gap-3 lg:grid-cols-2">
-          <label className="block text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">
+          <label className="block text-xs font-semibold uppercase tracking-[0.18em] text-dc-muted">
             Spreadsheet file (.csv or .xlsx)
             <input
               type="file"
               accept=".csv,.xlsx,.xls"
-              className="mt-2 block w-full rounded-lg border border-dc-border bg-dc-surface-muted px-3 py-2 text-sm text-dc-text file:mr-3 file:rounded-md file:border-0 file:bg-dc-accent file:px-3 file:py-1 file:text-xs file:font-semibold file:text-white"
+              className="mt-2 block w-full rounded-lg border border-dc-border bg-dc-surface-muted px-3 py-2 text-sm text-dc-text file:mr-3 file:rounded-md file:border-0 file:bg-dc-accent file:px-3 file:py-1 file:text-xs file:font-semibold file:text-dc-accent-foreground"
               onChange={(event) => {
                 const f = event.target.files?.[0] ?? null
                 setFile(f)
@@ -1020,10 +1020,10 @@ export function ScheduleImportPanel({
               type. Class lists use <strong>program</strong>. Pick staff for PAF-style volunteer schedules.
             </span>
           </label>
-          <label className="block text-xs font-semibold uppercase tracking-[0.18em] text-slate-400 lg:col-span-2">
+          <label className="block text-xs font-semibold uppercase tracking-[0.18em] text-dc-muted lg:col-span-2">
             Advanced: paste JSON rows
             <textarea
-              className="mt-2 min-h-[90px] w-full rounded-2xl border border-white/10 bg-black/20 px-3 py-2 text-sm text-slate-200"
+              className="mt-2 min-h-[90px] w-full rounded-2xl border border-dc-border bg-dc-elevated-muted px-3 py-2 text-sm text-dc-text"
               placeholder='[{"title":"Class","start":"2026-05-08T10:00:00-04:00","end":"...","room":"Burrow"}]'
               value={jsonText}
               onChange={(event) => {
@@ -1036,7 +1036,7 @@ export function ScheduleImportPanel({
         <button
           type="button"
           disabled={busy || readOnly || (!file && !jsonText.trim())}
-          className="mt-4 rounded-lg bg-dc-accent px-4 py-2 text-sm font-semibold text-white hover:opacity-90 disabled:opacity-50"
+          className="mt-4 rounded-lg bg-dc-accent px-4 py-2 text-sm font-semibold text-dc-accent-foreground hover:opacity-90 disabled:opacity-50"
           onClick={() => void uploadImport()}
         >
           {busy ? 'Uploading…' : 'Upload and preview'}
@@ -1052,7 +1052,7 @@ export function ScheduleImportPanel({
         <button
           type="button"
           disabled={readOnly}
-          className="ml-2 mt-4 rounded-full border border-dc-accent-border px-4 py-2 text-sm font-bold text-dc-text hover:bg-dc-accent-muted"
+          className="ml-2 mt-4 rounded-full border border-dc-accent-border px-4 py-2 text-sm font-bold text-dc-accent shadow-sm hover:bg-dc-accent-muted"
           onClick={loadDemoDraft}
         >
           {kind === 'program' ? 'Load unscheduled PAF demo' : 'Load drag/drop demo'}
@@ -1066,11 +1066,11 @@ export function ScheduleImportPanel({
         onDragEnd={handleDndDragEnd}
       >
       {locationsNeedsMigration ? (
-        <div className="mb-4 rounded-2xl border border-amber-400/35 bg-amber-950/40 p-4 text-sm text-amber-100">
-          <p className="font-semibold text-amber-50">Locations need database migration 007</p>
-          <p className="mt-1 text-amber-100/90">
-            Apply <code className="rounded bg-black/30 px-1">database/dancecard_007_organizer_import_workflow.sql</code> in
-            Supabase (or <code className="rounded bg-black/30 px-1">npm run dancecard:apply-migrations</code>). Until then,
+        <div className="mb-4 rounded-2xl border border-amber-400/35 bg-amber-100 p-4 text-sm text-amber-900">
+          <p className="font-semibold text-amber-900">Locations need database migration 007</p>
+          <p className="mt-1 text-amber-900/90">
+            Apply <code className="rounded bg-dc-surface-muted px-1">database/dancecard_007_organizer_import_workflow.sql</code> in
+            Supabase (or <code className="rounded bg-dc-surface-muted px-1">npm run dancecard:apply-migrations</code>). Until then,
             saved rooms are unavailable and add-location may fail.
           </p>
         </div>
@@ -1087,31 +1087,31 @@ export function ScheduleImportPanel({
       {batch ? (
         <div className="grid gap-5 xl:grid-cols-[310px_minmax(0,1fr)]">
           <aside className="space-y-4">
-            <div className="rounded-3xl border border-white/10 bg-[#151c27] p-4">
-              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-slate-400">Review</p>
+            <div className="rounded-3xl border border-dc-border bg-dc-elevated-solid p-4">
+              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-dc-muted">Review</p>
               <div className="mt-3 grid grid-cols-3 gap-2 text-center text-xs">
-                <div className="rounded-2xl bg-black/20 p-2">
-                  <b className="block text-[#f4efe7]">{batch.id.startsWith('local-') ? rows.length : batch.summary.total ?? rows.length}</b>Total
+                <div className="rounded-2xl bg-dc-elevated-muted p-2">
+                  <b className="block text-dc-text">{batch.id.startsWith('local-') ? rows.length : batch.summary.total ?? rows.length}</b>Total
                 </div>
-                <div className="rounded-2xl bg-black/20 p-2"><b className="block text-dc-accent">{batch.summary.valid ?? rows.filter((r) => !r.validation_errors?.length).length}</b>Valid</div>
-                <div className="rounded-2xl bg-black/20 p-2"><b className="block text-amber-100">{batch.summary.invalid ?? rows.filter((r) => r.validation_errors?.length).length}</b>Invalid</div>
+                <div className="rounded-2xl bg-dc-elevated-muted p-2"><b className="block text-dc-accent">{batch.summary.valid ?? rows.filter((r) => !r.validation_errors?.length).length}</b>Valid</div>
+                <div className="rounded-2xl bg-dc-elevated-muted p-2"><b className="block text-amber-900">{batch.summary.invalid ?? rows.filter((r) => r.validation_errors?.length).length}</b>Invalid</div>
               </div>
               {batch.kind === 'program' ? (
                 <div className="mt-2 grid grid-cols-2 gap-2 text-center text-xs">
-                  <div className="rounded-2xl bg-black/20 p-2">
-                    <b className="block text-amber-100">{unscheduledProgramCount}</b>Unscheduled
+                  <div className="rounded-2xl bg-dc-elevated-muted p-2">
+                    <b className="block text-amber-900">{unscheduledProgramCount}</b>Unscheduled
                   </div>
-                  <div className="rounded-2xl bg-black/20 p-2">
+                  <div className="rounded-2xl bg-dc-elevated-muted p-2">
                     <b className="block text-dc-accent">{scheduledCount}</b>Scheduled
                   </div>
                 </div>
               ) : batch.kind === 'staff' ? (
                 <div className="mt-2 grid grid-cols-2 gap-2 text-center text-xs">
-                  <div className="rounded-2xl bg-black/20 p-2">
-                    <b className="block text-amber-100">{unassignedDutyCount}</b>Unassigned duties
+                  <div className="rounded-2xl bg-dc-elevated-muted p-2">
+                    <b className="block text-amber-900">{unassignedDutyCount}</b>Unassigned duties
                   </div>
-                  <div className="rounded-2xl bg-black/20 p-2">
-                    <b className="block text-rose-100">
+                  <div className="rounded-2xl bg-dc-elevated-muted p-2">
+                    <b className="block text-red-800">
                       {Array.from(staffMetrics.values()).reduce((total, metric) => total + metric.conflictCount, 0)}
                     </b>
                     Conflicts
@@ -1120,17 +1120,17 @@ export function ScheduleImportPanel({
               ) : null}
               {batch.kind === 'event' ? (
                 <div className="mt-2 grid grid-cols-2 gap-2 text-center text-xs">
-                  <div className="rounded-2xl bg-black/20 p-2">
-                    <b className="block text-amber-100">{unscheduledProgramCount}</b>Unscheduled classes
+                  <div className="rounded-2xl bg-dc-elevated-muted p-2">
+                    <b className="block text-amber-900">{unscheduledProgramCount}</b>Unscheduled classes
                   </div>
-                  <div className="rounded-2xl bg-black/20 p-2">
+                  <div className="rounded-2xl bg-dc-elevated-muted p-2">
                     <b className="block text-dc-accent">{scheduledCount}</b>Scheduled classes
                   </div>
-                  <div className="rounded-2xl bg-black/20 p-2">
-                    <b className="block text-amber-100">{unassignedDutyCount}</b>Unassigned duties
+                  <div className="rounded-2xl bg-dc-elevated-muted p-2">
+                    <b className="block text-amber-900">{unassignedDutyCount}</b>Unassigned duties
                   </div>
-                  <div className="rounded-2xl bg-black/20 p-2">
-                    <b className="block text-rose-100">
+                  <div className="rounded-2xl bg-dc-elevated-muted p-2">
+                    <b className="block text-red-800">
                       {Array.from(staffMetrics.values()).reduce((total, metric) => total + metric.conflictCount, 0)}
                     </b>
                     Conflicts
@@ -1138,35 +1138,35 @@ export function ScheduleImportPanel({
                 </div>
               ) : null}
               {batch.status !== 'published' ? (
-                <div className="mt-3 rounded-2xl border border-white/10 bg-black/25 px-3 py-2 text-xs text-slate-300">
-                  <p className="font-semibold text-slate-200">Pre-publish summary</p>
+                <div className="mt-3 rounded-2xl border border-dc-border bg-dc-elevated-muted px-3 py-2 text-xs text-dc-muted">
+                  <p className="font-semibold text-dc-text">Pre-publish summary</p>
                   <p className="mt-1">
                     {importActionCounts.add > 0 ? (
-                      <span className="mr-2 text-emerald-200">{importActionCounts.add} add</span>
+                      <span className="mr-2 text-emerald-700">{importActionCounts.add} add</span>
                     ) : null}
                     {importActionCounts.update > 0 ? (
-                      <span className="mr-2 text-amber-200">{importActionCounts.update} update</span>
+                      <span className="mr-2 text-amber-800">{importActionCounts.update} update</span>
                     ) : null}
                     {importActionCounts.delete > 0 ? (
-                      <span className="mr-2 text-rose-200">{importActionCounts.delete} delete</span>
+                      <span className="mr-2 text-red-700">{importActionCounts.delete} delete</span>
                     ) : null}
                     {importActionCounts.unchanged > 0 ? (
-                      <span className="text-slate-500">{importActionCounts.unchanged} unchanged</span>
+                      <span className="text-dc-muted">{importActionCounts.unchanged} unchanged</span>
                     ) : null}
                     {!importActionCounts.add &&
                     !importActionCounts.update &&
                     !importActionCounts.delete &&
                     !importActionCounts.unchanged ? (
-                      <span className="text-slate-500">No diff actions counted.</span>
+                      <span className="text-dc-muted">No diff actions counted.</span>
                     ) : null}
                   </p>
                 </div>
               ) : null}
               <div className="mt-3 flex flex-col gap-2">
-                <button type="button" disabled={readOnly} className="rounded-full border border-white/10 px-3 py-2 text-sm text-slate-200" onClick={() => void moveUnplacedToFirstLocation()}>
+                <button type="button" disabled={readOnly} className="rounded-full border border-dc-border px-3 py-2 text-sm text-dc-text" onClick={() => void moveUnplacedToFirstLocation()}>
                   Move unplaced to first location
                 </button>
-                <button type="button" disabled={readOnly} className="rounded-full border border-white/10 px-3 py-2 text-sm text-slate-200" onClick={() => void shiftPlaced(30)}>
+                <button type="button" disabled={readOnly} className="rounded-full border border-dc-border px-3 py-2 text-sm text-dc-text" onClick={() => void shiftPlaced(30)}>
                   Bulk shift placed +30m
                 </button>
                 <button type="button" disabled={readOnly} className="rounded-full bg-dc-accent px-3 py-2 text-sm font-bold text-dc-accent-foreground" onClick={() => void publishBatch()}>
@@ -1175,12 +1175,12 @@ export function ScheduleImportPanel({
               </div>
             </div>
 
-            <div className="rounded-3xl border border-white/10 bg-[#151c27] p-4">
-              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-slate-400">Staff roster</p>
-              <p className="mt-1 text-xs text-slate-500">Add staff, then drag a person onto an existing duty shift to assign them.</p>
+            <div className="rounded-3xl border border-dc-border bg-dc-elevated-solid p-4">
+              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-dc-muted">Staff roster</p>
+              <p className="mt-1 text-xs text-dc-muted">Add staff, then drag a person onto an existing duty shift to assign them.</p>
               <div className="mt-3 grid grid-cols-[1fr_auto] gap-2">
                 <input
-                  className="rounded-xl border border-white/10 bg-black/20 px-3 py-2 text-xs text-white"
+                  className="rounded-xl border border-dc-border bg-dc-elevated-muted px-3 py-2 text-xs text-dc-text"
                   value={newStaffName}
                   placeholder="Staff name"
                   onChange={(event) => setNewStaffName(event.target.value)}
@@ -1206,35 +1206,35 @@ export function ScheduleImportPanel({
                     readOnly={readOnly}
                     className={cx(
                       'cursor-grab rounded-2xl border px-3 py-2 text-left text-xs font-semibold active:cursor-grabbing',
-                      metric.conflictCount ? 'border-rose-200/40 bg-rose-300/10 text-rose-100' : '',
+                      metric.conflictCount ? 'border-red-300 bg-red-100 text-red-800' : '',
                       activeDrag?.type === 'staff' && activeDrag.staffName === name
                         ? 'border-blue-100/50 bg-blue-200/20 text-blue-50'
                         : 'border-blue-200/20 bg-blue-300/10 text-blue-100'
                     )}
                   >
                     <span className="block">{name}</span>
-                    <span className="mt-0.5 block font-normal text-slate-300">
+                    <span className="mt-0.5 block font-normal text-dc-muted">
                       {metric.shiftCount} shifts · {(metric.minutes / 60).toFixed(metric.minutes % 60 ? 1 : 0)}h
                       {metric.conflictCount ? ` · ${metric.conflictCount} conflict${metric.conflictCount === 1 ? '' : 's'}` : ''}
                     </span>
                   </ImportDraggableStaffChip>
                     )
-                }) : <span className="text-sm text-slate-500">No staff names parsed yet.</span>}
+                }) : <span className="text-sm text-dc-muted">No staff names parsed yet.</span>}
               </div>
             </div>
 
-            <div className="rounded-3xl border border-white/10 bg-[#151c27] p-4">
-              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-slate-400">Duty templates</p>
-              <p className="mt-1 text-xs text-slate-500">Create duties, then drag duty chips onto the board to make shifts.</p>
+            <div className="rounded-3xl border border-dc-border bg-dc-elevated-solid p-4">
+              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-dc-muted">Duty templates</p>
+              <p className="mt-1 text-xs text-dc-muted">Create duties, then drag duty chips onto the board to make shifts.</p>
               <div className="mt-3 grid grid-cols-[1fr_5rem_auto] gap-2">
                 <input
-                  className="rounded-xl border border-white/10 bg-black/20 px-3 py-2 text-xs text-white"
+                  className="rounded-xl border border-dc-border bg-dc-elevated-muted px-3 py-2 text-xs text-dc-text"
                   value={newDutyName}
                   placeholder="Duty name"
                   onChange={(event) => setNewDutyName(event.target.value)}
                 />
                 <input
-                  className="rounded-xl border border-white/10 bg-black/20 px-3 py-2 text-xs text-white"
+                  className="rounded-xl border border-dc-border bg-dc-elevated-muted px-3 py-2 text-xs text-dc-text"
                   value={newDutyDuration}
                   placeholder="Min"
                   inputMode="numeric"
@@ -1257,26 +1257,26 @@ export function ScheduleImportPanel({
                     className={cx(
                       'cursor-grab rounded-full border px-3 py-1 text-xs font-semibold active:cursor-grabbing',
                       activeDrag?.type === 'duty' && activeDrag.dutyId === duty.id
-                        ? 'border-violet-100/50 bg-violet-200/20 text-violet-50'
-                        : 'border-violet-200/20 bg-violet-300/10 text-violet-100'
+                        ? 'border-violet-300/50 bg-violet-200/40 text-violet-900'
+                        : 'border-violet-200/20 bg-violet-300/10 text-violet-800'
                     )}
                   >
                     {duty.name} · {duty.durationMinutes}m
                   </ImportDraggableDutyChip>
                 ))}
                 {!dutyTemplates.length ? (
-                  <p className="rounded-2xl border border-white/10 bg-black/20 p-3 text-sm text-slate-500">
+                  <p className="rounded-2xl border border-dc-border bg-dc-elevated-muted p-3 text-sm text-dc-muted">
                     No duties yet. Add a duty name above, then drag it onto the board to create a shift.
                   </p>
                 ) : null}
               </div>
             </div>
 
-            <div className="rounded-3xl border border-white/10 bg-[#151c27] p-4">
-              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-slate-400">
+            <div className="rounded-3xl border border-dc-border bg-dc-elevated-solid p-4">
+              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-dc-muted">
                 {batch.kind === 'staff' ? 'Draft cards' : 'Class library'}
               </p>
-              <p className="mt-1 text-xs text-slate-500">
+              <p className="mt-1 text-xs text-dc-muted">
                 {batch.kind === 'staff'
                   ? 'Drag a card into a room/time cell to place or move it.'
                   : 'These classes are mock program cards. Drag a card into a location/time cell to schedule it.'}
@@ -1297,17 +1297,17 @@ export function ScheduleImportPanel({
                     )}
                     onClick={() => setSelectedId(row.id)}
                   >
-                    <span className="block font-semibold text-[#f4efe7]">{row.title || row.person_name || 'Untitled row'}</span>
-                    <span className="mt-1 block text-xs text-slate-400">
+                    <span className="block font-semibold text-dc-text">{row.title || row.person_name || 'Untitled row'}</span>
+                    <span className="mt-1 block text-xs text-dc-muted">
                       {row.kind === 'staff' ? row.role || 'Duty' : row.track || 'Program'} · {row.room || 'No location'}
                     </span>
-                    <span className="mt-1 block text-xs text-slate-500">
+                    <span className="mt-1 block text-xs text-dc-muted">
                       {row.starts_at ? localInputValue(row.starts_at).replace('T', ' ') : 'Unscheduled'}
                     </span>
                   </ImportSortableLibraryCard>
                 ))}
                 {!libraryRows.length ? (
-                  <p className="rounded-2xl border border-white/10 bg-black/20 p-3 text-sm text-slate-500">
+                  <p className="rounded-2xl border border-dc-border bg-dc-elevated-muted p-3 text-sm text-dc-muted">
                     Nothing waiting here. Scheduled items live on the board.
                   </p>
                 ) : null}
@@ -1317,14 +1317,15 @@ export function ScheduleImportPanel({
           </aside>
 
           <div className="space-y-4">
-            <div className="overflow-x-auto rounded-3xl border border-white/10 bg-[#101722] p-3">
+            <div className="overflow-x-auto rounded-3xl border border-dc-border bg-dc-surface-muted p-3">
+              <p className="mb-2 text-xs text-dc-muted md:hidden">Swipe horizontally to see all rooms and time slots.</p>
               <div className="mb-3 flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
                 <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.22em] text-slate-400">Draft board</p>
-                  <p className="text-xs text-slate-500">Drop onto a room/time cell. Filled cells stay editable from the side panel.</p>
+                  <p className="text-xs font-semibold uppercase tracking-[0.22em] text-dc-muted">Draft board</p>
+                  <p className="text-xs text-dc-muted">Drop onto a room/time cell. Filled cells stay editable from the side panel.</p>
                 </div>
                 {activeDrag ? (
-                  <p className="rounded-full border border-dc-accent-border bg-dc-accent-muted px-3 py-1 text-xs font-semibold text-dc-text">
+                  <p className="rounded-full border border-dc-accent-border bg-dc-accent-muted px-3 py-1 text-xs font-semibold text-dc-accent">
                     Dragging{' '}
                     {activeDrag.type === 'staff'
                       ? activeDrag.staffName
@@ -1340,19 +1341,19 @@ export function ScheduleImportPanel({
                 <div className="grid gap-2" style={{ gridTemplateColumns: `90px repeat(${Math.max(laneNames.length, 1)}, minmax(130px, 1fr))` }}>
                   <div />
                   {(laneNames.length ? laneNames : ['Unassigned']).map((room) => (
-                    <div key={room} className="rounded-2xl border border-white/10 bg-black/20 px-3 py-2 text-sm font-semibold text-[#f4efe7]">{room}</div>
+                    <div key={room} className="rounded-2xl border border-dc-border bg-dc-elevated-muted px-3 py-2 text-sm font-semibold text-dc-text">{room}</div>
                   ))}
                   {days.flatMap((day) =>
                     hours.map((hour) => (
                       <Fragment key={`${day}-${hour}`}>
-                        <div key={`${day}-${hour}-label`} className="py-2 pr-2 text-right text-xs text-slate-400">
+                        <div key={`${day}-${hour}-label`} className="py-2 pr-2 text-right text-xs text-dc-muted">
                           {day.slice(5)} {String(hour).padStart(2, '0')}:00
                         </div>
                         {(laneNames.length ? laneNames : ['Unassigned']).map((room) => (
                           <ImportDroppableCell
                             key={`${day}-${hour}-${room}`}
                             id={cellDropId(day, hour, room)}
-                            className={cx('min-h-[58px] rounded-2xl border border-white/8 bg-black/15 p-1 transition')}
+                            className={cx('min-h-[58px] rounded-2xl border border-dc-border/60 bg-dc-elevated-muted p-1 transition')}
                           >
                             {rows
                               .filter((row) => row.room === room && row.starts_at?.startsWith(day) && new Date(row.starts_at).getHours() === hour)
@@ -1364,9 +1365,9 @@ export function ScheduleImportPanel({
                                     className={cx(
                                       'mb-1 w-full cursor-grab rounded-xl border px-2 py-1 text-left text-[11px] active:cursor-grabbing',
                                       importActionBorderClass(row.action),
-                                      row.action === 'unchanged' ? 'text-dc-text-muted bg-dc-surface-muted/50' : 'text-dc-text bg-dc-accent-muted',
-                                      row.kind === 'staff' && !row.person_name && 'border-amber-200/40 bg-amber-300/10 text-amber-50',
-                                      conflictShiftIds.has(row.id) && 'border-rose-200/60 bg-rose-300/15 text-rose-50'
+                                      row.action === 'unchanged' ? 'text-dc-text-muted bg-dc-surface-muted/50' : 'text-dc-accent bg-dc-accent-muted',
+                                      row.kind === 'staff' && !row.person_name && 'border-amber-200/40 bg-amber-300/10 text-amber-900',
+                                      conflictShiftIds.has(row.id) && 'border-rose-200/60 bg-rose-300/15 text-red-900'
                                     )}
                                     onClick={() => setSelectedId(row.id)}
                                   >
@@ -1375,7 +1376,7 @@ export function ScheduleImportPanel({
                                     {row.ends_at ? `${localInputValue(row.starts_at).slice(11)}-${localInputValue(row.ends_at).slice(11)}` : 'Placed'}
                                   </span>
                                   {row.kind === 'staff' ? (
-                                    <span className="block truncate text-[10px] text-slate-300">
+                                    <span className="block truncate text-[10px] text-dc-muted">
                                       {row.person_name ? `Assigned: ${row.person_name}` : 'Unassigned'}
                                       {conflictShiftIds.has(row.id) ? ' · Conflict' : ''}
                                     </span>
@@ -1449,14 +1450,14 @@ function LocationManagerPanel({
   }
 
   return (
-    <div className="rounded-3xl border border-white/10 bg-[#151c27] p-4">
+    <div className="rounded-3xl border border-dc-border bg-dc-elevated-solid p-4">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-slate-400">Locations</p>
-          <p className="mt-1 text-sm text-slate-400">Create reusable locations, then drag a chip onto any class card to assign it.</p>
+          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-dc-muted">Locations</p>
+          <p className="mt-1 text-sm text-dc-muted">Create reusable locations, then drag a chip onto any class card to assign it.</p>
         </div>
         <div className="flex gap-2">
-          <input className="rounded-full border border-white/10 bg-black/20 px-3 py-2 text-sm text-white" value={name} disabled={readOnly} onChange={(event) => setName(event.target.value)} placeholder="Room name" />
+          <input className="rounded-full border border-dc-border bg-dc-elevated-muted px-3 py-2 text-sm text-dc-text" value={name} disabled={readOnly} onChange={(event) => setName(event.target.value)} placeholder="Room name" />
           <button type="button" disabled={busy || readOnly} className="rounded-full bg-dc-accent px-4 py-2 text-sm font-bold text-dc-accent-foreground disabled:opacity-60" onClick={() => void addLocation()}>
             Add
           </button>
@@ -1470,13 +1471,13 @@ function LocationManagerPanel({
             readOnly={readOnly}
             className={cx(
               'cursor-grab rounded-full border px-3 py-1 text-xs font-semibold active:cursor-grabbing',
-              'border-amber-200/20 bg-amber-300/10 text-amber-100'
+              'border-amber-200/20 bg-amber-300/10 text-amber-900'
             )}
           >
             {location.name}
           </ImportDraggableLocationChip>
         ))}
-        {!locations.length ? <span className="text-sm text-slate-500">No locations yet. Add one to create schedule lanes.</span> : null}
+        {!locations.length ? <span className="text-sm text-dc-muted">No locations yet. Add one to create schedule lanes.</span> : null}
       </div>
     </div>
   )
@@ -1517,30 +1518,30 @@ function ScheduleCardDetailsPanel({
   }
 
   return (
-    <div className="rounded-3xl border border-white/10 bg-[#151c27] p-4">
-      <p className="text-xs font-semibold uppercase tracking-[0.22em] text-slate-400">Selected draft card</p>
+    <div className="rounded-3xl border border-dc-border bg-dc-elevated-solid p-4">
+      <p className="text-xs font-semibold uppercase tracking-[0.22em] text-dc-muted">Selected draft card</p>
       {conflictRows.length ? (
-        <div className="mt-3 rounded-2xl border border-rose-200/30 bg-rose-300/10 p-3 text-sm text-rose-50">
+        <div className="mt-3 rounded-2xl border border-rose-200/30 bg-red-100 p-3 text-sm text-red-900">
           <p className="font-semibold">
             {row.person_name} is double-booked on {conflictRows.length} other shift{conflictRows.length === 1 ? '' : 's'}.
           </p>
           <div className="mt-2 space-y-2">
             {conflictRows.map((conflict) => (
-              <div key={conflict.id} className="rounded-xl border border-white/10 bg-black/20 p-2">
-                <p className="text-xs text-rose-100">
+              <div key={conflict.id} className="rounded-xl border border-dc-border bg-dc-elevated-muted p-2">
+                <p className="text-xs text-red-800">
                   {conflict.role || 'Duty shift'} · {conflict.room || 'No location'} · {formatScheduleLabel(conflict)}
                 </p>
                 <div className="mt-2 flex flex-wrap gap-2">
                   <button
                     type="button"
-                    className="rounded-full border border-white/15 px-3 py-1 text-xs font-semibold text-rose-50 hover:bg-white/10"
+                    className="rounded-full border border-dc-border px-3 py-1 text-xs font-semibold text-red-900 hover:bg-dc-accent-muted"
                     onClick={() => onSelectRow(conflict.id)}
                   >
                     View conflict
                   </button>
                   <button
                     type="button"
-                    className="rounded-full border border-white/15 px-3 py-1 text-xs font-semibold text-rose-50 hover:bg-white/10"
+                    className="rounded-full border border-dc-border px-3 py-1 text-xs font-semibold text-red-900 hover:bg-dc-accent-muted"
                     onClick={() => onSaveRow(conflict.id, { personName: null })}
                   >
                     Unassign other shift
@@ -1559,14 +1560,14 @@ function ScheduleCardDetailsPanel({
             </button>
             <button
               type="button"
-              className="rounded-full border border-rose-100/30 px-3 py-1.5 text-xs font-bold text-rose-50"
+              className="rounded-full border border-rose-100/30 px-3 py-1.5 text-xs font-bold text-red-900"
               onClick={() => moveSelected(30)}
             >
               Move this +30m
             </button>
             <button
               type="button"
-              className="rounded-full border border-rose-100/30 px-3 py-1.5 text-xs font-bold text-rose-50"
+              className="rounded-full border border-rose-100/30 px-3 py-1.5 text-xs font-bold text-red-900"
               onClick={() => moveSelected(60)}
             >
               Move this +1h
@@ -1575,25 +1576,25 @@ function ScheduleCardDetailsPanel({
         </div>
       ) : null}
       <div className="mt-3 grid gap-3 sm:grid-cols-2">
-        <label className="text-xs text-slate-400">
+        <label className="text-xs text-dc-muted">
           Title / person
-          <input className="mt-1 w-full rounded-xl border border-white/10 bg-black/20 px-3 py-2 text-sm text-white" value={title} onChange={(event) => setTitle(event.target.value)} />
+          <input className="mt-1 w-full rounded-xl border border-dc-border bg-dc-elevated-muted px-3 py-2 text-sm text-dc-text" value={title} onChange={(event) => setTitle(event.target.value)} />
         </label>
-        <label className="text-xs text-slate-400">
+        <label className="text-xs text-dc-muted">
           Location
-          <input className="mt-1 w-full rounded-xl border border-white/10 bg-black/20 px-3 py-2 text-sm text-white" value={room} onChange={(event) => setRoom(event.target.value)} />
+          <input className="mt-1 w-full rounded-xl border border-dc-border bg-dc-elevated-muted px-3 py-2 text-sm text-dc-text" value={room} onChange={(event) => setRoom(event.target.value)} />
         </label>
-        <label className="text-xs text-slate-400">
+        <label className="text-xs text-dc-muted">
           Starts
-          <input type="datetime-local" className="mt-1 w-full rounded-xl border border-white/10 bg-black/20 px-3 py-2 text-sm text-white" value={startsAt} onChange={(event) => setStartsAt(event.target.value)} />
+          <input type="datetime-local" className="mt-1 w-full rounded-xl border border-dc-border bg-dc-elevated-muted px-3 py-2 text-sm text-dc-text" value={startsAt} onChange={(event) => setStartsAt(event.target.value)} />
         </label>
-        <label className="text-xs text-slate-400">
+        <label className="text-xs text-dc-muted">
           Ends
-          <input type="datetime-local" className="mt-1 w-full rounded-xl border border-white/10 bg-black/20 px-3 py-2 text-sm text-white" value={endsAt} onChange={(event) => setEndsAt(event.target.value)} />
+          <input type="datetime-local" className="mt-1 w-full rounded-xl border border-dc-border bg-dc-elevated-muted px-3 py-2 text-sm text-dc-text" value={endsAt} onChange={(event) => setEndsAt(event.target.value)} />
         </label>
       </div>
       {row.validation_errors?.length ? (
-        <p className="mt-3 rounded-2xl border border-amber-200/20 bg-amber-300/10 px-3 py-2 text-xs text-amber-100">{row.validation_errors.join(', ')}</p>
+        <p className="mt-3 rounded-2xl border border-amber-200/20 bg-amber-300/10 px-3 py-2 text-xs text-amber-900">{row.validation_errors.join(', ')}</p>
       ) : null}
       <button
         type="button"

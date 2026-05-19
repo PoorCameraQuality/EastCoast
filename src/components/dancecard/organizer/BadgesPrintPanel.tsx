@@ -1,167 +1,319 @@
 'use client'
 
-import { useCallback, useEffect, useState } from 'react'
-import { fetchAllOrganizerRegistrants, organizerDancecardFetch } from '@/components/dancecard/organizer/organizerApi'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { organizerDancecardFetch } from '@/components/dancecard/organizer/organizerApi'
+import { BadgePrintCard } from '@/components/dancecard/organizer/BadgePrintCard'
+import { BadgePrintSheet } from '@/components/dancecard/organizer/BadgePrintSheet'
+import type { BadgePrintCategory, BadgePrintRegistrant } from '@/lib/dancecard/badgePrint'
 
-type Reg = {
-  id: string
-  sceneDisplayName: string
-  pronouns: string | null
-  categoryName: string | null
-  status: string
+type PrintData = {
+  eventTitle: string
+  logoUrl: string | null
+  hasBadgeLogo: boolean
+  categories: BadgePrintCategory[]
+  registrants: BadgePrintRegistrant[]
 }
 
+type PrintFilter = 'ready' | 'confirmed' | 'checked_in' | 'all'
+
+type PrintJob =
+  | { kind: 'all' }
+  | { kind: 'category'; categoryId: string; label: string }
+  | { kind: 'single'; registrantId: string; label: string }
+
 export function BadgesPrintPanel({ eventSlug, readOnly }: { eventSlug: string; readOnly: boolean }) {
-  const [eventTitle, setEventTitle] = useState('')
-  const [layout, setLayout] = useState<Record<string, unknown>>({})
-  const [regs, setRegs] = useState<Reg[]>([])
+  const [data, setData] = useState<PrintData | null>(null)
+  const [filter, setFilter] = useState<PrintFilter>('all')
+  const [search, setSearch] = useState('')
+  const [selectedId, setSelectedId] = useState<string | null>(null)
+  const [printJob, setPrintJob] = useState<PrintJob>({ kind: 'all' })
   const [err, setErr] = useState<string | null>(null)
+  const [logoMsg, setLogoMsg] = useState<string | null>(null)
+  const [uploadingLogo, setUploadingLogo] = useState(false)
+  const [loading, setLoading] = useState(true)
+  const printAfterPaint = useRef(false)
 
   const load = useCallback(async () => {
+    setLoading(true)
     setErr(null)
     try {
-      const ev = await organizerDancecardFetch<{ event: { eventTitle: string; badgeLayoutJson?: Record<string, unknown> } }>(
-        eventSlug,
-        '/event',
-      )
-      setEventTitle(ev.event.eventTitle)
-      setLayout((ev.event.badgeLayoutJson as Record<string, unknown>) ?? {})
-      const regs = await fetchAllOrganizerRegistrants<Reg>(eventSlug, { status: 'checked_in' })
-      setRegs(regs)
+      const status =
+        filter === 'checked_in'
+          ? 'checked_in'
+          : filter === 'confirmed'
+            ? 'confirmed'
+            : filter === 'all'
+              ? 'all'
+              : undefined
+      const q = status ? `?status=${encodeURIComponent(status)}` : ''
+      const res = await organizerDancecardFetch<PrintData>(eventSlug, `/badges/print-data${q}`)
+      setData(res)
+      setSelectedId((prev) => (prev && res.registrants.some((r) => r.id === prev) ? prev : null))
     } catch (e) {
-      setErr(e instanceof Error ? e.message : 'Failed to load')
+      setErr(e instanceof Error ? e.message : 'Failed to load badges')
+      setData(null)
+    } finally {
+      setLoading(false)
     }
-  }, [eventSlug])
+  }, [eventSlug, filter])
 
   useEffect(() => {
     void load()
   }, [load])
 
-  const stripe = String(layout.roleStripeField ?? 'categoryName')
-  const subtitle = String(layout.subtitle ?? 'Checked in')
-
-  async function saveLayout(patch: Record<string, unknown>) {
-    if (readOnly) return
-    const next = { ...layout, ...patch }
-    setLayout(next)
-    try {
-      await organizerDancecardFetch(eventSlug, '/event', {
-        method: 'PATCH',
-        body: JSON.stringify({ badgeLayoutJson: next }),
+  const searchHits = useMemo(() => {
+    if (!data) return []
+    const q = search.trim().toLowerCase()
+    if (!q) return []
+    return data.registrants
+      .filter((r) => {
+        const hay = `${r.sceneDisplayName} ${r.packageName ?? ''} ${r.registrationNumber}`.toLowerCase()
+        return hay.includes(q)
       })
-    } catch (e) {
-      setErr(e instanceof Error ? e.message : 'Could not save layout')
+      .slice(0, 12)
+  }, [data, search])
+
+  const selected = useMemo(
+    () => data?.registrants.find((r) => r.id === selectedId) ?? null,
+    [data, selectedId],
+  )
+
+  const printRegistrants = useMemo(() => {
+    if (!data) return []
+    if (printJob.kind === 'all') return data.registrants
+    if (printJob.kind === 'single') {
+      const one = data.registrants.find((r) => r.id === printJob.registrantId)
+      return one ? [one] : []
+    }
+    return data.registrants.filter((r) => (r.categoryId ?? '__none__') === printJob.categoryId)
+  }, [data, printJob])
+
+  const printHeader = useMemo(() => {
+    if (!data) return ''
+    if (printJob.kind === 'all') return `${data.eventTitle} — ${printRegistrants.length} badge(s)`
+    if (printJob.kind === 'single') return `${data.eventTitle} — Reprint: ${printJob.label}`
+    return `${data.eventTitle} — ${printJob.label} (${printRegistrants.length})`
+  }, [data, printJob, printRegistrants.length])
+
+  useEffect(() => {
+    if (!printAfterPaint.current) return
+    printAfterPaint.current = false
+    const t = window.setTimeout(() => window.print(), 80)
+    return () => window.clearTimeout(t)
+  }, [printJob, data])
+
+  function triggerPrint(job: PrintJob) {
+    setPrintJob(job)
+    printAfterPaint.current = true
+  }
+
+  async function onLogoFile(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0]
+    e.target.value = ''
+    if (!file || readOnly) return
+    setUploadingLogo(true)
+    setLogoMsg(null)
+    try {
+      const fd = new FormData()
+      fd.set('file', file)
+      const res = await fetch(`/api/organizer/dancecard/${encodeURIComponent(eventSlug)}/badges/logo/upload`, {
+        method: 'POST',
+        body: fd,
+        credentials: 'include',
+      })
+      const j = (await res.json()) as { badgeLogoUrl?: string; error?: string }
+      if (!res.ok) throw new Error(j.error ?? 'Upload failed')
+      setData((d) => (d ? { ...d, logoUrl: j.badgeLogoUrl ?? d.logoUrl, hasBadgeLogo: true } : d))
+      setLogoMsg(`Uploaded ${file.name} for badge printing.`)
+    } catch (ex) {
+      setLogoMsg(ex instanceof Error ? ex.message : 'Logo upload failed')
+    } finally {
+      setUploadingLogo(false)
     }
   }
 
   return (
-    <div className="space-y-4">
-      {err ? <p className="text-sm text-rose-300">{err}</p> : null}
-      <div className="space-y-2 text-sm text-slate-400">
-        <p>
-          Print checked-in badges from a simple layout editor. For custom art, many events use open-source badge tools
-          such as{' '}
-          <a
-            href="https://github.com/topics/badge-generator"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-dc-accent hover:underline"
-          >
-            community badge generators
-          </a>{' '}
-          to design layouts, then export for label printers.
-        </p>
-        <p className="text-xs text-slate-500">
-          Direct label-printer integration is not wired up yet; use Print / Save as PDF here, or export your roster and
-          print through your preferred badge app.
-        </p>
-      </div>
-      {!readOnly ? (
-        <div className="grid gap-3 sm:grid-cols-2">
-          <label className="text-xs text-slate-400">
-            Stripe field
-            <select
-              className="mt-1 w-full rounded border border-white/10 bg-black/40 px-2 py-1 text-white"
-              value={stripe}
-              onChange={(e) => void saveLayout({ roleStripeField: e.target.value })}
-            >
-              <option value="categoryName">categoryName</option>
-              <option value="pronouns">pronouns</option>
-            </select>
-          </label>
-          <label className="text-xs text-slate-400">
-            Subtitle
-            <input
-              className="mt-1 w-full rounded border border-white/10 bg-black/40 px-2 py-1 text-white"
-              value={subtitle}
-              onChange={(e) => void saveLayout({ subtitle: e.target.value })}
-            />
-          </label>
-        </div>
-      ) : null}
-      <div className="rounded-xl border border-dashed border-white/20 p-4">
-        <p className="text-[10px] uppercase text-violet-300">{subtitle}</p>
-        <p className="font-serif text-xl text-white">Sample Name</p>
-        <p className="text-xs text-slate-400">Preview card</p>
-      </div>
-      {readOnly ? (
-        <p className="text-xs text-amber-200/90">Read-only: you can still print the roster.</p>
-      ) : null}
-      <div className="flex flex-wrap gap-2">
-        <button
-          type="button"
-          className="rounded-full border border-white/15 px-4 py-2 text-sm text-slate-200 hover:bg-white/5"
-          onClick={() => void load()}
-        >
-          Refresh
-        </button>
-        <button
-          type="button"
-          className="rounded-full bg-dc-accent px-4 py-2 text-sm font-semibold text-dc-accent-foreground hover:bg-dc-accent-hover"
-          onClick={() => window.print()}
-        >
-          Print / Save as PDF
-        </button>
-      </div>
+    <div className="space-y-5">
+      {err ? <p className="text-sm text-red-700">{err}</p> : null}
+      {logoMsg ? <p className="text-sm text-dc-accent">{logoMsg}</p> : null}
 
-      <div id="dc-badge-print-root" className="print:block">
-        <style>{`
-          @media print {
-            body * { visibility: hidden; }
-            #dc-badge-print-root, #dc-badge-print-root * { visibility: visible; }
-            #dc-badge-print-root { position: absolute; left: 0; top: 0; width: 100%; }
-          }
-        `}</style>
-        <div className="mb-6 text-center print:mb-4">
-          <p className="text-xs uppercase tracking-[0.2em] text-slate-500">{subtitle}</p>
-          <h2 className="font-serif text-2xl text-white">{eventTitle}</h2>
-          <p className="text-xs text-slate-500">{regs.length} badge(s)</p>
+      <section className="rounded-xl border border-dc-border bg-dc-elevated/80 p-4">
+        <h3 className="text-sm font-semibold text-dc-text">Badge logo (print quality)</h3>
+        <p className="mt-1 text-xs text-dc-muted">
+          Upload a high-resolution PNG, JPEG, WebP, or SVG for crisp printing. Falls back to the branding URL in
+          settings if none is uploaded.
+        </p>
+        <div className="mt-3 flex flex-wrap items-center gap-3">
+          {data?.logoUrl ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={data.logoUrl}
+              alt=""
+              className="max-h-16 max-w-[200px] rounded border border-dc-border bg-white object-contain p-1"
+            />
+          ) : (
+            <span className="text-xs text-dc-muted">No logo yet</span>
+          )}
+          {!readOnly ? (
+            <label className="cursor-pointer rounded-full border border-dc-border bg-dc-surface-muted px-3 py-1.5 text-xs font-medium text-dc-text hover:border-dc-accent-border">
+              {uploadingLogo ? 'Uploading…' : data?.hasBadgeLogo ? 'Replace logo' : 'Upload logo'}
+              <input
+                type="file"
+                accept="image/png,image/jpeg,image/webp,image/svg+xml"
+                className="sr-only"
+                disabled={uploadingLogo}
+                onChange={(ev) => void onLogoFile(ev)}
+              />
+            </label>
+          ) : null}
+          {data?.hasBadgeLogo ? (
+            <span className="text-[10px] uppercase tracking-wide text-dc-muted">Print-quality file on file</span>
+          ) : null}
         </div>
-        <div className="grid gap-4 sm:grid-cols-2 print:grid-cols-2">
-          {regs.map((r) => {
-            const stripeVal =
-              stripe === 'categoryName'
-                ? r.categoryName ?? '—'
-                : stripe === 'pronouns'
-                  ? r.pronouns ?? '—'
-                  : (r as unknown as Record<string, string>)[stripe] ?? '—'
-            return (
-              <div
-                key={r.id}
-                className="flex h-36 flex-col justify-between rounded-xl border-2 border-white/20 bg-gradient-to-br from-slate-900 to-black p-4 text-left print:break-inside-avoid"
+      </section>
+
+      <section className="rounded-xl border border-dc-border bg-dc-elevated/80 p-4">
+        <h3 className="text-sm font-semibold text-dc-text">Find a badge (reprint)</h3>
+        <p className="mt-1 text-xs text-dc-muted">Search by scene name, package, or registration number.</p>
+        <input
+          className="mt-2 w-full max-w-md rounded-lg border border-dc-border bg-dc-surface-muted px-3 py-2 text-sm text-dc-text"
+          placeholder="Search attendees…"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+        {searchHits.length > 0 ? (
+          <ul className="mt-2 max-w-md rounded-lg border border-dc-border bg-dc-surface-muted">
+            {searchHits.map((r) => (
+              <li key={r.id}>
+                <button
+                  type="button"
+                  className="flex w-full items-center justify-between gap-2 px-3 py-2 text-left text-sm hover:bg-dc-accent-muted/40"
+                  onClick={() => {
+                    setSelectedId(r.id)
+                    setSearch('')
+                  }}
+                >
+                  <span className="font-medium text-dc-text">{r.sceneDisplayName}</span>
+                  <span className="text-xs text-dc-muted">
+                    {r.packageName ?? '—'} · #{r.registrationNumber}
+                  </span>
+                </button>
+              </li>
+            ))}
+          </ul>
+        ) : null}
+        {selected ? (
+          <div className="mt-4 flex flex-col items-start gap-3 sm:flex-row sm:items-end">
+            <div className="w-[3.375in] shrink-0">
+              <BadgePrintCard
+                eventSlug={eventSlug}
+                eventTitle={data?.eventTitle ?? ''}
+                logoUrl={data?.logoUrl ?? null}
+                reg={selected}
+              />
+            </div>
+            <button
+              type="button"
+              className="rounded-full bg-dc-accent px-4 py-2 text-sm font-semibold text-dc-accent-foreground"
+              onClick={() =>
+                triggerPrint({
+                  kind: 'single',
+                  registrantId: selected.id,
+                  label: selected.sceneDisplayName,
+                })
+              }
+            >
+              Print this badge
+            </button>
+          </div>
+        ) : null}
+      </section>
+
+      <section className="rounded-xl border border-dc-border bg-dc-elevated/80 p-4">
+        <h3 className="text-sm font-semibold text-dc-text">Print by package (pre-registration)</h3>
+        <p className="mt-1 text-xs text-dc-muted">
+          Print an entire registration category ahead of check-in. Registration numbers stay in signup order.
+        </p>
+        <div className="mt-2 flex flex-wrap items-center gap-2">
+          <span className="text-xs text-dc-muted">Roster</span>
+          {(
+            [
+              ['all', 'All non-cancelled'],
+              ['confirmed', 'Confirmed only'],
+              ['ready', 'Confirmed + checked in'],
+              ['checked_in', 'Checked in only'],
+            ] as const
+          ).map(([key, label]) => (
+            <button
+              key={key}
+              type="button"
+              className={
+                filter === key
+                  ? 'rounded-full border border-dc-accent-border bg-dc-accent-muted px-3 py-1 text-xs font-medium text-dc-accent'
+                  : 'rounded-full border border-dc-border px-3 py-1 text-xs text-dc-muted hover:text-dc-text'
+              }
+              onClick={() => setFilter(key)}
+            >
+              {label}
+            </button>
+          ))}
+          <button
+            type="button"
+            className="rounded-full border border-dc-border px-3 py-1 text-xs text-dc-muted hover:text-dc-text"
+            onClick={() => void load()}
+          >
+            Refresh
+          </button>
+        </div>
+        {loading ? <p className="mt-3 text-sm text-dc-muted">Loading…</p> : null}
+        {!loading && data?.categories.length ? (
+          <ul className="mt-3 space-y-2">
+            {data.categories.map((c) => (
+              <li
+                key={c.id}
+                className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-dc-border/80 bg-dc-surface-muted px-3 py-2"
               >
                 <div>
-                  <p className="text-[10px] uppercase tracking-wider text-violet-300">{stripeVal}</p>
-                  <p className="mt-1 font-serif text-xl text-white">{r.sceneDisplayName}</p>
-                  {r.pronouns ? <p className="text-xs text-slate-400">{r.pronouns}</p> : null}
+                  <p className="text-sm font-medium text-dc-text">{c.name}</p>
+                  <p className="text-xs text-dc-muted">{c.count} badge(s)</p>
                 </div>
-                <p className="text-[10px] text-slate-600">{r.id}</p>
-              </div>
-            )
-          })}
+                <button
+                  type="button"
+                  className="rounded-full border border-dc-accent-border bg-dc-accent-muted px-3 py-1.5 text-xs font-semibold text-dc-accent hover:bg-dc-accent-muted/80"
+                  onClick={() =>
+                    triggerPrint({ kind: 'category', categoryId: c.id, label: c.name })
+                  }
+                >
+                  Print {c.name}
+                </button>
+              </li>
+            ))}
+          </ul>
+        ) : null}
+        {!loading && data && !data.registrants.length ? (
+          <p className="mt-3 text-sm text-dc-muted">No registrants in this roster filter.</p>
+        ) : null}
+        <div className="mt-4 flex flex-wrap gap-2">
+          <button
+            type="button"
+            className="rounded-full bg-dc-accent px-4 py-2 text-sm font-semibold text-dc-accent-foreground"
+            onClick={() => triggerPrint({ kind: 'all' })}
+            disabled={!data?.registrants.length}
+          >
+            Print entire roster ({data?.registrants.length ?? 0})
+          </button>
         </div>
-        {!regs.length ? <p className="py-8 text-center text-slate-500">No checked-in registrants yet.</p> : null}
-      </div>
+      </section>
+
+      {data && printRegistrants.length > 0 ? (
+        <BadgePrintSheet
+          eventSlug={eventSlug}
+          eventTitle={data.eventTitle}
+          logoUrl={data.logoUrl}
+          registrants={printRegistrants}
+          header={printHeader}
+        />
+      ) : null}
     </div>
   )
 }

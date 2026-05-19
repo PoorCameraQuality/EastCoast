@@ -9,7 +9,7 @@ export const compareSlot = {
     'hover:brightness-110 hover:ring-2 hover:ring-dc-success/50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-dc-accent',
   hostFreeOnly: 'bg-dc-compare-host-only ring-1 ring-dc-compare-host-only-ring',
   busy: 'bg-dc-compare-busy ring-1 ring-dc-compare-busy-ring',
-  outsideWindow: 'bg-dc-compare-outside border border-black/50',
+  outsideWindow: 'bg-dc-compare-outside border border-dc-border',
   selectedGap: 'border-2 border-dashed border-dc-accent bg-dc-compare-selected',
 } as const
 
@@ -17,7 +17,7 @@ export const compareLegendSwatch = {
   mutualFree: 'bg-dc-compare-mutual ring-1 ring-dc-success/50',
   hostFreeOnly: 'bg-dc-compare-host-only ring-1 ring-dc-compare-host-only-ring',
   busy: 'bg-dc-compare-busy ring-1 ring-dc-compare-busy-ring',
-  outsideWindow: 'bg-dc-compare-outside ring-1 ring-black/40',
+  outsideWindow: 'bg-dc-compare-outside ring-1 ring-dc-border',
   selectedGap: 'border-2 border-dashed border-dc-accent bg-dc-compare-selected',
 } as const
 

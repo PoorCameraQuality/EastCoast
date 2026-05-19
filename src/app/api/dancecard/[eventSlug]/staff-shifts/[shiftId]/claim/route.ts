@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { mapStaffShiftRow } from '@/lib/dancecard/organizerStaffShiftDto'
+import { fetchStaffShiftRowsForEvent } from '@/lib/dancecard/organizerStaffShiftsData'
 import { getDancecardAdmin, loadEventBySlug, normalizeEventSlug, resolveAccountFromSession } from '@/lib/dancecard/routeCommon'
+import { findStaffShiftConflicts } from '@/lib/dancecard/staffShiftConflicts'
 import { toClientError } from '@/lib/security/safeApiError'
 import { rateLimiters, withRateLimit } from '@/lib/rateLimit'
 
@@ -25,6 +28,35 @@ export async function POST(request: NextRequest, context: { params: { eventSlug:
     }
     const shiftId = context.params.shiftId
     const displayName = session.displayName.trim() || session.username
+
+    const { data: shiftRow, error: loadErr } = await admin
+      .from('dancecard_staff_shifts')
+      .select('id, starts_at, ends_at, shift_status')
+      .eq('id', shiftId)
+      .eq('event_id', event.id)
+      .maybeSingle()
+    if (loadErr) throw loadErr
+    if (!shiftRow || (shiftRow as { shift_status: string }).shift_status !== 'open') {
+      return NextResponse.json({ error: 'Shift is not open for claiming' }, { status: 409 })
+    }
+
+    const startsAt = String((shiftRow as { starts_at: string }).starts_at)
+    const endsAt = String((shiftRow as { ends_at: string }).ends_at)
+    const existingRows = await fetchStaffShiftRowsForEvent(admin, event.id)
+    const shifts = existingRows.map((r) => mapStaffShiftRow(r))
+    const linkedPersonId =
+      shifts.find((s) => s.claimedByAccountId === session.accountId && s.personId)?.personId ?? null
+    const conflicts = findStaffShiftConflicts(shifts, {
+      personId: linkedPersonId,
+      personName: displayName,
+      startsAt,
+      endsAt,
+      excludeShiftId: shiftId,
+      claimedByAccountId: session.accountId,
+    })
+    if (conflicts.length) {
+      return NextResponse.json({ error: 'Scheduling conflict', conflicts }, { status: 409 })
+    }
 
     const { data: updated, error } = await admin
       .from('dancecard_staff_shifts')

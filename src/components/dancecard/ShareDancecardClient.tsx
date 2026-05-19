@@ -7,6 +7,9 @@ import { MutualAvailabilityStrip } from '@/components/dancecard/MutualAvailabili
 import { dayRangesFromSchedule } from '@/components/dancecard/eventAvailability'
 import { formatRange, formatTime, toDatetimeLocalValue } from '@/components/dancecard/time'
 import { bestOpenWindows } from '@/lib/dancecard/openWindowSuggestions'
+import { AttendeeProfileCard } from '@/components/dancecard/attendee/AttendeeProfileCard'
+import { PhotoPolicyChip } from '@/components/dancecard/attendee/PhotoPolicyChip'
+import type { AttendeePublicProfile } from '@/lib/dancecard/attendeeProfile'
 
 const DANCECARD_DISPLAY_TITLE = 'Dancecard'
 
@@ -17,7 +20,8 @@ type SharePayload = {
     windowStartsAt: string
     windowEndsAt: string
   } | null
-  host: { displayName: string }
+  host: { displayName: string; nameKind?: 'scene' }
+  hostProfile?: AttendeePublicProfile | null
   viewerYou: string | null
   hostFreeGaps: { start: string; end: string }[]
   hostBusy: { start: string; end: string }[]
@@ -30,6 +34,7 @@ type SharePayload = {
     track: string | null
     room: string | null
     description: string | null
+    photoPolicy?: 'allowed' | 'restricted' | 'none'
   }[]
 }
 
@@ -226,7 +231,7 @@ export function ShareDancecardClient(props: { eventSlug: string; token: string }
           <div className="mt-6 space-y-3">
             {[0, 1, 2].map((i) => (
               <div key={i} className="rounded-2xl border border-dc-border bg-dc-accent-muted/15 p-3">
-                <div className="h-3 w-24 rounded-full bg-white/10" />
+                <div className="h-3 w-24 rounded-full bg-dc-border/40" />
                 <div className="mt-3 h-11 rounded-xl bg-dc-elevated-muted" />
               </div>
             ))}
@@ -261,12 +266,12 @@ export function ShareDancecardClient(props: { eventSlug: string; token: string }
             </p>
             <p className="mt-2 text-sm text-dc-muted">
               When you&apos;re ready, close this screen and{' '}
-              <span className="font-medium text-emerald-200">tap a green open slot</span> on the schedule to claim time.
+              <span className="font-medium text-emerald-700">tap a green open slot</span> on the schedule to claim time.
             </p>
             <div className="mt-5 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
               <Link
                 href={`/dancecard/${eventSlug}`}
-                className="inline-flex min-h-touch items-center justify-center rounded-2xl border border-dc-accent-border bg-dc-accent-muted px-4 py-3 text-center text-sm font-semibold text-dc-text transition hover:bg-dc-accent/25"
+                className="inline-flex min-h-touch items-center justify-center rounded-2xl border border-dc-accent-border bg-dc-accent-muted px-4 py-3 text-center text-sm font-semibold text-dc-accent-foreground transition hover:bg-dc-accent/25"
               >
                 Get your personal Dancecard
               </Link>
@@ -307,19 +312,19 @@ export function ShareDancecardClient(props: { eventSlug: string; token: string }
               </button>
             </div>
             {selectedRangeLabel ? (
-              <div className="mt-4 rounded-2xl border border-emerald-400/25 bg-emerald-950/35 p-3 text-emerald-50/95">
-                <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-emerald-200/80">Selected time</p>
+              <div className="mt-4 rounded-2xl border border-emerald-400/25 bg-emerald-100 p-3 text-emerald-900/95">
+                <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-emerald-700/80">Selected time</p>
                 <p className="mt-1 text-base font-semibold text-dc-text">{selectedRangeLabel}</p>
               </div>
             ) : (
-              <p className="mt-4 rounded-2xl border border-amber-300/20 bg-amber-950/25 px-3 py-2 text-sm text-amber-100/90">
+              <p className="mt-4 rounded-2xl border border-amber-300/20 bg-amber-100 px-3 py-2 text-sm text-amber-900/90">
                 Choose a time on the schedule above (tap a green slot).
               </p>
             )}
             {reserveNotice?.kind === 'ok' ? (
-              <div className="mt-4 rounded-2xl border border-emerald-500/40 bg-emerald-950/50 p-4 text-sm text-emerald-50">
-                <p className="font-semibold text-white">Claim saved</p>
-                <p className="mt-1 text-emerald-100/95">This slot is now reserved. You can close this sheet.</p>
+              <div className="mt-4 rounded-2xl border border-emerald-500/40 bg-emerald-100 p-4 text-sm text-emerald-900">
+                <p className="font-semibold text-dc-text">Claim saved</p>
+                <p className="mt-1 text-emerald-800/95">This slot is now reserved. You can close this sheet.</p>
               </div>
             ) : (
               <>
@@ -381,8 +386,8 @@ export function ShareDancecardClient(props: { eventSlug: string; token: string }
                     Cancel
                   </button>
                 </div>
-                {reserveNotice?.kind === 'error' ? <p className="mt-3 text-sm text-rose-200">{reserveNotice.text}</p> : null}
-                {err ? <p className="mt-2 text-xs text-rose-300">{err}</p> : null}
+                {reserveNotice?.kind === 'error' ? <p className="mt-3 text-sm text-red-700">{reserveNotice.text}</p> : null}
+                {err ? <p className="mt-2 text-xs text-red-700">{err}</p> : null}
               </>
             )}
           </div>
@@ -412,17 +417,28 @@ export function ShareDancecardClient(props: { eventSlug: string; token: string }
             </span>
           </div>
         </div>
-        <div className="mt-4 rounded-2xl border border-emerald-500/25 bg-emerald-950/25 px-3 py-2.5 text-sm leading-relaxed text-dc-muted">
-          <span className="font-semibold text-emerald-100">Tap a green open slot</span> or use a suggested window below.
+        <div className="mt-4 rounded-2xl border border-emerald-500/25 bg-emerald-100 px-3 py-2.5 text-sm leading-relaxed text-dc-muted">
+          <span className="font-semibold text-emerald-800">Tap a green open slot</span> or use a suggested window below.
           A sheet will open so you can confirm your name and claim the time. No login required.
         </div>
+        {data.hostProfile ? (
+          <div className="mt-4 max-w-md">
+            <AttendeeProfileCard profile={data.hostProfile} variant="host" compact />
+            <Link
+              href={`/dancecard/${eventSlug}?compare=${encodeURIComponent(data.hostProfile.username)}#compare`}
+              className="mt-2 inline-flex rounded-xl border border-dc-accent-border bg-dc-accent-muted px-3 py-2 text-xs font-semibold text-dc-accent"
+            >
+              Compare availability with me
+            </Link>
+          </div>
+        ) : null}
       </header>
 
       {openWindowSuggestions.length ? (
-        <section className="mb-4 rounded-[24px] border border-emerald-300/15 bg-emerald-950/10 p-4">
+        <section className="mb-4 rounded-[24px] border border-emerald-300/15 bg-emerald-50 p-4">
           <div className="flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
             <div>
-              <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-emerald-200/75">Suggested windows</p>
+              <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-emerald-700/75">Suggested windows</p>
               <h2 className="font-serif text-xl font-semibold text-dc-text">Longest open blocks</h2>
             </div>
             <p className="text-xs text-dc-muted">Uses the same claim flow as the schedule.</p>
@@ -435,14 +451,14 @@ export function ShareDancecardClient(props: { eventSlug: string; token: string }
                 className="group flex min-h-touch items-center gap-3 rounded-2xl border border-dc-border bg-dc-accent-muted/20 p-3 text-left transition hover:-translate-y-0.5 hover:border-emerald-200/35 hover:bg-emerald-300/10"
                 onClick={() => fillReserveFromStep(w.startMs, w.endMs)}
               >
-                <span className="flex h-11 w-12 shrink-0 items-center justify-center rounded-2xl border border-emerald-200/20 bg-emerald-300/10 text-xs font-bold text-emerald-100">
+                <span className="flex h-11 w-12 shrink-0 items-center justify-center rounded-2xl border border-emerald-200/20 bg-emerald-300/10 text-xs font-bold text-emerald-800">
                   {w.day.split(',')[0]}
                 </span>
                 <span className="min-w-0 flex-1">
                   <span className="block text-sm font-semibold text-dc-text">{w.time}</span>
                   <span className="block text-xs text-dc-muted">{w.duration} open</span>
                 </span>
-                <span className="text-lg text-emerald-200 transition group-hover:translate-x-0.5">→</span>
+                <span className="text-lg text-emerald-700 transition group-hover:translate-x-0.5">→</span>
               </button>
             ))}
           </div>
@@ -450,8 +466,8 @@ export function ShareDancecardClient(props: { eventSlug: string; token: string }
       ) : null}
 
       <div className="flex flex-wrap gap-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-dc-text0">
-        <span className="rounded-full border border-rose-400/30 bg-rose-950/40 px-2.5 py-1 text-rose-100">Red = busy</span>
-        <span className="rounded-full border border-emerald-400/35 bg-emerald-950/45 px-2.5 py-1 text-emerald-100">
+        <span className="rounded-full border border-red-300 bg-red-100 px-2.5 py-1 text-red-800">Red = busy</span>
+        <span className="rounded-full border border-emerald-400/35 bg-emerald-100 px-2.5 py-1 text-emerald-800">
           Green = tap to claim
         </span>
       </div>
@@ -476,7 +492,7 @@ export function ShareDancecardClient(props: { eventSlug: string; token: string }
 
       <div className="mt-6 rounded-2xl border border-dc-border bg-dc-elevated-solid/90 p-4 text-center text-sm text-dc-muted">
         <p>
-          Claim form opens when you <span className="font-medium text-emerald-200">tap a green slot</span>.{' '}
+          Claim form opens when you <span className="font-medium text-emerald-700">tap a green slot</span>.{' '}
           <button type="button" className="text-dc-accent underline decoration-dc-accent/50 hover:text-dc-accent-hover" onClick={() => setClaimOpen(true)}>
             Open claim sheet
           </button>{' '}

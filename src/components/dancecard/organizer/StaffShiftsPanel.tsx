@@ -195,17 +195,17 @@ export function StaffShiftsPanel({
   return (
     <div className="space-y-4">
       {dialog}
-      <div className="rounded-xl border border-white/10 bg-black/20 px-4 py-3">
-        <p className="text-sm leading-relaxed text-slate-300">
+      <div className="rounded-xl border border-dc-border bg-dc-elevated-muted px-4 py-3">
+        <p className="text-sm leading-relaxed text-dc-muted">
           Create shifts, see who is scheduled, and filter for open or unstaffed blocks. Assign a person name on each row;
           use Open status for shifts volunteers can claim.
         </p>
       </div>
-      {err ? <p className="text-sm text-rose-300">{err}</p> : null}
+      {err ? <p className="text-sm text-red-700">{err}</p> : null}
       {hoursSummary.length > 0 ? (
-        <div className="rounded-xl border border-white/10 bg-black/25 p-4">
-          <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Hours on the board</p>
-          <p className="mt-1 text-xs text-slate-500">
+        <div className="rounded-xl border border-dc-border bg-dc-elevated-muted p-4">
+          <p className="text-xs font-semibold uppercase tracking-wide text-dc-muted">Hours on the board</p>
+          <p className="mt-1 text-xs text-dc-muted">
             Scheduled hours from shifts below. Expected hours are demo targets until comp codes are wired in.
           </p>
           <ul className="mt-3 flex flex-wrap gap-2">
@@ -217,14 +217,14 @@ export function StaffShiftsPanel({
                   key={name}
                   className={`rounded-lg border px-3 py-2 text-xs ${
                     over
-                      ? 'border-amber-400/30 bg-amber-950/30 text-amber-100'
+                      ? 'border-amber-400/30 bg-amber-100 text-amber-900'
                       : under
-                        ? 'border-slate-500/30 bg-black/30 text-slate-300'
-                        : 'border-emerald-400/25 bg-emerald-950/20 text-emerald-100'
+                        ? 'border-slate-500/30 bg-dc-surface-muted text-dc-muted'
+                        : 'border-emerald-400/25 bg-emerald-100 text-emerald-800'
                   }`}
                 >
                   <span className="font-medium">{name}</span>
-                  <span className="text-slate-400">
+                  <span className="text-dc-muted">
                     {' '}
                     · {scheduled.toFixed(1)}h scheduled / {expected}h expected
                   </span>
@@ -241,8 +241,8 @@ export function StaffShiftsPanel({
             type="button"
             className={
               listFilter === key
-                ? 'rounded-full border border-violet-400/40 bg-violet-950/40 px-3 py-1.5 text-xs font-semibold text-violet-100'
-                : 'rounded-full border border-white/15 px-3 py-1.5 text-xs text-slate-300 hover:bg-white/[0.04]'
+                ? 'rounded-full border border-violet-400/40 bg-violet-100 px-3 py-1.5 text-xs font-semibold text-violet-800'
+                : 'rounded-full border border-dc-border px-3 py-1.5 text-xs text-dc-muted hover:bg-dc-elevated-muted'
             }
             onClick={() => setListFilter(key)}
           >
@@ -251,32 +251,32 @@ export function StaffShiftsPanel({
           </button>
         ))}
       </div>
-      <div className={`rounded-xl border border-white/10 bg-black/30 p-4 ${readOnly ? 'opacity-60' : ''}`}>
-        <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">Add shift</p>
+      <div className={`rounded-xl border border-dc-border bg-dc-surface-muted p-4 ${readOnly ? 'opacity-60' : ''}`}>
+        <p className="text-xs font-semibold uppercase tracking-wide text-dc-muted">Add shift</p>
         <div className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          <label className="text-xs text-slate-400">
+          <label className="text-xs text-dc-muted">
             Person name
             <input
-              className="mt-1 w-full rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-sm text-white"
+              className="mt-1 w-full rounded-lg border border-dc-border bg-dc-surface-muted px-3 py-2 text-sm text-dc-text"
               value={personName}
               disabled={readOnly}
               onChange={(e) => setPersonName(e.target.value)}
             />
           </label>
-          <label className="text-xs text-slate-400">
+          <label className="text-xs text-dc-muted">
             Role
             <input
-              className="mt-1 w-full rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-sm text-white"
+              className="mt-1 w-full rounded-lg border border-dc-border bg-dc-surface-muted px-3 py-2 text-sm text-dc-text"
               value={role}
               disabled={readOnly}
               onChange={(e) => setRole(e.target.value)}
               placeholder="volunteer, dm_lead, door..."
             />
           </label>
-          <label className="text-xs text-slate-400">
+          <label className="text-xs text-dc-muted">
             Play-space (required for coverage roles)
             <select
-              className="mt-1 w-full rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-sm text-white"
+              className="mt-1 w-full rounded-lg border border-dc-border bg-dc-surface-muted px-3 py-2 text-sm text-dc-text"
               value={locationId}
               disabled={readOnly}
               onChange={(e) => setLocationId(e.target.value)}
@@ -289,10 +289,10 @@ export function StaffShiftsPanel({
               ))}
             </select>
           </label>
-          <label className="text-xs text-slate-400">
+          <label className="text-xs text-dc-muted">
             Shift status
             <select
-              className="mt-1 w-full rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-sm text-white"
+              className="mt-1 w-full rounded-lg border border-dc-border bg-dc-surface-muted px-3 py-2 text-sm text-dc-text"
               value={shiftStatus}
               disabled={readOnly}
               onChange={(e) => setShiftStatus(e.target.value as (typeof SHIFT_STATUSES)[number])}
@@ -315,7 +315,7 @@ export function StaffShiftsPanel({
         <button
           type="button"
           disabled={busy || readOnly}
-          className="mt-3 rounded-full bg-violet-600 px-4 py-2 text-sm font-semibold text-white hover:bg-violet-500 disabled:opacity-50"
+          className="mt-3 rounded-full bg-violet-600 px-4 py-2 text-sm font-semibold text-dc-text hover:bg-violet-500 disabled:opacity-50"
           onClick={() => void addShift()}
         >
           {busy ? 'Saving…' : 'Add shift'}
@@ -323,18 +323,18 @@ export function StaffShiftsPanel({
       </div>
 
       <div className="space-y-3 lg:hidden">
-        <p className="text-xs font-semibold uppercase text-slate-500">Timeline (mobile)</p>
+        <p className="text-xs font-semibold uppercase text-dc-muted">Timeline (mobile)</p>
         {shiftsByDay.map(([day, dayShifts]) => (
-          <div key={day} className="rounded-xl border border-white/10 bg-black/25 p-3">
-            <p className="text-sm font-semibold text-white">{day}</p>
+          <div key={day} className="rounded-xl border border-dc-border bg-dc-elevated-muted p-3">
+            <p className="text-sm font-semibold text-dc-text">{day}</p>
             <ul className="mt-2 space-y-2 text-xs">
               {dayShifts.map((s) => (
-                <li key={s.id} className="rounded-lg border border-white/10 bg-black/30 px-2 py-2">
-                  <p className="font-semibold text-white">{s.personName.trim() || 'Unassigned'}</p>
-                  <p className="text-slate-400">
+                <li key={s.id} className="rounded-lg border border-dc-border bg-dc-surface-muted px-2 py-2">
+                  <p className="font-semibold text-dc-text">{s.personName.trim() || 'Unassigned'}</p>
+                  <p className="text-dc-muted">
                     {formatTimeLabel(s.startsAt, timezone)} – {formatTimeLabel(s.endsAt, timezone)} · {s.role}
                   </p>
-                  <p className="text-slate-500">
+                  <p className="text-dc-muted">
                     {s.locationId ? locationById.get(s.locationId) ?? s.locationId : '—'}
                   </p>
                 </li>
@@ -343,15 +343,15 @@ export function StaffShiftsPanel({
           </div>
         ))}
         {!shiftsByDay.length ? (
-          <p className="text-sm text-slate-500">
+          <p className="text-sm text-dc-muted">
             {sorted.length ? 'No shifts match this filter.' : 'No shifts yet.'}
           </p>
         ) : null}
       </div>
 
-      <div className="hidden rounded-xl border border-white/10 bg-black/25 lg:block">
+      <div className="hidden rounded-xl border border-dc-border bg-dc-elevated-muted lg:block">
         <table className="w-full text-left text-sm">
-          <thead className="border-b border-white/10 text-xs uppercase text-slate-500">
+          <thead className="border-b border-dc-border text-xs uppercase text-dc-muted">
             <tr>
               <th className="px-2 py-2">Person</th>
               <th className="px-2 py-2">When</th>
@@ -364,22 +364,22 @@ export function StaffShiftsPanel({
           </thead>
           <tbody>
             {filtered.map((s) => (
-              <tr key={s.id} className="border-b border-white/5 hover:bg-white/[0.03]">
+              <tr key={s.id} className="border-b border-dc-border/50 hover:bg-white/[0.03]">
                 <td className="px-2 py-2 align-top">
-                  <span className="font-semibold text-white">{s.personName.trim() || 'Unassigned'}</span>
+                  <span className="font-semibold text-dc-text">{s.personName.trim() || 'Unassigned'}</span>
                 </td>
-                <td className="px-2 py-2 align-top text-slate-300">
+                <td className="px-2 py-2 align-top text-dc-muted">
                   {formatTimeLabel(s.startsAt, timezone)} – {formatTimeLabel(s.endsAt, timezone)}
                 </td>
-                <td className="px-2 py-2 align-top text-slate-300">{s.role}</td>
+                <td className="px-2 py-2 align-top text-dc-muted">{s.role}</td>
                 <td className="px-2 py-2 align-top">
                   {readOnly ? (
-                    <span className="text-slate-400">
+                    <span className="text-dc-muted">
                       {SHIFT_STATUS_LABELS[s.shiftStatus as (typeof SHIFT_STATUSES)[number]] ?? s.shiftStatus}
                     </span>
                   ) : (
                     <select
-                      className="max-w-[9rem] rounded border border-white/10 bg-black/40 px-1 py-1 text-xs text-white"
+                      className="max-w-[9rem] rounded border border-dc-border bg-dc-surface-muted px-1 py-1 text-xs text-dc-text"
                       value={s.shiftStatus}
                       onChange={(e) =>
                         void patchShift(s.id, { shiftStatus: e.target.value as (typeof SHIFT_STATUSES)[number] })
@@ -395,12 +395,12 @@ export function StaffShiftsPanel({
                 </td>
                 <td className="px-2 py-2 align-top">
                   {readOnly ? (
-                    <span className="text-xs text-slate-500">
+                    <span className="text-xs text-dc-muted">
                       {s.locationId ? locationById.get(s.locationId) ?? s.locationId : '—'}
                     </span>
                   ) : (
                     <select
-                      className="max-w-[8rem] rounded border border-white/10 bg-black/40 px-1 py-1 text-xs text-white"
+                      className="max-w-[8rem] rounded border border-dc-border bg-dc-surface-muted px-1 py-1 text-xs text-dc-text"
                       value={s.locationId ?? ''}
                       onChange={(e) => void patchShift(s.id, { locationId: e.target.value || null })}
                     >
@@ -415,10 +415,10 @@ export function StaffShiftsPanel({
                 </td>
                 <td className="px-2 py-2 align-top">
                   {readOnly ? (
-                    <span className="line-clamp-2 text-xs text-slate-500">{s.organizerNotesStaffOnly ?? '—'}</span>
+                    <span className="line-clamp-2 text-xs text-dc-muted">{s.organizerNotesStaffOnly ?? '—'}</span>
                   ) : (
                     <textarea
-                      className="w-full min-w-[8rem] rounded border border-white/10 bg-black/40 px-2 py-1 text-xs text-white"
+                      className="w-full min-w-[8rem] rounded border border-dc-border bg-dc-surface-muted px-2 py-1 text-xs text-dc-text"
                       rows={2}
                       defaultValue={s.organizerNotesStaffOnly ?? ''}
                       onBlur={(e) => {
@@ -444,7 +444,7 @@ export function StaffShiftsPanel({
                       ) : null}
                       <button
                         type="button"
-                        className="text-xs text-rose-300 hover:text-rose-200"
+                        className="text-xs text-red-700 hover:text-red-700"
                         onClick={() => void remove(s.id)}
                       >
                         Delete
@@ -457,7 +457,7 @@ export function StaffShiftsPanel({
           </tbody>
         </table>
         {filtered.length === 0 ? (
-          <p className="px-3 py-6 text-center text-sm text-slate-500">
+          <p className="px-3 py-6 text-center text-sm text-dc-muted">
             {sorted.length ? 'No shifts match this filter.' : 'No staff shifts yet.'}
           </p>
         ) : null}

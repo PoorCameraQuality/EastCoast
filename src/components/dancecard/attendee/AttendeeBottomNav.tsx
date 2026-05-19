@@ -2,7 +2,7 @@
 
 import { cn } from '@/lib/cn'
 
-export type AttendeeNavTab = 'program' | 'dancecard' | 'profile' | 'mutual' | 'reservations'
+export type AttendeeNavTab = 'program' | 'dancecard' | 'profile' | 'mutual' | 'reservations' | 'iso'
 
 const TABS: Array<{ key: AttendeeNavTab; label: string; short: string; shortcut: string }> = [
   { key: 'program', label: 'Program', short: 'Program', shortcut: '1' },
@@ -10,6 +10,7 @@ const TABS: Array<{ key: AttendeeNavTab; label: string; short: string; shortcut:
   { key: 'profile', label: 'Profile', short: 'Profile', shortcut: '3' },
   { key: 'mutual', label: 'Compare', short: 'Compare', shortcut: '4' },
   { key: 'reservations', label: 'Reservations', short: 'Reserve', shortcut: '5' },
+  { key: 'iso', label: 'ISO board', short: 'ISO', shortcut: '6' },
 ]
 
 type Props = {
@@ -45,7 +46,7 @@ export function AttendeeBottomNav({
               aria-current={active === option.key ? 'page' : undefined}
               aria-keyshortcuts={option.shortcut}
               className={cn(
-                'dc-hallway-target relative flex min-h-touch min-w-0 flex-1 flex-col items-center justify-center rounded-xl px-0.5 py-1 text-center text-[9px] font-semibold leading-tight sm:text-dc-micro',
+                'dc-hallway-target relative flex min-h-touch min-w-0 flex-1 flex-col items-center justify-center rounded-xl px-0.5 py-1 text-center text-[10px] font-semibold leading-tight sm:text-dc-micro',
                 active === option.key
                   ? 'bg-dc-accent-muted text-dc-accent'
                   : 'text-dc-muted hover:bg-dc-elevated-muted/80 hover:text-dc-text',
@@ -55,7 +56,7 @@ export function AttendeeBottomNav({
               <span className="truncate">{option.short}</span>
               <span className="sr-only">{option.label}</span>
               {badge != null && badge > 0 ? (
-                <span className="absolute right-1 top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-dc-accent px-1 text-[9px] font-bold text-dc-accent-foreground">
+                <span className="absolute right-1 top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-dc-accent px-1 text-[10px] font-bold text-dc-accent-foreground">
                   {badge > 9 ? '9+' : badge}
                 </span>
               ) : null}

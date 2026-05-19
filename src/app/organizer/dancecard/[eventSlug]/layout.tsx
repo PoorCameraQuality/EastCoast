@@ -37,7 +37,7 @@ export default async function OrganizerDancecardEventLayout({
         </div>
       ) : null}
       {sandboxPublic && !bypass ? (
-        <div className="border-b border-dc-accent-border/60 bg-dc-accent-muted px-4 py-2 text-center text-sm text-dc-text">
+        <div className="border-b border-dc-accent-border/60 bg-dc-accent-muted px-4 py-2 text-center text-sm text-dc-accent-foreground">
           Public sandbox demo — shared sample event. Explore freely;{' '}
           <a href="/organizer/login" className="font-semibold text-dc-accent underline hover:text-dc-accent-hover">
             sign in

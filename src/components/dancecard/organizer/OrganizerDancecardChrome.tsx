@@ -69,10 +69,10 @@ export function OrganizerDancecardChrome({
             {!isHubHome ? <span className="text-sm text-dc-muted">Event workspace</span> : null}
           </div>
           {currentSlug && events && events.length > 0 ? (
-            <label className="flex items-center gap-2 text-sm text-dc-text">
-              <span className="text-dc-micro uppercase tracking-wide text-dc-muted">Switch</span>
+            <label className="flex min-w-0 flex-1 items-center gap-2 text-sm text-dc-text sm:flex-none">
+              <span className="shrink-0 text-dc-micro uppercase tracking-wide text-dc-muted">Switch</span>
               <select
-                className="max-w-[14rem] rounded-lg border border-dc-border bg-dc-elevated-muted px-2 py-1.5 text-sm text-dc-text"
+                className="min-w-0 flex-1 max-w-full truncate rounded-lg border border-dc-border bg-dc-elevated-muted px-2 py-1.5 text-sm text-dc-text sm:max-w-[14rem] sm:flex-none"
                 value={currentSlug}
                 onChange={(e) => {
                   const next = e.target.value
@@ -80,8 +80,8 @@ export function OrganizerDancecardChrome({
                 }}
               >
                 {events.map((ev) => (
-                  <option key={ev.slug} value={ev.slug}>
-                    {ev.eventTitle} ({ev.slug}), {ev.role}
+                  <option key={ev.slug} value={ev.slug} title={`${ev.eventTitle} (${ev.slug}) — ${ev.role}`}>
+                    {ev.eventTitle}
                   </option>
                 ))}
               </select>

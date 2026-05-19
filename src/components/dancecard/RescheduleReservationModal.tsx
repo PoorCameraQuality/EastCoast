@@ -37,7 +37,7 @@ const fieldInputClass =
   'dc-field-input dc-datetime-local-input w-full rounded-2xl border border-dc-border px-4 py-3 text-sm text-dc-text'
 
 const ghostBtnClass =
-  'rounded-2xl border border-dc-border bg-dc-elevated-muted/80 px-4 py-2.5 text-sm font-medium text-dc-text transition hover:border-dc-accent-border hover:bg-dc-accent-muted/40 disabled:opacity-50'
+  'rounded-2xl border border-dc-border bg-dc-elevated-muted/80 px-4 py-2.5 text-sm font-medium text-dc-accent-foreground transition hover:border-dc-accent-border hover:bg-dc-accent-muted/40 disabled:opacity-50'
 
 const primaryBtnClass =
   'dc-btn-primary rounded-2xl bg-gradient-to-br from-dc-accent-hover via-dc-accent to-dc-accent px-4 py-2.5 text-sm font-semibold text-dc-accent-foreground shadow-[0_18px_50px_rgba(198,167,94,0.28)] transition hover:brightness-105 disabled:opacity-50'

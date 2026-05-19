@@ -2,10 +2,10 @@ import type { SupabaseClient } from '@supabase/supabase-js'
 import { mapProgramSlotRow, type OrganizerProgramSlotDto } from '@/lib/dancecard/organizerProgramSlotDto'
 import { isMissingColumn } from '@/lib/dancecard/supabaseColumnFallback'
 
-const PROGRAM_SLOT_SELECT_FULL =
+export const PROGRAM_SLOT_SELECT_FULL =
   'id, starts_at, ends_at, title, track, room, description, sort_order, location_id, is_published, visibility, is_frozen, updated_at, track_id, photo_policy, organizer_notes_internal'
 
-const PROGRAM_SLOT_SELECT_CORE =
+export const PROGRAM_SLOT_SELECT_CORE =
   'id, starts_at, ends_at, title, track, room, description, sort_order, location_id, updated_at'
 
 export async function fetchProgramSlotRowsForEvent(
@@ -101,20 +101,39 @@ export async function fetchOrganizerProgramSlotsForEvent(
   )
 }
 
+export async function fetchProgramSlotRowById(
+  admin: SupabaseClient,
+  eventId: string,
+  slotId: string,
+): Promise<Record<string, unknown> | null> {
+  const full = await admin
+    .from('dancecard_program_slots')
+    .select(PROGRAM_SLOT_SELECT_FULL)
+    .eq('event_id', eventId)
+    .eq('id', slotId)
+    .maybeSingle()
+
+  if (full.error && isMissingColumn(full.error)) {
+    const core = await admin
+      .from('dancecard_program_slots')
+      .select(PROGRAM_SLOT_SELECT_CORE)
+      .eq('event_id', eventId)
+      .eq('id', slotId)
+      .maybeSingle()
+    if (core.error) throw core.error
+    return (core.data as Record<string, unknown> | null) ?? null
+  }
+
+  if (full.error) throw full.error
+  return (full.data as Record<string, unknown> | null) ?? null
+}
+
 export async function fetchOrganizerProgramSlotById(
   admin: SupabaseClient,
   eventId: string,
   slotId: string,
 ): Promise<OrganizerProgramSlotDto | null> {
-  const { data: s, error } = await admin
-    .from('dancecard_program_slots')
-    .select(
-      'id, starts_at, ends_at, title, track, room, description, sort_order, location_id, is_published, visibility, is_frozen, updated_at, track_id, photo_policy, organizer_notes_internal',
-    )
-    .eq('event_id', eventId)
-    .eq('id', slotId)
-    .maybeSingle()
-  if (error) throw error
+  const s = await fetchProgramSlotRowById(admin, eventId, slotId)
   if (!s) return null
 
   let trackRow: { name: string | null; color?: string | null } | null = null

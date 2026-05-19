@@ -17,10 +17,10 @@ export function OrganizerEventHeader({
   onPreviewRole,
 }: Props) {
   return (
-    <header className="sticky top-0 z-30 flex flex-wrap items-center gap-2 border-b border-dc-border bg-dc-surface/95 px-4 py-2.5 backdrop-blur sm:px-6">
+    <header className="sticky top-0 z-30 flex flex-wrap items-center gap-2 border-b border-dc-border bg-dc-surface/95 px-3 py-2.5 backdrop-blur sm:px-6">
       <button
         type="button"
-        className="rounded-lg border border-dc-border px-3 py-1.5 text-sm font-medium text-dc-text md:hidden"
+        className="shrink-0 rounded-lg border border-dc-border px-3 py-1.5 text-sm font-medium text-dc-text md:hidden"
         onClick={onOpenMenu}
       >
         Menu
@@ -32,7 +32,7 @@ export function OrganizerEventHeader({
         </span>
       ) : null}
 
-      <div className="ml-auto flex flex-wrap items-center gap-2">
+      <div className="flex min-w-0 flex-1 basis-full flex-wrap items-center justify-end gap-2 sm:ml-auto sm:flex-none sm:basis-auto">
         <button
           type="button"
           className="hidden rounded-lg border border-dc-border px-3 py-1.5 text-xs font-medium text-dc-muted hover:text-dc-text sm:inline-flex"
@@ -42,7 +42,7 @@ export function OrganizerEventHeader({
         </button>
         {onPreviewRole ? (
           <select
-            className="max-w-[10rem] rounded-lg border border-dc-border bg-dc-elevated px-2 py-1.5 text-xs text-dc-text sm:max-w-none sm:text-sm"
+            className="min-w-0 max-w-full flex-1 rounded-lg border border-dc-border bg-dc-elevated px-2 py-1.5 text-xs text-dc-text sm:max-w-none sm:flex-none sm:text-sm"
             defaultValue=""
             onChange={(e) => {
               const v = e.target.value

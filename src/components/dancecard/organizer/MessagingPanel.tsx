@@ -217,33 +217,33 @@ export function MessagingPanel({ eventSlug, readOnly }: { eventSlug: string; rea
   }
 
   return (
-    <div className="space-y-6 text-sm text-slate-300">
+    <div className="space-y-6 text-sm text-dc-muted">
       {dialog}
       <div>
-        <h2 className="font-serif text-lg text-white">Announcements</h2>
-        <p className="mt-1 text-slate-400">
+        <h2 className="font-serif text-lg text-dc-text">Announcements</h2>
+        <p className="mt-1 text-dc-muted">
           Publish a draft to post on every attendee dancecard immediately (Announcements feed). Email is optional and requires
           Resend — you can use the feed without email working yet.
         </p>
-        <p className="mt-2 text-xs text-slate-500">
+        <p className="mt-2 text-xs text-dc-muted">
           Email delivery uses Resend. Your host needs a Resend API key and sender domain configured in the server
           environment before live sends work (see first-run docs).
         </p>
       </div>
       {needsMigration ? (
-        <p className="text-xs text-amber-200">
+        <p className="text-xs text-amber-800">
           Database update required to enable messaging. Apply the latest Dancecard migration in Supabase.
         </p>
       ) : null}
-      {err ? <p className="text-sm text-rose-300">{err}</p> : null}
+      {err ? <p className="text-sm text-red-700">{err}</p> : null}
 
-      <div className="rounded-xl border border-white/10 bg-black/30 p-4">
-        <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">New template</p>
+      <div className="rounded-xl border border-dc-border bg-dc-surface-muted p-4">
+        <p className="text-xs font-semibold uppercase tracking-wide text-dc-muted">New template</p>
         <div className="mt-3 grid gap-2 sm:grid-cols-2">
-          <label className="text-xs text-slate-400 sm:col-span-2">
+          <label className="text-xs text-dc-muted sm:col-span-2">
             Start from preset
             <select
-              className="mt-1 w-full rounded border border-white/10 bg-black/40 px-2 py-1 text-sm text-white"
+              className="mt-1 w-full rounded border border-dc-border bg-dc-surface-muted px-2 py-1 text-sm text-dc-text"
               value={presetId}
               disabled={readOnly || busy}
               onChange={(e) => applyPreset(e.target.value)}
@@ -256,28 +256,28 @@ export function MessagingPanel({ eventSlug, readOnly }: { eventSlug: string; rea
               ))}
             </select>
           </label>
-          <label className="text-xs text-slate-400">
+          <label className="text-xs text-dc-muted">
             Name
             <input
-              className="mt-1 w-full rounded border border-white/10 bg-black/40 px-2 py-1 text-sm text-white"
+              className="mt-1 w-full rounded border border-dc-border bg-dc-surface-muted px-2 py-1 text-sm text-dc-text"
               value={name}
               onChange={(e) => setName(e.target.value)}
               disabled={readOnly || busy}
             />
           </label>
-          <label className="text-xs text-slate-400 sm:col-span-2">
+          <label className="text-xs text-dc-muted sm:col-span-2">
             Subject
             <input
-              className="mt-1 w-full rounded border border-white/10 bg-black/40 px-2 py-1 text-sm text-white"
+              className="mt-1 w-full rounded border border-dc-border bg-dc-surface-muted px-2 py-1 text-sm text-dc-text"
               value={subject}
               onChange={(e) => setSubject(e.target.value)}
               disabled={readOnly || busy}
             />
           </label>
-          <label className="text-xs text-slate-400 sm:col-span-2">
+          <label className="text-xs text-dc-muted sm:col-span-2">
             Body (plain text)
             <textarea
-              className="mt-1 min-h-[120px] w-full rounded border border-white/10 bg-black/40 px-2 py-1 text-sm text-white"
+              className="mt-1 min-h-[120px] w-full rounded border border-dc-border bg-dc-surface-muted px-2 py-1 text-sm text-dc-text"
               value={bodyText}
               onChange={(e) => setBodyText(e.target.value)}
               disabled={readOnly || busy}
@@ -288,16 +288,16 @@ export function MessagingPanel({ eventSlug, readOnly }: { eventSlug: string; rea
           <button
             type="button"
             disabled={readOnly || busy || !subject.trim() || !bodyText.trim()}
-            className="rounded-full bg-dc-accent-muted px-4 py-2 text-xs font-semibold text-dc-text ring-1 ring-dc-accent-border hover:bg-dc-accent/30 disabled:opacity-40"
+            className="rounded-full bg-dc-accent-muted px-4 py-2 text-xs font-semibold text-dc-accent-foreground ring-1 ring-dc-accent-border hover:bg-dc-accent/30 disabled:opacity-40"
             onClick={() => void saveTemplate()}
           >
             Save template
           </button>
-          <label className="text-xs text-slate-400">
+          <label className="text-xs text-dc-muted">
             Test to
             <input
               type="email"
-              className="mt-1 block rounded border border-white/10 bg-black/40 px-2 py-1 text-sm text-white"
+              className="mt-1 block rounded border border-dc-border bg-dc-surface-muted px-2 py-1 text-sm text-dc-text"
               value={testEmail}
               onChange={(e) => setTestEmail(e.target.value)}
               disabled={readOnly || busy}
@@ -307,7 +307,7 @@ export function MessagingPanel({ eventSlug, readOnly }: { eventSlug: string; rea
           <button
             type="button"
             disabled={readOnly || busy || !testEmail.trim()}
-            className="rounded-full border border-white/20 px-3 py-2 text-xs hover:bg-white/10 disabled:opacity-40"
+            className="rounded-full border border-dc-border px-3 py-2 text-xs hover:bg-dc-accent-muted disabled:opacity-40"
             onClick={() => void sendTest()}
           >
             Send test
@@ -315,14 +315,14 @@ export function MessagingPanel({ eventSlug, readOnly }: { eventSlug: string; rea
         </div>
       </div>
 
-      <div className="rounded-xl border border-white/10 bg-black/30 p-4">
-        <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Templates</p>
+      <div className="rounded-xl border border-dc-border bg-dc-surface-muted p-4">
+        <p className="text-xs font-semibold uppercase tracking-wide text-dc-muted">Templates</p>
         <ul className="mt-3 space-y-3">
           {templates.map((t) => (
-            <li key={t.id} className="rounded-lg border border-white/10 bg-black/20 p-3">
-              <div className="font-medium text-slate-100">{t.name}</div>
-              <div className="text-xs text-slate-400">{t.subject}</div>
-              <pre className="mt-2 max-h-28 overflow-auto whitespace-pre-wrap text-[11px] text-slate-300">{t.bodyText}</pre>
+            <li key={t.id} className="rounded-lg border border-dc-border bg-dc-elevated-muted p-3">
+              <div className="font-medium text-dc-text">{t.name}</div>
+              <div className="text-xs text-dc-muted">{t.subject}</div>
+              <pre className="mt-2 max-h-28 overflow-auto whitespace-pre-wrap text-[11px] text-dc-muted">{t.bodyText}</pre>
               <div className="mt-2 flex flex-wrap gap-2">
                 <button
                   type="button"
@@ -336,15 +336,15 @@ export function MessagingPanel({ eventSlug, readOnly }: { eventSlug: string; rea
             </li>
           ))}
         </ul>
-        {!templates.length ? <p className="mt-2 text-xs text-slate-500">No templates yet.</p> : null}
+        {!templates.length ? <p className="mt-2 text-xs text-dc-muted">No templates yet.</p> : null}
       </div>
 
-      <div className="rounded-xl border border-white/10 bg-black/30 p-4">
-        <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Campaigns &amp; delivery</p>
-        <label className="mt-2 flex items-center gap-2 text-xs text-slate-400">
+      <div className="rounded-xl border border-dc-border bg-dc-surface-muted p-4">
+        <p className="text-xs font-semibold uppercase tracking-wide text-dc-muted">Campaigns &amp; delivery</p>
+        <label className="mt-2 flex items-center gap-2 text-xs text-dc-muted">
           Segment (chart)
           <select
-            className="rounded border border-white/10 bg-black/40 px-2 py-1 text-white"
+            className="rounded border border-dc-border bg-dc-surface-muted px-2 py-1 text-dc-text"
             value={segment}
             onChange={(e) => setSegment(e.target.value as typeof segment)}
           >
@@ -370,18 +370,18 @@ export function MessagingPanel({ eventSlug, readOnly }: { eventSlug: string; rea
         ) : null}
         <ul className="mt-3 space-y-2">
           {campaigns.map((c) => (
-            <li key={c.id} className="flex flex-wrap items-center justify-between gap-2 border-t border-white/10 pt-2 text-xs">
+            <li key={c.id} className="flex flex-wrap items-center justify-between gap-2 border-t border-dc-border pt-2 text-xs">
               <div>
-                <span className="text-slate-200">{c.templateName}</span>
-                <span className="text-slate-500"> · {c.status}</span>
+                <span className="text-dc-text">{c.templateName}</span>
+                <span className="text-dc-muted"> · {c.status}</span>
                 {c.status === 'sent' ? <span className="text-emerald-400/90"> · on dancecard</span> : null}
                 {c.deliveryTotal ? (
-                  <span className="text-slate-500">
+                  <span className="text-dc-muted">
                     {' '}
                     · email {c.deliverySent}/{c.deliveryTotal}
                   </span>
                 ) : c.status === 'sent' ? (
-                  <span className="text-slate-500"> · no email log</span>
+                  <span className="text-dc-muted"> · no email log</span>
                 ) : null}
               </div>
               {c.status === 'draft' ? (
@@ -397,48 +397,48 @@ export function MessagingPanel({ eventSlug, readOnly }: { eventSlug: string; rea
             </li>
           ))}
         </ul>
-        {!campaigns.length ? <p className="mt-2 text-xs text-slate-500">No campaigns yet.</p> : null}
+        {!campaigns.length ? <p className="mt-2 text-xs text-dc-muted">No campaigns yet.</p> : null}
       </div>
 
       {composeTemplate ? (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/65 p-4">
-          <div className="max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-2xl border border-white/15 bg-[#121820] p-5 shadow-2xl">
-            <h3 className="font-serif text-lg text-white">Create announcement</h3>
-            <p className="mt-2 text-sm text-slate-400">
-              Saves a <strong className="font-medium text-slate-200">draft</strong> only. Review in Campaigns below,
-              then click <strong className="font-medium text-slate-200">Publish to dancecard</strong> when ready (email optional).
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-dc-surface/80 p-4">
+          <div className="max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-2xl border border-dc-border bg-dc-elevated-solid p-5 shadow-2xl">
+            <h3 className="font-serif text-lg text-dc-text">Create announcement</h3>
+            <p className="mt-2 text-sm text-dc-muted">
+              Saves a <strong className="font-medium text-dc-text">draft</strong> only. Review in Campaigns below,
+              then click <strong className="font-medium text-dc-text">Publish to dancecard</strong> when ready (email optional).
             </p>
-            <dl className="mt-4 space-y-3 rounded-xl border border-white/10 bg-black/30 p-3 text-sm">
+            <dl className="mt-4 space-y-3 rounded-xl border border-dc-border bg-dc-surface-muted p-3 text-sm">
               <div>
-                <dt className="text-xs uppercase tracking-wide text-slate-500">Template</dt>
-                <dd className="text-slate-100">{composeTemplate.name}</dd>
+                <dt className="text-xs uppercase tracking-wide text-dc-muted">Template</dt>
+                <dd className="text-dc-text">{composeTemplate.name}</dd>
               </div>
               <div>
-                <dt className="text-xs uppercase tracking-wide text-slate-500">Email subject</dt>
-                <dd className="text-slate-100">{composeTemplate.subject}</dd>
+                <dt className="text-xs uppercase tracking-wide text-dc-muted">Email subject</dt>
+                <dd className="text-dc-text">{composeTemplate.subject}</dd>
               </div>
               <div>
-                <dt className="text-xs uppercase tracking-wide text-slate-500">Message preview</dt>
-                <dd className="mt-1 whitespace-pre-wrap text-slate-300">{composeTemplate.bodyText}</dd>
+                <dt className="text-xs uppercase tracking-wide text-dc-muted">Message preview</dt>
+                <dd className="mt-1 whitespace-pre-wrap text-dc-muted">{composeTemplate.bodyText}</dd>
               </div>
               <div>
-                <dt className="text-xs uppercase tracking-wide text-slate-500">Delivery estimate</dt>
-                <dd className="mt-1 text-slate-300">
+                <dt className="text-xs uppercase tracking-wide text-dc-muted">Delivery estimate</dt>
+                <dd className="mt-1 text-dc-muted">
                   {composeAudienceErr ? (
-                    <span className="text-amber-200">{composeAudienceErr}</span>
+                    <span className="text-amber-800">{composeAudienceErr}</span>
                   ) : composeAudience ? (
                     <>
                       <span className="block">
                         In-app (non-cancelled {copy.signups.toLowerCase()}):{' '}
-                        <strong className="text-slate-100">{composeAudience.dancecardReach}</strong>
+                        <strong className="text-dc-text">{composeAudience.dancecardReach}</strong>
                       </span>
-                      <span className="mt-1 block text-xs text-slate-400">
+                      <span className="mt-1 block text-xs text-dc-muted">
                         Unique emails on file (matches send):{' '}
-                        <strong className="text-slate-200">{composeAudience.emailReach}</strong>
+                        <strong className="text-dc-text">{composeAudience.emailReach}</strong>
                       </span>
                     </>
                   ) : (
-                    <span className="text-slate-500">Calculating…</span>
+                    <span className="text-dc-muted">Calculating…</span>
                   )}
                 </dd>
               </div>
@@ -456,7 +456,7 @@ export function MessagingPanel({ eventSlug, readOnly }: { eventSlug: string; rea
               </button>
               <button
                 type="button"
-                className="rounded-full border border-white/20 px-4 py-2 text-sm text-slate-300 hover:bg-white/5"
+                className="rounded-full border border-dc-border px-4 py-2 text-sm text-dc-muted hover:bg-white/5"
                 onClick={() => setComposeTemplate(null)}
               >
                 Cancel

@@ -1,4 +1,5 @@
 import type { SupabaseClient } from '@supabase/supabase-js'
+import { fetchProgramSlotRowsForEvent } from '@/lib/dancecard/organizerProgramSlotsData'
 import { slotVisibleToAttendee } from '@/lib/dancecard/programSlotPublication'
 
 export type PublicProgramSlotDto = {
@@ -14,7 +15,13 @@ export type PublicProgramSlotDto = {
   description: string | null
   sortOrder: number
   tagNames: string[]
-  presenters: { sceneName: string; role: string }[]
+  presenters: {
+    personId: string
+    sceneName: string
+    role: string
+    publicBio: string | null
+    photoUrl: string | null
+  }[]
   photoPolicy: 'allowed' | 'restricted' | 'none'
   locationName: string | null
 }
@@ -24,16 +31,8 @@ export async function fetchPublicProgramSlotsForEvent(
   eventId: string,
   isStaff: boolean,
 ): Promise<PublicProgramSlotDto[]> {
-  const { data: slots, error } = await admin
-    .from('dancecard_program_slots')
-    .select(
-      'id, starts_at, ends_at, title, track, room, description, sort_order, location_id, is_published, visibility, is_frozen, track_id, photo_policy',
-    )
-    .eq('event_id', eventId)
-    .order('starts_at', { ascending: true })
-    .order('sort_order', { ascending: true })
-  if (error) throw error
-  const list = (slots ?? []).filter((s) => s.starts_at != null && s.ends_at != null).filter((s) =>
+  const slots = await fetchProgramSlotRowsForEvent(admin, eventId)
+  const list = slots.filter((s) => s.starts_at != null && s.ends_at != null).filter((s) =>
     slotVisibleToAttendee(
       {
         is_published: s.is_published !== undefined ? Boolean(s.is_published) : true,
@@ -51,7 +50,10 @@ export async function fetchPublicProgramSlotsForEvent(
   const locNameById: Record<string, string> = {}
   const trackNameById: Record<string, string> = {}
   const tagNamesBySlot: Record<string, string[]> = {}
-  const presentersBySlot: Record<string, { sceneName: string; role: string }[]> = {}
+  const presentersBySlot: Record<
+    string,
+    { personId: string; sceneName: string; role: string; publicBio: string | null; photoUrl: string | null }[]
+  > = {}
 
   const [locsResult, tracksResult, tagsResult, assignsResult] = await Promise.all([
     locationIds.length
@@ -94,23 +96,37 @@ export async function fetchPublicProgramSlotsForEvent(
     const pids = Array.from(new Set(assigns.map((a) => a.person_id as string)))
     const { data: people, error: peopleErr } = await admin
       .from('dancecard_persons')
-      .select('id, scene_name, legal_name, show_legal_name_on_public')
+      .select('id, scene_name, legal_name, show_legal_name_on_public, public_bio, photo_url')
       .in('id', pids)
       .eq('event_id', eventId)
     if (!peopleErr && people) {
       const pubName: Record<string, string> = {}
+      const personMeta: Record<string, { publicBio: string | null; photoUrl: string | null }> = {}
       for (const p of people) {
+        const id = p.id as string
         const showLegal = Boolean(p.show_legal_name_on_public)
         const legal = (p.legal_name as string | null) ?? ''
         const scene = String(p.scene_name ?? '')
-        pubName[p.id as string] = showLegal && legal.trim() ? legal.trim() : scene
+        pubName[id] = showLegal && legal.trim() ? legal.trim() : scene
+        personMeta[id] = {
+          publicBio: (p.public_bio as string | null) ?? null,
+          photoUrl: (p.photo_url as string | null) ?? null,
+        }
       }
       for (const a of assigns) {
         const sid = a.slot_id as string
-        const name = pubName[a.person_id as string]
+        const pid = a.person_id as string
+        const name = pubName[pid]
         if (!name) continue
+        const meta = personMeta[pid] ?? { publicBio: null, photoUrl: null }
         if (!presentersBySlot[sid]) presentersBySlot[sid] = []
-        presentersBySlot[sid].push({ sceneName: name, role: String(a.role) })
+        presentersBySlot[sid].push({
+          personId: pid,
+          sceneName: name,
+          role: String(a.role),
+          publicBio: meta.publicBio,
+          photoUrl: meta.photoUrl,
+        })
       }
     }
   }

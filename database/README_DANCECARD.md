@@ -4,12 +4,12 @@ Schema expectations and app-side delivery notes: **§3.3** (Phase 0), **§3.4** 
 
 ## One-shot Supabase SQL editor
 
-- **`dancecard_full_bundle.sql`** — concatenates **000 → 001 → 002–040 → PAF26 seed** in order. Paste the entire file into the Supabase SQL editor once (mostly idempotent). **Remove or skip the final seed block** if you do not use slug `paf26`. Regenerate after editing slices: `npm run dancecard:build-migration-bundle`.
+- **`dancecard_full_bundle.sql`** — concatenates **000 → 053 → PAF26 seed** in order. Paste the entire file into the Supabase SQL editor once (mostly idempotent). **Remove or skip the final seed block** if you do not use slug `paf26`. Regenerate after editing slices: `npm run dancecard:build-migration-bundle`.
 - **Regenerate** after editing any slice: `npm run dancecard:build-migration-bundle` (writes `database/dancecard_full_bundle.sql`).
 
 ## Verify schema (Supabase SQL editor)
 
-After migrations **000–040**, paste and run **`dancecard_verify_schema.sql`** (read-only). Failures list first; the last row should be **`SUMMARY` → `PASS (000–040)`** (or the highest version your verify file targets). It checks core `dancecard_*` tables, columns through **040** (attendee profile, ops-summary embed), nullable program slots (**032**), indexes, triggers, and bump/touch functions. It does **not** create Storage buckets.
+After migrations **000–053**, paste and run **`dancecard_verify_schema.sql`** (read-only). Failures list first; the last row should be **`SUMMARY` → `PASS (000–053)`** (or the highest version your verify file targets). It checks core `dancecard_*` tables, columns through **040** (attendee profile, ops-summary embed), nullable program slots (**032**), indexes, triggers, and bump/touch functions. It does **not** create Storage buckets.
 
 ## Phase 3 increment (existing DB already on 012)
 
@@ -69,9 +69,9 @@ Then run **`dancecard_verify_schema.sql`** and confirm **`PASS (000–040)`**.
 
 Requires `DATABASE_URL` or `DIRECT_URL` in `.env.local` (database password from Supabase → Project Settings → Database, not API keys).
 
-Default order: **000, 001, 002 … 040**. Optional: set **`DANCECARD_APPLY_SEED=1`** to also run `dancecard_seed_paf26_demo.sql` (upserts `paf26` event metadata).
+Default order: **000, 001, 002 … 053**. Optional: set **`DANCECARD_APPLY_SEED=1`** to also run `dancecard_seed_paf26_demo.sql` (upserts `paf26` event metadata).
 
-**Maps uploads:** create a Storage bucket (default name **`dancecard-maps`**, or set **`DANCECARD_MAPS_BUCKET`**); allow service-role uploads and signed/public read per your security model. Organizer uploads use `POST /api/organizer/dancecard/[eventSlug]/maps/upload`.
+**Storage (three buckets):** create **`dancecard-maps`** (venue floor plans), **`dancecard-event-assets`** (badge logos), and **`dancecard-profile-photos`** (attendee avatars). Override names with **`DANCECARD_*_BUCKET`** env vars (see `.env.example`). Service role uploads and signed URLs only. If you previously used a single bucket for everything, run **`npm run dancecard:migrate-storage`** after creating the new buckets (optional **`--dry-run`**).
 
 ## Individual files (reference)
 
@@ -116,7 +116,12 @@ Default order: **000, 001, 002 … 040**. Optional: set **`DANCECARD_APPLY_SEED=
 - `dancecard_038_trusted_roles.sql` — trusted roles, questionnaire, vetting link column.
 - `dancecard_039_attendee_profile.sql` — attendee profile config and display fields.
 - `dancecard_040_ops_summary_embed.sql` — `ops_summary` embed token kind (separate from schedule/map).
-- `dancecard_verify_schema.sql` — read-only Postgres checks; paste in Supabase after **040** (expect `PASS (000–040)`).
+- `dancecard_041_door_checkin_tokens.sql` — `check_in_token` on registrants for QR door check-in.
+- `dancecard_042_safety_incidents.sql` — safety incident log table.
+- `dancecard_043_program_slot_audit.sql` — organizer forensic audit for program slot edits.
+- `dancecard_044_registration_question_categories.sql` — `required_for_category_ids` on registration questions.
+- `dancecard_045_ics_reminders.sql` through `dancecard_053_iso_comments.sql` — ICS reminders, follows, compare privacy/requests, ISO board, session feedback, badge fields, ISO comments.
+- `dancecard_verify_schema.sql` — read-only Postgres checks; paste in Supabase after **053** (expect `PASS (000–053)`).
 - `dancecard_seed_paf26_demo.sql` — upserts event `paf26` (no program rows; use `npm run dancecard:import`).
 
 See [docs/dancecard-first-run.md](../docs/dancecard-first-run.md) for smoke tests and program import.

@@ -17,6 +17,8 @@ type Props = {
   setShowPassword: (v: boolean | ((prev: boolean) => boolean)) => void
   displayName: string
   setDisplayName: (v: string) => void
+  compCode: string
+  setCompCode: (v: string) => void
   authNotice: AuthNotice | null
   setAuthNotice: (v: AuthNotice | null) => void
   onSubmit: () => void
@@ -36,6 +38,8 @@ export function PublicDancecardSignInPanel({
   setShowPassword,
   displayName,
   setDisplayName,
+  compCode,
+  setCompCode,
   authNotice,
   setAuthNotice,
   onSubmit,
@@ -61,6 +65,7 @@ export function PublicDancecardSignInPanel({
             onClick={() => {
               setAuthMode(mode)
               setPasswordConfirm('')
+              setCompCode('')
               setShowPassword(false)
               setAuthNotice(null)
             }}
@@ -141,6 +146,23 @@ export function PublicDancecardSignInPanel({
                 onChange={(e) => setDisplayName(e.target.value)}
                 placeholder="How friends see you"
               />
+            </div>
+            <div>
+              <label className="mb-2 block text-xs font-semibold uppercase tracking-[0.25em] text-dc-muted">
+                Registration code{' '}
+                <span className="font-normal normal-case tracking-normal text-dc-muted">(optional)</span>
+              </label>
+              <input
+                className={`w-full rounded-xl border border-dc-border bg-dc-surface-muted font-mono text-sm text-dc-text placeholder:text-dc-muted ${fieldPad}`}
+                value={compCode}
+                onChange={(e) => setCompCode(e.target.value)}
+                autoComplete="off"
+                placeholder="Staff / volunteer / comp code from organizers"
+              />
+              <p className="mt-2 text-[11px] leading-snug text-dc-muted">
+                Leave blank for general attendee registration. Your code sets your ticket type (staff, volunteer, comp,
+                etc.).
+              </p>
             </div>
             <div className="rounded-xl border border-dc-warning/40 bg-dc-warning-muted p-4 text-sm leading-6 text-dc-text">
               <p className="font-semibold text-dc-warning">There is no password reset.</p>

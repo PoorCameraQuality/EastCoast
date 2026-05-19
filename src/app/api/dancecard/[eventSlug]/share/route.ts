@@ -10,6 +10,8 @@ import {
 import { rateLimiters, withRateLimit } from '@/lib/rateLimit'
 import { toClientError } from '@/lib/security/safeApiError'
 
+export const dynamic = 'force-dynamic'
+
 const revokeSchema = z.object({
   token: z.string().min(1).max(128).optional(),
   revokeAll: z.boolean().optional(),

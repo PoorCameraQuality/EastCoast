@@ -64,16 +64,24 @@ If **`023`–`026`** are not yet applied, run in numeric order from [`database/R
 
 **Webhook retries:** set **`DANCECARD_CRON_SECRET`** (or reuse **`CRON_SECRET`**) and schedule **`GET /api/cron/dancecard-webhook-retries`** with header **`Authorization: Bearer <secret>`** every few minutes.
 
-### Maps (Phase 3) — Supabase Storage
+### Storage — Supabase buckets
 
-Organizer map uploads use bucket **`dancecard-maps`** by default (override with **`DANCECARD_MAPS_BUCKET`** in `.env.local` / Vercel). The app server uses the **service role** to upload objects and to mint **signed URLs** for public **`GET /api/dancecard/[eventSlug]/venue-map`**; attendees never receive the service role key.
+Three buckets (override via env; see `.env.example`):
 
-**Checklist (per environment: local, preview, production):**
+| Bucket | Purpose |
+|--------|---------|
+| **`dancecard-maps`** | Venue floor plans |
+| **`dancecard-event-assets`** | Badge logos / event files |
+| **`dancecard-profile-photos`** | Attendee profile avatars |
 
-1. Create Storage bucket **`dancecard-maps`** (or your override name) in the Supabase dashboard (or CLI).
-2. Ensure the **service role** can **upload** to that bucket (policies your team is comfortable with; often object paths are namespaced by event slug in app code).
-3. Ensure **`createSignedUrl`** works for objects you store there (bucket must allow the server to sign reads for public map JSON).
-4. Deploy app code that includes Phase 3 routes and set **`SUPABASE_SERVICE_ROLE_KEY`** on the host.
+The server uses the **service role** to upload and mint **signed URLs**; attendees never receive that key.
+
+**Checklist (per environment):**
+
+1. Create all three buckets in Supabase.
+2. Grant the service role upload + signed read on each.
+3. Set **`SUPABASE_SERVICE_ROLE_KEY`** on the host.
+4. If older uploads lived only in **`dancecard-maps`**, run **`npm run dancecard:migrate-storage`** once (optional **`--dry-run`**). Until then, signed URLs still fall back via **`DANCECARD_LEGACY_STORAGE_BUCKET`**.
 
 Do not expose the service role key to browsers.
 
@@ -204,6 +212,18 @@ JSON shape: `{ "slots": [ { "startsAt", "endsAt", "title", "track?", "room?", "s
 XLSX (row-oriented): prefers a sheet whose name contains **Grid**; otherwise first sheet. Header row must map to Start / End / Title columns (legacy heuristics). **PAF26 Grid matrix:** use `dancecard:parse-paf26` instead of direct XLSX import.
 
 **Chat → deploy workflow:** when an organizer sends a workbook, create or confirm the `dancecard_events` row (slug, window, titles), run import for that slug, spot-check first/last session times in the UI, then announce the public URL `/dancecard/{slug}`.
+
+## Release smoke checklist (sandbox)
+
+After `npm run dancecard:apply-migrations` and `npm run dancecard:seed-sandbox -- --reset` on a clean DB:
+
+1. **Attendee** — Sign in at `/dancecard/sandbox-dancecard`; land on **Program**; open timeline; `?compare=demo` loads mutual compare when seeded.
+2. **Organizer** — Open program grid, select **Opening circle** (or first slot); drawer loads without “Slot not found”.
+3. **Conflicts** — Disconnect network or block `/program-conflicts`; program tab shows an error banner (not an empty “all clear”).
+4. **Door** — As **viewer** role, door roster API must not return `checkInToken` per row.
+5. **Registration** — Register without code → attendee category only; with `SANDBOX-STAFF-REG` → staff category.
+6. **Compare** — Blocked users omitted from compare directory; **Request** sends compare request.
+7. **Build** — `npm run build` completes without type errors.
 
 ## Cutover from standalone repo
 

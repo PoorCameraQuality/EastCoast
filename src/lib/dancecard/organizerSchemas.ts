@@ -64,6 +64,22 @@ export const organizerProgramSlotCreateSchema = z
     }
   })
 
+const slotScheduleSnapshotSchema = z.object({
+  title: z.string(),
+  startsAt: z.union([isoLike, z.null()]),
+  endsAt: z.union([isoLike, z.null()]),
+  room: z.string().nullable(),
+  locationId: z.string().uuid().nullable(),
+  locationName: z.string().nullable(),
+})
+
+export const organizerNotifyScheduleChangeSchema = z.object({
+  accountIds: z.array(z.string().uuid()).max(500),
+  message: z.string().max(4000).optional(),
+  before: slotScheduleSnapshotSchema.optional(),
+  after: slotScheduleSnapshotSchema.optional(),
+})
+
 export const organizerProgramSlotPatchSchema = z
   .object({
   startsAt: isoLikeNullable.optional(),
@@ -142,6 +158,7 @@ export const organizerStaffShiftCreateSchema = z.object({
   sortOrder: z.number().int().min(0).max(1_000_000).optional(),
   shiftStatus: staffShiftStatusEnum.optional(),
   organizerNotesStaffOnly: z.string().max(4000).nullable().optional(),
+  overrideConflicts: z.boolean().optional(),
 })
 
 export const organizerStaffShiftPatchSchema = z.object({
@@ -156,6 +173,7 @@ export const organizerStaffShiftPatchSchema = z.object({
   organizerNotesStaffOnly: z.string().max(4000).nullable().optional(),
   droppedAt: isoLike.nullable().optional(),
   clearClaimedBy: z.boolean().optional(),
+  overrideConflicts: z.boolean().optional(),
 })
 
 const slotPersonRoleEnum = z.enum([
@@ -279,6 +297,7 @@ export const organizerRegistrationFormPutSchema = z.object({
         sortOrder: z.number().int().min(0).max(1_000_000).optional(),
         optionsJson: z.unknown().optional(),
         visibilityRulesJson: z.record(z.string(), z.unknown()).optional(),
+        requiredForCategoryIds: z.array(z.string().uuid()).max(200).optional(),
       }),
     )
     .optional(),
@@ -315,6 +334,7 @@ export const organizerRegistrantPatchSchema = z.object({
   importedPaymentStatus: z.string().max(200).nullable().optional(),
   externalSourceRef: z.string().max(500).nullable().optional(),
   pronouns: z.string().max(120).nullable().optional(),
+  badgeTagline: z.string().max(200).nullable().optional(),
   vettingStatus: z.enum(['none', 'pending', 'approved', 'rejected', 'hold']).optional(),
   vettingSafetyNotes: z.string().max(8000).nullable().optional(),
   tagIds: z.array(z.string().uuid()).max(200).optional(),
@@ -337,6 +357,7 @@ export const organizerRegistrantImportSchema = z.object({
           status: z.enum(['imported', 'pending', 'confirmed', 'cancelled', 'waitlisted', 'checked_in']).optional(),
           externalSource: z.string().min(1).max(64).optional(),
           externalId: z.string().min(1).max(256).optional(),
+          importedPaymentStatus: z.string().max(200).nullable().optional(),
         })
         .refine((r) => Boolean(r.categoryId || r.categoryName), {
           message: 'Each row needs categoryId or categoryName',

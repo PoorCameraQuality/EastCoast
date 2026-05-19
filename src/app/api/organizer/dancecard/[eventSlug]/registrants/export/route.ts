@@ -20,7 +20,9 @@ export async function GET(_request: Request, context: { params: { eventSlug: str
     }
     const { data: rows, error } = await admin
       .from('dancecard_registrants')
-      .select('id, category_id, status, scene_display_name, legal_name, email, phone, created_at')
+      .select(
+        'id, category_id, status, scene_display_name, legal_name, email, phone, checked_in_at, checked_in_timing, imported_payment_status, created_at',
+      )
       .eq('event_id', eventId)
       .order('created_at', { ascending: false })
     if (error) throw error
@@ -30,7 +32,19 @@ export async function GET(_request: Request, context: { params: { eventSlug: str
       const { data: cats } = await admin.from('dancecard_registration_categories').select('id, name').in('id', catIds)
       for (const c of cats ?? []) catName[c.id as string] = String(c.name)
     }
-    const header = ['id', 'category', 'status', 'sceneDisplayName', 'legalName', 'email', 'phone', 'createdAt']
+    const header = [
+      'id',
+      'category',
+      'status',
+      'sceneDisplayName',
+      'legalName',
+      'email',
+      'phone',
+      'checkedInAt',
+      'checkedInTiming',
+      'importedPaymentStatus',
+      'createdAt',
+    ]
     const lines = [header.join(',')]
     for (const r of rows ?? []) {
       lines.push(
@@ -42,6 +56,9 @@ export async function GET(_request: Request, context: { params: { eventSlug: str
           csvEscape(String(r.legal_name ?? '')),
           csvEscape(String(r.email ?? '')),
           csvEscape(String(r.phone ?? '')),
+          csvEscape(String(r.checked_in_at ?? '')),
+          csvEscape(String(r.checked_in_timing ?? '')),
+          csvEscape(String(r.imported_payment_status ?? '')),
           csvEscape(String(r.created_at ?? '')),
         ].join(','),
       )

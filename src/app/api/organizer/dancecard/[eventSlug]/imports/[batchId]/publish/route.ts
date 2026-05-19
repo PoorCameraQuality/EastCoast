@@ -1,5 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { assertOrganizerCanMutate, organizerErrorResponse, requireOrganizerForSlug } from '@/lib/dancecard/organizerAuth'
+import { loadEventBySlugAnyStatus } from '@/lib/dancecard/routeCommon'
+import {
+  buildSlotSnapshots,
+  formatScheduleChangeMessage,
+  formatScheduleChangeSummary,
+  scheduleFieldsChanged,
+} from '@/lib/dancecard/scheduleChangeImpact'
 
 export const dynamic = 'force-dynamic'
 
@@ -21,15 +28,21 @@ type ImportRow = {
   sort_order: number
 }
 
-function rowSnapshot(row: ImportRow) {
+function snapshotToJson(s: {
+  title: string
+  startsAt: string | null
+  endsAt: string | null
+  room: string | null
+  locationId: string | null
+  locationName: string | null
+}): Record<string, unknown> {
   return {
-    title: row.title,
-    personName: row.person_name,
-    role: row.role,
-    track: row.track,
-    room: row.room,
-    startsAt: row.starts_at,
-    endsAt: row.ends_at,
+    title: s.title,
+    startsAt: s.startsAt,
+    endsAt: s.endsAt,
+    room: s.room,
+    locationId: s.locationId,
+    locationName: s.locationName,
   }
 }
 
@@ -41,6 +54,8 @@ export async function POST(
     const ctx = await requireOrganizerForSlug(context.params.eventSlug)
     assertOrganizerCanMutate(ctx)
     const { admin, eventId, userId } = ctx
+    const event = await loadEventBySlugAnyStatus(admin, context.params.eventSlug)
+    const timezone = event?.timezone ?? 'America/New_York'
     const { data: batch, error: batchErr } = await admin
       .from('dancecard_import_batches')
       .select('id, kind, status')
@@ -91,7 +106,7 @@ export async function POST(
         if (row.action === 'update' && row.source_ref_id) {
           const { data: oldSlot } = await admin
             .from('dancecard_program_slots')
-            .select('id, title, track, room, starts_at, ends_at')
+            .select('id, title, track, room, location_id, starts_at, ends_at')
             .eq('id', row.source_ref_id)
             .eq('event_id', eventId)
             .maybeSingle()
@@ -102,18 +117,32 @@ export async function POST(
             .from('dancecard_selections')
             .select('account_id')
             .eq('slot_id', row.source_ref_id)
-          if (selections?.length) {
-            const notices = selections.map((selection) => ({
-              event_id: eventId,
-              account_id: selection.account_id,
-              program_slot_id: row.source_ref_id,
-              old_snapshot: oldSlot ?? {},
-              new_snapshot: rowSnapshot(row),
-              conflict_summary: {},
-            }))
-            const { error: noticeErr } = await admin.from('dancecard_schedule_change_notifications').insert(notices)
-            if (noticeErr) throw noticeErr
-            notified += notices.length
+          if (selections?.length && oldSlot) {
+            const afterRow = { ...oldSlot, ...payload, title: row.title }
+            const { before, after } = await buildSlotSnapshots(
+              admin,
+              eventId,
+              oldSlot as Record<string, unknown>,
+              afterRow as Record<string, unknown>,
+            )
+            if (scheduleFieldsChanged(before, after)) {
+              const summaryText = formatScheduleChangeSummary(before, after, timezone)
+              const message = formatScheduleChangeMessage(
+                { slotTitle: row.title ?? before.title, before, after, summaryText },
+                timezone,
+              )
+              const notices = selections.map((selection) => ({
+                event_id: eventId,
+                account_id: selection.account_id,
+                program_slot_id: row.source_ref_id,
+                old_snapshot: snapshotToJson(before),
+                new_snapshot: snapshotToJson(after),
+                conflict_summary: { message, kinds: ['dancecard_holder'] },
+              }))
+              const { error: noticeErr } = await admin.from('dancecard_schedule_change_notifications').insert(notices)
+              if (noticeErr) throw noticeErr
+              notified += notices.length
+            }
           }
         } else {
           const { error } = await admin.from('dancecard_program_slots').insert(payload)

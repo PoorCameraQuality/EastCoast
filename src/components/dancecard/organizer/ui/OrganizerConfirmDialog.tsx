@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
 
 const panelClass =
-  'rounded-2xl border border-dc-border-strong bg-[#151c27] p-5 shadow-[0_16px_48px_rgba(2,6,23,0.65)] sm:p-6'
+  'rounded-2xl border border-dc-border-strong bg-dc-elevated-solid p-5 shadow-[0_16px_48px_rgba(45,38,28,0.18)] sm:p-6'
 
 export function OrganizerConfirmDialog({
   open,
@@ -51,7 +51,7 @@ export function OrganizerConfirmDialog({
     >
       <button
         type="button"
-        className="absolute inset-0 bg-black/80"
+        className="absolute inset-0 bg-dc-text/40 backdrop-blur-sm"
         aria-label="Cancel"
         disabled={busy}
         onClick={onCancel}
@@ -80,7 +80,7 @@ export function OrganizerConfirmDialog({
             disabled={busy}
             className={
               destructive
-                ? 'rounded-lg bg-dc-danger px-4 py-2 text-sm font-semibold text-white hover:opacity-90 disabled:opacity-50'
+                ? 'rounded-lg bg-dc-danger px-4 py-2 text-sm font-semibold text-dc-text hover:opacity-90 disabled:opacity-50'
                 : 'rounded-lg bg-dc-accent px-4 py-2 text-sm font-semibold text-dc-accent-foreground hover:bg-dc-accent-hover disabled:opacity-50'
             }
             onClick={onConfirm}

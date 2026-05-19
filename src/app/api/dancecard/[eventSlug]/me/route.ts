@@ -6,16 +6,22 @@ import {
   loadAvailabilityRange,
   saveAccountProfile,
   setPrefsAllowCompareByUsername,
+  setPrefsComparePrivacy,
+  setPrefsIcsRemindBeforeMinutes,
 } from '@/lib/dancecard/data'
+import type { CompareVisibility } from '@/lib/dancecard/comparePrivacy'
 import {
   mergeProfileStored,
   parseAttendeeProfileConfig,
   profilePatchForConfig,
-  buildPublicProfile,
   attendeeProfileStoredSchema,
 } from '@/lib/dancecard/attendeeProfile'
+import { buildPublicProfileResolved } from '@/lib/dancecard/profilePhotoUrl'
 import { z, ZodError } from 'zod'
 import { displayNameSchema } from '@/lib/dancecard/schemas'
+import { resolveRegistrantForDancecardAccount } from '@/lib/dancecard/ensureSelfServiceRegistrant'
+
+export const dynamic = 'force-dynamic'
 
 export async function GET(
   request: NextRequest,
@@ -39,12 +45,24 @@ export async function GET(
     const attendeeProfileConfig = parseAttendeeProfileConfig(
       (event as { attendee_profile_config?: unknown }).attendee_profile_config
     )
-    const publicProfile = buildPublicProfile({
+    const publicProfile = await buildPublicProfileResolved(admin, {
       displayName: session.displayName,
       username: session.username,
       stored: prefs.profile,
       config: attendeeProfileConfig,
     })
+    const linked = await resolveRegistrantForDancecardAccount(admin, event.id, session.accountId, session.displayName, {
+      ensure: false,
+    })
+    let badgeTagline: string | null = null
+    if (linked?.id) {
+      const { data: regRow } = await admin
+        .from('dancecard_registrants')
+        .select('badge_tagline')
+        .eq('id', linked.id)
+        .maybeSingle()
+      badgeTagline = (regRow?.badge_tagline as string | null) ?? null
+    }
     return NextResponse.json({
       account: {
         id: session.accountId,
@@ -55,6 +73,10 @@ export async function GET(
       prefs: {
         bufferMinutes: prefs.bufferMinutes,
         allowCompareByUsername: prefs.allowCompareByUsername,
+        compareVisibility: prefs.compareVisibility,
+        showInCompareDirectory: prefs.showInCompareDirectory,
+        hideBusyDetailsInCompare: prefs.hideBusyDetailsInCompare,
+        icsRemindBeforeMinutes: prefs.icsRemindBeforeMinutes,
         availabilityStartsAt: availability?.startsAt ?? event.window_starts_at,
         availabilityEndsAt: availability?.endsAt ?? event.window_ends_at,
         profile: prefs.profile,
@@ -72,6 +94,7 @@ export async function GET(
         programTrack: s.program_track,
         note: s.note ?? null,
       })),
+      registrant: linked ? { id: linked.id, badgeTagline } : null,
     })
   } catch (e) {
     return jsonFromRouteError(e, 'dancecard-[eventSlug]-me')
@@ -100,17 +123,29 @@ export async function PATCH(
       (event as { attendee_profile_config?: unknown }).attendee_profile_config
     )
 
+    const compareVisibilitySchema = z.enum(['off', 'username', 'link_only'])
+
     const patchSchema = z
       .object({
         displayName: displayNameSchema.optional(),
         allowCompareByUsername: z.boolean().optional(),
+        compareVisibility: compareVisibilitySchema.optional(),
+        showInCompareDirectory: z.boolean().optional(),
+        hideBusyDetailsInCompare: z.boolean().optional(),
+        icsRemindBeforeMinutes: z.number().int().min(0).max(1440).optional(),
         profile: profilePatchSchema.optional(),
+        badgeTagline: z.string().max(200).nullable().optional(),
       })
       .refine(
         (b) =>
           b.displayName !== undefined ||
           b.allowCompareByUsername !== undefined ||
-          b.profile !== undefined,
+          b.compareVisibility !== undefined ||
+          b.showInCompareDirectory !== undefined ||
+          b.hideBusyDetailsInCompare !== undefined ||
+          b.icsRemindBeforeMinutes !== undefined ||
+          b.profile !== undefined ||
+          b.badgeTagline !== undefined,
         { message: 'No updates provided' }
       )
     const body = patchSchema.parse(await request.json())
@@ -129,8 +164,12 @@ export async function PATCH(
 
     let prefsOut: {
       allowCompareByUsername?: boolean
+      compareVisibility?: CompareVisibility
+      showInCompareDirectory?: boolean
+      hideBusyDetailsInCompare?: boolean
+      icsRemindBeforeMinutes?: number
       profile?: Record<string, unknown>
-      publicProfile?: ReturnType<typeof buildPublicProfile>
+      publicProfile?: Awaited<ReturnType<typeof buildPublicProfileResolved>>
     } | undefined
 
     if (body.allowCompareByUsername !== undefined) {
@@ -148,7 +187,54 @@ export async function PATCH(
           { status: 503 }
         )
       }
-      prefsOut = { ...(prefsOut ?? {}), allowCompareByUsername: body.allowCompareByUsername }
+      const vis: CompareVisibility = body.allowCompareByUsername ? 'username' : 'off'
+      prefsOut = {
+        ...(prefsOut ?? {}),
+        allowCompareByUsername: body.allowCompareByUsername,
+        compareVisibility: vis,
+      }
+    }
+
+    if (
+      body.compareVisibility !== undefined ||
+      body.showInCompareDirectory !== undefined ||
+      body.hideBusyDetailsInCompare !== undefined
+    ) {
+      const privacyRes = await setPrefsComparePrivacy(admin, session.accountId, {
+        compareVisibility: body.compareVisibility,
+        showInCompareDirectory: body.showInCompareDirectory,
+        hideBusyDetailsInCompare: body.hideBusyDetailsInCompare,
+      })
+      if (!privacyRes.ok) {
+        return NextResponse.json(
+          { error: 'Database is missing compare privacy columns. Apply migration dancecard_047_compare_privacy.sql.' },
+          { status: 503 }
+        )
+      }
+      if (body.compareVisibility !== undefined) {
+        prefsOut = {
+          ...(prefsOut ?? {}),
+          compareVisibility: body.compareVisibility,
+          allowCompareByUsername: body.compareVisibility === 'username',
+        }
+      }
+      if (body.showInCompareDirectory !== undefined) {
+        prefsOut = { ...(prefsOut ?? {}), showInCompareDirectory: body.showInCompareDirectory }
+      }
+      if (body.hideBusyDetailsInCompare !== undefined) {
+        prefsOut = { ...(prefsOut ?? {}), hideBusyDetailsInCompare: body.hideBusyDetailsInCompare }
+      }
+    }
+
+    if (body.icsRemindBeforeMinutes !== undefined) {
+      const icsRes = await setPrefsIcsRemindBeforeMinutes(admin, session.accountId, body.icsRemindBeforeMinutes)
+      if (!icsRes.ok) {
+        return NextResponse.json(
+          { error: 'Database is missing ics_remind_before_minutes. Apply migration dancecard_045_ics_reminders.sql.' },
+          { status: 503 }
+        )
+      }
+      prefsOut = { ...(prefsOut ?? {}), icsRemindBeforeMinutes: body.icsRemindBeforeMinutes }
     }
 
     if (body.profile !== undefined) {
@@ -169,7 +255,7 @@ export async function PATCH(
       prefsOut = {
         ...(prefsOut ?? {}),
         profile: merged,
-        publicProfile: buildPublicProfile({
+        publicProfile: await buildPublicProfileResolved(admin, {
           displayName,
           username: session.username,
           stored: merged,
@@ -178,9 +264,29 @@ export async function PATCH(
       }
     }
 
+    let registrantOut: { id: string; badgeTagline: string | null } | undefined
+    if (body.badgeTagline !== undefined) {
+      const linked = await resolveRegistrantForDancecardAccount(
+        admin,
+        event.id,
+        session.accountId,
+        session.displayName,
+        { ensure: true },
+      )
+      if (linked?.id) {
+        await admin
+          .from('dancecard_registrants')
+          .update({ badge_tagline: body.badgeTagline, updated_at: new Date().toISOString() })
+          .eq('id', linked.id)
+          .eq('event_id', event.id)
+        registrantOut = { id: linked.id, badgeTagline: body.badgeTagline }
+      }
+    }
+
     return NextResponse.json({
       ...(accountOut ? { account: accountOut } : {}),
       ...(prefsOut ? { prefs: prefsOut } : {}),
+      ...(registrantOut ? { registrant: registrantOut } : {}),
     })
   } catch (e) {
     if (e instanceof ZodError) {

@@ -13,6 +13,8 @@ import { rateLimiters, withRateLimit } from '@/lib/rateLimit'
 import { toClientError } from '@/lib/security/safeApiError'
 import { ZodError } from 'zod'
 
+export const dynamic = 'force-dynamic'
+
 export async function POST(
   request: NextRequest,
   context: { params: { eventSlug: string } }

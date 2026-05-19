@@ -59,6 +59,8 @@ export function AssignmentBoardPanel({
   const [assignmentsBySlot, setAssignmentsBySlot] = useState<Record<string, Assignment[]>>({})
   const [pendingDrop, setPendingDrop] = useState<{ slotId: string; personId: string } | null>(null)
   const [pickRole, setPickRole] = useState<string>('lead_presenter')
+  const [personSearch, setPersonSearch] = useState('')
+  const [roomFilter, setRoomFilter] = useState('')
 
   const dayKeys = Array.from(
     new Set(slots.map((s) => formatInTimeZone(slotStartDate(s.startsAt), timezone, 'yyyy-MM-dd'))),
@@ -117,6 +119,39 @@ export function AssignmentBoardPanel({
       return !a.some((x) => x.role === 'lead_presenter' || x.role === 'co_presenter')
     })
   }, [daySlots, assignmentsBySlot])
+
+  const roomOptions = useMemo(() => {
+    const labels = new Set<string>()
+    for (const s of gaps) {
+      const label = (s.locationName ?? s.room ?? '').trim()
+      if (label) labels.add(label)
+    }
+    return Array.from(labels).sort((a, b) => a.localeCompare(b))
+  }, [gaps])
+
+  const filteredPeople = useMemo(() => {
+    const q = personSearch.trim().toLowerCase()
+    if (!q) return people
+    return people.filter((p) => p.sceneName.toLowerCase().includes(q))
+  }, [people, personSearch])
+
+  const filteredGaps = useMemo(() => {
+    const room = roomFilter.trim().toLowerCase()
+    if (!room) return gaps
+    return gaps.filter((s) => {
+      const label = (s.locationName ?? s.room ?? '').trim().toLowerCase()
+      return label.includes(room)
+    })
+  }, [gaps, roomFilter])
+
+  const filteredDaySlots = useMemo(() => {
+    if (!roomFilter.trim()) return daySlots
+    const room = roomFilter.trim().toLowerCase()
+    return daySlots.filter((s) => {
+      const label = (s.locationName ?? s.room ?? '').trim().toLowerCase()
+      return label.includes(room)
+    })
+  }, [daySlots, roomFilter])
 
   async function assignWithRole(slotId: string, personId: string, role: string) {
     if (readOnly) return
@@ -191,11 +226,12 @@ export function AssignmentBoardPanel({
         ) : null}
       </header>
 
-      {gaps.length > 0 ? (
+      {filteredGaps.length > 0 ? (
         <Panel className="border-dc-warning/30 bg-dc-warning-muted/40">
           <p className="text-sm font-medium text-dc-warning">
-            {gaps.length} class{gaps.length === 1 ? '' : 'es'} on this day ha{gaps.length === 1 ? 's' : 've'} no instructor
-            listed
+            {filteredGaps.length} class{filteredGaps.length === 1 ? '' : 'es'} on this day ha
+            {filteredGaps.length === 1 ? 's' : 've'} no instructor listed
+            {roomFilter.trim() ? ' (filtered)' : ''}
           </p>
           <p className="mt-1 text-xs text-dc-muted">
             Attendees may see empty teacher lines on the public dancecard until you add someone.
@@ -211,9 +247,18 @@ export function AssignmentBoardPanel({
         <Panel variant="muted">
           <h3 className="text-sm font-semibold uppercase tracking-wide text-dc-muted">Roster</h3>
           <p className="mt-1 text-sm text-dc-muted">Drag onto a class, then choose their credit (lead, co-instructor, etc.).</p>
+          <label className="mt-3 block text-xs uppercase text-dc-muted">
+            Search roster
+            <input
+              className="mt-1 w-full rounded-lg border border-dc-border bg-dc-surface-muted px-3 py-2 text-sm text-dc-text"
+              placeholder="Filter by name…"
+              value={personSearch}
+              onChange={(e) => setPersonSearch(e.target.value)}
+            />
+          </label>
           {err ? <p className="mt-2 text-sm text-dc-danger">{err}</p> : null}
           <ul className="mt-4 flex flex-wrap gap-2">
-            {people.map((p) => (
+            {filteredPeople.map((p) => (
               <li
                 key={p.id}
                 draggable={!readOnly}
@@ -221,34 +266,58 @@ export function AssignmentBoardPanel({
                   e.dataTransfer.setData('text/person-id', p.id)
                   e.dataTransfer.effectAllowed = 'copy'
                 }}
-                className="cursor-grab rounded-full border border-dc-accent/30 bg-dc-accent/10 px-3 py-1 text-sm text-dc-text active:cursor-grabbing"
+                className="cursor-grab rounded-full border border-dc-accent/30 bg-dc-accent/10 px-3 py-1 text-sm text-dc-accent-foreground active:cursor-grabbing"
               >
                 {p.sceneName}
               </li>
             ))}
-            {!people.length ? <li className="text-sm text-dc-muted">No people in the directory yet.</li> : null}
+            {!filteredPeople.length ? (
+              <li className="text-sm text-dc-muted">
+                {people.length ? 'No names match your search.' : 'No people in the directory yet.'}
+              </li>
+            ) : null}
           </ul>
         </Panel>
 
         <Panel>
           <h3 className="text-sm font-semibold uppercase tracking-wide text-dc-muted">Classes on this day</h3>
-          <label className="mt-2 flex flex-wrap items-center gap-2 text-sm text-dc-muted">
-            Day
-            <select
-              className="rounded-lg border border-dc-border bg-dc-surface-muted px-2 py-1 text-dc-text"
-              value={day}
-              onChange={(e) => setDay(e.target.value)}
-            >
-              {dayKeys.map((d) => (
-                <option key={d} value={d}>
-                  {d}
-                </option>
-              ))}
-            </select>
-            {busy ? <span className="text-xs text-dc-muted">Saving…</span> : null}
-          </label>
+          <div className="mt-2 flex flex-wrap items-end gap-3">
+            <label className="flex flex-wrap items-center gap-2 text-sm text-dc-muted">
+              Day
+              <select
+                className="rounded-lg border border-dc-border bg-dc-surface-muted px-2 py-1 text-dc-text"
+                value={day}
+                onChange={(e) => setDay(e.target.value)}
+              >
+                {dayKeys.map((d) => (
+                  <option key={d} value={d}>
+                    {d}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <label className="flex min-w-[10rem] flex-1 flex-col gap-1 text-xs uppercase text-dc-muted">
+              Room / location (unassigned)
+              <select
+                className="rounded-lg border border-dc-border bg-dc-surface-muted px-2 py-1.5 text-sm normal-case text-dc-text"
+                value={roomFilter}
+                onChange={(e) => setRoomFilter(e.target.value)}
+              >
+                <option value="">All rooms</option>
+                {roomOptions.map((r) => (
+                  <option key={r} value={r}>
+                    {r}
+                  </option>
+                ))}
+              </select>
+            </label>
+            {busy ? <span className="pb-1 text-xs text-dc-muted">Saving…</span> : null}
+          </div>
+          {roomFilter.trim() && !filteredGaps.length ? (
+            <p className="mt-2 text-xs text-dc-muted">No unassigned classes in this room.</p>
+          ) : null}
           <ul className="mt-3 max-h-[min(520px,60vh)] space-y-2 overflow-y-auto">
-            {daySlots.map((s) => {
+            {filteredDaySlots.map((s) => {
               const assigned = assignmentsBySlot[s.id] ?? []
               const missingLead = !assigned.some((a) => a.role === 'lead_presenter' || a.role === 'co_presenter')
               return (
@@ -293,15 +362,17 @@ export function AssignmentBoardPanel({
                 </li>
               )
             })}
-            {!daySlots.length ? (
-              <li className="text-sm text-dc-muted">No classes on this day.</li>
+            {!filteredDaySlots.length ? (
+              <li className="text-sm text-dc-muted">
+                {daySlots.length ? 'No classes match this room filter.' : 'No classes on this day.'}
+              </li>
             ) : null}
           </ul>
         </Panel>
       </div>
 
       {pendingDrop && pendingSlot && pendingPerson ? (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-dc-surface/80 p-4">
           <Panel className="max-w-md w-full">
             <h3 className="font-serif text-lg text-dc-text">Add schedule credit</h3>
             <p className="mt-2 text-sm text-dc-muted">

@@ -121,8 +121,8 @@ export function AttendeeWeekendGuide({
               <div
                 className={
                   variant === 'organizer-classic'
-                    ? 'prose prose-invert prose-sm mt-3 max-w-none text-dc-muted'
-                    : 'prose prose-invert prose-sm mt-3 max-w-none text-dc-muted'
+                    ? 'prose prose-sm mt-3 max-w-none text-dc-muted prose-headings:text-dc-text prose-strong:text-dc-text'
+                    : 'prose prose-sm mt-3 max-w-none text-dc-muted prose-headings:text-dc-text prose-strong:text-dc-text'
                 }
               >
                 <ReactMarkdown>{s.markdown ?? ''}</ReactMarkdown>

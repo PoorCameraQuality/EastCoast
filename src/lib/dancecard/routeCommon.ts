@@ -80,6 +80,18 @@ export async function loadEventBySlugAnyStatus(admin: SupabaseClient, eventSlug:
     | null
 }
 
+/** JSON 401 when dancecard session cookie is missing, expired, or for another event. */
+export function dancecardSessionUnauthorizedResponse(): NextResponse {
+  return NextResponse.json(
+    {
+      error: 'Unauthorized',
+      hint:
+        'Sign in again for this event. Reseeding sandbox clears old sessions. Use the same site host you signed in on (e.g. stay on localhost, not 127.0.0.1).',
+    },
+    { status: 401 },
+  )
+}
+
 export async function resolveAccountFromSession(
   admin: SupabaseClient,
   request: NextRequest,

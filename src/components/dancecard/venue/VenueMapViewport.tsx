@@ -61,7 +61,8 @@ export function VenueMapViewport({
           Reset
         </button>
         <span className="text-dc-micro text-dc-muted">{Math.round(zoom * 100)}%</span>
-        <span className="text-dc-micro text-dc-muted">Ctrl + scroll to zoom</span>
+        <span className="text-dc-micro text-dc-muted sm:hidden">Pinch or use zoom buttons</span>
+        <span className="hidden text-dc-micro text-dc-muted sm:inline">Ctrl + scroll to zoom</span>
       </div>
       <div
         ref={scrollRef}

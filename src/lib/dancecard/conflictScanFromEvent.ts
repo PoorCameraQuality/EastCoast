@@ -5,6 +5,7 @@ import {
   type ConflictScannerSlot,
   type DancecardConflict,
 } from '@/lib/dancecard/conflictScanner'
+import { fetchProgramSlotRowsForEvent } from '@/lib/dancecard/organizerProgramSlotsData'
 
 /**
  * Loads program slots + slot-person links and returns conflict scanner output (Phase 7 facade).
@@ -13,12 +14,7 @@ export async function scanDancecardConflictsForEvent(
   admin: SupabaseClient,
   eventId: string,
 ): Promise<DancecardConflict[]> {
-  const { data: slots, error: slotErr } = await admin
-    .from('dancecard_program_slots')
-    .select('id, starts_at, ends_at, title, room, location_id, is_published, visibility, photo_policy')
-    .eq('event_id', eventId)
-  if (slotErr) throw slotErr
-  const slotRows = slots ?? []
+  const slotRows = await fetchProgramSlotRowsForEvent(admin, eventId)
 
   const scannerSlots: ConflictScannerSlot[] = slotRows.map((s) => ({
     id: s.id as string,
@@ -47,5 +43,12 @@ export async function scanDancecardConflictsForEvent(
     }
   }
 
-  return computeDancecardConflicts({ slots: scannerSlots, slotPeople })
+  const locationCapacity: Record<string, number> = {}
+  const { data: locRows } = await admin.from('dancecard_locations').select('id, capacity').eq('event_id', eventId)
+  for (const loc of locRows ?? []) {
+    const cap = loc.capacity as number | null
+    if (cap != null && cap > 0) locationCapacity[loc.id as string] = cap
+  }
+
+  return computeDancecardConflicts({ slots: scannerSlots, slotPeople, locationCapacity })
 }

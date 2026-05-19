@@ -7,6 +7,7 @@ import { organizerStaffShiftCreateSchema } from '@/lib/dancecard/organizerSchema
 import { assertSlotInsideWindow } from '@/lib/dancecard/organizerSlotValidation'
 import { fetchStaffShiftRowsForEvent } from '@/lib/dancecard/organizerStaffShiftsData'
 import { loadEventBySlugAnyStatus } from '@/lib/dancecard/routeCommon'
+import { findStaffShiftConflicts } from '@/lib/dancecard/staffShiftConflicts'
 
 export const dynamic = 'force-dynamic'
 
@@ -50,6 +51,20 @@ export async function POST(request: NextRequest, context: { params: { eventSlug:
       endsAt: body.endsAt,
     })
 
+    const startsAt = new Date(body.startsAt).toISOString()
+    const endsAt = new Date(body.endsAt).toISOString()
+    const existingRows = await fetchStaffShiftRowsForEvent(admin, eventId)
+    const shifts = existingRows.map((r) => mapStaffShiftRow(r))
+    const conflicts = findStaffShiftConflicts(shifts, {
+      personId: body.personId ?? null,
+      personName: body.personName.trim(),
+      startsAt,
+      endsAt,
+    })
+    if (conflicts.length && !body.overrideConflicts) {
+      return NextResponse.json({ error: 'Scheduling conflict', conflicts }, { status: 409 })
+    }
+
     const { count } = await admin
       .from('dancecard_staff_shifts')
       .select('*', { count: 'exact', head: true })
@@ -60,8 +75,8 @@ export async function POST(request: NextRequest, context: { params: { eventSlug:
       event_id: eventId,
       person_name: body.personName,
       role: body.role,
-      starts_at: new Date(body.startsAt).toISOString(),
-      ends_at: new Date(body.endsAt).toISOString(),
+      starts_at: startsAt,
+      ends_at: endsAt,
       sort_order: sortOrder,
       shift_status: body.shiftStatus ?? 'assigned',
     }

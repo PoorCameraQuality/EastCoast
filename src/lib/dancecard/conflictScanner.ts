@@ -43,6 +43,8 @@ export type ConflictScannerPersonLink = {
 export type ConflictScannerInput = {
   slots: ConflictScannerSlot[]
   slotPeople: ConflictScannerPersonLink[]
+  /** locationId → max concurrent sessions (from dancecard_locations.capacity) */
+  locationCapacity?: Record<string, number>
 }
 
 const PRESENTER_ROLES = new Set(['lead_presenter', 'co_presenter', 'moderator'])
@@ -86,6 +88,46 @@ export function computeDancecardConflicts(input: ConflictScannerInput): Dancecar
         .join(' · '),
       relatedSlotIds: ids,
     })
+  }
+
+  // --- Location capacity (concurrent sessions exceed capacity) ---
+  const caps = input.locationCapacity ?? {}
+  if (Object.keys(caps).length) {
+    const byLoc = new Map<string, ConflictScannerSlot[]>()
+    for (const s of slots) {
+      if (!s.locationId) continue
+      const list = byLoc.get(s.locationId) ?? []
+      list.push(s)
+      byLoc.set(s.locationId, list)
+    }
+    for (const [locId, locSlots] of Array.from(byLoc.entries())) {
+      const cap = caps[locId]
+      if (cap == null || cap < 1) continue
+      const events: { t: number; delta: number; slotId: string }[] = []
+      for (const s of locSlots) {
+        const a0 = new Date(s.startsAt).getTime()
+        const a1 = new Date(s.endsAt).getTime()
+        if (!Number.isFinite(a0) || !Number.isFinite(a1)) continue
+        events.push({ t: a0, delta: 1, slotId: s.id })
+        events.push({ t: a1, delta: -1, slotId: s.id })
+      }
+      events.sort((a, b) => a.t - b.t || a.delta - b.delta)
+      let cur = 0
+      const overSlotIds = new Set<string>()
+      for (const ev of events) {
+        cur += ev.delta
+        if (cur > cap) overSlotIds.add(ev.slotId)
+      }
+      if (overSlotIds.size) {
+        out.push({
+          id: `location-capacity-${locId}`,
+          severity: 'warning',
+          title: 'Room capacity exceeded',
+          detail: `${cur} concurrent session(s) exceed capacity of ${cap} at this location.`,
+          relatedSlotIds: Array.from(overSlotIds),
+        })
+      }
+    }
   }
 
   // --- Presenter / moderator overlap ---

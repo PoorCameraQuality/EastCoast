@@ -15,6 +15,9 @@ function mapQuestion(r: Record<string, unknown>) {
     sortOrder: Number(r.sort_order ?? 0),
     optionsJson: r.options_json,
     visibilityRulesJson: r.visibility_rules_json,
+    requiredForCategoryIds: Array.isArray(r.required_for_category_ids)
+      ? (r.required_for_category_ids as string[])
+      : [],
     createdAt: r.created_at as string,
     updatedAt: r.updated_at as string,
   }
@@ -70,6 +73,7 @@ async function syncQuestions(
     sortOrder?: number
     optionsJson?: unknown
     visibilityRulesJson?: Record<string, unknown>
+    requiredForCategoryIds?: string[]
   }>,
 ) {
   const { data: existingRows, error: exErr } = await admin
@@ -100,6 +104,7 @@ async function syncQuestions(
     const sortOrder = q.sortOrder ?? i
     const optionsJson = q.optionsJson ?? []
     const visibilityRulesJson = q.visibilityRulesJson ?? {}
+    const requiredForCategoryIds = q.requiredForCategoryIds ?? []
     if (q.id && existingIds.has(q.id)) {
       const { error: uErr } = await admin
         .from('dancecard_registration_questions')
@@ -110,6 +115,7 @@ async function syncQuestions(
           sort_order: sortOrder,
           options_json: optionsJson,
           visibility_rules_json: visibilityRulesJson,
+          required_for_category_ids: requiredForCategoryIds,
           updated_at: new Date().toISOString(),
         })
         .eq('id', q.id)
@@ -124,6 +130,7 @@ async function syncQuestions(
         sort_order: sortOrder,
         options_json: optionsJson,
         visibility_rules_json: visibilityRulesJson,
+        required_for_category_ids: requiredForCategoryIds,
       })
       if (iErr) throw iErr
     }

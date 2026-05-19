@@ -22,7 +22,7 @@ export function C2kFromBanner() {
   if (!c2kConvention) return null
 
   return (
-    <div className="mb-6 rounded-2xl border border-dc-accent-border bg-dc-accent-muted px-4 py-3 text-sm text-dc-text">
+    <div className="mb-6 rounded-2xl border border-dc-accent-border bg-dc-accent-muted px-4 py-3 text-sm text-dc-accent-foreground">
       <p>
         Opened from <strong>Coast to Coast Kink</strong> (convention <code className="text-dc-accent">{c2kConvention}</code>
         ). Sign in below if needed. Use the same email as your C2K organizer account when possible.

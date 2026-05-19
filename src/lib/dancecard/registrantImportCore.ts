@@ -80,6 +80,10 @@ export async function runRegistrantImportBatch(
             const n = await countActiveInCategory(admin, categoryId, rid)
             if (n >= cap) status = 'waitlisted'
           }
+          const paymentPatch =
+            row.importedPaymentStatus !== undefined
+              ? { imported_payment_status: row.importedPaymentStatus }
+              : {}
           const { error: upErr } = await admin
             .from('dancecard_registrants')
             .update({
@@ -88,6 +92,7 @@ export async function runRegistrantImportBatch(
               scene_display_name: row.sceneDisplayName.trim(),
               legal_name: row.legalName ?? null,
               email,
+              ...paymentPatch,
               last_synced_at: now,
               updated_at: now,
             })
@@ -106,6 +111,7 @@ export async function runRegistrantImportBatch(
             scene_display_name: row.sceneDisplayName.trim(),
             legal_name: row.legalName ?? null,
             email,
+            imported_payment_status: row.importedPaymentStatus ?? null,
             external_source: extSrc,
             external_id: extId,
             last_synced_at: now,
@@ -125,6 +131,7 @@ export async function runRegistrantImportBatch(
           scene_display_name: row.sceneDisplayName.trim(),
           legal_name: row.legalName ?? null,
           email,
+          imported_payment_status: row.importedPaymentStatus ?? null,
         })
         if (insErr) throw insErr
         created++

@@ -17,7 +17,7 @@ export function OrganizerHubHowItWorks() {
           from a previous year. Open an event below when you want to work on program, registrants, staff, or the attendee
           link.
         </p>
-        <p className="rounded-lg border border-dc-accent-border/30 bg-dc-accent-muted/25 px-3 py-2.5 text-dc-text">
+        <p className="rounded-lg border border-dc-accent-border/30 bg-dc-accent-muted/25 px-3 py-2.5 text-dc-accent-foreground">
           You will be presented with setup options after creating a new event.
         </p>
       </div>

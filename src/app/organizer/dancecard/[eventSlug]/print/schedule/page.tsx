@@ -53,7 +53,7 @@ export default function PrintSchedulePage() {
         </button>
       </div>
       <h1 className="font-serif text-2xl">{title || slug}</h1>
-      <p className="text-sm text-slate-600">Schedule export · {timezone}</p>
+      <p className="text-sm text-dc-muted">Schedule export · {timezone}</p>
       <table className="mt-6 w-full border-collapse text-left text-sm">
         <thead>
           <tr className="border-b border-black">
@@ -80,7 +80,7 @@ export default function PrintSchedulePage() {
           ))}
         </tbody>
       </table>
-      {!slots.length && !err ? <p className="mt-8 text-slate-500">No sessions.</p> : null}
+      {!slots.length && !err ? <p className="mt-8 text-dc-muted">No sessions.</p> : null}
     </div>
   )
 }

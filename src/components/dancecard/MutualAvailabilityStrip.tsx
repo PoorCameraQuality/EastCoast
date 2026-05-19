@@ -186,17 +186,17 @@ export function MutualAvailabilityStrip(props: {
 
   return (
     <div className="rounded-xl border border-dc-border bg-dc-surface-muted/95 p-2 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] sm:p-2.5">
-      <div className="flex flex-wrap items-center justify-between gap-2">
+      <div className="flex flex-col gap-1.5 sm:flex-row sm:items-start sm:justify-between sm:gap-2">
         <div className="text-xs font-semibold uppercase tracking-[0.2em] text-dc-text">{dayLabel}</div>
-        <div className="text-[10px] text-dc-muted">
+        <p className="text-[11px] leading-snug text-dc-muted sm:max-w-[min(100%,28rem)] sm:text-xs">
           {mode === 'mutual' ? 'Green = both free · Blue = host free only' : 'Green = host free'}
           {interactive ? <span className="text-dc-muted/80"> · tap green to reserve</span> : null}
           <span className="text-dc-muted/80"> · Rose = busy · Charcoal = outside window</span>
-        </div>
+        </p>
       </div>
 
       <div
-        className="mt-1.5 grid text-[9px] font-medium uppercase tracking-[0.1em] text-dc-muted sm:text-[10px]"
+        className="mt-1.5 grid text-[10px] font-medium uppercase tracking-[0.1em] text-dc-muted sm:text-[11px]"
         style={{ gridTemplateColumns: 'repeat(24, minmax(0,1fr))' }}
         aria-hidden
       >

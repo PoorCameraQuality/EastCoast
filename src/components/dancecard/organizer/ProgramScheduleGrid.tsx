@@ -25,12 +25,18 @@ import {
 } from '@/components/dancecard/organizer/organizerTimeline'
 import { SessionDetailDrawer } from '@/components/dancecard/organizer/SessionDetailDrawer'
 import {
+  ScheduleChangeImpactModal,
+  type ScheduleChangeImpactPayload,
+} from '@/components/dancecard/organizer/ScheduleChangeImpactModal'
+import type { ScheduleChangeImpactReport } from '@/lib/dancecard/scheduleChangeImpact'
+import {
   OrganizerConfirmDialog,
   useOrganizerToast,
 } from '@/components/dancecard/organizer/ui'
 import {
   ProgramGridDroppableCell,
   ProgramSlotDragOverlay,
+  ProgramSessionEditButton,
   ProgramUnassignedPool,
 } from '@/components/dancecard/organizer/program/programScheduleParts'
 import {
@@ -139,6 +145,9 @@ function DraggableProgramSlot({
     touchAction: 'none',
     ...visual.style,
   }
+
+  const openDetails = () => onOpenDrawer(slot)
+
   return (
     <div
       ref={setNodeRef}
@@ -150,9 +159,25 @@ function DraggableProgramSlot({
         selected && !hasConflict && '!border-dc-accent ring-2 ring-dc-accent/40',
         hasConflict && sonarPulse && 'dc-conflict-sonar',
         !slot.isPublished && 'ring-1 ring-dashed ring-dc-warning/60',
+        !readOnly && 'cursor-pointer',
       )}
+      onDoubleClick={(e) => {
+        if (readOnly) return
+        e.stopPropagation()
+        openDetails()
+      }}
+      title={readOnly ? undefined : `${slot.title} — double-click to edit`}
     >
-      <div className="flex items-start gap-1">
+      {!readOnly ? (
+        <ProgramSessionEditButton
+          slotTitle={slot.title}
+          scheduledItemLabel={scheduledItemLabel}
+          compact={compact}
+          className={cn(compact && 'absolute right-0.5 top-0.5 z-20')}
+          onClick={openDetails}
+        />
+      ) : null}
+      <div className={cn('flex items-start gap-1', compact && !readOnly && 'pr-8')}>
         {!readOnly ? (
           <input
             type="checkbox"
@@ -198,16 +223,6 @@ function DraggableProgramSlot({
             </div>
           ) : null}
         </div>
-        <button
-          type="button"
-          className="shrink-0 rounded p-0.5 text-dc-micro leading-none text-dc-muted hover:bg-dc-surface-muted hover:text-dc-text"
-          aria-label={`Open ${slot.title}`}
-          title={`Open ${scheduledItemLabel} details`}
-          onClick={() => onOpenDrawer(slot)}
-          onPointerDown={(e) => e.stopPropagation()}
-        >
-          ...
-        </button>
       </div>
     </div>
   )
@@ -239,7 +254,7 @@ export function ProgramScheduleGrid({
   onRefresh: () => Promise<void>
   readOnly?: boolean
   initialSlotId?: string | null
-  onSlotLinkChange?: (slotId: string) => void
+  onSlotLinkChange?: (slotId: string | null) => void
   conflictSlotIds?: string[]
   conflictSonarActive?: boolean
   onConflictsRefresh?: () => void | Promise<void>
@@ -267,14 +282,20 @@ export function ProgramScheduleGrid({
   const [activeDrawerTab, setActiveDrawerTab] = useState<
     'overview' | 'edit' | 'location' | 'people' | 'registrants' | 'privacy' | 'notes' | undefined
   >()
+  const [scheduleImpactPayload, setScheduleImpactPayload] = useState<ScheduleChangeImpactPayload | null>(null)
   const conflictSet = useMemo(() => new Set(conflictSlotIds), [conflictSlotIds])
   const rowH = ROW_H * zoom
 
   useEffect(() => {
     if (!initialSlotId || !slots.length) return
     const match = slots.find((s) => s.id === initialSlotId)
-    if (match) setDrawerSlot(match)
-  }, [initialSlotId, slots])
+    if (match) {
+      setDrawerSlot(match)
+      return
+    }
+    if (drawerSlot?.id === initialSlotId) setDrawerSlot(null)
+    onSlotLinkChange?.(null)
+  }, [initialSlotId, slots, drawerSlot?.id, onSlotLinkChange])
 
   useEffect(() => {
     const drawerId = drawerSlot?.id
@@ -526,11 +547,17 @@ export function ProgramScheduleGrid({
     startsAt: string | null,
     endsAt: string | null,
   ) => {
-    await organizerDancecardFetch(eventSlug, `/program-slots/${slotId}`, {
+    const res = await organizerDancecardFetch<{
+      slot: ProgramSlotRow
+      scheduleImpact?: ScheduleChangeImpactReport
+    }>(eventSlug, `/program-slots/${slotId}`, {
       method: 'PATCH',
       body: JSON.stringify({ startsAt, endsAt }),
     })
     await onRefresh()
+    if (res.scheduleImpact?.scheduleChanged) {
+      setScheduleImpactPayload({ ...res.scheduleImpact, slotId })
+    }
   }
 
   const scheduleSlotAtCell = async (slot: ProgramSlotRow, day: string, row: number) => {
@@ -652,8 +679,13 @@ export function ProgramScheduleGrid({
       `Delete ${scheduleNouns.scheduledItem}?`,
       `Attendee picks for this ${scheduleNouns.scheduledItem} will be removed.`,
       async () => {
-        await organizerDancecardFetch(eventSlug, `/program-slots/${id}`, { method: 'DELETE' })
-        await onRefresh()
+        try {
+          setErr(null)
+          await organizerDancecardFetch(eventSlug, `/program-slots/${id}`, { method: 'DELETE' })
+          await onRefresh()
+        } catch (e) {
+          setErr(e instanceof Error ? e.message : 'Delete failed')
+        }
       },
       true,
     )
@@ -673,22 +705,22 @@ export function ProgramScheduleGrid({
           void confirmActionRef.current?.()
         }}
       />
-      {err ? <p className="text-sm text-rose-300">{err}</p> : null}
+      {err ? <p className="text-sm text-red-700">{err}</p> : null}
 
-      <div className="flex flex-wrap items-end gap-2 rounded-xl border border-white/10 bg-black/25 p-3">
-        <label className="text-xs text-slate-400">
+      <div className="flex flex-wrap items-end gap-2 rounded-xl border border-dc-border bg-dc-elevated-muted p-3">
+        <label className="text-xs text-dc-muted">
           Search
           <input
-            className="mt-1 block min-w-[140px] rounded-lg border border-white/10 bg-black/40 px-2 py-1 text-sm text-white"
+            className="mt-1 block min-w-[140px] rounded-lg border border-dc-border bg-dc-surface-muted px-2 py-1 text-sm text-dc-text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Title, room, track…"
           />
         </label>
-        <label className="text-xs text-slate-400">
+        <label className="text-xs text-dc-muted">
           Track
           <select
-            className="mt-1 block rounded-lg border border-white/10 bg-black/40 px-2 py-1 text-sm text-white"
+            className="mt-1 block rounded-lg border border-dc-border bg-dc-surface-muted px-2 py-1 text-sm text-dc-text"
             value={filterTrack}
             onChange={(e) => setFilterTrack(e.target.value)}
           >
@@ -700,10 +732,10 @@ export function ProgramScheduleGrid({
             ))}
           </select>
         </label>
-        <label className="text-xs text-slate-400">
+        <label className="text-xs text-dc-muted">
           Tag
           <select
-            className="mt-1 block rounded-lg border border-white/10 bg-black/40 px-2 py-1 text-sm text-white"
+            className="mt-1 block rounded-lg border border-dc-border bg-dc-surface-muted px-2 py-1 text-sm text-dc-text"
             value={filterTag}
             onChange={(e) => setFilterTag(e.target.value)}
           >
@@ -725,12 +757,12 @@ export function ProgramScheduleGrid({
       </div>
 
       {!readOnly && selectedList.length > 0 ? (
-        <div className="flex flex-wrap items-center gap-2 rounded-xl border border-dc-accent-border bg-dc-accent-muted px-3 py-2 text-sm text-dc-text">
+        <div className="flex flex-wrap items-center gap-2 rounded-xl border border-dc-accent-border bg-dc-accent-muted px-3 py-2 text-sm text-dc-accent-foreground">
           <span className="font-medium">{selectedList.length} selected</span>
           <button
             type="button"
             disabled={busy}
-            className="rounded-full border border-white/20 px-3 py-1 text-xs hover:bg-white/10 disabled:opacity-40"
+            className="rounded-full border border-dc-border px-3 py-1 text-xs hover:bg-dc-accent-muted disabled:opacity-40"
             onClick={() => void runBulk({ op: 'publish', ids: selectedList.map((s) => s.id) })}
           >
             Publish
@@ -738,7 +770,7 @@ export function ProgramScheduleGrid({
           <button
             type="button"
             disabled={busy}
-            className="rounded-full border border-white/20 px-3 py-1 text-xs hover:bg-white/10 disabled:opacity-40"
+            className="rounded-full border border-dc-border px-3 py-1 text-xs hover:bg-dc-accent-muted disabled:opacity-40"
             onClick={() => void runBulk({ op: 'unpublish', ids: selectedList.map((s) => s.id) })}
           >
             Unpublish
@@ -746,7 +778,7 @@ export function ProgramScheduleGrid({
           <button
             type="button"
             disabled={busy}
-            className="rounded-full border border-white/20 px-3 py-1 text-xs hover:bg-white/10 disabled:opacity-40"
+            className="rounded-full border border-dc-border px-3 py-1 text-xs hover:bg-dc-accent-muted disabled:opacity-40"
             onClick={() =>
               void runBulk({
                 op: 'setVisibility',
@@ -760,7 +792,7 @@ export function ProgramScheduleGrid({
           <button
             type="button"
             disabled={busy}
-            className="rounded-full border border-white/20 px-3 py-1 text-xs hover:bg-white/10 disabled:opacity-40"
+            className="rounded-full border border-dc-border px-3 py-1 text-xs hover:bg-dc-accent-muted disabled:opacity-40"
             onClick={() =>
               void runBulk({
                 op: 'setVisibility',
@@ -774,7 +806,7 @@ export function ProgramScheduleGrid({
           <button
             type="button"
             disabled={busy}
-            className="rounded-full border border-white/20 px-3 py-1 text-xs hover:bg-white/10 disabled:opacity-40"
+            className="rounded-full border border-dc-border px-3 py-1 text-xs hover:bg-dc-accent-muted disabled:opacity-40"
             onClick={() =>
               void runBulk({
                 op: 'setVisibility',
@@ -788,7 +820,7 @@ export function ProgramScheduleGrid({
           <button
             type="button"
             disabled={busy}
-            className="rounded-full border border-white/20 px-3 py-1 text-xs hover:bg-white/10 disabled:opacity-40"
+            className="rounded-full border border-dc-border px-3 py-1 text-xs hover:bg-dc-accent-muted disabled:opacity-40"
             onClick={() => void runBulk({ op: 'freeze', ids: selectedList.map((s) => s.id) })}
           >
             Freeze
@@ -796,7 +828,7 @@ export function ProgramScheduleGrid({
           <button
             type="button"
             disabled={busy}
-            className="rounded-full border border-white/20 px-3 py-1 text-xs hover:bg-white/10 disabled:opacity-40"
+            className="rounded-full border border-dc-border px-3 py-1 text-xs hover:bg-dc-accent-muted disabled:opacity-40"
             onClick={() => void runBulk({ op: 'unfreeze', ids: selectedList.map((s) => s.id) })}
           >
             Unfreeze
@@ -804,7 +836,7 @@ export function ProgramScheduleGrid({
           <button
             type="button"
             disabled={busy}
-            className="rounded-full border border-white/20 px-3 py-1 text-xs hover:bg-white/10 disabled:opacity-40"
+            className="rounded-full border border-dc-border px-3 py-1 text-xs hover:bg-dc-accent-muted disabled:opacity-40"
             onClick={() => void runBulk({ op: 'duplicate', ids: selectedList.map((s) => s.id) })}
           >
             Duplicate
@@ -812,7 +844,7 @@ export function ProgramScheduleGrid({
           <button
             type="button"
             disabled={busy}
-            className="rounded-full border border-rose-400/30 px-3 py-1 text-xs text-rose-100 hover:bg-rose-500/10 disabled:opacity-40"
+            className="rounded-full border border-red-300 px-3 py-1 text-xs text-red-800 hover:bg-red-100 disabled:opacity-40"
             onClick={() => {
               const ids = selectedList.map((s) => s.id)
               const snapshot = selectedList.map((s) => ({ ...s }))
@@ -825,25 +857,29 @@ export function ProgramScheduleGrid({
                     undoLabel: 'Undo',
                     onUndo: () => {
                       void (async () => {
-                        for (const s of snapshot) {
-                          await organizerDancecardFetch(eventSlug, '/program-slots', {
-                            method: 'POST',
-                            body: JSON.stringify({
-                              startsAt: s.startsAt,
-                              endsAt: s.endsAt,
-                              title: s.title,
-                              track: s.track,
-                              trackId: s.trackId,
-                              room: s.room,
-                              locationId: s.locationId,
-                              description: s.description,
-                              isPublished: s.isPublished,
-                              visibility: s.visibility,
-                              isFrozen: s.isFrozen,
-                            }),
-                          })
+                        try {
+                          for (const s of snapshot) {
+                            await organizerDancecardFetch(eventSlug, '/program-slots', {
+                              method: 'POST',
+                              body: JSON.stringify({
+                                startsAt: s.startsAt,
+                                endsAt: s.endsAt,
+                                title: s.title,
+                                track: s.track,
+                                trackId: s.trackId,
+                                room: s.room,
+                                locationId: s.locationId,
+                                description: s.description,
+                                isPublished: s.isPublished,
+                                visibility: s.visibility,
+                                isFrozen: s.isFrozen,
+                              }),
+                            })
+                          }
+                          await onRefresh()
+                        } catch (e) {
+                          setErr(e instanceof Error ? e.message : 'Undo restore failed')
                         }
-                        await onRefresh()
                       })()
                     },
                   })
@@ -856,7 +892,7 @@ export function ProgramScheduleGrid({
           </button>
           <div className="flex items-center gap-1">
             <select
-              className="rounded-lg border border-white/10 bg-black/40 px-2 py-1 text-xs text-white"
+              className="rounded-lg border border-dc-border bg-dc-surface-muted px-2 py-1 text-xs text-dc-text"
               value={bulkTagId}
               onChange={(e) => setBulkTagId(e.target.value)}
             >
@@ -870,7 +906,7 @@ export function ProgramScheduleGrid({
             <button
               type="button"
               disabled={busy || !bulkTagId}
-              className="rounded-full border border-white/20 px-2 py-1 text-xs hover:bg-white/10 disabled:opacity-40"
+              className="rounded-full border border-dc-border px-2 py-1 text-xs hover:bg-dc-accent-muted disabled:opacity-40"
               onClick={() => {
                 if (!bulkTagId) return
                 void runBulk({
@@ -885,7 +921,7 @@ export function ProgramScheduleGrid({
             <button
               type="button"
               disabled={busy || !bulkTagId}
-              className="rounded-full border border-white/20 px-2 py-1 text-xs hover:bg-white/10 disabled:opacity-40"
+              className="rounded-full border border-dc-border px-2 py-1 text-xs hover:bg-dc-accent-muted disabled:opacity-40"
               onClick={() => {
                 if (!bulkTagId) return
                 void runBulk({
@@ -898,7 +934,7 @@ export function ProgramScheduleGrid({
               Remove tag
             </button>
           </div>
-          <button type="button" className="ml-auto text-xs text-slate-400 underline" onClick={() => setSelectedIds(new Set())}>
+          <button type="button" className="ml-auto text-xs text-dc-muted underline" onClick={() => setSelectedIds(new Set())}>
             Clear selection
           </button>
         </div>
@@ -941,7 +977,7 @@ export function ProgramScheduleGrid({
             }}
           >
             <div
-              className="shrink-0 border-r border-white/10 pr-1 text-right text-[10px] text-slate-500"
+              className="shrink-0 border-r border-dc-border pr-1 text-right text-[10px] text-dc-muted"
               style={{ width: 52, paddingTop: 22 }}
             >
               {rowLabels.map((lb, i) => (
@@ -1027,14 +1063,14 @@ export function ProgramScheduleGrid({
         <div className="flex flex-wrap gap-2">
           <button
             type="button"
-            className="rounded-full bg-dc-accent-muted px-4 py-2 text-sm font-medium text-dc-text ring-1 ring-dc-accent-border hover:bg-dc-accent/30"
+            className="rounded-full bg-dc-accent-muted px-4 py-2 text-sm font-medium text-dc-accent-foreground ring-1 ring-dc-accent-border hover:bg-dc-accent/30"
             onClick={() => openCreateModal()}
           >
             {scheduleNouns.addItemCta} in selection
           </button>
           <button
             type="button"
-            className="rounded-full border border-white/15 px-4 py-2 text-sm text-slate-300 hover:bg-white/5"
+            className="rounded-full border border-dc-border px-4 py-2 text-sm text-dc-muted hover:bg-white/5"
             onClick={() => clearGridSelection()}
           >
             Clear selection
@@ -1043,10 +1079,10 @@ export function ProgramScheduleGrid({
       ) : null}
 
       {modal ? (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4">
-          <div className="w-full max-w-md rounded-2xl border border-white/10 bg-slate-950 p-5 shadow-2xl">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-dc-surface/85 p-4">
+          <div className="w-full max-w-md rounded-2xl border border-dc-border bg-dc-elevated-solid p-5 shadow-2xl">
             <h3 className="font-serif text-xl text-dc-text">New {scheduleNouns.scheduledItem}</h3>
-            <p className="mt-1 text-xs text-slate-400">
+            <p className="mt-1 text-xs text-dc-muted">
               {formatDayHeader(modal.day, timezone)} ·{' '}
               {formatTimeLabel(
                 instantFromRow(modal.day, modal.startRow, timezone, GRID_START_HOUR, SLOT_STEP).toISOString(),
@@ -1059,44 +1095,44 @@ export function ProgramScheduleGrid({
               )}
             </p>
             <div className="mt-4 space-y-3">
-              <label className="block text-xs uppercase tracking-wide text-slate-400">
+              <label className="block text-xs uppercase tracking-wide text-dc-muted">
                 Title
                 <input
-                  className="mt-1 w-full rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-sm text-white"
+                  className="mt-1 w-full rounded-lg border border-dc-border bg-dc-surface-muted px-3 py-2 text-sm text-dc-text"
                   value={formTitle}
                   onChange={(e) => setFormTitle(e.target.value)}
                 />
               </label>
-              <label className="block text-xs uppercase tracking-wide text-slate-400">
+              <label className="block text-xs uppercase tracking-wide text-dc-muted">
                 Room / location
                 <input
-                  className="mt-1 w-full rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-sm text-white"
+                  className="mt-1 w-full rounded-lg border border-dc-border bg-dc-surface-muted px-3 py-2 text-sm text-dc-text"
                   value={formRoom}
                   onChange={(e) => setFormRoom(e.target.value)}
                 />
               </label>
-              <label className="block text-xs uppercase tracking-wide text-slate-400">
+              <label className="block text-xs uppercase tracking-wide text-dc-muted">
                 Track
                 <input
-                  className="mt-1 w-full rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-sm text-white"
+                  className="mt-1 w-full rounded-lg border border-dc-border bg-dc-surface-muted px-3 py-2 text-sm text-dc-text"
                   value={formTrack}
                   onChange={(e) => setFormTrack(e.target.value)}
                 />
               </label>
-              <label className="block text-xs uppercase tracking-wide text-slate-400">
+              <label className="block text-xs uppercase tracking-wide text-dc-muted">
                 Description
                 <textarea
-                  className="mt-1 min-h-[72px] w-full rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-sm text-white"
+                  className="mt-1 min-h-[72px] w-full rounded-lg border border-dc-border bg-dc-surface-muted px-3 py-2 text-sm text-dc-text"
                   value={formDesc}
                   onChange={(e) => setFormDesc(e.target.value)}
                 />
               </label>
             </div>
-            {err ? <p className="mt-3 text-sm text-rose-300">{err}</p> : null}
+            {err ? <p className="mt-3 text-sm text-red-700">{err}</p> : null}
             <div className="mt-5 flex justify-end gap-2">
               <button
                 type="button"
-                className="rounded-full border border-white/15 px-4 py-2 text-sm text-slate-300"
+                className="rounded-full border border-dc-border px-4 py-2 text-sm text-dc-muted"
                 onClick={() => setModal(null)}
               >
                 Cancel
@@ -1115,7 +1151,7 @@ export function ProgramScheduleGrid({
       ) : null}
 
       {draftModal ? (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-dc-surface/85 p-4">
           <div className="w-full max-w-md rounded-2xl border border-dc-border bg-dc-elevated p-5 shadow-2xl">
             <h3 className="font-serif text-xl text-dc-text">Add to library</h3>
             <p className="mt-1 text-xs text-dc-muted">
@@ -1147,7 +1183,7 @@ export function ProgramScheduleGrid({
                 />
               </label>
             </div>
-            {err ? <p className="mt-3 text-sm text-rose-300">{err}</p> : null}
+            {err ? <p className="mt-3 text-sm text-red-700">{err}</p> : null}
             <div className="mt-5 flex justify-end gap-2">
               <button
                 type="button"
@@ -1169,6 +1205,14 @@ export function ProgramScheduleGrid({
         </div>
       ) : null}
 
+      {scheduleImpactPayload ? (
+        <ScheduleChangeImpactModal
+          eventSlug={eventSlug}
+          payload={scheduleImpactPayload}
+          onClose={() => setScheduleImpactPayload(null)}
+        />
+      ) : null}
+
       {drawerSlot ? (
         <SessionDetailDrawer
           eventSlug={eventSlug}
@@ -1182,6 +1226,7 @@ export function ProgramScheduleGrid({
             onDrawerTabConsumed?.()
           }}
           onSaved={onRefresh}
+          onScheduleImpact={(impact) => setScheduleImpactPayload({ ...impact, slotId: drawerSlot.id })}
           onCopySessionLink={
             onSlotLinkChange
               ? () => {
@@ -1195,11 +1240,11 @@ export function ProgramScheduleGrid({
         />
       ) : null}
 
-      <div className="rounded-xl border border-white/10 bg-black/25 p-3">
-        <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">Edit existing</p>
+      <div className="rounded-xl border border-dc-border bg-dc-elevated-muted p-3">
+        <p className="text-xs font-semibold uppercase tracking-wide text-dc-muted">Edit existing</p>
         <ul className="mt-2 space-y-2 text-sm text-dc-text">
           {filteredSlots.map((s) => (
-            <li key={s.id} className="flex items-center justify-between gap-2 border-b border-white/5 py-1">
+            <li key={s.id} className="flex items-center justify-between gap-2 border-b border-dc-border/50 py-1">
               <label className="flex min-w-0 flex-1 cursor-pointer items-center gap-2">
                 {readOnly ? null : (
                   <input
@@ -1220,7 +1265,7 @@ export function ProgramScheduleGrid({
                 {readOnly ? null : (
                   <button
                     type="button"
-                    className="text-xs text-rose-300 hover:text-rose-200"
+                    className="text-xs text-red-700 hover:text-red-700"
                     onClick={() => void deleteSlot(s.id)}
                   >
                     Delete

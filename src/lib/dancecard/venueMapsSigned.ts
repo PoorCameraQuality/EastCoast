@@ -1,5 +1,5 @@
 import type { SupabaseClient } from '@supabase/supabase-js'
-import { DANCECARD_MAPS_BUCKET } from '@/lib/dancecard/dancecardMapsConstants'
+import { createSignedStorageUrl, DANCECARD_MAPS_BUCKET } from '@/lib/dancecard/dancecardStorage'
 
 import type { MapZoneShape } from '@/lib/dancecard/mapPinZones'
 
@@ -17,6 +17,8 @@ export type SignedVenueMapDto = {
   id: string
   title: string
   imageUrl: string | null
+  widthPx: number | null
+  heightPx: number | null
   pins: VenueMapPinDto[]
   locationNames: Record<string, string>
 }
@@ -28,7 +30,7 @@ export async function fetchSignedVenueMapsForEvent(
 ): Promise<SignedVenueMapDto[]> {
   const { data: maps, error: mErr } = await admin
     .from('dancecard_event_maps')
-    .select('id, title, image_path, sort_order')
+    .select('id, title, image_path, width_px, height_px, sort_order')
     .eq('event_id', eventId)
     .order('sort_order', { ascending: true })
     .limit(limit)
@@ -70,11 +72,13 @@ export async function fetchSignedVenueMapsForEvent(
   const out = await Promise.all(
     mapList.map(async (m) => {
       const path = m.image_path as string
-      const signed = await admin.storage.from(DANCECARD_MAPS_BUCKET).createSignedUrl(path, 3600)
+      const imageUrl = await createSignedStorageUrl(admin, path, DANCECARD_MAPS_BUCKET, 3600)
       return {
         id: m.id as string,
         title: String(m.title ?? 'Map'),
-        imageUrl: signed.data?.signedUrl ?? null,
+        imageUrl,
+        widthPx: (m.width_px as number | null) ?? null,
+        heightPx: (m.height_px as number | null) ?? null,
         locationNames,
         pins: pinsByMapId.get(m.id as string) ?? [],
       }

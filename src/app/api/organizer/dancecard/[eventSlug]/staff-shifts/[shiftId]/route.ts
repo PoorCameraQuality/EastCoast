@@ -5,7 +5,9 @@ import { isDmStaffRole } from '@/lib/dancecard/dmCoverageScanner'
 import { mapStaffShiftRow } from '@/lib/dancecard/organizerStaffShiftDto'
 import { organizerStaffShiftPatchSchema } from '@/lib/dancecard/organizerSchemas'
 import { assertSlotInsideWindow } from '@/lib/dancecard/organizerSlotValidation'
+import { fetchStaffShiftRowsForEvent } from '@/lib/dancecard/organizerStaffShiftsData'
 import { loadEventBySlugAnyStatus } from '@/lib/dancecard/routeCommon'
+import { findStaffShiftConflicts } from '@/lib/dancecard/staffShiftConflicts'
 
 export const dynamic = 'force-dynamic'
 
@@ -77,6 +79,27 @@ export async function PATCH(
 
     if (Object.keys(patch).length === 0) {
       return NextResponse.json({ error: 'No fields to update' }, { status: 400 })
+    }
+
+    const nextStartsAt =
+      body.startsAt !== undefined ? new Date(body.startsAt).toISOString() : String(existing.starts_at)
+    const nextEndsAt = body.endsAt !== undefined ? new Date(body.endsAt).toISOString() : String(existing.ends_at)
+    const nextPersonId =
+      body.personId !== undefined ? body.personId : ((existing.person_id as string | null) ?? null)
+    const nextPersonName =
+      body.personName !== undefined ? body.personName.trim() : String(existing.person_name ?? '').trim()
+
+    const existingRows = await fetchStaffShiftRowsForEvent(admin, eventId)
+    const shifts = existingRows.map((r) => mapStaffShiftRow(r))
+    const conflicts = findStaffShiftConflicts(shifts, {
+      personId: nextPersonId,
+      personName: nextPersonName,
+      startsAt: nextStartsAt,
+      endsAt: nextEndsAt,
+      excludeShiftId: shiftId,
+    })
+    if (conflicts.length && !body.overrideConflicts) {
+      return NextResponse.json({ error: 'Scheduling conflict', conflicts }, { status: 409 })
     }
 
     const { data: row, error } = await admin

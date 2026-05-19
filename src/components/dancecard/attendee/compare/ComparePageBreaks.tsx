@@ -20,7 +20,7 @@ export function PremiumSectionLabel({ children = 'Mutual availability' }: { chil
   return (
     <div className="flex items-center gap-5 py-4 sm:gap-8" role="separator" aria-label={children}>
       <GoldLine />
-      <span className="shrink-0 text-[11px] font-semibold uppercase tracking-[0.42em] text-[#c6a75e] sm:text-xs">
+      <span className="shrink-0 text-[11px] font-semibold uppercase tracking-[0.42em] text-dc-accent sm:text-xs">
         {children}
       </span>
       <GoldLine />

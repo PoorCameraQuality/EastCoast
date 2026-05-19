@@ -3,6 +3,7 @@ import type { SupabaseClient } from '@supabase/supabase-js'
 import { ZodError } from 'zod'
 import { z } from 'zod'
 import { assertOrganizerCanMutate, organizerErrorResponse, requireOrganizerForSlug } from '@/lib/dancecard/organizerAuth'
+import { executeShiftSwapApproval } from '@/lib/dancecard/shiftSwapApprove'
 
 export const dynamic = 'force-dynamic'
 
@@ -56,58 +57,38 @@ export async function PATCH(request: NextRequest, context: { params: { eventSlug
 
     const toClaim = to.claimed_by_account_id as string | null
     const requesterName = await accountDisplayName(admin, rid)
+    const otherName = toClaim && toClaim !== rid ? await accountDisplayName(admin, toClaim) : null
 
-    if (!toClaim) {
-      const pn = requesterName
-      const { error: e1 } = await admin
-        .from('dancecard_staff_shifts')
-        .update({
-          claimed_by_account_id: null,
-          person_name: null,
-          shift_status: 'open',
-          dropped_at: new Date().toISOString(),
-        })
-        .eq('id', fromId)
-      if (e1) throw e1
-      const { error: e2 } = await admin
-        .from('dancecard_staff_shifts')
-        .update({
-          claimed_by_account_id: rid,
-          person_name: pn,
-          shift_status: 'assigned',
-          dropped_at: null,
-        })
-        .eq('id', toId)
-      if (e2) throw e2
-    } else if (toClaim !== rid) {
-      const otherName = await accountDisplayName(admin, toClaim)
-      const { error: e1 } = await admin
-        .from('dancecard_staff_shifts')
-        .update({
-          claimed_by_account_id: toClaim,
-          person_name: otherName,
-          shift_status: 'assigned',
-        })
-        .eq('id', fromId)
-      if (e1) throw e1
-      const { error: e2 } = await admin
-        .from('dancecard_staff_shifts')
-        .update({
-          claimed_by_account_id: rid,
-          person_name: requesterName,
-          shift_status: 'assigned',
-        })
-        .eq('id', toId)
-      if (e2) throw e2
-    } else {
-      return NextResponse.json({ error: 'Invalid swap state' }, { status: 409 })
+    const result = await executeShiftSwapApproval({
+      admin,
+      swapId,
+      fromId,
+      toId,
+      rid,
+      toClaim,
+      requesterName,
+      otherName,
+      from: {
+        claimed_by_account_id: from.claimed_by_account_id as string | null,
+        person_name: String(from.person_name ?? ''),
+        shift_status: String(from.shift_status ?? 'assigned'),
+        dropped_at: (from.dropped_at as string | null) ?? null,
+      },
+      to: {
+        claimed_by_account_id: to.claimed_by_account_id as string | null,
+        person_name: String(to.person_name ?? ''),
+        shift_status: String(to.shift_status ?? 'assigned'),
+        dropped_at: (to.dropped_at as string | null) ?? null,
+      },
+    })
+
+    if (!result.ok) {
+      return NextResponse.json(
+        { error: result.error, rollbackMessage: result.rollbackMessage },
+        { status: result.status },
+      )
     }
 
-    const { error: fin } = await admin
-      .from('dancecard_shift_swap_requests')
-      .update({ status: 'approved', updated_at: new Date().toISOString() })
-      .eq('id', swapId)
-    if (fin) throw fin
     return NextResponse.json({ ok: true, status: 'approved' })
   } catch (e) {
     if (e instanceof ZodError) {

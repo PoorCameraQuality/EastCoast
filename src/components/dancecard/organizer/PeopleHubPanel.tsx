@@ -7,6 +7,7 @@ import { ShiftSwapsPanel } from '@/components/dancecard/organizer/ShiftSwapsPane
 import { VettingQueuePanel } from '@/components/dancecard/organizer/VettingQueuePanel'
 import { BadgesPrintPanel } from '@/components/dancecard/organizer/BadgesPrintPanel'
 import { DmCoveragePanel } from '@/components/dancecard/organizer/DmCoveragePanel'
+import { SafetyIncidentsPanel } from '@/components/dancecard/organizer/SafetyIncidentsPanel'
 import { usePeopleSubTab } from '@/components/dancecard/organizer/usePeopleSubTab'
 import type { OrganizerStaffShiftDto } from '@/lib/dancecard/organizerStaffShiftDto'
 import type { OrganizerRoleForClient } from '@/lib/dancecard/organizerRoles'
@@ -21,6 +22,7 @@ const TAB_LABELS: Record<string, string> = {
   swaps: 'Shift swaps',
   badges: 'Badges',
   coverage: 'Coverage & assignments',
+  incidents: 'Safety incidents',
 }
 
 type Props = {
@@ -80,7 +82,12 @@ export function PeopleHubPanel({
         <RegistrantsPanel eventSlug={eventSlug} readOnly={readOnly} organizerRole={organizerRole} />
       ) : null}
       {peopleTab === 'roster' ? (
-        <PeopleDirectoryPanel eventSlug={eventSlug} readOnly={readOnly} organizerRole={organizerRole} />
+        <PeopleDirectoryPanel
+          eventSlug={eventSlug}
+          timezone={timezone}
+          readOnly={readOnly}
+          organizerRole={organizerRole}
+        />
       ) : null}
       {peopleTab === 'staff' ? (
         <StaffShiftsPanel
@@ -94,6 +101,9 @@ export function PeopleHubPanel({
       {peopleTab === 'applications' ? <VettingQueuePanel eventSlug={eventSlug} organizerRole={organizerRole} /> : null}
       {peopleTab === 'swaps' ? <ShiftSwapsPanel eventSlug={eventSlug} timezone={timezone} readOnly={readOnly} /> : null}
       {peopleTab === 'badges' ? <BadgesPrintPanel eventSlug={eventSlug} readOnly={readOnly} /> : null}
+      {peopleTab === 'incidents' ? (
+        <SafetyIncidentsPanel eventSlug={eventSlug} organizerRole={organizerRole ?? 'viewer'} readOnly={readOnly} />
+      ) : null}
       {peopleTab === 'coverage' ? (
         hasEventWindow ? (
           <DmCoveragePanel

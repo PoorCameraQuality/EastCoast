@@ -5,6 +5,7 @@ import { codesEqual } from '@/lib/dancecard/accessCodes'
 import { getDancecardAdmin, loadEventBySlug, normalizeEventSlug } from '@/lib/dancecard/routeCommon'
 import { loginBodySchema } from '@/lib/dancecard/schemas'
 import { resolveRegistrantForDancecardAccount } from '@/lib/dancecard/ensureSelfServiceRegistrant'
+import { resolveRegistrationCategoryFromCompCode } from '@/lib/dancecard/resolveRegistrationCategoryFromCompCode'
 import {
   newSessionToken,
   hashToken,
@@ -15,6 +16,8 @@ import {
 } from '@/lib/dancecard/session'
 import { rateLimiters, withRateLimit } from '@/lib/rateLimit'
 import { toClientError } from '@/lib/security/safeApiError'
+
+export const dynamic = 'force-dynamic'
 
 export async function POST(
   request: NextRequest,
@@ -51,12 +54,23 @@ export async function POST(
       }
     }
 
+    const trimmedComp = String(body.compCode ?? '').trim()
+    const category = await resolveRegistrationCategoryFromCompCode(
+      admin,
+      event.id,
+      trimmedComp || null,
+    )
+
     await resolveRegistrantForDancecardAccount(
       admin,
       event.id,
       account.id as string,
       account.display_name as string,
-      { ensure: true },
+      {
+        ensure: true,
+        categoryId: category.categoryId,
+        updateCategoryOnLink: Boolean(trimmedComp),
+      },
     )
 
     await revokeAllSessionsForAccount(admin, account.id as string)

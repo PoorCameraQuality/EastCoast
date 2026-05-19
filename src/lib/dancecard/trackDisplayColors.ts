@@ -19,30 +19,32 @@ function hexToRgb(hex: string): { r: number; g: number; b: number } | null {
   return null
 }
 
-/** Opaque fill: blend track accent into the dancecard elevated surface (no alpha). */
+/** Parchment elevated surface (#f4f0e8) — blend track accent for readable cards on light chrome. */
+const PARCHMENT_BASE = { r: 244, g: 240, b: 232 }
+
 function opaqueCardBackground(rgb: { r: number; g: number; b: number }): string {
-  const base = { r: 21, g: 28, b: 39 }
-  const mix = 0.42
-  const r = Math.round(rgb.r * mix + base.r * (1 - mix))
-  const g = Math.round(rgb.g * mix + base.g * (1 - mix))
-  const b = Math.round(rgb.b * mix + base.b * (1 - mix))
+  const mix = 0.28
+  const r = Math.round(rgb.r * mix + PARCHMENT_BASE.r * (1 - mix))
+  const g = Math.round(rgb.g * mix + PARCHMENT_BASE.g * (1 - mix))
+  const b = Math.round(rgb.b * mix + PARCHMENT_BASE.b * (1 - mix))
   return `rgb(${r}, ${g}, ${b})`
 }
 
+/** Light tints for parchment program grid (dark text via text-dc-text). */
 const PROGRAM_TRACK_PRESETS: Record<string, { bg: string; border: string; accent: string }> = {
-  classes: { bg: 'rgb(30, 58, 95)', border: 'rgb(96, 165, 250)', accent: 'rgb(59, 130, 246)' },
-  class: { bg: 'rgb(30, 58, 95)', border: 'rgb(96, 165, 250)', accent: 'rgb(59, 130, 246)' },
-  play: { bg: 'rgb(59, 38, 92)', border: 'rgb(167, 139, 250)', accent: 'rgb(139, 92, 246)' },
-  dungeon: { bg: 'rgb(59, 38, 92)', border: 'rgb(167, 139, 250)', accent: 'rgb(139, 92, 246)' },
-  social: { bg: 'rgb(92, 62, 24)', border: 'rgb(251, 191, 36)', accent: 'rgb(245, 158, 11)' },
-  community: { bg: 'rgb(92, 62, 24)', border: 'rgb(251, 191, 36)', accent: 'rgb(245, 158, 11)' },
+  classes: { bg: 'rgb(232, 238, 252)', border: 'rgb(59, 130, 246)', accent: 'rgb(59, 130, 246)' },
+  class: { bg: 'rgb(232, 238, 252)', border: 'rgb(59, 130, 246)', accent: 'rgb(59, 130, 246)' },
+  play: { bg: 'rgb(240, 232, 252)', border: 'rgb(139, 92, 246)', accent: 'rgb(139, 92, 246)' },
+  dungeon: { bg: 'rgb(240, 232, 252)', border: 'rgb(139, 92, 246)', accent: 'rgb(139, 92, 246)' },
+  social: { bg: 'rgb(252, 242, 220)', border: 'rgb(180, 130, 40)', accent: 'rgb(139, 105, 20)' },
+  community: { bg: 'rgb(252, 242, 220)', border: 'rgb(180, 130, 40)', accent: 'rgb(139, 105, 20)' },
 }
 
 const FALLBACK_PRESETS = [
-  { bg: 'rgb(22, 78, 72)', border: 'rgb(45, 212, 191)', accent: 'rgb(45, 212, 191)' },
-  { bg: 'rgb(54, 72, 28)', border: 'rgb(163, 230, 53)', accent: 'rgb(163, 230, 53)' },
-  { bg: 'rgb(88, 28, 48)', border: 'rgb(251, 113, 133)', accent: 'rgb(251, 113, 133)' },
-  { bg: 'rgb(30, 58, 95)', border: 'rgb(96, 165, 250)', accent: 'rgb(59, 130, 246)' },
+  { bg: 'rgb(224, 244, 240)', border: 'rgb(45, 140, 120)', accent: 'rgb(45, 140, 120)' },
+  { bg: 'rgb(236, 244, 220)', border: 'rgb(100, 140, 50)', accent: 'rgb(100, 140, 50)' },
+  { bg: 'rgb(252, 228, 236)', border: 'rgb(190, 80, 110)', accent: 'rgb(190, 80, 110)' },
+  { bg: 'rgb(232, 238, 252)', border: 'rgb(59, 130, 246)', accent: 'rgb(59, 130, 246)' },
 ]
 
 function hashLabel(s: string): number {

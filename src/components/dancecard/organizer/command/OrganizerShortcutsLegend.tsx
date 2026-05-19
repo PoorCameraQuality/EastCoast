@@ -21,7 +21,7 @@ export function OrganizerShortcutsLegend() {
   if (!open) return null
 
   return (
-    <div className="fixed inset-0 z-dc-modal flex items-center justify-center bg-black/50 p-4 print:bg-white print:p-8">
+    <div className="fixed inset-0 z-dc-modal flex items-center justify-center bg-dc-text/35 p-4 backdrop-blur-sm print:bg-white print:p-8">
       <div className="max-h-[90vh] w-full max-w-md overflow-y-auto rounded-2xl border border-dc-border bg-dc-elevated p-6 print:border-black print:shadow-none">
         <h2 className="font-serif text-xl text-dc-text">Organizer shortcuts</h2>
         <ul className="mt-4 space-y-2 text-sm">
@@ -42,7 +42,7 @@ export function OrganizerShortcutsLegend() {
           </button>
           <button
             type="button"
-            className="rounded-full bg-dc-accent px-4 py-2 text-sm font-semibold text-white"
+            className="rounded-full bg-dc-accent px-4 py-2 text-sm font-semibold text-dc-accent-foreground"
             onClick={() => setOpen(false)}
           >
             Close

@@ -14,8 +14,10 @@ export function formatDancecardApiMessage(e: unknown): string {
     const raw = e.body?.trim() ?? ''
     if (!raw) return e.message || 'Request failed'
     try {
-      const j = JSON.parse(raw) as { error?: string; message?: string }
-      if (typeof j.error === 'string' && j.error) return j.error
+      const j = JSON.parse(raw) as { error?: string; message?: string; hint?: string }
+      if (typeof j.error === 'string' && j.error) {
+        return typeof j.hint === 'string' && j.hint ? `${j.error} ${j.hint}` : j.error
+      }
       if (typeof j.message === 'string' && j.message) return j.message
     } catch {
       if (raw.length < 400 && !raw.startsWith('<')) return raw
@@ -69,4 +71,20 @@ export async function dancecardFetch<T>(
     return JSON.parse(text) as T
   }
   return undefined as T
+}
+
+/** Multipart upload (do not set Content-Type — browser sets boundary). */
+export async function dancecardUpload<T>(slug: string, path: string, form: FormData): Promise<T> {
+  const res = await fetch(`/api/dancecard/${encodeURIComponent(slug)}${path}`, {
+    method: 'POST',
+    credentials: 'include',
+    body: form,
+    headers: { Accept: 'application/json' },
+  })
+  const text = await res.text()
+  if (!res.ok) {
+    throw new DancecardApiError(res.status, text)
+  }
+  if (!text) return undefined as T
+  return JSON.parse(text) as T
 }

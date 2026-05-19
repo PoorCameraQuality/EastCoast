@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { formatInTimeZone } from 'date-fns-tz'
 import { organizerDancecardFetch } from '@/components/dancecard/organizer/organizerApi'
 import type { ProgramSlotRow } from '@/lib/dancecard/organizerProgramSlotDto'
+import type { ScheduleChangeImpactReport } from '@/lib/dancecard/scheduleChangeImpact'
 
 type LocationRow = { id: string; name: string }
 
@@ -45,6 +46,7 @@ export function SessionDetailDrawer({
   onSaved,
   readOnly,
   onCopySessionLink,
+  onScheduleImpact,
   initialTab = 'overview',
 }: {
   eventSlug: string
@@ -54,10 +56,13 @@ export function SessionDetailDrawer({
   onSaved: () => Promise<void>
   readOnly: boolean
   onCopySessionLink?: () => void
+  onScheduleImpact?: (impact: ScheduleChangeImpactReport) => void
   initialTab?: TabKey
 }) {
   const [tab, setTab] = useState<TabKey>(initialTab)
   const [locations, setLocations] = useState<LocationRow[]>([])
+  const [locationsLoadErr, setLocationsLoadErr] = useState<string | null>(null)
+  const [peopleLoadErr, setPeopleLoadErr] = useState<string | null>(null)
   const [busy, setBusy] = useState(false)
   const [err, setErr] = useState<string | null>(null)
 
@@ -99,11 +104,25 @@ export function SessionDetailDrawer({
 
   const loadChangeLog = useCallback(async () => {
     try {
-      const res = await organizerDancecardFetch<{ entries: ChangeLogEntry[] }>(
-        eventSlug,
-        `/program-slots/${slot.id}/change-log`,
-      )
-      setChangeLog(res.entries ?? [])
+      const [notifyRes, auditRes] = await Promise.all([
+        organizerDancecardFetch<{ entries: ChangeLogEntry[] }>(
+          eventSlug,
+          `/program-slots/${slot.id}/change-log`,
+        ),
+        organizerDancecardFetch<{
+          entries: Array<{ id: string; action: string; createdAt: string }>
+        }>(eventSlug, `/program-slots/${slot.id}/audit`).catch(() => ({ entries: [] })),
+      ])
+      const merged: ChangeLogEntry[] = [
+        ...(notifyRes.entries ?? []),
+        ...(auditRes.entries ?? []).map((e) => ({
+          id: e.id,
+          createdAt: e.createdAt,
+          summary: `Organizer ${e.action}`,
+          status: 'audit',
+        })),
+      ].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+      setChangeLog(merged)
       setNotesMigration(false)
     } catch (e) {
       const msg = e instanceof Error ? e.message : ''
@@ -135,13 +154,15 @@ export function SessionDetailDrawer({
   }
 
   const loadLocations = useCallback(async () => {
+    setLocationsLoadErr(null)
     try {
       const res = await organizerDancecardFetch<{ locations: { id: string; name: string }[] }>(
         eventSlug,
         '/locations',
       )
       setLocations(res.locations ?? [])
-    } catch {
+    } catch (e) {
+      setLocationsLoadErr(e instanceof Error ? e.message : 'Could not load locations')
       setLocations([])
     }
   }, [eventSlug])
@@ -151,13 +172,15 @@ export function SessionDetailDrawer({
   }, [loadLocations])
 
   const loadPeopleForTab = useCallback(async () => {
+    setPeopleLoadErr(null)
     try {
       const res = await organizerDancecardFetch<{ people: { id: string; sceneName: string }[] }>(
         eventSlug,
         '/people',
       )
       setPeopleList((res.people ?? []).map((p) => ({ id: p.id, sceneName: p.sceneName })))
-    } catch {
+    } catch (e) {
+      setPeopleLoadErr(e instanceof Error ? e.message : 'Could not load people roster')
       setPeopleList([])
     }
   }, [eventSlug])
@@ -226,7 +249,10 @@ export function SessionDetailDrawer({
     setBusy(true)
     setErr(null)
     try {
-      await organizerDancecardFetch(eventSlug, `/program-slots/${slot.id}`, {
+      const res = await organizerDancecardFetch<{
+        slot: ProgramSlotRow
+        scheduleImpact?: ScheduleChangeImpactReport
+      }>(eventSlug, `/program-slots/${slot.id}`, {
         method: 'PATCH',
         body: JSON.stringify({
           title: title.trim(),
@@ -241,6 +267,9 @@ export function SessionDetailDrawer({
         }),
       })
       await onSaved()
+      if (res.scheduleImpact?.scheduleChanged && onScheduleImpact) {
+        onScheduleImpact(res.scheduleImpact)
+      }
       onClose()
     } catch (e) {
       setErr(e instanceof Error ? e.message : 'Save failed')
@@ -263,23 +292,23 @@ export function SessionDetailDrawer({
     <div className="fixed inset-0 z-[60] flex justify-end p-2 sm:p-4">
       <button
         type="button"
-        className="absolute inset-0 bg-black/60"
+        className="absolute inset-0 bg-dc-surface/80"
         aria-label="Close activity panel"
         onClick={onClose}
       />
       <div
-        className="relative z-10 flex h-full w-full max-w-lg flex-col rounded-2xl border border-white/10 bg-slate-950 shadow-2xl"
+        className="relative z-10 flex h-full w-full max-w-lg flex-col rounded-2xl border border-dc-border bg-dc-elevated-solid shadow-2xl"
         role="dialog"
         aria-modal
         aria-labelledby="dc-session-drawer-title"
       >
-        <div className="flex items-start justify-between gap-2 border-b border-white/10 px-4 py-3">
+        <div className="flex items-start justify-between gap-2 border-b border-dc-border px-4 py-3">
           <div className="min-w-0">
-            <p className="text-[10px] uppercase tracking-[0.2em] text-slate-500">Activity</p>
-            <h2 id="dc-session-drawer-title" className="truncate font-serif text-lg text-white">
+            <p className="text-[10px] uppercase tracking-[0.2em] text-dc-muted">Activity</p>
+            <h2 id="dc-session-drawer-title" className="truncate font-serif text-lg text-dc-text">
               {slot.title}
             </h2>
-            <p className="mt-1 text-xs text-slate-400">
+            <p className="mt-1 text-xs text-dc-muted">
               {slot.startsAt && slot.endsAt
                 ? `${formatInTimeZone(new Date(slot.startsAt), timezone, 'EEE MMM d · h:mm a')} – ${formatInTimeZone(new Date(slot.endsAt), timezone, 'h:mm a')}`
                 : 'Unscheduled — drag onto the program grid to set a time'}
@@ -289,7 +318,7 @@ export function SessionDetailDrawer({
             {onCopySessionLink ? (
               <button
                 type="button"
-                className="rounded-full border border-dc-accent-border px-3 py-1 text-xs text-dc-text hover:bg-dc-accent-muted"
+                className="rounded-full border border-dc-accent-border px-3 py-1 text-xs text-dc-accent-foreground hover:bg-dc-accent-muted"
                 onClick={onCopySessionLink}
               >
                 Copy link
@@ -297,7 +326,7 @@ export function SessionDetailDrawer({
             ) : null}
             <button
               type="button"
-              className="rounded-full border border-white/15 px-3 py-1 text-xs text-slate-300 hover:bg-white/5"
+              className="rounded-full border border-dc-border px-3 py-1 text-xs text-dc-muted hover:bg-white/5"
               onClick={onClose}
             >
               Close
@@ -305,7 +334,7 @@ export function SessionDetailDrawer({
           </div>
         </div>
 
-        <div className="flex gap-1 overflow-x-auto border-b border-white/10 px-2 py-2">
+        <div className="flex gap-1 overflow-x-auto border-b border-dc-border px-2 py-2">
           {tabs.map((t) => (
             <button
               key={t.key}
@@ -313,8 +342,8 @@ export function SessionDetailDrawer({
               onClick={() => setTab(t.key)}
               className={
                 tab === t.key
-                  ? 'shrink-0 rounded-full bg-dc-accent-muted px-3 py-1.5 text-xs font-medium text-dc-text ring-1 ring-dc-accent-border'
-                  : 'shrink-0 rounded-full border border-transparent px-3 py-1.5 text-xs text-slate-400 hover:bg-white/5'
+                  ? 'shrink-0 rounded-full bg-dc-accent-muted px-3 py-1.5 text-xs font-medium text-dc-accent-foreground ring-1 ring-dc-accent-border'
+                  : 'shrink-0 rounded-full border border-transparent px-3 py-1.5 text-xs text-dc-muted hover:bg-white/5'
               }
             >
               {t.label}
@@ -322,43 +351,43 @@ export function SessionDetailDrawer({
           ))}
         </div>
 
-        <div className="min-h-0 flex-1 overflow-y-auto px-4 py-4 text-sm text-slate-200">
+        <div className="min-h-0 flex-1 overflow-y-auto px-4 py-4 text-sm text-dc-text">
           {tab === 'overview' ? (
             <div className="space-y-3">
               <p>
-                <span className="text-slate-500">Track: </span>
+                <span className="text-dc-muted">Track: </span>
                 {slot.trackName ?? slot.track ?? '—'}
               </p>
               <p>
-                <span className="text-slate-500">Room: </span>
+                <span className="text-dc-muted">Room: </span>
                 {slot.locationName ?? slot.room ?? '—'}
               </p>
               <p>
-                <span className="text-slate-500">Published: </span>
+                <span className="text-dc-muted">Published: </span>
                 {slot.isPublished ? 'yes' : 'no'}
               </p>
               <p>
-                <span className="text-slate-500">Visibility: </span>
+                <span className="text-dc-muted">Visibility: </span>
                 {slot.visibility}
               </p>
               <p>
-                <span className="text-slate-500">Photo policy: </span>
+                <span className="text-dc-muted">Photo policy: </span>
                 {slot.photoPolicy}
               </p>
               <p>
-                <span className="text-slate-500">Frozen for attendees: </span>
+                <span className="text-dc-muted">Frozen for attendees: </span>
                 {slot.isFrozen ? 'yes' : 'no'}
               </p>
               {slot.tagNames.length ? (
                 <div>
-                  <span className="text-slate-500">Tags: </span>
+                  <span className="text-dc-muted">Tags: </span>
                   {slot.tagNames.join(', ')}
                 </div>
               ) : null}
               {slot.description ? (
-                <div className="rounded-lg border border-white/10 bg-black/30 p-3 text-slate-300">{slot.description}</div>
+                <div className="rounded-lg border border-dc-border bg-dc-surface-muted p-3 text-dc-muted">{slot.description}</div>
               ) : (
-                <p className="text-slate-500">No description.</p>
+                <p className="text-dc-muted">No description.</p>
               )}
             </div>
           ) : null}
@@ -371,10 +400,10 @@ export function SessionDetailDrawer({
                   {visibility === 'public' && isPublished ? `Public · ${photoPolicy}` : visibility}
                 </span>
               </p>
-              <label className="block text-xs uppercase text-slate-500">
+              <label className="block text-xs uppercase text-dc-muted">
                 Photo policy
                 <select
-                  className="mt-1 w-full rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-white"
+                  className="mt-1 w-full rounded-lg border border-dc-border bg-dc-surface-muted px-3 py-2 text-dc-text"
                   value={photoPolicy}
                   disabled={readOnly}
                   onChange={(e) => setPhotoPolicy(e.target.value as ProgramSlotRow['photoPolicy'])}
@@ -384,14 +413,14 @@ export function SessionDetailDrawer({
                   <option value="none">none</option>
                 </select>
               </label>
-              <label className="flex items-center gap-2 text-xs text-slate-300">
+              <label className="flex items-center gap-2 text-xs text-dc-muted">
                 <input type="checkbox" checked={isPublished} disabled={readOnly} onChange={(e) => setIsPublished(e.target.checked)} />
                 Published
               </label>
-              <label className="block text-xs uppercase text-slate-500">
+              <label className="block text-xs uppercase text-dc-muted">
                 Visibility
                 <select
-                  className="mt-1 w-full rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-white"
+                  className="mt-1 w-full rounded-lg border border-dc-border bg-dc-surface-muted px-3 py-2 text-dc-text"
                   value={visibility}
                   disabled={readOnly}
                   onChange={(e) => setVisibility(e.target.value as ProgramSlotRow['visibility'])}
@@ -401,7 +430,7 @@ export function SessionDetailDrawer({
                   <option value="secret">secret</option>
                 </select>
               </label>
-              <label className="flex items-center gap-2 text-xs text-slate-300">
+              <label className="flex items-center gap-2 text-xs text-dc-muted">
                 <input type="checkbox" checked={isFrozen} disabled={readOnly} onChange={(e) => setIsFrozen(e.target.checked)} />
                 Frozen on dancecards
               </label>
@@ -410,28 +439,28 @@ export function SessionDetailDrawer({
 
           {tab === 'edit' ? (
             <div className="space-y-3">
-              <label className="block text-xs uppercase text-slate-500">
+              <label className="block text-xs uppercase text-dc-muted">
                 Title
                 <input
-                  className="mt-1 w-full rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-white"
+                  className="mt-1 w-full rounded-lg border border-dc-border bg-dc-surface-muted px-3 py-2 text-dc-text"
                   value={title}
                   disabled={readOnly}
                   onChange={(e) => setTitle(e.target.value)}
                 />
               </label>
-              <label className="block text-xs uppercase text-slate-500">
+              <label className="block text-xs uppercase text-dc-muted">
                 Track (legacy text)
                 <input
-                  className="mt-1 w-full rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-white"
+                  className="mt-1 w-full rounded-lg border border-dc-border bg-dc-surface-muted px-3 py-2 text-dc-text"
                   value={track}
                   disabled={readOnly}
                   onChange={(e) => setTrack(e.target.value)}
                 />
               </label>
-              <label className="block text-xs uppercase text-slate-500">
+              <label className="block text-xs uppercase text-dc-muted">
                 Description
                 <textarea
-                  className="mt-1 min-h-[100px] w-full rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-white"
+                  className="mt-1 min-h-[100px] w-full rounded-lg border border-dc-border bg-dc-surface-muted px-3 py-2 text-dc-text"
                   value={description}
                   disabled={readOnly}
                   onChange={(e) => setDescription(e.target.value)}
@@ -442,10 +471,11 @@ export function SessionDetailDrawer({
 
           {tab === 'location' ? (
             <div className="space-y-3">
-              <label className="block text-xs uppercase text-slate-500">
+              {locationsLoadErr ? <p className="text-sm text-red-700">{locationsLoadErr}</p> : null}
+              <label className="block text-xs uppercase text-dc-muted">
                 Linked location
                 <select
-                  className="mt-1 w-full rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-white"
+                  className="mt-1 w-full rounded-lg border border-dc-border bg-dc-surface-muted px-3 py-2 text-dc-text"
                   value={locationId}
                   disabled={readOnly}
                   onChange={(e) => setLocationId(e.target.value)}
@@ -458,10 +488,10 @@ export function SessionDetailDrawer({
                   ))}
                 </select>
               </label>
-              <label className="block text-xs uppercase text-slate-500">
+              <label className="block text-xs uppercase text-dc-muted">
                 Room label (free text)
                 <input
-                  className="mt-1 w-full rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-white"
+                  className="mt-1 w-full rounded-lg border border-dc-border bg-dc-surface-muted px-3 py-2 text-dc-text"
                   value={room}
                   disabled={readOnly}
                   onChange={(e) => setRoom(e.target.value)}
@@ -472,19 +502,20 @@ export function SessionDetailDrawer({
 
           {tab === 'people' ? (
             <div className="space-y-3">
-              <p className="text-xs text-slate-500">
+              {peopleLoadErr ? <p className="text-sm text-red-700">{peopleLoadErr}</p> : null}
+              <p className="text-xs text-dc-muted">
                 Assign people to this activity. Only assignments marked public appear on the attendee schedule (when the
                 slot is published and visible).
               </p>
               {readOnly ? (
-                <p className="text-sm text-amber-100/90">Read-only: viewer role cannot change assignments.</p>
+                <p className="text-sm text-amber-900/90">Read-only: viewer role cannot change assignments.</p>
               ) : null}
               {assignments.map((row, idx) => (
-                <div key={`${row.personId}-${idx}`} className="rounded-lg border border-white/10 bg-black/25 p-3 space-y-2">
-                  <label className="block text-[10px] uppercase text-slate-500">
+                <div key={`${row.personId}-${idx}`} className="rounded-lg border border-dc-border bg-dc-elevated-muted p-3 space-y-2">
+                  <label className="block text-[10px] uppercase text-dc-muted">
                     Person
                     <select
-                      className="mt-1 w-full rounded-lg border border-white/10 bg-black/40 px-2 py-1.5 text-sm text-white"
+                      className="mt-1 w-full rounded-lg border border-dc-border bg-dc-surface-muted px-2 py-1.5 text-sm text-dc-text"
                       disabled={readOnly}
                       value={row.personId}
                       onChange={(e) => {
@@ -503,10 +534,10 @@ export function SessionDetailDrawer({
                       ))}
                     </select>
                   </label>
-                  <label className="block text-[10px] uppercase text-slate-500">
+                  <label className="block text-[10px] uppercase text-dc-muted">
                     Role
                     <select
-                      className="mt-1 w-full rounded-lg border border-white/10 bg-black/40 px-2 py-1.5 text-sm text-white"
+                      className="mt-1 w-full rounded-lg border border-dc-border bg-dc-surface-muted px-2 py-1.5 text-sm text-dc-text"
                       disabled={readOnly}
                       value={row.role}
                       onChange={(e) =>
@@ -522,7 +553,7 @@ export function SessionDetailDrawer({
                       ))}
                     </select>
                   </label>
-                  <label className="flex items-center gap-2 text-xs text-slate-300">
+                  <label className="flex items-center gap-2 text-xs text-dc-muted">
                     <input
                       type="checkbox"
                       disabled={readOnly}
@@ -538,7 +569,7 @@ export function SessionDetailDrawer({
                   {!readOnly ? (
                     <button
                       type="button"
-                      className="text-xs text-rose-300 hover:underline"
+                      className="text-xs text-red-700 hover:underline"
                       onClick={() => setAssignments((prev) => prev.filter((_, i) => i !== idx))}
                     >
                       Remove row
@@ -549,7 +580,7 @@ export function SessionDetailDrawer({
               {!readOnly ? (
                 <button
                   type="button"
-                  className="w-full rounded-lg border border-dashed border-white/20 py-2 text-xs text-slate-300 hover:bg-white/5"
+                  className="w-full rounded-lg border border-dashed border-dc-border py-2 text-xs text-dc-muted hover:bg-white/5"
                   onClick={() =>
                     setAssignments((prev) => [
                       ...prev,
@@ -570,34 +601,34 @@ export function SessionDetailDrawer({
           ) : null}
 
           {tab === 'registrants' ? (
-            <p className="text-slate-400 text-sm">
+            <p className="text-dc-muted text-sm">
               Event-level registrant roster lives under the organizer <strong>Registrants</strong> tab. Per-activity
               registrant views can extend here later.
             </p>
           ) : null}
 
           {tab === 'notes' ? (
-            <div className="space-y-4 text-slate-300">
-              <p className="text-xs text-slate-500">
+            <div className="space-y-4 text-dc-muted">
+              <p className="text-xs text-dc-muted">
                 Last updated:{' '}
                 {slot.updatedAt ? formatInTimeZone(new Date(slot.updatedAt), timezone, 'yyyy-MM-dd HH:mm') : '—'}
               </p>
               {notesMigration ? (
-                <p className="text-xs text-amber-200">
+                <p className="text-xs text-amber-800">
                   Database update required for organizer activity notes. Apply the latest Dancecard migration in
                   Supabase, then refresh.
                 </p>
               ) : null}
-              <label className="block text-xs uppercase tracking-wide text-slate-500">
+              <label className="block text-xs uppercase tracking-wide text-dc-muted">
                 Organizer notes (staff-only)
                 <textarea
-                  className="mt-1 min-h-[120px] w-full rounded-xl border border-white/10 bg-black/30 px-3 py-2 text-sm text-white"
+                  className="mt-1 min-h-[120px] w-full rounded-xl border border-dc-border bg-dc-surface-muted px-3 py-2 text-sm text-dc-text"
                   value={organizerNotes}
                   disabled={readOnly}
                   onChange={(e) => setOrganizerNotes(e.target.value)}
                 />
               </label>
-              {notesErr ? <p className="text-xs text-rose-300">{notesErr}</p> : null}
+              {notesErr ? <p className="text-xs text-red-700">{notesErr}</p> : null}
               {!readOnly ? (
                 <button
                   type="button"
@@ -609,20 +640,20 @@ export function SessionDetailDrawer({
                 </button>
               ) : null}
               <div>
-                <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Schedule change log</p>
+                <p className="text-xs font-semibold uppercase tracking-wide text-dc-muted">Schedule change log</p>
                 {changeLog.length ? (
                   <ul className="mt-2 space-y-2 text-xs">
                     {changeLog.map((e) => (
-                      <li key={e.id} className="rounded-lg border border-white/10 bg-black/20 px-2 py-1.5">
-                        <span className="text-slate-400">
+                      <li key={e.id} className="rounded-lg border border-dc-border bg-dc-elevated-muted px-2 py-1.5">
+                        <span className="text-dc-muted">
                           {formatInTimeZone(new Date(e.createdAt), timezone, 'MMM d HH:mm')}
                         </span>
-                        <span className="ml-2 text-slate-200">{String(e.summary ?? e.status)}</span>
+                        <span className="ml-2 text-dc-text">{String(e.summary ?? e.status)}</span>
                       </li>
                     ))}
                   </ul>
                 ) : (
-                  <p className="mt-2 text-xs text-slate-500">No attendee notifications tied to this activity yet.</p>
+                  <p className="mt-2 text-xs text-dc-muted">No attendee notifications tied to this activity yet.</p>
                 )}
               </div>
             </div>
@@ -630,8 +661,8 @@ export function SessionDetailDrawer({
         </div>
 
         {tab === 'edit' || tab === 'location' || tab === 'privacy' ? (
-          <div className="border-t border-white/10 px-4 py-3">
-            {err ? <p className="mb-2 text-xs text-rose-300">{err}</p> : null}
+          <div className="border-t border-dc-border px-4 py-3">
+            {err ? <p className="mb-2 text-xs text-red-700">{err}</p> : null}
             <button
               type="button"
               disabled={readOnly || busy}
@@ -643,8 +674,8 @@ export function SessionDetailDrawer({
           </div>
         ) : null}
         {tab === 'people' && !readOnly ? (
-          <div className="border-t border-white/10 px-4 py-3">
-            {err ? <p className="mb-2 text-xs text-rose-300">{err}</p> : null}
+          <div className="border-t border-dc-border px-4 py-3">
+            {err ? <p className="mb-2 text-xs text-red-700">{err}</p> : null}
             <button
               type="button"
               disabled={peopleBusy}

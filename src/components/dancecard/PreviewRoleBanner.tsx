@@ -15,7 +15,7 @@ export function PreviewRoleBanner() {
   if (!role || !LABELS[role]) return null
 
   return (
-    <div className="border-b border-amber-500/40 bg-amber-950/90 px-4 py-2 text-center text-sm text-amber-100">
+    <div className="border-b border-amber-500/40 bg-amber-100 px-4 py-2 text-center text-sm text-amber-900">
       Organizer preview as <strong>{LABELS[role]}</strong> — changes here do not affect live attendee data.
     </div>
   )

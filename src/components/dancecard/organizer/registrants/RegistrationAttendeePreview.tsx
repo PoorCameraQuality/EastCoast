@@ -35,7 +35,7 @@ export function RegistrationAttendeePreview({
     <div className="rounded-xl border border-dc-border bg-dc-surface-muted p-4 xl:sticky xl:top-4">
       <p className="text-dc-micro font-semibold uppercase tracking-wide text-dc-muted">Attendee preview</p>
       <p className="mt-1 text-[10px] text-dc-muted">
-        Registration type lists your categories below. Submit is preview-only until public registration ships.
+        Registration type lists your categories below. Publish the form to enable the public register page.
       </p>
       <div className="mt-3 space-y-4 text-sm">
         {introText ? (
@@ -93,8 +93,8 @@ export function RegistrationAttendeePreview({
               )}
             </label>
           ))}
-          <button type="button" disabled className="w-full rounded-full bg-dc-accent/40 py-2 font-semibold text-dc-text">
-            Submit registration (preview only)
+          <button type="button" disabled className="w-full rounded-full bg-dc-accent/40 py-2 font-semibold text-dc-accent-foreground">
+            Submit registration
           </button>
         </form>
         {confirmationText ? (

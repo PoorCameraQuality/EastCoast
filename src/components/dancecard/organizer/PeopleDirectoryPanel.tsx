@@ -7,6 +7,7 @@ import { useConfirmDialog } from '@/components/dancecard/organizer/ui'
 import type { PeopleRoleBucket } from '@/lib/dancecard/peopleDirectoryRoleBuckets'
 import { formatServiceHours, type PersonCompPackage } from '@/lib/dancecard/peopleCompPackages'
 import type { OrganizerRoleForClient } from '@/lib/dancecard/organizerRoles'
+import { PersonDetailDrawer } from '@/components/dancecard/organizer/PersonDetailDrawer'
 
 type PersonRow = {
   id: string
@@ -34,20 +35,22 @@ const ROLE_FILTERS: { key: RoleFilter; label: string; hint?: string }[] = [
 
 function filterPillClass(active: boolean, accent?: boolean) {
   if (!active) {
-    return 'rounded-full border border-white/15 px-3 py-1.5 text-xs text-slate-300 hover:bg-white/[0.04]'
+    return 'rounded-full border border-dc-border px-3 py-1.5 text-xs text-dc-muted hover:bg-dc-elevated-muted'
   }
   if (accent) {
-    return 'rounded-full border border-emerald-400/40 bg-emerald-950/40 px-3 py-1.5 text-xs font-semibold text-emerald-100'
+    return 'rounded-full border border-emerald-400/40 bg-emerald-100 px-3 py-1.5 text-xs font-semibold text-emerald-800'
   }
-  return 'rounded-full border border-dc-accent-border bg-dc-accent-muted px-3 py-1.5 text-xs font-semibold text-dc-text'
+  return 'rounded-full border border-dc-accent-border bg-dc-accent-muted px-3 py-1.5 text-xs font-semibold text-dc-accent-foreground'
 }
 
 export function PeopleDirectoryPanel({
   eventSlug,
+  timezone,
   readOnly,
   organizerRole,
 }: {
   eventSlug: string
+  timezone: string
   readOnly: boolean
   organizerRole: OrganizerRoleForClient | null
 }) {
@@ -61,6 +64,7 @@ export function PeopleDirectoryPanel({
   const [sceneName, setSceneName] = useState('')
   const [email, setEmail] = useState('')
   const { ask, dialog } = useConfirmDialog()
+  const [selectedPerson, setSelectedPerson] = useState<{ id: string; sceneName: string } | null>(null)
 
   const load = useCallback(async () => {
     setLoadErr(null)
@@ -144,13 +148,13 @@ export function PeopleDirectoryPanel({
   return (
     <div className="space-y-4">
       {dialog}
-      <div className="rounded-xl border border-white/10 bg-black/20 px-4 py-3">
-        <p className="text-sm leading-relaxed text-slate-300">
+      <div className="rounded-xl border border-dc-border bg-dc-elevated-muted px-4 py-3">
+        <p className="text-sm leading-relaxed text-dc-muted">
           This is the master list of everyone at your event: presenters, staff, volunteers, photographers, and anyone
           else you add. Comp type, package, code, and service hours come from the linked signup&apos;s registration
           category (Settings → Registration). Link people to sessions from the program grid.
         </p>
-        <p className="mt-2 text-xs text-slate-500">
+        <p className="mt-2 text-xs text-dc-muted">
           Looking for signup records? See{' '}
           <Link
             href={`/organizer/dancecard/${encodeURIComponent(eventSlug)}?tab=people&peopleTab=signups`}
@@ -162,21 +166,21 @@ export function PeopleDirectoryPanel({
         </p>
       </div>
       {organizerRole === 'viewer' ? (
-        <p className="rounded-xl border border-amber-200/20 bg-amber-950/30 px-4 py-3 text-sm text-amber-100">
+        <p className="rounded-xl border border-amber-200/20 bg-amber-100 px-4 py-3 text-sm text-amber-900">
           Read-only: you can browse people but not add or remove.
         </p>
       ) : null}
-      {loadErr ? <p className="text-sm text-rose-300">{loadErr}</p> : null}
+      {loadErr ? <p className="text-sm text-red-700">{loadErr}</p> : null}
       <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
         <input
-          className="min-w-[12rem] flex-1 rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-sm text-white"
+          className="min-w-[12rem] flex-1 rounded-lg border border-dc-border bg-dc-surface-muted px-3 py-2 text-sm text-dc-text"
           placeholder="Search by scene name or email..."
           value={q}
           onChange={(e) => setQ(e.target.value)}
         />
       </div>
       <div>
-        <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500">Filter by role</p>
+        <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-dc-muted">Filter by role</p>
         <div className="flex flex-wrap gap-2">
           {ROLE_FILTERS.map(({ key, label, hint }) => {
             const active = roleFilter === key
@@ -197,31 +201,31 @@ export function PeopleDirectoryPanel({
           })}
         </div>
         {roleFilter === 'registered' ? (
-          <p className="mt-2 text-xs text-emerald-200/80">
+          <p className="mt-2 text-xs text-emerald-700/80">
             People linked to a registrant record (by profile or matching email). Import or sync registrants to populate
             this list.
           </p>
         ) : null}
         {roleFilter === 'attendee' ? (
-          <p className="mt-2 text-xs text-slate-500">
+          <p className="mt-2 text-xs text-dc-muted">
             Registered guests without a presenter, staff, or photographer assignment on the program or shift board.
           </p>
         ) : null}
       </div>
       {!readOnly ? (
-        <div className="grid gap-2 rounded-xl border border-white/10 bg-black/25 p-4 sm:grid-cols-2">
-          <label className="text-xs uppercase text-slate-500">
+        <div className="grid gap-2 rounded-xl border border-dc-border bg-dc-elevated-muted p-4 sm:grid-cols-2">
+          <label className="text-xs uppercase text-dc-muted">
             New scene name
             <input
-              className="mt-1 w-full rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-sm text-white"
+              className="mt-1 w-full rounded-lg border border-dc-border bg-dc-surface-muted px-3 py-2 text-sm text-dc-text"
               value={sceneName}
               onChange={(e) => setSceneName(e.target.value)}
             />
           </label>
-          <label className="text-xs uppercase text-slate-500">
+          <label className="text-xs uppercase text-dc-muted">
             Email (optional)
             <input
-              className="mt-1 w-full rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-sm text-white"
+              className="mt-1 w-full rounded-lg border border-dc-border bg-dc-surface-muted px-3 py-2 text-sm text-dc-text"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               type="email"
@@ -239,9 +243,9 @@ export function PeopleDirectoryPanel({
           </div>
         </div>
       ) : null}
-      <div className="overflow-x-auto rounded-xl border border-white/10">
-        <table className="min-w-full text-left text-sm text-slate-200">
-          <thead className="border-b border-white/10 bg-black/30 text-xs uppercase text-slate-500">
+      <div className="overflow-x-auto rounded-xl border border-dc-border">
+        <table className="min-w-full text-left text-sm text-dc-text">
+          <thead className="border-b border-dc-border bg-dc-surface-muted text-xs uppercase text-dc-muted">
             <tr>
               <th className="px-3 py-2">Scene</th>
               <th className="px-3 py-2">Email</th>
@@ -256,50 +260,57 @@ export function PeopleDirectoryPanel({
           </thead>
           <tbody>
             {filteredPeople.map((p) => (
-              <tr key={p.id} className="border-b border-white/5 hover:bg-white/[0.03]">
-                <td className="px-3 py-2 font-medium text-white">{p.sceneName}</td>
-                <td className="px-3 py-2 text-slate-400">{p.email ?? '-'}</td>
-                <td className="px-3 py-2 text-slate-400">{p.pronouns ?? '-'}</td>
-                <td className="px-3 py-2 text-xs text-slate-500">
+              <tr
+                key={p.id}
+                className="cursor-pointer border-b border-dc-border/50 hover:bg-white/[0.03]"
+                onClick={() => setSelectedPerson({ id: p.id, sceneName: p.sceneName })}
+              >
+                <td className="px-3 py-2 font-medium text-dc-text">{p.sceneName}</td>
+                <td className="px-3 py-2 text-dc-muted">{p.email ?? '-'}</td>
+                <td className="px-3 py-2 text-dc-muted">{p.pronouns ?? '-'}</td>
+                <td className="px-3 py-2 text-xs text-dc-muted">
                   {(roleBuckets[p.id] ?? []).length
                     ? (roleBuckets[p.id] ?? [])
                         .map((b) => ROLE_FILTERS.find((f) => f.key === b)?.label ?? b)
                         .join(', ')
                     : '-'}
                 </td>
-                <td className="px-3 py-2 text-slate-300">
+                <td className="px-3 py-2 text-dc-muted">
                   {compPackages[p.id]?.roleKindLabel ?? (
-                    <span className="text-slate-600" title="No linked signup or category">
+                    <span className="text-dc-muted" title="No linked signup or category">
                       —
                     </span>
                   )}
                 </td>
-                <td className="px-3 py-2 text-slate-400">
+                <td className="px-3 py-2 text-dc-muted">
                   {compPackages[p.id]?.categoryName ?? (
-                    <span className="text-slate-600">—</span>
+                    <span className="text-dc-muted">—</span>
                   )}
                 </td>
-                <td className="px-3 py-2 font-mono text-xs text-slate-300">
+                <td className="px-3 py-2 font-mono text-xs text-dc-muted">
                   {compPackages[p.id]?.accessCode ?? (
-                    <span className="font-sans text-slate-600" title="No code on this package">
+                    <span className="font-sans text-dc-muted" title="No code on this package">
                       —
                     </span>
                   )}
                 </td>
-                <td className="px-3 py-2 text-slate-300">
+                <td className="px-3 py-2 text-dc-muted">
                   {compPackages[p.id] ? (
                     formatServiceHours(compPackages[p.id].expectedHours)
                   ) : (
-                    <span className="text-slate-600">—</span>
+                    <span className="text-dc-muted">—</span>
                   )}
                 </td>
                 {!readOnly ? (
                   <td className="px-3 py-2">
                     <button
                       type="button"
-                      className="text-xs text-rose-300 hover:underline"
+                      className="text-xs text-red-700 hover:underline"
                       disabled={busy}
-                      onClick={() => void removePerson(p.id)}
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        void removePerson(p.id)
+                      }}
                     >
                       Remove
                     </button>
@@ -309,7 +320,7 @@ export function PeopleDirectoryPanel({
             ))}
             {!filteredPeople.length ? (
               <tr>
-                <td colSpan={readOnly ? 8 : 9} className="px-3 py-6 text-center text-slate-500">
+                <td colSpan={readOnly ? 8 : 9} className="px-3 py-6 text-center text-dc-muted">
                   {people.length && roleFilter !== 'all'
                     ? 'No people match this filter. Try All or add assignments on the program or staff tabs.'
                     : 'No people yet. Add presenters and staff here, then attach them to sessions from the program grid.'}
@@ -319,6 +330,16 @@ export function PeopleDirectoryPanel({
           </tbody>
         </table>
       </div>
+      {selectedPerson ? (
+        <PersonDetailDrawer
+          eventSlug={eventSlug}
+          timezone={timezone}
+          personId={selectedPerson.id}
+          initialSceneName={selectedPerson.sceneName}
+          readOnly={readOnly}
+          onClose={() => setSelectedPerson(null)}
+        />
+      ) : null}
     </div>
   )
 }

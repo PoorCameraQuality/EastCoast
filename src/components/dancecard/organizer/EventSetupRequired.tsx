@@ -2,10 +2,10 @@
 
 export function EventSetupRequired({ onGoSettings }: { onGoSettings: () => void }) {
   return (
-    <div className="rounded-2xl border border-amber-400/25 bg-amber-950/25 p-6 text-sm text-amber-50">
-      <p className="text-xs uppercase tracking-[0.25em] text-amber-200/80">Setup required</p>
-      <h2 className="mt-2 text-lg font-semibold text-white">Set your event dates first</h2>
-      <p className="mt-2 leading-relaxed text-amber-50/90">
+    <div className="rounded-2xl border border-amber-400/25 bg-amber-100 p-6 text-sm text-amber-900">
+      <p className="text-xs uppercase tracking-[0.25em] text-amber-800/80">Setup required</p>
+      <h2 className="mt-2 text-lg font-semibold text-dc-text">Set your event dates first</h2>
+      <p className="mt-2 leading-relaxed text-amber-900/90">
         Program grid, venue grid, DM coverage, and schedule import need a start and end date for this event. Open
         Event settings (Basics or the setup guide), set the event window, then return here.
       </p>

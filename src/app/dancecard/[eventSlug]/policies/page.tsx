@@ -122,7 +122,7 @@ export default function DancecardPoliciesPage() {
                   {p.kind} · v{p.version} · published {new Date(p.publishedAt).toLocaleString()}
                 </p>
                 {p.bodyMarkdown?.trim() ? (
-                  <article className="prose prose-invert prose-sm mt-4 max-w-none text-dc-muted">
+                  <article className="prose prose-sm mt-4 max-w-none text-dc-muted prose-headings:text-dc-text prose-strong:text-dc-text prose-a:text-dc-accent">
                     <ReactMarkdown>{p.bodyMarkdown}</ReactMarkdown>
                   </article>
                 ) : (

@@ -1435,6 +1435,299 @@ CREATE INDEX IF NOT EXISTS dancecard_vetting_applications_role_idx
   ON dancecard_vetting_applications (event_id, trusted_role_id, created_at DESC);
 
 -- ============================================================================
+-- dancecard_039_attendee_profile.sql
+-- ============================================================================
+
+-- Attendee public profile on dancecard prefs + organizer field toggles on events.
+
+ALTER TABLE dancecard_prefs
+  ADD COLUMN IF NOT EXISTS profile_json jsonb NOT NULL DEFAULT '{}'::jsonb;
+
+ALTER TABLE dancecard_events
+  ADD COLUMN IF NOT EXISTS attendee_profile_config jsonb NOT NULL DEFAULT jsonb_build_object(
+    'photo', true,
+    'bio', true,
+    'pronouns', true,
+    'fetlife', true,
+    'discord', true,
+    'telegram', false,
+    'emailOnCard', false,
+    'bioMaxLength', 280,
+    'bioPrompt', null
+  );
+
+COMMENT ON COLUMN dancecard_prefs.profile_json IS
+  'Attendee-editable public card: pronouns, bio, photoUrl, fetlife, discord, telegram, emailOnCard.';
+
+COMMENT ON COLUMN dancecard_events.attendee_profile_config IS
+  'Organizer toggles for which profile fields attendees may fill on their dancecard.';
+
+-- ============================================================================
+-- dancecard_040_ops_summary_embed.sql
+-- ============================================================================
+
+-- Add ops_summary embed kind (separate token from schedule/map for C2K ops iframe).
+
+ALTER TABLE dancecard_embed_tokens
+  DROP CONSTRAINT IF EXISTS dancecard_embed_tokens_embed_kind_check;
+
+ALTER TABLE dancecard_embed_tokens
+  ADD CONSTRAINT dancecard_embed_tokens_embed_kind_check
+  CHECK (embed_kind IN ('schedule', 'map', 'ops_summary'));
+
+COMMENT ON COLUMN dancecard_embed_tokens.embed_kind IS 'schedule | map | ops_summary — ops_summary exposes readiness metrics only; mint a dedicated token.';
+
+-- ============================================================================
+-- dancecard_041_door_checkin_tokens.sql
+-- ============================================================================
+
+-- Door check-in signed tokens (QR on badges). Apply after dancecard_036_registrant_checkin.sql.
+
+ALTER TABLE dancecard_registrants
+  ADD COLUMN IF NOT EXISTS check_in_token text;
+
+CREATE UNIQUE INDEX IF NOT EXISTS dancecard_registrants_event_check_in_token_uidx
+  ON dancecard_registrants (event_id, check_in_token)
+  WHERE check_in_token IS NOT NULL;
+
+-- ============================================================================
+-- dancecard_042_safety_incidents.sql
+-- ============================================================================
+
+-- Safety incident log. Apply after dancecard_019_registrant_vetting_safety_role.sql.
+
+CREATE TABLE IF NOT EXISTS dancecard_safety_incidents (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  event_id uuid NOT NULL REFERENCES dancecard_events (id) ON DELETE CASCADE,
+  reported_at timestamptz NOT NULL DEFAULT now(),
+  location_id uuid REFERENCES dancecard_locations (id) ON DELETE SET NULL,
+  location_label text,
+  involved_registrant_ids uuid[] NOT NULL DEFAULT '{}',
+  involved_person_ids uuid[] NOT NULL DEFAULT '{}',
+  summary text NOT NULL,
+  safety_notes text,
+  status text NOT NULL DEFAULT 'open' CHECK (status IN ('open', 'reviewing', 'closed')),
+  created_by_user_id uuid,
+  updated_at timestamptz NOT NULL DEFAULT now()
+);
+
+CREATE INDEX IF NOT EXISTS dancecard_safety_incidents_event_reported_idx
+  ON dancecard_safety_incidents (event_id, reported_at DESC);
+
+-- ============================================================================
+-- dancecard_043_program_slot_audit.sql
+-- ============================================================================
+
+-- Organizer forensic audit for program slot edits. Apply after dancecard_007_organizer_import_workflow.sql.
+
+CREATE TABLE IF NOT EXISTS dancecard_program_slot_audit (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  event_id uuid NOT NULL REFERENCES dancecard_events (id) ON DELETE CASCADE,
+  slot_id uuid REFERENCES dancecard_program_slots (id) ON DELETE SET NULL,
+  actor_user_id uuid,
+  action text NOT NULL,
+  before_json jsonb,
+  after_json jsonb,
+  created_at timestamptz NOT NULL DEFAULT now()
+);
+
+CREATE INDEX IF NOT EXISTS dancecard_program_slot_audit_event_created_idx
+  ON dancecard_program_slot_audit (event_id, created_at DESC);
+
+CREATE INDEX IF NOT EXISTS dancecard_program_slot_audit_slot_idx
+  ON dancecard_program_slot_audit (slot_id, created_at DESC);
+
+-- ============================================================================
+-- dancecard_044_registration_question_categories.sql
+-- ============================================================================
+
+-- Category-scoped required questions. Apply after dancecard_012_registration.sql.
+
+ALTER TABLE dancecard_registration_questions
+  ADD COLUMN IF NOT EXISTS required_for_category_ids uuid[] NOT NULL DEFAULT '{}';
+
+-- ============================================================================
+-- dancecard_045_ics_reminders.sql
+-- ============================================================================
+
+-- Personal calendar export: VALARM offset before program selections (0 = off, default 15).
+ALTER TABLE dancecard_prefs
+  ADD COLUMN IF NOT EXISTS ics_remind_before_minutes integer NOT NULL DEFAULT 15;
+
+COMMENT ON COLUMN dancecard_prefs.ics_remind_before_minutes IS
+  'Minutes before each saved program slot to emit ICS VALARM; 0 disables reminders.';
+
+-- ============================================================================
+-- dancecard_046_person_follows.sql
+-- ============================================================================
+
+-- Attendee follows for program presenters (my presenters feed).
+CREATE TABLE IF NOT EXISTS dancecard_person_follows (
+  event_id uuid NOT NULL REFERENCES dancecard_events(id) ON DELETE CASCADE,
+  account_id uuid NOT NULL REFERENCES dancecard_accounts(id) ON DELETE CASCADE,
+  person_id uuid NOT NULL REFERENCES dancecard_persons(id) ON DELETE CASCADE,
+  created_at timestamptz NOT NULL DEFAULT now(),
+  PRIMARY KEY (event_id, account_id, person_id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_dancecard_person_follows_account
+  ON dancecard_person_follows (event_id, account_id);
+
+-- ============================================================================
+-- dancecard_047_compare_privacy.sql
+-- ============================================================================
+
+-- Compare visibility, directory opt-in, blocks, busy-detail hiding.
+ALTER TABLE dancecard_prefs
+  ADD COLUMN IF NOT EXISTS compare_visibility text NOT NULL DEFAULT 'off'
+    CHECK (compare_visibility IN ('off', 'username', 'link_only'));
+
+ALTER TABLE dancecard_prefs
+  ADD COLUMN IF NOT EXISTS show_in_compare_directory boolean NOT NULL DEFAULT false;
+
+ALTER TABLE dancecard_prefs
+  ADD COLUMN IF NOT EXISTS hide_busy_details_in_compare boolean NOT NULL DEFAULT false;
+
+-- Backfill compare_visibility from legacy boolean.
+UPDATE dancecard_prefs
+SET compare_visibility = CASE
+  WHEN allow_compare_by_username IS TRUE THEN 'username'
+  ELSE 'off'
+END
+WHERE compare_visibility = 'off' AND allow_compare_by_username IS TRUE;
+
+CREATE TABLE IF NOT EXISTS dancecard_compare_blocks (
+  event_id uuid NOT NULL REFERENCES dancecard_events(id) ON DELETE CASCADE,
+  blocker_account_id uuid NOT NULL REFERENCES dancecard_accounts(id) ON DELETE CASCADE,
+  blocked_account_id uuid NOT NULL REFERENCES dancecard_accounts(id) ON DELETE CASCADE,
+  created_at timestamptz NOT NULL DEFAULT now(),
+  PRIMARY KEY (event_id, blocker_account_id, blocked_account_id),
+  CHECK (blocker_account_id <> blocked_account_id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_dancecard_compare_blocks_blocked
+  ON dancecard_compare_blocks (event_id, blocked_account_id);
+
+-- ============================================================================
+-- dancecard_048_compare_requests.sql
+-- ============================================================================
+
+CREATE TABLE IF NOT EXISTS dancecard_compare_requests (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  event_id uuid NOT NULL REFERENCES dancecard_events(id) ON DELETE CASCADE,
+  from_account_id uuid NOT NULL REFERENCES dancecard_accounts(id) ON DELETE CASCADE,
+  to_account_id uuid NOT NULL REFERENCES dancecard_accounts(id) ON DELETE CASCADE,
+  status text NOT NULL DEFAULT 'pending'
+    CHECK (status IN ('pending', 'accepted', 'declined', 'expired')),
+  message text,
+  created_at timestamptz NOT NULL DEFAULT now(),
+  responded_at timestamptz,
+  CHECK (from_account_id <> to_account_id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_dancecard_compare_requests_to_pending
+  ON dancecard_compare_requests (event_id, to_account_id)
+  WHERE status = 'pending';
+
+-- ============================================================================
+-- dancecard_049_iso_board.sql
+-- ============================================================================
+
+CREATE TABLE IF NOT EXISTS dancecard_iso_posts (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  event_id uuid NOT NULL REFERENCES dancecard_events(id) ON DELETE CASCADE,
+  account_id uuid NOT NULL REFERENCES dancecard_accounts(id) ON DELETE CASCADE,
+  title text NOT NULL,
+  body text NOT NULL DEFAULT '',
+  tags text[] NOT NULL DEFAULT '{}',
+  visibility text NOT NULL DEFAULT 'public'
+    CHECK (visibility IN ('public', 'organizers_only', 'hidden')),
+  contact_reveal text NOT NULL DEFAULT 'on_interest'
+    CHECK (contact_reveal IN ('on_interest', 'never')),
+  status text NOT NULL DEFAULT 'active'
+    CHECK (status IN ('active', 'filled', 'withdrawn')),
+  curated_pin boolean NOT NULL DEFAULT false,
+  created_at timestamptz NOT NULL DEFAULT now(),
+  updated_at timestamptz NOT NULL DEFAULT now()
+);
+
+CREATE INDEX IF NOT EXISTS idx_dancecard_iso_posts_event_visible
+  ON dancecard_iso_posts (event_id, status, visibility);
+
+CREATE TABLE IF NOT EXISTS dancecard_iso_interests (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  iso_post_id uuid NOT NULL REFERENCES dancecard_iso_posts(id) ON DELETE CASCADE,
+  from_account_id uuid NOT NULL REFERENCES dancecard_accounts(id) ON DELETE CASCADE,
+  status text NOT NULL DEFAULT 'pending'
+    CHECK (status IN ('pending', 'accepted', 'declined')),
+  created_at timestamptz NOT NULL DEFAULT now(),
+  UNIQUE (iso_post_id, from_account_id)
+);
+
+-- ============================================================================
+-- dancecard_050_session_feedback.sql
+-- ============================================================================
+
+ALTER TABLE dancecard_events
+  ADD COLUMN IF NOT EXISTS feedback_config jsonb NOT NULL DEFAULT '{"enabled":false}'::jsonb;
+
+CREATE TABLE IF NOT EXISTS dancecard_session_feedback (
+  event_id uuid NOT NULL REFERENCES dancecard_events(id) ON DELETE CASCADE,
+  account_id uuid NOT NULL REFERENCES dancecard_accounts(id) ON DELETE CASCADE,
+  program_slot_id uuid NOT NULL REFERENCES dancecard_program_slots(id) ON DELETE CASCADE,
+  rating smallint CHECK (rating IS NULL OR (rating >= 1 AND rating <= 5)),
+  comment text,
+  created_at timestamptz NOT NULL DEFAULT now(),
+  PRIMARY KEY (event_id, account_id, program_slot_id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_dancecard_session_feedback_slot
+  ON dancecard_session_feedback (event_id, program_slot_id);
+
+-- ============================================================================
+-- dancecard_051_registrant_badge_tagline.sql
+-- ============================================================================
+
+-- Badge print: optional custom line per registrant (attendee-editable).
+ALTER TABLE dancecard_registrants ADD COLUMN IF NOT EXISTS badge_tagline text;
+
+COMMENT ON COLUMN dancecard_registrants.badge_tagline IS 'Short line printed on attendee badge (self-service or organizer-edited).';
+
+-- ============================================================================
+-- dancecard_052_badge_logo.sql
+-- ============================================================================
+
+-- High-resolution logo for printed badges (storage path in dancecard-maps bucket).
+ALTER TABLE dancecard_events ADD COLUMN IF NOT EXISTS badge_logo_path text;
+
+COMMENT ON COLUMN dancecard_events.badge_logo_path IS 'Supabase storage path for print-quality badge logo; signed URL served to badge printer.';
+
+-- ============================================================================
+-- dancecard_053_iso_comments.sql
+-- ============================================================================
+
+ALTER TABLE dancecard_iso_posts
+  ADD COLUMN IF NOT EXISTS contact_link text;
+
+CREATE TABLE IF NOT EXISTS dancecard_iso_comments (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  iso_post_id uuid NOT NULL REFERENCES dancecard_iso_posts(id) ON DELETE CASCADE,
+  parent_comment_id uuid REFERENCES dancecard_iso_comments(id) ON DELETE CASCADE,
+  account_id uuid NOT NULL REFERENCES dancecard_accounts(id) ON DELETE CASCADE,
+  body text NOT NULL CHECK (char_length(body) >= 1 AND char_length(body) <= 2000),
+  status text NOT NULL DEFAULT 'active'
+    CHECK (status IN ('active', 'hidden')),
+  created_at timestamptz NOT NULL DEFAULT now(),
+  updated_at timestamptz NOT NULL DEFAULT now()
+);
+
+CREATE INDEX IF NOT EXISTS idx_dancecard_iso_comments_post
+  ON dancecard_iso_comments (iso_post_id, created_at);
+
+CREATE INDEX IF NOT EXISTS idx_dancecard_iso_comments_parent
+  ON dancecard_iso_comments (parent_comment_id);
+
+-- ============================================================================
 -- dancecard_seed_paf26_demo.sql
 -- ============================================================================
 

@@ -353,33 +353,33 @@ export function DmCoveragePanel({
   }
 
   return (
-    <div className="space-y-6 text-sm text-slate-300">
+    <div className="space-y-6 text-sm text-dc-muted">
       {dialog}
-      {err ? <p className="text-sm text-rose-300">{err}</p> : null}
+      {err ? <p className="text-sm text-red-700">{err}</p> : null}
       <TrustedRoleWorkflowCallout eventSlug={eventSlug} variant="coverage" />
 
-      <div className="rounded-xl border border-white/10 bg-black/20 px-4 py-3">
-        <p className="text-sm leading-relaxed text-slate-300">
+      <div className="rounded-xl border border-dc-border bg-dc-elevated-muted px-4 py-3">
+        <p className="text-sm leading-relaxed text-dc-muted">
           See which play spaces need coverage during each time block. Red cells are uncovered — click one to see who is
           available, then click a name to assign. Conflicts are flagged before you can override; the volunteer is
           notified when assigned.
         </p>
-        <p className="mt-2 text-xs text-slate-500">
+        <p className="mt-2 text-xs text-dc-muted">
           Shifts appear here when the role includes dungeon monitor / DM wording and a play-space location is set.
         </p>
       </div>
 
-      <div className={`rounded-xl border border-white/10 bg-black/30 p-4 ${readOnly ? 'opacity-60' : ''}`}>
-        <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Add coverage window</p>
-        <p className="mt-1 text-[10px] text-slate-500">
+      <div className={`rounded-xl border border-dc-border bg-dc-surface-muted p-4 ${readOnly ? 'opacity-60' : ''}`}>
+        <p className="text-xs font-semibold uppercase tracking-wide text-dc-muted">Add coverage window</p>
+        <p className="mt-1 text-[10px] text-dc-muted">
           Click <span className="text-dc-accent">Starts</span> and <span className="text-dc-accent">Ends</span> to open
           the date/time picker (calendar icon on the right).
         </p>
         <div className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          <label className="text-xs text-slate-400">
+          <label className="text-xs text-dc-muted">
             Location
             <select
-              className="mt-1 w-full rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-sm text-white"
+              className="mt-1 w-full rounded-lg border border-dc-border bg-dc-surface-muted px-3 py-2 text-sm text-dc-text"
               value={locId}
               disabled={readOnly}
               onChange={(e) => setLocId(e.target.value)}
@@ -404,23 +404,23 @@ export function DmCoveragePanel({
             onChange={setEndsAt}
           />
           <div className="flex gap-2">
-            <label className="flex-1 text-xs text-slate-400" title="Primary on-duty coverage">
+            <label className="flex-1 text-xs text-dc-muted" title="Primary on-duty coverage">
               Min lead (primary)
               <input
                 type="number"
                 min={0}
-                className="mt-1 w-full rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-sm text-white"
+                className="mt-1 w-full rounded-lg border border-dc-border bg-dc-surface-muted px-3 py-2 text-sm text-dc-text"
                 value={minLead}
                 disabled={readOnly}
                 onChange={(e) => setMinLead(e.target.value)}
               />
             </label>
-            <label className="flex-1 text-xs text-slate-400" title="Backup or overlap coverage">
+            <label className="flex-1 text-xs text-dc-muted" title="Backup or overlap coverage">
               Min backup (float)
               <input
                 type="number"
                 min={0}
-                className="mt-1 w-full rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-sm text-white"
+                className="mt-1 w-full rounded-lg border border-dc-border bg-dc-surface-muted px-3 py-2 text-sm text-dc-text"
                 value={minFloat}
                 disabled={readOnly}
                 onChange={(e) => setMinFloat(e.target.value)}
@@ -431,21 +431,21 @@ export function DmCoveragePanel({
         <button
           type="button"
           disabled={busy || readOnly}
-          className="mt-3 rounded-full bg-violet-600 px-4 py-2 text-sm font-semibold text-white hover:bg-violet-500 disabled:opacity-50"
+          className="mt-3 rounded-full bg-violet-600 px-4 py-2 text-sm font-semibold text-dc-text hover:bg-violet-500 disabled:opacity-50"
           onClick={() => void addRequirement()}
         >
           {busy ? 'Saving…' : 'Add requirement'}
         </button>
       </div>
 
-      <div className="rounded-xl border border-white/10 bg-black/25">
-        <div className="border-b border-white/10 px-3 py-2 text-xs font-semibold uppercase text-slate-500">
+      <div className="rounded-xl border border-dc-border bg-dc-elevated-muted">
+        <div className="border-b border-dc-border px-3 py-2 text-xs font-semibold uppercase text-dc-muted">
           Coverage windows
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm">
-            <thead className="text-xs uppercase text-slate-500">
-              <tr className="border-b border-white/10">
+            <thead className="text-xs uppercase text-dc-muted">
+              <tr className="border-b border-dc-border">
                 <th className="px-3 py-2">When</th>
                 <th className="px-3 py-2">Space</th>
                 <th className="px-3 py-2">Min lead / backup</th>
@@ -454,20 +454,20 @@ export function DmCoveragePanel({
             </thead>
             <tbody>
               {requirements.map((r) => (
-                <tr key={r.id} className="border-b border-white/5">
-                  <td className="px-3 py-2 text-slate-300">
+                <tr key={r.id} className="border-b border-dc-border/50">
+                  <td className="px-3 py-2 text-dc-muted">
                     {formatInTimeZone(new Date(r.startsAt), timezone, 'EEE MMM d ha')} –{' '}
                     {formatInTimeZone(new Date(r.endsAt), timezone, 'ha')}
                   </td>
-                  <td className="px-3 py-2 text-white">{locById.get(r.locationId) ?? r.locationId.slice(0, 8)}</td>
-                  <td className="px-3 py-2 text-slate-400">
+                  <td className="px-3 py-2 text-dc-text">{locById.get(r.locationId) ?? r.locationId.slice(0, 8)}</td>
+                  <td className="px-3 py-2 text-dc-muted">
                     {r.minLead} / {r.minFloat}
                   </td>
                   <td className="px-3 py-2 text-right">
                     {readOnly ? null : (
                       <button
                         type="button"
-                        className="text-xs text-rose-300 hover:text-rose-200"
+                        className="text-xs text-red-700 hover:text-red-700"
                         onClick={() => void removeRequirement(r.id)}
                       >
                         Delete
@@ -479,23 +479,23 @@ export function DmCoveragePanel({
             </tbody>
           </table>
           {!requirements.length ? (
-            <p className="px-3 py-6 text-center text-slate-500">No coverage windows yet. Add one for each play space and time block.</p>
+            <p className="px-3 py-6 text-center text-dc-muted">No coverage windows yet. Add one for each play space and time block.</p>
           ) : null}
         </div>
       </div>
 
       {timeSlices.length && leaves.length ? (
-        <div className="rounded-xl border border-white/10 bg-black/25 p-3">
-          <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+        <div className="rounded-xl border border-dc-border bg-dc-elevated-muted p-3">
+          <p className="text-xs font-semibold uppercase tracking-wide text-dc-muted">
             Coverage headcount (2h slices × play spaces)
           </p>
           <div className="mt-2 overflow-x-auto">
             <table className="min-w-full border-collapse text-xs">
               <thead>
                 <tr>
-                  <th className="border border-white/10 bg-black/40 px-2 py-2 text-left text-slate-400">Time</th>
+                  <th className="border border-dc-border bg-dc-surface-muted px-2 py-2 text-left text-dc-muted">Time</th>
                   {leaves.map((l) => (
-                    <th key={l.id} className="border border-white/10 bg-black/40 px-2 py-2 text-slate-300">
+                    <th key={l.id} className="border border-dc-border bg-dc-surface-muted px-2 py-2 text-dc-muted">
                       {l.shortName || l.name}
                     </th>
                   ))}
@@ -504,7 +504,7 @@ export function DmCoveragePanel({
               <tbody>
                 {timeSlices.map((sl, i) => (
                   <tr key={i}>
-                    <td className="border border-white/10 px-2 py-1.5 text-slate-400 whitespace-nowrap">
+                    <td className="border border-dc-border px-2 py-1.5 text-dc-muted whitespace-nowrap">
                       {formatInTimeZone(new Date(sl.t0), timezone, 'EEE ha')} –{' '}
                       {formatInTimeZone(new Date(sl.t1), timezone, 'ha')}
                     </td>
@@ -514,8 +514,8 @@ export function DmCoveragePanel({
                       return (
                         <td
                           key={l.id}
-                          className={`border border-white/10 px-2 py-1.5 text-center ${
-                            isGap ? 'bg-rose-950/40 text-rose-200' : 'text-emerald-100'
+                          className={`border border-dc-border px-2 py-1.5 text-center ${
+                            isGap ? 'bg-red-100 text-red-700' : 'text-emerald-800'
                           } ${isGap && !readOnly ? 'cursor-pointer hover:ring-1 hover:ring-rose-300/50' : ''}`}
                           title={
                             isGap
@@ -539,12 +539,12 @@ export function DmCoveragePanel({
           </div>
         </div>
       ) : (
-        <p className="text-xs text-slate-500">Configure event window and locations to see the matrix.</p>
+        <p className="text-xs text-dc-muted">Configure event window and locations to see the matrix.</p>
       )}
 
-      <div className="rounded-xl border border-white/10 bg-black/25">
-        <div className="flex items-center justify-between border-b border-white/10 px-3 py-2">
-          <p className="text-xs font-semibold uppercase text-slate-500">Special role staff shifts</p>
+      <div className="rounded-xl border border-dc-border bg-dc-elevated-muted">
+        <div className="flex items-center justify-between border-b border-dc-border px-3 py-2">
+          <p className="text-xs font-semibold uppercase text-dc-muted">Special role staff shifts</p>
           <button
             type="button"
             className="text-xs text-dc-accent hover:underline"
@@ -555,16 +555,16 @@ export function DmCoveragePanel({
         </div>
         <ul className="max-h-64 divide-y divide-white/5 overflow-y-auto">
           {dmShifts.map((s) => (
-            <li key={s.id} className="px-3 py-2 text-xs text-slate-300">
-              <span className="text-white">{s.personName}</span> ·{' '}
+            <li key={s.id} className="px-3 py-2 text-xs text-dc-muted">
+              <span className="text-dc-text">{s.personName}</span> ·{' '}
               {s.role.replace(/_/g, ' ').replace(/\bdm\b/gi, 'coverage')} ·{' '}
-              <span className="text-slate-500">{s.shiftStatus}</span>
+              <span className="text-dc-muted">{s.shiftStatus}</span>
               {s.locationId ? (
-                <span className="text-slate-400"> @ {locById.get(s.locationId) ?? s.locationId.slice(0, 8)}</span>
+                <span className="text-dc-muted"> @ {locById.get(s.locationId) ?? s.locationId.slice(0, 8)}</span>
               ) : (
-                <span className="text-rose-300"> · missing location</span>
+                <span className="text-red-700"> · missing location</span>
               )}
-              <div className="text-[10px] text-slate-600">
+              <div className="text-[10px] text-dc-muted">
                 {formatInTimeZone(new Date(s.startsAt), timezone, 'EEE ha')} –{' '}
                 {formatInTimeZone(new Date(s.endsAt), timezone, 'ha')}
               </div>
@@ -572,7 +572,7 @@ export function DmCoveragePanel({
           ))}
         </ul>
         {!dmShifts.length ? (
-          <p className="px-3 py-6 text-center text-slate-500">
+          <p className="px-3 py-6 text-center text-dc-muted">
             No coverage shifts yet. Add them on the Staff shifts tab with a coverage role and play-space location.
           </p>
         ) : null}
@@ -580,7 +580,7 @@ export function DmCoveragePanel({
 
       {gapPick ? (
         <div
-          className="fixed inset-0 z-dc-modal flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm"
+          className="fixed inset-0 z-dc-modal flex items-center justify-center bg-dc-text/40 p-4 backdrop-blur-sm"
           role="presentation"
           onClick={() => {
             setGapPick(null)
@@ -588,8 +588,7 @@ export function DmCoveragePanel({
           }}
         >
           <div
-            className="max-h-[85vh] w-full max-w-lg overflow-y-auto rounded-2xl border border-dc-border-strong bg-dc-elevated p-5 shadow-2xl"
-            style={{ backgroundColor: '#151c27' }}
+            className="max-h-[85vh] w-full max-w-lg overflow-y-auto rounded-2xl border border-dc-border-strong bg-dc-elevated-solid p-5 shadow-2xl"
             role="dialog"
             aria-modal="true"
             onClick={(e) => e.stopPropagation()}
@@ -605,7 +604,7 @@ export function DmCoveragePanel({
               {gapPick.needFloat > 0 ? ` (+${gapPick.needFloat} backup)` : ''}; currently {gapPick.assigned} scheduled in
               this block. Click a name to assign — conflicts will be flagged before you can override.
             </p>
-            {assignOk ? <p className="mt-2 text-sm text-emerald-300">{assignOk}</p> : null}
+            {assignOk ? <p className="mt-2 text-sm text-emerald-700">{assignOk}</p> : null}
             <ul className="mt-4 max-h-64 space-y-2 overflow-y-auto">
               {gapCandidates.length === 0 ? (
                 <li className="text-sm text-dc-muted">No staff shifts on file yet. Add people on Staff shifts first.</li>
@@ -619,7 +618,7 @@ export function DmCoveragePanel({
                         type="button"
                         disabled={busy || !!assignBusyKey}
                         className="w-full rounded-lg border border-dc-border bg-dc-surface px-3 py-2 text-left text-sm transition-colors hover:border-dc-accent-border hover:bg-dc-elevated-muted disabled:opacity-50"
-                        style={{ backgroundColor: busy ? undefined : '#0f172a' }}
+                        style={{ backgroundColor: busy ? undefined : 'var(--dc-compare-host-only)' }}
                         onClick={() => void assignCoverage(p)}
                       >
                         <p className="font-medium text-dc-text">

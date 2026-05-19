@@ -107,6 +107,7 @@ export function AttendeeProfileCard({
             {variant === 'host' ? 'Comparing with' : 'Your dancecard'}
           </p>
           <h2 className={cn('font-serif text-dc-text', compact ? 'mt-0 text-lg leading-tight' : 'mt-0.5 text-2xl')}>
+            <span className="block text-[10px] font-normal uppercase tracking-wide text-dc-subtle">Scene name</span>
             {profile.displayName}
           </h2>
           <p className={cn('text-dc-muted', compact ? 'mt-0 text-[11px]' : 'mt-0.5 text-sm')}>

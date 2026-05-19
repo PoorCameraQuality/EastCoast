@@ -91,9 +91,9 @@ export function ShiftSwapsPanel({
 
   if (needsMigration) {
     return (
-      <div className="rounded-xl border border-amber-200/25 bg-amber-950/30 px-4 py-5 text-sm text-amber-100">
+      <div className="rounded-xl border border-amber-200/25 bg-amber-100 px-4 py-5 text-sm text-amber-900">
         <p className="font-medium">Shift trades are not enabled yet</p>
-        <p className="mt-2 text-amber-100/80">
+        <p className="mt-2 text-amber-900/80">
           Ask your administrator to apply the latest Dancecard migration, then refresh this page.
         </p>
       </div>
@@ -103,46 +103,46 @@ export function ShiftSwapsPanel({
   const pendingCount = swaps.filter((s) => s.status === 'pending').length
 
   return (
-    <div className="space-y-4 text-sm text-slate-200">
-      <div className="rounded-xl border border-white/10 bg-black/20 px-4 py-3">
-        <p className="text-sm leading-relaxed text-slate-300">
+    <div className="space-y-4 text-sm text-dc-text">
+      <div className="rounded-xl border border-dc-border bg-dc-elevated-muted px-4 py-3">
+        <p className="text-sm leading-relaxed text-dc-muted">
           Review requests from volunteers who want to trade shifts. Approve only when both shifts are still valid and
           staffed appropriately.
         </p>
-        <p className="mt-2 text-xs text-slate-500">
+        <p className="mt-2 text-xs text-dc-muted">
           Coming soon for attendees: staff will be able to propose swaps from their schedule view. You approve trades here.
         </p>
       </div>
-      {err ? <p className="text-rose-300">{err}</p> : null}
+      {err ? <p className="text-red-700">{err}</p> : null}
       {pendingCount > 0 ? (
-        <p className="text-xs text-amber-200/90">
+        <p className="text-xs text-amber-800/90">
           {pendingCount} request{pendingCount === 1 ? '' : 's'} waiting for a decision
         </p>
       ) : null}
       {!swaps.length ? (
-        <div className="rounded-xl border border-dashed border-white/15 bg-black/20 px-4 py-8 text-center text-slate-400">
-          <p className="font-medium text-slate-300">No trade requests yet</p>
-          <p className="mt-2 text-xs text-slate-500">
+        <div className="rounded-xl border border-dashed border-dc-border bg-dc-elevated-muted px-4 py-8 text-center text-dc-muted">
+          <p className="font-medium text-dc-muted">No trade requests yet</p>
+          <p className="mt-2 text-xs text-dc-muted">
             When a volunteer asks to swap with another shift, you will see the request here with both shifts listed.
           </p>
         </div>
       ) : (
         <ul className="space-y-3">
           {swaps.map((s) => (
-            <li key={s.id} className="rounded-xl border border-white/10 bg-black/25 px-4 py-3">
+            <li key={s.id} className="rounded-xl border border-dc-border bg-dc-elevated-muted px-4 py-3">
               <div className="flex flex-wrap items-start justify-between gap-2">
                 <div>
-                  <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Trade request</p>
-                  <p className="mt-1 font-medium text-white">
+                  <p className="text-xs font-semibold uppercase tracking-wide text-dc-muted">Trade request</p>
+                  <p className="mt-1 font-medium text-dc-text">
                     Giving up: {shiftLabel(s.from_shift_id)}
                   </p>
-                  <p className="mt-1 text-slate-300">Taking: {shiftLabel(s.to_shift_id)}</p>
-                  <p className="mt-2 text-xs text-slate-500">
+                  <p className="mt-1 text-dc-muted">Taking: {shiftLabel(s.to_shift_id)}</p>
+                  <p className="mt-2 text-xs text-dc-muted">
                     {SWAP_STATUS_LABELS[s.status] ?? s.status} · submitted{' '}
                     {new Date(s.created_at).toLocaleString()}
                   </p>
                   {s.note ? (
-                    <p className="mt-2 rounded-lg border border-white/10 bg-black/30 px-2 py-1.5 text-xs text-slate-400">
+                    <p className="mt-2 rounded-lg border border-dc-border bg-dc-surface-muted px-2 py-1.5 text-xs text-dc-muted">
                       Note from volunteer: {s.note}
                     </p>
                   ) : null}
@@ -152,7 +152,7 @@ export function ShiftSwapsPanel({
                     <button
                       type="button"
                       disabled={busy === s.id}
-                      className="rounded-full bg-emerald-600/80 px-3 py-1 text-xs font-semibold text-white disabled:opacity-40"
+                      className="rounded-full bg-emerald-600/80 px-3 py-1 text-xs font-semibold text-dc-text disabled:opacity-40"
                       onClick={() => void decide(s.id, 'approved')}
                     >
                       Approve trade
@@ -160,7 +160,7 @@ export function ShiftSwapsPanel({
                     <button
                       type="button"
                       disabled={busy === s.id}
-                      className="rounded-full border border-rose-400/40 px-3 py-1 text-xs text-rose-200 hover:bg-rose-950/40 disabled:opacity-40"
+                      className="rounded-full border border-rose-400/40 px-3 py-1 text-xs text-red-700 hover:bg-red-100 disabled:opacity-40"
                       onClick={() => void decide(s.id, 'rejected')}
                     >
                       Decline

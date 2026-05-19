@@ -75,9 +75,20 @@ export async function GET(_request: NextRequest, context: { params: { eventSlug:
       }
     }
 
+    const locationCapacity: Record<string, number> = {}
+    const { data: locCapRows } = await admin
+      .from('dancecard_locations')
+      .select('id, capacity')
+      .eq('event_id', eventId)
+    for (const loc of locCapRows ?? []) {
+      const cap = loc.capacity as number | null
+      if (cap != null && cap > 0) locationCapacity[loc.id as string] = cap
+    }
+
     const conflicts = computeDancecardConflicts({
       slots: scannerSlots,
       slotPeople,
+      locationCapacity,
     })
     for (const c of conflicts) {
       checks.push(conflictToReadinessCheck(c))

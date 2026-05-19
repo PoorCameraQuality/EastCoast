@@ -264,10 +264,10 @@ export function TrustedRolesPanel({
 
   if (needsMigration) {
     return (
-      <div className="rounded-xl border border-amber-200/25 bg-amber-950/30 px-4 py-5 text-sm text-amber-100">
+      <div className="rounded-xl border border-amber-200/25 bg-amber-100 px-4 py-5 text-sm text-amber-900">
         <p className="font-medium">Trusted roles need a database update</p>
-        <p className="mt-2 text-amber-100/80">
-          Run migration <code className="text-amber-50">database/dancecard_038_trusted_roles.sql</code> in Supabase, then
+        <p className="mt-2 text-amber-900/80">
+          Run migration <code className="text-amber-900">database/dancecard_038_trusted_roles.sql</code> in Supabase, then
           refresh.
         </p>
       </div>
@@ -275,11 +275,11 @@ export function TrustedRolesPanel({
   }
 
   return (
-    <section className="space-y-4 rounded-xl border border-white/10 bg-black/25 p-4">
+    <section className="space-y-4 rounded-xl border border-dc-border bg-dc-elevated-muted p-4">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h2 className="text-sm font-semibold text-white">Trusted roles & questionnaires</h2>
-          <p className="mt-1 max-w-xl text-xs text-slate-400">
+          <h2 className="text-sm font-semibold text-dc-text">Trusted roles & questionnaires</h2>
+          <p className="mt-1 max-w-xl text-xs text-dc-muted">
             Create special positions (dungeon monitor, lead volunteer, safety team), design each application form, and
             share a public apply link. Publish a role before sharing.
           </p>
@@ -297,13 +297,13 @@ export function TrustedRolesPanel({
       </div>
 
       {err ? (
-        <div className="rounded-xl border border-rose-400/30 bg-rose-950/40 px-4 py-3 text-sm text-rose-100">{err}</div>
+        <div className="rounded-xl border border-red-300 bg-red-100 px-4 py-3 text-sm text-red-800">{err}</div>
       ) : null}
 
       <div className="grid gap-4 lg:grid-cols-[minmax(0,220px)_1fr]">
         <ul className="space-y-2">
           {roles.length === 0 ? (
-            <li className="rounded-lg border border-dashed border-white/15 px-3 py-4 text-center text-xs text-slate-500">
+            <li className="rounded-lg border border-dashed border-dc-border px-3 py-4 text-center text-xs text-dc-muted">
               No roles yet. Add one to get started.
             </li>
           ) : (
@@ -314,12 +314,12 @@ export function TrustedRolesPanel({
                   className={
                     selectedId === r.id
                       ? 'w-full rounded-lg border border-dc-accent-border bg-dc-accent-muted px-3 py-2 text-left'
-                      : 'w-full rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-left hover:bg-white/[0.04]'
+                      : 'w-full rounded-lg border border-dc-border bg-dc-surface-muted px-3 py-2 text-left hover:bg-dc-elevated-muted'
                   }
                   onClick={() => setSelectedId(r.id)}
                 >
-                  <p className="font-medium text-white">{r.name}</p>
-                  <p className="text-[10px] text-slate-500">
+                  <p className="font-medium text-dc-text">{r.name}</p>
+                  <p className="text-[10px] text-dc-muted">
                     {r.status === 'published' ? 'Published' : 'Draft'} · /apply/{r.applySlug}
                   </p>
                 </button>
@@ -329,25 +329,25 @@ export function TrustedRolesPanel({
         </ul>
 
         {!draft ? (
-          <div className="flex items-center justify-center rounded-lg border border-dashed border-white/15 py-12 text-xs text-slate-500">
+          <div className="flex items-center justify-center rounded-lg border border-dashed border-dc-border py-12 text-xs text-dc-muted">
             Select a role to edit its form and apply link.
           </div>
         ) : (
           <div className="space-y-4">
             <div className="grid gap-3 sm:grid-cols-2">
-              <label className="block text-xs text-slate-500">
+              <label className="block text-xs text-dc-muted">
                 Role name
                 <input
-                  className="mt-1 w-full rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-sm text-white"
+                  className="mt-1 w-full rounded-lg border border-dc-border bg-dc-surface-muted px-3 py-2 text-sm text-dc-text"
                   disabled={!canMutate}
                   value={draft.name}
                   onChange={(e) => setDraft((d) => (d ? { ...d, name: e.target.value } : d))}
                 />
               </label>
-              <label className="block text-xs text-slate-500">
+              <label className="block text-xs text-dc-muted">
                 URL slug
                 <input
-                  className="mt-1 w-full rounded-lg border border-white/10 bg-black/40 px-3 py-2 font-mono text-sm text-white"
+                  className="mt-1 w-full rounded-lg border border-dc-border bg-dc-surface-muted px-3 py-2 font-mono text-sm text-dc-text"
                   disabled={!canMutate}
                   value={draft.applySlug}
                   onChange={(e) =>
@@ -358,20 +358,20 @@ export function TrustedRolesPanel({
                 />
               </label>
             </div>
-            <label className="block text-xs text-slate-500">
+            <label className="block text-xs text-dc-muted">
               Short description (optional)
               <input
-                className="mt-1 w-full rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-sm text-white"
+                className="mt-1 w-full rounded-lg border border-dc-border bg-dc-surface-muted px-3 py-2 text-sm text-dc-text"
                 disabled={!canMutate}
                 value={draft.description ?? ''}
                 onChange={(e) => setDraft((d) => (d ? { ...d, description: e.target.value } : d))}
               />
             </label>
             <div className="flex flex-wrap gap-3">
-              <label className="block text-xs text-slate-500">
+              <label className="block text-xs text-dc-muted">
                 Status
                 <select
-                  className="mt-1 block rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-sm text-white"
+                  className="mt-1 block rounded-lg border border-dc-border bg-dc-surface-muted px-3 py-2 text-sm text-dc-text"
                   disabled={!canMutate}
                   value={draft.status}
                   onChange={(e) => setDraft((d) => (d ? { ...d, status: e.target.value } : d))}
@@ -384,7 +384,7 @@ export function TrustedRolesPanel({
             {draft.status === 'published' && applyUrl ? (
               <div className="rounded-lg border border-dc-accent-border/40 bg-dc-accent-muted/30 px-3 py-2">
                 <p className="text-xs font-medium text-dc-accent">Public apply link</p>
-                <p className="mt-1 break-all font-mono text-[11px] text-slate-300">{applyUrl}</p>
+                <p className="mt-1 break-all font-mono text-[11px] text-dc-muted">{applyUrl}</p>
                 <div className="mt-2 flex flex-wrap gap-2">
                   <button
                     type="button"
@@ -404,22 +404,22 @@ export function TrustedRolesPanel({
                 </div>
               </div>
             ) : (
-              <p className="text-xs text-slate-500">Publish this role to generate a shareable apply link.</p>
+              <p className="text-xs text-dc-muted">Publish this role to generate a shareable apply link.</p>
             )}
-            <label className="block text-xs text-slate-500">
+            <label className="block text-xs text-dc-muted">
               Intro (shown at top of apply form)
               <textarea
-                className="mt-1 w-full rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-sm text-white"
+                className="mt-1 w-full rounded-lg border border-dc-border bg-dc-surface-muted px-3 py-2 text-sm text-dc-text"
                 rows={3}
                 disabled={!canMutate}
                 value={draft.introText}
                 onChange={(e) => setDraft((d) => (d ? { ...d, introText: e.target.value } : d))}
               />
             </label>
-            <label className="block text-xs text-slate-500">
+            <label className="block text-xs text-dc-muted">
               Confirmation message (after submit)
               <textarea
-                className="mt-1 w-full rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-sm text-white"
+                className="mt-1 w-full rounded-lg border border-dc-border bg-dc-surface-muted px-3 py-2 text-sm text-dc-text"
                 rows={2}
                 disabled={!canMutate}
                 value={draft.confirmationText}
@@ -429,7 +429,7 @@ export function TrustedRolesPanel({
 
             <div>
               <div className="flex items-center justify-between">
-                <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Questionnaire</p>
+                <p className="text-xs font-semibold uppercase tracking-wide text-dc-muted">Questionnaire</p>
                 {canMutate ? (
                   <button
                     type="button"
@@ -461,12 +461,12 @@ export function TrustedRolesPanel({
               </div>
               <div className="mt-2 space-y-3">
                 {draft.questions.map((q, idx) => (
-                  <div key={q.id ?? `q-${idx}`} className="rounded-lg border border-white/10 bg-black/30 p-3">
+                  <div key={q.id ?? `q-${idx}`} className="rounded-lg border border-dc-border bg-dc-surface-muted p-3">
                     <div className="grid gap-2 sm:grid-cols-2">
-                      <label className="block text-xs text-slate-500">
+                      <label className="block text-xs text-dc-muted">
                         Type
                         <select
-                          className="mt-1 w-full rounded-lg border border-white/10 bg-black/40 px-2 py-1.5 text-sm text-white"
+                          className="mt-1 w-full rounded-lg border border-dc-border bg-dc-surface-muted px-2 py-1.5 text-sm text-dc-text"
                           disabled={!canMutate}
                           value={q.type}
                           onChange={(e) =>
@@ -485,7 +485,7 @@ export function TrustedRolesPanel({
                           ))}
                         </select>
                       </label>
-                      <label className="flex items-end gap-2 pb-1 text-xs text-slate-400">
+                      <label className="flex items-end gap-2 pb-1 text-xs text-dc-muted">
                         <input
                           type="checkbox"
                           disabled={!canMutate}
@@ -502,10 +502,10 @@ export function TrustedRolesPanel({
                         Required
                       </label>
                     </div>
-                    <label className="mt-2 block text-xs text-slate-500">
+                    <label className="mt-2 block text-xs text-dc-muted">
                       Question label
                       <input
-                        className="mt-1 w-full rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-sm text-white"
+                        className="mt-1 w-full rounded-lg border border-dc-border bg-dc-surface-muted px-3 py-2 text-sm text-dc-text"
                         disabled={!canMutate}
                         value={q.label}
                         onChange={(e) =>
@@ -519,10 +519,10 @@ export function TrustedRolesPanel({
                       />
                     </label>
                     {q.type === 'single_choice' || q.type === 'multi_choice' || q.type === 'dropdown' ? (
-                      <label className="mt-2 block text-xs text-slate-500">
+                      <label className="mt-2 block text-xs text-dc-muted">
                         Options (one per line)
                         <textarea
-                          className="mt-1 w-full rounded-lg border border-white/10 bg-black/40 px-3 py-2 font-mono text-xs text-white"
+                          className="mt-1 w-full rounded-lg border border-dc-border bg-dc-surface-muted px-3 py-2 font-mono text-xs text-dc-text"
                           rows={3}
                           disabled={!canMutate}
                           value={optionsToText(q.optionsJson)}
@@ -570,7 +570,7 @@ export function TrustedRolesPanel({
                 <button
                   type="button"
                   disabled={busy}
-                  className="rounded-full border border-white/15 px-4 py-2 text-xs text-slate-300 hover:bg-white/5 disabled:opacity-40"
+                  className="rounded-full border border-dc-border px-4 py-2 text-xs text-dc-muted hover:bg-white/5 disabled:opacity-40"
                   onClick={() => void deleteRole(draft.id)}
                 >
                   Delete role

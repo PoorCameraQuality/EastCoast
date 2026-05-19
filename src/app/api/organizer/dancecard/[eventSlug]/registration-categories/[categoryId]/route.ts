@@ -105,8 +105,15 @@ export async function DELETE(_request: NextRequest, context: { params: { eventSl
     if (count && count > 0) {
       return NextResponse.json({ error: 'Cannot delete category with registrants' }, { status: 400 })
     }
-    const { error } = await admin.from('dancecard_registration_categories').delete().eq('id', categoryId).eq('event_id', eventId)
+    const { data: deleted, error } = await admin
+      .from('dancecard_registration_categories')
+      .delete()
+      .eq('id', categoryId)
+      .eq('event_id', eventId)
+      .select('id')
+      .maybeSingle()
     if (error) throw error
+    if (!deleted) return NextResponse.json({ error: 'Not found' }, { status: 404 })
     return NextResponse.json({ ok: true })
   } catch (e) {
     return organizerErrorResponse(e)

@@ -38,7 +38,15 @@ export type OrganizerTab =
 
 /** Sub-tabs when `tab=people` (People hub). */
 
-export type PeopleSubTab = 'signups' | 'roster' | 'staff' | 'applications' | 'swaps' | 'badges' | 'coverage'
+export type PeopleSubTab =
+  | 'signups'
+  | 'roster'
+  | 'staff'
+  | 'applications'
+  | 'swaps'
+  | 'badges'
+  | 'coverage'
+  | 'incidents'
 
 
 
@@ -61,6 +69,8 @@ export const ALL_PEOPLE_SUB_TABS: PeopleSubTab[] = [
   'badges',
 
   'coverage',
+
+  'incidents',
 
 ]
 

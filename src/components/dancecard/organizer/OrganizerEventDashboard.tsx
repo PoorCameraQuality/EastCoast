@@ -16,6 +16,7 @@ import {
 } from '@/lib/dancecard/resolveSetupTasks'
 import { SETUP_LIFECYCLE_COLLAPSED_KEY } from '@/lib/dancecard/setupTasks'
 import type { ReadinessCheck } from '@/lib/dancecard/readinessTypes'
+import { LiveOpsConsolePanel } from '@/components/dancecard/organizer/LiveOpsConsolePanel'
 import { Panel } from '@/components/dancecard/ui/Panel'
 import { cn } from '@/lib/cn'
 
@@ -248,6 +249,8 @@ export function OrganizerEventDashboard({
         </p>
       </header>
 
+      <LiveOpsConsolePanel eventSlug={eventSlug} />
+
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
         <KpiCard label="Setup" value={`${readinessPct}%`} hint="Essential tasks complete" />
         <KpiCard label="Classes" value={String(slots.length)} hint="On program grid" />
@@ -274,6 +277,12 @@ export function OrganizerEventDashboard({
             </p>
           </div>
           <div className="flex flex-wrap gap-2">
+            <Link
+              href={`/organizer/dancecard/${encodeURIComponent(eventSlug)}/door`}
+              className="rounded-xl border border-dc-accent-border bg-dc-accent-muted px-4 py-2 text-sm font-semibold text-dc-accent-hover hover:bg-dc-accent-muted/80"
+            >
+              Door mode
+            </Link>
             <Link
               href={`/dancecard/${eventSlug}`}
               target="_blank"

@@ -25,6 +25,7 @@ export function findStaffShiftConflicts(
     startsAt: string
     endsAt: string
     excludeShiftId?: string
+    claimedByAccountId?: string | null
   },
 ): StaffShiftConflict[] {
   const key = candidate.personId ? candidate.personId : `name:${candidate.personName}`
@@ -37,7 +38,11 @@ export function findStaffShiftConflicts(
     if (candidate.excludeShiftId && s.id === candidate.excludeShiftId) continue
     if (s.shiftStatus === 'draft' || s.shiftStatus === 'dropped') continue
     const sKey = staffShiftPersonKey(s)
-    const match = candidate.personId ? s.personId === candidate.personId : sKey === key
+    const match = candidate.claimedByAccountId
+      ? s.claimedByAccountId === candidate.claimedByAccountId
+      : candidate.personId
+        ? s.personId === candidate.personId
+        : sKey === key
     if (!match) continue
     const a0 = new Date(s.startsAt).getTime()
     const a1 = new Date(s.endsAt).getTime()

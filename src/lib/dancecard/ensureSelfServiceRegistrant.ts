@@ -1,19 +1,34 @@
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { findRegistrantByNames } from '@/lib/dancecard/registrantNameMatch'
+import { resolveRegistrationCategoryFromCompCode } from '@/lib/dancecard/resolveRegistrationCategoryFromCompCode'
 
 /** Links dancecard_accounts to dancecard_registrants for ECKE Sign and organizer roster. */
 export const DANCECARD_ACCOUNT_REGISTRANT_SOURCE = 'dancecard_account'
 
-async function defaultCategoryId(admin: SupabaseClient, eventId: string): Promise<string | null> {
-  const { data: cats, error } = await admin
-    .from('dancecard_registration_categories')
-    .select('id, name, sort_order')
-    .eq('event_id', eventId)
-    .order('sort_order', { ascending: true })
+async function countActiveInCategory(admin: SupabaseClient, categoryId: string): Promise<number> {
+  const { count, error } = await admin
+    .from('dancecard_registrants')
+    .select('*', { count: 'exact', head: true })
+    .eq('category_id', categoryId)
+    .neq('status', 'cancelled')
   if (error) throw error
-  if (!cats?.length) return null
-  const weekend = cats.find((c) => String(c.name).toLowerCase().includes('weekend'))
-  return (weekend?.id ?? cats[0]?.id) as string | null
+  return count ?? 0
+}
+
+async function registrantStatusForCategory(
+  admin: SupabaseClient,
+  categoryId: string,
+): Promise<'confirmed' | 'waitlisted'> {
+  const { data: cat, error } = await admin
+    .from('dancecard_registration_categories')
+    .select('capacity')
+    .eq('id', categoryId)
+    .maybeSingle()
+  if (error) throw error
+  const cap = cat?.capacity as number | null | undefined
+  if (cap == null || cap < 0) return 'confirmed'
+  const n = await countActiveInCategory(admin, categoryId)
+  return n >= cap ? 'waitlisted' : 'confirmed'
 }
 
 export type ResolvedRegistrant = { id: string; sceneDisplayName: string }
@@ -27,7 +42,13 @@ export async function resolveRegistrantForDancecardAccount(
   eventId: string,
   accountId: string,
   displayName: string,
-  options?: { ensure?: boolean; sceneName?: string; legalName?: string },
+  options?: {
+    ensure?: boolean
+    sceneName?: string
+    legalName?: string
+    categoryId?: string
+    updateCategoryOnLink?: boolean
+  },
 ): Promise<ResolvedRegistrant | null> {
   const ensure = options?.ensure !== false
   const sceneName = (options?.sceneName ?? displayName).trim()
@@ -43,6 +64,17 @@ export async function resolveRegistrantForDancecardAccount(
     .maybeSingle()
   if (linkErr) throw linkErr
   if (linked?.id) {
+    if (options?.categoryId && options.updateCategoryOnLink === true) {
+      const status = await registrantStatusForCategory(admin, options.categoryId)
+      await admin
+        .from('dancecard_registrants')
+        .update({
+          category_id: options.categoryId,
+          status,
+          updated_at: new Date().toISOString(),
+        })
+        .eq('id', linked.id)
+    }
     return { id: linked.id as string, sceneDisplayName: String(linked.scene_display_name ?? sceneName) }
   }
 
@@ -58,32 +90,46 @@ export async function resolveRegistrantForDancecardAccount(
     const row = (roster ?? []).find((r) => r.id === nameMatch.id)!
     const extId = row.external_id as string | null
     const extSrc = row.external_source as string | null
-    if (!extId || (extSrc === DANCECARD_ACCOUNT_REGISTRANT_SOURCE && extId === accountId)) {
-      if (!extId) {
-        await admin
-          .from('dancecard_registrants')
-          .update({
-            external_source: DANCECARD_ACCOUNT_REGISTRANT_SOURCE,
-            external_id: accountId,
-            updated_at: new Date().toISOString(),
-          })
-          .eq('id', nameMatch.id)
-      }
-      return { id: nameMatch.id, sceneDisplayName: String(row.scene_display_name ?? sceneName) }
+    if (extId && extSrc === DANCECARD_ACCOUNT_REGISTRANT_SOURCE && extId !== accountId) {
+      throw new Error(
+        'BAD_REQUEST: This display name is already linked to another dancecard account. Use a different name or contact the organizers.',
+      )
     }
+    if (extId && extSrc !== DANCECARD_ACCOUNT_REGISTRANT_SOURCE) {
+      throw new Error(
+        'BAD_REQUEST: This display name matches an existing registrant from another registration source. Contact the organizers to link your dancecard account.',
+      )
+    }
+    const linkPatch: Record<string, unknown> = {
+      external_source: DANCECARD_ACCOUNT_REGISTRANT_SOURCE,
+      external_id: accountId,
+      updated_at: new Date().toISOString(),
+    }
+    if (options?.categoryId && options.updateCategoryOnLink === true) {
+      linkPatch.category_id = options.categoryId
+      linkPatch.status = await registrantStatusForCategory(admin, options.categoryId)
+    }
+    await admin.from('dancecard_registrants').update(linkPatch).eq('id', nameMatch.id)
+    return { id: nameMatch.id, sceneDisplayName: String(row.scene_display_name ?? sceneName) }
   }
 
   if (!ensure) return null
 
-  const categoryId = await defaultCategoryId(admin, eventId)
+  let categoryId = options?.categoryId ?? null
+  if (!categoryId) {
+    const resolved = await resolveRegistrationCategoryFromCompCode(admin, eventId, null)
+    categoryId = resolved.categoryId
+  }
   if (!categoryId) return null
+
+  const status = await registrantStatusForCategory(admin, categoryId)
 
   const { data: created, error: insErr } = await admin
     .from('dancecard_registrants')
     .insert({
       event_id: eventId,
       category_id: categoryId,
-      status: 'confirmed',
+      status,
       scene_display_name: sceneName,
       legal_name: options?.legalName?.trim() || null,
       external_source: DANCECARD_ACCOUNT_REGISTRANT_SOURCE,

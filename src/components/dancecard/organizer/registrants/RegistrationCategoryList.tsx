@@ -16,6 +16,12 @@ import {
 import { Panel } from '@/components/dancecard/ui/Panel'
 import { Button } from '@/components/dancecard/ui/Button'
 
+/** Stacked label + control with consistent label height so grid rows align. */
+const CATEGORY_FIELD_LABEL_CLASS =
+  'flex min-h-[2.75rem] flex-col justify-end gap-1 text-xs font-medium uppercase tracking-wide text-dc-muted'
+
+const CATEGORY_FIELD_GRID = 'grid gap-3 sm:grid-cols-2 lg:grid-cols-4'
+
 export type RegistrationCategory = {
   id: string
   name: string
@@ -190,15 +196,16 @@ function CategoryRow({
           <span className="text-[10px] text-dc-muted">{draft.expectedHours.trim()} hrs service</span>
         ) : null}
       </div>
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
-        <label className={SETTINGS_LABEL_CLASS}>
-          Role type
-          <select
-            className={SETTINGS_FIELD_CLASS}
-            disabled={!canEdit || busy}
-            value={draft.roleKind}
-            onChange={(e) => updateDraft({ roleKind: e.target.value as RegistrationRoleKind })}
-          >
+      <div className="space-y-4">
+        <div className={CATEGORY_FIELD_GRID}>
+          <label className={CATEGORY_FIELD_LABEL_CLASS}>
+            <span>Role type</span>
+            <select
+              className={`${SETTINGS_FIELD_CLASS} mt-0`}
+              disabled={!canEdit || busy}
+              value={draft.roleKind}
+              onChange={(e) => updateDraft({ roleKind: e.target.value as RegistrationRoleKind })}
+            >
             {REGISTRATION_ROLE_KINDS.map((r) => (
               <option key={r.id} value={r.id}>
                 {r.label}
@@ -206,76 +213,81 @@ function CategoryRow({
             ))}
           </select>
         </label>
-        <label className={SETTINGS_LABEL_CLASS}>
-          Display name
-          <input
-            className={SETTINGS_FIELD_CLASS}
-            disabled={!canEdit || busy}
-            value={draft.name}
-            onChange={(e) => updateDraft({ name: e.target.value })}
-          />
-        </label>
-        <label className={SETTINGS_LABEL_CLASS}>
-          Hours of service
-          <input
-            className={SETTINGS_FIELD_CLASS}
-            type="number"
-            min={0}
-            step={0.5}
-            placeholder="Optional"
-            disabled={!canEdit || busy}
-            value={draft.expectedHours}
-            onChange={(e) => updateDraft({ expectedHours: e.target.value })}
-          />
-        </label>
-        <label className={SETTINGS_LABEL_CLASS}>
-          Capacity
-          <input
-            className={SETTINGS_FIELD_CLASS}
-            type="number"
-            min={0}
-            placeholder="Unlimited"
-            disabled={!canEdit || busy}
-            value={draft.capacity}
-            onChange={(e) => updateDraft({ capacity: e.target.value })}
-          />
-        </label>
-        <label className={SETTINGS_LABEL_CLASS}>
-          Check-in from
-          <input
-            className={SETTINGS_FIELD_CLASS}
-            type="date"
-            disabled={!canEdit || busy}
-            value={draft.checkInValidFrom}
-            onChange={(e) => updateDraft({ checkInValidFrom: e.target.value })}
-          />
-        </label>
-        <label className={SETTINGS_LABEL_CLASS}>
-          Check-in through
-          <input
-            className={SETTINGS_FIELD_CLASS}
-            type="date"
-            disabled={!canEdit || busy}
-            value={draft.checkInValidThrough}
-            onChange={(e) => updateDraft({ checkInValidThrough: e.target.value })}
-          />
-        </label>
-        <label className={`${SETTINGS_LABEL_CLASS} sm:col-span-2 xl:col-span-2`}>
-          Comp / access code
-          <div className="mt-1 flex flex-wrap gap-2">
+          <label className={CATEGORY_FIELD_LABEL_CLASS}>
+            <span>Display name</span>
             <input
-              className={`${SETTINGS_FIELD_CLASS} min-w-[8rem] flex-1 font-mono text-xs tracking-wide`}
+              className={`${SETTINGS_FIELD_CLASS} mt-0`}
+              disabled={!canEdit || busy}
+              value={draft.name}
+              onChange={(e) => updateDraft({ name: e.target.value })}
+            />
+          </label>
+          <label className={CATEGORY_FIELD_LABEL_CLASS}>
+            <span>Hours of service</span>
+            <input
+              className={`${SETTINGS_FIELD_CLASS} mt-0`}
+              type="number"
+              min={0}
+              step={0.5}
+              placeholder="Optional"
+              disabled={!canEdit || busy}
+              value={draft.expectedHours}
+              onChange={(e) => updateDraft({ expectedHours: e.target.value })}
+            />
+          </label>
+          <label className={CATEGORY_FIELD_LABEL_CLASS}>
+            <span>Capacity</span>
+            <input
+              className={`${SETTINGS_FIELD_CLASS} mt-0`}
+              type="number"
+              min={0}
+              placeholder="Unlimited"
+              disabled={!canEdit || busy}
+              value={draft.capacity}
+              onChange={(e) => updateDraft({ capacity: e.target.value })}
+            />
+          </label>
+        </div>
+
+        <div className="grid gap-3 sm:grid-cols-2">
+          <label className={CATEGORY_FIELD_LABEL_CLASS}>
+            <span>Check-in from</span>
+            <input
+              className={`${SETTINGS_FIELD_CLASS} mt-0`}
+              type="date"
+              disabled={!canEdit || busy}
+              value={draft.checkInValidFrom}
+              onChange={(e) => updateDraft({ checkInValidFrom: e.target.value })}
+            />
+          </label>
+          <label className={CATEGORY_FIELD_LABEL_CLASS}>
+            <span>Check-in through</span>
+            <input
+              className={`${SETTINGS_FIELD_CLASS} mt-0`}
+              type="date"
+              disabled={!canEdit || busy}
+              value={draft.checkInValidThrough}
+              onChange={(e) => updateDraft({ checkInValidThrough: e.target.value })}
+            />
+          </label>
+        </div>
+
+        <label className="block">
+          <span className="text-xs font-medium uppercase tracking-wide text-dc-muted">Comp / access code</span>
+          <div className="mt-1 flex flex-col gap-2 sm:flex-row sm:items-stretch">
+            <input
+              className={`${SETTINGS_FIELD_CLASS} mt-0 min-h-[2.5rem] flex-1 font-mono text-xs tracking-wide`}
               placeholder="Optional"
               disabled={!canEdit || busy}
               value={draft.accessCode}
               onChange={(e) => updateDraft({ accessCode: e.target.value })}
             />
             {canEdit ? (
-              <>
+              <div className="flex shrink-0 gap-2">
                 <Button
                   type="button"
                   variant="secondary"
-                  className="min-h-0 px-3 py-1.5 text-xs"
+                  className="min-h-[2.5rem] px-3 py-2 text-xs"
                   disabled={busy}
                   onClick={generateCode}
                 >
@@ -284,18 +296,19 @@ function CategoryRow({
                 <Button
                   type="button"
                   variant="secondary"
-                  className="min-h-0 px-3 py-1.5 text-xs"
+                  className="min-h-[2.5rem] px-3 py-2 text-xs"
                   disabled={busy || !draft.accessCode.trim()}
                   onClick={() => copyText(draft.accessCode.trim(), onMessage)}
                 >
                   Copy
                 </Button>
-              </>
+              </div>
             ) : null}
           </div>
         </label>
       </div>
-      <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
+
+      <div className="mt-4 flex flex-col gap-3 border-t border-dc-border pt-4 sm:flex-row sm:items-center sm:justify-between">
         <label className="flex items-center gap-2 text-xs text-dc-text">
           <input
             type="checkbox"
@@ -306,13 +319,13 @@ function CategoryRow({
           Unlock staff tools when this code is used on the dancecard
         </label>
         {canEdit ? (
-          <div className="flex flex-wrap gap-2">
-            <Button type="button" className="min-h-0 px-3 py-1.5 text-xs" disabled={busy || !dirty} onClick={() => void save()}>
+          <div className="flex shrink-0 flex-wrap items-center gap-2">
+            <Button type="button" className="min-h-[2.5rem] px-4 py-2 text-xs" disabled={busy || !dirty} onClick={() => void save()}>
               Save category
             </Button>
             <button
               type="button"
-              className="text-xs text-dc-danger hover:underline disabled:opacity-40"
+              className="min-h-[2.5rem] px-2 text-xs text-dc-danger hover:underline disabled:opacity-40"
               disabled={busy}
               onClick={() => onDelete(category.id)}
             >
@@ -447,11 +460,11 @@ export function RegistrationCategoryList({
       {canEdit ? (
         <div className="mt-4 rounded-lg border border-dashed border-dc-border p-4">
           <p className="text-xs font-medium uppercase tracking-wide text-dc-muted">Add category</p>
-          <div className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            <label className={SETTINGS_LABEL_CLASS}>
-              Role type
+          <div className={`mt-3 ${CATEGORY_FIELD_GRID}`}>
+            <label className={CATEGORY_FIELD_LABEL_CLASS}>
+              <span>Role type</span>
               <select
-                className={SETTINGS_FIELD_CLASS}
+                className={`${SETTINGS_FIELD_CLASS} mt-0`}
                 value={newRoleKind}
                 disabled={busy}
                 onChange={(e) => applyNewRoleKind(e.target.value as RegistrationRoleKind)}
@@ -463,20 +476,20 @@ export function RegistrationCategoryList({
                 ))}
               </select>
             </label>
-            <label className={SETTINGS_LABEL_CLASS}>
-              Display name
+            <label className={CATEGORY_FIELD_LABEL_CLASS}>
+              <span>Display name</span>
               <input
-                className={SETTINGS_FIELD_CLASS}
+                className={`${SETTINGS_FIELD_CLASS} mt-0`}
                 placeholder="Shown on registration form"
                 value={newName}
                 disabled={busy}
                 onChange={(e) => setNewName(e.target.value)}
               />
             </label>
-            <label className={SETTINGS_LABEL_CLASS}>
-              Hours of service
+            <label className={CATEGORY_FIELD_LABEL_CLASS}>
+              <span>Hours of service</span>
               <input
-                className={SETTINGS_FIELD_CLASS}
+                className={`${SETTINGS_FIELD_CLASS} mt-0`}
                 type="number"
                 min={0}
                 step={0.5}
@@ -486,10 +499,10 @@ export function RegistrationCategoryList({
                 onChange={(e) => setNewExpectedHours(e.target.value)}
               />
             </label>
-            <label className={SETTINGS_LABEL_CLASS}>
-              Capacity
+            <label className={CATEGORY_FIELD_LABEL_CLASS}>
+              <span>Capacity</span>
               <input
-                className={SETTINGS_FIELD_CLASS}
+                className={`${SETTINGS_FIELD_CLASS} mt-0`}
                 type="number"
                 min={0}
                 placeholder="Unlimited"

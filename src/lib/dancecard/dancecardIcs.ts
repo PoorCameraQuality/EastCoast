@@ -38,7 +38,32 @@ function reservationPartnerName(r: IcsReservation): string {
   return r.role === 'host' ? r.guest.displayName : r.host.displayName
 }
 
-type IcEvent = { uid: string; start: string; end: string; summary: string; description: string | null }
+type IcEvent = {
+  uid: string
+  start: string
+  end: string
+  summary: string
+  description: string | null
+  /** Program selections only — emit VALARM when remindBeforeMinutes > 0 */
+  remindBeforeMinutes?: number
+}
+
+/** RFC 5545 duration for VALARM TRIGGER (e.g. 15 → "-PT15M"). */
+export function icsValarmTriggerMinutes(minutes: number): string | null {
+  const m = Math.floor(minutes)
+  if (m <= 0 || m > 24 * 60) return null
+  return `-PT${m}M`
+}
+
+function appendValarm(lines: string[], remindBeforeMinutes: number) {
+  const trigger = icsValarmTriggerMinutes(remindBeforeMinutes)
+  if (!trigger) return
+  lines.push('BEGIN:VALARM')
+  lines.push('ACTION:DISPLAY')
+  lines.push('DESCRIPTION:Session reminder')
+  lines.push(`TRIGGER:${trigger}`)
+  lines.push('END:VALARM')
+}
 
 export function countDancecardIcsEvents(selections: IcsSelection[], reservations: IcsReservation[]): number {
   let n = 0
@@ -59,7 +84,8 @@ export function countDancecardIcsEvents(selections: IcsSelection[], reservations
 function collectEvents(
   selections: IcsSelection[],
   reservations: IcsReservation[],
-  attendeeName: string
+  attendeeName: string,
+  programRemindBeforeMinutes: number
 ): IcEvent[] {
   const out: IcEvent[] = []
 
@@ -82,6 +108,7 @@ function collectEvents(
         end: de,
         summary: title,
         description: desc,
+        remindBeforeMinutes: programRemindBeforeMinutes > 0 ? programRemindBeforeMinutes : undefined,
       })
     } else if (s.kind === 'manual') {
       const note = (s.note ?? '').trim()
@@ -121,8 +148,11 @@ export function buildDancecardIcs(args: {
   attendeeDisplayName: string
   selections: IcsSelection[]
   reservations: IcsReservation[]
+  /** Minutes before program selections for VALARM; 0 = none */
+  programRemindBeforeMinutes?: number
 }): string {
-  const events = collectEvents(args.selections, args.reservations, args.attendeeDisplayName)
+  const remind = args.programRemindBeforeMinutes ?? 0
+  const events = collectEvents(args.selections, args.reservations, args.attendeeDisplayName, remind)
   const stamp = formatUtcForIcs(new Date().toISOString()) ?? '19700101T000000Z'
 
   const lines: string[] = [
@@ -142,6 +172,7 @@ export function buildDancecardIcs(args: {
     lines.push(`DTEND:${ev.end}`)
     lines.push(`SUMMARY:${escapeIcsText(ev.summary.slice(0, 200))}`)
     if (ev.description) lines.push(`DESCRIPTION:${escapeIcsText(ev.description.slice(0, 2000))}`)
+    if (ev.remindBeforeMinutes) appendValarm(lines, ev.remindBeforeMinutes)
     lines.push('END:VEVENT')
   }
 
@@ -154,6 +185,7 @@ export function buildDancecardSelectionsOnlyIcs(args: {
   calendarName: string
   attendeeDisplayName: string
   selections: IcsSelection[]
+  programRemindBeforeMinutes?: number
 }): string {
   const emptyReservations: IcsReservation[] = []
   return buildDancecardIcs({
@@ -161,6 +193,7 @@ export function buildDancecardSelectionsOnlyIcs(args: {
     attendeeDisplayName: args.attendeeDisplayName,
     selections: args.selections,
     reservations: emptyReservations,
+    programRemindBeforeMinutes: args.programRemindBeforeMinutes,
   })
 }
 

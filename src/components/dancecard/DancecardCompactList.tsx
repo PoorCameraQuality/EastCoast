@@ -109,15 +109,15 @@ export function DancecardCompactList(props: {
 
   function agendaToneForRow(row: CompactAgendaRow) {
     if (row.type === 'reservation') {
-      return { rail: 'bg-emerald-200/75', surface: 'border-emerald-200/15 bg-emerald-950/10' }
+      return { rail: 'bg-emerald-400/80', surface: 'border-emerald-200 bg-emerald-50' }
     }
     const s = row.selection
     if (s.kind === 'program') return { rail: 'bg-dc-accent/80', surface: 'border-dc-accent-border/15 bg-dc-accent-muted/40' }
-    if (findMatchingStaffShift(s)) return { rail: 'bg-blue-300/80', surface: 'border-blue-200/15 bg-blue-950/10' }
+    if (findMatchingStaffShift(s)) return { rail: 'bg-blue-400/80', surface: 'border-blue-200 bg-blue-50' }
     if ((s.programTitle ?? s.note ?? '').toLowerCase().includes('sleep')) {
       return { rail: 'bg-dc-muted/70', surface: 'border-dc-border/30 bg-dc-elevated-muted' }
     }
-    return { rail: 'bg-violet-300/80', surface: 'border-violet-200/15 bg-violet-950/10' }
+    return { rail: 'bg-violet-300/80', surface: 'border-violet-200/15 bg-violet-50' }
   }
 
   return (
@@ -130,7 +130,7 @@ export function DancecardCompactList(props: {
           return (
             <div key={`r-${r.id}`}>
               {showDay ? (
-                <div className="mb-2 mt-4 first:mt-0 font-serif text-lg text-white">{day}</div>
+                <div className="mb-2 mt-4 first:mt-0 font-serif text-lg text-dc-text">{day}</div>
               ) : null}
               <div
                 className={cx(
@@ -145,7 +145,7 @@ export function DancecardCompactList(props: {
                   className="flex w-full flex-wrap items-center gap-2 text-left sm:gap-3"
                   onClick={() => setOpenId((id) => (id === r.id ? null : r.id))}
                 >
-                  <div className="min-w-[7rem] shrink-0 text-sm font-semibold text-emerald-50">
+                  <div className="min-w-[7rem] shrink-0 text-sm font-semibold text-emerald-900">
                     {formatTime(r.startsAt, tz)} – {formatTime(r.endsAt, tz)}
                   </div>
                   <span
@@ -158,17 +158,17 @@ export function DancecardCompactList(props: {
                   >
                     Reservation
                   </span>
-                  <div className="min-w-0 flex-1 text-sm font-semibold text-white">
+                  <div className="min-w-0 flex-1 text-sm font-semibold text-dc-text">
                     Scene with {reservationPartnerName(r)}
                   </div>
                 </button>
                 {openId === r.id ? (
-                  <div className="mt-2 space-y-3 border-t border-white/10 pt-2">
+                  <div className="mt-2 space-y-3 border-t border-dc-border pt-2">
                     <p className="text-xs text-dc-muted/85">{formatRange(r.startsAt, r.endsAt, tz)}</p>
                     {onCancelReservation && r.status === 'confirmed' ? (
                       <button
                         type="button"
-                        className="rounded-full border border-rose-400/30 bg-rose-500/15 px-3 py-1.5 text-xs font-medium text-rose-100 hover:bg-rose-500/25"
+                        className="rounded-full border border-red-300 bg-red-100 px-3 py-1.5 text-xs font-medium text-red-800 hover:bg-red-100"
                         onClick={(e) => {
                           e.stopPropagation()
                           void onCancelReservation(r.id)
@@ -207,7 +207,7 @@ export function DancecardCompactList(props: {
         return (
           <div key={`s-${s.id}`}>
             {showDay ? (
-              <div className="mb-2 mt-4 first:mt-0 font-serif text-lg text-white">{day}</div>
+              <div className="mb-2 mt-4 first:mt-0 font-serif text-lg text-dc-text">{day}</div>
             ) : null}
             <div
               className={cx(
@@ -237,7 +237,7 @@ export function DancecardCompactList(props: {
                     {label}
                   </span>
                 ) : null}
-                <div className="min-w-0 flex-1 text-sm font-semibold text-white">{title}</div>
+                <div className="min-w-0 flex-1 text-sm font-semibold text-dc-text">{title}</div>
                 {s.kind === 'program' && s.programRoom ? (
                   <span
                     className={cx(
@@ -255,11 +255,11 @@ export function DancecardCompactList(props: {
                 ) : null}
               </button>
               {openId === s.id ? (
-                <div className="mt-3 space-y-3 border-t border-white/10 pt-3">
+                <div className="mt-3 space-y-3 border-t border-dc-border pt-3">
                   <p className="text-xs text-dc-muted/85">{meta}</p>
                   <label className="block text-[10px] font-semibold uppercase tracking-[0.2em] text-dc-muted/85">Personal note</label>
                   <textarea
-                    className="min-h-[72px] w-full rounded-xl border border-dc-border bg-dc-elevated px-3 py-2 text-sm text-white placeholder:text-dc-subtle outline-none transition focus:border-dc-accent focus:ring-2 focus:ring-dc-accent-border/20"
+                    className="min-h-[72px] w-full rounded-xl border border-dc-border bg-dc-elevated px-3 py-2 text-sm text-dc-text placeholder:text-dc-subtle outline-none transition focus:border-dc-accent focus:ring-2 focus:ring-dc-accent-border/20"
                     defaultValue={s.note ?? ''}
                     placeholder="Only you see this note…"
                     onMouseDown={(e) => e.stopPropagation()}
@@ -268,7 +268,7 @@ export function DancecardCompactList(props: {
                   />
                   <button
                     type="button"
-                    className="rounded-full border border-rose-400/25 bg-rose-500/15 px-3 py-1.5 text-xs font-medium text-rose-100 hover:bg-rose-500/25"
+                    className="rounded-full border border-rose-400/25 bg-red-100 px-3 py-1.5 text-xs font-medium text-red-800 hover:bg-red-100"
                     onClick={() => onRemoveSelection(s.id)}
                   >
                     Remove from dancecard

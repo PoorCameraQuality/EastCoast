@@ -119,7 +119,7 @@ export function CompareConnectionBoard({
 
       <div
         className={cx(
-          'rounded-2xl border border-dc-accent-border bg-dc-accent-muted text-dc-text shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]',
+          'rounded-2xl border border-dc-accent-border bg-dc-accent-muted text-dc-accent-foreground shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]',
           compact ? 'px-3 py-2 text-[11px] leading-snug' : 'px-4 py-3 text-sm leading-relaxed'
         )}
       >
@@ -127,7 +127,7 @@ export function CompareConnectionBoard({
         {mutualData.viewerYou ? (
           <p className={cx('text-dc-muted', compact ? 'mt-1' : 'mt-1.5')}>
             <span className="text-dc-success">Green</span> = both free (tap to reserve).{' '}
-            <span className="text-sky-300/90">Blue</span> = host free but you are busy.
+            <span className="text-sky-700/90">Blue</span> = host free but you are busy.
           </p>
         ) : (
           <p className={cx('text-dc-muted', compact ? 'mt-1' : 'mt-1.5')}>

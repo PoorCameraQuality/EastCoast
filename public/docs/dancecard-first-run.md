@@ -64,18 +64,9 @@ If **`023`–`026`** are not yet applied, run in numeric order from [`database/R
 
 **Webhook retries:** set **`DANCECARD_CRON_SECRET`** (or reuse **`CRON_SECRET`**) and schedule **`GET /api/cron/dancecard-webhook-retries`** with header **`Authorization: Bearer <secret>`** every few minutes.
 
-### Maps (Phase 3) — Supabase Storage
+### Storage — Supabase buckets
 
-Organizer map uploads use bucket **`dancecard-maps`** by default (override with **`DANCECARD_MAPS_BUCKET`** in `.env.local` / Vercel). The app server uses the **service role** to upload objects and to mint **signed URLs** for public **`GET /api/dancecard/[eventSlug]/venue-map`**; attendees never receive the service role key.
-
-**Checklist (per environment: local, preview, production):**
-
-1. Create Storage bucket **`dancecard-maps`** (or your override name) in the Supabase dashboard (or CLI).
-2. Ensure the **service role** can **upload** to that bucket (policies your team is comfortable with; often object paths are namespaced by event slug in app code).
-3. Ensure **`createSignedUrl`** works for objects you store there (bucket must allow the server to sign reads for public map JSON).
-4. Deploy app code that includes Phase 3 routes and set **`SUPABASE_SERVICE_ROLE_KEY`** on the host.
-
-Do not expose the service role key to browsers.
+**`dancecard-maps`**, **`dancecard-event-assets`**, **`dancecard-profile-photos`** — see `.env.example`. Migrate legacy objects: **`npm run dancecard:migrate-storage`**. Service role only; never expose to browsers.
 
 **Verify in Postgres (optional):** `dancecard_event_maps`, `dancecard_map_pins`; on `dancecard_locations`, new columns `parent_id`, `kind`, `accessibility_notes`, `directions_public`, `internal_notes`.
 

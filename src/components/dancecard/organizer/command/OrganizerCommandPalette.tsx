@@ -68,7 +68,7 @@ export function OrganizerCommandPalette({
   if (!open) return null
 
   return (
-    <div className="fixed inset-0 z-dc-modal flex items-start justify-center bg-black/50 px-4 pt-[12vh]">
+    <div className="fixed inset-0 z-dc-modal flex items-start justify-center bg-dc-text/35 px-4 pt-[12vh] backdrop-blur-sm">
       <div className="w-full max-w-lg rounded-2xl border border-dc-border bg-dc-elevated shadow-2xl">
         <input
           autoFocus

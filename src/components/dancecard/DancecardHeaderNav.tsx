@@ -65,7 +65,7 @@ export function DancecardHeaderNav() {
           </label>
           <select
             id="header-dancecard-event"
-            className="max-w-[11rem] rounded-lg border border-dark-600 bg-dark-900/80 px-2 py-1.5 text-xs text-gray-200"
+            className="max-w-[11rem] rounded-lg border border-dc-border bg-dc-elevated-solid px-2 py-1.5 text-xs text-dc-text"
             defaultValue=""
             onChange={(e) => {
               const slug = e.target.value
@@ -92,7 +92,7 @@ export function DancecardHeaderNav() {
       <button
         type="button"
         onClick={() => setShowCode((v) => !v)}
-        className="text-xs text-gray-400 hover:text-white min-h-touch px-2 rounded-lg hover:bg-dark-800/50"
+        className="text-xs text-dc-muted hover:text-dc-text min-h-touch px-2 rounded-lg hover:bg-dc-surface-muted"
         aria-expanded={showCode}
       >
         Event code
@@ -100,17 +100,17 @@ export function DancecardHeaderNav() {
       {showCode ? (
         <form
           onSubmit={submitCode}
-          className="absolute right-0 top-full z-50 mt-2 flex w-56 flex-col gap-2 rounded-lg border border-dark-600 bg-black p-3 shadow-xl"
+          className="absolute right-0 top-full z-50 mt-2 flex w-56 flex-col gap-2 rounded-lg border border-dc-border bg-dc-elevated-solid p-3 shadow-[var(--dc-shadow-soft)]"
         >
           <input
             type="text"
             value={code}
             onChange={(e) => setCode(e.target.value)}
             placeholder="Event code"
-            className="rounded border border-dark-600 bg-dark-900 px-2 py-1.5 text-sm text-white"
+            className="rounded-lg border border-dc-border bg-dc-surface-muted px-2 py-1.5 text-sm text-dc-text placeholder:text-dc-muted/60 focus:border-dc-accent-border focus:outline-none focus:ring-1 focus:ring-dc-accent/30"
             autoFocus
           />
-          <button type="submit" className="rounded bg-primary-600 py-1.5 text-xs font-semibold text-white">
+          <button type="submit" className="rounded bg-primary-600 py-1.5 text-xs font-semibold text-dc-text">
             Go
           </button>
           {codeErr ? <p className="text-xs text-rose-400">{codeErr}</p> : null}

@@ -16,6 +16,40 @@ function displayTrack(slot: ProgramSlotRow) {
   return (slot.trackName ?? slot.track ?? '').trim()
 }
 
+/** Prominent control to open the session drawer (assign people, edit, publish). */
+export function ProgramSessionEditButton({
+  slotTitle,
+  scheduledItemLabel,
+  compact = false,
+  className,
+  onClick,
+}: {
+  slotTitle: string
+  scheduledItemLabel: string
+  compact?: boolean
+  className?: string
+  onClick: () => void
+}) {
+  return (
+    <button
+      type="button"
+      className={cn(
+        'shrink-0 rounded-md border-2 border-dc-accent bg-dc-accent font-bold uppercase tracking-wide text-dc-accent-foreground shadow-md',
+        'hover:border-dc-accent-hover hover:bg-dc-accent-hover',
+        'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-dc-accent',
+        compact ? 'min-h-[1.5rem] min-w-[2rem] px-1 py-0.5 text-[9px] leading-none' : 'min-h-[1.75rem] px-2.5 py-1 text-[11px]',
+        className,
+      )}
+      aria-label={`Edit ${slotTitle}`}
+      title={`Edit ${scheduledItemLabel} — assign people, room, publish`}
+      onClick={onClick}
+      onPointerDown={(e) => e.stopPropagation()}
+    >
+      Edit
+    </button>
+  )
+}
+
 export function ProgramGridDroppableCell({
   id,
   className,
@@ -72,7 +106,8 @@ export function ProgramUnassignedPool({
       <div className="border-b border-dc-border-subtle px-3 py-2.5">
         <h3 className="text-sm font-semibold text-dc-text">Unassigned</h3>
         <p className="mt-0.5 text-dc-micro text-dc-muted">
-          Drag onto the grid to schedule. Drop here to remove from the grid.
+          Drag onto the grid to schedule. Use <span className="font-medium text-dc-text">Edit</span> to assign people and
+          details. Drop here to unschedule.
         </p>
       </div>
       <div className="flex flex-wrap items-center gap-2 border-b border-dc-border-subtle px-3 py-2">
@@ -139,14 +174,12 @@ function ProgramUnassignedCard({
       </button>
       {tr ? <p className="mt-0.5 truncate text-[10px] text-dc-muted">{tr}</p> : null}
       {room ? <p className="truncate text-[10px] text-dc-subtle">{room}</p> : null}
-      <button
-        type="button"
-        className="mt-1 text-[10px] text-dc-accent hover:underline"
+      <ProgramSessionEditButton
+        slotTitle={slot.title}
+        scheduledItemLabel="activity"
+        className="mt-1.5 w-full"
         onClick={() => onOpenDrawer(slot)}
-        onPointerDown={(e) => e.stopPropagation()}
-      >
-        Open
-      </button>
+      />
     </div>
   )
 }

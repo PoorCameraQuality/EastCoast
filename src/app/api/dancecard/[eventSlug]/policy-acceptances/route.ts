@@ -118,6 +118,9 @@ export async function POST(request: NextRequest, context: { params: { eventSlug:
 
 
 
+    const acceptedPolicyDocumentIds: string[] = []
+    const failedPolicyDocumentIds: string[] = []
+
     for (const policyDocumentId of body.policyDocumentIds) {
 
       const { data: pol, error: pErr } = await admin
@@ -136,7 +139,10 @@ export async function POST(request: NextRequest, context: { params: { eventSlug:
 
       if (pErr) throw pErr
 
-      if (!pol) continue
+      if (!pol) {
+        failedPolicyDocumentIds.push(policyDocumentId)
+        continue
+      }
 
 
 
@@ -158,11 +164,18 @@ export async function POST(request: NextRequest, context: { params: { eventSlug:
 
       if (insErr && code !== '23505') throw insErr
 
+      acceptedPolicyDocumentIds.push(policyDocumentId)
+
     }
 
 
 
-    return NextResponse.json({ ok: true })
+    const ok = failedPolicyDocumentIds.length === 0
+
+    return NextResponse.json(
+      { ok, acceptedPolicyDocumentIds, failedPolicyDocumentIds },
+      { status: ok ? 200 : 400 },
+    )
 
   } catch (e) {
 

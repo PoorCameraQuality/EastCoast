@@ -66,7 +66,7 @@ export function OrganizerEventSidebar({
       {mobileOpen ? (
         <button
           type="button"
-          className="fixed inset-0 z-40 bg-black/60 md:hidden"
+          className="fixed inset-0 z-40 bg-dc-surface/80 md:hidden"
           aria-label="Close menu"
           onClick={() => onMobileOpenChange(false)}
         />

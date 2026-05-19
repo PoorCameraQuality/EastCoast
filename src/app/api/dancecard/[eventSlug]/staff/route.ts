@@ -25,7 +25,7 @@ export async function GET(request: NextRequest, context: { params: { eventSlug: 
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
     if (!session.isStaff) {
-      return NextResponse.json({ error: 'staff access required' }, { status: 401 })
+      return NextResponse.json({ error: 'staff access required' }, { status: 403 })
     }
     const { data: rows, error } = await admin
       .from('dancecard_staff_shifts')

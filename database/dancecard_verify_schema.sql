@@ -1,5 +1,5 @@
 -- Dancecard schema health check (read-only). Run in Supabase SQL editor.
--- Expect every row status = 'OK' (or 'SKIP' where noted). Final row: SUMMARY → PASS (000–038).
+-- Expect every row status = 'OK' (or 'SKIP' where noted). Final row: SUMMARY → PASS (000–053).
 -- Schema: public. See database/README_DANCECARD.md.
 
 WITH
@@ -54,7 +54,16 @@ expected_tables AS (
     'dancecard_trusted_roles',
     'dancecard_vetting_applications',
     'dancecard_webhook_deliveries',
-    'dancecard_webhook_subscriptions'
+    'dancecard_webhook_subscriptions',
+    'dancecard_safety_incidents',
+    'dancecard_program_slot_audit',
+    'dancecard_compare_requests',
+    'dancecard_compare_blocks',
+    'dancecard_iso_posts',
+    'dancecard_iso_interests',
+    'dancecard_iso_comments',
+    'dancecard_session_feedback',
+    'dancecard_person_follows'
   ])::text AS table_name
 ),
 table_check AS (
@@ -77,6 +86,12 @@ expected_columns AS (
     ('dancecard_events', 'attendee_guide_json'),
     ('dancecard_events', 'event_profile'),
     ('dancecard_events', 'agreements_config'),
+    ('dancecard_events', 'feedback_config'),
+    ('dancecard_events', 'badge_logo_path'),
+    ('dancecard_registrants', 'check_in_token'),
+    ('dancecard_registrants', 'badge_tagline'),
+    ('dancecard_prefs', 'compare_visibility'),
+    ('dancecard_prefs', 'show_in_compare_directory'),
     ('dancecard_accounts', 'is_staff'),
     ('dancecard_selections', 'note'),
     ('dancecard_prefs', 'allow_compare_by_username'),
@@ -299,5 +314,5 @@ SELECT
   'SUMMARY',
   'migration_health',
   (SELECT ok_count::text || ' ok, ' || fail_count::text || ' fail, ' || total_count::text || ' checked' FROM summary),
-  CASE WHEN (SELECT fail_count FROM summary) = 0 THEN 'PASS (000–038)' ELSE 'FAIL' END
+  CASE WHEN (SELECT fail_count FROM summary) = 0 THEN 'PASS (000–053)' ELSE 'FAIL' END
 ORDER BY CASE kind WHEN 'SUMMARY' THEN 1 ELSE 0 END, kind, name, detail NULLS FIRST;

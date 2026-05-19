@@ -18,15 +18,15 @@ type ExportAction = { label: string; description: string; onClick: () => void }
 
 function ExportGroup({ title, description, actions }: { title: string; description: string; actions: ExportAction[] }) {
   return (
-    <section className="rounded-xl border border-white/10 bg-black/30 p-4">
-      <h3 className="text-sm font-semibold text-slate-100">{title}</h3>
-      <p className="mt-1 text-xs text-slate-500">{description}</p>
+    <section className="rounded-xl border border-dc-border bg-dc-surface-muted p-4">
+      <h3 className="text-sm font-semibold text-dc-text">{title}</h3>
+      <p className="mt-1 text-xs text-dc-muted">{description}</p>
       <ul className="mt-3 divide-y divide-white/10">
         {actions.map((a) => (
           <li key={a.label} className="flex flex-col gap-0.5 py-3 first:pt-0 last:pb-0 sm:flex-row sm:items-center sm:justify-between">
             <div className="min-w-0">
-              <p className="text-sm text-slate-200">{a.label}</p>
-              <p className="text-xs text-slate-500">{a.description}</p>
+              <p className="text-sm text-dc-text">{a.label}</p>
+              <p className="text-xs text-dc-muted">{a.description}</p>
             </div>
             <button
               type="button"
@@ -153,7 +153,7 @@ function CalendarFeedsBlock({ slug }: { slug: string }) {
   }
 
   return (
-    <div className="rounded-xl border border-white/10 bg-black/30 p-4">
+    <div className="rounded-xl border border-dc-border bg-dc-surface-muted p-4">
       <OrganizerConfirmDialog
         open={revokeId !== null}
         title="Revoke feed?"
@@ -175,19 +175,19 @@ function CalendarFeedsBlock({ slug }: { slug: string }) {
           void createFeed(scope, id)
         }}
       />
-      <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Subscribe in Google or Apple Calendar</p>
-      <p className="mt-2 text-xs text-slate-400">
+      <p className="text-xs font-semibold uppercase tracking-wide text-dc-muted">Subscribe in Google or Apple Calendar</p>
+      <p className="mt-2 text-xs text-dc-muted">
         Create a private link attendees can add to their calendar app. Copy the link once — we do not show it again. Revoke
         old links if you rotate.
       </p>
       {needsMigration ? (
-        <p className="mt-2 text-xs text-amber-200">
+        <p className="mt-2 text-xs text-amber-800">
           Calendar links are not enabled on this server yet. Ask your host to apply the latest Dancecard update.
         </p>
       ) : null}
-      {err ? <p className="mt-2 text-xs text-rose-300">{err}</p> : null}
+      {err ? <p className="mt-2 text-xs text-red-700">{err}</p> : null}
       {lastUrl ? (
-        <div className="mt-3 rounded-lg border border-dc-accent-border bg-dc-accent-muted p-2 text-xs text-dc-text">
+        <div className="mt-3 rounded-lg border border-dc-accent-border bg-dc-accent-muted p-2 text-xs text-dc-accent-foreground">
           <p className="font-semibold">New subscribe URL (copy now — won&apos;t be shown again):</p>
           <p className="mt-1 break-all font-mono text-[11px]">{lastUrl}</p>
         </div>
@@ -196,7 +196,7 @@ function CalendarFeedsBlock({ slug }: { slug: string }) {
         <button
           type="button"
           disabled={busy || needsMigration}
-          className="rounded-full border border-white/15 px-3 py-1 text-xs text-white hover:bg-white/10 disabled:opacity-40"
+          className="rounded-full border border-dc-border px-3 py-1 text-xs text-dc-accent-foreground hover:bg-dc-accent-muted disabled:opacity-40"
           onClick={() => void createFeed('full')}
         >
           Create full-program feed
@@ -204,7 +204,7 @@ function CalendarFeedsBlock({ slug }: { slug: string }) {
         <button
           type="button"
           disabled={busy || needsMigration}
-          className="rounded-full border border-white/15 px-3 py-1 text-xs text-white hover:bg-white/10 disabled:opacity-40"
+          className="rounded-full border border-dc-border px-3 py-1 text-xs text-dc-accent-foreground hover:bg-dc-accent-muted disabled:opacity-40"
           onClick={() => void openPicker('track')}
         >
           Per-track…
@@ -212,7 +212,7 @@ function CalendarFeedsBlock({ slug }: { slug: string }) {
         <button
           type="button"
           disabled={busy || needsMigration}
-          className="rounded-full border border-white/15 px-3 py-1 text-xs text-white hover:bg-white/10 disabled:opacity-40"
+          className="rounded-full border border-dc-border px-3 py-1 text-xs text-dc-accent-foreground hover:bg-dc-accent-muted disabled:opacity-40"
           onClick={() => void openPicker('room')}
         >
           Per-room…
@@ -220,7 +220,7 @@ function CalendarFeedsBlock({ slug }: { slug: string }) {
         <button
           type="button"
           disabled={busy || needsMigration}
-          className="rounded-full border border-white/15 px-3 py-1 text-xs text-white hover:bg-white/10 disabled:opacity-40"
+          className="rounded-full border border-dc-border px-3 py-1 text-xs text-dc-accent-foreground hover:bg-dc-accent-muted disabled:opacity-40"
           onClick={() => void openPicker('presenter')}
         >
           Per-presenter…
@@ -228,17 +228,17 @@ function CalendarFeedsBlock({ slug }: { slug: string }) {
       </div>
       <ul className="mt-4 space-y-2 text-xs">
         {tokens.map((t) => (
-          <li key={t.id} className="flex flex-wrap items-center justify-between gap-2 border-t border-white/10 pt-2">
+          <li key={t.id} className="flex flex-wrap items-center justify-between gap-2 border-t border-dc-border pt-2">
             <span>
-              <span className="font-mono text-slate-200">{t.scope}</span>
-              {t.label ? <span className="text-slate-500"> — {t.label}</span> : null}
-              {t.revokedAt ? <span className="text-rose-300"> (revoked)</span> : <span className="text-emerald-300"> (active)</span>}
+              <span className="font-mono text-dc-text">{t.scope}</span>
+              {t.label ? <span className="text-dc-muted"> — {t.label}</span> : null}
+              {t.revokedAt ? <span className="text-red-700"> (revoked)</span> : <span className="text-emerald-700"> (active)</span>}
             </span>
             {!t.revokedAt ? (
               <button
                 type="button"
                 disabled={busy}
-                className="text-rose-300 hover:underline disabled:opacity-40"
+                className="text-red-700 hover:underline disabled:opacity-40"
                 onClick={() => setRevokeId(t.id)}
               >
                 Revoke
@@ -271,18 +271,25 @@ export function ExportsHubPanel({ eventSlug }: { eventSlug: string }) {
   }
 
   return (
-    <div className="space-y-6 text-sm text-slate-300">
+    <div className="space-y-6 text-sm text-dc-muted">
       <div>
-        <h2 className="font-serif text-lg text-slate-100">Exports</h2>
-        <p className="mt-1 text-slate-400">
+        <h2 className="font-serif text-lg text-dc-text">Exports</h2>
+        <p className="mt-1 text-dc-muted">
           Download spreadsheets for planning, or open print-friendly pages and save as PDF from your browser.
         </p>
+        <button
+          type="button"
+          className="dc-gold-btn mt-3 rounded-lg px-4 py-2 text-sm font-semibold"
+          onClick={() => exportAndLog('Event pack (ZIP)', `${base}/exports/event-pack`)}
+        >
+          Download event pack (ZIP)
+        </button>
       </div>
 
-      <section className="rounded-xl border border-white/10 bg-black/30 p-4">
-        <h3 className="text-sm font-semibold text-slate-100">Recent downloads</h3>
-        <p className="mt-1 text-xs text-slate-500">Tracked in this browser only.</p>
-        <ul className="mt-2 max-h-32 space-y-1 overflow-y-auto text-xs text-slate-400">
+      <section className="rounded-xl border border-dc-border bg-dc-surface-muted p-4">
+        <h3 className="text-sm font-semibold text-dc-text">Recent downloads</h3>
+        <p className="mt-1 text-xs text-dc-muted">Tracked in this browser only.</p>
+        <ul className="mt-2 max-h-32 space-y-1 overflow-y-auto text-xs text-dc-muted">
           {jobs.map((j, i) => (
             <li key={`${j.at}-${i}`}>
               {new Date(j.at).toLocaleString()} · {j.label}
@@ -348,14 +355,14 @@ export function ExportsHubPanel({ eventSlug }: { eventSlug: string }) {
         ]}
       />
 
-      <section className="rounded-xl border border-white/10 bg-black/30 p-4">
-        <h3 className="text-sm font-semibold text-slate-100">Print layouts</h3>
-        <p className="mt-1 text-xs text-slate-500">Opens a new tab; use Print, then Save as PDF.</p>
+      <section className="rounded-xl border border-dc-border bg-dc-surface-muted p-4">
+        <h3 className="text-sm font-semibold text-dc-text">Print layouts</h3>
+        <p className="mt-1 text-xs text-dc-muted">Opens a new tab; use Print, then Save as PDF.</p>
         <ul className="mt-3 divide-y divide-white/10">
           <li className="flex flex-col gap-0.5 py-3 first:pt-0 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <p className="text-sm text-slate-200">Printable schedule</p>
-              <p className="text-xs text-slate-500">Room-by-room or full run-of-show for posting on site.</p>
+              <p className="text-sm text-dc-text">Printable schedule</p>
+              <p className="text-xs text-dc-muted">Room-by-room or full run-of-show for posting on site.</p>
             </div>
             <Link
               className="text-sm text-dc-accent hover:underline"
@@ -367,8 +374,8 @@ export function ExportsHubPanel({ eventSlug }: { eventSlug: string }) {
           </li>
           <li className="flex flex-col gap-0.5 py-3 last:pb-0 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <p className="text-sm text-slate-200">Venue and room signs</p>
-              <p className="text-xs text-slate-500">Directional signs sized for doors and hallways.</p>
+              <p className="text-sm text-dc-text">Venue and room signs</p>
+              <p className="text-xs text-dc-muted">Directional signs sized for doors and hallways.</p>
             </div>
             <Link
               className="text-sm text-dc-accent hover:underline"

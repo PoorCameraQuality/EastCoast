@@ -52,7 +52,7 @@ export function TutorialOverlay({
       aria-modal="true"
       aria-labelledby="dc-tutorial-title"
     >
-      <button type="button" className="absolute inset-0 bg-black/60" aria-label="Dismiss tutorial" onClick={onSkip} />
+      <button type="button" className="absolute inset-0 bg-dc-surface/80" aria-label="Dismiss tutorial" onClick={onSkip} />
       <div
         ref={panelRef}
         className={cn(
@@ -78,7 +78,7 @@ export function TutorialOverlay({
           {onNext ? (
             <button
               type="button"
-              className="rounded-full bg-dc-accent px-4 py-2 text-sm font-semibold text-white hover:opacity-90"
+              className="rounded-full bg-dc-accent px-4 py-2 text-sm font-semibold text-dc-accent-foreground hover:opacity-90"
               onClick={onNext}
             >
               {nextLabel}

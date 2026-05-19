@@ -53,23 +53,23 @@ function rowCheckInTone(r: RegRow): CheckInTone {
 
 const TONE_CLASS: Record<CheckInTone, { status: string; button: string; pill: string }> = {
   gold: {
-    status: 'font-medium text-[#e8d5a8]',
-    button: 'border-[#c6a75e]/50 text-[#e8d5a8] hover:bg-[#c6a75e]/15',
-    pill: 'border-[#c6a75e]/45 bg-[#c6a75e]/12 text-[#e8d5a8]',
+    status: 'font-medium text-dc-accent-hover',
+    button: 'border-dc-accent-border/50 text-dc-accent-hover hover:bg-dc-accent-muted',
+    pill: 'border-dc-accent-border/45 bg-dc-accent-muted text-dc-accent-hover',
   },
   blue: {
-    status: 'font-medium text-sky-300',
-    button: 'border-sky-400/45 text-sky-200 hover:bg-sky-500/15',
-    pill: 'border-sky-400/45 bg-sky-950/40 text-sky-200',
+    status: 'font-medium text-sky-800',
+    button: 'border-sky-400 text-sky-800 hover:bg-sky-100',
+    pill: 'border-sky-400 bg-sky-100 text-sky-800',
   },
   red: {
-    status: 'font-medium text-rose-300',
-    button: 'border-rose-400/45 text-rose-200 hover:bg-rose-500/15',
-    pill: 'border-rose-400/45 bg-rose-950/35 text-rose-200',
+    status: 'font-medium text-red-700',
+    button: 'border-red-400 text-red-700 hover:bg-red-100',
+    pill: 'border-red-400 bg-red-100 text-red-700',
   },
   neutral: {
     status: '',
-    button: 'border-emerald-400/30 text-emerald-200 hover:bg-emerald-500/10',
+    button: 'border-emerald-300 text-emerald-700 hover:bg-emerald-100',
     pill: '',
   },
 }
@@ -81,6 +81,8 @@ const STATUSES = ['', 'imported', 'pending', 'confirmed', 'cancelled', 'waitlist
 const VETTING = ['none', 'pending', 'approved', 'rejected', 'hold'] as const
 
 const PAGE_SIZE = 50
+
+const PAYMENT_STATUSES = ['', 'paid', 'unpaid', 'partial', 'refunded', 'comp', 'pending', 'waived'] as const
 
 type RegistrantsListResponse = {
   registrants: RegRow[]
@@ -151,6 +153,7 @@ function parseRegistrantCsv(text: string): { rows: Record<string, unknown>[] } {
   const iLegal = col('legal_name', 'legalname')
   const iExtSrc = col('external_source', 'source')
   const iExtId = col('external_id', 'externalid')
+  const iPay = col('payment_status', 'imported_payment_status', 'importedpaymentstatus')
   if (iName < 0 || iCat < 0) {
     throw new Error('CSV must include name and category columns (e.g. name, category)')
   }
@@ -165,6 +168,7 @@ function parseRegistrantCsv(text: string): { rows: Record<string, unknown>[] } {
     if (iLegal >= 0 && cells[iLegal]?.trim()) row.legalName = cells[iLegal].trim()
     if (iExtSrc >= 0 && cells[iExtSrc]?.trim()) row.externalSource = cells[iExtSrc].trim()
     if (iExtId >= 0 && cells[iExtId]?.trim()) row.externalId = cells[iExtId].trim()
+    if (iPay >= 0 && cells[iPay]?.trim()) row.importedPaymentStatus = cells[iPay].trim()
     rows.push(row)
   }
   if (!rows.length) throw new Error('No data rows parsed from CSV')
@@ -182,6 +186,8 @@ export function RegistrantsPanel({
 }) {
   const [rows, setRows] = useState<RegRow[]>([])
   const [total, setTotal] = useState(0)
+  const [loading, setLoading] = useState(true)
+  const [loadFailed, setLoadFailed] = useState(false)
   const [loadingMore, setLoadingMore] = useState(false)
   const [status, setStatus] = useState('')
   const [vettingFilter, setVettingFilter] = useState('')
@@ -190,14 +196,23 @@ export function RegistrantsPanel({
   const [q, setQ] = useState('')
   const [err, setErr] = useState<string | null>(null)
   const [selected, setSelected] = useState<RegRow | null>(null)
-  const [detailTab, setDetailTab] = useState<'general' | 'vetting'>('general')
+  const [detailTab, setDetailTab] = useState<'general' | 'vetting' | 'answers' | 'payment' | 'tags'>('general')
   const [detailStatus, setDetailStatus] = useState('')
+  const [detailCategoryId, setDetailCategoryId] = useState('')
   const [detailNotes, setDetailNotes] = useState('')
   const [detailPronouns, setDetailPronouns] = useState('')
   const [detailVettingStatus, setDetailVettingStatus] = useState<(typeof VETTING)[number]>('none')
   const [detailVettingSafety, setDetailVettingSafety] = useState('')
   const [policyDocs, setPolicyDocs] = useState<PolicyDoc[]>([])
   const [policyPick, setPolicyPick] = useState<Record<string, boolean>>({})
+  const [detailPaymentStatus, setDetailPaymentStatus] = useState('')
+  const [detailAnswers, setDetailAnswers] = useState<Record<string, unknown>>({})
+  const [detailTagIds, setDetailTagIds] = useState<string[]>([])
+  const [registrantTags, setRegistrantTags] = useState<{ id: string; name: string }[]>([])
+  const [formQuestions, setFormQuestions] = useState<
+    { id: string; label: string; type: string; optionsJson: unknown }[]
+  >([])
+  const [linkBusy, setLinkBusy] = useState(false)
   const [busy, setBusy] = useState(false)
   const [importSuccess, setImportSuccess] = useState<string | null>(null)
   const [checkInSuccess, setCheckInSuccess] = useState<string | null>(null)
@@ -210,34 +225,76 @@ export function RegistrantsPanel({
     setSelected(r)
     setDetailTab('general')
     setDetailStatus(r.status)
+    setDetailCategoryId(r.categoryId)
     setDetailNotes(r.internalNotes ?? '')
     setDetailPronouns(r.pronouns ?? '')
     setDetailVettingStatus((r.vettingStatus as (typeof VETTING)[number]) ?? 'none')
     setDetailVettingSafety(r.vettingSafetyNotes ?? '')
     setPolicyPick({})
+    setDetailPaymentStatus('')
+    setDetailAnswers({})
+    setDetailTagIds([])
     try {
-      const [res, polRes] = await Promise.all([
+      const [res, polRes, tagsRes, formRes] = await Promise.all([
         organizerDancecardFetch<{
           registrant: {
+            categoryId: string
             status: string
             internalNotes: string | null
             pronouns: string | null
             vettingStatus: string
             vettingSafetyNotes: string | null
+            importedPaymentStatus: string | null
+            answers?: Record<string, unknown>
+            tagIds?: string[]
           }
         }>(eventSlug, `/registrants/${r.id}`),
         organizerDancecardFetch<{ documents: PolicyDoc[] }>(eventSlug, '/policy-documents').catch(() => ({
           documents: [] as PolicyDoc[],
         })),
+        organizerDancecardFetch<{ tags: { id: string; name: string; scope: string }[] }>(eventSlug, '/tags').catch(
+          () => ({ tags: [] }),
+        ),
+        organizerDancecardFetch<{
+          form: null | { questions: { id: string; label: string; type: string; optionsJson: unknown }[] }
+        }>(eventSlug, '/registration-form').catch(() => ({ form: null })),
       ])
       setDetailStatus(res.registrant.status)
+      setDetailCategoryId(res.registrant.categoryId ?? r.categoryId)
       setDetailNotes(res.registrant.internalNotes ?? '')
       setDetailPronouns(res.registrant.pronouns ?? '')
       setDetailVettingStatus((res.registrant.vettingStatus as (typeof VETTING)[number]) ?? 'none')
       setDetailVettingSafety(res.registrant.vettingSafetyNotes ?? '')
+      setDetailPaymentStatus(res.registrant.importedPaymentStatus ?? '')
+      setDetailAnswers(res.registrant.answers ?? {})
+      setDetailTagIds(res.registrant.tagIds ?? [])
+      setRegistrantTags((tagsRes.tags ?? []).filter((t) => t.scope === 'registrant').map((t) => ({ id: t.id, name: t.name })))
+      setFormQuestions(formRes.form?.questions ?? [])
       setPolicyDocs((polRes.documents ?? []).filter((d) => d.publishedAt))
     } catch {
       setPolicyDocs([])
+      setRegistrantTags([])
+      setFormQuestions([])
+    }
+  }
+
+  async function linkAccount() {
+    if (!selected || readOnly) return
+    setLinkBusy(true)
+    setErr(null)
+    try {
+      const res = await organizerDancecardFetch<{
+        registrant: { personId: string | null }
+        linkedPerson: { sceneName: string }
+      }>(eventSlug, `/registrants/${selected.id}/link-account`, { method: 'POST' })
+      await load()
+      setSelected((s) => (s ? { ...s, personId: res.registrant.personId } : s))
+      setErr(null)
+      setCheckInSuccess(`Linked to roster person: ${res.linkedPerson.sceneName}`)
+    } catch (e) {
+      setErr(e instanceof Error ? e.message : 'Link failed')
+    } finally {
+      setLinkBusy(false)
     }
   }
 
@@ -273,12 +330,19 @@ export function RegistrantsPanel({
 
   const load = useCallback(async () => {
     setErr(null)
+    setLoadFailed(false)
+    setLoading(true)
     try {
       const res = await organizerDancecardFetch<RegistrantsListResponse>(eventSlug, registrantsQueryPath(0))
       setRows(res.registrants ?? [])
       setTotal(res.total ?? 0)
     } catch (e) {
+      setLoadFailed(true)
+      setRows([])
+      setTotal(0)
       setErr(e instanceof Error ? e.message : 'Failed to load')
+    } finally {
+      setLoading(false)
     }
   }, [eventSlug, registrantsQueryPath])
 
@@ -360,17 +424,31 @@ export function RegistrantsPanel({
         .map(([id]) => id)
       const patch: Record<string, unknown> = {
         status: detailStatus,
+        categoryId: detailCategoryId || undefined,
         pronouns: detailPronouns.trim() || null,
         vettingStatus: detailVettingStatus,
       }
       if (showInternal) patch.internalNotes = detailNotes || null
       if (showVettingSafety) patch.vettingSafetyNotes = detailVettingSafety || null
       if (policyDocumentIds.length) patch.policyDocumentIds = policyDocumentIds
+      if (detailTab === 'payment' || detailTab === 'general') {
+        patch.importedPaymentStatus = detailPaymentStatus.trim() || null
+      }
+      if (detailTab === 'answers') patch.answers = detailAnswers
+      if (detailTab === 'tags') patch.tagIds = detailTagIds
 
-      await organizerDancecardFetch(eventSlug, `/registrants/${selected.id}`, {
+      const res = await organizerDancecardFetch<{ registrant: RegRow }>(eventSlug, `/registrants/${selected.id}`, {
         method: 'PATCH',
         body: JSON.stringify(patch),
       })
+      const updated = mergeRegistrantRow(selected, res.registrant)
+      setSelected(updated)
+      setDetailStatus(updated.status)
+      setDetailCategoryId(updated.categoryId)
+      setRows((prev) => prev.map((row) => (row.id === updated.id ? mergeRegistrantRow(row, updated) : row)))
+      if (updated.status === 'waitlisted' && detailStatus !== 'waitlisted' && detailStatus !== 'cancelled') {
+        setImportSuccess('Saved. Category is at capacity — status set to waitlisted.')
+      }
       await load()
     } catch (e) {
       setErr(e instanceof Error ? e.message : 'Save failed')
@@ -449,8 +527,8 @@ export function RegistrantsPanel({
       <header>
         <h2 className="font-serif text-xl text-dc-text sm:text-2xl">{copy.signups}</h2>
       </header>
-      <div className="rounded-xl border border-white/10 bg-black/20 px-4 py-3">
-        <p className="text-sm leading-relaxed text-slate-300">
+      <div className="rounded-xl border border-dc-border bg-dc-elevated-muted px-4 py-3">
+        <p className="text-sm leading-relaxed text-dc-muted">
           {copy.signups} are everyone who signed up through your registration form or import. Each row is a signup record
           (ticket category, status, check-in). When synced or linked, the same person also appears in the{' '}
           <Link
@@ -461,9 +539,12 @@ export function RegistrantsPanel({
           </Link>{' '}
           for program and staff assignments.
         </p>
-        <p className="mt-2 text-xs text-slate-500">
+        <p className="mt-2 text-xs text-dc-muted">
           Use {copy.roster} for roles on classes and shifts; use {copy.signups} for signup status, vetting fields, and
-          exports.
+          exports. Open any signup and use the <strong className="font-medium text-dc-text">General</strong> tab to change{' '}
+          <strong className="font-medium text-dc-text">registration category</strong> (Weekend pass, Staff, Volunteer,
+          etc.) and <strong className="font-medium text-dc-text">status</strong> — no comp or staff registration code
+          required.
         </p>
       </div>
       {importSuccess ? (
@@ -472,15 +553,15 @@ export function RegistrantsPanel({
       {checkInSuccess ? (
         <InlineSuccessBanner message={checkInSuccess} onDismiss={() => setCheckInSuccess(null)} />
       ) : null}
-      {err ? <p className="text-sm text-rose-300 whitespace-pre-wrap">{err}</p> : null}
+      {err ? <p className="text-sm text-red-700 whitespace-pre-wrap">{err}</p> : null}
       <p className="text-xs text-dc-muted">
-        Check-in colors: <span className="text-[#e8d5a8]">gold on-site</span> ·{' '}
-        <span className="text-sky-300">blue late</span> · <span className="text-rose-300">red early (override)</span>.
+        Check-in colors: <span className="text-dc-accent-hover">gold on-site</span> ·{' '}
+        <span className="text-sky-700">blue late</span> · <span className="text-red-700">red early (override)</span>.
         Set per-ticket windows in Registration → ticket categories.
       </p>
       <div className="-mx-1 flex gap-2 overflow-x-auto px-1 pb-1">
         <select
-          className="shrink-0 rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-sm text-white"
+          className="shrink-0 rounded-lg border border-dc-border bg-dc-surface-muted px-3 py-2 text-sm text-dc-text"
           value={status}
           onChange={(e) => setStatus(e.target.value)}
         >
@@ -491,7 +572,7 @@ export function RegistrantsPanel({
           ))}
         </select>
         <select
-          className="shrink-0 rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-sm text-white"
+          className="shrink-0 rounded-lg border border-dc-border bg-dc-surface-muted px-3 py-2 text-sm text-dc-text"
           value={vettingFilter}
           onChange={(e) => setVettingFilter(e.target.value)}
         >
@@ -503,7 +584,7 @@ export function RegistrantsPanel({
           ))}
         </select>
         <select
-          className="shrink-0 max-w-[12rem] rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-sm text-white"
+          className="shrink-0 max-w-[12rem] rounded-lg border border-dc-border bg-dc-surface-muted px-3 py-2 text-sm text-dc-text"
           value={categoryFilter}
           onChange={(e) => setCategoryFilter(e.target.value)}
         >
@@ -515,7 +596,7 @@ export function RegistrantsPanel({
           ))}
         </select>
         <input
-          className="min-w-[10rem] shrink-0 flex-1 rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-sm text-white"
+          className="min-w-[10rem] shrink-0 flex-1 rounded-lg border border-dc-border bg-dc-surface-muted px-3 py-2 text-sm text-dc-text"
           placeholder="Search name or email..."
           value={q}
           onChange={(e) => setQ(e.target.value)}
@@ -523,7 +604,7 @@ export function RegistrantsPanel({
         {!readOnly ? (
           <button
             type="button"
-            className="shrink-0 rounded-full border border-white/20 px-4 py-2 text-sm text-slate-200 hover:bg-white/5"
+            className="shrink-0 rounded-full border border-dc-border px-4 py-2 text-sm text-dc-text hover:bg-dc-surface-muted"
             onClick={() => void exportCsv()}
           >
             Export CSV
@@ -532,14 +613,14 @@ export function RegistrantsPanel({
       </div>
       {!readOnly ? (
         <>
-          <details className="rounded-xl border border-white/10 bg-black/25 p-3 text-sm text-slate-300">
+          <details className="rounded-xl border border-dc-border bg-dc-elevated-muted p-3 text-sm text-dc-muted">
             <summary className="cursor-pointer text-dc-accent">Import CSV</summary>
-            <p className="mt-2 text-xs text-slate-500">
+            <p className="mt-2 text-xs text-dc-muted">
               Header row required. Columns: <strong>name</strong>, <strong>category</strong> (must match a registration
-              category), optional email, legal_name, external_source, external_id.
+              category), optional email, legal_name, payment_status, external_source, external_id.
             </p>
             <textarea
-              className="mt-2 w-full min-h-[100px] rounded border border-white/10 bg-black/40 p-2 font-mono text-xs text-white"
+              className="mt-2 w-full min-h-[100px] rounded border border-dc-border bg-dc-surface-muted p-2 font-mono text-xs text-dc-text"
               placeholder={'name,category,email\nAlex,Full Weekend,a@b.co'}
               id="dc-import-csv"
             />
@@ -561,14 +642,14 @@ export function RegistrantsPanel({
               Run CSV import
             </button>
           </details>
-          <details className="rounded-xl border border-white/10 bg-black/25 p-3 text-sm text-slate-300">
+          <details className="rounded-xl border border-dc-border bg-dc-elevated-muted p-3 text-sm text-dc-muted">
           <summary className="cursor-pointer text-dc-accent">Import JSON</summary>
-          <p className="mt-2 text-xs text-slate-500">
+          <p className="mt-2 text-xs text-dc-muted">
             Body shape: {'{'} &quot;rows&quot;: [ {'{'} &quot;sceneDisplayName&quot;, &quot;categoryName&quot; or
             &quot;categoryId&quot;, optional &quot;email&quot;, &quot;status&quot; {'}'} ] {'}'}
           </p>
           <textarea
-            className="mt-2 w-full min-h-[100px] rounded border border-white/10 bg-black/40 p-2 font-mono text-xs text-white"
+            className="mt-2 w-full min-h-[100px] rounded border border-dc-border bg-dc-surface-muted p-2 font-mono text-xs text-dc-text"
             placeholder='{"rows":[{"sceneDisplayName":"Alex","categoryName":"Full Weekend","email":"a@b.co"}]}'
             id="dc-import-json"
           />
@@ -586,6 +667,8 @@ export function RegistrantsPanel({
         </details>
         </>
       ) : null}
+      {loading ? <p className="text-sm text-dc-muted">Loading signups…</p> : null}
+      {loadFailed && err ? <p className="text-sm text-red-700">{err}</p> : null}
       {total > 0 ? (
         <p className="text-xs text-dc-muted">
           Showing {rows.length} of {total} signup{total === 1 ? '' : 's'}
@@ -653,8 +736,16 @@ export function RegistrantsPanel({
             <>
               <h3 className="font-serif text-lg text-dc-text">{selected.sceneDisplayName}</h3>
               <p className="text-xs text-dc-muted">{selected.id}</p>
-              <div className="mt-3 flex gap-1 border-b border-dc-border pb-2">
-                {(['general', 'vetting'] as const).map((t) => (
+              <div className="mt-3 flex flex-wrap gap-1 border-b border-dc-border pb-2">
+                {(
+                  [
+                    ['general', 'General'],
+                    ['answers', 'Answers'],
+                    ['payment', 'Payment'],
+                    ['tags', 'Tags'],
+                    ['vetting', 'Vetting'],
+                  ] as const
+                ).map(([t, label]) => (
                   <button
                     key={t}
                     type="button"
@@ -665,16 +756,36 @@ export function RegistrantsPanel({
                     }
                     onClick={() => setDetailTab(t)}
                   >
-                    {t === 'general' ? 'General' : 'Vetting'}
+                    {label}
                   </button>
                 ))}
               </div>
               {detailTab === 'general' ? (
                 <div className="mt-3 space-y-3 text-sm">
                   <label className="block text-xs uppercase text-dc-muted">
+                    Registration category
+                    <select
+                      className="mt-1 w-full rounded-lg border border-dc-border bg-dc-surface px-3 py-2 text-dc-text"
+                      disabled={readOnly}
+                      value={detailCategoryId}
+                      onChange={(e) => setDetailCategoryId(e.target.value)}
+                    >
+                      {categories.map((c) => (
+                        <option key={c.id} value={c.id}>
+                          {c.name}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+                  <p className="text-[11px] leading-snug text-dc-muted">
+                    Change ticket type here for anyone — including people who signed up under a different category or
+                    without a staff/comp code. For shift assignments, also add them on{' '}
+                    <strong className="font-medium text-dc-text">Staff roster (overview)</strong>.
+                  </p>
+                  <label className="block text-xs uppercase text-dc-muted">
                     Status
                     <select
-                      className="mt-1 w-full rounded-lg border border-dc-border bg-dc-surface px-3 py-2"
+                      className="mt-1 w-full rounded-lg border border-dc-border bg-dc-surface px-3 py-2 text-dc-text"
                       disabled={readOnly}
                       value={detailStatus}
                       onChange={(e) => setDetailStatus(e.target.value)}
@@ -706,6 +817,81 @@ export function RegistrantsPanel({
                       placeholder="Internal notes"
                     />
                   ) : null}
+                  {!selected.personId && selected.email && !readOnly ? (
+                    <button
+                      type="button"
+                      disabled={linkBusy}
+                      className="w-full rounded-full border border-dc-accent-border px-3 py-2 text-xs text-dc-accent hover:bg-dc-accent-muted disabled:opacity-40"
+                      onClick={() => void linkAccount()}
+                    >
+                      {linkBusy ? 'Linking…' : 'Link to roster person by email'}
+                    </button>
+                  ) : null}
+                </div>
+              ) : detailTab === 'answers' ? (
+                <div className="mt-3 space-y-3 text-sm">
+                  {formQuestions.length === 0 ? (
+                    <p className="text-xs text-dc-muted">No registration form questions configured.</p>
+                  ) : (
+                    formQuestions.map((q) => (
+                      <label key={q.id} className="block text-xs text-dc-muted">
+                        {q.label}
+                        <input
+                          className="mt-1 w-full rounded-lg border border-dc-border bg-dc-surface px-3 py-2 text-sm"
+                          disabled={readOnly}
+                          value={
+                            typeof detailAnswers[q.id] === 'string' ||
+                            typeof detailAnswers[q.id] === 'number'
+                              ? String(detailAnswers[q.id])
+                              : detailAnswers[q.id] != null
+                                ? JSON.stringify(detailAnswers[q.id])
+                                : ''
+                          }
+                          onChange={(e) => setDetailAnswers((a) => ({ ...a, [q.id]: e.target.value }))}
+                        />
+                      </label>
+                    ))
+                  )}
+                </div>
+              ) : detailTab === 'payment' ? (
+                <div className="mt-3 space-y-3 text-sm">
+                  <label className="block text-xs uppercase text-dc-muted">
+                    Imported payment status
+                    <select
+                      className="mt-1 w-full rounded-lg border border-dc-border bg-dc-surface px-3 py-2"
+                      disabled={readOnly}
+                      value={detailPaymentStatus}
+                      onChange={(e) => setDetailPaymentStatus(e.target.value)}
+                    >
+                      {PAYMENT_STATUSES.map((s) => (
+                        <option key={s || 'none'} value={s}>
+                          {s ? s : '— not set —'}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+                </div>
+              ) : detailTab === 'tags' ? (
+                <div className="mt-3 space-y-2 text-sm">
+                  {registrantTags.length === 0 ? (
+                    <p className="text-xs text-dc-muted">No registrant-scoped tags.</p>
+                  ) : (
+                    registrantTags.map((tag) => (
+                      <label key={tag.id} className="flex items-center gap-2 text-dc-text">
+                        <input
+                          type="checkbox"
+                          disabled={readOnly}
+                          checked={detailTagIds.includes(tag.id)}
+                          onChange={(e) => {
+                            setDetailTagIds((ids) =>
+                              e.target.checked ? [...ids, tag.id] : ids.filter((id) => id !== tag.id),
+                            )
+                          }}
+                        />
+                        {tag.name}
+                      </label>
+                    ))
+                  )}
                 </div>
               ) : (
                 <div className="mt-3 space-y-3 text-sm">
@@ -735,7 +921,7 @@ export function RegistrantsPanel({
                 <button
                   type="button"
                   disabled={busy}
-                  className="mt-4 w-full rounded-full bg-dc-accent py-2 text-sm font-semibold text-white disabled:opacity-40"
+                  className="mt-4 w-full rounded-full bg-dc-accent py-2 text-sm font-semibold text-dc-accent-foreground disabled:opacity-40"
                   onClick={() => void saveDetail()}
                 >
                   Save
@@ -750,7 +936,7 @@ export function RegistrantsPanel({
           <button
             type="button"
             disabled={loadingMore}
-            className="rounded-full border border-white/20 px-4 py-2 text-sm text-slate-200 hover:bg-white/5 disabled:opacity-40"
+            className="rounded-full border border-dc-border px-4 py-2 text-sm text-dc-text hover:bg-dc-surface-muted disabled:opacity-40"
             onClick={() => void loadMore()}
           >
             {loadingMore ? 'Loading…' : `Load more (${rows.length} of ${total})`}

@@ -7,7 +7,7 @@ import {
 } from '@/components/dancecard/organizer/settings/eventSettingsConfig'
 
 const INPUT_CLASS =
-  'dc-datetime-local-input w-full cursor-pointer rounded-lg border border-white/10 bg-black/40 px-3 py-2 pr-11 text-sm text-white [color-scheme:dark] hover:border-dc-accent-border focus:border-dc-accent-border focus:outline-none focus:ring-1 focus:ring-dc-accent-border/40 disabled:cursor-not-allowed disabled:opacity-50'
+  'dc-datetime-local-input dc-field-input w-full cursor-pointer rounded-lg border border-dc-border bg-dc-elevated-solid px-3 py-2 pr-11 text-sm text-dc-text hover:border-dc-accent-border focus:border-dc-accent-border focus:outline-none focus:ring-1 focus:ring-dc-accent-border/40 disabled:cursor-not-allowed disabled:opacity-50'
 
 function CalendarIcon({ className }: { className?: string }) {
   return (
@@ -60,7 +60,7 @@ export function DatetimeLocalField({
   const id = useId()
   const inputRef = useRef<HTMLInputElement>(null)
   const isSettings = variant === 'settings'
-  const labelClass = isSettings ? SETTINGS_LABEL_CLASS : 'block text-xs text-slate-400'
+  const labelClass = isSettings ? SETTINGS_LABEL_CLASS : 'block text-xs text-dc-muted'
   const inputClass = isSettings ? `${SETTINGS_FIELD_CLASS} dc-datetime-local-input !pr-11` : INPUT_CLASS
 
   return (
@@ -123,7 +123,7 @@ export function DatetimeLocalField({
             openPicker(inputRef.current)
           }}
         >
-          <CalendarIcon className="h-5 w-5 drop-shadow-[0_0_6px_rgba(198,167,94,0.45)]" />
+          <CalendarIcon className="h-5 w-5 text-dc-accent" />
         </button>
       </div>
       {!disabled && hint ? (
@@ -131,7 +131,7 @@ export function DatetimeLocalField({
           className={
             isSettings
               ? 'mt-1 text-xs font-normal normal-case text-dc-muted'
-              : 'mt-1 text-[10px] leading-snug text-slate-500'
+              : 'mt-1 text-[10px] leading-snug text-dc-muted'
           }
         >
           {hint}

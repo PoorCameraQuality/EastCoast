@@ -80,6 +80,20 @@ const baseMigrationFiles = [
   path.join(root, 'database', 'dancecard_037_map_pin_rotation.sql'),
   path.join(root, 'database', 'dancecard_038_trusted_roles.sql'),
   path.join(root, 'database', 'dancecard_039_attendee_profile.sql'),
+  path.join(root, 'database', 'dancecard_040_ops_summary_embed.sql'),
+  path.join(root, 'database', 'dancecard_041_door_checkin_tokens.sql'),
+  path.join(root, 'database', 'dancecard_042_safety_incidents.sql'),
+  path.join(root, 'database', 'dancecard_043_program_slot_audit.sql'),
+  path.join(root, 'database', 'dancecard_044_registration_question_categories.sql'),
+  path.join(root, 'database', 'dancecard_045_ics_reminders.sql'),
+  path.join(root, 'database', 'dancecard_046_person_follows.sql'),
+  path.join(root, 'database', 'dancecard_047_compare_privacy.sql'),
+  path.join(root, 'database', 'dancecard_048_compare_requests.sql'),
+  path.join(root, 'database', 'dancecard_049_iso_board.sql'),
+  path.join(root, 'database', 'dancecard_050_session_feedback.sql'),
+  path.join(root, 'database', 'dancecard_051_registrant_badge_tagline.sql'),
+  path.join(root, 'database', 'dancecard_052_badge_logo.sql'),
+  path.join(root, 'database', 'dancecard_053_iso_comments.sql'),
 ]
 
 const defaultFiles =

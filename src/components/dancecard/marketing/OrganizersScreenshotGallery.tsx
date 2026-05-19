@@ -9,6 +9,13 @@ import {
   type MarketingFeature,
 } from '@/components/dancecard/marketing/marketingWalkthroughData'
 
+/** Native export size for walkthrough PNGs in `public/dancecard/organizers/walkthrough/`. */
+const SHOT_WIDTH = 1920
+const SHOT_HEIGHT = 1200
+
+/** UI screenshots: skip Next optimization (WebP resize softens small text). */
+const SHOT_SIZES_THUMB = '(max-width: 640px) 100vw, (max-width: 1024px) 90vw, 1100px'
+
 type FlatShot = {
   src: string
   alt: string
@@ -24,6 +31,31 @@ function flattenFeatures(features: readonly MarketingFeature[]): FlatShot[] {
     })
   }
   return out
+}
+
+function MarketingScreenshot({
+  src,
+  alt,
+  className,
+  priority,
+}: {
+  src: string
+  alt: string
+  className?: string
+  priority?: boolean
+}) {
+  return (
+    <Image
+      src={src}
+      alt={alt}
+      width={SHOT_WIDTH}
+      height={SHOT_HEIGHT}
+      unoptimized
+      sizes={SHOT_SIZES_THUMB}
+      priority={priority}
+      className={className}
+    />
+  )
 }
 
 function ScreenshotLightbox({
@@ -63,18 +95,18 @@ function ScreenshotLightbox({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black/92 p-4 backdrop-blur-sm sm:p-6"
+      className="fixed inset-0 z-50 flex flex-col bg-dc-text/50 sm:justify-center sm:bg-dc-text/45 sm:p-6 backdrop-blur-sm"
       role="dialog"
       aria-modal="true"
       aria-label={`${shot.feature.title} screenshot enlarged`}
       onClick={onClose}
     >
       <div
-        className="relative flex max-h-[92vh] w-full max-w-6xl flex-col"
+        className="relative flex min-h-0 w-full flex-1 flex-col sm:max-h-[92vh] sm:max-w-6xl"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="mb-3 flex shrink-0 items-center justify-between gap-4">
-          <div>
+        <div className="flex shrink-0 items-start justify-between gap-3 border-b border-dc-border px-3 pb-3 pt-[max(0.75rem,env(safe-area-inset-top))] sm:mb-3 sm:border-0 sm:px-0 sm:pt-0">
+          <div className="min-w-0 pr-2">
             <p className="text-xs font-semibold uppercase tracking-wider text-dc-accent">
               {chapterLabel} · {shot.feature.label}
             </p>
@@ -83,26 +115,33 @@ function ScreenshotLightbox({
           <button
             type="button"
             onClick={onClose}
-            className="rounded-lg border border-dc-border bg-dc-elevated-muted px-3 py-2 text-sm font-medium text-dc-text transition hover:border-dc-accent-border hover:bg-dc-elevated-solid/80"
+            className="shrink-0 rounded-lg border border-dc-border bg-dc-elevated-muted px-3 py-2 text-sm font-medium text-dc-text transition hover:border-dc-accent-border hover:bg-dc-elevated-solid/80"
           >
             Close
           </button>
         </div>
 
-        <div className="relative min-h-0 flex-1 overflow-hidden rounded-xl border border-dc-border bg-dc-surface-muted shadow-2xl ring-1 ring-white/10">
-          <Image
+        <p className="shrink-0 px-3 pb-2 text-center text-[11px] text-dc-muted sm:hidden">
+          Pinch or drag to zoom · scroll sideways for detail
+        </p>
+
+        <div className="min-h-0 flex-1 overflow-auto overscroll-contain px-1 pb-[max(0.5rem,env(safe-area-inset-bottom))] sm:overflow-hidden sm:rounded-xl sm:border sm:border-dc-border sm:bg-dc-surface-muted sm:px-0 sm:shadow-2xl sm:ring-1 sm:ring-dc-border">
+          {/* Native img: full-resolution file + scroll/pinch on mobile */}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
             src={shot.src}
             alt={shot.alt}
-            width={1920}
-            height={1200}
-            className="h-auto max-h-[calc(92vh-7rem)] w-full object-contain"
-            sizes="100vw"
-            priority
+            width={SHOT_WIDTH}
+            height={SHOT_HEIGHT}
+            decoding="async"
+            draggable={false}
+            className="mx-auto block h-auto w-auto min-w-[min(100%,1920px)] max-w-none select-none sm:h-auto sm:max-h-[calc(92vh-9rem)] sm:w-full sm:min-w-0 sm:object-contain"
+            style={{ width: 'max(100%, min(1920px, 140vw))' }}
           />
         </div>
 
         {shots.length > 1 ? (
-          <div className="mt-4 flex items-center justify-between gap-3">
+          <div className="flex shrink-0 items-center justify-between gap-3 px-3 py-3 sm:mt-4 sm:px-0">
             <button
               type="button"
               onClick={onPrev}
@@ -125,7 +164,9 @@ function ScreenshotLightbox({
           </div>
         ) : null}
 
-        <p className="mt-3 text-center text-xs text-dc-muted">Press Esc to close · Arrow keys to browse</p>
+        <p className="hidden shrink-0 text-center text-xs text-dc-muted sm:mt-3 sm:block">
+          Press Esc to close · Arrow keys to browse
+        </p>
       </div>
     </div>
   )
@@ -148,16 +189,26 @@ function FeatureSection({
       id={feature.id}
       className="scroll-mt-28 border-t border-dc-border pt-12 first:border-t-0 first:pt-0"
     >
-      <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)] lg:items-start">
-        <div>
+      <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)] lg:items-start lg:gap-8">
+        <div className="order-2 lg:order-1">
           <p className="text-xs font-semibold uppercase tracking-[0.28em] text-dc-accent/90">{feature.label}</p>
           <h3 className="mt-2 font-serif text-2xl text-dc-text sm:text-3xl">{feature.title}</h3>
           <p className="mt-3 text-sm leading-relaxed text-dc-muted sm:text-base">{feature.body}</p>
         </div>
-        <div className={multi ? 'grid gap-4 sm:grid-cols-2' : undefined}>
+        <div
+          className={`order-1 -mx-4 w-[calc(100%+2rem)] sm:mx-0 sm:w-full lg:order-2 ${multi ? 'grid grid-cols-1 gap-4 sm:grid-cols-2' : ''}`}
+        >
           {featureFlat.map((shot) => {
             const flatIndex = flatShots.indexOf(shot)
-            return <ShotButton key={`${shot.src}-${shot.shotIndex}`} shot={shot} flatIndex={flatIndex} onOpen={onOpen} wide={feature.wide && !multi} />
+            return (
+              <ShotButton
+                key={`${shot.src}-${shot.shotIndex}`}
+                shot={shot}
+                flatIndex={flatIndex}
+                onOpen={onOpen}
+                wide={feature.wide && !multi}
+              />
+            )
           })}
         </div>
       </div>
@@ -180,23 +231,21 @@ function ShotButton({
     <button
       type="button"
       onClick={() => onOpen(flatIndex)}
-      className={`group relative block w-full cursor-zoom-in overflow-hidden rounded-xl border border-dc-border bg-dc-surface-muted text-left shadow-[0_16px_40px_rgba(0,0,0,0.35)] ring-1 ring-white/5 transition hover:border-dc-accent-border hover:ring-dc-accent/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-dc-accent ${wide ? 'sm:col-span-2' : ''}`}
+      className={`group relative block w-full cursor-zoom-in overflow-hidden rounded-none border-y border-dc-border bg-dc-surface-muted text-left shadow-[0_16px_40px_rgba(0,0,0,0.35)] ring-1 ring-dc-border/40 transition hover:border-dc-accent-border hover:ring-dc-accent/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-dc-accent sm:rounded-xl sm:border ${wide ? 'sm:col-span-2' : ''}`}
       aria-label={`View full size: ${shot.feature.label}`}
     >
-      <Image
+      <MarketingScreenshot
         src={shot.src}
         alt={shot.alt}
-        width={1440}
-        height={900}
-        className="h-auto w-full transition duration-200 group-hover:scale-[1.01]"
-        sizes={wide ? '(min-width: 1024px) 720px, 100vw' : '(min-width: 1024px) 480px, 100vw'}
+        className="h-auto w-full transition duration-200 sm:group-hover:scale-[1.01]"
       />
       <span
-        className="pointer-events-none absolute inset-x-0 bottom-0 flex justify-center bg-gradient-to-t from-black/75 via-black/25 to-transparent pb-3 pt-10 opacity-0 transition group-hover:opacity-100 group-focus-visible:opacity-100"
+        className="pointer-events-none absolute inset-x-0 bottom-0 flex justify-center bg-gradient-to-t from-black/80 via-black/30 to-transparent pb-3 pt-12 opacity-100 transition sm:pt-10 sm:opacity-0 sm:group-hover:opacity-100 sm:group-focus-visible:opacity-100"
         aria-hidden
       >
         <span className="rounded-full bg-dc-elevated-solid/90 px-3 py-1 text-xs font-medium text-dc-text">
-          Click to enlarge
+          <span className="sm:hidden">Tap to enlarge</span>
+          <span className="hidden sm:inline">Click to enlarge</span>
         </span>
       </span>
     </button>

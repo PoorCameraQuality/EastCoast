@@ -338,7 +338,7 @@ export function EventSettingsPanel({
             <button
               type="button"
               disabled={saving}
-              className="rounded-full bg-dc-accent px-4 py-2 text-sm font-semibold text-white disabled:opacity-40"
+              className="rounded-full bg-dc-accent px-4 py-2 text-sm font-semibold text-dc-accent-foreground disabled:opacity-40"
               onClick={() => void save({ agreementsConfig: event.agreementsConfig })}
             >
               Save agreements settings
@@ -359,7 +359,7 @@ export function EventSettingsPanel({
               <button
                 type="button"
                 disabled={saving}
-                className="rounded-full bg-dc-accent px-4 py-2 text-sm font-semibold text-white disabled:opacity-40"
+                className="rounded-full bg-dc-accent px-4 py-2 text-sm font-semibold text-dc-accent-foreground disabled:opacity-40"
                 onClick={() => void save({ attendeeGuideJson: event.attendeeGuideJson })}
               >
                 Save attendee guide
@@ -382,7 +382,7 @@ export function EventSettingsPanel({
             <button
               type="button"
               disabled={saving}
-              className="rounded-full bg-dc-accent px-4 py-2 text-sm font-semibold text-white disabled:opacity-40"
+              className="rounded-full bg-dc-accent px-4 py-2 text-sm font-semibold text-dc-accent-foreground disabled:opacity-40"
               onClick={() => void save({ attendeeProfileConfig: event.attendeeProfileConfig })}
             >
               Save attendee profile settings

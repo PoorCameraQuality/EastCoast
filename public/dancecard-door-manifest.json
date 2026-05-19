@@ -1,0 +1,10 @@
+{
+  "name": "Dancecard Door Check-in",
+  "short_name": "Door",
+  "description": "Fast event check-in kiosk",
+  "start_url": "/organizer/dancecard",
+  "display": "standalone",
+  "background_color": "#f4f0e8",
+  "theme_color": "#8b6914",
+  "orientation": "portrait"
+}

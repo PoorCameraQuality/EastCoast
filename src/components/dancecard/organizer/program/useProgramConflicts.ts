@@ -7,17 +7,20 @@ import type { DancecardConflict } from '@/lib/dancecard/conflictScanner'
 export function useProgramConflicts(eventSlug: string) {
   const [conflicts, setConflicts] = useState<DancecardConflict[]>([])
   const [loading, setLoading] = useState(false)
+  const [loadError, setLoadError] = useState<string | null>(null)
 
   const refresh = useCallback(async () => {
     setLoading(true)
+    setLoadError(null)
     try {
       const res = await organizerDancecardFetch<{ conflicts: DancecardConflict[] }>(
         eventSlug,
         '/program-conflicts',
       )
       setConflicts(res.conflicts ?? [])
-    } catch {
+    } catch (e) {
       setConflicts([])
+      setLoadError(e instanceof Error ? e.message : 'Could not load schedule conflicts')
     } finally {
       setLoading(false)
     }
@@ -27,5 +30,5 @@ export function useProgramConflicts(eventSlug: string) {
     void refresh()
   }, [refresh])
 
-  return { conflicts, loading, refresh }
+  return { conflicts, loading, loadError, refresh }
 }

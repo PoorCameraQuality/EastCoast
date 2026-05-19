@@ -44,7 +44,7 @@ export default function PrintVenueSignsPage() {
         </button>
       </div>
       <h1 className="font-serif text-2xl">{title || slug}</h1>
-      <p className="text-sm text-slate-600">Venue / room signs</p>
+      <p className="text-sm text-dc-muted">Venue / room signs</p>
       <div className="mt-8 grid gap-8">
         {locations.map((l) => (
           <section key={l.id} className="sign-card rounded-lg border-2 border-black p-6">
@@ -65,7 +65,7 @@ export default function PrintVenueSignsPage() {
           </section>
         ))}
       </div>
-      {!locations.length && !err ? <p className="mt-8 text-slate-500">No locations configured.</p> : null}
+      {!locations.length && !err ? <p className="mt-8 text-dc-muted">No locations configured.</p> : null}
     </div>
   )
 }

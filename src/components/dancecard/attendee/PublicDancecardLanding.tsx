@@ -256,7 +256,7 @@ export function PublicDancecardLanding({
                   {HOW_IT_WORKS.map((step, i) => (
                     <li
                       key={step.title}
-                      className="rounded-lg border border-[var(--lux-line)]/60 bg-black/20 px-2.5 py-2 lg:flex lg:items-start lg:gap-2 lg:py-1.5"
+                      className="rounded-lg border border-[var(--lux-line)]/60 bg-dc-elevated-muted px-2.5 py-2 lg:flex lg:items-start lg:gap-2 lg:py-1.5"
                     >
                       <span className="font-serif text-sm text-[var(--lux-gold-dim)] lg:text-xs">{i + 1}</span>
                       <div className="lg:min-w-0">

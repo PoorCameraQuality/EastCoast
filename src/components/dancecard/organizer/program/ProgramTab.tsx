@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useGuideState } from '@/lib/dancecard/guides/useGuideState'
 import { ProgramScheduleGrid } from '@/components/dancecard/organizer/ProgramScheduleGrid'
 import { ConflictDock } from '@/components/dancecard/organizer/program/ConflictDock'
@@ -20,7 +20,7 @@ type Props = {
   onRefresh: () => Promise<void>
   readOnly: boolean
   initialSlotId: string | null
-  onSlotLinkChange: (slotId: string) => void
+  onSlotLinkChange: (slotId: string | null) => void
   hasEventWindow: boolean
   onGoSettings: () => void
   onConflictsScanned?: () => void
@@ -51,12 +51,20 @@ export function ProgramTab({
   publishFilterDraft,
   wideCanvas,
 }: Props) {
-  const { conflicts, loading, refresh } = useProgramConflicts(eventSlug)
+  const { conflicts, loading, loadError, refresh } = useProgramConflicts(eventSlug)
   const { labels: profileLabels } = useEventProfileLabels({ eventSlug, source: 'organizer', eventProfile })
   const { reset: startProgramTour } = useGuideState(eventSlug, 'program-rehearsal')
   const [view, setView] = useState<'grid' | 'list'>('grid')
   const [drawerTab, setDrawerTab] = useState<'overview' | 'edit' | 'privacy' | undefined>()
   const [focusSlotId, setFocusSlotId] = useState<string | null>(initialSlotId)
+
+  useEffect(() => {
+    if (!initialSlotId) {
+      setFocusSlotId(null)
+      return
+    }
+    if (slots.some((s) => s.id === initialSlotId)) setFocusSlotId(initialSlotId)
+  }, [initialSlotId, slots])
 
   if (!hasEventWindow) {
     return <EventSetupRequired onGoSettings={onGoSettings} />
@@ -101,13 +109,25 @@ export function ProgramTab({
           Grid tour
         </button>
       </div>
+      {view === 'grid' ? (
+        <p className="rounded-lg border border-dc-border-subtle bg-dc-surface-muted/50 px-3 py-2 text-xs text-dc-muted">
+          Click the gold <span className="font-semibold text-dc-accent">Edit</span> button on any block, or{' '}
+          <span className="font-medium text-dc-text">double-click</span> the block, to assign people and change details.
+          Drag the <span className="font-medium text-dc-text">title</span> to move times.
+        </p>
+      ) : null}
       {publishFilterDraft ? (
         <p className="rounded-lg border border-dc-warning/30 bg-dc-warning-muted px-3 py-2 text-sm text-dc-warning">
           Showing draft (unpublished) activities only. Publish from the activity drawer when ready.
         </p>
       ) : null}
+      {loadError ? (
+        <p className="rounded-lg border border-dc-danger/30 bg-dc-danger-muted px-3 py-2 text-sm text-dc-danger">
+          {loadError}
+        </p>
+      ) : null}
       <ConflictDock
-        conflicts={loading ? [] : conflicts}
+        conflicts={loading || loadError ? [] : conflicts}
         slots={slots}
         onOpenSlot={(slotId, opts) => openSlot(slotId, opts)}
         onOpenBoth={(a) => openSlot(a)}

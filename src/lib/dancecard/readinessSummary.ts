@@ -2,7 +2,7 @@ import { fetchProgramSlotRowsForEvent } from '@/lib/dancecard/organizerProgramSl
 import { fetchStaffShiftRowsForEvent } from '@/lib/dancecard/organizerStaffShiftsData'
 import { READINESS_ACTION } from '@/lib/dancecard/readinessHumanCopy'
 import type { ReadinessCheck } from '@/lib/dancecard/readinessTypes'
-import { isMissingTable } from '@/lib/dancecard/supabaseColumnFallback'
+import { isMissingColumn, isMissingTable } from '@/lib/dancecard/supabaseColumnFallback'
 import type { SupabaseClient } from '@supabase/supabase-js'
 
 export type ReadinessSummaryMeta = {
@@ -42,7 +42,12 @@ export async function buildReadinessSummaryChecks(
     fetchProgramSlotRowsForEvent(admin, eventId),
     fetchStaffShiftRowsForEvent(admin, eventId).then(
       (rows) => ({ rows, failed: false as const }),
-      () => ({ rows: [] as Awaited<ReturnType<typeof fetchStaffShiftRowsForEvent>>, failed: true as const }),
+      (err) => {
+        if (isMissingTable(err, 'dancecard_staff_shifts') || isMissingColumn(err)) {
+          return { rows: [] as Awaited<ReturnType<typeof fetchStaffShiftRowsForEvent>>, failed: true as const }
+        }
+        throw err
+      },
     ),
     admin
       .from('dancecard_registration_categories')

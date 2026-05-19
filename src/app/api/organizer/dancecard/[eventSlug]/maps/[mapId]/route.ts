@@ -14,12 +14,15 @@ export async function DELETE(
     const { admin, eventId } = ctx
     const event = await loadEventBySlugAnyStatus(admin, context.params.eventSlug)
     if (!event || event.id !== eventId) return NextResponse.json({ error: 'Not found' }, { status: 404 })
-    const { error } = await admin
+    const { data: deleted, error } = await admin
       .from('dancecard_event_maps')
       .delete()
       .eq('id', context.params.mapId)
       .eq('event_id', eventId)
+      .select('id')
+      .maybeSingle()
     if (error) throw error
+    if (!deleted) return NextResponse.json({ error: 'Not found' }, { status: 404 })
     return NextResponse.json({ ok: true })
   } catch (e) {
     return organizerErrorResponse(e)

@@ -142,7 +142,7 @@ export function OrganizerHubClient({ open: openProp, defaultOpen = false, onOpen
     >
       <button
         type="button"
-        className="absolute inset-0 bg-black/60"
+        className="absolute inset-0 bg-dc-surface/80"
         aria-label="Close"
         onClick={() => setOpen(false)}
       />

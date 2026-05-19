@@ -8,6 +8,8 @@ import { eventWindowFromRow, parseIso } from '@/lib/dancecard/busy'
 import { slotVisibleToAttendee } from '@/lib/dancecard/programSlotPublication'
 import { ZodError } from 'zod'
 
+export const dynamic = 'force-dynamic'
+
 export async function PUT(
   request: NextRequest,
   context: { params: { eventSlug: string } }

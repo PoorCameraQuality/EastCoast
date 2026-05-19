@@ -14,7 +14,7 @@ export default function DancecardProductPage() {
     <div className="min-h-screen bg-gradient-to-b from-dc-surface via-dc-surface-muted to-dc-surface text-dc-text">
       <div className="mx-auto max-w-3xl px-4 py-12 sm:px-6 sm:py-16 lg:py-20">
         <p className="text-xs font-semibold uppercase tracking-[0.35em] text-dc-accent/90">East Coast Kink Events</p>
-        <h1 className="mt-3 font-serif text-4xl font-bold tracking-tight text-dc-text sm:text-5xl">Dancecard</h1>
+        <h1 className="mt-3 font-serif text-3xl font-bold tracking-tight text-dc-text sm:text-4xl lg:text-5xl">Dancecard</h1>
         <p className="mt-4 text-lg leading-relaxed text-dc-muted">
           One product, two modes: attendees carry a literal dancecard for program, compare, and reservations; organizers
           run program, registration, staff, and safety from a single console.
@@ -70,6 +70,10 @@ export default function DancecardProductPage() {
         </section>
 
         <p className="mt-10 text-center text-sm text-dc-muted">
+          <Link href="/dancecard/palette-lab" className="text-dc-accent underline hover:text-dc-accent-hover">
+            Palette lab
+          </Link>
+          {' · '}
           <Link href={DANCECARD_DEFAULT_EVENT_PATH} className="text-dc-accent underline hover:text-dc-accent-hover">
             Demo event (paf26)
           </Link>

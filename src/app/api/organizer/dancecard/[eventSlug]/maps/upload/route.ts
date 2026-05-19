@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 
 import { assertOrganizerCanMutate, organizerErrorResponse, requireOrganizerForSlug } from '@/lib/dancecard/organizerAuth'
 
-import { DANCECARD_MAPS_BUCKET, sanitizeMapObjectName } from '@/lib/dancecard/dancecardMapsConstants'
+import { DANCECARD_MAPS_BUCKET, sanitizeStorageObjectName, storageSetupHint } from '@/lib/dancecard/dancecardStorage'
 
 import { loadEventBySlugAnyStatus } from '@/lib/dancecard/routeCommon'
 
@@ -100,7 +100,7 @@ export async function POST(request: NextRequest, context: { params: { eventSlug:
 
     const rawName = (file as File).name || 'map.png'
 
-    const path = `${eventId}/${crypto.randomUUID()}-${sanitizeMapObjectName(rawName)}`
+    const path = `${eventId}/${crypto.randomUUID()}-${sanitizeStorageObjectName(rawName)}`
 
 
 
@@ -118,7 +118,7 @@ export async function POST(request: NextRequest, context: { params: { eventSlug:
 
         {
 
-          error: `Storage upload failed. Create bucket "${DANCECARD_MAPS_BUCKET}" in Supabase and grant service role upload.`,
+          error: `Storage upload failed. ${storageSetupHint(DANCECARD_MAPS_BUCKET)}`,
 
         },
 

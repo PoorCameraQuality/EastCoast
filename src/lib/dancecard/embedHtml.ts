@@ -1,4 +1,5 @@
 import type { PublicProgramSlotDto } from '@/lib/dancecard/publicProgramSlotsData'
+import { programSlotDisplayRoom } from '@/lib/dancecard/programSlotDisplayRoom'
 import { assertHttpsImageUrl } from '@/lib/security/safeUrl'
 
 function esc(s: string) {
@@ -37,7 +38,7 @@ export function buildScheduleEmbedHtml(
     .map(
       (s) =>
         `<tr><td>${esc(new Date(s.startsAt).toLocaleString())}</td><td>${esc(s.title)}</td><td>${esc(
-          s.room ?? '',
+          programSlotDisplayRoom(s),
         )}</td><td>${esc(s.trackDisplay ?? s.track ?? '')}</td></tr>`,
     )
     .join('')
@@ -54,7 +55,7 @@ export function buildScheduleEmbedHtml(
   const postMessage = embedPostMessageScript(opts.parentOrigin)
   return `<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><title>${esc(
     title,
-  )}</title><style>${rootStyle}body{font-family:system-ui,sans-serif;background:var(--dc-surface,#050504);color:var(--dc-text,#f7f3eb);margin:0;padding:12px}a{color:var(--event-accent,var(--dc-accent,#c6a75e))}table{width:100%;border-collapse:collapse;font-size:13px}th,td{border-bottom:1px solid rgba(255,255,255,.08);padding:6px 4px;text-align:left}th{color:#9a9288;font-weight:600}@media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}</style></head><body>${label}${fullLink}<h1 style="font-size:18px;margin:0 0 12px">${esc(
+  )}</title><style>${rootStyle}body{font-family:system-ui,sans-serif;background:var(--dc-surface,#f4f0e8);color:var(--dc-text,#1c1814);margin:0;padding:12px}a{color:var(--event-accent,var(--dc-accent,#8b6914))}table{width:100%;border-collapse:collapse;font-size:13px}th,td{border-bottom:1px solid rgba(28,24,20,.12);padding:6px 4px;text-align:left}th{color:#4f483f;font-weight:600}@media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}</style></head><body>${label}${fullLink}<h1 style="font-size:18px;margin:0 0 12px">${esc(
     title,
   )}</h1><table><thead><tr><th>Starts</th><th>Session</th><th>Room</th><th>Track</th></tr></thead><tbody>${rows || '<tr><td colspan="4">No published sessions.</td></tr>'}</tbody></table>${postMessage}</body></html>`
 }
@@ -72,13 +73,13 @@ export function buildMapEmbedHtml(
     .map((m) => {
       const src = assertHttpsImageUrl(m.imageUrl)
       if (!src) return ''
-      return `<section style="margin-bottom:16px"><h2 style="font-size:14px;margin:0 0 8px">${esc(m.title)}</h2><img src="${esc(src)}" alt="" style="max-width:100%;border-radius:8px;border:1px solid rgba(255,255,255,.1)"/></section>`
+      return `<section style="margin-bottom:16px"><h2 style="font-size:14px;margin:0 0 8px">${esc(m.title)}</h2><img src="${esc(src)}" alt="" style="max-width:100%;border-radius:8px;border:1px solid #c9b896"/></section>`
     })
     .filter(Boolean)
     .join('')
   return `<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><title>${esc(
     title,
-  )} — maps</title><style>${rootStyle}body{font-family:system-ui,sans-serif;background:var(--dc-surface,#050504);color:var(--dc-text,#f7f3eb);margin:0;padding:12px}@media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}</style></head><body><h1 style="font-size:18px">${esc(
+  )} — maps</title><style>${rootStyle}body{font-family:system-ui,sans-serif;background:var(--dc-surface,#f4f0e8);color:var(--dc-text,#1c1814);margin:0;padding:12px}@media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}</style></head><body><h1 style="font-size:18px">${esc(
     title,
   )}</h1>${blocks || '<p>No map images.</p>'}</body></html>`
 }

@@ -1,17 +1,29 @@
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { parseProfileStored, type AttendeeProfileStored } from '@/lib/dancecard/attendeeProfile'
+import type { CompareVisibility } from '@/lib/dancecard/comparePrivacy'
 import type { ReservationRow, SelectionRow } from './busy'
 
 export type DancecardPrefsLoaded = {
   bufferMinutes: number
   allowCompareByUsername: boolean
+  compareVisibility: CompareVisibility
+  showInCompareDirectory: boolean
+  hideBusyDetailsInCompare: boolean
+  icsRemindBeforeMinutes: number
   profile: AttendeeProfileStored
+}
+
+function parseCompareVisibility(raw: unknown, allowCompareLegacy: boolean): CompareVisibility {
+  if (raw === 'username' || raw === 'link_only' || raw === 'off') return raw
+  return allowCompareLegacy ? 'username' : 'off'
 }
 
 export async function loadPrefs(admin: SupabaseClient, accountId: string): Promise<DancecardPrefsLoaded> {
   const { data, error } = await admin
     .from('dancecard_prefs')
-    .select('buffer_minutes, allow_compare_by_username, profile_json')
+    .select(
+      'buffer_minutes, allow_compare_by_username, profile_json, compare_visibility, show_in_compare_directory, hide_busy_details_in_compare, ics_remind_before_minutes'
+    )
     .eq('account_id', accountId)
     .maybeSingle()
   if (error) {
@@ -19,18 +31,42 @@ export async function loadPrefs(admin: SupabaseClient, accountId: string): Promi
     if (code === '42703') {
       const { data: d2, error: e2 } = await admin
         .from('dancecard_prefs')
-        .select('buffer_minutes')
+        .select('buffer_minutes, allow_compare_by_username, profile_json')
         .eq('account_id', accountId)
         .maybeSingle()
       if (e2) throw e2
-      return { bufferMinutes: d2?.buffer_minutes ?? 0, allowCompareByUsername: false, profile: {} }
+      const allow = Boolean(d2?.allow_compare_by_username)
+      return {
+        bufferMinutes: d2?.buffer_minutes ?? 0,
+        allowCompareByUsername: allow,
+        compareVisibility: allow ? 'username' : 'off',
+        showInCompareDirectory: false,
+        hideBusyDetailsInCompare: false,
+        icsRemindBeforeMinutes: 15,
+        profile: parseProfileStored(d2?.profile_json),
+      }
     }
     throw error
   }
-  const row = data as { buffer_minutes?: number; allow_compare_by_username?: boolean; profile_json?: unknown }
+  const row = data as {
+    buffer_minutes?: number
+    allow_compare_by_username?: boolean
+    profile_json?: unknown
+    compare_visibility?: string
+    show_in_compare_directory?: boolean
+    hide_busy_details_in_compare?: boolean
+    ics_remind_before_minutes?: number
+  }
+  const allowLegacy = Boolean(row?.allow_compare_by_username)
+  const visibility = parseCompareVisibility(row?.compare_visibility, allowLegacy)
   return {
     bufferMinutes: row?.buffer_minutes ?? 0,
-    allowCompareByUsername: Boolean(row?.allow_compare_by_username),
+    allowCompareByUsername: visibility === 'username',
+    compareVisibility: visibility,
+    showInCompareDirectory: Boolean(row?.show_in_compare_directory),
+    hideBusyDetailsInCompare: Boolean(row?.hide_busy_details_in_compare),
+    icsRemindBeforeMinutes:
+      typeof row?.ics_remind_before_minutes === 'number' ? row.ics_remind_before_minutes : 15,
     profile: parseProfileStored(row?.profile_json),
   }
 }
@@ -83,38 +119,86 @@ export async function setPrefsAllowCompareByUsername(
   accountId: string,
   allowCompareByUsername: boolean
 ): Promise<SetPrefsAllowCompareResult> {
-  const updatedAt = new Date().toISOString()
-  const payload = {
-    allow_compare_by_username: allowCompareByUsername,
-    updated_at: updatedAt,
-  } as const
+  return setPrefsCompareVisibility(admin, accountId, allowCompareByUsername ? 'username' : 'off')
+}
 
+export type SetPrefsPatchResult = { ok: true } | { ok: false; reason: 'column_missing' }
+
+async function upsertPrefsPatch(
+  admin: SupabaseClient,
+  accountId: string,
+  payload: Record<string, unknown>
+): Promise<SetPrefsPatchResult> {
+  const updatedAt = new Date().toISOString()
+  const full = { ...payload, updated_at: updatedAt }
   const { data: updated, error: upErr } = await admin
     .from('dancecard_prefs')
-    .update(payload)
+    .update(full)
     .eq('account_id', accountId)
     .select('account_id')
     .maybeSingle()
-
   if (upErr) {
     const code = (upErr as { code?: string }).code
-    if (code === '42703') return { ok: false, reason: 'allow_compare_column_missing' }
+    if (code === '42703') return { ok: false, reason: 'column_missing' }
     throw upErr
   }
-
   if (updated) return { ok: true }
-
   const { error: insErr } = await admin.from('dancecard_prefs').insert({
     account_id: accountId,
     buffer_minutes: 0,
-    ...payload,
+    ...full,
   })
   if (insErr) {
     const code = (insErr as { code?: string }).code
-    if (code === '42703') return { ok: false, reason: 'allow_compare_column_missing' }
+    if (code === '42703') return { ok: false, reason: 'column_missing' }
     throw insErr
   }
   return { ok: true }
+}
+
+export async function setPrefsCompareVisibility(
+  admin: SupabaseClient,
+  accountId: string,
+  compareVisibility: CompareVisibility
+): Promise<SetPrefsAllowCompareResult> {
+  const res = await upsertPrefsPatch(admin, accountId, {
+    compare_visibility: compareVisibility,
+    allow_compare_by_username: compareVisibility === 'username',
+  })
+  if (!res.ok) return { ok: false, reason: 'allow_compare_column_missing' }
+  return { ok: true }
+}
+
+export async function setPrefsIcsRemindBeforeMinutes(
+  admin: SupabaseClient,
+  accountId: string,
+  minutes: number
+): Promise<SetPrefsPatchResult> {
+  const m = Math.max(0, Math.min(24 * 60, Math.floor(minutes)))
+  return upsertPrefsPatch(admin, accountId, { ics_remind_before_minutes: m })
+}
+
+export async function setPrefsComparePrivacy(
+  admin: SupabaseClient,
+  accountId: string,
+  patch: {
+    compareVisibility?: CompareVisibility
+    showInCompareDirectory?: boolean
+    hideBusyDetailsInCompare?: boolean
+  }
+): Promise<SetPrefsPatchResult> {
+  const payload: Record<string, unknown> = {}
+  if (patch.compareVisibility !== undefined) {
+    payload.compare_visibility = patch.compareVisibility
+    payload.allow_compare_by_username = patch.compareVisibility === 'username'
+  }
+  if (patch.showInCompareDirectory !== undefined) {
+    payload.show_in_compare_directory = patch.showInCompareDirectory
+  }
+  if (patch.hideBusyDetailsInCompare !== undefined) {
+    payload.hide_busy_details_in_compare = patch.hideBusyDetailsInCompare
+  }
+  return upsertPrefsPatch(admin, accountId, payload)
 }
 
 export async function loadAvailabilityRange(

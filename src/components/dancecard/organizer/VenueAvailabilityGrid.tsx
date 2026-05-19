@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { formatInTimeZone } from 'date-fns-tz'
@@ -81,7 +81,7 @@ function VenueAddSpaceModal({
           </button>
           <button
             type="button"
-            className="rounded-lg bg-dc-accent px-4 py-2 text-sm font-semibold text-white disabled:opacity-60"
+            className="rounded-lg bg-dc-accent px-4 py-2 text-sm font-semibold text-dc-accent-foreground disabled:opacity-60"
             disabled={busy || !name.trim()}
             onClick={() => void onSubmit(name.trim())}
           >
@@ -474,7 +474,7 @@ export function VenueAvailabilityGrid({
             <>
               <button
                 type="button"
-                className="rounded-lg bg-dc-accent px-4 py-2 text-sm font-semibold text-white hover:opacity-90"
+                className="rounded-lg bg-dc-accent px-4 py-2 text-sm font-semibold text-dc-accent-foreground hover:opacity-90"
                 onClick={() => setAddModalOpen(true)}
               >
                 Add a room
@@ -606,7 +606,7 @@ export function VenueAvailabilityGrid({
                                 e.dataTransfer.setData('text/slot-id', s.id)
                                 e.dataTransfer.effectAllowed = 'move'
                               }}
-                              className="cursor-grab rounded border border-dc-accent/25 bg-dc-accent/10 px-1.5 py-1 text-dc-text active:cursor-grabbing"
+                              className="cursor-grab rounded border border-dc-accent/25 bg-dc-accent/10 px-1.5 py-1 text-dc-text shadow-sm active:cursor-grabbing"
                               title={s.title}
                             >
                               <span className={density >= 3 ? 'line-clamp-2' : 'line-clamp-3'}>{s.title}</span>

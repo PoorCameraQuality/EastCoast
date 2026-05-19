@@ -1,9 +1,6 @@
 import type { SupabaseClient } from '@supabase/supabase-js'
-import {
-  buildPublicProfile,
-  parseAttendeeProfileConfig,
-  type AttendeePublicProfile,
-} from '@/lib/dancecard/attendeeProfile'
+import { parseAttendeeProfileConfig, type AttendeePublicProfile } from '@/lib/dancecard/attendeeProfile'
+import { buildPublicProfileResolved } from '@/lib/dancecard/profilePhotoUrl'
 import {
   loadAvailabilityRange,
   loadPrefs,
@@ -48,7 +45,7 @@ export async function buildMutualSharePayload(
 
   const { data: slots } = await admin
     .from('dancecard_program_slots')
-    .select('id, starts_at, ends_at, title, track, room, description, sort_order')
+    .select('id, starts_at, ends_at, title, track, room, description, sort_order, photo_policy')
     .eq('event_id', event.id)
     .order('starts_at', { ascending: true })
     .order('sort_order', { ascending: true })
@@ -83,7 +80,7 @@ export async function buildMutualSharePayload(
     host.id
   )
 
-  const hostProfile: AttendeePublicProfile = buildPublicProfile({
+  const hostProfile: AttendeePublicProfile = await buildPublicProfileResolved(admin, {
     displayName: host.display_name,
     username: host.username,
     stored: hostPrefs.profile,
@@ -98,7 +95,7 @@ export async function buildMutualSharePayload(
     const vb = await loadPrefs(admin, viewer.accountId)
     const vs = await loadSelections(admin, viewer.accountId)
     const vr = await loadReservationsForAccount(admin, event.id, viewer.accountId)
-    viewerProfile = buildPublicProfile({
+    viewerProfile = await buildPublicProfileResolved(admin, {
       displayName: viewer.displayName,
       username: viewer.username,
       stored: vb.profile,
@@ -118,6 +115,8 @@ export async function buildMutualSharePayload(
     mutualFree = m.map((g) => ({ start: g.start.toISOString(), end: g.end.toISOString() }))
   }
 
+  const hideBusy = hostPrefs.hideBusyDetailsInCompare
+
   return {
     meta: {
       productTitle: event.product_title,
@@ -130,22 +129,31 @@ export async function buildMutualSharePayload(
       sharedByDetail: event.shared_by_detail,
       logoUrl: event.logo_url,
     },
-    host: { id: host.id, displayName: host.display_name as string },
+    host: { id: host.id, displayName: host.display_name as string, nameKind: 'scene' as const },
     hostProfile,
     viewerYou,
     viewerProfile,
     hostFreeGaps: hostFree.map((g) => ({ start: g.start.toISOString(), end: g.end.toISOString() })),
-    hostBusy: hostBusy.map((g) => ({ start: g.start.toISOString(), end: g.end.toISOString() })),
+    hostBusy: hideBusy
+      ? []
+      : hostBusy.map((g) => ({ start: g.start.toISOString(), end: g.end.toISOString() })),
+    hostBusyHidden: hideBusy,
     mutualFreeGaps: mutualFree,
-    slots: (slots ?? []).map((s) => ({
-      id: s.id,
-      startsAt: s.starts_at,
-      endsAt: s.ends_at,
-      title: s.title,
-      track: s.track,
-      room: s.room,
-      description: s.description,
-      sortOrder: s.sort_order,
-    })),
+    slots: (slots ?? []).map((s) => {
+      const rawPhoto = String((s as { photo_policy?: string }).photo_policy ?? 'allowed')
+      const photoPolicy =
+        rawPhoto === 'restricted' || rawPhoto === 'none' ? rawPhoto : ('allowed' as const)
+      return {
+        id: s.id,
+        startsAt: s.starts_at,
+        endsAt: s.ends_at,
+        title: s.title,
+        track: s.track,
+        room: s.room,
+        description: s.description,
+        sortOrder: s.sort_order,
+        photoPolicy,
+      }
+    }),
   }
 }
