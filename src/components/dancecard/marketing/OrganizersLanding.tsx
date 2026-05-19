@@ -17,7 +17,7 @@ const PILLARS = [
   },
   {
     title: 'One link for attendees',
-    body: 'Announcements, live schedule, compare and reserve, signed policies, your camp map. Same data you edited in the console.',
+    body: 'Announcements, live schedule, compare and reserve, ISO board, tent groups, signed policies, and your camp map. Same data you edited in the console.',
   },
 ] as const
 
@@ -117,7 +117,7 @@ export function OrganizersLanding() {
             </h2>
             <p className="mt-3 text-sm leading-relaxed text-dc-muted sm:text-base">
               Scroll the real screens. Every screenshot is from our Sandbox Con demo. Click any image to blow it up.
-              This is the toolkit your team runs on; the section after shows what your attendees see when you publish.
+              This is the toolkit your team runs on. The section after shows what your attendees see when you publish.
             </p>
             <p className="mt-2 text-xs text-dc-muted">
               <strong className="font-semibold text-dc-text">{ORGANIZER_FEATURES.length}</strong> organizer tools, then
@@ -189,8 +189,9 @@ export function OrganizersLanding() {
         <div className="mt-14 flex flex-col items-center rounded-2xl border border-dc-accent-border bg-dc-accent-muted px-6 py-10 text-center">
           <p className="font-serif text-2xl text-dc-text">And there is more where that came from</p>
           <p className="mt-2 max-w-xl text-sm leading-relaxed text-dc-muted">
-            Messaging, exports, integrations, vetting workflows, and the public East Coast Kink Events calendar. We
-            built this for the community we already show up for. Come see if it fits your next event.
+            Messaging, exports, integrations, safety incident log, vetting workflows, and the public East Coast Kink
+            Events calendar. We built this for the community we already show up for. Come see if it fits your next
+            event.
           </p>
           <div className="mt-6 flex flex-col gap-3 sm:flex-row">
             <Link

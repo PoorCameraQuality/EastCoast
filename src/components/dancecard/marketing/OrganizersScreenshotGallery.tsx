@@ -265,11 +265,24 @@ function FeatureChapter({
 }) {
   if (features.length === 0) return null
 
+  let lastPhase: string | undefined
+
   return (
     <div className="space-y-0">
-      {features.map((feature) => (
-        <FeatureSection key={feature.id} feature={feature} flatShots={flatShots} onOpen={onOpen} />
-      ))}
+      {features.map((feature) => {
+        const showPhase = chapter === 'organizer' && feature.phase && feature.phase !== lastPhase
+        if (showPhase) lastPhase = feature.phase
+        return (
+          <div key={feature.id}>
+            {showPhase ? (
+              <h3 className="mb-6 mt-4 border-t border-dc-border pt-10 font-serif text-xl text-dc-text first:mt-0 first:border-t-0 first:pt-0 sm:text-2xl">
+                {feature.phase}
+              </h3>
+            ) : null}
+            <FeatureSection feature={feature} flatShots={flatShots} onOpen={onOpen} />
+          </div>
+        )
+      })}
     </div>
   )
 }
@@ -314,8 +327,8 @@ export function OrganizersScreenshotGallery({
             </h2>
             <p className="mt-3 text-sm leading-relaxed text-dc-muted sm:text-base">
               When you hit publish, this is what shows up on their phones. Same schedule, same map, same policies you
-              configured. They get announcements, a live program, availability tools, compare and reserve, and sign-in
-              at the door without you re-explaining the camp layout.
+              configured in the console. They get announcements, a live program, availability tools, compare and
+              reserve, ISO board, tent groups, and sign-in at the door without you re-explaining the camp layout.
             </p>
           </div>
           <MarketingWalkthrough chapter="attendee" />
