@@ -118,7 +118,7 @@ export async function GET(request: NextRequest, context: { params: { eventSlug: 
     return NextResponse.json({
       eventTitle: event.event_title,
       logoUrl: badgeLogoUrl,
-      hasBadgeLogo: Boolean((event.badge_logo_path as string | null)?.trim()),
+      hasBadgeLogo: Boolean(event.badge_logo_path?.trim()),
       timezone: tz,
       categories,
       registrants,

@@ -48,6 +48,7 @@ export async function loadEventBySlug(admin: SupabaseClient, eventSlug: string) 
         shared_by_label: string
         shared_by_detail: string | null
         logo_url: string | null
+        badge_logo_path?: string | null
         status: string
         staff_access_code?: string | null
         registration_access_code?: string | null
@@ -73,6 +74,7 @@ export async function loadEventBySlugAnyStatus(admin: SupabaseClient, eventSlug:
         shared_by_label: string
         shared_by_detail: string | null
         logo_url: string | null
+        badge_logo_path?: string | null
         status: string
         staff_access_code?: string | null
         registration_access_code?: string | null
