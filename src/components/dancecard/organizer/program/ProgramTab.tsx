@@ -148,7 +148,9 @@ export function ProgramTab({
         initialSlotId={focusSlotId}
         drawerInitialTab={drawerTab}
         onDrawerTabConsumed={() => setDrawerTab(undefined)}
-        onSlotLinkChange={(id) => openSlot(id)}
+        onSlotLinkChange={(id) => {
+          if (id) openSlot(id)
+        }}
         conflictSlotIds={conflicts.flatMap((c) => c.relatedSlotIds)}
         conflictSonarActive={conflictSonarActive}
         onConflictsRefresh={async () => {

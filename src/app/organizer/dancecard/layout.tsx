@@ -3,6 +3,8 @@ import { OrganizerDancecardChrome } from '@/components/dancecard/organizer/Organ
 import { dancecardFontClassName } from '@/lib/dancecard/dancecardFonts'
 import { assertProductionNoOrganizerBypass } from '@/lib/dancecard/organizerAuth'
 
+export const dynamic = 'force-dynamic'
+
 export const metadata: Metadata = {
   title: {
     default: 'Organizer console',

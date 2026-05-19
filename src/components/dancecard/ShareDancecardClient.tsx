@@ -425,7 +425,7 @@ export function ShareDancecardClient(props: { eventSlug: string; token: string }
           <div className="mt-4 max-w-md">
             <AttendeeProfileCard profile={data.hostProfile} variant="host" compact />
             <Link
-              href={`/dancecard/${eventSlug}?compare=${encodeURIComponent(data.hostProfile.username)}#compare`}
+              href={`/dancecard/${eventSlug}?compare=${encodeURIComponent(data.hostProfile.loginName)}#compare`}
               className="mt-2 inline-flex rounded-xl border border-dc-accent-border bg-dc-accent-muted px-3 py-2 text-xs font-semibold text-dc-accent"
             >
               Compare availability with me

@@ -27,7 +27,18 @@ export function PresenterDirectory({
   onSelectSlot,
   embedded,
 }: Props) {
-  const index = buildPresenterIndex(slots.map((s) => ({ id: s.id, presenters: s.presenters ?? [] })))
+  const index = buildPresenterIndex(
+    slots.map((s) => ({
+      id: s.id,
+      presenters: (s.presenters ?? []).map((p) => ({
+        personId: p.personId ?? '',
+        sceneName: p.sceneName,
+        role: p.role,
+        publicBio: p.publicBio ?? null,
+        photoUrl: p.photoUrl ?? null,
+      })),
+    })),
+  )
   const [profilePersonId, setProfilePersonId] = useState<string | null>(null)
   const [profileName, setProfileName] = useState<string | undefined>(undefined)
 
@@ -56,7 +67,7 @@ export function PresenterDirectory({
                     type="button"
                     className="text-left hover:text-dc-accent"
                     onClick={() => {
-                      setProfilePersonId(p.personId)
+                      setProfilePersonId(p.personId ?? null)
                       setProfileName(p.sceneName)
                     }}
                   >

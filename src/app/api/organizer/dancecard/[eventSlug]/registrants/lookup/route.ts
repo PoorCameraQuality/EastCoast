@@ -60,7 +60,7 @@ export async function GET(request: NextRequest, context: { params: { eventSlug: 
         status: row.status as string,
         checkedInAt: (row.checked_in_at as string | null) ?? null,
         checkedInTiming: (row.checked_in_timing as string | null) ?? null,
-        category: cat,
+        category: cat ?? null,
         event,
       })
       return NextResponse.json({
@@ -100,7 +100,7 @@ export async function GET(request: NextRequest, context: { params: { eventSlug: 
         status: r.status as string,
         checkedInAt: (r.checked_in_at as string | null) ?? null,
         checkedInTiming: (r.checked_in_timing as string | null) ?? null,
-        category: cat,
+        category: cat ?? null,
         event,
       })
       return mapOrganizerRegistrantRow(r as Record<string, unknown>, (cat?.name as string) ?? null, organizerRole, extras)

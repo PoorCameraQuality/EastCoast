@@ -104,7 +104,7 @@ type ProgramSlot = {
   sortOrder: number
   tagNames?: string[]
   presenters?: {
-    personId: string
+    personId?: string
     sceneName: string
     role: string
     publicBio?: string | null
@@ -788,19 +788,6 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
       () => setFollowedPersonIds(new Set())
     )
   }, [me, slug])
-
-  useEffect(() => {
-    if (typeof window === 'undefined' || !me) return
-    const compareUser = new URLSearchParams(window.location.search).get('compare')?.trim().replace(/^@/, '')
-    if (!compareUser) return
-    const normalized = compareUser.toLowerCase()
-    setTab('mutual')
-    setMutualCompareUsername(normalized)
-    if (typeof window !== 'undefined') {
-      window.sessionStorage.setItem(`eck_dc_compare_user_${slug}`, normalized)
-    }
-    void refreshMutual({ mode: 'username' })
-  }, [me, slug, refreshMutual])
 
   useEffect(() => {
     if (!me || typeof window === 'undefined') return
@@ -2182,6 +2169,19 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
     }
   }, [slug, mutualCompareUsername])
 
+  useEffect(() => {
+    if (typeof window === 'undefined' || !me) return
+    const compareUser = new URLSearchParams(window.location.search).get('compare')?.trim().replace(/^@/, '')
+    if (!compareUser) return
+    const normalized = compareUser.toLowerCase()
+    setTab('mutual')
+    setMutualCompareUsername(normalized)
+    if (typeof window !== 'undefined') {
+      window.sessionStorage.setItem(`eck_dc_compare_user_${slug}`, normalized)
+    }
+    void refreshMutual({ mode: 'username' })
+  }, [me, slug, refreshMutual])
+
   const copyMutualReservationSummary = useCallback(async () => {
     const host = mutualData?.host.displayName ?? 'Host'
     const you = me?.account.displayName ?? 'You'
@@ -2631,7 +2631,11 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
             method: 'POST',
             body: JSON.stringify({ personId }),
           })
-          setFollowedPersonIds((prev) => new Set([...prev, personId]))
+          setFollowedPersonIds((prev) => {
+            const next = new Set(prev)
+            next.add(personId)
+            return next
+          })
         } else {
           await dancecardFetch(slug, `/follows?personId=${encodeURIComponent(personId)}`, {
             method: 'DELETE',

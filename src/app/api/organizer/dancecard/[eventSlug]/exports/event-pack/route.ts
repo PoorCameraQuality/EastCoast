@@ -77,7 +77,7 @@ export async function GET(_request: Request, context: { params: { eventSlug: str
     files.push({ name: 'conflict-report.csv', content: conflictCsv })
 
     const zip = await buildEventPackZip(admin, eventId, slug, files)
-    return new NextResponse(zip, {
+    return new NextResponse(new Uint8Array(zip), {
       headers: {
         'Content-Type': 'application/zip',
         'Content-Disposition': `attachment; filename="${slug}-event-pack.zip"`,

@@ -40,6 +40,7 @@
     "node_modules",
     "Please fix this",
     "**/*.d.ts",
+    "**/*.test.ts",
     "projectfilesmigration"
   ]
 }

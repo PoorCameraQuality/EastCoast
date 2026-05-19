@@ -30,7 +30,7 @@ export async function GET(_request: Request, context: { params: { eventSlug: str
 
     const payload = encodeCheckInQrPayload(registrantId, token)
     const png = await QRCode.toBuffer(payload, { width: 200, margin: 1, type: 'png' })
-    return new NextResponse(png, {
+    return new NextResponse(new Uint8Array(png), {
       headers: {
         'Content-Type': 'image/png',
         'Cache-Control': 'private, max-age=3600',
