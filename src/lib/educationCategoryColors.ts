@@ -104,11 +104,11 @@ export function isKnownEducationCategory(category: string): category is Educatio
 }
 
 /** Sort key: known categories first (in EDUCATION_CATEGORY_ORDER), then alphabetical. */
-export function sortEducationCategories(categories: Iterable<string>): string[] {
+export function sortEducationCategories(categories: readonly string[]): string[] {
   const set = new Set<string>()
-  for (const c of categories) {
+  categories.forEach((c) => {
     if (c?.trim()) set.add(c.trim())
-  }
+  })
   const preferred = EDUCATION_CATEGORY_ORDER.filter((c) => set.has(c))
   const rest = Array.from(set)
     .filter((c) => !isKnownEducationCategory(c))
