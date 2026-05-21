@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import type { PublicDancecardEvent } from '@/lib/dancecard/publicEvents'
-import { DANCECARD_DEFAULT_EVENT_PATH } from '@/lib/dancecard/nav'
+import { DANCECARD_ATTENDEE_SANDBOX_PATH } from '@/lib/dancecard/nav'
 
 export function DancecardPublicEventsList() {
   const [events, setEvents] = useState<PublicDancecardEvent[] | null>(null)
@@ -40,8 +40,8 @@ export function DancecardPublicEventsList() {
     return (
       <p className="text-sm text-dc-muted">
         {loadErr}{' '}
-        <Link href={DANCECARD_DEFAULT_EVENT_PATH} className="text-dc-accent underline hover:text-dc-accent-hover">
-          Try demo event
+        <Link href={DANCECARD_ATTENDEE_SANDBOX_PATH} className="text-dc-accent underline hover:text-dc-accent-hover">
+          attendee sandbox demo
         </Link>
       </p>
     )
@@ -50,10 +50,11 @@ export function DancecardPublicEventsList() {
   if (!events?.length) {
     return (
       <p className="text-sm text-dc-muted">
-        No published events yet.{' '}
-        <Link href={DANCECARD_DEFAULT_EVENT_PATH} className="text-dc-accent underline hover:text-dc-accent-hover">
-          Open demo event (paf26)
-        </Link>
+        No published events yet. Try the{' '}
+        <Link href={DANCECARD_ATTENDEE_SANDBOX_PATH} className="text-dc-accent underline hover:text-dc-accent-hover">
+          attendee sandbox demo
+        </Link>{' '}
+        instead. No event code needed.
       </p>
     )
   }

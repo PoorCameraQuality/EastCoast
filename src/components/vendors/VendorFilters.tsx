@@ -37,7 +37,7 @@ function GroupAccordion({
   defaultOpen?: boolean
 }) {
   return (
-    <details className="group rounded-xl border border-white/10 bg-white/5 overflow-hidden" open={defaultOpen}>
+    <details className="group card-glass overflow-hidden" open={defaultOpen}>
       <summary className="cursor-pointer select-none min-h-touch px-4 py-3 text-sm font-semibold text-white flex items-center justify-between">
         <span>{title}</span>
         <svg
@@ -220,8 +220,8 @@ export default function VendorFilters({
       </div>
 
       {/* Desktop sidebar */}
-      <div className="hidden md:block sticky top-24">
-        {Panel}
+      <div className="sticky top-24 hidden md:block">
+        <div className="card-glass p-4 sm:p-5">{Panel}</div>
       </div>
 
       {/* Mobile drawer */}

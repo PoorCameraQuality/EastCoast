@@ -6,9 +6,12 @@ import { usePathname, useRouter } from 'next/navigation'
 import type { VendorTag, VendorTagGroup } from '@/data/vendorTaxonomy'
 import VendorFilters from '@/components/vendors/VendorFilters'
 import VendorCard from '@/components/vendors/VendorCard'
+import SupportCTAInline from '@/components/SupportCTAInline'
+import DirectoryCompactStats from '@/components/discovery/DirectoryCompactStats'
 import { CONTACT_US_LABEL } from '@/lib/submissionContact'
 import Breadcrumb from '@/components/Breadcrumb'
-import HeroSponsorLayout from '@/components/HeroSponsorLayout'
+import DiscoveryPageShell from '@/components/discovery/DiscoveryPageShell'
+import { DancecardShowcase } from '@/components/dancecard/DancecardShowcase'
 import {
   filterVendorsBySelectedTags,
   type VendorRecord,
@@ -139,29 +142,40 @@ export default function VendorsPageClient({
     { label: 'Vendors', href: '/vendors', current: true },
   ]
 
-  return (
-    <section className="relative overflow-hidden section-padding bg-black">
-      <div className="pointer-events-none absolute inset-0 opacity-[0.06] motion-reduce:opacity-0" aria-hidden>
-        <div className="absolute -right-20 top-20 h-72 w-72 rounded-full bg-primary-500 blur-3xl" />
-        <div className="absolute bottom-20 left-0 h-64 w-64 rounded-full bg-teal-600/80 blur-3xl" />
-      </div>
+  const stats = [
+    { label: 'listings', value: vendors.length },
+    { label: 'supporters', value: supporterCount, accent: true },
+    ...(selectedTagSlugs.length > 0
+      ? [{ label: 'matching filters', value: displayVendors.length }]
+      : []),
+  ]
 
-      <div className="container-custom relative z-10">
-        <div className="mx-auto max-w-7xl">
+  return (
+    <DiscoveryPageShell accent="teal">
+      <section className="section-padding pt-4 md:pt-6">
+        <div className="container-custom">
           <Breadcrumb items={breadcrumbItems} />
 
-          <HeroSponsorLayout contextLabel="Vendors">
-            <header className="max-w-3xl">
-              <p className="mb-2 text-sm font-medium uppercase tracking-wider text-primary-400/90">Marketplace</p>
-              <h1 className="font-serif text-3xl font-bold text-white sm:text-4xl md:text-5xl">
-                Kink vendors &amp;{' '}
-                <span className="bg-gradient-to-r from-primary-300 via-primary-400 to-primary-500 bg-clip-text text-transparent">
-                  independent makers
+          <header className="mb-4 max-w-3xl md:mb-5">
+            <p className="mb-2 text-sm font-medium uppercase tracking-[0.2em] text-primary-400/90">Marketplace</p>
+            <h1 className="font-serif text-3xl font-bold leading-tight text-white sm:text-4xl">
+              Kink vendors &amp;{' '}
+              <span className="bg-gradient-to-r from-primary-300 via-primary-400 to-primary-500 bg-clip-text text-transparent">
+                independent makers
+              </span>
+            </h1>
+            <p className="mt-3 text-base text-gray-300">
+              Gear, leather, rope, and services—browse by topic or open a profile.
+            </p>
+            <details className="group mt-3">
+              <summary className="flex min-h-touch cursor-pointer list-none items-center text-sm font-medium text-primary-400 underline-offset-2 hover:text-primary-300 hover:underline [&::-webkit-details-marker]:hidden">
+                <span className="mr-2 inline-block transition group-open:rotate-90" aria-hidden>
+                  ▶
                 </span>
-              </h1>
-              <p className="mt-4 max-w-3xl text-base leading-relaxed text-gray-300 md:text-lg">
-                Impact gear, leather, rope, wearables, books, and services—curated as a discovery aid (not an
-                endorsement of every product). Pair with{' '}
+                About the marketplace
+              </summary>
+              <p className="mt-3 text-sm leading-relaxed text-gray-400">
+                Curated as a discovery aid, not an endorsement of every product. Pair with{' '}
                 <Link href="/events" className="text-primary-400 underline underline-offset-2 hover:text-primary-300">
                   events
                 </Link>
@@ -173,80 +187,46 @@ export default function VendorsPageClient({
                 <Link href="/dungeons" className="text-primary-400 underline underline-offset-2 hover:text-primary-300">
                   dungeons
                 </Link>{' '}
-                when you are planning a trip or booth crawl.
+                when planning a trip. Non-supporter rows shuffle between visits; supporters stay pinned at the top.
               </p>
+            </details>
 
-              <div className="mt-6 flex flex-wrap justify-center gap-3 md:justify-start">
-                <div className="rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-sm text-gray-300">
-                  <span className="font-semibold tabular-nums text-white">{vendors.length}</span> listings
+            {popularTags.length > 0 ? (
+              <div className="mt-4">
+                <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-gray-500">Popular topics</p>
+                <div className="flex flex-wrap gap-2">
+                  {popularTags.map((t) => (
+                    <Link
+                      key={t.slug}
+                      href={`/vendors?tag=${encodeURIComponent(t.slug)}`}
+                      scroll={false}
+                      className={`discovery-filter-pill px-3 py-1.5 text-xs ${
+                        selectedTagSlugs.includes(t.slug) ? 'discovery-filter-pill-active' : ''
+                      }`}
+                    >
+                      {t.name}
+                    </Link>
+                  ))}
                 </div>
-                <div className="rounded-full border border-primary-500/25 bg-primary-500/10 px-4 py-2 text-sm text-primary-100/90">
-                  <span className="font-semibold tabular-nums">{supporterCount}</span> supporters highlighted
-                </div>
-                {selectedTagSlugs.length > 0 ? (
-                  <div className="rounded-full border border-amber-500/30 bg-amber-500/10 px-4 py-2 text-sm text-amber-100/90">
-                    <span className="font-semibold tabular-nums">{displayVendors.length}</span> match filters
-                  </div>
-                ) : null}
               </div>
+            ) : null}
+          </header>
 
-              {popularTags.length > 0 ? (
-                <div className="mt-8">
-                  <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-gray-500">
-                    Popular topics · one tap
-                  </p>
-                  <div className="flex flex-wrap gap-2">
-                    {popularTags.map((t) => (
-                      <Link
-                        key={t.slug}
-                        href={`/vendors?tag=${encodeURIComponent(t.slug)}`}
-                        scroll={false}
-                        className={`rounded-full border px-3 py-1.5 text-xs font-medium transition ${
-                          selectedTagSlugs.includes(t.slug)
-                            ? 'border-primary-400 bg-primary-500/20 text-primary-100'
-                            : 'border-white/15 bg-white/5 text-gray-200 hover:border-primary-500/40 hover:bg-primary-950/30'
-                        }`}
-                      >
-                        {t.name}
-                      </Link>
-                    ))}
-                  </div>
-                </div>
-              ) : null}
-
-              <p className="mt-6 max-w-2xl text-xs text-gray-600">
-                Non-supporter rows shuffle between visits so different makers surface; sponsors and paid supporters stay
-                pinned at the top.
-              </p>
-            </header>
-          </HeroSponsorLayout>
-
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-12 lg:gap-10">
-            <aside className="md:col-span-4 lg:col-span-3">
-              <VendorFilters
-                tagGroups={tagGroups}
-                tags={tags}
-                selectedTagSlugs={selectedTagSlugs}
-                availableTagSlugs={availableTagSlugs}
-                onToggleTag={toggleTag}
-                onRemoveTag={removeTag}
-                onClearAll={clearAll}
-              />
-            </aside>
-
-            <div className="md:col-span-8 lg:col-span-9">
+          <div className="grid grid-cols-1 gap-8 lg:grid-cols-12 lg:gap-10">
+            <div className="lg:col-span-8 xl:col-span-9">
               <div
                 id="vendor-results"
-                className="mb-4 flex flex-col gap-3 border-b border-white/10 pb-4 sm:flex-row sm:items-center sm:justify-between"
+                className="mb-4 flex flex-wrap items-center justify-between gap-2"
               >
-                <div className="text-sm text-gray-400">
-                  Showing{' '}
-                  <span className="font-semibold text-white">{displayVendors.length}</span> of{' '}
-                  <span className="tabular-nums text-gray-300">{vendors.length}</span>
-                  {selectedTagSlugs.length > 0 ? (
-                    <span className="text-gray-500"> (filtered)</span>
-                  ) : null}
-                </div>
+                <p className="text-sm text-gray-500">
+                  <span className="font-serif text-xl font-bold text-white sm:text-2xl">
+                    <span className="bg-gradient-to-r from-primary-300 to-cyan-300 bg-clip-text text-transparent">
+                      Makers
+                    </span>
+                  </span>
+                  <span className="mx-2 text-gray-600">·</span>
+                  <span className="tabular-nums font-semibold text-gray-300">{displayVendors.length}</span> showing
+                </p>
                 <div className="flex flex-wrap gap-3">
                   {selectedTagSlugs.length > 0 ? (
                     <button
@@ -259,8 +239,7 @@ export default function VendorsPageClient({
                   ) : null}
                   <Link
                     href="/contact"
-                    className="inline-flex min-h-touch items-center text-sm text-gray-400 underline underline-offset-2 decoration-white/20 hover:text-white hover:decoration-white/40"
-                    aria-label="Contact us"
+                    className="text-sm text-gray-400 underline underline-offset-2 decoration-white/20 hover:text-white"
                   >
                     {CONTACT_US_LABEL}
                   </Link>
@@ -268,11 +247,9 @@ export default function VendorsPageClient({
               </div>
 
               {displayVendors.length === 0 ? (
-                <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-8 text-center sm:p-10">
+                <div className="discovery-empty-panel p-8 sm:p-10">
                   <h2 className="font-serif text-xl font-semibold text-white">No listings match</h2>
-                  <p className="mt-2 text-gray-400">
-                    Try removing a tag or browse a popular topic above.
-                  </p>
+                  <p className="mt-2 text-gray-400">Try removing a tag or pick a popular topic above.</p>
                   <button
                     type="button"
                     onClick={clearAll}
@@ -282,7 +259,7 @@ export default function VendorsPageClient({
                   </button>
                 </div>
               ) : (
-                <div className="grid grid-cols-1 gap-5 xl:grid-cols-2 xl:gap-6">
+                <div className="grid grid-cols-1 gap-4 xl:grid-cols-2 xl:gap-6">
                   {displayVendors.map((v) => (
                     <VendorCard
                       key={v.slug}
@@ -295,9 +272,30 @@ export default function VendorsPageClient({
                 </div>
               )}
             </div>
+
+            <aside className="lg:col-span-4 xl:col-span-3">
+              <VendorFilters
+                tagGroups={tagGroups}
+                tags={tags}
+                selectedTagSlugs={selectedTagSlugs}
+                availableTagSlugs={availableTagSlugs}
+                onToggleTag={toggleTag}
+                onRemoveTag={removeTag}
+                onClearAll={clearAll}
+              />
+            </aside>
+          </div>
+
+          <div className="mt-10 md:mt-12">
+            <DancecardShowcase className="mx-auto max-w-3xl lg:max-w-none" />
+          </div>
+
+          <div className="stack-ecke-md mt-10 border-t border-white/[0.06] pt-8 md:mt-12">
+            <DirectoryCompactStats stats={stats} />
+            <SupportCTAInline contextLabel="Vendors" variant="stack" />
           </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </DiscoveryPageShell>
   )
 }

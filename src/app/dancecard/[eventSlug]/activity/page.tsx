@@ -3,7 +3,9 @@
 import { useEffect, useState } from 'react'
 import { useParams } from 'next/navigation'
 import { dancecardFetch } from '@/components/dancecard/api-client'
+import { AttendeeSubpageLoader } from '@/components/dancecard/attendee/AttendeeSubpageLoader'
 import { DancecardEventNav } from '@/components/dancecard/attendee/DancecardEventNav'
+import { DancecardListSkeleton } from '@/components/dancecard/organizer/ui'
 import { Panel } from '@/components/dancecard/ui/Panel'
 
 type ActivityItem = { id: string; kind: 'announcement' | 'iso'; title: string; body: string; at: string }
@@ -58,6 +60,10 @@ export default function ActivityPage() {
 
   if (!slug) return null
 
+  if (loading && !title) {
+    return <AttendeeSubpageLoader eventSlug={slug} label="Loading activity…" maxWidth="2xl" />
+  }
+
   return (
     <>
       <DancecardEventNav eventSlug={slug} eventTitle={title} showNews={false} />
@@ -65,7 +71,9 @@ export default function ActivityPage() {
         <h1 className="font-serif text-2xl text-dc-text">Activity</h1>
         <p className="mt-1 text-sm text-dc-muted">Organizer updates and pinned ISO posts.</p>
         {loading ? (
-          <p className="mt-6 text-dc-muted">Loading…</p>
+          <div className="mt-6">
+            <DancecardListSkeleton rows={4} />
+          </div>
         ) : (
           <ul className="mt-6 space-y-3">
             {items.map((item) => (

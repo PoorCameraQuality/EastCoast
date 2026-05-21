@@ -10,10 +10,11 @@ import { DmCoveragePanel } from '@/components/dancecard/organizer/DmCoveragePane
 import { SafetyIncidentsPanel } from '@/components/dancecard/organizer/SafetyIncidentsPanel'
 import { VolunteerCompliancePanel } from '@/components/dancecard/organizer/VolunteerCompliancePanel'
 import { usePeopleSubTab } from '@/components/dancecard/organizer/usePeopleSubTab'
+import type { PeopleSubTab } from '@/components/dancecard/organizer/shell/organizerNavConfig'
 import type { OrganizerStaffShiftDto } from '@/lib/dancecard/organizerStaffShiftDto'
 import type { OrganizerRoleForClient } from '@/lib/dancecard/organizerRoles'
+import { OrganizerSectionTabs } from '@/components/dancecard/organizer/ui/OrganizerSectionTabs'
 import { copy } from '@/lib/dancecard/productCopy'
-import { cn } from '@/lib/cn'
 
 const TAB_LABELS: Record<string, string> = {
   signups: copy.signups,
@@ -52,34 +53,29 @@ export function PeopleHubPanel({
 }: Props) {
   const { peopleTab, setPeopleTab, allTabs } = usePeopleSubTab(eventSlug, 'signups')
 
+  const sectionTabs = allTabs.map((t) => ({ id: t, label: TAB_LABELS[t] ?? t }))
+
   return (
-    <div className="space-y-4">
-      <p className="max-w-2xl text-sm text-dc-muted">
+    <div className="space-y-5">
+      <p className="max-w-2xl text-sm leading-relaxed text-dc-muted">
         {copy.signups} are ticket records. {copy.roster} is everyone on your schedule or in ops. The same person may appear
         in both lists.
       </p>
 
-      <nav
-        className="-mx-1 flex flex-nowrap gap-2 overflow-x-auto px-1 pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-        aria-label="People sections"
-      >
-        {allTabs.map((t) => (
-          <button
-            key={t}
-            type="button"
-            className={cn(
-              'shrink-0 rounded-full border px-3 py-1.5 text-sm font-medium transition-colors',
-              peopleTab === t
-                ? 'border-dc-accent-border bg-dc-accent-muted text-dc-accent'
-                : 'border-dc-border text-dc-muted hover:border-dc-accent-border/50 hover:text-dc-text',
-            )}
-            onClick={() => setPeopleTab(t)}
-          >
-            {TAB_LABELS[t] ?? t}
-          </button>
-        ))}
-      </nav>
+      <OrganizerSectionTabs
+        tabs={sectionTabs}
+        activeId={peopleTab}
+        onChange={(id) => setPeopleTab(id as PeopleSubTab)}
+        heading="People — switch section"
+        ariaLabel="People hub sections"
+      />
 
+      <div
+        id={`organizer-section-${peopleTab}`}
+        role="tabpanel"
+        aria-labelledby={`organizer-section-tab-${peopleTab}`}
+        className="min-w-0"
+      >
       {peopleTab === 'signups' ? (
         <RegistrantsPanel eventSlug={eventSlug} readOnly={readOnly} organizerRole={organizerRole} />
       ) : null}
@@ -122,6 +118,7 @@ export function PeopleHubPanel({
           <p className="text-sm text-dc-muted">Set event dates in Settings before configuring coverage roles.</p>
         )
       ) : null}
+      </div>
     </div>
   )
 }

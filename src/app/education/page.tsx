@@ -1,15 +1,15 @@
 import type { Metadata } from 'next'
 import EducationPageClient from './EducationPageClient'
 import { EducationStructuredData } from '@/components/StructuredData'
+import { getPublishedEducationArticles } from '@/lib/educationArticles'
 import { BASE_URL } from '@/lib/seo'
-import { supabase } from '@/lib/supabase'
 
 export const revalidate = 1800
 
 export const metadata: Metadata = {
-  title: 'BDSM Education: Consent, Safety & Kink Guides',
+  title: 'BDSM Education Hub: Articles & Curated Kink Guides',
   description:
-    'Free BDSM education guides for adults: consent, safety, negotiation, aftercare, kink terms, and technique basics before events or play.',
+    'BDSM education hub with East Coast Kink Events articles plus curated links to trusted guides on consent, safety, aftercare, community, and more.',
   alternates: {
     canonical: `${BASE_URL}/education`,
   },
@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     siteName: 'East Coast Kink Events',
     title: 'BDSM Education — Consent, Safety & Kink Guides',
     description:
-      'Browse adult BDSM education articles on consent, safety, negotiation, aftercare, kink terms, and community norms.',
+      'Our BDSM education articles plus curated off-site guides on consent, safety, negotiation, aftercare, and community norms.',
     images: [
       {
         url: `${BASE_URL}/og-image.png`,
@@ -39,24 +39,9 @@ export const metadata: Metadata = {
   },
 }
 
-async function getArticles() {
-  const client = supabase
-  if (!client) return []
-  const { data, error } = await client
-    .from('articles')
-    .select('*')
-    .eq('status', 'published')
-    .order('publish_date', { ascending: false })
-  if (error) {
-    console.error('Error fetching articles:', error)
-    return []
-  }
-  return data || []
-}
-
 export default async function EducationPage() {
-  const initialArticles = await getArticles()
-  const articlesForSchema = initialArticles.map((a: any) => ({
+  const initialArticles = await getPublishedEducationArticles()
+  const articlesForSchema = initialArticles.map((a) => ({
     slug: a.slug,
     title: a.title,
     author_name: a.author_name,
@@ -69,4 +54,3 @@ export default async function EducationPage() {
     </>
   )
 }
-

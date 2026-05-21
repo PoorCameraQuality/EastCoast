@@ -5,6 +5,7 @@ import {
   loadEventBySlug,
   normalizeEventSlug,
 } from '@/lib/dancecard/routeCommon'
+import { allowPublicAttendeeDemoAccess } from '@/lib/dancecard/publicDemo'
 import {
   loadPublicRegistrationCategories,
   loadPublishedRegistrationForm,
@@ -28,7 +29,9 @@ export async function GET(_request: NextRequest, context: { params: { eventSlug:
       return NextResponse.json({ error: 'Registration is not open', form: null, categories: [] }, { status: 404 })
     }
 
-    const regGate = String((event as { registration_access_code?: string }).registration_access_code ?? '').trim()
+    const regGate = allowPublicAttendeeDemoAccess(slug)
+      ? ''
+      : String((event as { registration_access_code?: string }).registration_access_code ?? '').trim()
 
     return NextResponse.json({
       eventTitle: event.event_title,

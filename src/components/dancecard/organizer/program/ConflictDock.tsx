@@ -8,6 +8,7 @@ import { Button } from '@/components/dancecard/ui/Button'
 type Props = {
   conflicts: DancecardConflict[]
   slots: ProgramSlotRow[]
+  loading?: boolean
   onOpenSlot: (slotId: string, opts?: { editTab?: 'edit' | 'privacy' }) => void
   onOpenBoth: (a: string, b: string) => void
   onOpenScheduleCredits?: () => void
@@ -17,11 +18,26 @@ type Props = {
 export function ConflictDock({
   conflicts,
   slots,
+  loading = false,
   onOpenSlot,
   onOpenBoth,
   onOpenScheduleCredits,
   onLaunchConflictGuide,
 }: Props) {
+  if (loading) {
+    return (
+      <Panel variant="muted" className="text-sm text-dc-muted" aria-busy="true">
+        <span className="inline-flex items-center gap-2">
+          <span
+            className="inline-block h-4 w-4 rounded-full border-2 border-dc-accent-border border-t-dc-accent animate-spin motion-reduce:animate-none"
+            aria-hidden
+          />
+          Scanning schedule for conflicts…
+        </span>
+      </Panel>
+    )
+  }
+
   if (!conflicts.length) {
     return (
       <Panel variant="muted" className="text-sm text-dc-muted">

@@ -127,7 +127,8 @@ export function ProgramTab({
         </p>
       ) : null}
       <ConflictDock
-        conflicts={loading || loadError ? [] : conflicts}
+        loading={loading && !loadError}
+        conflicts={loadError ? [] : conflicts}
         slots={slots}
         onOpenSlot={(slotId, opts) => openSlot(slotId, opts)}
         onOpenBoth={(a) => openSlot(a)}

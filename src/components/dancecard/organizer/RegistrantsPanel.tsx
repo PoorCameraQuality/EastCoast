@@ -54,22 +54,25 @@ function rowCheckInTone(r: RegRow): CheckInTone {
 const TONE_CLASS: Record<CheckInTone, { status: string; button: string; pill: string }> = {
   gold: {
     status: 'font-medium text-dc-accent-hover',
-    button: 'border-dc-accent-border/50 text-dc-accent-hover hover:bg-dc-accent-muted',
-    pill: 'border-dc-accent-border/45 bg-dc-accent-muted text-dc-accent-hover',
+    button:
+      'min-h-10 border-dc-accent-border/50 px-3 py-2 text-dc-accent-hover hover:bg-dc-accent-muted',
+    pill: 'border-dc-accent-border/45 bg-dc-accent-muted px-3 py-1.5 text-dc-accent-hover',
   },
   blue: {
-    status: 'font-medium text-sky-800',
-    button: 'border-sky-400 text-sky-800 hover:bg-sky-100',
-    pill: 'border-sky-400 bg-sky-100 text-sky-800',
+    status: 'font-medium text-sky-600 dark:text-sky-300',
+    button:
+      'min-h-10 border-sky-500/50 px-3 py-2 text-sky-700 hover:bg-sky-500/10 dark:text-sky-200',
+    pill: 'border-sky-500/50 bg-sky-500/10 px-3 py-1.5 text-sky-700 dark:text-sky-200',
   },
   red: {
-    status: 'font-medium text-red-700',
-    button: 'border-red-400 text-red-700 hover:bg-red-100',
-    pill: 'border-red-400 bg-red-100 text-red-700',
+    status: 'font-medium text-dc-danger',
+    button: 'min-h-10 border-dc-danger-border px-3 py-2 text-dc-danger hover:bg-dc-danger-muted',
+    pill: 'border-dc-danger-border bg-dc-danger-muted px-3 py-1.5 text-dc-danger',
   },
   neutral: {
     status: '',
-    button: 'border-emerald-300 text-emerald-700 hover:bg-emerald-100',
+    button:
+      'min-h-10 border-dc-success/40 px-3 py-2 text-dc-success hover:bg-dc-success-muted',
     pill: '',
   },
 }
@@ -527,7 +530,26 @@ export function RegistrantsPanel({
       <header>
         <h2 className="font-serif text-xl text-dc-text sm:text-2xl">{copy.signups}</h2>
       </header>
-      <div className="rounded-xl border border-dc-border bg-dc-elevated-muted px-4 py-3">
+      <details className="rounded-xl border border-dc-border bg-dc-elevated-muted px-4 py-3 lg:hidden">
+        <summary className="cursor-pointer text-sm font-medium text-dc-text">About signups & roster</summary>
+        <div className="mt-3 space-y-2 text-sm leading-relaxed text-dc-muted">
+          <p>
+            {copy.signups} are everyone who signed up through your registration form or import. When linked, they also
+            appear in the{' '}
+            <Link
+              href={`/organizer/dancecard/${encodeURIComponent(eventSlug)}?tab=people&${PEOPLE_SUB_TAB_PARAM}=roster`}
+              className="text-dc-accent hover:underline"
+            >
+              {copy.roster}
+            </Link>
+            .
+          </p>
+          <p className="text-xs">
+            Tap a name to open details. Use General to change category and status.
+          </p>
+        </div>
+      </details>
+      <div className="hidden rounded-xl border border-dc-border bg-dc-elevated-muted px-4 py-3 lg:block">
         <p className="text-sm leading-relaxed text-dc-muted">
           {copy.signups} are everyone who signed up through your registration form or import. Each row is a signup record
           (ticket category, status, check-in). When synced or linked, the same person also appears in the{' '}
@@ -554,63 +576,82 @@ export function RegistrantsPanel({
         <InlineSuccessBanner message={checkInSuccess} onDismiss={() => setCheckInSuccess(null)} />
       ) : null}
       {err ? <p className="text-sm text-red-700 whitespace-pre-wrap">{err}</p> : null}
-      <p className="text-xs text-dc-muted">
+      <details className="text-xs text-dc-muted lg:hidden">
+        <summary className="cursor-pointer font-medium text-dc-text">Check-in color key</summary>
+        <p className="mt-2">
+          <span className="text-dc-accent-hover">Gold</span> on-site · <span className="text-sky-600 dark:text-sky-300">blue</span>{' '}
+          late · <span className="text-dc-danger">red</span> early override. Set windows under Registration → ticket categories.
+        </p>
+      </details>
+      <p className="hidden text-xs text-dc-muted lg:block">
         Check-in colors: <span className="text-dc-accent-hover">gold on-site</span> ·{' '}
-        <span className="text-sky-700">blue late</span> · <span className="text-red-700">red early (override)</span>.
+        <span className="text-sky-600 dark:text-sky-300">blue late</span> · <span className="text-dc-danger">red early (override)</span>.
         Set per-ticket windows in Registration → ticket categories.
       </p>
-      <div className="-mx-1 flex gap-2 overflow-x-auto px-1 pb-1">
-        <select
-          className="shrink-0 rounded-lg border border-dc-border bg-dc-surface-muted px-3 py-2 text-sm text-dc-text"
-          value={status}
-          onChange={(e) => setStatus(e.target.value)}
-        >
-          {STATUSES.map((s) => (
-            <option key={s || 'all'} value={s}>
-              {s ? (STATUS_LABELS[s] ?? s) : 'All statuses'}
-            </option>
-          ))}
-        </select>
-        <select
-          className="shrink-0 rounded-lg border border-dc-border bg-dc-surface-muted px-3 py-2 text-sm text-dc-text"
-          value={vettingFilter}
-          onChange={(e) => setVettingFilter(e.target.value)}
-        >
-          <option value="">All vetting</option>
-          {VETTING.map((v) => (
-            <option key={v} value={v}>
-              {v.replace(/_/g, ' ')}
-            </option>
-          ))}
-        </select>
-        <select
-          className="shrink-0 max-w-[12rem] rounded-lg border border-dc-border bg-dc-surface-muted px-3 py-2 text-sm text-dc-text"
-          value={categoryFilter}
-          onChange={(e) => setCategoryFilter(e.target.value)}
-        >
-          <option value="">All ticket types</option>
-          {categories.map((c) => (
-            <option key={c.id} value={c.id}>
-              {c.name}
-            </option>
-          ))}
-        </select>
-        <input
-          className="min-w-[10rem] shrink-0 flex-1 rounded-lg border border-dc-border bg-dc-surface-muted px-3 py-2 text-sm text-dc-text"
-          placeholder="Search name or email..."
-          value={q}
-          onChange={(e) => setQ(e.target.value)}
-        />
-        {!readOnly ? (
-          <button
-            type="button"
-            className="shrink-0 rounded-full border border-dc-border px-4 py-2 text-sm text-dc-text hover:bg-dc-surface-muted"
-            onClick={() => void exportCsv()}
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        <label className="flex flex-col gap-1 text-xs text-dc-muted">
+          <span className="font-semibold uppercase tracking-wide">Status</span>
+          <select
+            className="min-h-11 w-full rounded-lg border border-dc-border bg-dc-elevated-solid px-3 py-2 text-base text-dc-text"
+            value={status}
+            onChange={(e) => setStatus(e.target.value)}
           >
-            Export CSV
-          </button>
-        ) : null}
+            {STATUSES.map((s) => (
+              <option key={s || 'all'} value={s}>
+                {s ? (STATUS_LABELS[s] ?? s) : 'All statuses'}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label className="flex flex-col gap-1 text-xs text-dc-muted">
+          <span className="font-semibold uppercase tracking-wide">Vetting</span>
+          <select
+            className="min-h-11 w-full rounded-lg border border-dc-border bg-dc-elevated-solid px-3 py-2 text-base text-dc-text"
+            value={vettingFilter}
+            onChange={(e) => setVettingFilter(e.target.value)}
+          >
+            <option value="">All vetting</option>
+            {VETTING.map((v) => (
+              <option key={v} value={v}>
+                {v.replace(/_/g, ' ')}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label className="flex flex-col gap-1 text-xs text-dc-muted sm:col-span-2 lg:col-span-1">
+          <span className="font-semibold uppercase tracking-wide">Ticket type</span>
+          <select
+            className="min-h-11 w-full rounded-lg border border-dc-border bg-dc-elevated-solid px-3 py-2 text-base text-dc-text"
+            value={categoryFilter}
+            onChange={(e) => setCategoryFilter(e.target.value)}
+          >
+            <option value="">All ticket types</option>
+            {categories.map((c) => (
+              <option key={c.id} value={c.id}>
+                {c.name}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label className="flex flex-col gap-1 text-xs text-dc-muted sm:col-span-2 lg:col-span-1">
+          <span className="font-semibold uppercase tracking-wide">Search</span>
+          <input
+            className="min-h-11 w-full rounded-lg border border-dc-border bg-dc-elevated-solid px-3 py-2 text-base text-dc-text"
+            placeholder="Name or email…"
+            value={q}
+            onChange={(e) => setQ(e.target.value)}
+          />
+        </label>
       </div>
+      {!readOnly ? (
+        <button
+          type="button"
+          className="min-h-11 w-full rounded-xl border border-dc-border px-4 py-2.5 text-sm font-medium text-dc-text hover:bg-dc-surface-muted sm:w-auto"
+          onClick={() => void exportCsv()}
+        >
+          Export CSV
+        </button>
+      ) : null}
       {!readOnly ? (
         <>
           <details className="rounded-xl border border-dc-border bg-dc-elevated-muted p-3 text-sm text-dc-muted">
@@ -680,6 +721,7 @@ export function RegistrantsPanel({
         readOnly={readOnly}
         selectedId={selected?.id ?? null}
         onSelect={(r) => void openRow(r)}
+        onClearSelection={() => setSelected(null)}
         renderPersonRosterLink={(r) =>
           r.personId ? (
             <Link
@@ -719,7 +761,7 @@ export function RegistrantsPanel({
                 return (
                   <button
                     type="button"
-                    className={`rounded-full border px-2 py-1 text-xs font-medium ${cls.button}`}
+                    className={`rounded-full border text-xs font-medium ${cls.button}`}
                     onClick={(e) => void quickCheckIn(r.id, e)}
                   >
                     {r.checkInEligibility === 'early'

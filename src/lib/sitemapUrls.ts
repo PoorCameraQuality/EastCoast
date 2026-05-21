@@ -109,6 +109,8 @@ export async function buildDirectorySitemapUrls(): Promise<SitemapUrlEntry[]> {
     { loc: `${BASE_URL}/directory-snapshot`, lastmod: today, changefreq: 'weekly', priority: 0.48 },
     { loc: `${BASE_URL}/bdsm-events`, changefreq: 'weekly', priority: 0.72 },
     { loc: `${BASE_URL}/vendors`, changefreq: 'weekly', priority: 0.68 },
+    { loc: `${BASE_URL}/dancecard`, changefreq: 'monthly', priority: 0.55 },
+    { loc: `${BASE_URL}/dancecard/organizers`, changefreq: 'monthly', priority: 0.55 },
     { loc: `${BASE_URL}/blog`, changefreq: 'weekly', priority: 0.62 },
     { loc: `${BASE_URL}/spirituality-kink`, changefreq: 'weekly', priority: 0.58 },
     {

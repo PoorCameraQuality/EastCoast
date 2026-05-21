@@ -2,9 +2,14 @@ import Link from 'next/link'
 import { OrganizersScreenshotGallery } from '@/components/dancecard/marketing/OrganizersScreenshotGallery'
 import { ORGANIZER_FEATURES } from '@/components/dancecard/marketing/marketingWalkthroughData'
 
-const LOGIN = '/organizer/login?next=%2Forganizer%2Fdancecard'
+import {
+  DANCECARD_ORGANIZER_SANDBOX_PATH,
+  ECKE_EVENT_SYSTEMS_LOGIN_PATH,
+} from '@/lib/dancecard/nav'
+
+const LOGIN = ECKE_EVENT_SYSTEMS_LOGIN_PATH
 const SIGNUP = '/organizer/login?view=signup&next=%2Forganizer%2Fdancecard'
-const SANDBOX = '/organizer/dancecard/sandbox?tab=dashboard'
+const SANDBOX = DANCECARD_ORGANIZER_SANDBOX_PATH
 
 const PILLARS = [
   {
@@ -66,6 +71,9 @@ export function OrganizersLanding() {
           </p>
           <p className="mt-4 text-base leading-relaxed text-dc-muted">
             Camp weekends. Hotel takeovers. Any event where the schedule, the door, and the map need to stay in sync.
+          </p>
+          <p className="mt-3 text-sm text-amber-200/90">
+            Free while in beta — pricing for organizers will be announced before general availability.
           </p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
             <Link

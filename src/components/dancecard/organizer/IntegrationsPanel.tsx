@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from 'react'
 import { organizerDancecardFetch } from '@/components/dancecard/organizer/organizerApi'
-import { InlineSuccessBanner, useConfirmDialog } from '@/components/dancecard/organizer/ui'
+import { DancecardPanelSkeleton, InlineSuccessBanner, useConfirmDialog } from '@/components/dancecard/organizer/ui'
 import type { OrganizerRoleForClient } from '@/lib/dancecard/organizerRoles'
 import type { DancecardModules } from '@/lib/dancecard/eventEntitlements'
 import { EmbedSkinPreview } from '@/components/dancecard/organizer/integrations/EmbedSkinPreview'
@@ -81,6 +81,7 @@ export function IntegrationsPanel({
     webhookDeliveries30d: number
   } | null>(null)
   const [successBanner, setSuccessBanner] = useState<string | null>(null)
+  const [initialLoading, setInitialLoading] = useState(true)
   const { ask, dialog } = useConfirmDialog()
 
   const origin = typeof window !== 'undefined' ? window.location.origin : ''
@@ -129,8 +130,14 @@ export function IntegrationsPanel({
   }, [eventSlug, ownerOrAdmin])
 
   useEffect(() => {
-    void load()
-    void loadEntitlements()
+    let cancelled = false
+    void (async () => {
+      await Promise.all([load(), loadEntitlements()])
+      if (!cancelled) setInitialLoading(false)
+    })()
+    return () => {
+      cancelled = true
+    }
   }, [load, loadEntitlements])
 
   async function toggleModule(key: keyof DancecardModules, enabled: boolean) {
@@ -284,8 +291,18 @@ export function IntegrationsPanel({
     return <p className="text-sm text-dc-muted">Integrations are limited to event owners and site admins.</p>
   }
 
+  if (initialLoading) {
+    return (
+      <div className="space-y-6 text-sm text-dc-text" aria-busy="true">
+        <p className="text-dc-muted">Loading integrations and module settings…</p>
+        <DancecardPanelSkeleton lines={4} />
+        <DancecardPanelSkeleton lines={3} />
+      </div>
+    )
+  }
+
   return (
-    <div className="space-y-8 text-sm text-dc-text">
+    <div className="space-y-8 text-sm text-dc-text dc-tab-content-enter">
       {dialog}
       {successBanner ? (
         <InlineSuccessBanner message={successBanner} onDismiss={() => setSuccessBanner(null)} />

@@ -4,8 +4,16 @@ import type { SupabaseClient } from '@supabase/supabase-js'
 import { NextResponse } from 'next/server'
 import type { OrganizerEventRole, OrganizerRoleForClient } from '@/lib/dancecard/organizerRoles'
 import { getDancecardAdmin, normalizeEventSlug } from '@/lib/dancecard/routeCommon'
+import { allowPublicSandboxOrganizerAccess } from '@/lib/dancecard/publicDemo'
 import { toClientError } from '@/lib/security/safeApiError'
 import { assertProductionNoOrganizerBypass } from '@/lib/security/apiAuth'
+
+export {
+  PUBLIC_SANDBOX_SLUG,
+  isPublicSandboxSlug,
+  publicSandboxOrganizerDemoEnabled,
+  allowPublicSandboxOrganizerAccess,
+} from '@/lib/dancecard/publicDemo'
 
 export { assertProductionNoOrganizerBypass } from '@/lib/security/apiAuth'
 
@@ -14,26 +22,6 @@ const DEV_BYPASS_USER_ID = '00000000-0000-4000-8000-000000000001'
 
 /** Placeholder user id for anonymous public sandbox demo (slug `sandbox` only). */
 const PUBLIC_SANDBOX_DEMO_USER_ID = '00000000-0000-4000-8000-000000000002'
-
-/** Seeded demo event slug (`npm run dancecard:seed-sandbox`). */
-export const PUBLIC_SANDBOX_SLUG = 'sandbox'
-
-export function isPublicSandboxSlug(eventSlug: string): boolean {
-  return normalizeEventSlug(eventSlug) === PUBLIC_SANDBOX_SLUG
-}
-
-/**
- * Production: allow unauthenticated organizer console for slug `sandbox` only.
- * Disable with `DANCECARD_PUBLIC_SANDBOX_DEMO=0` on Vercel.
- */
-export function publicSandboxOrganizerDemoEnabled(): boolean {
-  if (process.env.DANCECARD_PUBLIC_SANDBOX_DEMO === '0') return false
-  return true
-}
-
-export function allowPublicSandboxOrganizerAccess(eventSlug: string): boolean {
-  return publicSandboxOrganizerDemoEnabled() && isPublicSandboxSlug(eventSlug)
-}
 
 /**
  * Local preview only: `next dev` + `.env.local` must set BOTH:

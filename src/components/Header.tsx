@@ -7,27 +7,38 @@ import UserMenu from './auth/UserMenu'
 import { CONTACT_US_LABEL } from '@/lib/submissionContact'
 import { suppressEckeHeader } from '@/lib/dancecard/shellRoutes'
 
-const NAV_LINKS = [
-  { href: '/dancecard', label: 'Dancecard' },
+const PRIMARY_NAV = [
   { href: '/events', label: 'Events' },
-  { href: '/dungeons', label: 'Dungeons & clubs' },
-  { href: '/education', label: 'Education' },
-  { href: '/vendors', label: 'Vendors' },
   { href: '/calendar', label: 'Calendar' },
   { href: '/states', label: 'States' },
+  { href: '/dungeons', label: 'Dungeons & clubs' },
+  { href: '/vendors', label: 'Vendors' },
+] as const
+
+const MORE_NAV = [
+  { href: '/dancecard', label: 'Dancecard' },
+  { href: '/dancecard/organizers', label: 'Dancecard organizers' },
   { href: '/support', label: 'Support' },
   { href: '/about', label: 'About' },
+  { href: '/education', label: 'Education' },
+  { href: '/contact', label: 'Contact' },
 ] as const
+
+function isNavCurrent(pathname: string, href: string) {
+  if (href === '/') return pathname === '/'
+  return pathname === href || pathname.startsWith(`${href}/`)
+}
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [isMoreOpen, setIsMoreOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
   const pathname = usePathname()
   const mobileMenuButtonRef = useRef<HTMLButtonElement>(null)
 
-  // Auto-close mobile menu when route changes
   useEffect(() => {
     setIsMenuOpen(false)
+    setIsMoreOpen(false)
   }, [pathname])
 
   useEffect(() => {
@@ -36,6 +47,7 @@ export default function Header() {
       if (e.key === 'Escape') {
         e.preventDefault()
         setIsMenuOpen(false)
+        setIsMoreOpen(false)
         mobileMenuButtonRef.current?.focus()
       }
     }
@@ -43,7 +55,6 @@ export default function Header() {
     return () => window.removeEventListener('keydown', onKey)
   }, [isMenuOpen])
 
-  // Handle scroll effect
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20)
@@ -56,42 +67,43 @@ export default function Header() {
     return null
   }
 
+  const moreActive = MORE_NAV.some((l) => isNavCurrent(pathname, l.href))
+
   return (
-    <header className={`sticky top-0 z-50 transition-all duration-500 ${
-      isScrolled 
-        ? 'bg-black/95 backdrop-blur-xl border-b border-dark-700/50 shadow-2xl' 
-        : 'bg-gradient-to-b from-black/90 to-black/70 backdrop-blur-md'
-    }`}>
+    <header
+      className={`sticky top-0 z-50 transition-all duration-500 ${
+        isScrolled
+          ? 'bg-black/95 backdrop-blur-xl border-b border-dark-700/50 shadow-2xl'
+          : 'bg-gradient-to-b from-black/90 to-black/70 backdrop-blur-md'
+      }`}
+    >
       <div className="container-custom">
         <div className="flex justify-between items-center py-3 lg:py-4">
-          {/* Logo */}
-          <Link href="/" className="flex items-center space-x-3 group">
-            <div className="relative">
+          <Link href="/" className="flex items-center space-x-3 group min-w-0">
+            <div className="relative shrink-0">
               <div className="w-12 h-12 bg-gradient-to-br from-primary-500 to-primary-700 rounded-lg flex items-center justify-center shadow-lg group-hover:shadow-primary-500/25 transition-all duration-300 group-hover:scale-105">
                 <span className="text-white font-serif font-bold text-xl">EC</span>
               </div>
-              <div className="absolute inset-0 bg-gradient-to-br from-primary-400/20 to-primary-600/20 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
             </div>
-            <div className="flex flex-col">
-              <span className="text-xl font-serif font-semibold text-white group-hover:text-primary-300 transition-colors duration-300">
+            <div className="flex flex-col min-w-0">
+              <span className="text-lg sm:text-xl font-serif font-semibold text-white group-hover:text-primary-300 transition-colors duration-300 truncate">
                 East Coast Kink Events
               </span>
-              <span className="text-xs text-gray-400 font-medium tracking-wide">
-                Community • Events • Education
+              <span className="hidden sm:inline text-xs text-gray-400 font-medium tracking-wide">
+                Community · Events · Directory
               </span>
             </div>
           </Link>
 
-          {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center space-x-1" aria-label="Primary">
             <ul className="flex items-center space-x-1 list-none m-0 p-0" role="list">
-              {NAV_LINKS.map((link) => {
-                const isCurrent = pathname === link.href
+              {PRIMARY_NAV.map((link) => {
+                const isCurrent = isNavCurrent(pathname, link.href)
                 return (
                   <li key={link.href}>
                     <Link
                       href={link.href}
-                      className={`relative px-4 py-2 rounded-lg font-medium transition-all duration-300 inline-flex ${
+                      className={`relative px-3 py-2 rounded-lg text-sm font-medium transition-all duration-300 inline-flex ${
                         isCurrent
                           ? 'text-primary-300 bg-primary-600/20 border border-primary-600/30'
                           : 'text-gray-300 hover:text-white hover:bg-dark-800/50'
@@ -99,32 +111,63 @@ export default function Header() {
                       aria-current={isCurrent ? 'page' : undefined}
                     >
                       {link.label}
-                      {isCurrent && (
-                        <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-primary-400 rounded-full"></div>
-                      )}
                     </Link>
                   </li>
                 )
               })}
+              <li className="relative">
+                <button
+                  type="button"
+                  onClick={() => setIsMoreOpen(!isMoreOpen)}
+                  aria-expanded={isMoreOpen}
+                  aria-haspopup="true"
+                  className={`px-3 py-2 rounded-lg text-sm font-medium transition-all duration-300 inline-flex min-h-touch items-center gap-1 ${
+                    moreActive || isMoreOpen
+                      ? 'text-primary-300 bg-primary-600/20 border border-primary-600/30'
+                      : 'text-gray-300 hover:text-white hover:bg-dark-800/50 border border-transparent'
+                  }`}
+                >
+                  More
+                  <svg className={`w-4 h-4 transition-transform ${isMoreOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+                {isMoreOpen ? (
+                  <ul
+                    className="absolute right-0 top-full mt-1 min-w-[12rem] rounded-xl border border-dark-700 bg-black/95 py-2 shadow-xl list-none m-0 p-0 z-50"
+                    role="list"
+                  >
+                    {MORE_NAV.map((link) => (
+                      <li key={link.href}>
+                        <Link
+                          href={link.href}
+                          className="block px-4 py-2.5 text-sm text-gray-300 hover:bg-dark-800/50 hover:text-white min-h-touch"
+                          onClick={() => setIsMoreOpen(false)}
+                        >
+                          {link.label}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                ) : null}
+              </li>
             </ul>
 
             <div className="mx-2 w-px h-6 bg-dark-600" aria-hidden="true" />
 
             <Link
               href="/contact"
-              className="btn-outline text-sm px-5 py-2 whitespace-nowrap min-h-touch inline-flex items-center justify-center"
+              className="btn-outline text-sm px-4 py-2 whitespace-nowrap min-h-touch inline-flex items-center justify-center"
               aria-label="Contact us"
-              aria-current={pathname === '/contact' ? 'page' : undefined}
             >
               {CONTACT_US_LABEL}
             </Link>
-            
+
             <div className="ml-2">
               <UserMenu />
             </div>
           </nav>
 
-          {/* Mobile menu button */}
           <button
             ref={mobileMenuButtonRef}
             type="button"
@@ -132,76 +175,87 @@ export default function Header() {
             aria-label="Toggle mobile navigation menu"
             aria-expanded={isMenuOpen}
             aria-controls="ecke-mobile-nav"
-            className="lg:hidden relative p-3 rounded-lg text-gray-300 hover:text-white hover:bg-dark-800/50 transition-all duration-300 group"
+            className="lg:hidden relative p-3 rounded-lg text-gray-300 hover:text-white hover:bg-dark-800/50 transition-all duration-300"
           >
-            <div className={`w-6 h-6 flex flex-col justify-center items-center transition-all duration-300 ${
-              isMenuOpen ? 'rotate-180' : ''
-            }`}>
-              <span className={`block w-5 h-0.5 bg-current transition-all duration-300 ${
-                isMenuOpen ? 'rotate-45 translate-y-1' : '-translate-y-1'
-              }`}></span>
-              <span className={`block w-5 h-0.5 bg-current transition-all duration-300 ${
-                isMenuOpen ? 'opacity-0' : ''
-              }`}></span>
-              <span className={`block w-5 h-0.5 bg-current transition-all duration-300 ${
-                isMenuOpen ? '-rotate-45 -translate-y-1' : 'translate-y-1'
-              }`}></span>
+            <div className={`w-6 h-6 flex flex-col justify-center items-center transition-all duration-300 ${isMenuOpen ? 'rotate-180' : ''}`}>
+              <span className={`block w-5 h-0.5 bg-current transition-all duration-300 ${isMenuOpen ? 'rotate-45 translate-y-1' : '-translate-y-1'}`} />
+              <span className={`block w-5 h-0.5 bg-current transition-all duration-300 ${isMenuOpen ? 'opacity-0' : ''}`} />
+              <span className={`block w-5 h-0.5 bg-current transition-all duration-300 ${isMenuOpen ? '-rotate-45 -translate-y-1' : 'translate-y-1'}`} />
             </div>
           </button>
         </div>
 
-        {/* Mobile Navigation */}
         <div
           id="ecke-mobile-nav"
           aria-hidden={!isMenuOpen}
           className={`lg:hidden overflow-hidden transition-all duration-300 ease-in-out ${
-            isMenuOpen ? 'max-h-[min(85vh,28rem)] opacity-100' : 'max-h-0 opacity-0 pointer-events-none'
+            isMenuOpen ? 'max-h-[min(85vh,32rem)] opacity-100' : 'max-h-0 opacity-0 pointer-events-none'
           }`}
         >
-          <div className="py-4 border-t border-dark-700/50 bg-black/80 backdrop-blur-md max-h-[min(80vh,26rem)] overflow-y-auto overscroll-contain">
+          <div className="py-4 border-t border-dark-700/50 bg-black/80 backdrop-blur-md max-h-[min(80vh,30rem)] overflow-y-auto overscroll-contain">
             <nav aria-label="Mobile">
-              <ul
-                className="grid grid-cols-2 gap-3 sm:gap-4 list-none m-0 p-0"
-                role="list"
-              >
-                {[...NAV_LINKS, { href: '/contact', label: 'Contact' }].map((link) => {
-                  const isCurrent = pathname === link.href
+              <ul className="flex flex-col gap-1 list-none m-0 p-0" role="list">
+                {PRIMARY_NAV.map((link) => {
+                  const isCurrent = isNavCurrent(pathname, link.href)
                   return (
                     <li key={link.href}>
                       <Link
                         href={link.href}
-                        className={`flex min-h-touch items-center justify-center px-3 py-3 rounded-xl text-center transition-all duration-300 ${
+                        className={`flex min-h-touch items-center px-4 py-3 rounded-lg transition-all duration-300 ${
                           isCurrent
                             ? 'bg-primary-600/20 border border-primary-600/30 text-primary-300'
                             : 'text-gray-300 hover:text-white hover:bg-dark-800/50 border border-transparent'
                         }`}
                         aria-current={isCurrent ? 'page' : undefined}
                       >
-                        <span className="text-sm font-medium leading-tight">{link.label}</span>
+                        <span className="text-sm font-medium">{link.label}</span>
                       </Link>
                     </li>
                   )
                 })}
+                <li>
+                  <button
+                    type="button"
+                    onClick={() => setIsMoreOpen(!isMoreOpen)}
+                    aria-expanded={isMoreOpen}
+                    className={`flex w-full min-h-touch items-center justify-between px-4 py-3 rounded-lg text-sm font-medium transition-all ${
+                      moreActive ? 'text-primary-300 bg-primary-600/10' : 'text-gray-300 hover:bg-dark-800/50'
+                    }`}
+                  >
+                    More
+                    <svg className={`w-4 h-4 transition-transform ${isMoreOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </button>
+                  {isMoreOpen ? (
+                    <ul className="mt-1 ml-2 flex flex-col gap-1 border-l border-dark-700 pl-3 list-none" role="list">
+                      {MORE_NAV.map((link) => {
+                        const isCurrent = isNavCurrent(pathname, link.href)
+                        return (
+                          <li key={link.href}>
+                            <Link
+                              href={link.href}
+                              className={`flex min-h-touch items-center py-2.5 text-sm ${
+                                isCurrent ? 'text-primary-300' : 'text-gray-400 hover:text-white'
+                              }`}
+                            >
+                              {link.label}
+                            </Link>
+                          </li>
+                        )
+                      })}
+                    </ul>
+                  ) : null}
+                </li>
               </ul>
             </nav>
-            
-            <div className="mt-4 pt-4 border-t border-dark-700/50">
-              <div className="flex flex-col gap-3 sm:flex-row sm:items-stretch">
-                <Link
-                  href="/contact"
-                  className="btn-outline flex-1 text-center justify-center min-h-touch inline-flex items-center"
-                  aria-label="Contact us"
-                >
-                  {CONTACT_US_LABEL}
-                </Link>
-                <div className="flex-1 min-w-0 flex justify-center sm:justify-stretch [&>*]:w-full sm:[&>*]:max-w-none">
-                  <UserMenu />
-                </div>
-              </div>
+
+            <div className="mt-4 pt-4 border-t border-dark-700/50 px-4">
+              <UserMenu />
             </div>
           </div>
         </div>
       </div>
     </header>
   )
-} 
+}

@@ -89,7 +89,7 @@ export function PublicDancecardSignInPanel({
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             autoComplete="username"
-            placeholder="rope-dreamer"
+            placeholder="your-username"
           />
         </div>
         <div>

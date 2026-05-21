@@ -111,7 +111,7 @@ export function CompareDirectoryDiscover({ eventSlug, onPickUsername, compact }:
       className={
         compact
           ? 'space-y-2 rounded-xl border border-dc-border bg-dc-elevated/95 p-3 shadow-[0_12px_32px_rgba(45,38,28,0.1),inset_0_1px_0_rgba(255,255,255,0.5)]'
-          : 'space-y-3 rounded-2xl border border-dc-border bg-dc-elevated/95 p-4 shadow-[0_18px_54px_rgba(45,38,28,0.12),inset_0_1px_0_rgba(255,255,255,0.045)]'
+          : 'dc-glass-panel space-y-3 rounded-2xl border border-dc-border bg-dc-elevated/95 p-4'
       }
     >
       <div className="space-y-1">

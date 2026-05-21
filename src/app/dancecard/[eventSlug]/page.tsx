@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Suspense } from 'react'
 import { DancecardClient } from '@/components/dancecard/DancecardClient'
+import { DancecardAttendeeShellSkeleton } from '@/components/dancecard/organizer/ui'
 import { PreviewRoleBanner } from '@/components/dancecard/PreviewRoleBanner'
 import { BASE_URL } from '@/lib/seo'
 import { getDancecardAdmin, loadEventBySlug, normalizeEventSlug } from '@/lib/dancecard/routeCommon'
@@ -67,7 +68,15 @@ export default function DancecardEventPage({ params }: { params: { eventSlug: st
       <Suspense fallback={null}>
         <PreviewRoleBanner />
       </Suspense>
-      <DancecardClient eventSlug={slug} />
+      <Suspense
+        fallback={
+          <div className="relative min-h-screen overflow-hidden bg-dc-surface text-dc-text">
+            <DancecardAttendeeShellSkeleton />
+          </div>
+        }
+      >
+        <DancecardClient eventSlug={slug} />
+      </Suspense>
     </>
   )
 }

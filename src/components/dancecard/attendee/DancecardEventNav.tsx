@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import DancecardAppearancePicker from '@/components/dancecard/DancecardAppearancePicker'
 
 export function DancecardEventNav({
   eventSlug,
@@ -51,10 +52,12 @@ export function DancecardEventNav({
             {eventTitle?.trim() || 'Dancecard'}
           </span>
         </Link>
-        <nav
-          className="flex max-w-[min(52vw,14rem)] shrink-0 items-center gap-2.5 overflow-x-auto overscroll-x-contain whitespace-nowrap text-[11px] font-semibold tracking-wide [-ms-overflow-style:none] [scrollbar-width:none] sm:max-w-none sm:gap-4 sm:text-sm [&::-webkit-scrollbar]:hidden"
-          aria-label="Event sections"
-        >
+        <div className="flex shrink-0 items-center gap-2 sm:gap-3">
+          <DancecardAppearancePicker compact className="max-w-[9rem] sm:max-w-[11rem]" />
+          <nav
+            className="flex max-w-[min(52vw,14rem)] items-center gap-2.5 overflow-x-auto overscroll-x-contain whitespace-nowrap text-[11px] font-semibold tracking-wide [-ms-overflow-style:none] [scrollbar-width:none] sm:max-w-none sm:gap-4 sm:text-sm [&::-webkit-scrollbar]:hidden"
+            aria-label="Event sections"
+          >
           <a href="#dc-sign-in" className="shrink-0 text-dc-accent hover:text-dc-text hover:underline">
             Sign in
           </a>
@@ -87,7 +90,8 @@ export function DancecardEventNav({
           <Link href={`/dancecard/${slug}/policies`} className={linkClass}>
             Policies
           </Link>
-        </nav>
+          </nav>
+        </div>
       </div>
     </header>
   )

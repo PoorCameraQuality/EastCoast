@@ -1,3 +1,9 @@
+import {
+  DANCECARD_APPEARANCE_PRESETS,
+  getAppearancePreset,
+  type DancecardAppearancePreset,
+} from '@/lib/dancecard/appearancePresets'
+
 export type PalettePreset = {
   id: string
   name: string
@@ -6,82 +12,58 @@ export type PalettePreset = {
   vars: Record<string, string>
 }
 
-/** Sample palettes for outdoor / mobile readability review. */
+function labVarsFromPreset(p: DancecardAppearancePreset): Record<string, string> {
+  const v = p.vars
+  return {
+    '--dc-surface': v['--dc-surface'] ?? '',
+    '--dc-surface-muted': v['--dc-surface-muted'] ?? '',
+    '--dc-elevated-solid': v['--dc-elevated-solid'] ?? '',
+    '--dc-text': v['--dc-text'] ?? '',
+    '--dc-text-muted': v['--dc-text-muted'] ?? '',
+    '--dc-muted': v['--dc-muted'] ?? v['--dc-text-muted'] ?? '',
+    '--dc-accent': v['--dc-accent'] ?? '',
+    '--dc-accent-hover': v['--dc-accent-hover'] ?? '',
+    '--dc-accent-muted': v['--dc-accent-muted'] ?? '',
+    '--dc-accent-border': v['--dc-accent-border'] ?? '',
+    '--dc-accent-foreground': v['--dc-accent-foreground'] ?? '',
+    '--dc-border-subtle': v['--dc-border-subtle'] ?? '',
+    '--dc-compare-mutual': v['--dc-compare-mutual'] ?? '',
+    '--dc-compare-busy': v['--dc-compare-busy'] ?? '',
+    '--dc-compare-host-only': v['--dc-compare-host-only'] ?? '',
+    '--dc-compare-outside': v['--dc-compare-outside'] ?? '',
+  }
+}
+
+function toLabPreset(p: DancecardAppearancePreset, id?: string): PalettePreset {
+  return {
+    id: id ?? p.id,
+    name: p.name,
+    tagline: p.tagline,
+    bestFor: p.bestFor,
+    vars: labVarsFromPreset(p),
+  }
+}
+
+const parchment = getAppearancePreset('parchment')
+
+/** Palette lab + legacy anchor ids (`current`, `noon`, `slate`, `lifted`). */
 export const PALETTE_PRESETS: PalettePreset[] = [
   {
     id: 'current',
     name: 'Current — Parchment & Brass',
     tagline: 'Live product default',
-    bestFor: 'Mobile + outdoor; attendee & organizer',
-    vars: {
-      '--dc-surface': '#f4f0e8',
-      '--dc-surface-muted': '#e8e2d6',
-      '--dc-elevated-solid': '#ffffff',
-      '--dc-text': '#1c1814',
-      '--dc-text-muted': '#4f483f',
-      '--dc-muted': '#4f483f',
-      '--dc-accent': '#8b6914',
-      '--dc-accent-hover': '#6e5310',
-      '--dc-accent-muted': '#ede4cf',
-      '--dc-accent-border': '#9a7b2f',
-      '--dc-accent-foreground': '#ffffff',
-      '--dc-border-subtle': '#c9b896',
-      '--dc-compare-mutual': '#2f6b4f',
-      '--dc-compare-busy': '#b91c1c',
-      '--dc-compare-host-only': '#3d5a80',
-      '--dc-compare-outside': '#d4cfc4',
-    },
+    bestFor: parchment.bestFor,
+    vars: labVarsFromPreset(parchment),
   },
-  {
-    id: 'parchment',
-    name: 'Parchment & Brass',
-    tagline: 'Warm light — recommended outdoor default',
-    bestFor: 'Mobile + daylight; keeps gold brand',
-    vars: {
-      '--dc-surface': '#f4f0e8',
-      '--dc-surface-muted': '#e8e2d6',
-      '--dc-elevated-solid': '#ffffff',
-      '--dc-text': '#1c1814',
-      '--dc-text-muted': '#4f483f',
-      '--dc-muted': '#4f483f',
-      '--dc-accent': '#8b6914',
-      '--dc-accent-hover': '#6e5310',
-      '--dc-accent-muted': '#ede4cf',
-      '--dc-accent-border': '#9a7b2f',
-      '--dc-accent-foreground': '#ffffff',
-      '--dc-border-subtle': '#c9b896',
-      '--dc-compare-mutual': '#2f6b4f',
-      '--dc-compare-busy': '#b91c1c',
-      '--dc-compare-host-only': '#3d5a80',
-    },
-  },
-  {
-    id: 'noon',
-    name: 'High Noon',
-    tagline: 'Maximum contrast for sunlight',
-    bestFor: 'Gate / hallway / “sunlight mode” toggle',
-    vars: {
-      '--dc-surface': '#fafaf8',
-      '--dc-surface-muted': '#f0f0ee',
-      '--dc-elevated-solid': '#ffffff',
-      '--dc-text': '#111111',
-      '--dc-text-muted': '#444444',
-      '--dc-muted': '#444444',
-      '--dc-accent': '#b45309',
-      '--dc-accent-hover': '#92400e',
-      '--dc-accent-muted': '#ffedd5',
-      '--dc-accent-border': '#c2410c',
-      '--dc-accent-foreground': '#ffffff',
-      '--dc-border-subtle': '#999999',
-      '--dc-compare-mutual': '#15803d',
-      '--dc-compare-busy': '#b91c1c',
-      '--dc-compare-host-only': '#1e40af',
-    },
-  },
+  toLabPreset(getAppearancePreset('midnight-brass')),
+  toLabPreset(getAppearancePreset('parchment'), 'parchment'),
+  toLabPreset(getAppearancePreset('high-noon'), 'noon'),
+  toLabPreset(getAppearancePreset('coastal-slate'), 'slate'),
+  toLabPreset(getAppearancePreset('lifted-ink'), 'lifted'),
   {
     id: 'camp',
     name: 'Camp Day',
-    tagline: 'Friendly festival energy',
+    tagline: 'Friendly festival energy (lab only)',
     bestFor: 'Volunteers, outdoor camp weekends',
     vars: {
       '--dc-surface': '#f7f5f0',
@@ -101,50 +83,7 @@ export const PALETTE_PRESETS: PalettePreset[] = [
       '--dc-compare-host-only': '#4a6fa5',
     },
   },
-  {
-    id: 'slate',
-    name: 'Coastal Slate',
-    tagline: 'Cool light — organizer crisp',
-    bestFor: 'Long console sessions, data-heavy grids',
-    vars: {
-      '--dc-surface': '#f2f4f6',
-      '--dc-surface-muted': '#e4e8ec',
-      '--dc-elevated-solid': '#ffffff',
-      '--dc-text': '#0f172a',
-      '--dc-text-muted': '#475569',
-      '--dc-muted': '#475569',
-      '--dc-accent': '#b8860b',
-      '--dc-accent-hover': '#996f09',
-      '--dc-accent-muted': '#fef3c7',
-      '--dc-accent-border': '#b8860b',
-      '--dc-accent-foreground': '#0f172a',
-      '--dc-border-subtle': '#94a3b8',
-      '--dc-compare-mutual': '#047857',
-      '--dc-compare-busy': '#dc2626',
-      '--dc-compare-host-only': '#2563eb',
-    },
-  },
-  {
-    id: 'lifted',
-    name: 'Lifted Ink',
-    tagline: 'Improved dark for night only',
-    bestFor: 'After-dark; still not ideal outdoors',
-    vars: {
-      '--dc-surface': '#1a1816',
-      '--dc-surface-muted': '#252220',
-      '--dc-elevated-solid': '#2e2b28',
-      '--dc-text': '#faf8f5',
-      '--dc-text-muted': '#c4bbb0',
-      '--dc-muted': '#c4bbb0',
-      '--dc-accent': '#e8d5a8',
-      '--dc-accent-hover': '#f5ecd4',
-      '--dc-accent-muted': 'rgba(232, 213, 168, 0.14)',
-      '--dc-accent-border': 'rgba(232, 213, 168, 0.45)',
-      '--dc-accent-foreground': '#1a1510',
-      '--dc-border-subtle': 'rgba(232, 213, 168, 0.32)',
-      '--dc-compare-mutual': '#9cb88a',
-      '--dc-compare-busy': '#e8a4a4',
-      '--dc-compare-host-only': '#4a6fa5',
-    },
-  },
 ]
+
+/** Re-export for settings / docs. */
+export { DANCECARD_APPEARANCE_PRESETS }

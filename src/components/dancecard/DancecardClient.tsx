@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -45,7 +45,8 @@ import { DancecardCompactList } from '@/components/dancecard/DancecardCompactLis
 import { roleColor } from '@/lib/dancecard/roleColors'
 import { locationColor } from '@/lib/dancecard/locationColors'
 import { cn } from '@/lib/cn'
-import { DancecardAttendeeShellSkeleton } from '@/components/dancecard/organizer/ui'
+import { availabilitySlotClasses } from '@/lib/dancecard/availabilitySlotClasses'
+import { DancecardAttendeeShellSkeleton, DancecardListSkeleton } from '@/components/dancecard/organizer/ui'
 import { AttendeeBottomNav, type AttendeeNavTab } from '@/components/dancecard/attendee/AttendeeBottomNav'
 import { AttendeeSectionTabs, ATTENDEE_TAB_SHORT_LABEL } from '@/components/dancecard/attendee/AttendeeSectionTabs'
 import { AttendeeProfileTab } from '@/components/dancecard/attendee/AttendeeProfileTab'
@@ -81,11 +82,13 @@ import { PhotoPolicyChip } from '@/components/dancecard/attendee/PhotoPolicyChip
 import { AttendeeAnnouncements } from '@/components/dancecard/attendee/AttendeeAnnouncements'
 import { AttendeeWeekendGuide } from '@/components/dancecard/attendee/AttendeeWeekendGuide'
 import { PublicDancecardLanding } from '@/components/dancecard/attendee/PublicDancecardLanding'
+import { SandboxAttendeeLanding } from '@/components/dancecard/attendee/SandboxAttendeeLanding'
 import { PublicDancecardSignInPanel } from '@/components/dancecard/attendee/PublicDancecardSignInPanel'
 import { programSlotDisplayRoom } from '@/lib/dancecard/programSlotDisplayRoom'
 import { dayLabel } from '@/components/dancecard/time'
 import type { PublicProgramSlotDto } from '@/lib/dancecard/publicProgramSlotsData'
 import { resolveEventDisplayTitles } from '@/lib/dancecard/eventDisplay'
+import { isPublicAttendeeDemoSlug } from '@/lib/dancecard/publicDemo'
 
 type ScheduleMeta = {
   productTitle: string
@@ -446,6 +449,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
   )
   const [mutualAdvancedTokenOpen, setMutualAdvancedTokenOpen] = useState(false)
   const [mutualData, setMutualData] = useState<MutualSharePayload | null>(null)
+  const [mutualRefreshing, setMutualRefreshing] = useState(false)
   const [reservations, setReservations] = useState<ReservationRow[]>([])
   const [reserveMutualOpen, setReserveMutualOpen] = useState(false)
   const [reserveMutualStart, setReserveMutualStart] = useState('')
@@ -650,6 +654,8 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
         if (g.modules) setEventModules(g.modules)
         if (g.eventProfile) setEventProfile(g.eventProfile)
         if (!g.requiresRegistrationCode) {
+          setEntryGateUnlocked(true)
+        } else if (isPublicAttendeeDemoSlug(slug)) {
           setEntryGateUnlocked(true)
         } else if (typeof window !== 'undefined') {
           const ok = window.sessionStorage.getItem(entryGateKey) === 'ok'
@@ -1196,7 +1202,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
               </button>
               <button
                 type="button"
-                className="min-h-10 rounded-md border border-red-300 bg-red-100 px-2.5 py-1.5 text-xs font-semibold text-red-800 hover:bg-red-100"
+                className="min-h-10 rounded-md border border-dc-danger-border bg-dc-danger-muted px-2.5 py-1.5 text-xs font-semibold text-dc-danger hover:brightness-110"
                 aria-label="Delete busy time"
                 title="Delete busy time"
                 onClick={() => removeSelection(s.id)}
@@ -2152,6 +2158,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
   }
 
   const refreshMutual = useCallback(async (opts?: { mode?: 'username' | 'token' }) => {
+    setMutualRefreshing(true)
     const forceToken = opts?.mode === 'token'
     const username = forceToken ? '' : mutualCompareUsername.trim().toLowerCase()
     if (username) {
@@ -2180,12 +2187,15 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
       } catch (e) {
         setMutualData(null)
         setToast(formatDancecardApiMessage(e))
+      } finally {
+        setMutualRefreshing(false)
       }
       return
     }
     const raw = mutualTokenRef.current.trim()
     if (!raw) {
       setMutualData(null)
+      setMutualRefreshing(false)
       return
     }
     if (forceToken) {
@@ -2218,6 +2228,8 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
     } catch {
       setMutualData(null)
       setToast('Could not load share preview.')
+    } finally {
+      setMutualRefreshing(false)
     }
   }, [slug, mutualCompareUsername])
 
@@ -2828,9 +2840,8 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
     return (
       <>
         {renderTopBar()}
-        <div className="relative min-h-screen overflow-hidden bg-dc-surface px-4 py-20 text-dc-text">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(198,167,94,0.14),transparent_32%),linear-gradient(180deg,var(--dc-surface)_0%,var(--dc-surface-muted)_100%)]" />
-          <LoadingPhase phase="gate" />
+        <div className="relative min-h-screen overflow-hidden bg-dc-surface text-dc-text">
+          <LoadingPhase phase="gate" fullBleed />
         </div>
       </>
     )
@@ -2927,7 +2938,8 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
       <>
         {renderTopBar()}
         <div className="relative min-h-screen overflow-hidden bg-dc-surface text-dc-text">
-          <DancecardAttendeeShellSkeleton />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(198,167,94,0.12),transparent_36%)]" />
+          <LoadingPhase phase="schedule" fullBleed />
         </div>
       </>
     )
@@ -2944,6 +2956,47 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
         </>
       )
     }
+    const signInPanel = (
+      <PublicDancecardSignInPanel
+        compact
+        authMode={authMode}
+        setAuthMode={setAuthMode}
+        username={username}
+        setUsername={setUsername}
+        password={password}
+        setPassword={setPassword}
+        passwordConfirm={passwordConfirm}
+        setPasswordConfirm={setPasswordConfirm}
+        showPassword={showPassword}
+        setShowPassword={setShowPassword}
+        displayName={displayName}
+        setDisplayName={setDisplayName}
+        compCode={compCode}
+        setCompCode={setCompCode}
+        authNotice={authNotice}
+        setAuthNotice={setAuthNotice}
+        onSubmit={() => void submitAuth()}
+      />
+    )
+
+    if (isPublicAttendeeDemoSlug(slug)) {
+      return (
+        <>
+          {renderTopBar()}
+          <SandboxAttendeeLanding
+            eventSlug={slug}
+            meta={schedule.meta}
+            productTitle={displayProductTitle}
+            eventTitle={displayEventTitle}
+            subtitle={displaySubtitle}
+            programSlots={schedule.slots}
+            onDemoEnter={checkSession}
+            signInPanel={signInPanel}
+          />
+        </>
+      )
+    }
+
     return (
       <>
         {renderTopBar({ luxury: true })}
@@ -2960,28 +3013,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
             setShowPassword(false)
             setAuthNotice(null)
           }}
-          signInPanel={
-            <PublicDancecardSignInPanel
-              compact
-              authMode={authMode}
-              setAuthMode={setAuthMode}
-              username={username}
-              setUsername={setUsername}
-              password={password}
-              setPassword={setPassword}
-              passwordConfirm={passwordConfirm}
-              setPasswordConfirm={setPasswordConfirm}
-              showPassword={showPassword}
-              setShowPassword={setShowPassword}
-              displayName={displayName}
-              setDisplayName={setDisplayName}
-              compCode={compCode}
-              setCompCode={setCompCode}
-              authNotice={authNotice}
-              setAuthNotice={setAuthNotice}
-              onSubmit={() => void submitAuth()}
-            />
-          }
+          signInPanel={signInPanel}
         />
       </>
     )
@@ -3194,7 +3226,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                 </button>
                 <button
                   type="button"
-                  className="rounded-xl border border-sky-400/35 bg-sky-500/15 px-3 py-2 text-xs font-medium text-sky-900"
+                  className="dc-chip-btn rounded-xl border px-3 py-2 text-xs font-medium text-dc-accent"
                   onClick={() => exportDancecardCalendar('google')}
                 >
                   Google Calendar
@@ -3226,7 +3258,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                       {r.note ? <span className="max-w-full truncate text-[10px] text-dc-muted sm:max-w-[45%]">{r.note}</span> : null}
                       <button
                         type="button"
-                        className="shrink-0 rounded-full border border-red-300 bg-red-100 px-2 py-1 text-[10px] font-medium text-red-800 hover:bg-red-100"
+                        className="shrink-0 rounded-full border border-dc-danger-border bg-dc-danger-muted px-2 py-1 text-[10px] font-medium text-dc-danger hover:brightness-110"
                         onClick={() => void cancelReservation(r.id)}
                       >
                         Cancel
@@ -3286,12 +3318,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                   </p>
                 ) : (
                   mobileSchedulePanel.rows.map((row, idx) => {
-                    const slotCls = cx(
-                      'grid w-full min-h-touch grid-cols-[98px_minmax(0,1fr)] items-center gap-2 rounded-lg border px-2.5 py-2 text-left text-xs transition motion-reduce:transition-none',
-                      row.busy
-                        ? 'border-red-300 bg-red-100 text-red-800'
-                        : 'border-emerald-300 bg-emerald-100 text-emerald-800 active:scale-[0.99] motion-reduce:active:scale-100 hover:border-emerald-300/45 hover:bg-emerald-100'
-                    )
+                    const slotCls = availabilitySlotClasses(row, 'day-grid')
                     const inner = (
                       <>
                         <span className="font-semibold text-dc-text">{formatTime(row.start.toISOString(), tz)}</span>
@@ -3329,7 +3356,8 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                 )}
               </div>
               <p className="mt-2 border-t border-dc-border/50 pt-2 text-[10px] leading-snug text-dc-subtle">
-                Tap <span className="text-emerald-700">green</span> hours to mark busy; tap editable red hours to free them.
+                Tap <span className="text-dc-success">open</span> hours to mark busy; tap your <span className="text-dc-danger">busy</span> hours to free them.{' '}
+                <span className="text-dc-accent">Gold</span> slots are claimed by someone else.
                 Times are for the highlighted day.
               </p>
             </GlassPanel>
@@ -3360,12 +3388,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                       </div>
                       <div className="mt-2 max-h-56 space-y-1 overflow-y-auto pr-1">
                         {day.rows.length ? day.rows.map((row, idx) => {
-                          const slotCls = cx(
-                            'grid w-full min-h-10 grid-cols-[84px_minmax(0,1fr)] items-center gap-2 rounded-lg border px-2 py-1.5 text-left text-xs transition motion-reduce:transition-none',
-                            row.busy
-                              ? 'border-red-300 bg-red-100 text-red-800'
-                              : 'border-emerald-300 bg-emerald-100 text-emerald-800 active:scale-[0.99] motion-reduce:active:scale-100 hover:border-emerald-300/45 hover:bg-emerald-100'
-                          )
+                          const slotCls = availabilitySlotClasses(row, 'day-grid-compact')
                           const inner = (
                             <>
                               <span className="font-semibold text-dc-text">{formatTime(row.start.toISOString(), tz)}</span>
@@ -3531,6 +3554,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                   mutualAdvancedTokenOpen={mutualAdvancedTokenOpen}
                   setMutualAdvancedTokenOpen={setMutualAdvancedTokenOpen}
                   refreshMutual={refreshMutual}
+                  mutualRefreshing={mutualRefreshing}
                   mutualData={mutualData}
                   mutualStripDays={mutualStripDays}
                   mutualPlayableWindow={mutualPlayableWindow}
@@ -3802,7 +3826,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                       </button>
                       <button
                         type="button"
-                        className="min-h-10 rounded-md border border-red-300 bg-red-100 px-2.5 py-1.5 text-xs font-semibold text-red-800 hover:bg-red-100"
+                        className="min-h-10 rounded-md border border-dc-danger-border bg-dc-danger-muted px-2.5 py-1.5 text-xs font-semibold text-dc-danger hover:brightness-110"
                         aria-label="Delete busy time"
                         title="Delete busy time"
                         onClick={() => removeSelection(s.id)}
@@ -3920,7 +3944,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                 </div>
                 <button
                   type="button"
-                  className="shrink-0 rounded-full border border-dc-border bg-white/[0.03] px-3 py-1.5 text-xs text-dc-accent-foreground transition hover:bg-dc-accent-muted"
+                  className="dc-chip-btn shrink-0 rounded-full border px-3 py-1.5 text-xs transition"
                   onClick={() => void loadSchedule()}
                 >
                   Refresh
@@ -3928,12 +3952,12 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
               </div>
 
               <div className="grid gap-2 sm:grid-cols-2 sm:gap-3">
-                <div className="rounded-xl border border-dc-border bg-dc-elevated/75 p-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.035)] sm:p-3.5">
+                <div className="dc-inset-surface rounded-xl border border-dc-border bg-dc-elevated/75 p-3 sm:p-3.5">
                   <p className="text-xs font-semibold uppercase tracking-[0.32em] text-dc-muted/90">Today</p>
                   <div className="mt-2 font-serif text-lg text-dc-text sm:mt-2 sm:text-2xl">{todayLabel(tz)}</div>
                   <p className="mt-2 text-xs text-dc-muted/80 sm:text-sm">{tz}</p>
                 </div>
-                <div className="rounded-xl border border-dc-border bg-dc-elevated/75 p-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.035)] sm:p-3.5">
+                <div className="dc-inset-surface rounded-xl border border-dc-border bg-dc-elevated/75 p-3 sm:p-3.5">
                   <p className="text-xs font-semibold uppercase tracking-[0.32em] text-dc-muted/90">Coming up next</p>
                   {nextAgendaItem ? (
                     nextAgendaItem.type === 'selection' ? (
@@ -3972,28 +3996,28 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
               </div>
             </div>
 
-            <div className="rounded-xl border border-dc-border bg-dc-elevated/75 p-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.035)] sm:p-3.5">
+            <div className="dc-inset-surface rounded-xl border border-dc-border bg-dc-elevated/75 p-3 sm:p-3.5">
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0">
                   <p className="text-xs font-semibold uppercase tracking-[0.3em] text-dc-muted/90">Signed in</p>
                   <h2 className="mt-1 truncate text-base font-semibold text-dc-text sm:text-xl">{me.account.displayName}</h2>
                   <p className="mt-0.5 truncate text-xs text-dc-muted sm:text-sm">@{me.account.username}</p>
                 </div>
-                <div className="shrink-0 rounded-full border border-emerald-400/25 bg-emerald-400/10 px-2 py-0.5 text-[10px] font-medium text-emerald-700 sm:px-3 sm:text-xs">
+                <div className="shrink-0 rounded-full border border-dc-success/30 bg-dc-success-muted px-2 py-0.5 text-[10px] font-medium text-dc-success sm:px-3 sm:text-xs">
                   Live
                 </div>
               </div>
               <div className="mt-3 flex flex-wrap gap-1.5">
                 <button
                   type="button"
-                  className="rounded-full border border-dc-border bg-white/[0.03] px-3 py-1 text-xs text-dc-accent-foreground transition hover:bg-dc-accent-muted"
+                  className="dc-chip-btn rounded-full border px-3 py-1 text-xs transition"
                   onClick={openRename}
                 >
                   Rename
                 </button>
                 <button
                   type="button"
-                  className="rounded-full border border-dc-border bg-white/[0.03] px-3 py-1 text-xs text-dc-accent-foreground transition hover:bg-dc-accent-muted"
+                  className="dc-chip-btn rounded-full border px-3 py-1 text-xs transition"
                   onClick={openBlankManualModal}
                 >
                   Add busy time
@@ -4001,14 +4025,14 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                 <button
                   type="button"
                   title={SHARE_LINK_PRIVACY_BLURB}
-                  className="rounded-full border border-dc-border bg-white/[0.03] px-3 py-1 text-xs text-dc-accent-foreground transition hover:bg-dc-accent-muted"
+                  className="dc-chip-btn rounded-full border px-3 py-1 text-xs transition"
                   onClick={() => void copyShare()}
                 >
                   Copy share link
                 </button>
                 <button
                   type="button"
-                  className="rounded-full border border-red-300 bg-red-100 px-3 py-1 text-xs text-red-800 transition hover:bg-red-200"
+                  className="rounded-full border border-dc-danger-border bg-dc-danger-muted px-3 py-1 text-xs text-dc-danger transition hover:brightness-110"
                   onClick={() => void logout()}
                 >
                   Log out
@@ -4297,7 +4321,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                           <button
                             type="button"
                             disabled={calendarExportCount === 0}
-                            className="rounded-xl border border-dc-border bg-white/[0.06] px-3 py-2 text-xs font-medium text-dc-accent-foreground transition hover:bg-dc-accent-muted disabled:cursor-not-allowed disabled:opacity-40"
+                            className="dc-chip-btn rounded-xl border px-3 py-2 text-xs font-medium transition disabled:cursor-not-allowed disabled:opacity-40"
                             onClick={() => exportDancecardCalendar('ical')}
                           >
                             Apple / iCal
@@ -4305,7 +4329,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                           <button
                             type="button"
                             disabled={calendarExportCount === 0}
-                            className="rounded-xl border border-sky-400/35 bg-sky-500/15 px-3 py-2 text-xs font-medium text-sky-900 transition hover:bg-sky-500/25 disabled:cursor-not-allowed disabled:opacity-40"
+                            className="dc-chip-btn rounded-xl border px-3 py-2 text-xs font-medium text-dc-accent transition disabled:cursor-not-allowed disabled:opacity-40"
                             onClick={() => exportDancecardCalendar('google')}
                           >
                             Google Calendar
@@ -4378,12 +4402,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                             </p>
                           ) : (
                             mobileSchedulePanel.rows.map((row, idx) => {
-                              const slotCls = cx(
-                                'grid w-full min-h-touch grid-cols-[98px_minmax(0,1fr)] items-center gap-2 rounded-lg border px-2.5 py-2 text-left text-xs transition motion-reduce:transition-none',
-                                row.busy
-                                  ? 'border-red-300 bg-red-100 text-red-800'
-                                  : 'border-emerald-300 bg-emerald-100 text-emerald-800 active:scale-[0.99] motion-reduce:active:scale-100 hover:border-emerald-300/45 hover:bg-emerald-100'
-                              )
+                              const slotCls = availabilitySlotClasses(row, 'day-grid')
                               const inner = (
                                 <>
                                   <span className="font-semibold text-dc-text">{formatTime(row.start.toISOString(), tz)}</span>
@@ -4421,7 +4440,8 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                           )}
                         </div>
                         <p className="mt-2 border-t border-dc-border/50 pt-2 text-[11px] leading-snug text-dc-subtle">
-                          Tap <span className="text-emerald-700">green</span> hours to mark busy; tap editable red hours to free them.
+                          Tap <span className="text-dc-success">open</span> hours to mark busy; tap your <span className="text-dc-danger">busy</span> hours to free them.{' '}
+                <span className="text-dc-accent">Gold</span> slots are claimed by someone else.
                           Day chips are above.
                         </p>
                       </GlassPanel>
@@ -4431,17 +4451,12 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                           {availabilityDisplayToggle}
                         </div>
                         <p className="mt-1 hidden text-[11px] text-dc-subtle md:block">
-                          Tap green rows to mark busy; tap editable red rows to free that hour.
+                          Open = mark busy; your busy = free; gold = claimed by another guest.
                         </p>
                         <div className="mt-2 max-h-56 space-y-1 overflow-y-auto pr-1 hidden md:block">
                           {visibleAvailabilityHourRows.length ? (
                             visibleAvailabilityHourRows.map((row, idx) => {
-                              const slotCls = cx(
-                                'flex w-full min-h-10 items-center justify-between rounded-lg border px-2.5 py-2 text-left text-xs transition motion-reduce:transition-none',
-                                row.busy
-                                  ? 'border-red-300 bg-red-100 text-red-800'
-                                  : 'border-emerald-300 bg-emerald-100 text-emerald-800 active:scale-[0.99] motion-reduce:active:scale-100 hover:border-emerald-300/45 hover:bg-emerald-100'
-                              )
+                              const slotCls = availabilitySlotClasses(row, 'hour-flex')
                               const inner = (
                                 <>
                                   <span>{toDatetimeLocalValue(row.start).replace('T', ' ')}</span>
@@ -4572,6 +4587,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                     mutualAdvancedTokenOpen={mutualAdvancedTokenOpen}
                     setMutualAdvancedTokenOpen={setMutualAdvancedTokenOpen}
                     refreshMutual={refreshMutual}
+                    mutualRefreshing={mutualRefreshing}
                     mutualData={mutualData}
                     mutualStripDays={mutualStripDays}
                     mutualPlayableWindow={mutualPlayableWindow}
@@ -4816,7 +4832,7 @@ export function DancecardClient({ eventSlug }: { eventSlug: string }) {
                       </button>
                       <button
                         type="button"
-                        className="min-h-10 rounded-md border border-red-300 bg-red-100 px-2.5 py-1.5 text-xs font-semibold text-red-800 hover:bg-red-100"
+                        className="min-h-10 rounded-md border border-dc-danger-border bg-dc-danger-muted px-2.5 py-1.5 text-xs font-semibold text-dc-danger hover:brightness-110"
                         aria-label="Delete busy time"
                         title="Delete busy time"
                         onClick={() => removeSelection(s.id)}
@@ -4953,7 +4969,7 @@ function GlassPanel({
   return (
     <div
       className={cx(
-        'rounded-2xl border border-dc-border bg-dc-elevated/95 shadow-[0_18px_54px_rgba(45,38,28,0.42),inset_0_1px_0_rgba(255,255,255,0.045)] backdrop-blur-sm transition-[box-shadow,border-color] duration-200 motion-reduce:transition-none',
+        'dc-glass-panel rounded-2xl border border-dc-border bg-dc-elevated/95 backdrop-blur-sm transition-[box-shadow,border-color] duration-200 motion-reduce:transition-none',
         className
       )}
     >
@@ -5109,7 +5125,7 @@ function DancecardProgramTabBody({
                   'rounded-full px-3 py-2 text-xs transition sm:px-4 sm:text-sm',
                   scheduleView === option.key
                     ? 'bg-white text-dc-accent-foreground'
-                    : 'border border-dc-border bg-white/[0.03] text-dc-muted hover:bg-white/[0.07]'
+                    : 'dc-chip-btn border text-dc-muted'
                 )}
                 onClick={() => setScheduleView(option.key)}
               >
@@ -5223,7 +5239,7 @@ function DancecardProgramTabBody({
                     'shrink-0 rounded-full border px-3 py-1.5 text-xs font-medium transition',
                     active
                       ? 'border-dc-accent-border bg-dc-accent text-dc-accent-foreground'
-                      : 'border-dc-border bg-white/[0.03] text-dc-muted hover:bg-white/[0.07]'
+                      : 'dc-chip-btn border-dc-border text-dc-muted'
                   )}
                   onClick={() => onToggleProgramTag(tag)}
                 >
@@ -5239,7 +5255,7 @@ function DancecardProgramTabBody({
               <a
                 key={g.day}
                 href={`#dc-day-${idx}`}
-                className="rounded-full border border-dc-border bg-white/[0.03] px-3 py-1.5 text-xs font-medium uppercase tracking-[0.25em] text-dc-muted transition hover:bg-dc-accent-muted"
+                className="dc-chip-btn rounded-full border px-3 py-1.5 text-xs font-medium uppercase tracking-[0.25em] text-dc-muted transition"
               >
                 {shortDayLabel(g.day)}
               </a>
@@ -5541,18 +5557,23 @@ function DancecardProgramTabBody({
 function ReservationsPanel({ slug, tz }: { slug: string; tz: string }) {
   const { ask, dialog } = useConfirmDialog()
   const [rows, setRows] = useState<RescheduleReservationRow[]>([])
+  const [loaded, setLoaded] = useState(false)
   const [cancelId, setCancelId] = useState<string | null>(null)
   const [rescheduleRow, setRescheduleRow] = useState<RescheduleReservationRow | null>(null)
   const [panelErr, setPanelErr] = useState<string | null>(null)
   const [panelMsg, setPanelMsg] = useState<string | null>(null)
 
   const load = useCallback(async () => {
-    const r = await dancecardFetch<{ reservations: typeof rows }>(slug, '/reservations')
-    setRows(r.reservations)
+    try {
+      const r = await dancecardFetch<{ reservations: typeof rows }>(slug, '/reservations')
+      setRows(r.reservations)
+    } finally {
+      setLoaded(true)
+    }
   }, [slug])
 
   useEffect(() => {
-    void load().catch(() => null)
+    void load().catch(() => setLoaded(true))
   }, [load])
 
   function canReschedule(b: RescheduleReservationRow): boolean {
@@ -5612,9 +5633,11 @@ function ReservationsPanel({ slug, tz }: { slug: string; tz: string }) {
         </button>
       </div>
       {panelErr ? <p className="mb-3 text-sm text-red-700">{panelErr}</p> : null}
-      {panelMsg ? <p className="mb-3 text-sm text-emerald-700">{panelMsg}</p> : null}
+      {panelMsg ? <p className="mb-3 text-sm text-dc-success">{panelMsg}</p> : null}
       <div className="mt-4 space-y-3 text-sm sm:mt-5">
-        {rows.length ? (
+        {!loaded ? (
+          <DancecardListSkeleton rows={3} />
+        ) : rows.length ? (
           rows.map((b) => (
             <div key={b.id} className="flex flex-wrap items-start justify-between gap-2">
               <div className="min-w-0 flex-1">
@@ -5641,7 +5664,7 @@ function ReservationsPanel({ slug, tz }: { slug: string; tz: string }) {
                   <button
                     type="button"
                     disabled={cancelId === b.id}
-                    className="rounded-full border border-red-300 bg-red-100 px-3 py-1.5 text-xs font-medium text-red-800 hover:bg-red-100 disabled:opacity-50"
+                    className="rounded-full border border-dc-danger-border bg-dc-danger-muted px-3 py-1.5 text-xs font-medium text-dc-danger hover:brightness-110 disabled:opacity-50"
                     onClick={() => void cancelReservationRow(b.id)}
                   >
                     {cancelId === b.id ? 'Cancelling…' : 'Cancel'}

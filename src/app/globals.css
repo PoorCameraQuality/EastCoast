@@ -106,6 +106,96 @@
   .card-elegant {
     @apply bg-dark-900 border-0 shadow-dark hover:shadow-elegant-lg transition-all duration-300 p-6 sm:p-8;
   }
+
+  /** Glass surface for discovery cards (homepage, hubs) */
+  .card-glass {
+    @apply relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-b from-white/[0.08] to-white/[0.02] backdrop-blur-md shadow-[0_8px_32px_rgba(0,0,0,0.35)] transition-[border-color,box-shadow,transform] duration-300;
+  }
+
+  @media (hover: hover) and (prefers-reduced-motion: no-preference) {
+    .card-glass:hover {
+      @apply border-primary-400/30 shadow-[0_12px_40px_rgba(0,0,0,0.5)] -translate-y-0.5;
+    }
+  }
+
+  .card-glass-wash {
+    @apply pointer-events-none absolute inset-0 bg-gradient-to-br from-primary-500/10 via-transparent to-cyan-500/5 opacity-0 transition-opacity duration-500;
+  }
+
+  @media (hover: hover) {
+    .group:hover .card-glass-wash,
+    .group:focus-within .card-glass-wash,
+    .group\/card:hover .card-glass-wash,
+    .group\/card:focus-within .card-glass-wash {
+      @apply opacity-100;
+    }
+  }
+
+  .card-glass-violet {
+    @apply border-violet-500/15;
+  }
+
+  @media (hover: hover) and (prefers-reduced-motion: no-preference) {
+    .card-glass-violet:hover {
+      @apply border-violet-400/35 shadow-[0_12px_40px_rgba(88,28,135,0.25)];
+    }
+  }
+
+  .card-glass-wash-violet {
+    @apply from-violet-500/10 via-transparent to-fuchsia-500/5;
+  }
+
+  .card-glass-muted {
+    @apply border-white/10 from-white/[0.04] to-transparent opacity-90;
+  }
+
+  @media (hover: hover) and (prefers-reduced-motion: no-preference) {
+    .card-glass-muted:hover {
+      @apply border-white/25 opacity-100;
+    }
+  }
+
+  .card-glass-hub {
+    @apply shadow-[0_12px_40px_rgba(0,0,0,0.45)];
+  }
+
+  @media (hover: hover) and (prefers-reduced-motion: no-preference) {
+    .card-glass-hub:hover {
+      @apply -translate-y-0 scale-[1.02] md:scale-[1.03];
+    }
+  }
+
+  .discovery-page {
+    @apply bg-gradient-to-b from-black via-[#060a0f] to-black;
+  }
+
+  .discovery-stat-pill {
+    @apply rounded-full border border-white/10 bg-gradient-to-b from-white/[0.08] to-white/[0.02] px-4 py-2 text-sm text-gray-300 shadow-sm backdrop-blur-sm;
+  }
+
+  .discovery-stat-pill-accent {
+    @apply rounded-full border border-primary-500/25 bg-primary-500/10 px-4 py-2 text-sm text-primary-100/90;
+  }
+
+  .discovery-filter-pill {
+    @apply inline-flex min-h-touch shrink-0 snap-start items-center rounded-full border border-white/15 bg-gradient-to-b from-white/10 to-white/[0.03] px-4 py-2 text-sm font-medium text-gray-200 shadow-sm backdrop-blur-sm transition hover:border-primary-400/35 hover:from-primary-500/15 hover:text-white;
+  }
+
+  .discovery-filter-pill-active {
+    @apply border-primary-500/40 bg-gradient-to-r from-primary-600 via-primary-600 to-primary-700 font-semibold text-white shadow-[0_0_20px_rgba(45,212,191,0.15)];
+  }
+
+  .discovery-search-panel {
+    @apply rounded-xl border border-white/10 bg-gradient-to-b from-white/[0.08] to-white/[0.02] p-3 shadow-[0_8px_32px_rgba(0,0,0,0.3)] backdrop-blur-md sm:p-4;
+  }
+
+  .discovery-empty-panel {
+    @apply rounded-2xl border border-white/10 bg-gradient-to-b from-white/[0.08] to-white/[0.02] p-6 text-center shadow-[0_12px_40px_rgba(0,0,0,0.4)] backdrop-blur-md sm:p-8;
+  }
+
+  .home-ambient {
+    @apply pointer-events-none absolute rounded-full blur-3xl motion-reduce:opacity-0;
+  }
   
   .container-custom {
     @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;

@@ -24,16 +24,10 @@ export default function SwingClubCard({ club }: Props) {
   const stateName = stateSlug ? EAST_COAST_STATES[stateSlug].name : null
 
   return (
-    <article
-      className="group/card relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-violet-950/20 to-transparent p-4 shadow-lg transition duration-300 hover:border-violet-500/35 hover:shadow-violet-900/15 sm:p-5"
-      aria-label={club.name}
-    >
-      <div
-        className="pointer-events-none absolute left-0 top-0 h-full w-1 bg-gradient-to-b from-violet-400/80 via-fuchsia-600/40 to-transparent opacity-0 transition group-hover/card:opacity-100 motion-reduce:opacity-0"
-        aria-hidden
-      />
+    <article className="group/card card-glass card-glass-violet p-4 sm:p-5" aria-label={club.name}>
+      <div className="card-glass-wash card-glass-wash-violet" aria-hidden />
 
-      <div className="flex items-start gap-4">
+      <div className="relative z-10 flex items-start gap-4">
         <DungeonImage
           src={club.logo}
           alt={`${club.name} — swing & lifestyle club in ${club.location.city}, ${club.location.state}`}
@@ -72,10 +66,10 @@ export default function SwingClubCard({ club }: Props) {
       </div>
 
       {preview ? (
-        <p className="mt-4 line-clamp-3 text-sm leading-relaxed text-gray-400">{preview}</p>
+        <p className="relative z-10 mt-4 line-clamp-3 text-sm leading-relaxed text-gray-400">{preview}</p>
       ) : null}
 
-      <div className="mt-4 flex flex-wrap gap-2 border-t border-white/5 pt-4">
+      <div className="relative z-10 mt-4 flex flex-wrap gap-2 border-t border-white/10 pt-4">
         <Link
           href={`/swing-clubs/${club.slug}`}
           className="btn-primary inline-flex min-h-touch flex-1 items-center justify-center px-4 py-2 text-sm sm:flex-none bg-violet-600 hover:bg-violet-500 border-violet-500/50"

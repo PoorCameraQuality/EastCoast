@@ -17,6 +17,21 @@
   animation: dc-fade-in var(--dc-duration-base) ease-out forwards;
 }
 
+.dc-tab-content-enter {
+  animation: dc-tab-content-enter var(--dc-duration-base) ease-out forwards;
+}
+
+@keyframes dc-tab-content-enter {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 @keyframes dc-fade-in {
   from {
     opacity: 0;
@@ -117,12 +132,14 @@
   }
 
   .dc-animate-fade-in,
+  .dc-tab-content-enter,
   .dc-vestibule-pulse,
   .dc-vestibule-fan,
   .dc-skeleton-stagger > *,
   .dc-conflict-sonar {
     animation: none;
     opacity: 1;
+    transform: none;
   }
 
   .dc-transition-drawer {

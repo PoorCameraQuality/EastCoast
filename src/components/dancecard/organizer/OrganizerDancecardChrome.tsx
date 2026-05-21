@@ -3,6 +3,8 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
+import { useDancecardAppearance } from '@/components/dancecard/DancecardAppearanceContext'
+import DancecardAppearancePicker from '@/components/dancecard/DancecardAppearancePicker'
 
 type HubEvent = {
   slug: string
@@ -21,6 +23,7 @@ export function OrganizerDancecardChrome({
   className?: string
 }) {
   const pathname = usePathname()
+  const { appearanceId, appearanceStyle, appearanceReady } = useDancecardAppearance()
   const [events, setEvents] = useState<HubEvent[] | null>(null)
   const slugMatch = pathname?.match(/^\/organizer\/dancecard\/([^/]+)/)
   const currentSlug = slugMatch && slugMatch[1] !== '' ? slugMatch[1].toLowerCase() : null
@@ -44,7 +47,13 @@ export function OrganizerDancecardChrome({
   }, [])
 
   return (
-    <div className={`dc-gold-chrome min-h-screen bg-dc-surface text-dc-text ${className}`.trim()} data-dc-theme="event">
+    <div
+      className={`dc-gold-chrome min-h-screen bg-dc-surface text-dc-text ${className}`.trim()}
+      data-dc-theme="event"
+      data-dc-appearance={appearanceId}
+      style={appearanceReady ? appearanceStyle : undefined}
+      suppressHydrationWarning
+    >
       <header className="z-dc-chrome border-b border-dc-border bg-dc-surface-muted/80 px-4 py-3">
         <div className="mx-auto flex max-w-[100rem] flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex flex-wrap items-center gap-3">
@@ -68,25 +77,28 @@ export function OrganizerDancecardChrome({
             ) : null}
             {!isHubHome ? <span className="text-sm text-dc-muted">Event workspace</span> : null}
           </div>
-          {currentSlug && events && events.length > 0 ? (
-            <label className="flex min-w-0 flex-1 items-center gap-2 text-sm text-dc-text sm:flex-none">
-              <span className="shrink-0 text-dc-micro uppercase tracking-wide text-dc-muted">Switch</span>
-              <select
-                className="min-w-0 flex-1 max-w-full truncate rounded-lg border border-dc-border bg-dc-elevated-muted px-2 py-1.5 text-sm text-dc-text sm:max-w-[14rem] sm:flex-none"
-                value={currentSlug}
-                onChange={(e) => {
-                  const next = e.target.value
-                  if (next) window.location.href = `/organizer/dancecard/${encodeURIComponent(next)}`
-                }}
-              >
-                {events.map((ev) => (
-                  <option key={ev.slug} value={ev.slug} title={`${ev.eventTitle} (${ev.slug}) — ${ev.role}`}>
-                    {ev.eventTitle}
-                  </option>
-                ))}
-              </select>
-            </label>
-          ) : null}
+          <div className="flex min-w-0 flex-1 flex-wrap items-center justify-end gap-3 sm:flex-none">
+            <DancecardAppearancePicker compact className="shrink-0" />
+            {currentSlug && events && events.length > 0 ? (
+              <label className="flex min-w-0 flex-1 items-center gap-2 text-sm text-dc-text sm:max-w-[16rem] sm:flex-none">
+                <span className="shrink-0 text-dc-micro uppercase tracking-wide text-dc-muted">Switch</span>
+                <select
+                  className="min-w-0 flex-1 max-w-full truncate rounded-lg border border-dc-border bg-dc-elevated-solid px-2 py-1.5 text-sm text-dc-text"
+                  value={currentSlug}
+                  onChange={(e) => {
+                    const next = e.target.value
+                    if (next) window.location.href = `/organizer/dancecard/${encodeURIComponent(next)}`
+                  }}
+                >
+                  {events.map((ev) => (
+                    <option key={ev.slug} value={ev.slug} title={`${ev.eventTitle} (${ev.slug}) — ${ev.role}`}>
+                      {ev.eventTitle}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            ) : null}
+          </div>
         </div>
       </header>
       {children}

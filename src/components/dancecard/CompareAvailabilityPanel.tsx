@@ -1,6 +1,7 @@
 'use client'
 
 import { CompareConnectionBoard } from '@/components/dancecard/attendee/compare/CompareConnectionBoard'
+import { DancecardPanelSkeleton } from '@/components/dancecard/organizer/ui'
 import { CompareDirectoryDiscover } from '@/components/dancecard/attendee/compare/CompareDirectoryDiscover'
 import { CompareOnboardingCarousel } from '@/components/dancecard/attendee/compare/CompareOnboardingCarousel'
 import type { AttendeePublicProfile } from '@/lib/dancecard/attendeeProfile'
@@ -36,6 +37,7 @@ export function CompareAvailabilityPanel(props: {
   mutualAdvancedTokenOpen: boolean
   setMutualAdvancedTokenOpen: (v: boolean | ((b: boolean) => boolean)) => void
   refreshMutual: (opts?: { mode?: 'token' }) => void
+  mutualRefreshing?: boolean
   mutualData: CompareMutualData | null
   mutualStripDays: CompareStripDay[]
   mutualPlayableWindow: { startMs: number; endMs: number } | null | undefined
@@ -60,6 +62,7 @@ export function CompareAvailabilityPanel(props: {
     mutualAdvancedTokenOpen,
     setMutualAdvancedTokenOpen,
     refreshMutual,
+    mutualRefreshing = false,
     mutualData,
     mutualStripDays,
     mutualPlayableWindow,
@@ -260,7 +263,13 @@ export function CompareAvailabilityPanel(props: {
         ) : null}
       </div>
 
-      {showStrips && mutualData ? (
+      {mutualRefreshing ? (
+        <div className={cx(compact ? 'mt-3' : 'mt-6')} aria-busy="true">
+          <DancecardPanelSkeleton lines={4} />
+        </div>
+      ) : null}
+
+      {showStrips && mutualData && !mutualRefreshing ? (
         <CompareConnectionBoard
           tz={tz}
           compact={compact}

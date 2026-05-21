@@ -24,16 +24,10 @@ export default function DungeonCard({ dungeon }: DungeonCardProps) {
   const stateName = stateSlug ? EAST_COAST_STATES[stateSlug].name : null
 
   return (
-    <article
-      className="group/card relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-white/[0.06] to-transparent p-4 shadow-lg transition duration-300 hover:border-primary-500/35 hover:shadow-primary-900/15 sm:p-5"
-      aria-label={dungeon.name}
-    >
-      <div
-        className="pointer-events-none absolute left-0 top-0 h-full w-1 bg-gradient-to-b from-violet-400/80 via-primary-600/50 to-transparent opacity-0 transition group-hover/card:opacity-100 motion-reduce:opacity-0"
-        aria-hidden
-      />
+    <article className="group/card card-glass p-4 sm:p-5" aria-label={dungeon.name}>
+      <div className="card-glass-wash" aria-hidden />
 
-      <div className="flex items-start gap-4">
+      <div className="relative z-10 flex items-start gap-4">
         <DungeonImage
           src={dungeon.logo}
           alt={`${dungeon.name} — BDSM dungeon in ${dungeon.location.city}, ${dungeon.location.state}`}
@@ -72,10 +66,10 @@ export default function DungeonCard({ dungeon }: DungeonCardProps) {
       </div>
 
       {preview ? (
-        <p className="mt-4 line-clamp-3 text-sm leading-relaxed text-gray-400">{preview}</p>
+        <p className="relative z-10 mt-4 line-clamp-3 text-sm leading-relaxed text-gray-400">{preview}</p>
       ) : null}
 
-      <div className="mt-4 flex flex-wrap gap-2 border-t border-white/5 pt-4">
+      <div className="relative z-10 mt-4 flex flex-wrap gap-2 border-t border-white/10 pt-4">
         <Link
           href={`/dungeons/${dungeon.slug}`}
           className="btn-primary inline-flex min-h-touch flex-1 items-center justify-center px-4 py-2 text-sm sm:flex-none"

@@ -45,17 +45,14 @@ export default function VendorCard({
 
   return (
     <article
-      className={`group relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-white/[0.06] to-transparent p-4 shadow-lg transition duration-300 hover:border-primary-500/35 hover:shadow-primary-900/20 sm:p-5 motion-reduce:transition-none ${
+      className={`group card-glass p-4 sm:p-5 motion-reduce:transition-none ${
         vendor.isPaid ? 'vendor-paid-sparkle' : ''
       }`}
       aria-label={vendor.name}
     >
-      <div
-        className="pointer-events-none absolute left-0 top-0 h-full w-1 bg-gradient-to-b from-primary-400/80 via-primary-600/40 to-transparent opacity-0 transition group-hover:opacity-100 motion-reduce:opacity-0"
-        aria-hidden
-      />
+      <div className="card-glass-wash" aria-hidden />
 
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-start">
+      <div className="relative z-10 flex flex-col gap-4 sm:flex-row sm:items-start">
         <VendorImage
           src={vendor.logo125Url}
           alt={`${vendor.name} — kink vendor and BDSM gear`}
@@ -150,7 +147,7 @@ export default function VendorCard({
       </div>
 
       {vendor.isPaid ? (
-        <div className="mt-4 border-t border-white/5 pt-4 lg:hidden">
+        <div className="relative z-10 mt-4 border-t border-white/10 pt-4 lg:hidden">
           <p className="mb-2 text-xs text-gray-500">Supporter highlight</p>
           <VendorImage
             src={paidImageUrl}

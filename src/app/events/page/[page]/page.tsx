@@ -2,6 +2,8 @@ import { Metadata } from 'next'
 import Link from 'next/link'
 import EventCard from '@/components/EventCard'
 import Breadcrumb from '@/components/Breadcrumb'
+import DiscoveryPageShell from '@/components/discovery/DiscoveryPageShell'
+import DiscoverySectionHeading from '@/components/discovery/DiscoverySectionHeading'
 import { BASE_URL } from '@/lib/seo'
 import { getUnifiedEvents, getUpcomingUnified, unifiedEventToEventsPageShape } from '@/lib/unifiedEvents'
 
@@ -102,29 +104,36 @@ export default async function EventsPageNumber({ params }: PageProps) {
   ]
 
   return (
-    <div className="min-h-screen bg-black">
-      <div className="container-custom py-8 md:py-16">
+    <DiscoveryPageShell accent="primary">
+      <div className="section-padding">
+      <div className="container-custom">
         <Breadcrumb items={breadcrumbItems} />
-        
-        <div className="mb-8">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-white mb-4">
-            Upcoming Events - Page {pageNum}
-          </h1>
-          <p className="text-gray-300">
-            Showing {startIndex + 1}-{Math.min(endIndex, totalEvents)} of {totalEvents} events
-          </p>
-        </div>
 
-        {/* Events Grid */}
+        <DiscoverySectionHeading
+          title="Upcoming events"
+          accent={`page ${pageNum}`}
+          subtitle={
+            <p className="text-gray-300">
+              Showing {startIndex + 1}–{Math.min(endIndex, totalEvents)} of {totalEvents} events
+            </p>
+          }
+          className="mb-8"
+        />
+
         {paginatedEvents.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+          <div className="mb-12 grid grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-6 xl:grid-cols-3">
             {paginatedEvents.map((event) => (
-              <EventCard key={event.slug} event={event} itemListName="events_paginated" />
+              <EventCard
+                key={event.slug}
+                event={event}
+                variant="compact"
+                itemListName="events_paginated"
+              />
             ))}
           </div>
         ) : (
-          <div className="text-center py-12">
-            <p className="text-gray-400 text-lg">No events found on this page.</p>
+          <div className="discovery-empty-panel py-12">
+            <p className="text-lg text-gray-400">No events found on this page.</p>
           </div>
         )}
 
@@ -170,7 +179,8 @@ export default async function EventsPageNumber({ params }: PageProps) {
           </Link>
         </div>
       </div>
-    </div>
+      </div>
+    </DiscoveryPageShell>
   )
 }
 

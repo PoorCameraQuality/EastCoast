@@ -1,0 +1,138 @@
+/**
+ * Appearance presets — overrides tokens on dc-gold-chrome / event theme roots.
+ * Vars are also inlined by DancecardAppearanceProvider for first paint.
+ */
+
+[data-dc-theme='event'][data-dc-appearance='midnight-brass'],
+[data-dc-theme='event'][data-dc-appearance='lifted-ink'] {
+  color-scheme: dark;
+}
+
+[data-dc-theme='event'][data-dc-appearance='parchment'],
+[data-dc-theme='event'][data-dc-appearance='coastal-slate'],
+[data-dc-theme='event'][data-dc-appearance='high-noon'] {
+  color-scheme: light;
+}
+
+/* Dark presets: panels and primary buttons match product landing */
+[data-dc-appearance='midnight-brass'] .dc-panel,
+[data-dc-appearance='lifted-ink'] .dc-panel {
+  background: linear-gradient(180deg, var(--dc-elevated-solid) 0%, var(--dc-surface-muted) 100%);
+  border-color: var(--dc-border-subtle);
+  box-shadow: var(--dc-shadow-panel);
+}
+
+[data-dc-appearance='midnight-brass'] .dc-btn-primary,
+[data-dc-appearance='lifted-ink'] .dc-btn-primary {
+  background: linear-gradient(180deg, var(--dc-accent-hover) 0%, var(--dc-accent) 55%, var(--dc-accent) 100%);
+  color: var(--dc-accent-foreground);
+  border-color: var(--dc-accent-border);
+}
+
+[data-dc-appearance='midnight-brass'] .dc-btn-secondary,
+[data-dc-appearance='lifted-ink'] .dc-btn-secondary {
+  background: var(--dc-elevated-muted);
+  color: var(--dc-text);
+  border-color: var(--dc-border-subtle);
+}
+
+[data-dc-appearance='midnight-brass'] input,
+[data-dc-appearance='midnight-brass'] select,
+[data-dc-appearance='midnight-brass'] textarea,
+[data-dc-appearance='lifted-ink'] input,
+[data-dc-appearance='lifted-ink'] select,
+[data-dc-appearance='lifted-ink'] textarea {
+  background-color: var(--dc-elevated-solid);
+  color: var(--dc-text);
+  border-color: var(--dc-border-subtle);
+}
+
+[data-dc-appearance='midnight-brass'] input::placeholder,
+[data-dc-appearance='lifted-ink'] input::placeholder,
+[data-dc-appearance='midnight-brass'] textarea::placeholder,
+[data-dc-appearance='lifted-ink'] textarea::placeholder {
+  color: var(--dc-text-muted);
+}
+
+[data-dc-appearance='midnight-brass'] .dc-field-input,
+[data-dc-appearance='lifted-ink'] .dc-field-input,
+[data-dc-appearance='midnight-brass'] .dc-datetime-local-input,
+[data-dc-appearance='lifted-ink'] .dc-datetime-local-input {
+  color-scheme: dark;
+}
+
+/* Availability calendar hour slots */
+[data-dc-theme='event'] .dc-avail-slot--open {
+  border-color: var(--dc-avail-open-border);
+  background-color: var(--dc-avail-open-bg);
+  color: var(--dc-avail-open-text);
+}
+
+[data-dc-theme='event'] .dc-avail-slot--open:hover {
+  filter: brightness(1.06);
+}
+
+[data-dc-theme='event'] .dc-avail-slot--busy {
+  border-color: var(--dc-avail-busy-border);
+  background-color: var(--dc-avail-busy-bg);
+  color: var(--dc-avail-busy-text);
+}
+
+[data-dc-theme='event'] .dc-avail-slot--claimed {
+  border-color: var(--dc-avail-claimed-border);
+  background-color: var(--dc-avail-claimed-bg);
+  color: var(--dc-avail-claimed-text);
+}
+
+[data-dc-theme='event'] .dc-avail-slot--open .font-semibold,
+[data-dc-theme='event'] .dc-avail-slot--busy .font-semibold,
+[data-dc-theme='event'] .dc-avail-slot--claimed .font-semibold {
+  color: var(--dc-text);
+}
+
+/* Glass panels (attendee dancecard sections) */
+[data-dc-theme='event'] .dc-glass-panel {
+  box-shadow: var(--dc-glass-shadow), var(--dc-glass-inset);
+}
+
+[data-dc-theme='event'] .dc-inset-surface {
+  box-shadow: var(--dc-glass-inset);
+}
+
+/* Section tab bar (Program, Avail, Compare, …) */
+[data-dc-theme='event'] .dc-section-tabs-shell {
+  box-shadow: var(--dc-tab-shell-shadow);
+}
+
+[data-dc-theme='event'] .dc-section-tab--inactive {
+  border-color: var(--dc-border-subtle);
+  background-color: var(--dc-tab-inactive-bg);
+  color: var(--dc-text);
+}
+
+[data-dc-theme='event'] .dc-section-tab--inactive:hover {
+  border-color: var(--dc-accent-border);
+  background-color: var(--dc-tab-inactive-hover-bg);
+}
+
+[data-dc-theme='event'] .dc-section-tab--active {
+  border-color: var(--dc-accent-border);
+  background: linear-gradient(
+    to bottom right,
+    var(--dc-accent-hover),
+    var(--dc-accent),
+    color-mix(in srgb, var(--dc-accent) 75%, var(--dc-surface) 25%)
+  );
+  color: var(--dc-accent-foreground);
+  box-shadow: var(--dc-tab-active-shadow);
+}
+
+[data-dc-theme='event'] .dc-chip-btn {
+  border-color: var(--dc-border-subtle);
+  background-color: var(--dc-chip-bg);
+  color: var(--dc-text);
+}
+
+[data-dc-theme='event'] .dc-chip-btn:hover {
+  background-color: var(--dc-chip-hover-bg);
+}

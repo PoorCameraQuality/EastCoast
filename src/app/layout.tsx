@@ -1,5 +1,6 @@
 import '@/styles/dancecard-tokens.css'
 import '@/styles/dancecard-gold-theme.css'
+import '@/styles/dancecard-appearance.css'
 import '@/styles/dancecard-motion.css'
 import './globals.css'
 import type { Metadata } from "next";
@@ -38,7 +39,7 @@ export const metadata: Metadata = {
     default: 'East Coast Kink Events - Discover BDSM Events & Dungeons',
     template: '%s | East Coast Kink Events'
   },
-  description: 'Find kink events, BDSM dungeons, and educational resources across the East Coast. Connect with workshops, conferences, and community events in a safe, inclusive environment.',
+  description: 'Find kink events, BDSM dungeons, and play spaces across the United States. Browse by state, calendar, and venue—confirm details with organizers.',
   authors: [{ name: 'East Coast Kink Events' }],
   creator: 'East Coast Kink Events',
   publisher: 'East Coast Kink Events',
@@ -60,7 +61,7 @@ export const metadata: Metadata = {
     url: 'https://www.eastcoastkinkevents.com',
     siteName: 'East Coast Kink Events',
     title: 'East Coast Kink Events - Discover BDSM Events & Dungeons',
-    description: 'Find kink events, BDSM dungeons, and educational resources across the East Coast. Connect with workshops, conferences, and community events in a safe, inclusive environment.',
+    description: 'Find kink events, BDSM dungeons, and play spaces across the United States. Browse by state, calendar, and venue—confirm details with organizers.',
     images: [
       {
         url: '/og-image.png',
@@ -73,7 +74,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'East Coast Kink Events - Discover BDSM Events & Dungeons',
-    description: 'Find kink events, BDSM dungeons, and educational resources across the East Coast.',
+    description: 'Find kink events, BDSM dungeons, and play spaces across the United States.',
     images: ['/og-image.png'],
     creator: '@eastcoastkinkevents',
   },

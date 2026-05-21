@@ -1,10 +1,10 @@
-import AboutSection from '@/components/AboutSection'
 import { HomepageStructuredData } from '@/components/StructuredData'
 import HubCategoryGrid from '@/components/home/HubCategoryGrid'
-import FeaturedEventsSection from '@/components/home/FeaturedEventsSection'
-import FeaturedDungeonsSection from '@/components/home/FeaturedDungeonsSection'
-import FeaturedVendorsSection from '@/components/home/FeaturedVendorsSection'
-import EducationSpotlightSection from '@/components/home/EducationSpotlightSection'
+import HomeHeroMinimal from '@/components/home/HomeHeroMinimal'
+import HomeUpcomingEvents from '@/components/home/HomeUpcomingEvents'
+import HomeStateChips from '@/components/home/HomeStateChips'
+import HomeDancecardShowcase from '@/components/home/HomeDancecardShowcase'
+import HomeQuickLinks from '@/components/home/HomeQuickLinks'
 import CommunityCTASection from '@/components/home/CommunityCTASection'
 import { getHubCategoryCounts } from '@/lib/homeHubCounts'
 import { getUnifiedVendors } from '@/lib/unifiedVendors'
@@ -19,14 +19,14 @@ export default async function Home() {
     <>
       <HomepageStructuredData />
       <main lang="en">
+        <HomeHeroMinimal />
+        <HomeDancecardShowcase />
+        <HomeUpcomingEvents />
+        <HomeStateChips />
         <HubCategoryGrid counts={hubCounts} />
-        <FeaturedEventsSection />
-        <FeaturedDungeonsSection />
-        <FeaturedVendorsSection vendors={vendors} />
-        <EducationSpotlightSection />
+        <HomeQuickLinks />
         <CommunityCTASection />
-        <AboutSection />
       </main>
     </>
   )
-} 
+}

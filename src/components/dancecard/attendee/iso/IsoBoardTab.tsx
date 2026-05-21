@@ -7,9 +7,10 @@ import { IsoCommentThread } from '@/components/dancecard/attendee/iso/IsoComment
 import type { AttendeePublicProfile } from '@/lib/dancecard/attendeeProfile'
 import type { IsoCommentNode } from '@/lib/dancecard/isoComments'
 import { cn } from '@/lib/cn'
+import { DancecardListSkeleton } from '@/components/dancecard/organizer/ui'
 
 const SHELL =
-  'rounded-2xl border border-dc-border bg-dc-elevated/95 shadow-[0_18px_54px_rgba(45,38,28,0.42),inset_0_1px_0_rgba(255,255,255,0.045)] backdrop-blur-sm'
+  'dc-glass-panel rounded-2xl border border-dc-border bg-dc-elevated/95 backdrop-blur-sm'
 
 type IsoListPost = {
   id: string
@@ -206,6 +207,7 @@ export function IsoBoardTab({ eventSlug, signedIn }: Props) {
   const [err, setErr] = useState<string | null>(null)
   const [composeOpen, setComposeOpen] = useState(false)
   const [toast, setToast] = useState<string | null>(null)
+  const [listLoaded, setListLoaded] = useState(false)
 
   const loadList = useCallback(async () => {
     try {
@@ -214,6 +216,8 @@ export function IsoBoardTab({ eventSlug, signedIn }: Props) {
       setErr(null)
     } catch (e) {
       setErr(formatDancecardApiMessage(e))
+    } finally {
+      setListLoaded(true)
     }
   }, [eventSlug])
 
@@ -467,7 +471,10 @@ export function IsoBoardTab({ eventSlug, signedIn }: Props) {
           Sign in to post or join a discussion.
         </p>
       )}
-      <ul className="space-y-3">
+      {!listLoaded ? (
+        <DancecardListSkeleton rows={4} />
+      ) : (
+      <ul className="space-y-3 dc-tab-content-enter">
         {posts.length === 0 ? (
           <li className="rounded-2xl border border-dashed border-dc-border py-10 text-center text-sm text-dc-muted">
             No ISO posts yet. Be the first to post.
@@ -476,6 +483,7 @@ export function IsoBoardTab({ eventSlug, signedIn }: Props) {
           posts.map((p) => <IsoPostListCard key={p.id} post={p} onOpen={() => setSelectedId(p.id)} />)
         )}
       </ul>
+      )}
     </div>
   )
 }

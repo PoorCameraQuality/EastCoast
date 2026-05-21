@@ -10,6 +10,7 @@ import {
   type CSSProperties,
   type ReactNode,
 } from 'react'
+import { useDancecardAppearance } from '@/components/dancecard/DancecardAppearanceContext'
 import type { DancecardThemeConfig, PublicThemeDto } from '@/lib/dancecard/theme'
 import { parseThemeConfig, themeConfigToCssVars } from '@/lib/dancecard/theme'
 
@@ -38,6 +39,7 @@ type Props = {
 }
 
 export function DancecardThemeProvider({ eventSlug, theme: themeProp, children, className = '' }: Props) {
+  const { appearanceId, appearanceStyle, appearanceReady } = useDancecardAppearance()
   const [theme, setTheme] = useState<DancecardThemeConfig>(() => parseThemeConfig(themeProp))
   const [hallway, setHallwayState] = useState(false)
 
@@ -88,7 +90,10 @@ export function DancecardThemeProvider({ eventSlug, theme: themeProp, children, 
   )
 
   const cssVars = useMemo(() => themeConfigToCssVars(theme), [theme])
-  const style = cssVars as CSSProperties
+  const style = useMemo(
+    () => ({ ...appearanceStyle, ...cssVars }) as CSSProperties,
+    [appearanceStyle, cssVars],
+  )
 
   const hallwayValue = useMemo(
     () => ({ hallway, setHallway, eventSlug: eventSlug ?? null }),
@@ -99,8 +104,10 @@ export function DancecardThemeProvider({ eventSlug, theme: themeProp, children, 
     <HallwayContext.Provider value={hallwayValue}>
       <div
         data-dc-theme="event"
+        data-dc-appearance={appearanceId}
         data-dc-hallway={hallway ? 'true' : 'false'}
-        style={style}
+        style={appearanceReady ? style : undefined}
+        suppressHydrationWarning
         className={`min-h-screen bg-dc-surface text-dc-text antialiased ${className}`.trim()}
       >
         {children}

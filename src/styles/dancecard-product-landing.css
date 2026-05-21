@@ -1,0 +1,49 @@
+/**
+ * /dancecard product home — uses appearance tokens (Midnight Brass is default marketing look).
+ */
+[data-dc-theme='event']:has([data-dc-landing='product']) {
+  background-color: var(--dc-surface) !important;
+}
+
+[data-dc-landing='product'] {
+  --dc-product-bg: var(--dc-surface);
+  --dc-product-card: var(--dc-elevated-solid);
+  --dc-product-card-border: var(--dc-border-strong);
+  --dc-product-text: var(--dc-text);
+  --dc-product-muted: var(--dc-text-muted);
+  --dc-product-gold: var(--dc-accent);
+  color: var(--dc-product-text);
+}
+
+[data-dc-landing='product'] .dc-product-card {
+  border: 1px solid var(--dc-product-card-border);
+  background: linear-gradient(165deg, var(--dc-elevated-solid) 0%, var(--dc-surface-muted) 100%);
+  box-shadow: var(--dc-shadow-panel);
+}
+
+[data-dc-landing='product'] .dc-product-btn-gold {
+  background: linear-gradient(135deg, var(--dc-accent-hover) 0%, var(--dc-accent) 50%, var(--dc-accent) 100%);
+  color: var(--dc-accent-foreground);
+  font-weight: 700;
+  box-shadow: var(--dc-shadow-soft);
+}
+
+[data-dc-landing='product'] .dc-product-btn-gold:hover {
+  filter: brightness(1.06);
+}
+
+[data-dc-landing='product'] .dc-product-btn-outline {
+  border: 1px solid rgba(198, 167, 94, 0.45);
+  background: rgba(198, 167, 94, 0.08);
+  color: var(--dc-product-gold);
+}
+
+[data-dc-landing='product'] .dc-product-btn-outline:hover {
+  background: rgba(198, 167, 94, 0.16);
+}
+
+[data-dc-landing='product'] .dc-product-beta {
+  border: 1px solid rgba(245, 158, 11, 0.45);
+  background: rgba(245, 158, 11, 0.12);
+  color: #fcd34d;
+}

@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import type { ReactNode } from 'react'
+import DancecardAppearanceRoot from '@/components/dancecard/DancecardAppearanceRoot'
 import { dancecardFontClassName } from '@/lib/dancecard/dancecardFonts'
 
 export const metadata: Metadata = {
@@ -33,9 +34,5 @@ export const metadata: Metadata = {
 }
 
 export default function DancecardSegmentLayout({ children }: { children: ReactNode }) {
-  return (
-    <div className={`dc-gold-chrome min-h-screen bg-dc-surface text-dc-text ${dancecardFontClassName}`} data-dc-theme="event">
-      {children}
-    </div>
-  )
+  return <DancecardAppearanceRoot chromeClassName={dancecardFontClassName}>{children}</DancecardAppearanceRoot>
 }

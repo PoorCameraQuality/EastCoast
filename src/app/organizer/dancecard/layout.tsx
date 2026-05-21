@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { DancecardAppearanceProvider } from '@/components/dancecard/DancecardAppearanceContext'
 import { OrganizerDancecardChrome } from '@/components/dancecard/organizer/OrganizerDancecardChrome'
 import { dancecardFontClassName } from '@/lib/dancecard/dancecardFonts'
 import { assertProductionNoOrganizerBypass } from '@/lib/dancecard/organizerAuth'
@@ -16,5 +17,9 @@ export const metadata: Metadata = {
 
 export default async function OrganizerDancecardLayout({ children }: { children: React.ReactNode }) {
   assertProductionNoOrganizerBypass()
-  return <OrganizerDancecardChrome className={dancecardFontClassName}>{children}</OrganizerDancecardChrome>
+  return (
+    <DancecardAppearanceProvider wrapChrome={false}>
+      <OrganizerDancecardChrome className={dancecardFontClassName}>{children}</OrganizerDancecardChrome>
+    </DancecardAppearanceProvider>
+  )
 }

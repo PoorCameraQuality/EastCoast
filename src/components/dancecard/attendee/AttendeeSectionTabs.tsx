@@ -22,8 +22,7 @@ export function AttendeeSectionTabs({ options, active, onSelect, onCopyLink, siz
     <div className="space-y-2">
       <div
         className={cn(
-          'rounded-2xl border border-dc-accent-border/45 bg-gradient-to-b from-dc-elevated-solid via-dc-surface-muted/90 to-dc-surface-muted p-1.5',
-          'shadow-[inset_0_1px_0_rgba(255,255,255,0.65),0_14px_36px_rgba(45,38,28,0.1)]',
+          'dc-section-tabs-shell rounded-2xl border border-dc-accent-border/45 bg-gradient-to-b from-dc-elevated-solid via-dc-surface-muted/90 to-dc-surface-muted p-1.5',
         )}
       >
         <div
@@ -44,12 +43,10 @@ export function AttendeeSectionTabs({ options, active, onSelect, onCopyLink, siz
                 aria-selected={selected}
                 onClick={() => onSelect(option.key)}
                 className={cn(
-                  'flex min-w-[7.25rem] shrink-0 snap-start flex-col rounded-xl border text-left transition duration-200',
+                  'dc-section-tab flex min-w-[7.25rem] shrink-0 snap-start flex-col rounded-xl border text-left transition duration-200',
                   'lg:min-w-0 lg:shrink',
                   size === 'compact' ? 'px-2.5 py-2' : 'px-3 py-2.5',
-                  selected
-                    ? 'border-dc-accent-border bg-gradient-to-br from-dc-accent via-[#9a7b2f] to-[#6e5310] text-dc-accent-foreground shadow-[0_10px_28px_rgba(139,105,20,0.35),inset_0_1px_0_rgba(255,255,255,0.35)]'
-                    : 'border-dc-border/80 bg-white/70 text-dc-text shadow-sm hover:border-dc-accent-border/50 hover:bg-white hover:shadow-md',
+                  selected ? 'dc-section-tab--active' : 'dc-section-tab--inactive',
                 )}
               >
                 <span className={cn('truncate font-semibold', size === 'compact' ? 'text-sm' : 'text-sm')}>
@@ -59,7 +56,7 @@ export function AttendeeSectionTabs({ options, active, onSelect, onCopyLink, siz
                   className={cn(
                     'mt-0.5 hidden line-clamp-2 leading-snug xl:block',
                     size === 'compact' ? 'text-[10px]' : 'text-[10px]',
-                    selected ? 'text-dc-accent-foreground/80' : 'text-dc-muted',
+                    selected ? 'text-dc-accent-foreground/85' : 'text-dc-muted',
                   )}
                 >
                   {option.blurb}

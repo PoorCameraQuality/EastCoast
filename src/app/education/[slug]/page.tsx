@@ -1,5 +1,4 @@
 import { Metadata } from 'next'
-import { supabase } from '@/lib/supabase'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import Breadcrumb from '@/components/Breadcrumb'
@@ -9,9 +8,15 @@ import Markdown from '@/components/Markdown'
 import { normalizeMarkdown } from '@/lib/normalizeMarkdown'
 import { BASE_URL } from '@/lib/seo'
 import { resolveArticleOgImageUrl } from '@/lib/articleSeo'
-import { fetchRelatedArticleSummaries } from '@/lib/articleRelated'
+import {
+  fetchRelatedEducationSummaries,
+  getPublishedEducationArticleBySlug,
+  getPublishedEducationSlugs,
+  type EducationArticle,
+} from '@/lib/educationArticles'
 import { ArticleStructuredData } from '@/components/ArticleStructuredData'
 import { getArticleSerpOverride } from '@/lib/articleSerpOverrides'
+import { getCategoryColorClass } from '@/lib/educationCategoryColors'
 
 const DEFAULT_OG = `${BASE_URL}/og-image.png`
 
@@ -19,57 +24,10 @@ interface ArticlePageProps {
   params: { slug: string }
 }
 
-interface Article {
-  id: string
-  title: string
-  slug: string
-  excerpt: string
-  content: string
-  author_name: string
-  author_credentials?: string
-  author_bio?: string
-  category: string
-  tags?: string[] | string
-  featured: boolean
-  status: string
-  publish_date: string
-  last_updated?: string
-  read_time?: string
-  seo_title?: string
-  meta_description?: string
-  focus_keywords?: string[] | string
-  og_image?: string | null
-}
-
-async function getArticleBySlug(slug: string) {
-  try {
-    const client = supabase
-    if (!client) {
-      console.error('Supabase is not configured')
-      return null
-    }
-
-    const { data: article, error } = await client
-      .from('articles')
-      .select('*')
-      .eq('slug', slug)
-      .eq('status', 'published')
-      .single()
-
-    if (error || !article) {
-      console.error('Error fetching article:', error)
-      return null
-    }
-
-    return article
-  } catch (error) {
-    console.error('Error:', error)
-    return null
-  }
-}
+type Article = EducationArticle
 
 export async function generateMetadata({ params }: ArticlePageProps): Promise<Metadata> {
-  const article = await getArticleBySlug(params.slug)
+  const article = await getPublishedEducationArticleBySlug(params.slug)
 
   if (!article) {
     return {
@@ -124,47 +82,20 @@ export const revalidate = 1800
 
 // Generate static params for published articles
 export async function generateStaticParams() {
-  try {
-    if (!supabase) return []
-
-    const { data: articles } = await supabase
-      .from('articles')
-      .select('slug')
-      .eq('status', 'published')
-      .limit(50) // Generate top 50 articles at build time
-
-    return (
-      articles?.map((article) => ({
-        slug: article.slug,
-      })) || []
-    )
-  } catch (error) {
-    console.error('Error generating static params:', error)
-    return []
-  }
+  const slugs = await getPublishedEducationSlugs()
+  return slugs.slice(0, 50).map((slug) => ({ slug }))
 }
 
 export default async function ArticlePage({ params }: { params: { slug: string } }) {
   const { slug } = params
 
   try {
-    const client = supabase
-    if (!client) {
-      throw new Error('Supabase client not configured')
-    }
-
-    const { data: article, error } = await client
-      .from('articles')
-      .select('*')
-      .eq('slug', slug)
-      .eq('status', 'published')
-      .single()
-
-    if (error || !article) {
+    const article = await getPublishedEducationArticleBySlug(slug)
+    if (!article) {
       notFound()
     }
 
-    const relatedArticles = await fetchRelatedArticleSummaries(client, {
+    const relatedArticles = await fetchRelatedEducationSummaries({
       id: article.id,
       category: article.category,
     })
@@ -188,24 +119,6 @@ export default async function ArticlePage({ params }: { params: { slug: string }
     // Process content for markdown rendering
     const processedContent = normalizeMarkdown(article.content || '')
 
-    // Get category color
-    const getCategoryColor = (category: string) => {
-      switch (category) {
-        case 'Safety':
-          return 'bg-gradient-to-r from-red-600 to-red-700'
-        case 'Techniques':
-          return 'bg-gradient-to-r from-primary-600 to-primary-700'
-        case 'Community':
-          return 'bg-gradient-to-r from-green-600 to-green-700'
-        case 'Resources':
-          return 'bg-gradient-to-r from-purple-600 to-purple-700'
-        case 'Consent':
-          return 'bg-gradient-to-r from-yellow-600 to-yellow-700'
-        default:
-          return 'bg-gradient-to-r from-gray-600 to-gray-700'
-      }
-    }
-
     const breadcrumbItems = [
       { label: 'Home', href: '/' },
       { label: 'Education', href: '/education' },
@@ -228,7 +141,7 @@ export default async function ArticlePage({ params }: { params: { slug: string }
                 ← Back to Education
               </Link>
               <span
-                className={`inline-flex min-h-touch items-center text-white text-sm font-medium px-4 py-2 rounded-full ${getCategoryColor(article.category)} shadow-lg order-1 sm:order-2 self-start`}
+                className={`inline-flex min-h-touch items-center text-white text-sm font-medium px-4 py-2 rounded-full ${getCategoryColorClass(article.category)} shadow-lg order-1 sm:order-2 self-start`}
               >
                 {article.category}
               </span>

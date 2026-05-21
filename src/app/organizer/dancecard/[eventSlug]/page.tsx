@@ -1,13 +1,12 @@
 import { Suspense } from 'react'
+import { OrganizerBootstrapScreen } from '@/components/dancecard/organizer/ui'
 import { OrganizerDancecardClient } from './OrganizerDancecardClient'
 import { OrganizerDancecardShell } from './OrganizerDancecardShell'
 
 export default function OrganizerDancecardPage({ params }: { params: { eventSlug: string } }) {
   return (
     <OrganizerDancecardShell>
-      <Suspense
-        fallback={<p className="px-6 py-12 text-sm text-dc-muted">Loading event…</p>}
-      >
+      <Suspense fallback={<OrganizerBootstrapScreen eventSlug={params.eventSlug} />}>
         <OrganizerDancecardClient eventSlug={params.eventSlug} />
       </Suspense>
     </OrganizerDancecardShell>

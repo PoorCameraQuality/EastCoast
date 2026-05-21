@@ -1,99 +1,19 @@
 'use client'
 
-import { Suspense, useEffect, useMemo, useState } from 'react'
+import { Suspense, useEffect, useMemo, useTransition } from 'react'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
-import { supabase } from '@/lib/supabase'
 import ArticleCard from '@/components/education/ArticleCard'
+import ExternalResourceCard from '@/components/education/ExternalResourceCard'
 import Breadcrumb from '@/components/Breadcrumb'
+import { EXTERNAL_EDUCATION_RESOURCES } from '@/data/externalEducationResources'
+import { getCategoryTabClass, sortEducationCategories } from '@/lib/educationCategoryColors'
+import type { EducationArticle } from '@/lib/educationArticles'
 import Link from 'next/link'
 import { CONTACT_US_LABEL } from '@/lib/submissionContact'
 import HeroSponsorLayout from '@/components/HeroSponsorLayout'
 
-interface Article {
-  id: string
-  title: string
-  excerpt: string
-  content: string
-  author_name: string
-  author_credentials?: string
-  author_bio?: string
-  category: string
-  tags?: string | string[]
-  featured: boolean
-  status: string
-  publish_date: string
-  read_time?: string
-  slug?: string
-}
-
-/** Preferred tab order; any other category from CMS is appended alphabetically. */
-const CATEGORY_ORDER = [
-  'Safety',
-  'Consent',
-  'Techniques',
-  'Community',
-  'Resources',
-  'Education',
-  'Identity',
-  'Aftercare',
-  'Mental Health',
-  'Legal',
-]
-
-function categoryTabClass(category: string, selected: boolean): string {
-  const base =
-    'shrink-0 snap-start min-h-touch rounded-full border-2 px-4 py-2.5 text-sm font-semibold transition duration-200'
-  const palettes: Record<string, { on: string; off: string }> = {
-    Safety: {
-      on: 'border-red-400 bg-red-600/90 text-white shadow-md shadow-red-900/30',
-      off: 'border-white/10 bg-white/[0.04] text-gray-200 hover:border-red-500/40',
-    },
-    Consent: {
-      on: 'border-amber-300 bg-amber-500 text-black shadow-md shadow-amber-900/20',
-      off: 'border-white/10 bg-white/[0.04] text-gray-200 hover:border-amber-400/40',
-    },
-    Techniques: {
-      on: 'border-primary-400 bg-primary-600 text-white shadow-md shadow-primary-900/30',
-      off: 'border-white/10 bg-white/[0.04] text-gray-200 hover:border-primary-500/40',
-    },
-    Community: {
-      on: 'border-emerald-400 bg-emerald-700 text-white shadow-md shadow-emerald-900/30',
-      off: 'border-white/10 bg-white/[0.04] text-gray-200 hover:border-emerald-500/40',
-    },
-    Resources: {
-      on: 'border-violet-400 bg-violet-700 text-white shadow-md shadow-violet-900/30',
-      off: 'border-white/10 bg-white/[0.04] text-gray-200 hover:border-violet-500/40',
-    },
-    Education: {
-      on: 'border-sky-400 bg-sky-800 text-white shadow-md shadow-sky-900/30',
-      off: 'border-white/10 bg-white/[0.04] text-gray-200 hover:border-sky-500/40',
-    },
-    Identity: {
-      on: 'border-fuchsia-400 bg-fuchsia-900/80 text-white shadow-md shadow-fuchsia-900/30',
-      off: 'border-white/10 bg-white/[0.04] text-gray-200 hover:border-fuchsia-500/40',
-    },
-    Aftercare: {
-      on: 'border-rose-400 bg-rose-900/70 text-white shadow-md shadow-rose-900/30',
-      off: 'border-white/10 bg-white/[0.04] text-gray-200 hover:border-rose-500/40',
-    },
-    'Mental Health': {
-      on: 'border-cyan-400 bg-cyan-900/70 text-white shadow-md shadow-cyan-900/30',
-      off: 'border-white/10 bg-white/[0.04] text-gray-200 hover:border-cyan-500/40',
-    },
-    Legal: {
-      on: 'border-slate-300 bg-slate-700 text-white shadow-md shadow-slate-900/30',
-      off: 'border-white/10 bg-white/[0.04] text-gray-200 hover:border-slate-400/40',
-    },
-  }
-  const p = palettes[category] ?? {
-    on: 'border-primary-400 bg-primary-700 text-white shadow-md shadow-primary-900/20',
-    off: 'border-white/10 bg-white/[0.04] text-gray-200 hover:border-primary-500/35',
-  }
-  return `${base} ${selected ? p.on : p.off}`
-}
-
 type Props = {
-  initialArticles: Article[]
+  initialArticles: EducationArticle[]
 }
 
 function EducationIndexSuspenseFallback() {
@@ -113,10 +33,9 @@ function EducationPageInner({ initialArticles }: Props) {
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
+  const [isRefreshing, startRefresh] = useTransition()
 
-  const [articles, setArticles] = useState<Article[]>(initialArticles)
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+  const articles = initialArticles
 
   const breadcrumbItems = [
     { label: 'Home', href: '/' },
@@ -124,15 +43,14 @@ function EducationPageInner({ initialArticles }: Props) {
   ]
 
   const categoriesInUse = useMemo(() => {
-    const set = new Set<string>()
+    const names: string[] = []
     for (const a of articles) {
-      if (a.category?.trim()) set.add(a.category.trim())
+      if (a.category?.trim()) names.push(a.category.trim())
     }
-    const preferred = CATEGORY_ORDER.filter((c) => set.has(c))
-    const rest = Array.from(set)
-      .filter((c) => !CATEGORY_ORDER.includes(c))
-      .sort((a, b) => a.localeCompare(b))
-    return [...preferred, ...rest]
+    for (const r of EXTERNAL_EDUCATION_RESOURCES) {
+      if (r.category?.trim()) names.push(r.category.trim())
+    }
+    return sortEducationCategories(names)
   }, [articles])
 
   const selectedCategory = useMemo(() => {
@@ -161,77 +79,32 @@ function EducationPageInner({ initialArticles }: Props) {
     router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false })
   }
 
-  const fetchArticles = async () => {
-    try {
-      setLoading(true)
-      setError(null)
-      const client = supabase
-      if (!client) {
-        throw new Error('Supabase client not configured')
-      }
-
-      const { data: articlesData, error: articlesError } = await client
-        .from('articles')
-        .select('*')
-        .eq('status', 'published')
-        .order('publish_date', { ascending: false })
-
-      if (articlesError) {
-        throw articlesError
-      }
-
-      setArticles(articlesData || [])
-    } catch (err) {
-      console.error('Error fetching articles:', err)
-      setError('Unable to load articles at this time.')
-    } finally {
-      setLoading(false)
-    }
+  const refreshArticles = () => {
+    startRefresh(() => {
+      router.refresh()
+    })
   }
 
   const filteredArticles =
     selectedCategory === 'all' ? articles : articles.filter((a) => a.category === selectedCategory)
 
+  const filteredExternal =
+    selectedCategory === 'all'
+      ? EXTERNAL_EDUCATION_RESOURCES
+      : EXTERNAL_EDUCATION_RESOURCES.filter((r) => r.category === selectedCategory)
+
   const featuredArticles = filteredArticles.filter((a) => a.featured)
   const regularArticles = filteredArticles.filter((a) => !a.featured)
 
   const getCategoryCount = (categoryId: string) => {
-    if (categoryId === 'all') return articles.length
-    return articles.filter((a) => a.category === categoryId).length
+    if (categoryId === 'all') return articles.length + EXTERNAL_EDUCATION_RESOURCES.length
+    const internal = articles.filter((a) => a.category === categoryId).length
+    const external = EXTERNAL_EDUCATION_RESOURCES.filter((r) => r.category === categoryId).length
+    return internal + external
   }
 
   const featuredTotal = useMemo(() => articles.filter((a) => a.featured).length, [articles])
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-black section-padding">
-        <div className="container-custom flex min-h-[50vh] items-center justify-center">
-          <div
-            className="h-12 w-12 animate-spin rounded-full border-2 border-primary-500 border-t-transparent motion-reduce:animate-none"
-            aria-label="Loading"
-          />
-        </div>
-      </div>
-    )
-  }
-
-  if (error) {
-    return (
-      <div className="min-h-screen bg-black section-padding">
-        <div className="container-custom py-12 text-center">
-          <h1 className="font-serif text-2xl font-bold text-white">Couldn&apos;t load articles</h1>
-          <p className="mt-2 text-gray-400">{error}</p>
-          <button
-            type="button"
-            onClick={fetchArticles}
-            className="btn-primary mt-6 inline-flex min-h-touch items-center justify-center px-6 py-2.5"
-          >
-            Try again
-          </button>
-        </div>
-      </div>
-    )
-  }
+  const curatedTotal = EXTERNAL_EDUCATION_RESOURCES.length
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-black section-padding">
@@ -240,12 +113,21 @@ function EducationPageInner({ initialArticles }: Props) {
         <div className="absolute bottom-10 right-0 h-64 w-64 rounded-full bg-violet-600/60 blur-3xl" />
       </div>
 
+      {isRefreshing ? (
+        <div
+          className="fixed inset-x-0 top-0 z-50 h-1 animate-pulse bg-primary-500 motion-reduce:animate-none"
+          aria-hidden
+        />
+      ) : null}
+
       <div className="container-custom relative z-10">
         <Breadcrumb items={breadcrumbItems} />
 
         <HeroSponsorLayout contextLabel="Education">
           <header className="max-w-3xl">
-            <p className="mb-2 text-sm font-medium uppercase tracking-wider text-primary-400/90">Library</p>
+            <p className="mb-2 text-sm font-medium uppercase tracking-wider text-primary-400/90">
+              Library &amp; curated links
+            </p>
             <h1 className="font-serif text-3xl font-bold text-white sm:text-4xl md:text-5xl">
               BDSM &amp; kink{' '}
               <span className="bg-gradient-to-r from-primary-300 via-primary-400 to-primary-500 bg-clip-text text-transparent">
@@ -253,8 +135,9 @@ function EducationPageInner({ initialArticles }: Props) {
               </span>
             </h1>
             <p className="mt-4 text-base leading-relaxed text-gray-300 md:text-lg">
-              Consent, safety, techniques, and community—articles you can use before you play. When you&apos;re ready
-              to go out, pair reading with the{' '}
+              Our articles plus trusted guides from across the community—short teasers here, full reads on the source
+              site. Consent, safety, techniques, and more before you play. When you&apos;re ready to go out, pair reading
+              with the{' '}
               <Link href="/calendar" className="text-primary-400 underline underline-offset-2 hover:text-primary-300">
                 calendar
               </Link>{' '}
@@ -265,9 +148,12 @@ function EducationPageInner({ initialArticles }: Props) {
               .
             </p>
 
-            <div className="mt-6 flex flex-wrap gap-3">
+            <div className="mt-6 flex flex-wrap items-center gap-3">
               <div className="rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-sm text-gray-300">
-                <span className="font-semibold tabular-nums text-white">{articles.length}</span> articles
+                <span className="font-semibold tabular-nums text-white">{articles.length}</span> on-site articles
+              </div>
+              <div className="rounded-full border border-violet-500/25 bg-violet-500/10 px-4 py-2 text-sm text-violet-100/90">
+                <span className="font-semibold tabular-nums">{curatedTotal}</span> curated links
               </div>
               <div className="rounded-full border border-amber-500/25 bg-amber-500/10 px-4 py-2 text-sm text-amber-100/90">
                 <span className="font-semibold tabular-nums">{featuredTotal}</span> featured
@@ -275,6 +161,15 @@ function EducationPageInner({ initialArticles }: Props) {
               <div className="rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-sm text-gray-300">
                 <span className="font-semibold tabular-nums text-white">{categoriesInUse.length}</span> topics
               </div>
+              <button
+                type="button"
+                onClick={refreshArticles}
+                disabled={isRefreshing}
+                className="rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-sm text-gray-300 transition hover:border-white/25 hover:text-white disabled:opacity-50"
+                aria-label="Refresh article list"
+              >
+                {isRefreshing ? 'Refreshing…' : 'Refresh'}
+              </button>
             </div>
           </header>
         </HeroSponsorLayout>
@@ -306,7 +201,7 @@ function EducationPageInner({ initialArticles }: Props) {
                 role="tab"
                 aria-selected={selectedCategory === cat}
                 onClick={() => selectCategory(cat)}
-                className={categoryTabClass(cat, selectedCategory === cat)}
+                className={getCategoryTabClass(cat, selectedCategory === cat)}
               >
                 {cat} ({getCategoryCount(cat)})
               </button>
@@ -336,10 +231,11 @@ function EducationPageInner({ initialArticles }: Props) {
 
         {regularArticles.length > 0 && (
           <section aria-labelledby="all-edu-heading">
-            <div className="mb-6 border-b border-white/10 pb-3">
+            <div className="mb-6 border-b border-white/10 pb-3 md:flex md:items-end md:justify-between">
               <h2 id="all-edu-heading" className="font-serif text-2xl font-semibold text-white">
-                {selectedCategory === 'all' ? 'All articles' : `${selectedCategory} · articles`}
+                {selectedCategory === 'all' ? 'From East Coast Kink Events' : `${selectedCategory} · our articles`}
               </h2>
+              <p className="mt-2 text-sm text-gray-500 md:mt-0">Read in full on this site</p>
             </div>
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3 xl:gap-8">
               {regularArticles.map((article) => (
@@ -349,7 +245,23 @@ function EducationPageInner({ initialArticles }: Props) {
           </section>
         )}
 
-        {filteredArticles.length === 0 && (
+        {filteredExternal.length > 0 && (
+          <section className="mt-14 md:mt-16" aria-labelledby="curated-edu-heading">
+            <div className="mb-6 border-b border-white/10 pb-3 md:flex md:items-end md:justify-between">
+              <h2 id="curated-edu-heading" className="font-serif text-2xl font-semibold text-white">
+                {selectedCategory === 'all' ? 'Recommended reading' : `${selectedCategory} · recommended reading`}
+              </h2>
+              <p className="mt-2 text-sm text-gray-500 md:mt-0">Curated off-site guides — opens in a new tab</p>
+            </div>
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3 xl:gap-8">
+              {filteredExternal.map((resource) => (
+                <ExternalResourceCard key={resource.id} resource={resource} />
+              ))}
+            </div>
+          </section>
+        )}
+
+        {filteredArticles.length === 0 && filteredExternal.length === 0 && (
           <div className="rounded-2xl border border-white/10 bg-white/[0.03] py-12 text-center md:py-16">
             <h3 className="font-serif text-xl font-semibold text-white">No articles here yet</h3>
             <p className="mx-auto mt-2 max-w-md text-gray-400">
@@ -366,6 +278,14 @@ function EducationPageInner({ initialArticles }: Props) {
                 View all articles
               </button>
             ) : null}
+            <button
+              type="button"
+              onClick={refreshArticles}
+              disabled={isRefreshing}
+              className="btn-primary mt-6 inline-flex min-h-touch items-center justify-center px-6 disabled:opacity-50"
+            >
+              {isRefreshing ? 'Refreshing…' : 'Refresh list'}
+            </button>
             <Link
               href="/contact"
               className="mt-4 inline-flex min-h-touch items-center justify-center text-sm text-primary-400 underline underline-offset-2"

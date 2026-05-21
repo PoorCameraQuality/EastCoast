@@ -1,11 +1,14 @@
 import Link from 'next/link'
 import Breadcrumb from '@/components/Breadcrumb'
+import SeoIntroCollapsible from '@/components/seo/SeoIntroCollapsible'
 import DungeonDiscoveryHubGrid from '@/components/dungeons/DungeonDiscoveryHubGrid'
 import DungeonDiscoveryEventsStrip, {
   type HubEventRow,
 } from '@/components/dungeons/DungeonDiscoveryEventsStrip'
 import DungeonDiscoveryRelatedLinks from '@/components/dungeons/DungeonDiscoveryRelatedLinks'
 import DungeonDiscoveryStructuredData from '@/components/dungeons/DungeonDiscoveryStructuredData'
+import DiscoveryPageShell from '@/components/discovery/DiscoveryPageShell'
+import DiscoverySectionHeading from '@/components/discovery/DiscoverySectionHeading'
 import type { ParsedDungeonDiscovery } from '@/lib/parseDungeonDiscoverySlug'
 import type { UnifiedDungeon } from '@/lib/unifiedDungeons'
 
@@ -35,7 +38,7 @@ export default function DungeonDiscoveryHubLayout({
   ]
 
   return (
-    <div className="min-h-screen bg-black">
+    <DiscoveryPageShell accent="violet">
       <DungeonDiscoveryStructuredData
         urlPath={path}
         name={h1}
@@ -48,38 +51,33 @@ export default function DungeonDiscoveryHubLayout({
           <Breadcrumb items={breadcrumbItems} />
           <Link
             href="/dungeons"
-            className="inline-flex min-h-touch items-center text-gray-300 hover:text-white underline underline-offset-4 decoration-white/20 hover:decoration-white/50 transition-colors mt-2"
+            className="mt-2 inline-flex min-h-touch items-center text-gray-300 underline underline-offset-4 decoration-white/20 transition-colors hover:text-white hover:decoration-white/50"
           >
             ← Back to Dungeons
           </Link>
 
-          <header className="max-w-3xl mt-8 mb-10">
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-white mb-6">
-              {h1}
-            </h1>
-            <div className="prose prose-invert prose-lg max-w-none text-gray-300 space-y-4">
-              {paragraphs.map((p, i) => (
-                <p key={i} className="leading-relaxed">
-                  {p}
-                </p>
-              ))}
-            </div>
-          </header>
+          <div className="mb-8 mt-8 max-w-3xl">
+            <SeoIntroCollapsible h1={h1} paragraphs={paragraphs} summaryLabel="About this area" />
+          </div>
 
-          <h2 className="text-xl font-serif font-semibold text-white mb-4">Matching venues</h2>
+          <DiscoverySectionHeading title="Matching" accent="venues" className="mb-4" />
           <DungeonDiscoveryHubGrid dungeons={dungeons} />
 
-          <h2 className="text-xl font-serif font-semibold text-white mt-12 mb-4">
-            Upcoming events in this area
-          </h2>
-          <p className="text-sm text-gray-500 mb-4">
-            Geographic matches from our events calendar; not every event is hosted at a listed venue.
-          </p>
+          <DiscoverySectionHeading
+            title="Upcoming events in"
+            accent="this area"
+            subtitle={
+              <p className="text-sm text-gray-500">
+                Geographic matches from our events calendar; not every event is hosted at a listed venue.
+              </p>
+            }
+            className="mb-4 mt-12"
+          />
           <DungeonDiscoveryEventsStrip events={events} />
 
           <DungeonDiscoveryRelatedLinks parsed={parsed} />
         </div>
       </section>
-    </div>
+    </DiscoveryPageShell>
   )
 }

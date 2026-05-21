@@ -8,6 +8,7 @@ import type { PeopleRoleBucket } from '@/lib/dancecard/peopleDirectoryRoleBucket
 import { formatServiceHours, type PersonCompPackage } from '@/lib/dancecard/peopleCompPackages'
 import type { OrganizerRoleForClient } from '@/lib/dancecard/organizerRoles'
 import { PersonDetailDrawer } from '@/components/dancecard/organizer/PersonDetailDrawer'
+import { DancecardTableSkeleton } from '@/components/dancecard/organizer/ui'
 
 type PersonRow = {
   id: string
@@ -60,6 +61,7 @@ export function PeopleDirectoryPanel({
   const [roleBuckets, setRoleBuckets] = useState<Record<string, PeopleRoleBucket[]>>({})
   const [compPackages, setCompPackages] = useState<Record<string, PersonCompPackage>>({})
   const [loadErr, setLoadErr] = useState<string | null>(null)
+  const [listLoading, setListLoading] = useState(true)
   const [busy, setBusy] = useState(false)
   const [sceneName, setSceneName] = useState('')
   const [email, setEmail] = useState('')
@@ -68,6 +70,7 @@ export function PeopleDirectoryPanel({
 
   const load = useCallback(async () => {
     setLoadErr(null)
+    setListLoading(true)
     try {
       const qs = q.trim() ? `?q=${encodeURIComponent(q.trim())}` : ''
       const res = await organizerDancecardFetch<{
@@ -80,6 +83,8 @@ export function PeopleDirectoryPanel({
       setCompPackages(res.compPackages ?? {})
     } catch (e) {
       setLoadErr(e instanceof Error ? e.message : 'Failed to load people')
+    } finally {
+      setListLoading(false)
     }
   }, [eventSlug, q])
 
@@ -243,7 +248,10 @@ export function PeopleDirectoryPanel({
           </div>
         </div>
       ) : null}
-      <div className="overflow-x-auto rounded-xl border border-dc-border">
+      {listLoading ? (
+        <DancecardTableSkeleton rows={8} cols={readOnly ? 7 : 8} />
+      ) : (
+      <div className="overflow-x-auto rounded-xl border border-dc-border dc-tab-content-enter">
         <table className="min-w-full text-left text-sm text-dc-text">
           <thead className="border-b border-dc-border bg-dc-surface-muted text-xs uppercase text-dc-muted">
             <tr>
@@ -330,6 +338,7 @@ export function PeopleDirectoryPanel({
           </tbody>
         </table>
       </div>
+      )}
       {selectedPerson ? (
         <PersonDetailDrawer
           eventSlug={eventSlug}

@@ -1,7 +1,10 @@
 import Link from 'next/link'
 import Breadcrumb from '@/components/Breadcrumb'
+import SeoIntroCollapsible from '@/components/seo/SeoIntroCollapsible'
 import VendorDiscoveryHubGrid from '@/components/vendors/VendorDiscoveryHubGrid'
 import VendorDiscoveryRelatedLinks from '@/components/vendors/VendorDiscoveryRelatedLinks'
+import DiscoveryPageShell from '@/components/discovery/DiscoveryPageShell'
+import DiscoverySectionHeading from '@/components/discovery/DiscoverySectionHeading'
 import type { ParsedVendorDiscovery } from '@/lib/parseVendorDiscoverySlug'
 import type { VendorRecord } from '@/lib/vendorFiltering'
 import { selectedTaxonomySlugsForVendorHub } from '@/lib/vendorHubTagMap'
@@ -37,41 +40,34 @@ export default function VendorDiscoveryHubLayout({
   ]
 
   return (
-    <section className="section-padding bg-gradient-to-br from-black via-dark-950 to-black">
-      <div className="container-custom">
-        <div className="max-w-4xl mx-auto mb-8">
-          <Breadcrumb items={breadcrumbItems} />
-          <Link
-            href="/vendors"
-            className="inline-flex min-h-touch items-center text-gray-300 hover:text-white underline underline-offset-4 decoration-white/20 hover:decoration-white/50 transition-colors mt-2"
-          >
-            ← Back to Vendors
-          </Link>
-        </div>
-
-        <header className="max-w-3xl mx-auto mb-10">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-white mb-6">
-            {h1}
-          </h1>
-          <div className="prose prose-invert prose-lg max-w-none text-gray-300 space-y-4">
-            {paragraphs.map((p, i) => (
-              <p key={i} className="leading-relaxed">
-                {p}
-              </p>
-            ))}
+    <DiscoveryPageShell accent="teal">
+      <section className="section-padding">
+        <div className="container-custom">
+          <div className="mb-8 max-w-4xl">
+            <Breadcrumb items={breadcrumbItems} />
+            <Link
+              href="/vendors"
+              className="mt-2 inline-flex min-h-touch items-center text-gray-300 underline underline-offset-4 decoration-white/20 transition-colors hover:text-white hover:decoration-white/50"
+            >
+              ← Back to Vendors
+            </Link>
           </div>
-        </header>
 
-        <div className="max-w-5xl mx-auto">
-          <h2 className="text-xl font-serif font-semibold text-white mb-4">Matching vendors</h2>
-          <VendorDiscoveryHubGrid
-            vendors={vendors}
-            selectedTagSlugs={selectedTagSlugs}
-            itemListName={path.replace(/^\//, '').replace(/\//g, '_')}
-          />
-          <VendorDiscoveryRelatedLinks parsed={parsed} />
+          <div className="mx-auto mb-8 max-w-3xl">
+            <SeoIntroCollapsible h1={h1} paragraphs={paragraphs} summaryLabel="About this hub" />
+          </div>
+
+          <div className="mx-auto max-w-5xl">
+            <DiscoverySectionHeading title="Matching" accent="vendors" className="mb-4" />
+            <VendorDiscoveryHubGrid
+              vendors={vendors}
+              selectedTagSlugs={selectedTagSlugs}
+              itemListName={path.replace(/^\//, '').replace(/\//g, '_')}
+            />
+            <VendorDiscoveryRelatedLinks parsed={parsed} />
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </DiscoveryPageShell>
   )
 }

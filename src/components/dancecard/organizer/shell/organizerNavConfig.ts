@@ -217,7 +217,7 @@ export const ORGANIZER_SIDEBAR_SECTIONS: OrganizerSidebarSection[] = [
 
         label: 'Messaging',
 
-        description: 'Templates and announcements to registrants.',
+        description: 'Draft an announcement and publish it to every attendee Dancecard.',
 
       },
 

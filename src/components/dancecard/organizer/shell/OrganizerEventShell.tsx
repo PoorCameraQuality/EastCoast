@@ -58,7 +58,7 @@ export function OrganizerEventShell({
 
         <main
           className={cn(
-            'flex-1 px-4 py-6 sm:px-6 lg:py-8',
+            'flex-1 px-3 py-5 sm:px-6 sm:py-6 lg:py-8',
             wideCanvas && wideLayoutForTab
               ? 'max-w-[min(100%,1600px)]'
               : activeTab === 'people' ||
@@ -70,9 +70,11 @@ export function OrganizerEventShell({
           )}
         >
           {activeTab !== 'dashboard' ? (
-            <header className="mb-6 border-b border-dc-border pb-5">
-              <h1 className="font-serif text-2xl text-dc-text sm:text-3xl">{pageTitle}</h1>
-              {pageDescription ? <p className="mt-2 max-w-2xl text-sm leading-relaxed text-dc-muted">{pageDescription}</p> : null}
+            <header className="mb-5 border-b border-dc-border pb-4 sm:mb-6 sm:pb-5">
+              <h1 className="font-serif text-xl text-dc-text sm:text-2xl lg:text-3xl">{pageTitle}</h1>
+              {pageDescription ? (
+                <p className="mt-2 max-w-2xl text-sm leading-relaxed text-dc-muted">{pageDescription}</p>
+              ) : null}
             </header>
           ) : null}
 

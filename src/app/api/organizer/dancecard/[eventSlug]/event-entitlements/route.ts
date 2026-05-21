@@ -24,6 +24,9 @@ const patchSchema = z.object({
       iso_board: z.boolean().optional(),
       session_feedback: z.boolean().optional(),
       attendee_groups: z.boolean().optional(),
+      meal_signups: z.boolean().optional(),
+      exhibitor_directory: z.boolean().optional(),
+      attendee_directory: z.boolean().optional(),
     })
     .strict(),
 })

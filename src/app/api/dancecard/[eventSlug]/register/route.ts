@@ -3,6 +3,7 @@ import { ZodError } from 'zod'
 import bcrypt from 'bcryptjs'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { codesEqual } from '@/lib/dancecard/accessCodes'
+import { allowPublicAttendeeDemoAccess } from '@/lib/dancecard/publicDemo'
 import { getDancecardAdmin, loadEventBySlug, normalizeEventSlug } from '@/lib/dancecard/routeCommon'
 import { registerBodySchema } from '@/lib/dancecard/schemas'
 import { resolveRegistrantForDancecardAccount } from '@/lib/dancecard/ensureSelfServiceRegistrant'
@@ -35,7 +36,9 @@ export async function POST(
       return NextResponse.json({ error: 'Event not found' }, { status: 404 })
     }
     const body = registerBodySchema.parse(await request.json())
-    const regGate = String((event as { registration_access_code?: string }).registration_access_code ?? '').trim()
+    const regGate = allowPublicAttendeeDemoAccess(slug)
+      ? ''
+      : String((event as { registration_access_code?: string }).registration_access_code ?? '').trim()
     if (regGate) {
       const provided = String(body.registrationAccessCode ?? '').trim()
       if (!provided || !codesEqual(provided, regGate)) {

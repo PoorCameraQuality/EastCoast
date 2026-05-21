@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { getEventEntitlements } from '@/lib/dancecard/eventEntitlements'
 import { parseEventProfile } from '@/lib/dancecard/eventProfile'
+import { allowPublicAttendeeDemoAccess } from '@/lib/dancecard/publicDemo'
 import {getDancecardAdmin, loadEventBySlug, normalizeEventSlug, jsonFromRouteError } from '@/lib/dancecard/routeCommon'
 
 export const dynamic = 'force-dynamic'
@@ -21,8 +22,9 @@ export async function GET(_request: Request, context: { params: { eventSlug: str
     if (error) throw error
     const code = String((row as { registration_access_code?: string } | null)?.registration_access_code ?? '').trim()
     const modules = await getEventEntitlements(admin, event.id)
+    const publicDemo = allowPublicAttendeeDemoAccess(slug)
     return NextResponse.json({
-      requiresRegistrationCode: code.length > 0,
+      requiresRegistrationCode: publicDemo ? false : code.length > 0,
       modules,
       eventProfile: parseEventProfile((row as { event_profile?: string } | null)?.event_profile),
     })

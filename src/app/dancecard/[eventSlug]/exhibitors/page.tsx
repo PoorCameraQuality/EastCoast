@@ -3,7 +3,9 @@
 import { useEffect, useState } from 'react'
 import { useParams } from 'next/navigation'
 import { dancecardFetch } from '@/components/dancecard/api-client'
+import { AttendeeSubpageLoader } from '@/components/dancecard/attendee/AttendeeSubpageLoader'
 import { DancecardEventNav } from '@/components/dancecard/attendee/DancecardEventNav'
+import { DancecardListSkeleton } from '@/components/dancecard/organizer/ui'
 import { Panel } from '@/components/dancecard/ui/Panel'
 
 type Exhibitor = {
@@ -22,16 +24,28 @@ export default function ExhibitorsPage() {
   const [title, setTitle] = useState('')
   const [items, setItems] = useState<Exhibitor[]>([])
   const [q, setQ] = useState('')
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     if (!slug) return
+    setLoading(true)
     void (async () => {
-      const gate = await dancecardFetch<{ eventTitle?: string }>(slug, '/gate').catch(() => ({ eventTitle: slug }))
-      setTitle(gate.eventTitle ?? slug)
-      const d = await dancecardFetch<{ exhibitors: Exhibitor[] }>(slug, '/exhibitors').catch(() => ({ exhibitors: [] }))
-      setItems(d.exhibitors ?? [])
+      try {
+        const gate = await dancecardFetch<{ eventTitle?: string }>(slug, '/gate').catch(() => ({ eventTitle: slug }))
+        setTitle(gate.eventTitle ?? slug)
+        const d = await dancecardFetch<{ exhibitors: Exhibitor[] }>(slug, '/exhibitors').catch(() => ({ exhibitors: [] }))
+        setItems(d.exhibitors ?? [])
+      } finally {
+        setLoading(false)
+      }
     })()
   }, [slug])
+
+  if (!slug) return null
+
+  if (loading && !title) {
+    return <AttendeeSubpageLoader eventSlug={slug} label="Loading exhibitors…" maxWidth="2xl" />
+  }
 
   const filtered = items.filter((e) => {
     if (!q.trim()) return true
@@ -50,7 +64,12 @@ export default function ExhibitorsPage() {
           value={q}
           onChange={(e) => setQ(e.target.value)}
         />
-        <ul className="mt-4 space-y-3">
+        {loading ? (
+          <div className="mt-4">
+            <DancecardListSkeleton rows={5} />
+          </div>
+        ) : (
+        <ul className="mt-4 space-y-3 dc-tab-content-enter">
           {filtered.map((e) => (
             <li key={e.id}>
               <Panel className="p-4">
@@ -63,6 +82,7 @@ export default function ExhibitorsPage() {
             </li>
           ))}
         </ul>
+        )}
       </main>
     </>
   )

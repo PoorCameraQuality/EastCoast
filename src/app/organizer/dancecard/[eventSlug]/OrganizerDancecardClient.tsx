@@ -36,6 +36,8 @@ import { C2kFromBanner } from '@/components/dancecard/organizer/C2kFromBanner'
 import { OrganizerCommandProvider } from '@/components/dancecard/organizer/command/OrganizerCommandContext'
 import { SETUP_TASKS } from '@/lib/dancecard/setupTasks'
 import { OrganizerCommandShell } from '@/components/dancecard/organizer/OrganizerCommandShell'
+import { OrganizerWorkspaceSkeleton } from '@/components/dancecard/organizer/ui'
+import { TabContentTransition } from '@/components/dancecard/ui/TabContentTransition'
 
 export function OrganizerDancecardClient({ eventSlug }: { eventSlug: string }) {
   const slug = eventSlug.toLowerCase()
@@ -54,6 +56,7 @@ export function OrganizerDancecardClient({ eventSlug }: { eventSlug: string }) {
   const [notice, setNotice] = useState<string | null>(null)
   const { wideCanvas, toggleWideCanvas } = useOrganizerShellPrefs(slug)
   const [conflictsPulse, setConflictsPulse] = useState(false)
+  const [bootstrapReady, setBootstrapReady] = useState(false)
 
   const readOnly = organizerRole === 'viewer'
   const hasEventWindow = Boolean(windowStartsAt && windowEndsAt)
@@ -140,6 +143,7 @@ export function OrganizerDancecardClient({ eventSlug }: { eventSlug: string }) {
 
   const loadBootstrap = useCallback(async () => {
     invalidateOrganizerDancecardCache(slug)
+    setBootstrapReady(false)
     try {
       const res = await organizerDancecardFetch<{
         organizerRole: OrganizerRoleForClient
@@ -163,6 +167,8 @@ export function OrganizerDancecardClient({ eventSlug }: { eventSlug: string }) {
     } catch (e) {
       const raw = e instanceof Error ? e.message : 'Could not load event'
       setLoadErr(humanizeLoadMessage(raw, 'event'))
+    } finally {
+      setBootstrapReady(true)
     }
   }, [humanizeLoadMessage, slug])
 
@@ -307,7 +313,7 @@ export function OrganizerDancecardClient({ eventSlug }: { eventSlug: string }) {
 
         <OrganizerEventShell
           eventSlug={slug}
-          eventTitle={eventTitle}
+          eventTitle={bootstrapReady ? eventTitle || slug : 'Loading event…'}
           activeTab={tab}
           readOnly={readOnly}
           wideCanvas={wideCanvas}
@@ -322,6 +328,9 @@ export function OrganizerDancecardClient({ eventSlug }: { eventSlug: string }) {
           {loadErr ? (
             <p className="mb-4 text-sm text-dc-danger">{loadErr}</p>
           ) : null}
+          {!bootstrapReady && !loadErr ? <OrganizerWorkspaceSkeleton /> : null}
+          {bootstrapReady ? (
+          <TabContentTransition tabKey={tab}>
           {notice && tab !== 'dashboard' ? (
             <div className="mb-4 rounded-xl border border-dc-warning/25 bg-dc-warning-muted px-4 py-3 text-sm text-dc-warning">
               <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
@@ -440,6 +449,8 @@ export function OrganizerDancecardClient({ eventSlug }: { eventSlug: string }) {
             )
           ) : null}
           {tab === 'integrations' ? <IntegrationsPanel eventSlug={slug} organizerRole={organizerRole} /> : null}
+          </TabContentTransition>
+          ) : null}
         </OrganizerEventShell>
       </OrganizerCommandShell>
     </OrganizerCommandProvider>

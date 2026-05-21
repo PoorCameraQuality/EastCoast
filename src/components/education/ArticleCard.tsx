@@ -1,19 +1,22 @@
 import Link from 'next/link'
+import { getCategoryColorClass } from '@/lib/educationCategoryColors'
+import type { EducationArticle } from '@/lib/educationArticles'
 
 interface ArticleCardProps {
-  article: {
-    id: string
-    slug?: string
-    title: string
-    excerpt: string
-    author_name: string
-    author_credentials?: string
-    category: string
-    tags?: string | string[]
-    featured: boolean
-    read_time?: string
-    publish_date?: string
-  }
+  article: Pick<
+    EducationArticle,
+    | 'id'
+    | 'slug'
+    | 'title'
+    | 'excerpt'
+    | 'author_name'
+    | 'author_credentials'
+    | 'category'
+    | 'tags'
+    | 'featured'
+    | 'read_time'
+    | 'publish_date'
+  >
 }
 
 export default function ArticleCard({ article }: ArticleCardProps) {
@@ -38,41 +41,13 @@ export default function ArticleCard({ article }: ArticleCardProps) {
 
   const articleTags = formatTags(article.tags)
 
-  // Get category color
-  const getCategoryColor = (category: string) => {
-    switch (category) {
-      case 'Safety':
-        return 'bg-gradient-to-r from-red-600 to-red-700'
-      case 'Techniques':
-        return 'bg-gradient-to-r from-primary-600 to-primary-700'
-      case 'Community':
-        return 'bg-gradient-to-r from-emerald-600 to-emerald-800'
-      case 'Resources':
-        return 'bg-gradient-to-r from-violet-600 to-violet-800'
-      case 'Consent':
-        return 'bg-gradient-to-r from-amber-500 to-amber-700'
-      case 'Education':
-        return 'bg-gradient-to-r from-sky-600 to-sky-800'
-      case 'Identity':
-        return 'bg-gradient-to-r from-fuchsia-600 to-fuchsia-900'
-      case 'Aftercare':
-        return 'bg-gradient-to-r from-rose-600 to-rose-900'
-      case 'Mental Health':
-        return 'bg-gradient-to-r from-cyan-600 to-cyan-900'
-      case 'Legal':
-        return 'bg-gradient-to-r from-slate-600 to-slate-800'
-      default:
-        return 'bg-gradient-to-r from-slate-600 to-slate-800'
-    }
-  }
-
   return (
     <Link href={`/education/${article.slug || article.id}`} className="block group">
       <div className="card-elegant group/card h-full overflow-hidden border border-dark-600 transition-all duration-300 hover:border-primary-500/60 hover:shadow-xl motion-safe:md:hover:scale-[1.02] motion-reduce:hover:scale-100">
         {/* Header with category and featured badge */}
         <div className="relative p-6 pb-4">
           <div className="flex items-center justify-between mb-4">
-            <span className={`px-3 py-1 rounded-full text-xs font-medium text-white ${getCategoryColor(article.category)} shadow-lg`}>
+            <span className={`px-3 py-1 rounded-full text-xs font-medium text-white ${getCategoryColorClass(article.category)} shadow-lg`}>
               {article.category}
             </span>
             {article.featured && (

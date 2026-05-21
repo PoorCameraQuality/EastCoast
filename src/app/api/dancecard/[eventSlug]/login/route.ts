@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { ZodError } from 'zod'
 import bcrypt from 'bcryptjs'
 import { codesEqual } from '@/lib/dancecard/accessCodes'
+import { allowPublicAttendeeDemoAccess } from '@/lib/dancecard/publicDemo'
 import { getDancecardAdmin, loadEventBySlug, normalizeEventSlug } from '@/lib/dancecard/routeCommon'
 import { loginBodySchema } from '@/lib/dancecard/schemas'
 import { resolveRegistrantForDancecardAccount } from '@/lib/dancecard/ensureSelfServiceRegistrant'
@@ -46,7 +47,9 @@ export async function POST(
       return NextResponse.json({ error: 'Invalid username or password' }, { status: 401 })
     }
 
-    const regGate = String((event as { registration_access_code?: string }).registration_access_code ?? '').trim()
+    const regGate = allowPublicAttendeeDemoAccess(slug)
+      ? ''
+      : String((event as { registration_access_code?: string }).registration_access_code ?? '').trim()
     if (regGate) {
       const provided = String(body.registrationAccessCode ?? '').trim()
       if (!provided || !codesEqual(provided, regGate)) {

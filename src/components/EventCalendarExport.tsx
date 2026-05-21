@@ -114,23 +114,18 @@ export default function EventCalendarExport({ event }: EventCalendarExportProps)
   }
 
   return (
-    <div className="bg-gradient-to-br from-gray-900 to-black border border-gray-700 rounded-2xl p-6">
-      <h2 className="text-xl font-serif font-bold text-white mb-3 flex items-center gap-3">
-        <div className="w-8 h-8 bg-gradient-to-r from-green-500 to-primary-500 rounded-lg flex items-center justify-center">
-          <svg className="w-4 h-4 text-black" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/>
-          </svg>
-        </div>
-        Add to Calendar
-      </h2>
-      <p className="text-gray-300 text-sm mb-4">
-        Add this event to your personal calendar or download it for offline use.
+    <div className="card-glass p-4 sm:p-5">
+      <div className="card-glass-wash" aria-hidden />
+      <div className="relative z-10">
+      <h2 className="font-serif text-lg font-semibold text-white">Add to calendar</h2>
+      <p className="mt-2 text-sm text-gray-400">
+        Save dates locally or open in Google Calendar.
       </p>
-      <div className="flex flex-col sm:flex-row gap-3">
+      <div className="mt-4 flex flex-col gap-2">
         <button
           type="button"
           onClick={exportToGoogleCalendar}
-          className="group inline-flex min-h-touch items-center justify-center gap-2 bg-gradient-to-r from-primary-500 to-primary-600 text-white font-bold py-2 px-4 rounded-lg hover:from-primary-600 hover:to-primary-700 transition-colors duration-300 shadow-lg md:hover:scale-105 motion-reduce:md:hover:scale-100 text-sm"
+          className="btn-primary w-full justify-center gap-2 text-sm"
         >
           <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
             <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/>
@@ -141,7 +136,7 @@ export default function EventCalendarExport({ event }: EventCalendarExportProps)
         <button
           type="button"
           onClick={addToAppleCalendar}
-          className="group inline-flex min-h-touch items-center justify-center gap-2 bg-gradient-to-r from-gray-800 to-gray-900 text-white font-bold py-2 px-4 rounded-lg hover:from-gray-700 hover:to-gray-800 transition-colors duration-300 shadow-lg md:hover:scale-105 motion-reduce:md:hover:scale-100 text-sm"
+          className="inline-flex min-h-touch w-full items-center justify-center gap-2 rounded-lg border border-white/15 bg-white/5 px-4 py-2 text-sm font-medium text-gray-200 transition hover:border-white/25 hover:bg-white/10"
         >
           <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
             <path d="M18.71 19.5c-.83 1.24-1.71 2.5-3.05 2.47-1.34-.03-1.74-.79-3.27-.79-1.53 0-2 .77-3.27.79-1.34.03-2.22-1.23-3.05-2.47C5.04 17.68 4 15.33 4 13c0-5.52 4.48-10 10-10s10 4.48 10 10c0 2.33-1.04 4.68-5.29 6.5z"/>
@@ -152,13 +147,14 @@ export default function EventCalendarExport({ event }: EventCalendarExportProps)
         <button
           type="button"
           onClick={exportToICal}
-          className="group inline-flex min-h-touch items-center justify-center gap-2 bg-gradient-to-r from-green-500 to-green-600 text-white font-bold py-2 px-4 rounded-lg hover:from-green-600 hover:to-green-700 transition-colors duration-300 shadow-lg md:hover:scale-105 motion-reduce:md:hover:scale-100 text-sm"
+          className="inline-flex min-h-touch w-full items-center justify-center gap-2 rounded-lg border border-white/15 bg-white/5 px-4 py-2 text-sm font-medium text-gray-200 transition hover:border-white/25 hover:bg-white/10"
         >
           <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
             <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
           </svg>
           Download iCal File
         </button>
+      </div>
       </div>
     </div>
   )
