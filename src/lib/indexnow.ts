@@ -15,11 +15,22 @@ import { getAllSwingClubs } from '@/data/swingClubs'
 import { getStateSlugsForSitemap } from '@/lib/eastCoastStates'
 import { buildAllowlistedVendorDiscoveryPaths } from '@/lib/vendorDiscoveryTier'
 import { getSpiritualityKinkIndexPaths } from '@/lib/spiritualityKinkProgrammatic'
+import { isIndexNowSubmissionEnabled } from '@/lib/indexnowEnv'
 
 const INDEXNOW_API_URL = "https://api.indexnow.org/indexnow"
 const INDEXNOW_KEY = "0050cb815778482eafc98bbf0849daad"
 const KEY_LOCATION = "https://www.eastcoastkinkevents.com/0050cb815778482eafc98bbf0849daad.txt"
 const BASE_URL = "https://www.eastcoastkinkevents.com"
+
+function skippedIndexNowResponse(urlCount: number): IndexNowResponse {
+  return {
+    status: 200,
+    statusText: 'Skipped (INDEXNOW_ENABLED=false)',
+    submittedCount: 0,
+    skippedCount: urlCount,
+    urls: [],
+  }
+}
 
 interface IndexNowResponse {
   status: number
@@ -34,6 +45,10 @@ interface IndexNowResponse {
  * Submit URLs to IndexNow API
  */
 export async function submitToIndexNow(urls: string[]): Promise<IndexNowResponse> {
+  if (!isIndexNowSubmissionEnabled()) {
+    return skippedIndexNowResponse(urls.length)
+  }
+
   try {
     // Validate and filter URLs
     const validUrls = urls
@@ -101,6 +116,22 @@ export async function submitToIndexNow(urls: string[]): Promise<IndexNowResponse
  */
 export async function submitUrlToIndexNow(url: string): Promise<IndexNowResponse> {
   return submitToIndexNow([url])
+}
+
+export type SingleIndexNowResult = {
+  ok: boolean
+  status: number
+  error?: string
+}
+
+/** Fire-and-forget friendly wrapper for a single published/unpublished content URL. */
+export async function submitSingleContentUrlToIndexNow(url: string): Promise<SingleIndexNowResult> {
+  const result = await submitUrlToIndexNow(url)
+  return {
+    ok: result.status >= 200 && result.status < 300,
+    status: result.status,
+    error: result.error,
+  }
 }
 
 /** Full URLs for spirituality/kink programmatic hub (same paths as XML sitemap). */

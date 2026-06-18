@@ -22,6 +22,16 @@ export type EducationArticle = {
   meta_description?: string
   focus_keywords?: string[] | string
   og_image?: string | null
+  content_warnings?: string[] | null
+  difficulty?: string | null
+  author_username?: string | null
+  author_profile_url?: string | null
+  presenter_profile_url?: string | null
+  kink_social_canonical_url?: string | null
+  source_attribution?: string | null
+  last_synced_at?: string | null
+  c2k_source_type?: string | null
+  c2k_source_id?: string | null
 }
 
 function normalizeStaticArticle(raw: Record<string, unknown>): EducationArticle {
