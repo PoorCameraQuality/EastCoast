@@ -474,6 +474,59 @@
     transform: translateY(-50%);
   }
 
+  .kink-social-alpha-sponsor {
+    box-shadow:
+      0 0 0 1px rgba(45, 212, 191, 0.22),
+      0 0 48px rgba(20, 184, 166, 0.18),
+      0 0 96px rgba(234, 179, 8, 0.1);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .kink-social-alpha-sponsor {
+      animation: kinkSocialAlphaGlow 3.4s ease-in-out infinite;
+    }
+  }
+  .kink-social-alpha-badge {
+    position: absolute;
+    top: 0.85rem;
+    right: 0.85rem;
+    z-index: 3;
+    border-radius: 9999px;
+    border: 1px solid rgba(251, 191, 36, 0.65);
+    background: rgba(2, 6, 23, 0.92);
+    padding: 0.28rem 0.65rem;
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(253, 230, 138, 0.95);
+    box-shadow: 0 0 18px rgba(251, 191, 36, 0.35);
+  }
+  .kink-social-alpha-cta {
+    background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 45%, #2dd4bf 100%);
+    box-shadow: 0 0 24px rgba(251, 191, 36, 0.35);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .kink-social-alpha-cta:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 0 32px rgba(45, 212, 191, 0.45);
+  }
+  @keyframes kinkSocialAlphaGlow {
+    0%, 100% {
+      border-color: rgba(45, 212, 191, 0.38);
+      box-shadow:
+        0 0 0 1px rgba(45, 212, 191, 0.18),
+        0 0 40px rgba(20, 184, 166, 0.16),
+        0 0 80px rgba(234, 179, 8, 0.08);
+    }
+    50% {
+      border-color: rgba(251, 191, 36, 0.5);
+      box-shadow:
+        0 0 0 1px rgba(251, 191, 36, 0.24),
+        0 0 52px rgba(234, 179, 8, 0.22),
+        0 0 100px rgba(20, 184, 166, 0.14);
+    }
+  }
+
   @keyframes sponsorBorderPulse {
     0%, 100% {
       border-color: rgba(251, 191, 36, 0.38);

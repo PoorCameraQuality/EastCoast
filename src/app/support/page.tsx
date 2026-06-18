@@ -2,6 +2,8 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import Breadcrumb from '@/components/Breadcrumb'
 import VendorImage from '@/components/vendors/VendorImage'
+import KinkSocialAlphaSponsorCard from '@/components/KinkSocialAlphaSponsorCard'
+import { getSiteSponsorPromo } from '@/data/siteSponsor'
 import { getSiteSponsorVendor } from '@/data/vendors'
 import { BASE_URL } from '@/lib/seo'
 
@@ -45,7 +47,8 @@ export default function SupportPage() {
     { label: 'Home', href: '/' },
     { label: 'Support', href: '/support', current: true },
   ]
-  const sponsorVendor = getSiteSponsorVendor()
+  const sponsorPromo = getSiteSponsorPromo()
+  const sponsorVendor = sponsorPromo ? null : getSiteSponsorVendor()
 
   return (
     <div className="min-h-screen bg-black">
@@ -63,7 +66,11 @@ export default function SupportPage() {
             </p>
           </header>
 
-          {sponsorVendor ? (
+          {sponsorPromo ? (
+            <section className="mb-8">
+              <KinkSocialAlphaSponsorCard promo={sponsorPromo} variant="wide" />
+            </section>
+          ) : sponsorVendor ? (
             <section className="mb-8">
               <div className="relative overflow-visible rounded-2xl border border-amber-300/40 bg-black/70 p-5 vendor-sponsor-glitter">
                 <span className="sponsor-spotlight-label">

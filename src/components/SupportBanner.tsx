@@ -4,6 +4,8 @@ import { useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import VendorImage from '@/components/vendors/VendorImage'
+import KinkSocialAlphaSponsorCard from '@/components/KinkSocialAlphaSponsorCard'
+import { getSiteSponsorPromo } from '@/data/siteSponsor'
 import { getSiteSponsorVendor } from '@/data/vendors'
 import { suppressSupportBanner } from '@/lib/dancecard/shellRoutes'
 
@@ -26,7 +28,8 @@ export default function SupportBanner() {
   const pathname = usePathname()
   const [visible, setVisible] = useState(false)
   const [ready, setReady] = useState(false)
-  const sponsorVendor = getSiteSponsorVendor()
+  const sponsorPromo = getSiteSponsorPromo()
+  const sponsorVendor = sponsorPromo ? null : getSiteSponsorVendor()
 
   const isSuppressedRoute = useMemo(() => {
     if (!pathname) return true
@@ -112,7 +115,9 @@ export default function SupportBanner() {
             </div>
           </div>
 
-          {sponsorVendor ? (
+          {sponsorPromo ? (
+            <KinkSocialAlphaSponsorCard promo={sponsorPromo} variant="compact" />
+          ) : sponsorVendor ? (
             <div className="relative overflow-visible rounded-2xl border border-amber-300/40 bg-black/70 p-4 vendor-sponsor-glitter">
               <span className="sponsor-spotlight-label">
                 Keep this site community funded

@@ -872,8 +872,8 @@ export const getVendorBySlug = (slug) => {
   return vendors.find((v) => v.slug === slug && !v.isHidden)
 }
 
-/** Set to a vendor slug (e.g. `'floggin-farmers'`) for site-wide sponsor spotlight; `null` when no active sponsor. */
-export const SITE_SPONSOR_VENDOR_SLUG = 'floggin-farmers'
+/** Set to a vendor slug for vendor sponsor spotlight when `SITE_SPONSOR_PROMO` is null. */
+export const SITE_SPONSOR_VENDOR_SLUG = null
 
 export const getSiteSponsorVendor = () => {
   if (!SITE_SPONSOR_VENDOR_SLUG) return null

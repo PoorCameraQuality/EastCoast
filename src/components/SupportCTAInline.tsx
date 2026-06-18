@@ -2,6 +2,8 @@
 
 import Link from 'next/link'
 import VendorImage from '@/components/vendors/VendorImage'
+import KinkSocialAlphaSponsorCard from '@/components/KinkSocialAlphaSponsorCard'
+import { getSiteSponsorPromo } from '@/data/siteSponsor'
 import { getSiteSponsorVendor } from '@/data/vendors'
 
 const SPONSOR_CONTACT_HREF =
@@ -14,10 +16,11 @@ type Props = {
 }
 
 export default function SupportCTAInline({ contextLabel, variant = 'stack' }: Props) {
-  const sponsorVendor = getSiteSponsorVendor()
+  const sponsorPromo = getSiteSponsorPromo()
+  const sponsorVendor = sponsorPromo ? null : getSiteSponsorVendor()
   const isAside = variant === 'heroAside'
 
-  const wrapperClassName = sponsorVendor
+  const wrapperClassName = sponsorPromo || sponsorVendor
     ? isAside
       ? 'mt-0 mb-0 w-full max-w-md mx-auto lg:mx-0 lg:max-w-none'
       : 'mt-4 mb-6'
@@ -31,7 +34,9 @@ export default function SupportCTAInline({ contextLabel, variant = 'stack' }: Pr
       aria-label={`Support this site — ${contextLabel}`}
     >
       <div className={`flex flex-col ${isAside ? 'gap-3' : 'gap-4'}`}>
-        {sponsorVendor ? (
+        {sponsorPromo ? (
+          <KinkSocialAlphaSponsorCard promo={sponsorPromo} variant="compact" />
+        ) : sponsorVendor ? (
           <div
             className={`relative overflow-visible rounded-xl border border-amber-300/40 bg-black/70 vendor-sponsor-glitter ${
               isAside ? 'p-3' : 'p-3 sm:p-4'
