@@ -5,6 +5,7 @@ import { CalendarStructuredData } from '@/components/StructuredData'
 import Breadcrumb from '@/components/Breadcrumb'
 import SupportCTAInline from '@/components/SupportCTAInline'
 import CalendarClient from '@/components/CalendarClient'
+import KinkSocialAcquisitionCard from '@/components/kink-social/KinkSocialAcquisitionCard'
 import { BASE_URL } from '@/lib/seo'
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -61,6 +62,9 @@ export default function CalendarPage() {
       <div className="container-custom section-padding">
         <Breadcrumb items={breadcrumbItems} />
         <CalendarClient allEvents={eventsList} />
+        <section className="mt-10 md:mt-12">
+          <KinkSocialAcquisitionCard variant="calendar" />
+        </section>
         <SupportCTAInline contextLabel="Calendar" />
       </div>
     </main>

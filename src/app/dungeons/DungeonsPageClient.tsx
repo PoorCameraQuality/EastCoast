@@ -9,7 +9,7 @@ import SwingClubCard from '@/components/swingclubs/SwingClubCard'
 import SupportCTAInline from '@/components/SupportCTAInline'
 import DirectoryCompactStats from '@/components/discovery/DirectoryCompactStats'
 import DiscoveryPageShell from '@/components/discovery/DiscoveryPageShell'
-import { DancecardShowcase } from '@/components/dancecard/DancecardShowcase'
+import KinkSocialAcquisitionCard from '@/components/kink-social/KinkSocialAcquisitionCard'
 
 type DungeonRecord = {
   slug: string
@@ -194,7 +194,7 @@ export default function DungeonsPageClient({ allDungeons, allSwingClubs, allEven
           ) : null}
 
           <div className="mt-10 md:mt-12">
-            <DancecardShowcase organizerLean className="mx-auto max-w-3xl lg:max-w-none" />
+            <KinkSocialAcquisitionCard variant="dungeon" className="mx-auto max-w-3xl lg:max-w-none" />
           </div>
 
           <div className="stack-ecke-md mt-10 border-t border-white/[0.06] pt-8 md:mt-12">

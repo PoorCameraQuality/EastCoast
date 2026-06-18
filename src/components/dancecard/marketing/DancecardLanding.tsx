@@ -2,6 +2,7 @@ import Link from 'next/link'
 import '@/styles/dancecard-product-landing.css'
 import DancecardAppearancePicker from '@/components/dancecard/DancecardAppearancePicker'
 import { DancecardPublicEventsList } from '@/components/dancecard/DancecardPublicEventsList'
+import KinkSocialOrganizerCta from '@/components/kink-social/KinkSocialOrganizerCta'
 import {
   DANCECARD_ATTENDEE_SANDBOX_PATH,
   DANCECARD_ORGANIZER_SANDBOX_PATH,
@@ -27,15 +28,16 @@ export function DancecardLanding() {
         <header className="mt-6 border-b border-dc-border pb-8">
           <div className="flex flex-wrap items-center gap-3">
             <p className="text-xs font-semibold uppercase tracking-[0.3em] text-dc-accent/80">
-              East Coast Kink Events
+              Dancecard by kink.social
             </p>
             <span className="dc-product-beta rounded-full px-3 py-1 text-xs font-bold uppercase tracking-wide">
               Free while in beta
             </span>
           </div>
-          <h1 className="mt-4 font-serif text-4xl font-bold text-dc-text sm:text-5xl">Dancecard</h1>
+          <h1 className="mt-4 font-serif text-4xl font-bold text-dc-text sm:text-5xl">Your weekend, planned your way.</h1>
           <p className="mt-3 max-w-2xl text-base leading-relaxed text-dc-muted sm:text-lg">
-            Plan your kink weekend on your phone. Organizers run program, door, and staff from one console.
+            Dancecard is the schedule and weekend-planning layer inside kink.social. Browse the live program, compare
+            free time, build your personal schedule, and help organizers run smoother events.
           </p>
         </header>
 
@@ -110,6 +112,10 @@ export function DancecardLanding() {
             just exploring.
           </p>
         </details>
+
+        <div className="mt-10 [&_section]:border-dc-border [&_h2]:text-dc-text [&_p]:text-dc-muted">
+          <KinkSocialOrganizerCta compact />
+        </div>
 
         <p className="mt-8 text-center text-sm text-dc-text-subtle">
           <Link href="/dancecard/organizers" className="text-dc-accent underline hover:text-dc-accent-hover">

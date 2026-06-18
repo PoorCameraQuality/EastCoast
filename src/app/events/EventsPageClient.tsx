@@ -11,7 +11,7 @@ import EventCard from '@/components/EventCard'
 import SupportCTAInline from '@/components/SupportCTAInline'
 import DirectoryCompactStats from '@/components/discovery/DirectoryCompactStats'
 import DiscoveryPageShell from '@/components/discovery/DiscoveryPageShell'
-import { DancecardShowcase } from '@/components/dancecard/DancecardShowcase'
+import KinkSocialAcquisitionCard from '@/components/kink-social/KinkSocialAcquisitionCard'
 
 type EventRow = {
   slug: string
@@ -238,7 +238,7 @@ export default function EventsPageClient({
 
           {upcomingEvents.length > 0 ? (
             <section className="mb-8 md:mb-10">
-              <DancecardShowcase className="mx-auto max-w-3xl lg:max-w-none" />
+              <KinkSocialAcquisitionCard variant="eventsIndex" />
             </section>
           ) : null}
 
