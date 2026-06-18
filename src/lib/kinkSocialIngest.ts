@@ -45,6 +45,7 @@ function mapPayloadToArticleRow(
     excerpt: payload.excerpt.slice(0, 500),
     content: payload.bodyHtml,
     author_name: payload.authorDisplayName,
+    author_bio: '',
     category: payload.categories[0] || 'Education',
     tags: payload.categories,
     status: 'published',
@@ -53,7 +54,6 @@ function mapPayloadToArticleRow(
     read_time: readTime,
     seo_title: payload.seoTitle ?? payload.title,
     meta_description: (payload.metaDescription ?? payload.excerpt).slice(0, 500),
-    og_image: payload.heroImageUrl ?? null,
     content_warnings: payload.contentWarnings,
     difficulty: payload.difficulty ?? null,
     author_username: payload.authorUsername ?? null,
@@ -220,7 +220,12 @@ export async function upsertEducationArticle(
     if (insertError?.code === '23505') {
       return ingestJsonError('slug_collision', 'Slug conflicts with an existing article', 409)
     }
-    return ingestJsonError('upsert_failed', 'Failed to insert article', 500)
+    console.error('[kink-social-ingest] insert failed', insertError)
+    return ingestJsonError(
+      'upsert_failed',
+      insertError?.message ? `Failed to insert article: ${insertError.message}` : 'Failed to insert article',
+      500,
+    )
   }
 
   const eckePublicUrl = `${BASE_URL}/education/${inserted.slug}`
