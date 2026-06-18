@@ -13,6 +13,7 @@ import OutboundWebsiteLink from '@/components/analytics/OutboundWebsiteLink'
 import { stateAbbrToSlug } from '@/lib/discoveryCrossLinks'
 import { EAST_COAST_STATES } from '@/lib/eastCoastStates'
 import type { EventPageRecord } from '@/lib/unifiedEvents'
+import KinkSocialEventSourceCta from '@/components/kinkSocial/KinkSocialEventSourceCta'
 
 /** Subtle logo glow for flagship events; otherwise site primary. */
 function logoAccentClass(slug: string): string {
@@ -237,6 +238,12 @@ export default function EventDetailView({ event }: { event: EventPageRecord }) {
               <DiscoveryEngineStrip stateAbbr={event.location.state} />
             </div>
           </details>
+
+          <KinkSocialEventSourceCta
+            c2kSourceId={event.c2kSourceId}
+            c2kSourceType={event.c2kSourceType}
+            eckeSlug={event.slug}
+          />
         </div>
       </section>
 
