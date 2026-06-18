@@ -13,6 +13,7 @@ import { notFound } from 'next/navigation'
 import { EAST_COAST_STATES, type StateSlug } from '@/lib/eastCoastStates'
 import { FaqStructuredData } from '@/components/StructuredData'
 import { buildStateHubFaqs } from '@/lib/seo/stateHubFaqs'
+import KinkSocialAcquisitionCard from '@/components/kink-social/KinkSocialAcquisitionCard'
 
 interface PageProps {
   params: { state: string }
@@ -182,6 +183,10 @@ export default function StatePage({ params }: PageProps) {
               </Link>
             </div>
           )}
+        </section>
+
+        <section className="mb-16">
+          <KinkSocialAcquisitionCard variant="state" stateName={stateInfo.name} />
         </section>
 
         {/* Dungeons */}

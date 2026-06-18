@@ -4,6 +4,12 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { CONTACT_US_LABEL } from "@/lib/submissionContact";
 import { suppressEckeFooter } from "@/lib/dancecard/shellRoutes";
+import {
+  getKinkSocialJoinUrl,
+  getKinkSocialOrgUrl,
+  KINK_SOCIAL_LABELS,
+} from '@/lib/kinkSocialMarketing'
+import KinkSocialCtaLink from '@/components/kink-social/KinkSocialCtaLink'
 
 const DISCORD_INVITE_URL = "https://discord.gg/xcnGGyGsmT";
 
@@ -75,8 +81,8 @@ export default function Footer() {
               </div>
             </div>
             <p className="mt-4 text-sm leading-7 text-gray-400 max-w-prose">
-              Connecting kink communities across the East Coast. Find events,
-              make friends, and explore safely with discretion and elegance.
+              East Coast Kink Events is the public searchable directory for events, venues, vendors, and education.
+              kink.social is the free community and event management platform behind the scenes.
             </p>
 
             <div className="mt-6">
@@ -108,7 +114,7 @@ export default function Footer() {
           </div>
 
           <nav
-            className="md:col-span-8 grid grid-cols-2 gap-8 sm:grid-cols-3"
+            className="md:col-span-8 grid grid-cols-2 gap-8 sm:grid-cols-2 lg:grid-cols-4"
             aria-label="Footer"
           >
             <Section title="Explore">
@@ -122,9 +128,39 @@ export default function Footer() {
               <L href="/spirituality-kink">Spirituality &amp; kink</L>
             </Section>
 
+            <Section title="kink.social">
+              <li>
+                <KinkSocialCtaLink
+                  href={getKinkSocialJoinUrl('footer')}
+                  label={KINK_SOCIAL_LABELS.joinFree}
+                  variant="footer"
+                  surface="footer_nav"
+                  className="text-gray-400 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ecke-focus focus-visible:ring-offset-2 focus-visible:ring-offset-brand-void rounded-md min-h-touch inline-flex items-center py-1"
+                />
+              </li>
+              <li>
+                <KinkSocialCtaLink
+                  href={getKinkSocialOrgUrl('footer')}
+                  label={KINK_SOCIAL_LABELS.createOrg}
+                  variant="footer"
+                  surface="footer_nav"
+                  className="text-gray-400 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ecke-focus focus-visible:ring-offset-2 focus-visible:ring-offset-brand-void rounded-md min-h-touch inline-flex items-center py-1"
+                />
+              </li>
+              <li>
+                <KinkSocialCtaLink
+                  href={getKinkSocialOrgUrl('footer')}
+                  label={KINK_SOCIAL_LABELS.publishToEcke}
+                  variant="footer"
+                  surface="footer_nav"
+                  className="text-gray-400 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ecke-focus focus-visible:ring-offset-2 focus-visible:ring-offset-brand-void rounded-md min-h-touch inline-flex items-center py-1"
+                />
+              </li>
+              <L href="/dancecard">Dancecard by kink.social</L>
+            </Section>
+
             <Section title="Community">
-              <L href="/dancecard">Dancecard</L>
-              <L href="/dancecard/organizers">Organizer console</L>
+              <L href="/dancecard/organizers">For organizers</L>
               <L href="/contact">{CONTACT_US_LABEL}</L>
               <L href="/about">About</L>
               <L href="/guidelines">Guidelines</L>

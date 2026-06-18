@@ -6,6 +6,7 @@ import { VendorStructuredData } from '@/components/StructuredData'
 import type { VendorRecord } from '@/lib/vendorFiltering'
 import { parseVendorLocation } from '@/lib/unifiedVendors'
 import DiscoveryEngineStrip from '@/components/discovery/DiscoveryEngineStrip'
+import KinkSocialAcquisitionCard from '@/components/kink-social/KinkSocialAcquisitionCard'
 import OutboundWebsiteLink from '@/components/analytics/OutboundWebsiteLink'
 
 type Props = {
@@ -103,6 +104,10 @@ export default function VendorDetailView({ vendor, selectedTagSlugs }: Props) {
               </Link>
             </div>
           </header>
+
+          <div className="mt-10">
+            <KinkSocialAcquisitionCard variant="vendor" />
+          </div>
         </div>
       </div>
     </section>

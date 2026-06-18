@@ -6,6 +6,9 @@ import { usePathname } from 'next/navigation'
 import UserMenu from './auth/UserMenu'
 import { CONTACT_US_LABEL } from '@/lib/submissionContact'
 import { suppressEckeHeader } from '@/lib/dancecard/shellRoutes'
+import {
+  getKinkSocialJoinUrl,
+} from '@/lib/kinkSocialMarketing'
 
 const PRIMARY_NAV = [
   { href: '/events', label: 'Events' },
@@ -15,14 +18,17 @@ const PRIMARY_NAV = [
   { href: '/vendors', label: 'Vendors' },
 ] as const
 
-const MORE_NAV = [
+type MoreNavItem = { href: string; label: string; external?: boolean }
+
+const MORE_NAV: MoreNavItem[] = [
+  { href: getKinkSocialJoinUrl('header_nav'), label: 'kink.social', external: true },
+  { href: '/dancecard/organizers', label: 'For organizers' },
   { href: '/dancecard', label: 'Dancecard' },
-  { href: '/dancecard/organizers', label: 'Dancecard organizers' },
+  { href: '/education', label: 'Education' },
   { href: '/support', label: 'Support' },
   { href: '/about', label: 'About' },
-  { href: '/education', label: 'Education' },
   { href: '/contact', label: 'Contact' },
-] as const
+]
 
 function isNavCurrent(pathname: string, href: string) {
   if (href === '/') return pathname === '/'
@@ -67,7 +73,7 @@ export default function Header() {
     return null
   }
 
-  const moreActive = MORE_NAV.some((l) => isNavCurrent(pathname, l.href))
+  const moreActive = MORE_NAV.some((l) => !l.external && isNavCurrent(pathname, l.href))
 
   return (
     <header
@@ -139,13 +145,25 @@ export default function Header() {
                   >
                     {MORE_NAV.map((link) => (
                       <li key={link.href}>
-                        <Link
-                          href={link.href}
-                          className="block px-4 py-2.5 text-sm text-gray-300 hover:bg-dark-800/50 hover:text-white min-h-touch"
-                          onClick={() => setIsMoreOpen(false)}
-                        >
-                          {link.label}
-                        </Link>
+                        {link.external ? (
+                          <a
+                            href={link.href}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="block px-4 py-2.5 text-sm text-gray-300 hover:bg-dark-800/50 hover:text-white min-h-touch"
+                            onClick={() => setIsMoreOpen(false)}
+                          >
+                            {link.label}
+                          </a>
+                        ) : (
+                          <Link
+                            href={link.href}
+                            className="block px-4 py-2.5 text-sm text-gray-300 hover:bg-dark-800/50 hover:text-white min-h-touch"
+                            onClick={() => setIsMoreOpen(false)}
+                          >
+                            {link.label}
+                          </Link>
+                        )}
                       </li>
                     ))}
                   </ul>
@@ -230,17 +248,28 @@ export default function Header() {
                   {isMoreOpen ? (
                     <ul className="mt-1 ml-2 flex flex-col gap-1 border-l border-dark-700 pl-3 list-none" role="list">
                       {MORE_NAV.map((link) => {
-                        const isCurrent = isNavCurrent(pathname, link.href)
+                        const isCurrent = !link.external && isNavCurrent(pathname, link.href)
                         return (
                           <li key={link.href}>
-                            <Link
-                              href={link.href}
-                              className={`flex min-h-touch items-center py-2.5 text-sm ${
-                                isCurrent ? 'text-primary-300' : 'text-gray-400 hover:text-white'
-                              }`}
-                            >
-                              {link.label}
-                            </Link>
+                            {link.external ? (
+                              <a
+                                href={link.href}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex min-h-touch items-center py-2.5 text-sm text-gray-400 hover:text-white"
+                              >
+                                {link.label}
+                              </a>
+                            ) : (
+                              <Link
+                                href={link.href}
+                                className={`flex min-h-touch items-center py-2.5 text-sm ${
+                                  isCurrent ? 'text-primary-300' : 'text-gray-400 hover:text-white'
+                                }`}
+                              >
+                                {link.label}
+                              </Link>
+                            )}
                           </li>
                         )
                       })}

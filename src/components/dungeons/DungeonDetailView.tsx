@@ -5,7 +5,7 @@ import RelatedContent from '@/components/RelatedContent'
 import DiscoveryEngineStrip from '@/components/discovery/DiscoveryEngineStrip'
 import ListingHubLinks from '@/components/seo/ListingHubLinks'
 import DungeonImage from '@/components/dungeons/DungeonImage'
-import { DancecardProductPitch } from '@/components/dancecard/DancecardProductPitch'
+import KinkSocialAcquisitionCard from '@/components/kink-social/KinkSocialAcquisitionCard'
 import DiscoveryPageShell from '@/components/discovery/DiscoveryPageShell'
 import MarkdownSimple from '@/components/MarkdownSimple'
 import VenueDetailAside from '@/components/venues/VenueDetailAside'
@@ -176,7 +176,7 @@ export default function DungeonDetailView({ dungeon }: { dungeon: Dungeon }) {
       </section>
 
       <div className="container-custom pb-12">
-        <DancecardProductPitch organizerLean className="mb-10" />
+        <KinkSocialAcquisitionCard variant="dungeon" className="mb-10" />
         <RelatedContent currentDungeon={dungeon} />
       </div>
     </DiscoveryPageShell>

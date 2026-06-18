@@ -369,6 +369,39 @@ export function isKinkSocialSourcedArticle(article: {
   return attr.includes('kink.social')
 }
 
+const KINK_SOCIAL_PRIVATE_URL_RE =
+  /https?:\/\/(?:www\.)?kink\.social(?:\/api\b|\/messages\b|\/dm\b|\/inbox\b|\/settings\b|\/profile\/edit\b|\/education\/write\b|\/organizer\b)[^\s"'<>]*/i
+
+export function isKinkSocialSourcedEvent(event: {
+  c2kSourceId?: string | null
+  c2kSourceType?: string | null
+}): boolean {
+  if (event.c2kSourceId) return true
+  const t = (event.c2kSourceType || '').toLowerCase()
+  return t === 'event' || t === 'convention'
+}
+
+/** Public-safe kink.social deep link for C2K-published ECKE events. */
+export function resolveKinkSocialEventCtaUrl(input: {
+  c2kSourceId?: string | null
+  c2kSourceType?: string | null
+  eckeSlug: string
+}): string | null {
+  const base = process.env.NEXT_PUBLIC_C2K_PUBLIC_URL?.trim()
+  if (!base || !input.c2kSourceId) return null
+
+  const sourceType = (input.c2kSourceType || 'event').toLowerCase()
+  let href: string
+  if (sourceType === 'convention') {
+    href = `${base.replace(/\/$/, '')}/conventions/${encodeURIComponent(input.eckeSlug)}`
+  } else {
+    href = `${base.replace(/\/$/, '')}/events/${encodeURIComponent(input.c2kSourceId)}`
+  }
+
+  if (KINK_SOCIAL_PRIVATE_URL_RE.test(href)) return null
+  return href
+}
+
 export function __kinkSocialIngestSelfTest(): void {
   const assert = (cond: boolean, msg: string) => {
     if (!cond) throw new Error(`[kink-social-ingest-selftest] ${msg}`)
@@ -479,6 +512,28 @@ export function __kinkSocialIngestSelfTest(): void {
     'CTA source detection by c2k_source_id',
   )
   assert(!isKinkSocialSourcedArticle({ source_attribution: 'East Coast Kink Events' }), 'non-C2K article hidden')
+
+  assert(isKinkSocialSourcedEvent({ c2kSourceId: '11111111-1111-4111-8111-111111111111' }), 'C2K event by id')
+  const prevC2kUrl = process.env.NEXT_PUBLIC_C2K_PUBLIC_URL
+  process.env.NEXT_PUBLIC_C2K_PUBLIC_URL = 'https://kink.social'
+  assert(
+    resolveKinkSocialEventCtaUrl({
+      c2kSourceId: '11111111-1111-4111-8111-111111111111',
+      c2kSourceType: 'event',
+      eckeSlug: 'rope-munch',
+    }) === 'https://kink.social/events/11111111-1111-4111-8111-111111111111',
+    'event CTA url',
+  )
+  assert(
+    resolveKinkSocialEventCtaUrl({
+      c2kSourceId: '22222222-2222-4222-8222-222222222222',
+      c2kSourceType: 'convention',
+      eckeSlug: 'preview-c2k-weekend',
+    }) === 'https://kink.social/conventions/preview-c2k-weekend',
+    'convention CTA url',
+  )
+  if (prevC2kUrl === undefined) delete process.env.NEXT_PUBLIC_C2K_PUBLIC_URL
+  else process.env.NEXT_PUBLIC_C2K_PUBLIC_URL = prevC2kUrl
 
   if (prev === undefined) delete process.env.KINK_SOCIAL_INGEST_SECRET
   else process.env.KINK_SOCIAL_INGEST_SECRET = prev

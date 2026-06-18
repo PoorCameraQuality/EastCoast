@@ -15,10 +15,9 @@ import {
   type EducationArticle,
 } from '@/lib/educationArticles'
 import { ArticleStructuredData } from '@/components/ArticleStructuredData'
-import KinkSocialSourceCta from '@/components/kinkSocial/KinkSocialSourceCta'
+import KinkSocialAcquisitionCard from '@/components/kink-social/KinkSocialAcquisitionCard'
 import { getArticleSerpOverride } from '@/lib/articleSerpOverrides'
 import { getCategoryColorClass } from '@/lib/educationCategoryColors'
-import { isKinkSocialSourcedArticle } from '@/lib/kinkSocialIngestValidation'
 
 const DEFAULT_OG = `${BASE_URL}/og-image.png`
 
@@ -120,7 +119,6 @@ export default async function ArticlePage({ params }: { params: { slug: string }
     const contentWarnings = Array.isArray(article.content_warnings)
       ? article.content_warnings.filter((warning) => warning.trim().length > 0)
       : []
-    const showKinkSocialCta = isKinkSocialSourcedArticle(article)
 
     // Process content for markdown rendering
     const processedContent = normalizeMarkdown(article.content || '')
@@ -204,9 +202,9 @@ export default async function ArticlePage({ params }: { params: { slug: string }
                     <Markdown content={processedContent} />
                   </section>
 
-                  {showKinkSocialCta ? (
-                    <KinkSocialSourceCta canonicalUrl={article.kink_social_canonical_url} />
-                  ) : null}
+                  <div className="mt-10">
+                    <KinkSocialAcquisitionCard variant="education" />
+                  </div>
                 </div>
               </div>
 

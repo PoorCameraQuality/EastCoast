@@ -6,6 +6,7 @@ import { buildAllowlistedDungeonDiscoveryPaths } from '@/lib/dungeonDiscoveryTie
 import { buildAllowlistedSwingDiscoveryPaths } from '@/lib/swingDiscoveryTier'
 import { buildAllowlistedBlogPaths } from '@/lib/blogDiscoveryTier'
 import { BASE_URL } from '@/lib/seo'
+import { fetchPublishedC2kEventSlugsForSitemap } from '@/lib/unifiedEvents'
 
 export type SitemapUrlEntry = {
   loc: string
@@ -42,6 +43,15 @@ async function loadSitemapEntities() {
         slug: e.slug,
         updated: e.date?.start?.slice?.(0, 10),
       }))
+
+    const c2kEvents = await fetchPublishedC2kEventSlugsForSitemap()
+    if (c2kEvents.length) {
+      const bySlug = new Map(events.map((e) => [e.slug, e]))
+      for (const row of c2kEvents) {
+        bySlug.set(row.slug, row)
+      }
+      events = Array.from(bySlug.values())
+    }
     dungeons = allDungeons
       .filter((d: { slug?: string }) => d?.slug)
       .map((d: Record<string, unknown>) => ({

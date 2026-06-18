@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { OrganizersScreenshotGallery } from '@/components/dancecard/marketing/OrganizersScreenshotGallery'
 import { ORGANIZER_FEATURES } from '@/components/dancecard/marketing/marketingWalkthroughData'
+import KinkSocialOrganizerCta from '@/components/kink-social/KinkSocialOrganizerCta'
 
 import {
   DANCECARD_ORGANIZER_SANDBOX_PATH,
@@ -59,15 +60,14 @@ export function OrganizersLanding() {
 
         <header className="mt-8 max-w-3xl">
           <p className="text-xs font-semibold uppercase tracking-[0.35em] text-dc-accent/90">
-            East Coast Kink Events
+            For organizers on kink.social
           </p>
           <h1 className="mt-3 font-serif text-4xl font-bold tracking-tight text-dc-text sm:text-5xl lg:text-[3.25rem] lg:leading-tight">
-            Run the weekend from one backstage
+            Run your event on kink.social. Promote it on ECKE.
           </h1>
           <p className="mt-5 text-lg leading-relaxed text-dc-muted sm:text-xl">
-            You already juggle spreadsheets, PDF waivers, registration exports, and a group chat where everyone
-            shares the same password. Dancecard is the organizer console for that work, plus the attendee dancecard
-            your people actually open on their phones.
+            Dancecard is the weekend console inside kink.social. Build your program, run door and staff, and hand
+            attendees one link while you publish the public listing to East Coast Kink Events.
           </p>
           <p className="mt-4 text-base leading-relaxed text-dc-muted">
             Camp weekends. Hotel takeovers. Any event where the schedule, the door, and the map need to stay in sync.
@@ -102,6 +102,10 @@ export function OrganizersLanding() {
             </Link>
           </p>
         </header>
+
+        <div className="mt-10 [&_section]:border-dc-border [&_h2]:text-dc-text [&_p]:text-dc-muted">
+          <KinkSocialOrganizerCta compact />
+        </div>
 
         <section className="mt-14 grid gap-4 sm:grid-cols-3" aria-labelledby="pillars-heading">
           <h2 id="pillars-heading" className="sr-only">

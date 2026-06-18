@@ -6,13 +6,14 @@ import DiscoveryEngineStrip from '@/components/discovery/DiscoveryEngineStrip'
 import ListingHubLinks from '@/components/seo/ListingHubLinks'
 import EventLogo from '@/components/EventLogo'
 import EventCalendarExport from '@/components/EventCalendarExport'
-import { DancecardProductPitch } from '@/components/dancecard/DancecardProductPitch'
 import DiscoveryPageShell from '@/components/discovery/DiscoveryPageShell'
 import MarkdownSimple from '@/components/MarkdownSimple'
 import OutboundWebsiteLink from '@/components/analytics/OutboundWebsiteLink'
 import { stateAbbrToSlug } from '@/lib/discoveryCrossLinks'
 import { EAST_COAST_STATES } from '@/lib/eastCoastStates'
 import type { EventPageRecord } from '@/lib/unifiedEvents'
+import KinkSocialAcquisitionCard from '@/components/kink-social/KinkSocialAcquisitionCard'
+import { resolveKinkSocialEventCtaUrl } from '@/lib/kinkSocialIngestValidation'
 
 /** Subtle logo glow for flagship events; otherwise site primary. */
 function logoAccentClass(slug: string): string {
@@ -26,6 +27,14 @@ export default function EventDetailView({ event }: { event: EventPageRecord }) {
   const stateName = stateSlug ? EAST_COAST_STATES[stateSlug].name : event.location.state
   const hasFeatures = Boolean(event.features?.length)
   const hasLongCopy = Boolean(event.longDescription?.trim())
+  const isC2kSourced = Boolean(event.c2kSourceId)
+  const safeKinkSocialEventUrl = isC2kSourced
+    ? resolveKinkSocialEventCtaUrl({
+        c2kSourceId: event.c2kSourceId,
+        c2kSourceType: event.c2kSourceType,
+        eckeSlug: event.slug,
+      })
+    : null
 
   const breadcrumbItems = [
     { label: 'Home', href: '/' },
@@ -174,7 +183,12 @@ export default function EventDetailView({ event }: { event: EventPageRecord }) {
             </div>
 
             <aside className="space-y-4 lg:sticky lg:top-24 lg:self-start">
-              <DancecardProductPitch eckeSlug={event.slug} compact />
+              <KinkSocialAcquisitionCard
+                variant={isC2kSourced ? 'c2kEventDetail' : 'eventDetail'}
+                eventSlug={event.slug}
+                safeKinkSocialEventUrl={safeKinkSocialEventUrl}
+                compact
+              />
               <div className="card-glass p-4 sm:p-5">
                 <div className="card-glass-wash" aria-hidden />
                 <div className="relative z-10 space-y-4 text-sm">

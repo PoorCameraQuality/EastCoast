@@ -14,6 +14,8 @@ export type UnifiedEvent = {
   /** Normalized tag slugs for filtering (inferred for static, DB for Supabase) */
   tagSlugs: string[]
   source: 'static' | 'supabase'
+  c2kSourceId?: string | null
+  c2kSourceType?: string | null
 }
 
 function slugifyTag(raw: string): string {
@@ -109,6 +111,8 @@ function dbRowToUnified(row: Record<string, unknown>): UnifiedEvent | null {
     logo: (row.logo as string) || undefined,
     tagSlugs: normalizeDbTags(row.tags),
     source: 'supabase',
+    c2kSourceId: (row.c2k_source_id as string | null) ?? null,
+    c2kSourceType: (row.c2k_source_type as string | null) ?? null,
   }
 }
 
@@ -122,7 +126,7 @@ export async function fetchPublishedSupabaseEvents(): Promise<UnifiedEvent[]> {
     const { data, error } = await client
       .from('events')
       .select(
-        'title, slug, start_date, end_date, display_date, city, state, short_description, category, logo, tags, status'
+        'title, slug, start_date, end_date, display_date, city, state, short_description, category, logo, tags, status, c2k_source_id, c2k_source_type'
       )
       .eq('status', 'published')
 
@@ -157,7 +161,11 @@ export async function getUnifiedEvents(): Promise<UnifiedEvent[]> {
       bySlug.set(e.slug, e)
     }
     for (const e of remote) {
-      if (!bySlug.has(e.slug)) bySlug.set(e.slug, e)
+      if (e.c2kSourceId) {
+        bySlug.set(e.slug, e)
+      } else if (!bySlug.has(e.slug)) {
+        bySlug.set(e.slug, e)
+      }
     }
   }
   return Array.from(bySlug.values()).sort(
@@ -188,6 +196,8 @@ export type EventPageRecord = {
   logo?: string
   features?: string[]
   seo?: { title: string; description: string; keywords: string }
+  c2kSourceId?: string | null
+  c2kSourceType?: string | null
 }
 
 function parseDbFeatures(raw: unknown): string[] {
@@ -253,6 +263,8 @@ function dbRowToEventPageRecord(row: Record<string, unknown>): EventPageRecord |
     venue,
     logo: (row.logo as string)?.trim() || undefined,
     features: parseDbFeatures(row.features),
+    c2kSourceId: (row.c2k_source_id as string | null) ?? null,
+    c2kSourceType: (row.c2k_source_type as string | null) ?? null,
     seo: metaTitle
       ? {
           title: metaTitle,
@@ -298,6 +310,8 @@ export async function fetchPublishedSupabaseEventAsPageEvent(
           'seo_keywords',
           'meta_title',
           'meta_description',
+          'c2k_source_id',
+          'c2k_source_type',
         ].join(', ')
       )
       .eq('status', 'published')
@@ -319,9 +333,37 @@ export async function resolveEventForPage(slug: string): Promise<EventPageRecord
   const staticEv = getEventBySlug(slug) as EventPageRecord | undefined
   const dbEv = await fetchPublishedSupabaseEventAsPageEvent(slug)
 
+  if (dbEv?.c2kSourceId) return dbEv
   if (preferDb && dbEv) return dbEv
   if (staticEv) return staticEv
   return dbEv
+}
+
+/**
+ * Published kink.social event rows for sitemap (status=published, c2k_source_id set).
+ */
+export async function fetchPublishedC2kEventSlugsForSitemap(): Promise<
+  Array<{ slug: string; updated?: string }>
+> {
+  const client = getSupabaseClient()
+  if (!client) return []
+  try {
+    const { data, error } = await client
+      .from('events')
+      .select('slug, start_date, last_synced_at, updated_at, c2k_source_id, status')
+      .eq('status', 'published')
+      .not('c2k_source_id', 'is', null)
+
+    if (error || !data?.length) return []
+    return (data as Record<string, unknown>[])
+      .filter((row) => row.slug)
+      .map((row) => ({
+        slug: String(row.slug),
+        updated: String(row.last_synced_at || row.updated_at || row.start_date || '').slice(0, 10),
+      }))
+  } catch {
+    return []
+  }
 }
 
 /** Shape for `/events` client list and paginated `EventCard` grids (static + Supabase). */
