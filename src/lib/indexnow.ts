@@ -103,6 +103,22 @@ export async function submitUrlToIndexNow(url: string): Promise<IndexNowResponse
   return submitToIndexNow([url])
 }
 
+export type SingleIndexNowResult = {
+  ok: boolean
+  status: number
+  error?: string
+}
+
+/** Fire-and-forget friendly wrapper for a single published/unpublished content URL. */
+export async function submitSingleContentUrlToIndexNow(url: string): Promise<SingleIndexNowResult> {
+  const result = await submitUrlToIndexNow(url)
+  return {
+    ok: result.status >= 200 && result.status < 300,
+    status: result.status,
+    error: result.error,
+  }
+}
+
 /** Full URLs for spirituality/kink programmatic hub (same paths as XML sitemap). */
 export function spiritualityKinkUrlsForIndexNow(): string[] {
   return getSpiritualityKinkIndexPaths().map((path) => `${BASE_URL}${path}`)

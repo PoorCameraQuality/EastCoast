@@ -15,8 +15,10 @@ import {
   type EducationArticle,
 } from '@/lib/educationArticles'
 import { ArticleStructuredData } from '@/components/ArticleStructuredData'
+import KinkSocialSourceCta from '@/components/kinkSocial/KinkSocialSourceCta'
 import { getArticleSerpOverride } from '@/lib/articleSerpOverrides'
 import { getCategoryColorClass } from '@/lib/educationCategoryColors'
+import { isKinkSocialSourcedArticle } from '@/lib/kinkSocialIngestValidation'
 
 const DEFAULT_OG = `${BASE_URL}/og-image.png`
 
@@ -115,6 +117,10 @@ export default async function ArticlePage({ params }: { params: { slug: string }
     }
 
     const articleTags = formatTags(article.tags)
+    const contentWarnings = Array.isArray(article.content_warnings)
+      ? article.content_warnings.filter((warning) => warning.trim().length > 0)
+      : []
+    const showKinkSocialCta = isKinkSocialSourcedArticle(article)
 
     // Process content for markdown rendering
     const processedContent = normalizeMarkdown(article.content || '')
@@ -179,9 +185,28 @@ export default async function ArticlePage({ params }: { params: { slug: string }
                     )}
                   </header>
 
+                  {contentWarnings.length > 0 && (
+                    <div
+                      role="note"
+                      className="mb-6 rounded-lg border border-amber-500/30 bg-amber-950/20 px-4 py-3"
+                      aria-label="Content warnings"
+                    >
+                      <p className="text-sm font-semibold text-amber-200">Content warnings</p>
+                      <ul className="mt-2 list-disc pl-5 text-sm text-amber-100/90 space-y-1">
+                        {contentWarnings.map((warning) => (
+                          <li key={warning}>{warning}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
                   <section className="mt-8">
                     <Markdown content={processedContent} />
                   </section>
+
+                  {showKinkSocialCta ? (
+                    <KinkSocialSourceCta canonicalUrl={article.kink_social_canonical_url} />
+                  ) : null}
                 </div>
               </div>
 
