@@ -198,6 +198,16 @@ export function isUnsafeKinkSocialProfileUrl(url: string): boolean {
   }
 }
 
+/** True when text includes a kink.social URL pointing at a member-only app surface. */
+export function textContainsUnsafeKinkSocialUrl(text: string): boolean {
+  const urlRe = /https?:\/\/(?:www\.)?kink\.social\b[^\s"'<>]*/gi
+  let match: RegExpExecArray | null
+  while ((match = urlRe.exec(text)) !== null) {
+    if (isUnsafeKinkSocialProfileUrl(match[0])) return true
+  }
+  return false
+}
+
 export function validateEducationArticlePrivacy(payload: EducationArticlePayload): string | null {
   const textFields: Array<[string, string]> = [
     ['bodyHtml', payload.bodyHtml],
@@ -207,7 +217,7 @@ export function validateEducationArticlePrivacy(payload: EducationArticlePayload
   ]
 
   for (const [field, value] of textFields) {
-    if (textContainsKinkSocialReference(value)) {
+    if (textContainsUnsafeKinkSocialUrl(value)) {
       return field
     }
   }
@@ -426,6 +436,17 @@ export function __kinkSocialIngestSelfTest(): void {
     payload: { ...validPayload, bodyHtml: '<p>See https://kink.social/messages/1</p>' },
   })
   assert(!privateUrl.ok && privateUrl.errorCode === 'restricted_field', 'private url in body rejected')
+
+  const brandMention = validateUpsertEnvelope({
+    ...validEnvelope,
+    payload: {
+      ...validPayload,
+      title: 'Kink.Social comes online in alpha',
+      excerpt: 'kink.social alpha launch',
+      bodyHtml: '<p>Visit kink.social for the community platform.</p>',
+    },
+  })
+  assert(brandMention.ok, 'kink.social brand mentions allowed in education payload')
 
   const slugCollision = resolveEducationArticleSlug({
     payloadSlug: 'safety-basics',
