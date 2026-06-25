@@ -1,4 +1,4 @@
-import { getSupabaseClient } from '@/lib/supabase'
+import { getSupabaseServerClient } from '@/lib/supabaseServer'
 
 export type GroupListingRecord = {
   slug: string
@@ -52,7 +52,7 @@ function dbRowToRecord(row: DbGroupListingRow): GroupListingRecord {
 }
 
 export async function fetchPublishedGroupListingBySlug(slug: string): Promise<GroupListingRecord | null> {
-  const client = getSupabaseClient()
+  const client = getSupabaseServerClient()
   if (!client) return null
   try {
     const { data, error } = await client
@@ -72,7 +72,7 @@ export async function fetchPublishedGroupListingBySlug(slug: string): Promise<Gr
 }
 
 export async function fetchPublishedGroupSlugsForSitemap(): Promise<Array<{ slug: string; updated?: string }>> {
-  const client = getSupabaseClient()
+  const client = getSupabaseServerClient()
   if (!client) return []
   try {
     const { data, error } = await client
