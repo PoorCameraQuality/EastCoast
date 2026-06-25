@@ -7,6 +7,7 @@ import { buildAllowlistedSwingDiscoveryPaths } from '@/lib/swingDiscoveryTier'
 import { buildAllowlistedBlogPaths } from '@/lib/blogDiscoveryTier'
 import { BASE_URL } from '@/lib/seo'
 import { fetchPublishedC2kEventSlugsForSitemap } from '@/lib/unifiedEvents'
+import { fetchPublishedGroupSlugsForSitemap } from '@/lib/unifiedGroupListings'
 
 export type SitemapUrlEntry = {
   loc: string
@@ -22,6 +23,7 @@ async function loadSitemapEntities() {
   let swingClubs: Array<{ slug: string; updated?: string }> = []
   let articles: Array<{ slug: string; updated?: string }> = []
   let vendors: Array<{ slug: string }> = []
+  let groups: Array<{ slug: string; updated?: string }> = []
 
   try {
     const [{ getAllEvents }, { getAllDungeons }, { getAllSwingClubs }, { getAllArticles }, { getUnifiedVendors }] =
@@ -72,6 +74,8 @@ async function loadSitemapEntities() {
       .filter((v: { slug?: string }) => v?.slug)
       .map((v: { slug: string }) => ({ slug: v.slug }))
 
+    groups = await fetchPublishedGroupSlugsForSitemap()
+
     const client = supabase
     if (client) {
       const { data: supabaseArticles, error } = await client
@@ -101,13 +105,13 @@ async function loadSitemapEntities() {
     console.error('[sitemapUrls] Error loading data:', err)
   }
 
-  return { events, dungeons, swingClubs, articles, vendors }
+  return { events, dungeons, swingClubs, articles, vendors, groups }
 }
 
 /** High-value directory and content URLs (events, venues, education, hubs). */
 export async function buildDirectorySitemapUrls(): Promise<SitemapUrlEntry[]> {
   const today = new Date().toISOString().slice(0, 10)
-  const { events, dungeons, swingClubs, articles, vendors } = await loadSitemapEntities()
+  const { events, dungeons, swingClubs, articles, vendors, groups } = await loadSitemapEntities()
 
   const core: SitemapUrlEntry[] = [
     { loc: `${BASE_URL}/`, lastmod: today, changefreq: 'daily', priority: 1.0 },
@@ -182,6 +186,13 @@ export async function buildDirectorySitemapUrls(): Promise<SitemapUrlEntry[]> {
     priority: 0.52,
   }))
 
+  const groupUrls: SitemapUrlEntry[] = groups.map((g) => ({
+    loc: `${BASE_URL}/groups/${g.slug}`,
+    lastmod: g.updated?.slice(0, 10),
+    changefreq: 'weekly' as const,
+    priority: 0.55,
+  }))
+
   const discoveryPaths = buildAllowlistedDiscoveryPaths()
   const discoveryUrls: SitemapUrlEntry[] = discoveryPaths.map((p) => ({
     loc: `${BASE_URL}/${p}`,
@@ -235,6 +246,7 @@ export async function buildDirectorySitemapUrls(): Promise<SitemapUrlEntry[]> {
     ...swingClubUrls,
     ...articleUrls,
     ...vendorUrls,
+    ...groupUrls,
   ]
 }
 

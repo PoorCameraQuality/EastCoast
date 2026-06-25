@@ -1,12 +1,13 @@
-import { getAllEvents } from '@/data/events'
-import Link from 'next/link'
 import { Metadata } from 'next'
 import { CalendarStructuredData } from '@/components/StructuredData'
 import Breadcrumb from '@/components/Breadcrumb'
 import SupportCTAInline from '@/components/SupportCTAInline'
 import CalendarClient from '@/components/CalendarClient'
 import KinkSocialAcquisitionCard from '@/components/kink-social/KinkSocialAcquisitionCard'
+import { getUnifiedEvents, unifiedEventToEventsPageShape } from '@/lib/unifiedEvents'
 import { BASE_URL } from '@/lib/seo'
+
+export const revalidate = 1800
 
 export async function generateMetadata(): Promise<Metadata> {
   const year = new Date().getFullYear()
@@ -49,8 +50,9 @@ export async function generateMetadata(): Promise<Metadata> {
   }
 }
 
-export default function CalendarPage() {
-  const eventsList = getAllEvents()
+export default async function CalendarPage() {
+  const unified = await getUnifiedEvents()
+  const eventsList = unified.map(unifiedEventToEventsPageShape)
   const breadcrumbItems = [
     { label: 'Home', href: '/' },
     { label: 'Calendar', href: '/calendar', current: true }

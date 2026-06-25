@@ -18,6 +18,7 @@
     "fetch:venue-assets": "node scripts/fetch-venue-assets.mjs",
     "verify:discovery-db": "node scripts/verify-discovery-db.mjs",
     "verify:kink-social-education-ingest": "node scripts/verify-kink-social-education-ingest.mjs",
+    "verify:kink-social-listing-webhook": "node scripts/verify-kink-social-listing-webhook.mjs",
     "migrate:events-to-supabase": "node scripts/migrate-static-events-to-supabase.mjs",
     "migrate:vendors-to-supabase": "node scripts/migrate-static-vendors-to-supabase.mjs",
     "dancecard:smoke": "node scripts/dancecard-smoke.mjs",
