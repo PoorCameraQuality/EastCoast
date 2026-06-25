@@ -1,7 +1,11 @@
 import { randomUUID } from 'crypto'
 import type { NextRequest } from 'next/server'
 import { NextResponse } from 'next/server'
-import { submitSingleContentUrlToIndexNow } from '@/lib/indexnow'
+import {
+  LISTING_PROJECTIONS,
+  unpublishListingProjection,
+  upsertListingProjection,
+} from '@/lib/kinkSocialListingProjection'
 import type { IngestErrorResponse } from '@/lib/kinkSocialIngestValidation'
 import {
   getListingWebhookSecret,
@@ -15,6 +19,7 @@ import {
   type ListingUpsertEnvelope,
 } from '@/lib/kinkSocialListingValidation'
 import { BASE_URL } from '@/lib/seo'
+import { submitSingleContentUrlToIndexNow } from '@/lib/indexnow'
 import { getSupabaseAdminClient } from '@/lib/supabaseAdmin'
 
 export { __kinkSocialListingSelfTest } from '@/lib/kinkSocialListingValidation'
@@ -286,7 +291,11 @@ export async function handleKinkSocialListingWebhook(request: NextRequest): Prom
     if (!validated.ok) {
       return listingJsonError(validated.errorCode, validated.errorMessage, 400)
     }
-    return unpublishGroupListing(validated.envelope, requestId)
+    const config = LISTING_PROJECTIONS[validated.envelope.entityType]
+    if (!config) {
+      return listingJsonError('unsupported_entity_type', 'Unsupported listing entity type', 400)
+    }
+    return unpublishListingProjection(config, validated.envelope, requestId)
   }
 
   const validated = validateListingUpsertEnvelope(body)
@@ -299,5 +308,9 @@ export async function handleKinkSocialListingWebhook(request: NextRequest): Prom
     return listingJsonError(validated.errorCode, validated.errorMessage, httpStatus)
   }
 
-  return upsertGroupListing(validated.envelope, validated.payload, requestId)
+  const config = LISTING_PROJECTIONS[validated.envelope.entityType]
+  if (!config) {
+    return listingJsonError('unsupported_entity_type', 'Unsupported listing entity type', 400)
+  }
+  return upsertListingProjection(config, validated.envelope, validated.payload, requestId)
 }

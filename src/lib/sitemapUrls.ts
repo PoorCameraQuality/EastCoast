@@ -8,6 +8,7 @@ import { buildAllowlistedBlogPaths } from '@/lib/blogDiscoveryTier'
 import { BASE_URL } from '@/lib/seo'
 import { fetchPublishedC2kEventSlugsForSitemap } from '@/lib/unifiedEvents'
 import { fetchPublishedGroupSlugsForSitemap } from '@/lib/unifiedGroupListings'
+import { fetchPublishedListingSlugsForSitemap } from '@/lib/unifiedExtendedListings'
 
 export type SitemapUrlEntry = {
   loc: string
@@ -24,6 +25,10 @@ async function loadSitemapEntities() {
   let articles: Array<{ slug: string; updated?: string }> = []
   let vendors: Array<{ slug: string }> = []
   let groups: Array<{ slug: string; updated?: string }> = []
+  let organizations: Array<{ slug: string; updated?: string }> = []
+  let conventions: Array<{ slug: string; updated?: string }> = []
+  let presenters: Array<{ slug: string; updated?: string }> = []
+  let venues: Array<{ slug: string; updated?: string }> = []
 
   try {
     const [{ getAllEvents }, { getAllDungeons }, { getAllSwingClubs }, { getAllArticles }, { getUnifiedVendors }] =
@@ -76,6 +81,17 @@ async function loadSitemapEntities() {
 
     groups = await fetchPublishedGroupSlugsForSitemap()
 
+    const [orgRows, convRows, presRows, venueRows] = await Promise.all([
+      fetchPublishedListingSlugsForSitemap('organization'),
+      fetchPublishedListingSlugsForSitemap('convention'),
+      fetchPublishedListingSlugsForSitemap('presenter'),
+      fetchPublishedListingSlugsForSitemap('venue'),
+    ])
+    organizations = orgRows
+    conventions = convRows
+    presenters = presRows
+    venues = venueRows
+
     const client = supabase
     if (client) {
       const { data: supabaseArticles, error } = await client
@@ -105,13 +121,14 @@ async function loadSitemapEntities() {
     console.error('[sitemapUrls] Error loading data:', err)
   }
 
-  return { events, dungeons, swingClubs, articles, vendors, groups }
+  return { events, dungeons, swingClubs, articles, vendors, groups, organizations, conventions, presenters, venues }
 }
 
 /** High-value directory and content URLs (events, venues, education, hubs). */
 export async function buildDirectorySitemapUrls(): Promise<SitemapUrlEntry[]> {
   const today = new Date().toISOString().slice(0, 10)
-  const { events, dungeons, swingClubs, articles, vendors, groups } = await loadSitemapEntities()
+  const { events, dungeons, swingClubs, articles, vendors, groups, organizations, conventions, presenters, venues } =
+    await loadSitemapEntities()
 
   const core: SitemapUrlEntry[] = [
     { loc: `${BASE_URL}/`, lastmod: today, changefreq: 'daily', priority: 1.0 },
@@ -123,6 +140,11 @@ export async function buildDirectorySitemapUrls(): Promise<SitemapUrlEntry[]> {
     { loc: `${BASE_URL}/directory-snapshot`, lastmod: today, changefreq: 'weekly', priority: 0.48 },
     { loc: `${BASE_URL}/bdsm-events`, changefreq: 'weekly', priority: 0.72 },
     { loc: `${BASE_URL}/vendors`, changefreq: 'weekly', priority: 0.68 },
+    { loc: `${BASE_URL}/groups`, changefreq: 'weekly', priority: 0.55 },
+    { loc: `${BASE_URL}/organizations`, changefreq: 'weekly', priority: 0.55 },
+    { loc: `${BASE_URL}/conventions`, changefreq: 'weekly', priority: 0.58 },
+    { loc: `${BASE_URL}/presenters`, changefreq: 'weekly', priority: 0.52 },
+    { loc: `${BASE_URL}/venues`, changefreq: 'weekly', priority: 0.52 },
     { loc: `${BASE_URL}/dancecard`, changefreq: 'monthly', priority: 0.55 },
     { loc: `${BASE_URL}/dancecard/organizers`, changefreq: 'monthly', priority: 0.55 },
     { loc: `${BASE_URL}/blog`, changefreq: 'weekly', priority: 0.62 },
@@ -193,6 +215,34 @@ export async function buildDirectorySitemapUrls(): Promise<SitemapUrlEntry[]> {
     priority: 0.55,
   }))
 
+  const organizationUrls: SitemapUrlEntry[] = organizations.map((o) => ({
+    loc: `${BASE_URL}/organizations/${o.slug}`,
+    lastmod: o.updated?.slice(0, 10),
+    changefreq: 'weekly' as const,
+    priority: 0.54,
+  }))
+
+  const conventionUrls: SitemapUrlEntry[] = conventions.map((c) => ({
+    loc: `${BASE_URL}/conventions/${c.slug}`,
+    lastmod: c.updated?.slice(0, 10),
+    changefreq: 'weekly' as const,
+    priority: 0.56,
+  }))
+
+  const presenterUrls: SitemapUrlEntry[] = presenters.map((p) => ({
+    loc: `${BASE_URL}/presenters/${p.slug}`,
+    lastmod: p.updated?.slice(0, 10),
+    changefreq: 'monthly' as const,
+    priority: 0.5,
+  }))
+
+  const venueUrls: SitemapUrlEntry[] = venues.map((v) => ({
+    loc: `${BASE_URL}/venues/${v.slug}`,
+    lastmod: v.updated?.slice(0, 10),
+    changefreq: 'monthly' as const,
+    priority: 0.5,
+  }))
+
   const discoveryPaths = buildAllowlistedDiscoveryPaths()
   const discoveryUrls: SitemapUrlEntry[] = discoveryPaths.map((p) => ({
     loc: `${BASE_URL}/${p}`,
@@ -247,6 +297,10 @@ export async function buildDirectorySitemapUrls(): Promise<SitemapUrlEntry[]> {
     ...articleUrls,
     ...vendorUrls,
     ...groupUrls,
+    ...organizationUrls,
+    ...conventionUrls,
+    ...presenterUrls,
+    ...venueUrls,
   ]
 }
 

@@ -60,7 +60,13 @@ function findRestrictedFieldInPayload(payload: unknown): string | null {
   return null
 }
 
-export const LISTING_SUPPORTED_ENTITY_TYPES = ['group'] as const
+export const LISTING_SUPPORTED_ENTITY_TYPES = [
+  'group',
+  'organization',
+  'convention',
+  'presenter',
+  'venue',
+] as const
 export type ListingEntityType = (typeof LISTING_SUPPORTED_ENTITY_TYPES)[number]
 
 const listingPayloadSchema = z.object({
@@ -78,6 +84,9 @@ const listingPayloadSchema = z.object({
   visibility: z.enum(['public', 'hidden']),
   startsAt: z.string().max(100).nullable().optional(),
   endsAt: z.string().max(100).nullable().optional(),
+  websiteUrl: z.string().url().max(2000).nullable().optional(),
+  city: z.string().max(128).nullable().optional(),
+  state: z.string().max(128).nullable().optional(),
 })
 
 const listingUpsertEnvelopeSchema = z.object({
