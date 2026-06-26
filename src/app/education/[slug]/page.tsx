@@ -4,8 +4,7 @@ import Link from 'next/link'
 import Breadcrumb from '@/components/Breadcrumb'
 import RelatedArticlesSection from '@/components/education/RelatedArticlesSection'
 import { CONTACT_US_LABEL } from '@/lib/submissionContact'
-import Markdown from '@/components/Markdown'
-import { normalizeMarkdown } from '@/lib/normalizeMarkdown'
+import EducationArticleBody from '@/components/education/EducationArticleBody'
 import { BASE_URL } from '@/lib/seo'
 import { resolveArticleOgImageUrl } from '@/lib/articleSeo'
 import {
@@ -120,8 +119,7 @@ export default async function ArticlePage({ params }: { params: { slug: string }
       ? article.content_warnings.filter((warning) => warning.trim().length > 0)
       : []
 
-    // Process content for markdown rendering
-    const processedContent = normalizeMarkdown(article.content || '')
+    const heroImageUrl = resolveArticleOgImageUrl(article.og_image, article.content)
 
     const breadcrumbItems = [
       { label: 'Home', href: '/' },
@@ -167,6 +165,16 @@ export default async function ArticlePage({ params }: { params: { slug: string }
                       {heroTitle}
                     </h1>
 
+                    {heroImageUrl && heroImageUrl !== DEFAULT_OG ?
+                      <div className="mb-6 overflow-hidden rounded-xl border border-white/10 bg-black/20">
+                        <img
+                          src={heroImageUrl}
+                          alt={`${heroTitle} hero image`}
+                          className="w-full max-h-[min(420px,50vh)] object-cover"
+                        />
+                      </div>
+                    : null}
+
                     <p className="text-lg md:text-xl text-subtle leading-relaxed mb-6">{heroLead}</p>
 
                     {articleTags.length > 0 && (
@@ -199,7 +207,7 @@ export default async function ArticlePage({ params }: { params: { slug: string }
                   )}
 
                   <section className="mt-8">
-                    <Markdown content={processedContent} />
+                    <EducationArticleBody content={article.content || ''} />
                   </section>
 
                   <div className="mt-10">
