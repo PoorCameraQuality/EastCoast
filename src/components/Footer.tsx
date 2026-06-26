@@ -1,60 +1,89 @@
 'use client'
 
 import EckeLink from '@/components/EckeLink'
-import { usePathname } from "next/navigation";
-import { CONTACT_US_LABEL } from "@/lib/submissionContact";
-import { suppressEckeFooter } from "@/lib/dancecard/shellRoutes";
+import KinkSocialCtaLink from '@/components/kink-social/KinkSocialCtaLink'
+import { usePathname } from 'next/navigation'
+import { CONTACT_US_LABEL } from '@/lib/submissionContact'
+import { suppressEckeFooter } from '@/lib/dancecard/shellRoutes'
+import { buildEventsListUrl } from '@/lib/eventsListSearchParams'
 import {
+  buildKinkSocialUrl,
   getKinkSocialJoinUrl,
   getKinkSocialOrgUrl,
-  KINK_SOCIAL_LABELS,
+  getKinkSocialVendorOnboardingUrl,
+  KINK_SOCIAL_PATHS,
 } from '@/lib/kinkSocialMarketing'
-import KinkSocialCtaLink from '@/components/kink-social/KinkSocialCtaLink'
 
-const DISCORD_INVITE_URL = "https://discord.gg/xcnGGyGsmT";
+const DISCORD_INVITE_URL = 'https://discord.gg/xcnGGyGsmT'
 
-const sectionId = (title: string) =>
-  title.replace(/\s+/g, "-").toLowerCase();
+type FooterLink = { href: string; label: string; external?: boolean }
 
-const Section = ({
-  title,
-  children,
-}: {
-  title: string;
-  children: React.ReactNode;
-}) => {
-  const sid = sectionId(title);
+type FooterSection = {
+  title: string
+  links: FooterLink[]
+}
+
+const sectionId = (title: string) => title.replace(/\s+/g, '-').toLowerCase()
+
+function FooterSectionBlock({ title, links }: FooterSection) {
+  const sid = sectionId(title)
   return (
     <section aria-labelledby={sid}>
       <h3
         id={sid}
-        className="mb-3 text-sm font-semibold tracking-wide text-sf-strong md:mb-4"
+        className="mb-2.5 text-xs font-semibold uppercase tracking-wider text-sf-muted md:mb-3"
       >
         {title}
       </h3>
-      <ul className="space-y-2">
-        {children}
+      <ul className="space-y-1.5">
+        {links.map((link) => (
+          <li key={`${title}-${link.label}`}>
+            {link.external ? (
+              <a
+                href={link.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex min-h-touch items-center rounded-md py-0.5 text-sm text-sf-body hover:text-sf-strong focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ecke-focus focus-visible:ring-offset-2 focus-visible:ring-offset-sf-bg"
+              >
+                {link.label}
+              </a>
+            ) : (
+              <EckeLink
+                href={link.href}
+                className="inline-flex min-h-touch items-center rounded-md py-0.5 text-sm text-sf-body hover:text-sf-strong focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ecke-focus focus-visible:ring-offset-2 focus-visible:ring-offset-sf-bg"
+              >
+                {link.label}
+              </EckeLink>
+            )}
+          </li>
+        ))}
       </ul>
     </section>
-  );
-};
+  )
+}
 
-const L = ({
+function KinkSocialFooterLink({
   href,
-  children,
+  label,
+  surface,
 }: {
-  href: string;
-  children: React.ReactNode;
-}) => (
-  <li>
-    <EckeLink
-      href={href}
-      className="inline-flex min-h-touch items-center rounded-md py-1 text-sf-muted hover:text-sf-strong focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ecke-focus focus-visible:ring-offset-2 focus-visible:ring-offset-sf-bg"
-    >
-      {children}
-    </EckeLink>
-  </li>
-);
+  href: string
+  label: string
+  surface: string
+}) {
+  return (
+    <li>
+      <KinkSocialCtaLink
+        href={href}
+        label={label}
+        variant="footer"
+        surface={surface}
+        className="inline-flex min-h-touch items-center rounded-md py-0.5 text-sm text-sf-body hover:text-sf-strong"
+        external
+      />
+    </li>
+  )
+}
 
 export default function Footer() {
   const pathname = usePathname()
@@ -62,176 +91,189 @@ export default function Footer() {
     return null
   }
 
+  const discoverLinks: FooterLink[] = [
+    { href: '/events', label: 'Events & conventions' },
+    { href: '/calendar', label: 'Calendar' },
+    { href: '/dungeons', label: 'Places' },
+    { href: '/vendors', label: 'Vendors' },
+    { href: '/education', label: 'Education' },
+    { href: '/states', label: 'States' },
+  ]
+
+  const planLinks: FooterLink[] = [
+    { href: buildEventsListUrl('this-weekend'), label: 'This weekend' },
+    { href: '/events', label: 'Upcoming events' },
+    { href: '/states', label: 'State hubs' },
+    { href: '/calendar', label: 'Calendar' },
+    { href: '/education?path=new-to-kink', label: 'New to kink' },
+    { href: '/dungeons', label: 'Browse places' },
+  ]
+
+  const helpLinks: FooterLink[] = [
+    { href: '/about', label: 'About' },
+    { href: '/contact', label: CONTACT_US_LABEL },
+    { href: '/report', label: 'Report a problem' },
+    { href: '/guidelines', label: 'Guidelines' },
+    { href: '/privacy', label: 'Privacy' },
+    { href: '/terms', label: 'Terms' },
+    { href: '/accessibility', label: 'Accessibility' },
+    { href: '/sitemap.xml', label: 'Sitemap' },
+  ]
+
   return (
     <footer className="border-t border-white/10 bg-sf-bg text-sf-body">
-      <div className="border-b border-white/10 bg-sf-surface/60">
-        <div className="container-custom flex flex-col items-center justify-between gap-4 py-ecke-6 text-center md:flex-row md:text-left">
-          <p className="text-lg font-semibold text-sf-strong">Ready to find your next event?</p>
-          <div className="flex flex-col gap-3 sm:flex-row">
-            <EckeLink href="/events" className="sf-btn-primary">
+      {/* Top conversion band */}
+      <div className="border-b border-white/10 bg-sf-surface/50">
+        <div className="container-custom flex flex-col gap-4 py-6 md:flex-row md:items-center md:justify-between md:py-7">
+          <div className="max-w-xl">
+            <p className="text-lg font-semibold text-sf-strong md:text-xl">
+              Find what is happening next.
+            </p>
+            <p className="mt-1.5 text-sm leading-relaxed text-sf-muted">
+              Browse public events, places, vendors, education, and local scene hubs. Join
+              kink.social when you are ready to save, follow, publish, or connect.
+            </p>
+          </div>
+          <div className="flex flex-col gap-2.5 sm:flex-row sm:flex-wrap sm:items-center">
+            <EckeLink href="/events" className="sf-btn-primary whitespace-nowrap text-center">
               Browse events
+            </EckeLink>
+            <EckeLink href="/states" className="sf-btn-ghost whitespace-nowrap text-center">
+              Explore states
             </EckeLink>
             <KinkSocialCtaLink
               href={getKinkSocialJoinUrl('footer')}
               label="Join kink.social"
               variant="footer"
               surface="footer_cta"
-              className="sf-btn-rose"
+              className="sf-btn-rose whitespace-nowrap text-center"
               external
             />
           </div>
         </div>
       </div>
 
-      <div className="container-custom py-12 md:py-16">
-        <div className="grid grid-cols-1 gap-y-10 md:grid-cols-12 md:gap-8">
-          <div className="md:col-span-4">
+      <div className="container-custom py-10 md:py-12">
+        <div className="grid grid-cols-1 gap-10 lg:grid-cols-12 lg:gap-8">
+          {/* Brand */}
+          <div className="lg:col-span-3">
             <div className="flex items-center gap-3">
-              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-sf-violet/15 text-sm font-semibold text-sf-violet">
+              <div
+                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-sf-violet/15 text-sm font-semibold text-sf-violet"
+                aria-hidden
+              >
                 EC
               </div>
               <div>
-                <p className="font-semibold text-sf-strong">
-                  East Coast Kink Events
-                </p>
+                <p className="font-semibold text-sf-strong">East Coast Kink Events</p>
                 <p className="text-xs text-sf-muted">by kink.social</p>
               </div>
             </div>
-            <p className="mt-4 max-w-prose text-sm leading-7 text-sf-muted">
-              East Coast Kink Events is the public discovery surface for kink events, places, vendors,
-              education, and community listings. kink.social is the free community and event-management
+            <p className="mt-3 max-w-sm text-sm leading-relaxed text-sf-muted">
+              East Coast Kink Events is the public discovery surface for kink events, places,
+              vendors, education, and local scene hubs. kink.social is the community and publishing
               platform behind the scenes.
             </p>
-
-            <div className="mt-6">
+            <div className="mt-4 flex flex-wrap gap-2">
+              <KinkSocialCtaLink
+                href={getKinkSocialJoinUrl('footer')}
+                label="Join kink.social"
+                variant="footer"
+                surface="footer_brand"
+                className="sf-btn-rose px-3 py-2 text-xs"
+                external
+              />
               <a
                 href={DISCORD_INVITE_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex min-h-touch items-center rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-sm font-medium text-sf-strong hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ecke-focus focus-visible:ring-offset-2 focus-visible:ring-offset-sf-bg"
+                className="sf-btn-ghost px-3 py-2 text-xs"
                 aria-label="Join Discord (opens in a new tab)"
               >
                 Join Discord
               </a>
             </div>
-
-            <div className="mt-6 rounded-xl border border-white/10 bg-sf-card/40 p-4">
-              <p className="text-sm font-semibold text-sf-strong">Support this site</p>
-              <p className="mt-1 text-sm leading-6 text-sf-muted">
-                Supporter tier ($25/mo) gets sticky placement while people browse. Sponsorships available via Discord: <span className="font-semibold text-sf-body">Brax117</span>.
-              </p>
-              <div className="mt-3">
-                <EckeLink
-                  href="/support"
-                  className="sf-btn-ghost text-sm"
-                >
-                  Learn more
-                </EckeLink>
-              </div>
-            </div>
           </div>
 
+          {/* Navigation columns */}
           <nav
-            className="md:col-span-8 grid grid-cols-2 gap-8 sm:grid-cols-2 lg:grid-cols-5"
+            className="grid grid-cols-2 gap-8 sm:grid-cols-2 md:grid-cols-4 lg:col-span-9"
             aria-label="Footer"
           >
-            <Section title="Explore">
-              <L href="/events">Events</L>
-              <L href="/calendar">Calendar</L>
-              <L href="/states">States</L>
-              <L href="/dungeons">Dungeons &amp; clubs</L>
-              <L href="/vendors">Vendors</L>
-              <L href="/education">Education</L>
-              <L href="/groups">Groups</L>
-              <L href="/organizations">Organizations</L>
-              <L href="/conventions">Conventions</L>
-              <L href="/presenters">Presenters</L>
-              <L href="/venues">Venues</L>
-            </Section>
+            <FooterSectionBlock title="Discover" links={discoverLinks} />
 
-            <Section title="For organizers">
-              <li>
-                <KinkSocialCtaLink
+            <FooterSectionBlock title="Plan" links={planLinks} />
+
+            <section aria-labelledby="footer-publish">
+              <h3
+                id="footer-publish"
+                className="mb-2.5 text-xs font-semibold uppercase tracking-wider text-sf-muted md:mb-3"
+              >
+                Publish on kink.social
+              </h3>
+              <ul className="space-y-1.5">
+                <KinkSocialFooterLink
                   href={getKinkSocialOrgUrl('footer')}
-                  label={KINK_SOCIAL_LABELS.createOrg}
-                  variant="footer"
-                  surface="footer_organizers"
-                  className="inline-flex min-h-touch items-center py-1 text-sf-muted hover:text-sf-strong"
-                  external
+                  label="Publish an event"
+                  surface="footer_publish_event"
                 />
-              </li>
-              <li>
-                <KinkSocialCtaLink
+                <KinkSocialFooterLink
                   href={getKinkSocialOrgUrl('footer')}
-                  label={KINK_SOCIAL_LABELS.publishToEcke}
-                  variant="footer"
-                  surface="footer_organizers"
-                  className="inline-flex min-h-touch items-center py-1 text-sf-muted hover:text-sf-strong"
-                  external
+                  label="Create an organization"
+                  surface="footer_publish_org"
                 />
-              </li>
-              <L href="/support">Support this site</L>
-              <L href="/contact">{CONTACT_US_LABEL}</L>
-            </Section>
-
-            <Section title="kink.social">
-              <li>
-                <KinkSocialCtaLink
-                  href={getKinkSocialJoinUrl('footer')}
-                  label="Join free"
-                  variant="footer"
-                  surface="footer_nav"
-                  className="inline-flex min-h-touch items-center py-1 text-sf-muted hover:text-sf-strong"
-                  external
+                <KinkSocialFooterLink
+                  href={getKinkSocialVendorOnboardingUrl('footer')}
+                  label="Create a vendor profile"
+                  surface="footer_publish_vendor"
                 />
-              </li>
-              <L href="/dancecard">Dancecard</L>
-              <li>
-                <KinkSocialCtaLink
-                  href={getKinkSocialOrgUrl('footer')}
-                  label="Create organization"
-                  variant="footer"
-                  surface="footer_nav"
-                  className="inline-flex min-h-touch items-center py-1 text-sf-muted hover:text-sf-strong"
-                  external
+                <KinkSocialFooterLink
+                  href={buildKinkSocialUrl(KINK_SOCIAL_PATHS.educationBrowse, 'footer')}
+                  label="Publish education"
+                  surface="footer_publish_education"
                 />
-              </li>
-              <L href="/dancecard/organizers">Organizer tools</L>
-            </Section>
+                <KinkSocialFooterLink
+                  href={buildKinkSocialUrl(KINK_SOCIAL_PATHS.orgNew, 'footer', {
+                    ref: 'ecke_footer_place',
+                  })}
+                  label="Publish a place listing"
+                  surface="footer_publish_place"
+                />
+              </ul>
+              <p className="mt-3 text-xs leading-relaxed text-sf-muted">
+                Publish events, places, vendors, and education to ECKE from kink.social.
+              </p>
+            </section>
 
-            <Section title="Community">
-              <L href="/about">About</L>
-              <L href="/guidelines">Guidelines</L>
-              <li>
-                <a
-                  href={DISCORD_INVITE_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex min-h-touch items-center rounded-md py-1 text-sf-muted hover:text-sf-strong focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ecke-focus"
-                >
-                  Discord
-                </a>
-              </li>
-              <L href="/report">Report a problem</L>
-            </Section>
-
-            <Section title="Legal">
-              <L href="/privacy">Privacy</L>
-              <L href="/terms">Terms</L>
-              <L href="/accessibility">Accessibility</L>
-              <L href="/sitemap.xml">Sitemap</L>
-            </Section>
+            <FooterSectionBlock title="Help & legal" links={helpLinks} />
           </nav>
         </div>
 
-        <div className="mt-10 border-t border-white/10" />
+        {/* Compact support row */}
+        <div className="mt-8 flex flex-col gap-3 rounded-lg border border-white/8 bg-sf-card/30 px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="min-w-0">
+            <p className="text-sm font-medium text-sf-strong">Support ECKE</p>
+            <p className="mt-0.5 text-xs leading-relaxed text-sf-muted">
+              Supporter placement helps keep the public guide online. Sponsorships available via
+              Discord: <span className="text-sf-body">Brax117</span>.
+            </p>
+          </div>
+          <div className="flex shrink-0 flex-wrap gap-2">
+            <EckeLink href="/support" className="sf-btn-ghost px-3 py-2 text-xs">
+              Learn more
+            </EckeLink>
+            <EckeLink href="/contact" className="sf-btn-ghost px-3 py-2 text-xs">
+              Contact
+            </EckeLink>
+          </div>
+        </div>
 
-        <div className="mt-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <div className="mt-8 border-t border-white/10 pt-5">
           <p className="text-xs text-sf-muted">
             © {new Date().getFullYear()} East Coast Kink Events. All rights reserved.
           </p>
         </div>
       </div>
     </footer>
-  );
+  )
 }
