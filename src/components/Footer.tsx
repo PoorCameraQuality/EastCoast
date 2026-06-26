@@ -122,6 +122,11 @@ export default function Footer() {
               <L href="/dungeons">Dungeons &amp; clubs</L>
               <L href="/education">Education</L>
               <L href="/vendors">Vendors</L>
+              <L href="/groups">Groups</L>
+              <L href="/organizations">Organizations</L>
+              <L href="/conventions">Conventions</L>
+              <L href="/presenters">Presenters</L>
+              <L href="/venues">Venues</L>
               <L href="/calendar">Calendar</L>
               <L href="/states">States</L>
               <L href="/directory-snapshot">Directory snapshot</L>

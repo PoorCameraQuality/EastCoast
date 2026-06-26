@@ -22,6 +22,11 @@ type MoreNavItem = { href: string; label: string; external?: boolean }
 
 const MORE_NAV: MoreNavItem[] = [
   { href: getKinkSocialJoinUrl('header_nav'), label: 'kink.social', external: true },
+  { href: '/groups', label: 'Groups' },
+  { href: '/organizations', label: 'Organizations' },
+  { href: '/conventions', label: 'Conventions' },
+  { href: '/presenters', label: 'Presenters' },
+  { href: '/venues', label: 'Venues' },
   { href: '/dancecard/organizers', label: 'For organizers' },
   { href: '/dancecard', label: 'Dancecard' },
   { href: '/education', label: 'Education' },

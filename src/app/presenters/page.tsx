@@ -1,13 +1,13 @@
 import type { Metadata } from 'next'
-import Link from 'next/link'
 import { fetchPublishedListingsIndex } from '@/lib/unifiedExtendedListings'
+import KinkSocialListingIndexView from '@/components/kink-social/KinkSocialListingIndexView'
 import { BASE_URL } from '@/lib/seo'
 
 export const revalidate = 1800
 
 export const metadata: Metadata = {
   title: 'Presenters',
-  description: 'Public presenter profiles published from kink.social.',
+  description: 'Kink presenters published from kink.social.',
   alternates: { canonical: `${BASE_URL}/presenters` },
 }
 
@@ -15,26 +15,11 @@ export default async function PresentersIndexPage() {
   const rows = await fetchPublishedListingsIndex('presenter')
 
   return (
-    <main className="min-h-screen bg-black section-padding">
-      <div className="container-custom max-w-3xl mx-auto">
-        <h1 className="text-3xl font-serif font-bold text-white">Presenters</h1>
-        <p className="mt-3 text-gray-400">Public presenter listings synced from kink.social.</p>
-        <ul className="mt-8 space-y-4">
-          {rows.map((row) => (
-            <li key={row.slug}>
-              <Link
-                href={`/presenters/${row.slug}`}
-                className="block rounded-xl border border-white/10 bg-white/5 p-4 hover:border-teal-500/40 transition"
-              >
-                <span className="font-medium text-white">{row.name}</span>
-              </Link>
-            </li>
-          ))}
-          {!rows.length ?
-            <li className="text-gray-500 text-sm">No published presenter listings yet.</li>
-          : null}
-        </ul>
-      </div>
-    </main>
+    <KinkSocialListingIndexView
+      title="Presenters"
+      description="Public presenter profiles synced from kink.social."
+      indexHref="/presenters"
+      listings={rows}
+    />
   )
 }

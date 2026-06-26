@@ -37,10 +37,21 @@ export default function KinkSocialListingDetailView({ entityLabel, indexHref, in
             <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-teal-300/90 sm:text-xs">
               {entityLabel} · Published from kink.social
             </p>
-            <h1 className="mt-3 text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-white">{listing.name}</h1>
-            {listing.orgDisplayName ?
-              <p className="mt-2 text-sm text-gray-400">Part of {listing.orgDisplayName}</p>
-            : null}
+            <div className="mt-3 flex flex-wrap items-start gap-4 sm:gap-6">
+              {listing.logoUrl ?
+                <img
+                  src={listing.logoUrl}
+                  alt={`${listing.name} image`}
+                  className="h-16 w-16 shrink-0 rounded-xl border border-white/10 bg-white/5 object-cover sm:h-20 sm:w-20"
+                />
+              : null}
+              <div className="min-w-0 flex-1">
+                <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-white">{listing.name}</h1>
+                {listing.orgDisplayName ?
+                  <p className="mt-2 text-sm text-gray-400">Part of {listing.orgDisplayName}</p>
+                : null}
+              </div>
+            </div>
             {locationParts.length ?
               <p className="mt-4 text-gray-300">{locationParts.join(' · ')}</p>
             : null}

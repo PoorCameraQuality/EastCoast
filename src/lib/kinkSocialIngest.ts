@@ -54,6 +54,7 @@ function mapPayloadToArticleRow(
     read_time: readTime,
     seo_title: payload.seoTitle ?? payload.title,
     meta_description: (payload.metaDescription ?? payload.excerpt).slice(0, 500),
+    og_image: payload.heroImageUrl ?? null,
     content_warnings: payload.contentWarnings,
     difficulty: payload.difficulty ?? null,
     author_username: payload.authorUsername ?? null,
