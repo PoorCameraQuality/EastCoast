@@ -14,9 +14,10 @@ interface EventCalendarExportProps {
       state: string
     }
   }
+  variant?: 'default' | 'eventDock'
 }
 
-export default function EventCalendarExport({ event }: EventCalendarExportProps) {
+export default function EventCalendarExport({ event, variant = 'default' }: EventCalendarExportProps) {
   const exportToGoogleCalendar = () => {
     const startDate = new Date(event.date.start)
     const endDate = new Date(event.date.end)
@@ -111,6 +112,26 @@ export default function EventCalendarExport({ event }: EventCalendarExportProps)
       link.click()
       document.body.removeChild(link)
     }
+  }
+
+  if (variant === 'eventDock') {
+    return (
+      <div id="event-calendar" className="event-calendar-dock">
+        <h2 className="event-calendar-dock-title">Add to calendar</h2>
+        <p className="event-calendar-dock-note">Save dates locally or open in Google Calendar.</p>
+        <div className="event-calendar-dock-actions">
+          <button type="button" onClick={exportToGoogleCalendar} className="ed-btn-calendar-primary">
+            Google Calendar
+          </button>
+          <button type="button" onClick={addToAppleCalendar} className="ed-btn-calendar-secondary">
+            Apple Calendar
+          </button>
+          <button type="button" onClick={exportToICal} className="ed-btn-calendar-secondary">
+            Download iCal
+          </button>
+        </div>
+      </div>
+    )
   }
 
   return (

@@ -2,29 +2,43 @@ import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import Breadcrumb from '@/components/Breadcrumb'
-import RelatedArticlesSection from '@/components/education/RelatedArticlesSection'
-import { CONTACT_US_LABEL } from '@/lib/submissionContact'
 import EducationArticleBody from '@/components/education/EducationArticleBody'
+import ArticleMasthead from '@/components/education/library/ArticleMasthead'
+import ArticleKeyTakeaways from '@/components/education/library/ArticleKeyTakeaways'
+import ArticleTableOfContents from '@/components/education/library/ArticleTableOfContents'
+import ArticleAuthorPanel from '@/components/education/library/ArticleAuthorPanel'
+import ArticleRelatedLearning from '@/components/education/library/ArticleRelatedLearning'
+import EducationKinkSocialCta from '@/components/education/library/EducationKinkSocialCta'
 import { BASE_URL } from '@/lib/seo'
 import { resolveArticleOgImageUrl } from '@/lib/articleSeo'
 import {
   fetchRelatedEducationSummaries,
   getPublishedEducationArticleBySlug,
+  getPublishedEducationArticles,
   getPublishedEducationSlugs,
-  type EducationArticle,
 } from '@/lib/educationArticles'
 import { ArticleStructuredData } from '@/components/ArticleStructuredData'
-import KinkSocialAcquisitionCard from '@/components/kink-social/KinkSocialAcquisitionCard'
 import { getArticleSerpOverride } from '@/lib/articleSerpOverrides'
-import { getCategoryColorClass } from '@/lib/educationCategoryColors'
+import {
+  attachLearningPath,
+  articleToPublicItem,
+  buildEducationIndex,
+  relatedInLearningPath,
+} from '@/lib/publicEducationIndex'
+import {
+  extractKeyTakeaways,
+  extractTableOfContents,
+  formatTags,
+  injectHeadingIds,
+} from '@/lib/educationVisual'
+import { getLearningPathBySlug } from '@/lib/educationLearningPaths'
+import EckeLink from '@/components/EckeLink'
 
 const DEFAULT_OG = `${BASE_URL}/og-image.png`
 
 interface ArticlePageProps {
   params: { slug: string }
 }
-
-type Article = EducationArticle
 
 export async function generateMetadata({ params }: ArticlePageProps): Promise<Metadata> {
   const article = await getPublishedEducationArticleBySlug(params.slug)
@@ -77,10 +91,8 @@ export async function generateMetadata({ params }: ArticlePageProps): Promise<Me
   }
 }
 
-// Enable ISR - regenerate every 30 minutes
 export const revalidate = 1800
 
-// Generate static params for published articles
 export async function generateStaticParams() {
   const slugs = await getPublishedEducationSlugs()
   return slugs.slice(0, 50).map((slug) => ({ slug }))
@@ -95,6 +107,10 @@ export default async function ArticlePage({ params }: { params: { slug: string }
       notFound()
     }
 
+    const allArticles = await getPublishedEducationArticles()
+    const libraryItems = buildEducationIndex(allArticles).filter((i) => i.lane === 'library')
+    const publicItem = attachLearningPath(articleToPublicItem(article), libraryItems)
+
     const relatedArticles = await fetchRelatedEducationSummaries({
       id: article.id,
       category: article.category,
@@ -104,22 +120,24 @@ export default async function ArticlePage({ params }: { params: { slug: string }
     const heroTitle = serp?.h1 ?? article.title
     const heroLead = serp?.lead ?? article.excerpt
 
-    // Handle tags formatting
-    const formatTags = (tags?: string | string[]) => {
-      if (!tags) return []
-      if (Array.isArray(tags)) return tags
-      if (typeof tags === 'string') {
-        return tags.split(',').map((tag) => tag.trim()).filter((tag) => tag)
-      }
-      return []
-    }
-
     const articleTags = formatTags(article.tags)
     const contentWarnings = Array.isArray(article.content_warnings)
       ? article.content_warnings.filter((warning) => warning.trim().length > 0)
       : []
 
-    const heroImageUrl = resolveArticleOgImageUrl(article.og_image, article.content)
+    const takeaways = extractKeyTakeaways(article.content || '', heroLead)
+    const toc = extractTableOfContents(article.content || '')
+    const bodyContent = injectHeadingIds(article.content || '', toc)
+
+    const pathNext = relatedInLearningPath(publicItem, libraryItems)
+    const path = publicItem.learningPathSlug ? getLearningPathBySlug(publicItem.learningPathSlug) : undefined
+
+    const moreByAuthor =
+      publicItem.authorSlug
+        ? libraryItems.filter(
+            (a) => a.authorSlug === publicItem.authorSlug && a.slug !== publicItem.slug
+          )
+        : []
 
     const breadcrumbItems = [
       { label: 'Home', href: '/' },
@@ -128,168 +146,102 @@ export default async function ArticlePage({ params }: { params: { slug: string }
     ]
 
     return (
-      <div className="min-h-screen bg-black">
+      <div className="edu-article-page">
         <ArticleStructuredData article={article} />
 
-        <div className="container-custom py-8 md:py-16">
+        <div className="container-custom">
           <Breadcrumb items={breadcrumbItems} />
 
-          <div className="mb-10 md:mb-12">
-            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-6">
-              <Link
-                href="/education"
-                className="inline-flex min-h-touch items-center text-primary-400 hover:text-primary-300 transition-colors order-2 sm:order-1"
-              >
-                ← Back to Education
-              </Link>
-              <span
-                className={`inline-flex min-h-touch items-center text-white text-sm font-medium px-4 py-2 rounded-full ${getCategoryColorClass(article.category)} shadow-lg order-1 sm:order-2 self-start`}
-              >
-                {article.category}
-              </span>
-            </div>
-
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-              <div className="lg:col-span-2 order-1 lg:order-none">
-                <div className="card-elegant px-4 sm:px-6 lg:px-8">
-                  <header className="mb-8">
-                    <div className="flex items-center gap-3 mb-4">
-                      {article.featured && (
-                        <span className="inline-flex min-h-touch items-center px-3 py-1 rounded-full text-xs font-medium bg-gradient-to-r from-yellow-500 to-yellow-600 text-black shadow-lg animate-pulse motion-reduce:animate-none">
-                          <span aria-hidden>⭐ </span>Featured Article
-                        </span>
-                      )}
-                    </div>
-
-                    <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-white mb-6 leading-tight">
-                      {heroTitle}
-                    </h1>
-
-                    {heroImageUrl && heroImageUrl !== DEFAULT_OG ?
-                      <div className="mb-6 overflow-hidden rounded-xl border border-white/10 bg-black/20">
-                        <img
-                          src={heroImageUrl}
-                          alt={`${heroTitle} hero image`}
-                          className="w-full max-h-[min(420px,50vh)] object-cover"
-                        />
-                      </div>
-                    : null}
-
-                    <p className="text-lg md:text-xl text-subtle leading-relaxed mb-6">{heroLead}</p>
-
-                    {articleTags.length > 0 && (
-                      <div className="flex flex-wrap gap-2">
-                        {articleTags.map((tag, index) => (
-                          <span
-                            key={index}
-                            className="inline-flex min-h-touch items-center px-3 py-1 rounded-full text-sm bg-dark-700 text-gray-300 border border-dark-600 hover:border-primary-500 transition-colors"
-                          >
-                            {tag}
-                          </span>
-                        ))}
-                      </div>
-                    )}
-                  </header>
-
-                  {contentWarnings.length > 0 && (
-                    <div
-                      role="note"
-                      className="mb-6 rounded-lg border border-amber-500/30 bg-amber-950/20 px-4 py-3"
-                      aria-label="Content warnings"
-                    >
-                      <p className="text-sm font-semibold text-amber-200">Content warnings</p>
-                      <ul className="mt-2 list-disc pl-5 text-sm text-amber-100/90 space-y-1">
-                        {contentWarnings.map((warning) => (
-                          <li key={warning}>{warning}</li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-
-                  <section className="mt-8">
-                    <EducationArticleBody content={article.content || ''} />
-                  </section>
-
-                  <div className="mt-10">
-                    <KinkSocialAcquisitionCard variant="education" />
-                  </div>
-                </div>
-              </div>
-
-              <div className="lg:col-span-1 order-2 lg:order-none">
-                <div className="card-elegant lg:sticky lg:top-8 p-4 sm:p-6">
-                  <div className="mb-6">
-                    <h3 className="text-lg font-serif font-semibold text-white mb-4">About the Author</h3>
-                    <div className="flex items-center gap-4 mb-4">
-                      <div
-                        className="w-12 h-12 shrink-0 bg-gradient-to-br from-primary-500 to-primary-600 rounded-full flex items-center justify-center"
-                        aria-hidden
-                      >
-                        <span className="text-white font-bold text-lg">
-                          {article.author_name.charAt(0).toUpperCase()}
-                        </span>
-                      </div>
-                      <div className="min-w-0">
-                        <div className="font-medium text-white">{article.author_name}</div>
-                        {article.author_credentials && (
-                          <div className="text-sm text-gray-400">{article.author_credentials}</div>
-                        )}
-                      </div>
-                    </div>
-                    {article.author_bio && (
-                      <p className="text-subtle text-sm leading-relaxed">{article.author_bio}</p>
-                    )}
-                  </div>
-
-                  <div className="mt-8 border-t border-dark-600 pt-6 space-y-4 text-sm text-muted-foreground">
-                    <div>
-                      <span className="font-medium text-white">Category:</span>
-                      <p>{article.category}</p>
-                    </div>
-                    {article.read_time && (
-                      <div>
-                        <span className="font-medium text-white">Read Time:</span>
-                        <p>{article.read_time}</p>
-                      </div>
-                    )}
-                    <div>
-                      <span className="font-medium text-white">Published:</span>
-                      <p>
-                        {new Date(article.publish_date).toLocaleDateString('en-US', {
-                          year: 'numeric',
-                          month: 'long',
-                          day: 'numeric',
-                        })}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+          <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
+            <EckeLink href="/education" className="text-sm text-violet-300 hover:text-violet-200">
+              ← Back to library
+            </EckeLink>
+            {publicItem.lane === 'platform_update' ? (
+              <span className="edu-topic-badge edu-topic-badge-platform">Platform update</span>
+            ) : null}
           </div>
 
-          <RelatedArticlesSection articles={relatedArticles} />
+          <div className="edu-article-layout">
+            <div className="edu-article-main">
+              <ArticleMasthead item={publicItem} heroTitle={heroTitle} heroLead={heroLead} />
 
-          <div className="mt-16">
-            <div className="card-elegant text-center">
-              <h2 className="text-2xl font-serif font-semibold text-white mb-4">Explore More Articles</h2>
-              <p className="text-lg text-subtle mb-6 max-w-2xl mx-auto">
-                Discover more educational content, safety guidelines, and community resources. Learn from experts and
-                share your knowledge with the community.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Link href="/education" className="btn-primary min-h-touch inline-flex items-center justify-center">
-                  Browse All Articles
-                </Link>
-                <Link
-                  href="/contact"
-                  className="btn-outline min-h-touch inline-flex items-center justify-center"
-                  aria-label="Contact us"
-                >
-                  {CONTACT_US_LABEL}
-                </Link>
+              {path ? (
+                <p className="edu-path-banner">
+                  Part of the learning path{' '}
+                  <Link href={`/education?path=${path.slug}`}>{path.title}</Link>
+                </p>
+              ) : null}
+
+              {contentWarnings.length > 0 && (
+                <div className="edu-warnings" role="note" aria-label="Content warnings">
+                  <p className="edu-warnings-title">Content warnings</p>
+                  <ul className="edu-warnings-list">
+                    {contentWarnings.map((warning) => (
+                      <li key={warning}>{warning}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              <ArticleKeyTakeaways items={takeaways} />
+              <ArticleTableOfContents entries={toc} />
+
+              {articleTags.length > 0 && (
+                <div className="edu-card-tags mb-4">
+                  {articleTags.map((tag) => (
+                    <span key={tag} className="edu-card-tag">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              )}
+
+              <div className="edu-article-body-wrap">
+                <EducationArticleBody content={bodyContent} />
               </div>
+
+              <div className="mt-8">
+                <EducationKinkSocialCta compact />
+              </div>
+
+              <ArticleRelatedLearning
+                item={publicItem}
+                relatedArticles={relatedArticles}
+                pathNext={pathNext}
+                libraryItems={libraryItems}
+              />
             </div>
+
+            <aside className="edu-article-rail" aria-label="Article sidebar">
+              <ArticleAuthorPanel
+                item={publicItem}
+                authorBio={article.author_bio}
+                moreByAuthor={moreByAuthor}
+              />
+              {toc.length >= 3 ? (
+                <nav className="edu-rail-card" aria-label="On this page">
+                  <h3 className="edu-rail-title">On this page</h3>
+                  <ol className="edu-toc-list mt-2">
+                    {toc.slice(0, 8).map((entry) => (
+                      <li key={entry.id}>
+                        <a href={`#${entry.id}`} className="edu-toc-link">
+                          {entry.text}
+                        </a>
+                      </li>
+                    ))}
+                  </ol>
+                </nav>
+              ) : null}
+              <div className="edu-rail-card">
+                <h3 className="edu-rail-title">Keep exploring</h3>
+                <p className="edu-rail-body">
+                  Browse learning paths, curated resources, and educator profiles in the full library.
+                </p>
+                <EckeLink href="/education" className="edu-btn-read mt-3 inline-flex">
+                  Education library
+                </EckeLink>
+              </div>
+            </aside>
           </div>
         </div>
       </div>

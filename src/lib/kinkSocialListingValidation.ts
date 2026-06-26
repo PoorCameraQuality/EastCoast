@@ -258,7 +258,7 @@ export function __kinkSocialListingSelfTest(): void {
   const badEntity = validateListingUpsertEnvelope({
     kind: 'ecke_listing',
     action: 'upsert',
-    entityType: 'organization',
+    entityType: 'user',
     sourceSystem: 'kink.social',
     sourceId: '11111111-1111-4111-8111-111111111111',
     payload: validPayload,

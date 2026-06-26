@@ -111,4 +111,29 @@
   --ecke-mdx-row-hover: rgba(255, 255, 255, 0.06);
   --ecke-mdx-code-bg: rgba(255, 255, 255, 0.08);
   --ecke-mdx-table-shadow: rgba(0, 0, 0, 0.25);
+
+  /* Storefront — dark Apple Store × nightlife city guide */
+  --sf-bg: #07080d;
+  --sf-surface: #10131b;
+  --sf-elevated: #161a25;
+  --sf-card: #1d2230;
+  --sf-panel: #202638;
+  --sf-border: rgba(255, 255, 255, 0.1);
+  --sf-border-strong: rgba(255, 255, 255, 0.16);
+  --sf-text-strong: #f7f4ef;
+  --sf-text-body: #d8d3cb;
+  --sf-text-muted: #9b98a3;
+  --sf-violet: #8b5cf6;
+  --sf-blue: #38bdf8;
+  --sf-warm: #f4b860;
+  --sf-rose: #e6638e;
+  --sf-fresh: #7dd3a8;
+  --sf-violet-dim: rgba(139, 92, 246, 0.14);
+  --sf-violet-glow: rgba(139, 92, 246, 0.22);
+  --sf-blue-dim: rgba(56, 189, 248, 0.12);
+  --sf-rose-dim: rgba(230, 99, 142, 0.14);
+  --sf-rose-glow: rgba(230, 99, 142, 0.2);
+  --sf-header-bg: rgba(7, 8, 13, 0.78);
+  --sf-header-border: rgba(255, 255, 255, 0.08);
+  --sf-glass: rgba(16, 19, 27, 0.72);
 }

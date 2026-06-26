@@ -16,6 +16,9 @@ export type UnifiedEvent = {
   source: 'static' | 'supabase'
   c2kSourceId?: string | null
   c2kSourceType?: string | null
+  dancecardEnabled?: boolean
+  organizer?: string
+  lastSyncedAt?: string
 }
 
 function slugifyTag(raw: string): string {
@@ -59,6 +62,11 @@ export function inferTagsForStaticEvent(event: {
 }
 
 function staticToUnified(e: ReturnType<typeof getAllEvents>[number]): UnifiedEvent {
+  const raw = e as ReturnType<typeof getAllEvents>[number] & {
+    dancecardEnabled?: boolean
+    dancecardSlug?: string
+    organizer?: string
+  }
   return {
     name: e.name,
     slug: e.slug,
@@ -74,6 +82,8 @@ function staticToUnified(e: ReturnType<typeof getAllEvents>[number]): UnifiedEve
       longDescription: (e as { longDescription?: string }).longDescription,
     }),
     source: 'static',
+    dancecardEnabled: Boolean(raw.dancecardEnabled || raw.dancecardSlug),
+    organizer: raw.organizer,
   }
 }
 
@@ -113,6 +123,7 @@ function dbRowToUnified(row: Record<string, unknown>): UnifiedEvent | null {
     source: 'supabase',
     c2kSourceId: (row.c2k_source_id as string | null) ?? null,
     c2kSourceType: (row.c2k_source_type as string | null) ?? null,
+    lastSyncedAt: String(row.last_synced_at || row.updated_at || '').slice(0, 10) || undefined,
   }
 }
 
@@ -126,7 +137,7 @@ export async function fetchPublishedSupabaseEvents(): Promise<UnifiedEvent[]> {
     const { data, error } = await client
       .from('events')
       .select(
-        'title, slug, start_date, end_date, display_date, city, state, short_description, category, logo, tags, status, c2k_source_id, c2k_source_type'
+        'title, slug, start_date, end_date, display_date, city, state, short_description, category, logo, tags, status, c2k_source_id, c2k_source_type, last_synced_at, updated_at'
       )
       .eq('status', 'published')
 
@@ -161,10 +172,20 @@ export async function getUnifiedEvents(): Promise<UnifiedEvent[]> {
       bySlug.set(e.slug, e)
     }
     for (const e of remote) {
+      const existing = bySlug.get(e.slug)
       if (e.c2kSourceId) {
         bySlug.set(e.slug, e)
-      } else if (!bySlug.has(e.slug)) {
+      } else if (!existing) {
         bySlug.set(e.slug, e)
+      }
+    }
+    // kink.social rows with source ID win over static when slug differs but same source ID
+    for (const e of remote) {
+      if (!e.c2kSourceId) continue
+      for (const [slug, existing] of Array.from(bySlug.entries())) {
+        if (slug !== e.slug && existing.c2kSourceId === e.c2kSourceId) {
+          bySlug.delete(slug)
+        }
       }
     }
   }

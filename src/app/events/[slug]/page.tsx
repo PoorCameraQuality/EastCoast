@@ -4,6 +4,8 @@ import { resolveEventForPage } from '@/lib/unifiedEvents'
 import { notFound } from 'next/navigation'
 import EventDetailView from '@/components/events/EventDetailView'
 import { BASE_URL } from '@/lib/seo'
+import { normalizeEventMedia } from '@/lib/eventMedia'
+import { deriveEventBrandTheme } from '@/lib/eventBrandTheme.server'
 
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
   const event = await resolveEventForPage(params.slug)
@@ -56,5 +58,13 @@ export default async function EventPage({ params }: { params: { slug: string } }
     notFound()
   }
 
-  return <EventDetailView event={event} />
+  const media = normalizeEventMedia({
+    name: event.name,
+    logo: event.logo,
+    source: event.c2kSourceId ? 'supabase' : 'static',
+    c2kSourceId: event.c2kSourceId,
+  })
+  const brand = await deriveEventBrandTheme(media, event.slug, event.category)
+
+  return <EventDetailView event={event} media={media} brand={brand} />
 }

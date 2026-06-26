@@ -64,10 +64,10 @@
     "date-fns-tz": "^3.2.0",
     "dotenv": "^16.4.5",
     "eslint": "^8.57.0",
-    "eslint-config-next": "^14.2.15",
+    "eslint-config-next": "14.2.35",
     "googleapis": "^144.0.0",
     "nanoid": "^5.1.9",
-    "next": "^14.2.15",
+    "next": "14.2.35",
     "postcss": "^8.4.47",
     "qrcode": "^1.5.4",
     "react": "^18.3.1",
@@ -99,5 +99,6 @@
   },
   "engines": {
     "node": "24.x"
-  }
+  },
+  "packageManager": "pnpm@11.9.0"
 }

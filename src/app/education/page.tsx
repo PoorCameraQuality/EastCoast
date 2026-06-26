@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import EducationPageClient from './EducationPageClient'
+import EducationLibraryPageClient from '@/components/education/library/EducationLibraryPageClient'
 import { EducationStructuredData } from '@/components/StructuredData'
 import { getPublishedEducationArticles } from '@/lib/educationArticles'
 import { BASE_URL } from '@/lib/seo'
@@ -7,9 +7,9 @@ import { BASE_URL } from '@/lib/seo'
 export const revalidate = 1800
 
 export const metadata: Metadata = {
-  title: 'BDSM Education Hub: Articles & Curated Kink Guides',
+  title: 'Kink Education Library — Guides, Paths & Resources',
   description:
-    'BDSM education hub with East Coast Kink Events articles plus curated links to trusted guides on consent, safety, aftercare, community, and more.',
+    'Public learning library for kink education: curated paths, safety and consent guides, external resources, and educator discovery — powered by kink.social publishing.',
   alternates: {
     canonical: `${BASE_URL}/education`,
   },
@@ -18,23 +18,23 @@ export const metadata: Metadata = {
     locale: 'en_US',
     url: `${BASE_URL}/education`,
     siteName: 'East Coast Kink Events',
-    title: 'BDSM Education — Consent, Safety & Kink Guides',
+    title: 'Kink Education Library — Guides & Learning Paths',
     description:
-      'Our BDSM education articles plus curated off-site guides on consent, safety, negotiation, aftercare, and community norms.',
+      'Guides, learning paths, and curated resources for consent, safety, community, and showing up prepared.',
     images: [
       {
         url: `${BASE_URL}/og-image.png`,
         width: 1200,
         height: 630,
-        alt: 'East Coast Kink Events - Educational Resources',
+        alt: 'East Coast Kink Events - Education Library',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'BDSM Education — Consent, Safety & Kink Guides',
+    title: 'Kink Education Library — Guides & Learning Paths',
     description:
-      'Free adult BDSM education articles on consent, safety, negotiation, aftercare, kink terms, and community norms.',
+      'Public learning library with curated paths, safety guides, and educator discovery.',
     images: [`${BASE_URL}/og-image.png`],
   },
 }
@@ -50,7 +50,7 @@ export default async function EducationPage() {
   return (
     <>
       <EducationStructuredData articles={articlesForSchema} />
-      <EducationPageClient initialArticles={initialArticles} />
+      <EducationLibraryPageClient initialArticles={initialArticles} />
     </>
   )
 }

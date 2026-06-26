@@ -6,8 +6,11 @@ import { getUnifiedEvents, unifiedEventToEventsPageShape } from '@/lib/unifiedEv
 import { EventListStructuredData } from '@/components/StructuredData'
 import {
   eventsListHasActiveFilter,
+  parseEventsListIntent,
+  parseEventsListLocation,
   parseEventsListSearchParams,
 } from '@/lib/eventsListSearchParams'
+import { buildIndexFromUnified } from '@/lib/publicEventIndex'
 import { BASE_URL } from '@/lib/seo'
 
 export const revalidate = 1800
@@ -23,15 +26,13 @@ export async function generateMetadata({
   const filtered = eventsListHasActiveFilter(searchParams)
   const selection = parseEventsListSearchParams(searchParams)
 
-  const baseDescription = `${count}+ BDSM events near you: kink conventions, workshops, parties, retreats, and dungeons across the East Coast & Midwest. Search by state or type.`
-  const filterSuffix = filtered
-    ? ` Filtered: ${selection}.`
-    : ''
+  const baseDescription = `${count}+ kink events and conventions across the East Coast & Midwest: hotel weekends, classes, parties, vendor markets, and community gatherings.`
+  const filterSuffix = filtered ? ` Filtered: ${selection}.` : ''
   const description = `${baseDescription}${filterSuffix}`.slice(0, 160)
   const ogDescription = `${baseDescription}${filterSuffix}`.slice(0, 200)
 
-  const defaultTitle = 'BDSM Events Near Me: Kink Conventions & Workshops'
-  const title = filtered ? `${selection} — Kink Events`.slice(0, 70) : defaultTitle
+  const defaultTitle = 'Events & Conventions — Kink Calendar | East Coast Kink Events'
+  const title = filtered ? `${selection} — Events & Conventions`.slice(0, 70) : defaultTitle
 
   return {
     title,
@@ -47,20 +48,20 @@ export async function generateMetadata({
       locale: 'en_US',
       url: `${BASE_URL}/events`,
       siteName: 'East Coast Kink Events',
-      title: filtered ? `${selection} — Kink Events` : 'BDSM Events Near Me — Kink Conventions & Workshops',
+      title: filtered ? `${selection} — Events & Conventions` : defaultTitle,
       description: ogDescription,
       images: [
         {
           url: `${BASE_URL}/og-image.png`,
           width: 1200,
           height: 630,
-          alt: 'East Coast Kink Events - All Events',
+          alt: 'East Coast Kink Events - Events & Conventions',
         },
       ],
     },
     twitter: {
       card: 'summary_large_image',
-      title: filtered ? `${selection} — Kink Events` : 'BDSM Events Near Me — Kink Conventions & Workshops',
+      title: filtered ? `${selection} — Events & Conventions` : defaultTitle,
       description: ogDescription,
       images: [`${BASE_URL}/og-image.png`],
     },
@@ -73,19 +74,23 @@ export default async function EventsPage({
   searchParams: Record<string, string | string[] | undefined>
 }) {
   const unified = await getUnifiedEvents()
-  const allEvents = unified.map(unifiedEventToEventsPageShape)
+  const indexItems = buildIndexFromUnified(unified)
+  const searchEvents = unified.map(unifiedEventToEventsPageShape)
   const allDungeons = getAllDungeons()
   const allSwingClubs = getAllSwingClubs()
-  const selectedCategory = parseEventsListSearchParams(searchParams)
+  const selectedIntent = parseEventsListIntent(searchParams)
+  const locationFilter = parseEventsListLocation(searchParams)
 
   return (
     <>
       <EventListStructuredData />
       <EventsPageClient
-        allEvents={allEvents}
+        indexItems={indexItems}
+        searchEvents={searchEvents}
         allDungeons={allDungeons}
         allSwingClubs={allSwingClubs}
-        selectedCategory={selectedCategory}
+        selectedIntent={selectedIntent}
+        locationFilter={locationFilter}
       />
     </>
   )
