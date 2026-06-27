@@ -21,6 +21,7 @@ import {
 import { BASE_URL } from '@/lib/seo'
 import { submitSingleContentUrlToIndexNow } from '@/lib/indexnow'
 import { getSupabaseAdminClient } from '@/lib/supabaseAdmin'
+import { resolveEckePayloadHeroUrl, type EckePhotosManifest } from '@/lib/kinkSocialPhotoManifest'
 
 export { __kinkSocialListingSelfTest } from '@/lib/kinkSocialListingValidation'
 
@@ -42,7 +43,10 @@ function mapPayloadToGroupRow(
     name: payload.title,
     description: payload.description?.trim() || null,
     public_location_summary: payload.location?.trim() || null,
-    logo_url: payload.imageUrl ?? null,
+    logo_url: resolveEckePayloadHeroUrl({
+      photos: payload.photos as EckePhotosManifest | undefined,
+      legacyHeroUrl: payload.imageUrl,
+    }),
     kink_social_canonical_url: envelope.canonicalKinkSocialUrl ?? null,
     cta_url: envelope.canonicalKinkSocialUrl ?? null,
     org_slug: payload.orgSlug?.toLowerCase() ?? null,

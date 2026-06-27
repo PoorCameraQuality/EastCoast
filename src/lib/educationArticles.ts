@@ -22,6 +22,8 @@ export type EducationArticle = {
   meta_description?: string
   focus_keywords?: string[] | string
   og_image?: string | null
+  hero_media_asset_id?: string | null
+  heroMediaPublicUrl?: string | null
   content_warnings?: string[] | null
   difficulty?: string | null
   author_username?: string | null
@@ -65,6 +67,27 @@ function getStaticPublishedArticles(): EducationArticle[] {
   return getAllArticles().map((a) => normalizeStaticArticle(a as Record<string, unknown>))
 }
 
+async function attachHeroMediaPublicUrls(articles: EducationArticle[]): Promise<EducationArticle[]> {
+  const client = getSupabaseServerClient()
+  if (!client) return articles
+
+  const heroIds = [...new Set(articles.map((a) => a.hero_media_asset_id).filter(Boolean))] as string[]
+  if (heroIds.length === 0) return articles
+
+  const { data, error } = await client
+    .from('kink_social_media_assets')
+    .select('id, public_url')
+    .in('id', heroIds)
+
+  if (error || !data) return articles
+
+  const byId = new Map(data.map((row) => [row.id as string, row.public_url as string]))
+  return articles.map((article) => ({
+    ...article,
+    heroMediaPublicUrl: article.hero_media_asset_id ? byId.get(article.hero_media_asset_id) ?? null : null,
+  }))
+}
+
 async function fetchFromSupabase(): Promise<EducationArticle[] | null> {
   const client = getSupabaseServerClient()
   if (!client) return null
@@ -80,7 +103,7 @@ async function fetchFromSupabase(): Promise<EducationArticle[] | null> {
     return null
   }
 
-  return (data as EducationArticle[]) || []
+  return attachHeroMediaPublicUrls((data as EducationArticle[]) || [])
 }
 
 /** Published articles: Supabase when available, else static seed data from @/data/education. */
@@ -111,7 +134,10 @@ export async function getPublishedEducationArticleBySlug(
       .eq('status', 'published')
       .maybeSingle()
 
-    if (!error && data) return data as EducationArticle
+    if (!error && data) {
+      const [withHero] = await attachHeroMediaPublicUrls([data as EducationArticle])
+      return withHero
+    }
     if (error) {
       console.error('[educationArticles] Supabase slug fetch failed:', error.message)
     }

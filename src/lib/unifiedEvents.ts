@@ -1,5 +1,6 @@
 import { getAllEvents, getEventBySlug } from '@/data/events'
 import { getSupabaseClient } from '@/lib/supabase'
+import { resolveEntityHeroUrl } from '@/lib/kinkSocialEntityMedia'
 import { KNOWN_TAG_SLUGS } from '@/lib/discoveryTags'
 import { BASE_URL } from '@/lib/seo'
 
@@ -340,7 +341,13 @@ export async function fetchPublishedSupabaseEventAsPageEvent(
       .maybeSingle()
 
     if (error || !data) return null
-    return dbRowToEventPageRecord(data as unknown as Record<string, unknown>)
+    const record = dbRowToEventPageRecord(data as unknown as Record<string, unknown>)
+    if (!record) return null
+    const heroUrl = await resolveEntityHeroUrl(client, 'event', slug, record.logo)
+    if (heroUrl && heroUrl !== record.logo) {
+      return { ...record, logo: heroUrl }
+    }
+    return record
   } catch {
     return null
   }

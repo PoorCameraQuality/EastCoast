@@ -2,6 +2,7 @@
 
 **Status:** Architecture + contract — multi-entity public SEO ingest  
 **Mirror (kink.social):** [`coast-to-coast-kink/docs/ECKE_PUBLIC_PUBLISHING_CONTRACT.md`](../../coast-to-coast-kink/docs/ECKE_PUBLIC_PUBLISHING_CONTRACT.md)  
+**Photo manifest (v1):** optional `payload.photos` on ingest envelopes — see `packages/shared/src/ecke-photos-manifest.ts` (kink.social) and `src/lib/kinkSocialPhotoManifest.ts` (ECKE).
 **Supersedes:** [`KINK_SOCIAL_INGEST_CONTRACT.md`](./KINK_SOCIAL_INGEST_CONTRACT.md) (article-only Pass 1 draft)
 
 ---

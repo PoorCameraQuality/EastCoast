@@ -10,6 +10,7 @@ import {
 } from '@/lib/educationVisual'
 import type { EducationArticle } from '@/lib/educationArticles'
 import { resolveArticleOgImageUrl } from '@/lib/articleSeo'
+import { resolveDualReadHeroUrl } from '@/lib/kinkSocialPhotoManifest'
 import { buildKinkSocialUrl, KINK_SOCIAL_PATHS } from '@/lib/kinkSocialMarketing'
 import type {
   EducationContentLane,
@@ -96,7 +97,8 @@ export function articleToPublicItem(article: EducationArticle): PublicEducationI
   const readTimeMinutes = parseReadTimeMinutes(article.read_time)
   const level = parseEducationLevel(article.difficulty)
   const urls = buildKinkSocialUrls(article)
-  const heroImageUrl = resolveArticleOgImageUrl(article.og_image, article.content)
+  const dualReadHero = resolveDualReadHeroUrl(article.heroMediaPublicUrl, article.og_image)
+  const heroImageUrl = dualReadHero ?? resolveArticleOgImageUrl(article.og_image, article.content)
 
   return {
     id: article.id,

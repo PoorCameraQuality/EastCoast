@@ -69,6 +69,23 @@ export const LISTING_SUPPORTED_ENTITY_TYPES = [
 ] as const
 export type ListingEntityType = (typeof LISTING_SUPPORTED_ENTITY_TYPES)[number]
 
+const eckePhotoAssetSchema = z.object({
+  sourceMediaAssetId: z.string().uuid(),
+  role: z.enum(['hero', 'gallery', 'logo', 'thumbnail']),
+  ordinal: z.number().int().min(0).max(999),
+  publicUrl: z.string().url().max(2000),
+  width: z.number().int().positive().nullable(),
+  height: z.number().int().positive().nullable(),
+  sha256Hash: z.string().max(128).nullable(),
+  altText: z.string().max(500).nullable(),
+})
+
+const eckePhotosManifestSchema = z.object({
+  manifestVersion: z.literal(1),
+  hero: eckePhotoAssetSchema.nullable(),
+  gallery: z.array(eckePhotoAssetSchema).max(48).default([]),
+})
+
 const listingPayloadSchema = z.object({
   slug: z
     .string()
@@ -79,6 +96,7 @@ const listingPayloadSchema = z.object({
   description: z.string().max(12000).nullable().optional(),
   location: z.string().max(500).nullable().optional(),
   imageUrl: z.string().url().max(2000).nullable().optional(),
+  photos: eckePhotosManifestSchema.optional(),
   orgSlug: z.string().max(200).nullable().optional(),
   orgDisplayName: z.string().max(500).nullable().optional(),
   visibility: z.enum(['public', 'hidden']),
@@ -254,6 +272,61 @@ export function __kinkSocialListingSelfTest(): void {
     payload: validPayload,
   })
   assert(upsertOk.ok, 'valid group upsert accepted')
+
+  const withPhotos = validateListingUpsertEnvelope({
+    kind: 'ecke_listing',
+    action: 'upsert',
+    entityType: 'group',
+    sourceSystem: 'kink.social',
+    sourceId: '11111111-1111-4111-8111-111111111111',
+    payload: {
+      ...validPayload,
+      imageUrl: 'https://cdn.example.com/legacy.jpg',
+      photos: {
+        manifestVersion: 1,
+        hero: {
+          sourceMediaAssetId: '22222222-2222-4222-8222-222222222222',
+          role: 'hero',
+          ordinal: 0,
+          publicUrl: 'https://cdn.example.com/hero.jpg',
+          width: 800,
+          height: 600,
+          sha256Hash: null,
+          altText: null,
+        },
+        gallery: [],
+      },
+    },
+  })
+  assert(withPhotos.ok, 'listing upsert with photos manifest accepted')
+
+  const presenterPhotos = validateListingUpsertEnvelope({
+    kind: 'ecke_listing',
+    action: 'upsert',
+    entityType: 'presenter',
+    sourceSystem: 'kink.social',
+    sourceId: '33333333-3333-4333-8333-333333333333',
+    payload: {
+      slug: 'demo-presenter',
+      title: 'Demo Presenter',
+      visibility: 'public' as const,
+      photos: {
+        manifestVersion: 1,
+        hero: {
+          sourceMediaAssetId: '44444444-4444-4444-8444-444444444444',
+          role: 'hero',
+          ordinal: 0,
+          publicUrl: 'https://cdn.example.com/presenter.jpg',
+          width: 400,
+          height: 400,
+          sha256Hash: null,
+          altText: null,
+        },
+        gallery: [],
+      },
+    },
+  })
+  assert(presenterPhotos.ok, 'presenter listing upsert with photos manifest accepted')
 
   const badEntity = validateListingUpsertEnvelope({
     kind: 'ecke_listing',

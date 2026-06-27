@@ -66,6 +66,23 @@ const PRIVATE_KINK_SOCIAL_PATH_SEGMENTS = [
 const KINK_SOCIAL_URL_RE = /https?:\/\/(?:www\.)?kink\.social\b[^\s"'<>]*/i
 const KINK_SOCIAL_HOST_RE = /\bkink\.social\b/i
 
+const eckePhotoAssetSchema = z.object({
+  sourceMediaAssetId: z.string().uuid(),
+  role: z.enum(['hero', 'gallery', 'logo', 'thumbnail']),
+  ordinal: z.number().int().min(0).max(999),
+  publicUrl: z.string().url().max(2000),
+  width: z.number().int().positive().nullable(),
+  height: z.number().int().positive().nullable(),
+  sha256Hash: z.string().max(128).nullable(),
+  altText: z.string().max(500).nullable(),
+})
+
+const eckePhotosManifestSchema = z.object({
+  manifestVersion: z.literal(1),
+  hero: eckePhotoAssetSchema.nullable(),
+  gallery: z.array(eckePhotoAssetSchema).max(48).default([]),
+})
+
 const educationArticlePayloadSchema = z.object({
   title: z.string().min(1).max(500),
   slug: z
@@ -88,6 +105,7 @@ const educationArticlePayloadSchema = z.object({
   heroImageUrl: z.string().url().max(2000).nullable().optional(),
   seoTitle: z.string().max(500).nullable().optional(),
   metaDescription: z.string().max(500).nullable().optional(),
+  photos: eckePhotosManifestSchema.optional(),
 })
 
 const upsertEnvelopeSchema = z.object({

@@ -17,6 +17,12 @@ import {
 } from '@/lib/kinkSocialIngestValidation'
 import { BASE_URL } from '@/lib/seo'
 import { getSupabaseAdminClient } from '@/lib/supabaseAdmin'
+import {
+  resolveEckePayloadHeroUrl,
+  setArticleHeroMediaPointer,
+  upsertKinkSocialPhotoManifest,
+  type EckePhotosManifest,
+} from '@/lib/kinkSocialPhotoManifest'
 
 export {
   __kinkSocialIngestSelfTest,
@@ -39,6 +45,11 @@ function mapPayloadToArticleRow(
   const readTime =
     payload.readingMinutes != null ? `${payload.readingMinutes} min read` : null
 
+  const heroUrl = resolveEckePayloadHeroUrl({
+    photos: payload.photos as EckePhotosManifest | undefined,
+    legacyHeroUrl: payload.heroImageUrl,
+  })
+
   return {
     title: payload.title,
     slug,
@@ -54,7 +65,7 @@ function mapPayloadToArticleRow(
     read_time: readTime,
     seo_title: payload.seoTitle ?? payload.title,
     meta_description: (payload.metaDescription ?? payload.excerpt).slice(0, 500),
-    og_image: payload.heroImageUrl ?? null,
+    og_image: heroUrl,
     content_warnings: payload.contentWarnings,
     difficulty: payload.difficulty ?? null,
     author_username: payload.authorUsername ?? null,
@@ -109,6 +120,26 @@ async function notifyIndexNow(
       indexNowError: error instanceof Error ? error.message : 'unknown',
     })
   }
+}
+
+async function syncEducationArticlePhotos(
+  admin: NonNullable<ReturnType<typeof getSupabaseAdminClient>>,
+  envelope: UpsertEnvelope,
+  payload: EducationArticlePayload,
+  slug: string,
+): Promise<void> {
+  if (!payload.photos) return
+  const { heroMediaAssetRowId, error } = await upsertKinkSocialPhotoManifest(admin, {
+    entityType: 'education_article',
+    entitySlug: slug,
+    c2kSourceId: envelope.sourceId,
+    photos: payload.photos as EckePhotosManifest,
+  })
+  if (error) {
+    console.warn('[kink-social-ingest] photo manifest upsert failed', { error, sourceId: envelope.sourceId })
+    return
+  }
+  await setArticleHeroMediaPointer(admin, slug, heroMediaAssetRowId)
 }
 
 export async function upsertEducationArticle(
@@ -202,6 +233,7 @@ export async function upsertEducationArticle(
       durationMs: Date.now() - started,
     })
     void notifyIndexNow(requestId, envelope.entityType, envelope.sourceId, eckePublicUrl)
+    await syncEducationArticlePhotos(admin, envelope, payload, updated.slug)
 
     return NextResponse.json({
       status: 'published',
@@ -239,6 +271,7 @@ export async function upsertEducationArticle(
     durationMs: Date.now() - started,
   })
   void notifyIndexNow(requestId, envelope.entityType, envelope.sourceId, eckePublicUrl)
+  await syncEducationArticlePhotos(admin, envelope, payload, inserted.slug)
 
   return NextResponse.json({
     status: 'published',

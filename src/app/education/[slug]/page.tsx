@@ -11,6 +11,7 @@ import ArticleRelatedLearning from '@/components/education/library/ArticleRelate
 import EducationKinkSocialCta from '@/components/education/library/EducationKinkSocialCta'
 import { BASE_URL } from '@/lib/seo'
 import { resolveArticleOgImageUrl } from '@/lib/articleSeo'
+import { resolveDualReadHeroUrl } from '@/lib/kinkSocialPhotoManifest'
 import {
   fetchRelatedEducationSummaries,
   getPublishedEducationArticleBySlug,
@@ -61,7 +62,9 @@ export async function generateMetadata({ params }: ArticlePageProps): Promise<Me
         : article.tags.split(',').map((tag: string) => tag.trim())
       : [])
 
-  const ogImageUrl = resolveArticleOgImageUrl(article.og_image, article.content)
+  const preferredOg =
+    resolveDualReadHeroUrl(article.heroMediaPublicUrl, article.og_image) ?? article.og_image
+  const ogImageUrl = resolveArticleOgImageUrl(preferredOg, article.content)
   const ogImageEntry =
     ogImageUrl === DEFAULT_OG
       ? { url: ogImageUrl, width: 1200, height: 630, alt: `${title} - East Coast Kink Events` }

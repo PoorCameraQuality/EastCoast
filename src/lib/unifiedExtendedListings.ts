@@ -1,6 +1,7 @@
 import { getSupabaseServerClient } from '@/lib/supabaseServer'
 import type { ListingEntityType } from '@/lib/kinkSocialListingValidation'
-import { LISTING_PROJECTIONS } from '@/lib/kinkSocialListingProjection'
+import { LISTING_PROJECTIONS, listingMediaEntityType } from '@/lib/kinkSocialListingProjection'
+import { resolveEntityHeroUrl } from '@/lib/kinkSocialEntityMedia'
 
 export type KinkSocialListingRecord = {
   slug: string
@@ -75,6 +76,23 @@ function selectColumns(entityType: ListingEntityType): string {
   return BASE_SELECT
 }
 
+async function enrichListingHeroFromManifest(
+  entityType: ListingEntityType,
+  record: KinkSocialListingRecord,
+): Promise<KinkSocialListingRecord> {
+  const mediaEntityType = listingMediaEntityType(entityType)
+  if (!mediaEntityType) return record
+  const client = getSupabaseServerClient()
+  if (!client) return record
+  try {
+    const heroUrl = await resolveEntityHeroUrl(client, mediaEntityType, record.slug, record.logoUrl)
+    if (!heroUrl || heroUrl === record.logoUrl) return record
+    return { ...record, logoUrl: heroUrl }
+  } catch {
+    return record
+  }
+}
+
 export async function fetchPublishedListingBySlug(
   entityType: ListingEntityType,
   slug: string,
@@ -90,7 +108,7 @@ export async function fetchPublishedListingBySlug(
       .eq('slug', slug.toLowerCase())
       .maybeSingle()
     if (error || !data) return null
-    return dbRowToRecord(data as unknown as DbRow)
+    return enrichListingHeroFromManifest(entityType, dbRowToRecord(data as unknown as DbRow))
   } catch {
     return null
   }
@@ -131,7 +149,8 @@ export async function fetchPublishedListingsIndex(
       .eq('status', 'published')
       .order('name', { ascending: true })
     if (error || !data) return []
-    return (data as unknown as DbRow[]).map(dbRowToRecord)
+    const records = (data as unknown as DbRow[]).map(dbRowToRecord)
+    return Promise.all(records.map((record) => enrichListingHeroFromManifest(entityType, record)))
   } catch {
     return []
   }

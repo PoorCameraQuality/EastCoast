@@ -36,7 +36,14 @@ export default function KinkSocialListingIndexView({ title, description, indexHr
                     href={href}
                     className="group block rounded-xl border border-white/10 bg-white/5 p-4 sm:p-5 hover:border-teal-500/40 transition"
                   >
-                    <div className="flex flex-wrap items-start justify-between gap-3">
+                    <div className="flex flex-wrap items-start gap-3 sm:gap-4">
+                      {listing.logoUrl ?
+                        <img
+                          src={listing.logoUrl}
+                          alt=""
+                          className="h-12 w-12 shrink-0 rounded-lg border border-white/10 bg-white/5 object-cover sm:h-14 sm:w-14"
+                        />
+                      : null}
                       <div className="min-w-0 flex-1">
                         <h2 className="font-medium text-white group-hover:text-teal-100 transition-colors">
                           {listing.name}
@@ -48,7 +55,7 @@ export default function KinkSocialListingIndexView({ title, description, indexHr
                           <p className="mt-2 text-sm text-gray-500">{location}</p>
                         : null}
                       </div>
-                      <span className="shrink-0 text-sm font-medium text-teal-300 group-hover:text-teal-200">
+                      <span className="shrink-0 self-center text-sm font-medium text-teal-300 group-hover:text-teal-200">
                         View listing →
                       </span>
                     </div>

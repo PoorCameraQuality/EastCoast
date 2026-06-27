@@ -3,6 +3,11 @@ import { NextResponse, type NextResponse as NextResponseType } from 'next/server
 import { submitSingleContentUrlToIndexNow } from '@/lib/indexnow'
 import type { IngestErrorResponse } from '@/lib/kinkSocialIngestValidation'
 import {
+  resolveEckePayloadHeroUrl,
+  upsertKinkSocialPhotoManifest,
+  type EckePhotosManifest,
+} from '@/lib/kinkSocialPhotoManifest'
+import {
   type ListingEntityType,
   type ListingErrorCode,
   type ListingPayload,
@@ -12,6 +17,7 @@ import {
 } from '@/lib/kinkSocialListingValidation'
 import { BASE_URL } from '@/lib/seo'
 import { getSupabaseAdminClient } from '@/lib/supabaseAdmin'
+import type { SupabaseClient } from '@supabase/supabase-js'
 
 export type ListingProjectionConfig = {
   entityType: ListingEntityType
@@ -76,6 +82,50 @@ function logListingEvent(event: Record<string, unknown>): void {
   console.info('[kink-social-listing]', event)
 }
 
+function listingMediaEntityType(entityType: ListingEntityType): string | null {
+  if (entityType === 'group') return 'group'
+  if (entityType === 'organization') return 'organization'
+  if (entityType === 'convention') return 'convention'
+  if (entityType === 'presenter') return 'presenter'
+  if (entityType === 'venue') return 'place'
+  return null
+}
+
+export { listingMediaEntityType }
+
+function resolveListingLogoUrl(payload: ListingPayload): string | null {
+  return resolveEckePayloadHeroUrl({
+    photos: payload.photos as EckePhotosManifest | undefined,
+    legacyHeroUrl: payload.imageUrl,
+  })
+}
+
+async function syncListingPhotos(
+  admin: SupabaseClient,
+  config: ListingProjectionConfig,
+  envelope: ListingUpsertEnvelope,
+  payload: ListingPayload,
+  slug: string,
+): Promise<void> {
+  if (!payload.photos) return
+  const entityType = listingMediaEntityType(config.entityType)
+  if (!entityType) return
+
+  const { error } = await upsertKinkSocialPhotoManifest(admin, {
+    entityType,
+    entitySlug: slug,
+    c2kSourceId: envelope.sourceId,
+    photos: payload.photos as EckePhotosManifest,
+  })
+  if (error) {
+    console.warn('[kink-social-listing] photo manifest upsert failed', {
+      error,
+      entityType: config.entityType,
+      sourceId: envelope.sourceId,
+    })
+  }
+}
+
 function mapPayloadToRow(
   config: ListingProjectionConfig,
   envelope: ListingUpsertEnvelope,
@@ -87,7 +137,7 @@ function mapPayloadToRow(
     name: payload.title,
     description: payload.description?.trim() || null,
     public_location_summary: payload.location?.trim() || null,
-    logo_url: payload.imageUrl ?? null,
+    logo_url: resolveListingLogoUrl(payload),
     kink_social_canonical_url: envelope.canonicalKinkSocialUrl ?? null,
     cta_url: envelope.canonicalKinkSocialUrl ?? null,
     status: 'published',
@@ -218,6 +268,8 @@ export async function upsertListingProjection(
 
   const saved = await writeRow(existingBySource?.id)
   if (saved instanceof NextResponse) return saved
+
+  await syncListingPhotos(admin, config, envelope, payload, saved.slug)
 
   const eckePublicUrl = `${BASE_URL}${config.detailPath(saved.slug)}`
   logListingEvent({

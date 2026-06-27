@@ -1,5 +1,6 @@
 import { BASE_URL } from '@/lib/seo'
 import { countWordsFromArticleContent, resolveArticleOgImageUrl } from '@/lib/articleSeo'
+import { resolveDualReadHeroUrl } from '@/lib/kinkSocialPhotoManifest'
 
 export type ArticleStructuredDataArticle = {
   title: string
@@ -13,6 +14,7 @@ export type ArticleStructuredDataArticle = {
   tags?: string[] | string
   focus_keywords?: string[] | string
   og_image?: string | null
+  heroMediaPublicUrl?: string | null
   publish_date?: string
   last_updated?: string
   created_at?: string
@@ -39,7 +41,9 @@ function normalizeKeywords(
  * Single source of truth for Article JSON-LD (used on public article pages and admin preview client).
  */
 export function ArticleStructuredData({ article }: { article: ArticleStructuredDataArticle }) {
-  const imageUrl = resolveArticleOgImageUrl(article.og_image, article.content)
+  const preferredOg =
+    resolveDualReadHeroUrl(article.heroMediaPublicUrl, article.og_image) ?? article.og_image
+  const imageUrl = resolveArticleOgImageUrl(preferredOg, article.content)
   const wordCount = countWordsFromArticleContent(article.content)
   const datePublished = article.publish_date || article.created_at || new Date().toISOString()
   const dateModified = article.last_updated || article.publish_date || article.created_at || datePublished
