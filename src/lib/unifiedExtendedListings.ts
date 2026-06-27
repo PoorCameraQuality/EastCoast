@@ -1,7 +1,7 @@
 import { getSupabaseServerClient } from '@/lib/supabaseServer'
 import type { ListingEntityType } from '@/lib/kinkSocialListingValidation'
 import { LISTING_PROJECTIONS, listingMediaEntityType } from '@/lib/kinkSocialListingProjection'
-import { resolveEntityHeroUrl } from '@/lib/kinkSocialEntityMedia'
+import { resolveEntityHeroAndGallery, type EntityHeroGalleryItem } from '@/lib/kinkSocialEntityMedia'
 
 export type KinkSocialListingRecord = {
   slug: string
@@ -19,6 +19,7 @@ export type KinkSocialListingRecord = {
   c2kSourceId: string
   sourceAttribution: string
   lastSyncedAt: string | null
+  gallery: EntityHeroGalleryItem[]
 }
 
 type DbRow = {
@@ -57,6 +58,7 @@ function dbRowToRecord(row: DbRow): KinkSocialListingRecord {
     c2kSourceId: row.c2k_source_id,
     sourceAttribution: row.source_attribution ?? 'kink.social',
     lastSyncedAt: row.last_synced_at,
+    gallery: [],
   }
 }
 
@@ -85,9 +87,20 @@ async function enrichListingHeroFromManifest(
   const client = getSupabaseServerClient()
   if (!client) return record
   try {
-    const heroUrl = await resolveEntityHeroUrl(client, mediaEntityType, record.slug, record.logoUrl)
-    if (!heroUrl || heroUrl === record.logoUrl) return record
-    return { ...record, logoUrl: heroUrl }
+    const { heroUrl, gallery } = await resolveEntityHeroAndGallery(
+      client,
+      mediaEntityType,
+      record.slug,
+      record.logoUrl,
+    )
+    const heroChanged = Boolean(heroUrl && heroUrl !== record.logoUrl)
+    const hasGallery = gallery.length > 0
+    if (!heroChanged && !hasGallery) return record
+    return {
+      ...record,
+      ...(heroChanged ? { logoUrl: heroUrl! } : {}),
+      ...(hasGallery ? { gallery } : {}),
+    }
   } catch {
     return record
   }

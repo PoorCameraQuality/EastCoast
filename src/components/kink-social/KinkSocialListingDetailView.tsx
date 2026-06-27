@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import Breadcrumb from '@/components/Breadcrumb'
 import KinkSocialAcquisitionCard from '@/components/kink-social/KinkSocialAcquisitionCard'
+import KinkSocialEntityGallerySection from '@/components/kink-social/KinkSocialEntityGallerySection'
 import type { KinkSocialListingRecord } from '@/lib/unifiedExtendedListings'
 
 type Props = {
@@ -69,6 +70,10 @@ export default function KinkSocialListingDetailView({ entityLabel, indexHref, in
               </a>
             : null}
           </header>
+
+          {listing.gallery?.length ? (
+            <KinkSocialEntityGallerySection gallery={listing.gallery} title="Photos" />
+          ) : null}
 
           {listing.kinkSocialCanonicalUrl ?
             <aside

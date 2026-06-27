@@ -12,6 +12,7 @@ import EventOverviewModules from '@/components/events/EventOverviewModules'
 import EventFeatureTiles from '@/components/events/EventFeatureTiles'
 import EventVenueTravel from '@/components/events/EventVenueTravel'
 import EventListingStatus from '@/components/events/EventListingStatus'
+import KinkSocialEntityGallerySection from '@/components/kink-social/KinkSocialEntityGallerySection'
 import { stateAbbrToSlug } from '@/lib/discoveryCrossLinks'
 import { EAST_COAST_STATES } from '@/lib/eastCoastStates'
 import type { EventPageRecord } from '@/lib/unifiedEvents'
@@ -90,6 +91,10 @@ export default function EventDetailView({ event, media, brand }: Props) {
               )}
 
               {hasFeatures ? <EventFeatureTiles features={event.features!} /> : null}
+
+              {event.gallery?.length ? (
+                <KinkSocialEntityGallerySection gallery={event.gallery} title="Event photos" />
+              ) : null}
 
               <EventVenueTravel event={event} />
 

@@ -1,6 +1,6 @@
 import { getAllEvents, getEventBySlug } from '@/data/events'
 import { getSupabaseClient } from '@/lib/supabase'
-import { resolveEntityHeroUrl } from '@/lib/kinkSocialEntityMedia'
+import { resolveEntityHeroAndGallery, type EntityHeroGalleryItem } from '@/lib/kinkSocialEntityMedia'
 import { KNOWN_TAG_SLUGS } from '@/lib/discoveryTags'
 import { BASE_URL } from '@/lib/seo'
 
@@ -220,6 +220,7 @@ export type EventPageRecord = {
   seo?: { title: string; description: string; keywords: string }
   c2kSourceId?: string | null
   c2kSourceType?: string | null
+  gallery?: EntityHeroGalleryItem[]
 }
 
 function parseDbFeatures(raw: unknown): string[] {
@@ -343,11 +344,15 @@ export async function fetchPublishedSupabaseEventAsPageEvent(
     if (error || !data) return null
     const record = dbRowToEventPageRecord(data as unknown as Record<string, unknown>)
     if (!record) return null
-    const heroUrl = await resolveEntityHeroUrl(client, 'event', slug, record.logo)
-    if (heroUrl && heroUrl !== record.logo) {
-      return { ...record, logo: heroUrl }
+    const { heroUrl, gallery } = await resolveEntityHeroAndGallery(client, 'event', slug, record.logo)
+    const heroChanged = Boolean(heroUrl && heroUrl !== record.logo)
+    const hasGallery = gallery.length > 0
+    if (!heroChanged && !hasGallery) return record
+    return {
+      ...record,
+      ...(heroChanged ? { logo: heroUrl! } : {}),
+      ...(hasGallery ? { gallery } : {}),
     }
-    return record
   } catch {
     return null
   }
