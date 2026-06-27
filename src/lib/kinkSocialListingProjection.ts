@@ -17,6 +17,7 @@ import {
 } from '@/lib/kinkSocialListingValidation'
 import { BASE_URL } from '@/lib/seo'
 import { getSupabaseAdminClient } from '@/lib/supabaseAdmin'
+import type { KinkSocialMediaEntityType } from '@/lib/kinkSocialEntityMedia'
 import type { SupabaseClient } from '@supabase/supabase-js'
 
 export type ListingProjectionConfig = {
@@ -82,7 +83,7 @@ function logListingEvent(event: Record<string, unknown>): void {
   console.info('[kink-social-listing]', event)
 }
 
-function listingMediaEntityType(entityType: ListingEntityType): string | null {
+function listingMediaEntityType(entityType: ListingEntityType): KinkSocialMediaEntityType | null {
   if (entityType === 'group') return 'group'
   if (entityType === 'organization') return 'organization'
   if (entityType === 'convention') return 'convention'

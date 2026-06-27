@@ -71,7 +71,13 @@ async function attachHeroMediaPublicUrls(articles: EducationArticle[]): Promise<
   const client = getSupabaseServerClient()
   if (!client) return articles
 
-  const heroIds = [...new Set(articles.map((a) => a.hero_media_asset_id).filter(Boolean))] as string[]
+  const heroIds = Array.from(
+    new Set(
+      articles
+        .map((a) => a.hero_media_asset_id)
+        .filter((id): id is string => Boolean(id)),
+    ),
+  )
   if (heroIds.length === 0) return articles
 
   const { data, error } = await client
