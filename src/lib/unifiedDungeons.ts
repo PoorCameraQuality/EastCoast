@@ -1,4 +1,5 @@
-import { getAllDungeons } from '@/data/dungeons'
+import type { SupabaseClient } from '@supabase/supabase-js'
+import { getAllDungeons, getDungeonBySlug } from '@/data/dungeons'
 import { getAllEvents } from '@/data/events'
 import { CITY_BY_SLUG } from '@/lib/discoveryCityRegistry'
 import { EAST_COAST_STATES, type StateSlug } from '@/lib/eastCoastStates'
@@ -7,6 +8,8 @@ import {
   inferDungeonHubTags,
   type DungeonSeoHubTagSlug,
 } from '@/lib/dungeonHubTagMap'
+import { resolveEntityHeroUrl } from '@/lib/kinkSocialEntityMedia'
+import { getSupabaseServerClient } from '@/lib/supabaseServer'
 
 export type DungeonRecord = ReturnType<typeof getAllDungeons>[number]
 
@@ -23,6 +26,36 @@ function toUnified(d: DungeonRecord): UnifiedDungeon {
 
 export function getUnifiedDungeons(): UnifiedDungeon[] {
   return getAllDungeons().map(toUnified)
+}
+
+export async function enrichDungeonHeroFromManifest(
+  dungeon: UnifiedDungeon,
+  client: SupabaseClient,
+): Promise<UnifiedDungeon> {
+  try {
+    const heroUrl = await resolveEntityHeroUrl(client, 'dungeon', dungeon.slug, dungeon.logo)
+    if (!heroUrl || heroUrl === dungeon.logo) return dungeon
+    return { ...dungeon, logo: heroUrl } as UnifiedDungeon
+  } catch {
+    return dungeon
+  }
+}
+
+/** Static dungeons with ECKE manifest hero dual-read applied (SSR-safe). */
+export async function getUnifiedDungeonsAsync(): Promise<UnifiedDungeon[]> {
+  const dungeons = getUnifiedDungeons()
+  const client = getSupabaseServerClient()
+  if (!client) return dungeons
+  return Promise.all(dungeons.map((d) => enrichDungeonHeroFromManifest(d, client)))
+}
+
+export async function resolveDungeonBySlugAsync(slug: string): Promise<UnifiedDungeon | null> {
+  const dungeon = getDungeonBySlug(slug)
+  if (!dungeon) return null
+  const unified = toUnified(dungeon)
+  const client = getSupabaseServerClient()
+  if (!client) return unified
+  return enrichDungeonHeroFromManifest(unified, client)
 }
 
 export type DungeonHubFilter = {

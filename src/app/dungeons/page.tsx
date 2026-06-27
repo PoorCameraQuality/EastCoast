@@ -1,10 +1,10 @@
 import { Metadata } from 'next'
-import { getAllDungeons } from '@/data/dungeons'
-import { getAllEvents } from '@/data/events'
 import { getAllSwingClubs } from '@/data/swingClubs'
+import { getAllEvents } from '@/data/events'
 import PlacesPageClient from '@/components/places/PlacesPageClient'
 import { buildPlaceIndex } from '@/lib/publicPlaceIndex'
 import { getUnifiedEvents } from '@/lib/unifiedEvents'
+import { getUnifiedDungeonsAsync } from '@/lib/unifiedDungeons'
 import { fetchPublishedListingsIndex } from '@/lib/unifiedExtendedListings'
 import { BASE_URL } from '@/lib/seo'
 
@@ -49,7 +49,7 @@ function dedupeBySlug<T extends { slug: string; name: string }>(items: T[]): T[]
 }
 
 export default async function DungeonsPage() {
-  const allDungeons = dedupeBySlug(getAllDungeons())
+  const allDungeons = dedupeBySlug(await getUnifiedDungeonsAsync())
   const allSwingClubs = dedupeBySlug(getAllSwingClubs())
   const allEvents = getAllEvents()
   const unifiedEvents = await getUnifiedEvents()

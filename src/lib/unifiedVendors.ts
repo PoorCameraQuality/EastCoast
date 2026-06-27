@@ -1,10 +1,12 @@
+import type { SupabaseClient } from '@supabase/supabase-js'
 import { getAllVendors } from '@/data/vendors'
 import type { VendorRecord } from '@/lib/vendorFiltering'
 import type { ParsedVendorDiscovery } from '@/lib/parseVendorDiscoverySlug'
 import type { VendorSeoHubTagSlug } from '@/lib/vendorHubTagMap'
 import { taxonomySlugsFromSeoHubTags, vendorMatchesHubTag } from '@/lib/vendorHubTagMap'
 import { EAST_COAST_STATES, type StateSlug } from '@/lib/eastCoastStates'
-import { getSupabaseClient } from '@/lib/supabase'
+import { resolveEntityHeroUrl } from '@/lib/kinkSocialEntityMedia'
+import { getSupabaseServerClient } from '@/lib/supabaseServer'
 
 export type UnifiedVendor = VendorRecord & {
   stateAbbr: string | null
@@ -102,12 +104,25 @@ function dbRowToUnified(row: DbVendorRow, seoTagSlugs: string[]): UnifiedVendor 
   }
 }
 
+async function enrichVendorHeroFromManifest(
+  vendor: UnifiedVendor,
+  client: SupabaseClient,
+): Promise<UnifiedVendor> {
+  try {
+    const heroUrl = await resolveEntityHeroUrl(client, 'vendor', vendor.slug, vendor.logo125Url)
+    if (!heroUrl || heroUrl === vendor.logo125Url) return vendor
+    return { ...vendor, logo125Url: heroUrl }
+  } catch {
+    return vendor
+  }
+}
+
 /**
  * Vendors from Supabase (fails soft if DB unavailable).
  * Expects `vendors`, `vendor_seo_tag_links`, `vendor_seo_tags` tables.
  */
 export async function fetchPublishedSupabaseVendors(): Promise<UnifiedVendor[]> {
-  const client = getSupabaseClient()
+  const client = getSupabaseServerClient()
   if (!client) return []
   try {
     const { data: vrows, error: vErr } = await client.from('vendors').select('*')
@@ -178,7 +193,10 @@ export async function getUnifiedVendors(): Promise<UnifiedVendor[]> {
     }
   }
 
-  return Array.from(bySlug.values())
+  const merged = Array.from(bySlug.values())
+  const client = getSupabaseServerClient()
+  if (!client) return merged
+  return Promise.all(merged.map((v) => enrichVendorHeroFromManifest(v, client)))
 }
 
 /** Resolve a vendor for `/vendors/[slug]` including DB-only listings. */

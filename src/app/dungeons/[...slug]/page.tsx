@@ -1,6 +1,6 @@
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import { getDungeonBySlug, generateDungeonSEO } from '@/data/dungeons'
+import { generateDungeonSEO } from '@/data/dungeons'
 import {
   parseDungeonDiscoverySlug,
   parseDungeonDiscoverySlugSafe,
@@ -8,8 +8,9 @@ import {
 } from '@/lib/parseDungeonDiscoverySlug'
 import {
   filterDungeonsForHub,
-  getUnifiedDungeons,
+  getUnifiedDungeonsAsync,
   getUpcomingEventsForDungeonHub,
+  resolveDungeonBySlugAsync,
 } from '@/lib/unifiedDungeons'
 import { buildDungeonDiscoveryIntro } from '@/lib/seo/dungeonDiscoveryCopy'
 import { dungeonDiscoveryRobotsMeta } from '@/lib/dungeonDiscoveryRobots'
@@ -33,7 +34,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
 
   if (parsed.kind === 'dungeonDetail') {
-    const dungeon = getDungeonBySlug(parsed.slug)
+    const dungeon = await resolveDungeonBySlugAsync(parsed.slug)
     if (!dungeon) {
       return {
         title: 'Dungeon Not Found',
@@ -66,7 +67,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
 
   const year = new Date().getFullYear()
-  const all = getUnifiedDungeons()
+  const all = await getUnifiedDungeonsAsync()
   const filter = dungeonHubFilterFromParsed(parsed)
   const filtered = filterDungeonsForHub(all, filter)
   const robots = dungeonDiscoveryRobotsMeta(params.slug, filtered.length)
@@ -102,14 +103,14 @@ export async function generateStaticParams() {
   }))
 }
 
-export default function DungeonsCatchAllPage({ params }: PageProps) {
+export default async function DungeonsCatchAllPage({ params }: PageProps) {
   const parsed = parseDungeonDiscoverySlug(params.slug)
   if (!parsed) {
     notFound()
   }
 
   if (parsed.kind === 'dungeonDetail') {
-    const dungeon = getDungeonBySlug(parsed.slug)
+    const dungeon = await resolveDungeonBySlugAsync(parsed.slug)
     if (!dungeon) {
       notFound()
     }
@@ -117,7 +118,7 @@ export default function DungeonsCatchAllPage({ params }: PageProps) {
   }
 
   const year = new Date().getFullYear()
-  const all = getUnifiedDungeons()
+  const all = await getUnifiedDungeonsAsync()
   const filter = dungeonHubFilterFromParsed(parsed)
   const filtered = filterDungeonsForHub(all, filter)
   const events = getUpcomingEventsForDungeonHub({
