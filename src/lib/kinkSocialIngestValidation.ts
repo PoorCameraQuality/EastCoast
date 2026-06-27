@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { createHmac, timingSafeEqual } from 'node:crypto'
 
 export const KINK_SOCIAL_SOURCE_SYSTEM = 'kink.social' as const
 export const SUPPORTED_ENTITY_TYPES = ['education_article'] as const
@@ -164,7 +165,38 @@ export function getIngestSecret(): string | null {
   return secret || null
 }
 
-export function verifyIngestAuth(headers: IngestAuthHeaders): IngestErrorCode | null {
+export function getIngestHmacSecret(): string | null {
+  const secret = process.env.KINK_SOCIAL_INGEST_HMAC_SECRET?.trim()
+  return secret || null
+}
+
+const INGEST_HMAC_MAX_SKEW_SECONDS = 300
+
+function verifyIngestHmac(headers: IngestAuthHeaders, rawBody: string): IngestErrorCode | null {
+  const secret = getIngestHmacSecret()
+  if (!secret) return null
+
+  const timestamp = headers.get('x-kink-social-timestamp')?.trim()
+  const signature = headers.get('x-kink-social-signature')?.trim()
+  if (!timestamp || !signature) return 'bad_auth'
+
+  const ts = Number.parseInt(timestamp, 10)
+  if (!Number.isFinite(ts)) return 'bad_auth'
+  const now = Math.floor(Date.now() / 1000)
+  if (Math.abs(now - ts) > INGEST_HMAC_MAX_SKEW_SECONDS) return 'bad_auth'
+
+  const expected = createHmac('sha256', secret).update(`${timestamp}.${rawBody}`).digest('hex')
+  try {
+    const a = Buffer.from(signature, 'hex')
+    const b = Buffer.from(expected, 'hex')
+    if (a.length !== b.length || !timingSafeEqual(a, b)) return 'bad_auth'
+  } catch {
+    return 'bad_auth'
+  }
+  return null
+}
+
+export function verifyIngestAuth(headers: IngestAuthHeaders, rawBody?: string): IngestErrorCode | null {
   const secret = getIngestSecret()
   if (!secret) return 'missing_auth'
 
@@ -176,6 +208,12 @@ export function verifyIngestAuth(headers: IngestAuthHeaders): IngestErrorCode | 
 
   const token = match[1].trim()
   if (!token || token !== secret) return 'bad_auth'
+
+  if (getIngestHmacSecret()) {
+    if (!rawBody) return 'bad_auth'
+    const hmacError = verifyIngestHmac(headers, rawBody)
+    if (hmacError) return hmacError
+  }
 
   return null
 }
@@ -435,6 +473,29 @@ export function __kinkSocialIngestSelfTest(): void {
     }) === 'bad_auth',
     'bad auth',
   )
+
+  const prevHmac = process.env.KINK_SOCIAL_INGEST_HMAC_SECRET
+  process.env.KINK_SOCIAL_INGEST_HMAC_SECRET = 'hmac-secret'
+  const body = '{"ok":true}'
+  const ts = '1700000000'
+  const sig = createHmac('sha256', 'hmac-secret').update(`${ts}.${body}`).digest('hex')
+  assert(
+    verifyIngestAuth(
+      {
+        get: (k: string) => {
+          const key = k.toLowerCase()
+          if (key === 'authorization') return 'Bearer test-secret'
+          if (key === 'x-kink-social-timestamp') return ts
+          if (key === 'x-kink-social-signature') return sig
+          return null
+        },
+      },
+      body,
+    ) === null,
+    'valid bearer + hmac',
+  )
+  if (prevHmac === undefined) delete process.env.KINK_SOCIAL_INGEST_HMAC_SECRET
+  else process.env.KINK_SOCIAL_INGEST_HMAC_SECRET = prevHmac
 
   const validPayload = {
     title: 'Safety Basics',

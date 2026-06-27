@@ -354,7 +354,15 @@ export async function handleKinkSocialIngest(request: NextRequest): Promise<Next
   if (!getIngestSecret()) {
     return ingestJsonError('missing_auth', 'Ingest authentication is not configured', 503)
   }
-  const authError = verifyIngestAuth(request.headers)
+
+  let rawBody: string
+  try {
+    rawBody = await request.text()
+  } catch {
+    return ingestJsonError('invalid_envelope', 'Request body must be valid JSON', 400)
+  }
+
+  const authError = verifyIngestAuth(request.headers, rawBody)
   if (authError) {
     return ingestJsonError(
       authError,
@@ -365,7 +373,7 @@ export async function handleKinkSocialIngest(request: NextRequest): Promise<Next
 
   let body: unknown
   try {
-    body = await request.json()
+    body = JSON.parse(rawBody)
   } catch {
     return ingestJsonError('invalid_envelope', 'Request body must be valid JSON', 400)
   }
@@ -387,7 +395,15 @@ export async function handleKinkSocialUnpublish(request: NextRequest): Promise<N
   if (!getIngestSecret()) {
     return ingestJsonError('missing_auth', 'Ingest authentication is not configured', 503)
   }
-  const authError = verifyIngestAuth(request.headers)
+
+  let rawBody: string
+  try {
+    rawBody = await request.text()
+  } catch {
+    return ingestJsonError('invalid_envelope', 'Request body must be valid JSON', 400)
+  }
+
+  const authError = verifyIngestAuth(request.headers, rawBody)
   if (authError) {
     return ingestJsonError(
       authError,
@@ -398,7 +414,7 @@ export async function handleKinkSocialUnpublish(request: NextRequest): Promise<N
 
   let body: unknown
   try {
-    body = await request.json()
+    body = JSON.parse(rawBody)
   } catch {
     return ingestJsonError('invalid_envelope', 'Request body must be valid JSON', 400)
   }

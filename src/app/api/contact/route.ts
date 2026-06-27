@@ -1,29 +1,34 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { supabase } from '@/lib/supabase'
+import { z } from 'zod'
+import { rateLimiters, withRateLimit } from '@/lib/rateLimit'
+import { getSupabaseAdminClient } from '@/lib/supabaseAdmin'
+
+const contactBodySchema = z.object({
+  name: z.string().trim().min(1).max(200),
+  email: z.string().trim().email().max(320),
+  subject: z.string().trim().min(1).max(300),
+  message: z.string().trim().min(1).max(8000),
+})
 
 export async function POST(request: NextRequest) {
+  const limited = await withRateLimit(request, rateLimiters.forms)
+  if (limited) return limited
+
   try {
-    const body = await request.json()
-    const { name, email, subject, message } = body
-
-    // Validate required fields
-    if (!name || !email || !subject || !message) {
-      return NextResponse.json(
-        { error: 'All fields are required' },
-        { status: 400 }
-      )
+    let json: unknown
+    try {
+      json = await request.json()
+    } catch {
+      return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 })
     }
 
-    // Validate email format
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    if (!emailRegex.test(email)) {
-      return NextResponse.json(
-        { error: 'Invalid email format' },
-        { status: 400 }
-      )
+    const parsed = contactBodySchema.safeParse(json)
+    if (!parsed.success) {
+      return NextResponse.json({ error: 'All fields are required and must be valid' }, { status: 400 })
     }
 
-    // Prepare submission data
+    const { name, email, subject, message } = parsed.data
+
     const submissionData = {
       submission_type: 'contact',
       author_name: name,
@@ -39,43 +44,29 @@ export async function POST(request: NextRequest) {
       contact_type: subject,
       contact_method: 'Website Contact Form',
       contact_method_details: 'Submitted via website contact form',
-      word_count: message.split(' ').length,
+      word_count: message.split(/\s+/).filter(Boolean).length,
       status: 'pending',
-      submitted_at: new Date().toISOString()
+      submitted_at: new Date().toISOString(),
     }
 
-    // Get Supabase client
-    const client = supabase
+    const client = getSupabaseAdminClient()
     if (!client) {
-      return NextResponse.json(
-        { error: 'Database not configured' },
-        { status: 500 }
-      )
+      return NextResponse.json({ error: 'Database not configured' }, { status: 503 })
     }
 
-    // Insert into Supabase
-    const { data, error } = await client
-      .from('submissions')
-      .insert([submissionData])
-      .select()
+    const { error } = await client.from('submissions').insert([submissionData])
 
     if (error) {
-      console.error('Database error:', error)
-      return NextResponse.json(
-        { error: 'Failed to save message' },
-        { status: 500 }
-      )
+      console.error('[contact] Database error:', error)
+      return NextResponse.json({ error: 'Failed to save message' }, { status: 500 })
     }
 
     return NextResponse.json({
       success: true,
-      message: 'Message sent successfully'
+      message: 'Message sent successfully',
     })
   } catch (error) {
-    console.error('Contact route error:', error)
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    )
+    console.error('[contact] Route error:', error)
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }

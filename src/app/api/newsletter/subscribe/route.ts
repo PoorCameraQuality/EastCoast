@@ -1,11 +1,16 @@
+import type { NextRequest } from 'next/server'
 import { NextResponse } from 'next/server'
 import { z } from 'zod'
+import { rateLimiters, withRateLimit } from '@/lib/rateLimit'
 
 const bodySchema = z.object({
   email: z.string().trim().email().max(320),
 })
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
+  const limited = await withRateLimit(request, rateLimiters.forms)
+  if (limited) return limited
+
   const apiKey = process.env.BUTTONDOWN_API_KEY
   if (!apiKey) {
     console.error('[newsletter] BUTTONDOWN_API_KEY is not set')
