@@ -2023,42 +2023,48 @@ export const events = [
     }
   },
   {
-    "name": "KinkyCon Community Co-op 2026",
+    "name": "KinkyCon Summer Community Co-op 2026",
     "slug": "kinkycon-summer-coop",
     "date": {
       "start": "2026-07-18",
       "end": "2026-07-18",
-      "display": "Jul 18, 2026 (one-day vending)"
+      "display": "Jul 18, 2026 (Sat 10 AM–6 PM)"
     },
     "location": {
       "city": "Nashua",
       "state": "NH",
       "region": "New Hampshire"
     },
-    "venue": "2 Somerset Pkwy, Nashua, NH (per organizer ticketing page)",
+    "venue": "DoubleTree by Hilton Nashua, 2 Somerset Parkway, Nashua, NH 03063",
     "category": "Indoor Event",
-    "excerpt": "KinkyCon Community Co-op is a one-day vending and community event on the KinkyCon calendar (Jul 18, 2026, Nashua, NH). For full multi-day KinkyCon conferences, see KinkyCon Wicked Weekend on the organizer site.",
-    "longDescription": "This listing tracks the **KinkyCon Community Co-op** format: a **single-day** vending-focused gathering in **Nashua, NH**. The **2026** edition is **July 18, 2026** per **kc.gotomyevent.com**.\n\nIt is distinct from the larger multi-day **KinkyCon Wicked Weekend** events (see the **kinky-con-new-hampshire** listing for the Nov 2026 weekend).",
-    "website": "https://kc.gotomyevent.com/",
+    "excerpt": "KinkyCon's Summer Community Co-op returns Saturday, July 18, 2026 at the DoubleTree Nashua—an 18+ one-day festival with classes, demos, vendors, and $10 admission at the door. Vanillaish dress code; wheelchair accessible.",
+    "longDescription": "The **KinkyCon Summer Community Co-op** is back in **2026**. Mark your calendars for **Saturday, July 18, 2026**, **10:00 AM – 6:00 PM**, at the **DoubleTree by Hilton Nashua**, **2 Somerset Parkway, Nashua, NH 03063**.\n\n**About the Co-op** — KinkyCon's summer edition is a **single-day** gathering focused on **education and exploration** around **BDSM**, **polyamory**, **gender identity**, and **alternative sexuality**, open to adults **18+** across races, orientations, gender identities, and spiritual backgrounds. Expect **classes**, **hands-on demos**, a **vendor marketplace**, **silent auctions**, **raffles**, and **social programming** throughout the day.\n\n**Tickets** — **$10 general admission**, purchased **at the door**.\n\n**Dress code** — **Vanillaish.** The hotel is shared with vanilla guests and their families—use good judgement when deciding what to wear.\n\n**Accessibility** — **Wheelchair accessible** (per organizer listing).\n\n**Health policy** — There are currently no statewide restrictions for businesses or the general public related to COVID-19 in NH, and KinkyCon will not require proof of vaccination or mask wearing at this event. This is subject to change should the state change its position.\n\n**Related KinkyCon events** — This summer Co-op is distinct from the larger multi-day **KinkyCon Wicked Weekend** (see the **kinky-con-new-hampshire** listing for Nov 13–15, 2026). Organizer portal: **kc.gotomyevent.com**; public site: **kinkyconnh.com**.",
+    "website": "https://fetlife.com/events/2026/07/18/kinkycon-summer-community-co-op-2026-july-18th-nashua-nh-ull33e/",
+    "organizer": "KinkyCon",
+    "ageRequirement": "18+",
     "logo": "/images/kinkycon.png",
     "features": [
+      "Saturday Jul 18, 2026 — 10:00 AM to 6:00 PM",
+      "DoubleTree by Hilton Nashua",
+      "$10 General Admission at Door",
       "BDSM Education & Exploration",
       "Polyamory Discussions",
       "Gender Identity Support",
       "Alternative Sexuality Education",
       "Welcoming 18+ Environment",
-      "Diverse Classes & Demos",
+      "Classes & Demos Throughout the Day",
       "Vendor Marketplace",
       "Silent Auctions",
       "Raffles",
       "Social Activities",
-      "Inclusive Community",
-      "Unique Event Energy"
+      "Vanillaish Dress Code - Shared Hotel Space",
+      "Wheelchair Accessible",
+      "Inclusive Community"
     ],
     "seo": {
-      "title": "KinkyCon Community Co-op - Nashua NH | East Coast Kink Events",
-      "description": "KinkyCon Community Co-op 2026—one-day vending event Jul 18, 2026 in Nashua, NH. Confirm details on kc.gotomyevent.com.",
-      "keywords": "KinkyCon, New Hampshire, BDSM education, polyamory, gender identity, alternative sexuality, vendors, demos, classes"
+      "title": "KinkyCon Summer Community Co-op 2026 - Nashua NH | East Coast Kink Events",
+      "description": "KinkyCon Summer Community Co-op 2026 — Saturday Jul 18 at DoubleTree Nashua: classes, demos, vendors, $10 at door. 18+; vanillaish dress code; wheelchair accessible.",
+      "keywords": "KinkyCon, Summer Community Co-op, Nashua NH, New Hampshire, BDSM education, polyamory, gender identity, alternative sexuality, vendors, demos, classes, DoubleTree Nashua"
     }
   },
   {
