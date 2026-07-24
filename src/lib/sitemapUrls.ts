@@ -311,6 +311,7 @@ export async function buildFullSitemapUrls(): Promise<SitemapUrlEntry[]> {
   // Omit noindex routes (accessibility, contact, report, guidelines) — see page metadata robots.
   const legal: SitemapUrlEntry[] = [
     { loc: `${BASE_URL}/about`, lastmod: today, changefreq: 'monthly', priority: 0.5 },
+    { loc: `${BASE_URL}/kink-social`, lastmod: today, changefreq: 'monthly', priority: 0.7 },
     { loc: `${BASE_URL}/privacy`, changefreq: 'monthly', priority: 0.3 },
     { loc: `${BASE_URL}/terms`, changefreq: 'monthly', priority: 0.3 },
     { loc: `${BASE_URL}/support`, changefreq: 'monthly', priority: 0.5 },
