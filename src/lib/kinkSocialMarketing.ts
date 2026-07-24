@@ -10,7 +10,7 @@ export const KINK_SOCIAL_BASE_URL = (
 export const KINK_SOCIAL_UTM = {
   source: 'ecke',
   medium: 'seo_cta',
-  campaign: 'kink_social_alpha',
+  campaign: 'kink_social_launch',
 } as const
 
 export type KinkSocialCampaign =
