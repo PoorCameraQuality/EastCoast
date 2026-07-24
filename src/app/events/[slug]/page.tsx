@@ -7,6 +7,9 @@ import { BASE_URL } from '@/lib/seo'
 import { normalizeEventMedia } from '@/lib/eventMedia'
 import { deriveEventBrandTheme } from '@/lib/eventBrandTheme.server'
 
+/** C2K-synced logos/covers can land after first publish — keep pages fresh. */
+export const revalidate = 60
+
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
   const event = await resolveEventForPage(params.slug)
 
