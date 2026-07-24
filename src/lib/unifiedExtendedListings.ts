@@ -132,19 +132,30 @@ export async function fetchPublishedListingSlugsForSitemap(
 ): Promise<Array<{ slug: string; updated?: string }>> {
   const config = LISTING_PROJECTIONS[entityType]
   const client = getSupabaseServerClient()
-  if (!client) return []
+  if (!client) {
+    console.error(`[sitemap] ${entityType} listings: Supabase server client unavailable`)
+    return []
+  }
   try {
     const { data, error } = await client
       .from(config.table)
       .select('slug, last_synced_at, updated_at')
       .eq('status', 'published')
-    if (error || !data) return []
+    if (error) {
+      console.error(`[sitemap] ${entityType} listings query failed:`, error.message, error.code)
+      return []
+    }
+    if (!data?.length) {
+      console.warn(`[sitemap] ${entityType} listings returned 0 published rows`)
+      return []
+    }
     return data.map((row) => ({
       slug: (row as { slug: string }).slug,
       updated: (row as { last_synced_at?: string; updated_at?: string }).last_synced_at ??
         (row as { updated_at?: string }).updated_at,
     }))
-  } catch {
+  } catch (err) {
+    console.error(`[sitemap] ${entityType} listings unexpected error:`, err)
     return []
   }
 }
