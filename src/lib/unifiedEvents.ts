@@ -125,7 +125,8 @@ function dbRowToUnified(row: Record<string, unknown>): UnifiedEvent | null {
     source: 'supabase',
     c2kSourceId: (row.c2k_source_id as string | null) ?? null,
     c2kSourceType: (row.c2k_source_type as string | null) ?? null,
-    lastSyncedAt: String(row.last_synced_at || row.updated_at || '').slice(0, 10) || undefined,
+    // `events` has last_synced_at (C2K ingest); no updated_at column in live schema.
+    lastSyncedAt: String(row.last_synced_at || '').slice(0, 10) || undefined,
   }
 }
 
@@ -143,7 +144,7 @@ export async function fetchPublishedSupabaseEvents(): Promise<UnifiedEvent[]> {
     const { data, error } = await client
       .from('events')
       .select(
-        'title, slug, start_date, end_date, display_date, city, state, short_description, category, logo, tags, status, c2k_source_id, c2k_source_type, last_synced_at, updated_at'
+        'title, slug, start_date, end_date, display_date, city, state, short_description, category, logo, tags, status, c2k_source_id, c2k_source_type, last_synced_at'
       )
       .eq('status', 'published')
 

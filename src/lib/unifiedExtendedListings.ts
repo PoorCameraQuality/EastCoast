@@ -139,7 +139,7 @@ export async function fetchPublishedListingSlugsForSitemap(
   try {
     const { data, error } = await client
       .from(config.table)
-      .select('slug, last_synced_at, updated_at')
+      .select('slug, last_synced_at')
       .eq('status', 'published')
     if (error) {
       console.error(`[sitemap] ${entityType} listings query failed:`, error.message, error.code)
@@ -151,8 +151,7 @@ export async function fetchPublishedListingSlugsForSitemap(
     }
     return data.map((row) => ({
       slug: (row as { slug: string }).slug,
-      updated: (row as { last_synced_at?: string; updated_at?: string }).last_synced_at ??
-        (row as { updated_at?: string }).updated_at,
+      updated: (row as { last_synced_at?: string }).last_synced_at,
     }))
   } catch (err) {
     console.error(`[sitemap] ${entityType} listings unexpected error:`, err)
