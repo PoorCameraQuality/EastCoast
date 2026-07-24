@@ -17,6 +17,7 @@
     "build:og-rasters": "node scripts/rasterize-svg-og.mjs",
     "fetch:venue-assets": "node scripts/fetch-venue-assets.mjs",
     "verify:discovery-db": "node scripts/verify-discovery-db.mjs",
+    "verify:c2k-bridge": "node scripts/verify-c2k-bridge.mjs",
     "verify:kink-social-education-ingest": "node scripts/verify-kink-social-education-ingest.mjs",
     "verify:kink-social-listing-webhook": "node scripts/verify-kink-social-listing-webhook.mjs",
     "migrate:events-to-supabase": "node scripts/migrate-static-events-to-supabase.mjs",

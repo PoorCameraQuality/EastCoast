@@ -1,5 +1,6 @@
 import { getAllEvents, getEventBySlug } from '@/data/events'
 import { getSupabaseClient } from '@/lib/supabase'
+import { getSupabaseServerClient } from '@/lib/supabaseServer'
 import { resolveEntityHeroAndGallery, type EntityHeroGalleryItem } from '@/lib/kinkSocialEntityMedia'
 import { KNOWN_TAG_SLUGS } from '@/lib/discoveryTags'
 import { BASE_URL } from '@/lib/seo'
@@ -378,12 +379,13 @@ export async function resolveEventForPage(slug: string): Promise<EventPageRecord
 export async function fetchPublishedC2kEventSlugsForSitemap(): Promise<
   Array<{ slug: string; updated?: string }>
 > {
-  const client = getSupabaseClient()
+  // Sitemap runs on the server — browser client is always null in Node.
+  const client = getSupabaseServerClient() ?? getSupabaseClient()
   if (!client) return []
   try {
     const { data, error } = await client
       .from('events')
-      .select('slug, start_date, last_synced_at, updated_at, c2k_source_id, status')
+      .select('slug, start_date, last_synced_at, c2k_source_id, status')
       .eq('status', 'published')
       .not('c2k_source_id', 'is', null)
 
@@ -392,7 +394,7 @@ export async function fetchPublishedC2kEventSlugsForSitemap(): Promise<
       .filter((row) => row.slug)
       .map((row) => ({
         slug: String(row.slug),
-        updated: String(row.last_synced_at || row.updated_at || row.start_date || '').slice(0, 10),
+        updated: String(row.last_synced_at || row.start_date || '').slice(0, 10),
       }))
   } catch {
     return []
