@@ -4,7 +4,7 @@ import KinkSocialListingDetailView from '@/components/kink-social/KinkSocialList
 import { BASE_URL } from '@/lib/seo'
 import { fetchPublishedListingBySlug } from '@/lib/unifiedExtendedListings'
 
-export const revalidate = 1800
+export const revalidate = 60
 
 type PageProps = { params: { slug: string } }
 
