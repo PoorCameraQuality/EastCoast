@@ -381,7 +381,10 @@ export async function fetchPublishedC2kEventSlugsForSitemap(): Promise<
 > {
   // Sitemap runs on the server — browser client is always null in Node.
   const client = getSupabaseServerClient() ?? getSupabaseClient()
-  if (!client) return []
+  if (!client) {
+    console.error('[sitemap] C2K events: Supabase server client unavailable (check NEXT_PUBLIC_SUPABASE_URL/ANON_KEY)')
+    return []
+  }
   try {
     const { data, error } = await client
       .from('events')
@@ -389,14 +392,22 @@ export async function fetchPublishedC2kEventSlugsForSitemap(): Promise<
       .eq('status', 'published')
       .not('c2k_source_id', 'is', null)
 
-    if (error || !data?.length) return []
+    if (error) {
+      console.error('[sitemap] C2K events query failed:', error.message, error.code, error.details)
+      return []
+    }
+    if (!data?.length) {
+      console.warn('[sitemap] C2K events query returned 0 rows (published + c2k_source_id)')
+      return []
+    }
     return (data as Record<string, unknown>[])
       .filter((row) => row.slug)
       .map((row) => ({
         slug: String(row.slug),
         updated: String(row.last_synced_at || row.start_date || '').slice(0, 10),
       }))
-  } catch {
+  } catch (err) {
+    console.error('[sitemap] C2K events unexpected error:', err)
     return []
   }
 }

@@ -10,9 +10,10 @@ export const dynamic = 'force-dynamic'
 const BASE = 'https://www.eastcoastkinkevents.com'
 
 export async function GET() {
+  // Short CDN cache while verifying C2K slug inclusion (raise SWR again after launch SEO sign-off).
   const headers = {
     'Content-Type': 'application/xml; charset=utf-8',
-    'Cache-Control': 'public, max-age=600, s-maxage=600, stale-while-revalidate=86400',
+    'Cache-Control': 'public, max-age=60, s-maxage=60, stale-while-revalidate=300',
   }
 
   const today = new Date().toISOString().slice(0, 10)
