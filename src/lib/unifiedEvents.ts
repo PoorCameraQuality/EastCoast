@@ -133,8 +133,12 @@ function dbRowToUnified(row: Record<string, unknown>): UnifiedEvent | null {
  * Published events from Supabase (submissions pipeline). Fails soft if DB unavailable.
  */
 export async function fetchPublishedSupabaseEvents(): Promise<UnifiedEvent[]> {
-  const client = getSupabaseClient()
-  if (!client) return []
+  // Server Components / route handlers — browser client is always null in Node.
+  const client = getSupabaseServerClient() ?? getSupabaseClient()
+  if (!client) {
+    console.error('[unifiedEvents] list: Supabase server client unavailable')
+    return []
+  }
   try {
     const { data, error } = await client
       .from('events')
@@ -143,10 +147,15 @@ export async function fetchPublishedSupabaseEvents(): Promise<UnifiedEvent[]> {
       )
       .eq('status', 'published')
 
-    if (error || !data?.length) return []
+    if (error) {
+      console.error('[unifiedEvents] list query failed:', error.message, error.code)
+      return []
+    }
+    if (!data?.length) return []
     const rows = data as Record<string, unknown>[]
     return rows.map(dbRowToUnified).filter((e): e is UnifiedEvent => e !== null)
-  } catch {
+  } catch (err) {
+    console.error('[unifiedEvents] list unexpected error:', err)
     return []
   }
 }
@@ -305,8 +314,12 @@ function dbRowToEventPageRecord(row: Record<string, unknown>): EventPageRecord |
 export async function fetchPublishedSupabaseEventAsPageEvent(
   slug: string
 ): Promise<EventPageRecord | null> {
-  const client = getSupabaseClient()
-  if (!client) return null
+  // Server Components — browser client is always null in Node.
+  const client = getSupabaseServerClient() ?? getSupabaseClient()
+  if (!client) {
+    console.error('[unifiedEvents] detail: Supabase server client unavailable')
+    return null
+  }
   try {
     const { data, error } = await client
       .from('events')
@@ -342,7 +355,11 @@ export async function fetchPublishedSupabaseEventAsPageEvent(
       .eq('slug', slug)
       .maybeSingle()
 
-    if (error || !data) return null
+    if (error) {
+      console.error('[unifiedEvents] detail query failed:', slug, error.message, error.code)
+      return null
+    }
+    if (!data) return null
     const record = dbRowToEventPageRecord(data as unknown as Record<string, unknown>)
     if (!record) return null
     const { heroUrl, gallery } = await resolveEntityHeroAndGallery(client, 'event', slug, record.logo)
@@ -354,7 +371,8 @@ export async function fetchPublishedSupabaseEventAsPageEvent(
       ...(heroChanged ? { logo: heroUrl! } : {}),
       ...(hasGallery ? { gallery } : {}),
     }
-  } catch {
+  } catch (err) {
+    console.error('[unifiedEvents] detail unexpected error:', slug, err)
     return null
   }
 }
