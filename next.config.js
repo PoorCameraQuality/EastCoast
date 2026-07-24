@@ -12,6 +12,9 @@ const nextConfig = {
       { protocol: 'https', hostname: 'www.kinkdownsouth.com' },
       /** Supabase Storage (`NEXT_PUBLIC_SUPABASE_URL` host) — logos from DB */
       { protocol: 'https', hostname: '*.supabase.co', pathname: '/storage/v1/object/public/**' },
+      /** C2K public media CDN (MinIO via Caddy) — convention/event covers */
+      { protocol: 'https', hostname: 'kink.social', pathname: '/c2k-uploads/**' },
+      { protocol: 'https', hostname: 'www.kink.social', pathname: '/c2k-uploads/**' },
       /** Swing-club asset pipeline (see `asset-overrides.generated.js`) */
       { protocol: 'https', hostname: 'modernlifestyle-prod.nyc3.cdn.digitaloceanspaces.com' },
       { protocol: 'https', hostname: 'cdn.prod.website-files.com' },
