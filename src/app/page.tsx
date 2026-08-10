@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import { HomepageStructuredData } from '@/components/StructuredData'
 import StorefrontHero from '@/components/storefront/StorefrontHero'
 import FeaturedEventRunway from '@/components/storefront/FeaturedEventRunway'
@@ -6,8 +7,15 @@ import RegionalDiscovery from '@/components/storefront/RegionalDiscovery'
 import ExploreEcosystemSection from '@/components/storefront/ExploreEcosystemSection'
 import HomeNextStepsCta from '@/components/storefront/HomeNextStepsCta'
 import { getHomepageStorefrontData } from '@/lib/homepageStorefrontData'
+import { BASE_URL } from '@/lib/seo'
 
 export const revalidate = 600
+
+export const metadata: Metadata = {
+  alternates: {
+    canonical: BASE_URL,
+  },
+}
 
 export default async function Home() {
   const data = await getHomepageStorefrontData()

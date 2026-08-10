@@ -106,7 +106,8 @@ export function articleToPublicItem(article: EducationArticle): PublicEducationI
     title: article.title,
     subtitle: article.excerpt,
     summary: article.excerpt,
-    body: article.content,
+    // Index/list payloads must stay light — full HTML lives on article routes only.
+    body: undefined,
 
     contentType: inferContentType(article, lane),
     topic,

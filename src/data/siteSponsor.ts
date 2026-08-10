@@ -12,16 +12,7 @@ export type SiteSponsorPromo = {
 }
 
 /** Set to `null` to fall back to `SITE_SPONSOR_VENDOR_SLUG` in vendors.js */
-export const SITE_SPONSOR_PROMO: SiteSponsorPromo | null = {
-  name: 'kink.social',
-  eyebrow: 'Sponsor spotlight',
-  headline: 'Alpha test is live',
-  tagline: 'Build community, organize events, make friends.',
-  imageUrl: '/images/sponsors/kink-social-alpha-test.png',
-  imageAlt: 'kink.social alpha test — gold KS monogram on black',
-  href: 'https://kink.social',
-  ctaLabel: 'Join the alpha',
-}
+export const SITE_SPONSOR_PROMO: SiteSponsorPromo | null = null
 
 export function getSiteSponsorPromo(): SiteSponsorPromo | null {
   return SITE_SPONSOR_PROMO

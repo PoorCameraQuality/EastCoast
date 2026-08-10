@@ -25,9 +25,6 @@ export const metadata: Metadata = {
     description: 'Educational articles and resources about kink, BDSM, and the community.',
     images: [`${BASE_URL}/og-image.png`],
   },
-  alternates: {
-    canonical: `${BASE_URL}/education`,
-  },
 }
 
 export default function EducationLayout({

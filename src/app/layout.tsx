@@ -44,9 +44,6 @@ export const metadata: Metadata = {
   creator: 'East Coast Kink Events',
   publisher: 'East Coast Kink Events',
   metadataBase: new URL('https://www.eastcoastkinkevents.com'),
-  alternates: {
-    canonical: 'https://www.eastcoastkinkevents.com',
-  },
   icons: {
     icon: [
       { url: '/favicon.svg', type: 'image/svg+xml' },

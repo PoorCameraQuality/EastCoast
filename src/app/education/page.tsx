@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import EducationLibraryPageClient from '@/components/education/library/EducationLibraryPageClient'
 import { EducationStructuredData } from '@/components/StructuredData'
 import { getPublishedEducationArticles } from '@/lib/educationArticles'
+import { buildEducationIndex } from '@/lib/publicEducationIndex'
 import { BASE_URL } from '@/lib/seo'
 
 export const revalidate = 1800
@@ -40,8 +41,10 @@ export const metadata: Metadata = {
 }
 
 export default async function EducationPage() {
-  const initialArticles = await getPublishedEducationArticles()
-  const articlesForSchema = initialArticles.map((a) => ({
+  const published = await getPublishedEducationArticles()
+  // Map on the server so hero/meta can use content, then omit bodies for the client payload.
+  const initialItems = buildEducationIndex(published)
+  const articlesForSchema = published.map((a) => ({
     slug: a.slug,
     title: a.title,
     author_name: a.author_name,
@@ -50,7 +53,7 @@ export default async function EducationPage() {
   return (
     <>
       <EducationStructuredData articles={articlesForSchema} />
-      <EducationLibraryPageClient initialArticles={initialArticles} />
+      <EducationLibraryPageClient initialItems={initialItems} />
     </>
   )
 }

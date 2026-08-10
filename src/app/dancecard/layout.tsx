@@ -10,6 +10,10 @@ export const metadata: Metadata = {
   },
   description:
     'Dancecard helps attendees plan their weekend and gives organizers a stage-manager console for program, staff, registration, and safety workflows.',
+  robots: {
+    index: false,
+    follow: false,
+  },
   openGraph: {
     siteName: 'Dancecard',
     title: 'Dancecard — event planning & organizer ops',

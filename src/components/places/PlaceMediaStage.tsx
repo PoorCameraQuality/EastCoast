@@ -52,16 +52,6 @@ function PlaceLogoStage({
     <div className="place-logo-stage">
       <Image
         src={logoUrl}
-        alt=""
-        aria-hidden
-        width={640}
-        height={360}
-        className="place-logo-ghost"
-        sizes={isMasthead ? '640px' : '400px'}
-        onError={() => setError(true)}
-      />
-      <Image
-        src={logoUrl}
         alt={`${name} logo`}
         width={640}
         height={360}

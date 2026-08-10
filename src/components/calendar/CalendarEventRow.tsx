@@ -5,7 +5,7 @@ import KinkSocialCtaLink from '@/components/kink-social/KinkSocialCtaLink'
 import { exportSingleEvent } from '@/lib/calendarExport'
 import { calendarPillTone, isPastItem, parseLocalDate, typeBadgeLabel } from '@/lib/calendarVisual'
 import { sourceLabel } from '@/lib/publicEventIndex'
-import { buildKinkSocialUrl, getKinkSocialJoinUrl, getKinkSocialOrgUrl, KINK_SOCIAL_LABELS, KINK_SOCIAL_PATHS } from '@/lib/kinkSocialMarketing'
+import { getKinkSocialJoinUrl, getKinkSocialOrgUrl, KINK_SOCIAL_LABELS } from '@/lib/kinkSocialMarketing'
 import type { PublicEventIndexItem } from '@/types/publicEventIndexItem'
 
 type Props = {
@@ -17,10 +17,6 @@ export default function CalendarEventRow({ item }: Props) {
   const start = parseLocalDate(item.startsAt)
   const tone = calendarPillTone(item, past)
   const src = sourceLabel(item)
-  const saveHref = buildKinkSocialUrl(KINK_SOCIAL_PATHS.join, 'calendar', {
-    ref: 'ecke_save',
-    ecke_event: item.slug,
-  })
 
   return (
     <article className={`cal-event-row ${past ? 'cal-event-row-past' : ''}`}>
@@ -65,14 +61,6 @@ export default function CalendarEventRow({ item }: Props) {
           <EckeLink href={`/events/${item.slug}`} className="cal-btn cal-btn-view">
             View event
           </EckeLink>
-          <KinkSocialCtaLink
-            href={saveHref}
-            label="Save on kink.social"
-            variant="calendar"
-            surface="calendar_row"
-            className="cal-btn cal-btn-save"
-            external
-          />
           <details className="cal-event-row-more">
             <summary>Add to calendar</summary>
             <div className="cal-event-row-export">

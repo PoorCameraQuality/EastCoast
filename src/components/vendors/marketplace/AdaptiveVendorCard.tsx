@@ -6,7 +6,7 @@ import OutboundWebsiteLink from '@/components/analytics/OutboundWebsiteLink'
 import VendorMediaStage from '@/components/vendors/marketplace/VendorMediaStage'
 import { trackSelectItemEntity } from '@/lib/analyticsEntities'
 import { locationDisplay } from '@/lib/publicVendorIndex'
-import { buildKinkSocialUrl, getKinkSocialJoinUrl, getKinkSocialVendorOnboardingUrl, KINK_SOCIAL_PATHS } from '@/lib/kinkSocialMarketing'
+import { getKinkSocialJoinUrl, getKinkSocialVendorOnboardingUrl } from '@/lib/kinkSocialMarketing'
 import type { PublicVendorListing } from '@/types/publicVendorListing'
 
 type Props = {
@@ -30,11 +30,6 @@ export default function AdaptiveVendorCard({
       name: vendor.name,
       itemListName,
     })
-
-  const saveHref = buildKinkSocialUrl(KINK_SOCIAL_PATHS.join, 'vendor_page', {
-    ref: 'ecke_vendor',
-    ecke_vendor: vendor.slug,
-  })
 
   return (
     <article className={`vendor-index-card sf-card-lift ${isFeatured ? 'vendor-index-card-featured' : ''}`}>
@@ -79,14 +74,6 @@ export default function AdaptiveVendorCard({
           >
             View profile
           </EckeLink>
-          <KinkSocialCtaLink
-            href={vendor.followUrl ?? saveHref}
-            label="Follow on kink.social"
-            variant="vendor"
-            surface="vendor_card"
-            className="vendor-btn vendor-btn-save min-h-11"
-            external
-          />
         </div>
       </div>
     </article>

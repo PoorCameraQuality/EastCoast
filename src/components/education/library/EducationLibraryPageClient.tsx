@@ -16,7 +16,6 @@ import { EXTERNAL_EDUCATION_RESOURCES } from '@/data/externalEducationResources'
 import { LEARNING_PATHS, getLearningPathBySlug } from '@/lib/educationLearningPaths'
 import {
   articlesForLearningPath,
-  buildEducationIndex,
   buildEducatorPreviews,
   externalResourceToPublicItem,
   filterByTopic,
@@ -24,12 +23,12 @@ import {
   splitByLane,
   topicCounts,
 } from '@/lib/publicEducationIndex'
-import type { EducationArticle } from '@/lib/educationArticles'
 import type { EducationLevel, EducationTopic, PublicEducationItem } from '@/types/publicEducationItem'
 import { categoryToTopic } from '@/lib/educationVisual'
 
 type Props = {
-  initialArticles: EducationArticle[]
+  /** Prebuilt on the server without article HTML bodies. */
+  initialItems: PublicEducationItem[]
 }
 
 type LevelFilter = '' | 'beginner' | 'intermediate' | 'advanced'
@@ -64,7 +63,7 @@ function matchesLevel(item: PublicEducationItem, level: LevelFilter): boolean {
   return item.level === (level as EducationLevel)
 }
 
-function EducationLibraryInner({ initialArticles }: Props) {
+function EducationLibraryInner({ initialItems }: Props) {
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
@@ -75,10 +74,9 @@ function EducationLibraryInner({ initialArticles }: Props) {
   const [showAllLinks, setShowAllLinks] = useState(false)
 
   const allItems = useMemo(() => {
-    const articleItems = buildEducationIndex(initialArticles)
     const resourceItems = EXTERNAL_EDUCATION_RESOURCES.map(externalResourceToPublicItem)
-    return [...articleItems, ...resourceItems]
-  }, [initialArticles])
+    return [...initialItems, ...resourceItems]
+  }, [initialItems])
 
   const { library, resources, platformUpdates } = useMemo(() => splitByLane(allItems), [allItems])
 

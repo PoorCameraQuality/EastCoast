@@ -292,7 +292,7 @@ export default function EventsPageClient({
                     item={item}
                     variant="featured"
                     itemListName="events_featured_runway"
-                    priority={index < 2}
+                    priority={index === 0}
                   />
                 ))}
               </div>
@@ -319,7 +319,7 @@ export default function EventsPageClient({
                     item={item}
                     variant="upcoming"
                     itemListName="events_page_upcoming"
-                    priority={index < 3}
+                    priority={false}
                   />
                 ))}
               </div>
