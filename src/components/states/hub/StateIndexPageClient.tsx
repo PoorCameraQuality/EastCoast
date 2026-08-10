@@ -1,14 +1,12 @@
 'use client'
 
 import { useMemo, useState } from 'react'
+import { useRouter } from 'next/navigation'
 import EckeLink from '@/components/EckeLink'
 import Breadcrumb from '@/components/Breadcrumb'
 import ActiveLocalHubCard from '@/components/states/hub/ActiveLocalHubCard'
 import NationwideOnlineShelf from '@/components/states/hub/NationwideOnlineShelf'
-import RecentlyUpdatedFromKinkSocial from '@/components/states/hub/RecentlyUpdatedFromKinkSocial'
 import RegionGroupGrid from '@/components/states/hub/RegionGroupGrid'
-import StatePublishingCta from '@/components/states/hub/StatePublishingCta'
-import StateSponsorCard from '@/components/states/hub/StateSponsorCard'
 import type { StateHubContext } from '@/lib/publicStateIndex'
 
 type Props = Pick<
@@ -20,34 +18,50 @@ export default function StateIndexPageClient({
   summaries,
   nationwideEvents,
   nationwideVendors,
-  recentlyUpdated,
 }: Props) {
+  const router = useRouter()
   const [query, setQuery] = useState('')
 
   const filtered = useMemo(() => {
-    const q = query.trim().toLowerCase()
-    if (!q) return summaries
+    const normalizedQuery = query.trim().toLowerCase()
+    if (!normalizedQuery) return summaries
     return summaries.filter(
-      (s) =>
-        s.info.name.toLowerCase().includes(q) ||
-        s.info.abbr.toLowerCase().includes(q) ||
-        s.info.region.toLowerCase().includes(q)
+      (summary) =>
+        summary.info.name.toLowerCase().includes(normalizedQuery) ||
+        summary.info.abbr.toLowerCase().includes(normalizedQuery) ||
+        summary.info.region.toLowerCase().includes(normalizedQuery)
     )
   }, [summaries, query])
 
+  const topStates = useMemo(() => summaries.slice(0, 16), [summaries])
+
+  const searchResults = useMemo(() => {
+    const normalizedQuery = query.trim().toLowerCase()
+    if (!normalizedQuery) return []
+    return filtered.slice(0, 8)
+  }, [filtered, query])
+
   const activeHubs = useMemo(
-    () => filtered.filter((s) => s.stats.total > 0).slice(0, 6),
+    () => filtered.filter((summary) => summary.stats.total > 0).slice(0, 6),
     [filtered]
   )
 
-  const totalEvents = summaries.reduce((n, s) => n + s.stats.events + s.stats.conventions, 0)
-  const totalPlaces = summaries.reduce((n, s) => n + s.stats.places, 0)
-  const activeStates = summaries.filter((s) => s.stats.total > 0).length
+  const totalEvents = summaries.reduce(
+    (count, summary) => count + summary.stats.events + summary.stats.conventions,
+    0
+  )
+  const totalPlaces = summaries.reduce((count, summary) => count + summary.stats.places, 0)
+  const activeStates = summaries.filter((summary) => summary.stats.total > 0).length
 
   const breadcrumbItems = [
     { label: 'Home', href: '/' },
     { label: 'States', href: '/states', current: true },
   ]
+
+  const jumpToState = (slug: string) => {
+    setQuery('')
+    router.push(`/states/${slug}`)
+  }
 
   return (
     <div className="st-page">
@@ -75,30 +89,88 @@ export default function StateIndexPageClient({
               <strong>{summaries.length}</strong> regions
             </span>
           </div>
+
           <div className="st-search">
+            <label className="sr-only" htmlFor="states-list-search">
+              Find your state
+            </label>
             <input
+              id="states-list-search"
               type="search"
               value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search by state, abbreviation, or region…"
+              onChange={(event) => setQuery(event.target.value)}
+              placeholder="Find your state (e.g., 'Montana', 'MT')…"
               className="st-search-input"
-              aria-label="Search states"
+              aria-label="Find your state"
+              aria-controls="states-search-results"
+              autoComplete="off"
             />
+            {searchResults.length > 0 ? (
+              <ul id="states-search-results" className="st-search-results" role="listbox">
+                {searchResults.map((summary) => (
+                  <li key={summary.slug}>
+                    <button
+                      type="button"
+                      className="st-search-result"
+                      onClick={() => jumpToState(summary.slug)}
+                    >
+                      <span className="st-search-result-main">
+                        {summary.info.abbr} · {summary.info.name}
+                      </span>
+                      <span className="st-search-result-count">
+                        {summary.stats.total > 0
+                          ? `${summary.stats.total} listings`
+                          : 'Growing hub'}
+                      </span>
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            ) : null}
+            {query.trim() && searchResults.length === 0 ? (
+              <p className="st-search-empty">No states match “{query.trim()}”.</p>
+            ) : null}
           </div>
         </header>
 
-        <div className="st-layout">
+        <div className="st-layout st-layout-full">
           <div className="st-main">
             <section className="st-section" aria-labelledby="st-chips">
               <h2 id="st-chips" className="st-section-title mb-3">
                 Quick state picker
               </h2>
-              <div className="st-chip-rail" role="toolbar" aria-label="Top states">
-                {filtered.slice(0, 16).map((s) => (
-                  <EckeLink key={s.slug} href={`/states/${s.slug}`} className="st-chip">
-                    <span className="st-chip-abbr">{s.info.abbr}</span>
-                    <span className="hidden sm:inline">{s.info.name}</span>
-                    <span className="st-chip-count">{s.stats.total || '—'}</span>
+
+              <div className="md:hidden">
+                <label className="sr-only" htmlFor="states-quick-select">
+                  Jump to top state
+                </label>
+                <select
+                  id="states-quick-select"
+                  className="st-quick-select"
+                  defaultValue=""
+                  onChange={(event) => {
+                    if (event.target.value) jumpToState(event.target.value)
+                  }}
+                >
+                  <option value="">Jump to top state…</option>
+                  {topStates.map((summary) => (
+                    <option key={summary.slug} value={summary.slug}>
+                      {summary.info.name} ({summary.stats.total || 0})
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="st-chip-rail hidden md:flex" role="toolbar" aria-label="Top states">
+                {topStates.map((summary) => (
+                  <EckeLink
+                    key={summary.slug}
+                    href={`/states/${summary.slug}`}
+                    className="st-chip min-h-11"
+                  >
+                    <span className="st-chip-abbr">{summary.info.abbr}</span>
+                    <span className="hidden sm:inline">{summary.info.name}</span>
+                    <span className="st-chip-count">{summary.stats.total || '—'}</span>
                   </EckeLink>
                 ))}
               </div>
@@ -131,28 +203,7 @@ export default function StateIndexPageClient({
             </section>
 
             <NationwideOnlineShelf events={nationwideEvents} vendors={nationwideVendors} />
-            <RecentlyUpdatedFromKinkSocial items={recentlyUpdated} />
-
-            <div className="st-section">
-              <StatePublishingCta />
-            </div>
-
-            <div className="st-mobile-sponsor">
-              <StateSponsorCard />
-            </div>
           </div>
-
-          <aside className="st-rail" aria-label="States sidebar">
-            <div className="st-rail-card">
-              <h3 className="st-rail-title">Scene map</h3>
-              <p className="st-rail-body">
-                Each state hub aggregates events, places, vendors, and education — with kink.social
-                publishing feeding local discovery.
-              </p>
-            </div>
-            <StatePublishingCta compact />
-            <StateSponsorCard />
-          </aside>
         </div>
       </div>
     </div>

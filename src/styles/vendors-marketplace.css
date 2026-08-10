@@ -47,18 +47,71 @@
   margin-top: 1rem;
 }
 
+.vendor-filter-controls {
+  margin-top: 1.125rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.vendor-list-search-input,
+.vendor-filter-select {
+  width: 100%;
+  max-width: 28rem;
+  min-height: 2.75rem;
+  border-radius: 0.625rem;
+  border: 1px solid var(--sf-border, rgba(255, 255, 255, 0.12));
+  background: var(--sf-card, #12141c);
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+  color: var(--sf-text-strong, #f8fafc);
+}
+
+.vendor-list-search-input::placeholder {
+  color: var(--sf-text-muted, #94a3b8);
+}
+
+.vendor-filter-select {
+  max-width: none;
+}
+
 .vendor-category-rail {
   display: flex;
-  gap: 0.45rem;
-  overflow-x: auto;
-  padding-bottom: 0.25rem;
-  margin-bottom: 1rem;
+  flex-wrap: wrap;
+  gap: 0.25rem 0.35rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  margin-bottom: 0;
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
 
 .vendor-category-rail::-webkit-scrollbar {
   display: none;
+}
+
+.vendor-category-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  min-height: 2.75rem;
+  border: none;
+  border-bottom: 2px solid transparent;
+  background: transparent;
+  padding: 0.65rem 0.75rem;
+  font-size: 0.8125rem;
+  font-weight: 400;
+  color: var(--sf-text-muted);
+  cursor: pointer;
+}
+
+.vendor-category-tab:hover {
+  color: var(--sf-text-strong);
+}
+
+.vendor-category-tab-active {
+  border-bottom-color: var(--sf-violet, #8b5cf6);
+  color: var(--sf-text-strong);
+  font-weight: 500;
 }
 
 .vendor-category-chip {
@@ -86,13 +139,25 @@
   opacity: 0.75;
 }
 
+.vendor-section-note {
+  margin: -0.25rem 0 0.85rem;
+  max-width: 40rem;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--sf-text-muted);
+}
+
+.vendor-bottom-cta {
+  margin-top: 2rem;
+}
+
 .vendor-marketplace-toolbar {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   gap: 0.5rem;
-  margin-bottom: 1rem;
+  margin-bottom: 0;
 }
 
 .vendor-marketplace-count {

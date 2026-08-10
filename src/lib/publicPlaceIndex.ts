@@ -236,6 +236,7 @@ export function attachEventCounts(
     return {
       ...place,
       upcomingEventCount: matched.length,
+      eventsThisMonthCount: thisMonth.length,
       upcomingEvents: matched.slice(0, 6),
     }
   })
@@ -282,7 +283,7 @@ export function matchesPlaceIntent(item: PublicPlaceListing, intent: PlaceListIn
   if (intent === 'campgrounds') return item.placeType === 'campground'
   if (intent === 'new-friendly') return item.newFriendly === true
   if (intent === 'public-address') return item.venuePrivacyMode === 'public_address'
-  if (intent === 'events-this-month') return (item.upcomingEventCount ?? 0) > 0
+  if (intent === 'events-this-month') return (item.eventsThisMonthCount ?? 0) > 0
   if (intent === 'kink-social') return item.sourceSystem === 'kink_social'
   return true
 }
@@ -343,7 +344,8 @@ export function featuredPlaceScore(item: PublicPlaceListing): number {
   let score = 0
   if (item.coverImageUrl || item.gallery?.length) score += 30
   if (item.logoUrl) score += 15
-  if ((item.upcomingEventCount ?? 0) > 0) score += 25
+  if ((item.eventsThisMonthCount ?? 0) > 0) score += 35
+  else if ((item.upcomingEventCount ?? 0) > 0) score += 25
   if (item.sourceSystem === 'kink_social') score += 10
   if (item.placeType === 'dungeon' || item.placeType === 'swing_lifestyle_club') score += 10
   if (item.websiteUrl) score += 5

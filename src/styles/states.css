@@ -12,8 +12,12 @@
   gap: 1.5rem;
 }
 
+.st-layout-full {
+  grid-template-columns: minmax(0, 1fr);
+}
+
 @media (min-width: 1024px) {
-  .st-layout {
+  .st-layout:not(.st-layout-full) {
     grid-template-columns: minmax(0, 1fr) minmax(240px, 280px);
     align-items: start;
     gap: 2rem;
@@ -113,27 +117,94 @@
 
 /* Search */
 .st-search {
+  position: relative;
   margin-top: 1rem;
   max-width: 28rem;
 }
 
 .st-search-input {
   width: 100%;
+  min-height: 2.75rem;
   border-radius: 0.625rem;
   border: 1px solid rgba(255, 255, 255, 0.1);
   background: rgba(15, 23, 42, 0.55);
-  padding: 0.625rem 0.875rem;
+  padding: 0.75rem 1rem;
   font-size: 0.875rem;
   color: #f8fafc;
 }
 
 .st-search-input::placeholder { color: #64748b; }
 
+.st-search-results {
+  position: absolute;
+  z-index: 20;
+  top: calc(100% + 0.35rem);
+  left: 0;
+  right: 0;
+  margin: 0;
+  padding: 0.35rem;
+  list-style: none;
+  border-radius: 0.625rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(15, 23, 42, 0.98);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
+}
+
+.st-search-result {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  min-height: 2.75rem;
+  border: none;
+  border-radius: 0.5rem;
+  background: transparent;
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+  cursor: pointer;
+  color: #e2e8f0;
+}
+
+.st-search-result:hover {
+  background: rgba(139, 92, 246, 0.12);
+  color: #f8fafc;
+}
+
+.st-search-result-main {
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.st-search-result-count {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  white-space: nowrap;
+}
+
+.st-search-empty {
+  margin-top: 0.5rem;
+  font-size: 0.8125rem;
+  color: #94a3b8;
+}
+
+.st-quick-select {
+  width: 100%;
+  max-width: 20rem;
+  min-height: 2.75rem;
+  border-radius: 0.625rem;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(15, 23, 42, 0.7);
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+  color: #f8fafc;
+}
+
 /* Chips */
 .st-chip-rail {
   display: flex;
+  flex-wrap: wrap;
   gap: 0.45rem;
-  overflow-x: auto;
   padding-bottom: 0.25rem;
 }
 
@@ -145,7 +216,7 @@
   border-radius: 999px;
   border: 1px solid rgba(255, 255, 255, 0.1);
   background: rgba(255, 255, 255, 0.03);
-  padding: 0.4rem 0.75rem;
+  padding: 0.5rem 0.85rem;
   font-size: 0.8125rem;
   font-weight: 600;
   color: #cbd5e1;

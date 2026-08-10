@@ -1,5 +1,4 @@
 import EckeLink from '@/components/EckeLink'
-import KinkSocialCtaLink from '@/components/kink-social/KinkSocialCtaLink'
 import {
   formatCardMeta,
   topicBadgeClass,
@@ -34,18 +33,9 @@ export default function FeaturedGuideCard({ item, compact = false }: Props) {
       ) : null}
       {item.authorName ? <p className="edu-card-author">{item.authorName}</p> : null}
       <div className="edu-card-actions">
-        <EckeLink href={href} className="edu-btn-read">
+        <EckeLink href={href} className="edu-btn-read min-h-11">
           Read guide
         </EckeLink>
-        {item.saveUrl ? (
-          <KinkSocialCtaLink
-            href={item.saveUrl}
-            label="Save on kink.social"
-            variant="education"
-            surface="education_save"
-            className="edu-btn-save"
-          />
-        ) : null}
       </div>
     </article>
   )

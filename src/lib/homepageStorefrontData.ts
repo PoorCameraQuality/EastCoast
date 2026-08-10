@@ -156,7 +156,8 @@ export async function getHomepageStorefrontData(): Promise<HomepageStorefrontDat
   const upcomingUnified = getUpcomingUnified(unified)
   const upcomingSlice = upcomingUnified.slice(0, 8)
   const upcomingEvents = await Promise.all(upcomingSlice.map(toStorefrontEvent))
-  const topStates = getTopStatesByActivity(12)
+  // Enough rows that pinned homepage states (PA, CA, TX, …) resolve even if not top-12 by activity.
+  const topStates = getTopStatesByActivity(40)
   const featuredState = topStates.find((s) => s.slug === 'pennsylvania') ?? topStates[0] ?? null
 
   const supporters = vendors.filter((v) => v.isPaid)

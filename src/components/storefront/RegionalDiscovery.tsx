@@ -1,13 +1,35 @@
 import EckeLink from '@/components/EckeLink'
 import type { TopStateEntry } from '@/lib/topStatesByActivity'
 
+/** Pinned homepage states (handoff top performers). */
+const PINNED_STATE_SLUGS = [
+  'pennsylvania',
+  'california',
+  'texas',
+  'florida',
+  'maryland',
+  'illinois',
+  'washington-dc',
+  'new-york',
+] as const
+
 type Props = {
-  featuredState: TopStateEntry | null
   states: TopStateEntry[]
 }
 
-export default function RegionalDiscovery({ featuredState, states }: Props) {
-  const gridStates = states.filter((s) => s.slug !== featuredState?.slug).slice(0, 8)
+function pickPinnedStates(states: TopStateEntry[]): TopStateEntry[] {
+  const bySlug = new Map(states.map((state) => [state.slug, state]))
+  const pinned = PINNED_STATE_SLUGS.map((slug) => bySlug.get(slug)).filter(
+    (state): state is TopStateEntry => Boolean(state),
+  )
+  if (pinned.length >= 6) return pinned.slice(0, 8)
+  const pinnedSet = new Set<string>(PINNED_STATE_SLUGS)
+  const extras = states.filter((state) => !pinnedSet.has(state.slug))
+  return [...pinned, ...extras].slice(0, 8)
+}
+
+export default function RegionalDiscovery({ states }: Props) {
+  const visibleStates = pickPinnedStates(states)
 
   return (
     <section className="sf-section-tight" aria-labelledby="regional-discovery-title">
@@ -15,41 +37,35 @@ export default function RegionalDiscovery({ featuredState, states }: Props) {
         <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <h2 id="regional-discovery-title" className="sf-title">
-              Explore by region
+              Find events near you
             </h2>
-            <p className="sf-subhead">Start where you are, or where you will travel.</p>
           </div>
-          <EckeLink href="/states" className="sf-btn-ghost shrink-0 text-sm">
-            All states
+          <EckeLink
+            href="/states"
+            className="inline-flex min-h-11 items-center text-sm font-medium text-sf-blue hover:text-sf-strong"
+          >
+            View all states →
           </EckeLink>
         </div>
 
-        <div className="mt-5 flex flex-wrap gap-2">
-          {featuredState ? (
-            <EckeLink
-              href={`/states/${featuredState.slug}`}
-              className="sf-card-lift inline-flex items-center gap-3 rounded-lg border border-sf-violet/30 bg-sf-violet/10 px-4 py-3"
-            >
-              <span className="text-lg font-bold tabular-nums text-sf-violet">{featuredState.abbr}</span>
-              <span>
-                <span className="block text-sm font-semibold text-sf-strong">{featuredState.name}</span>
-                <span className="text-xs text-sf-muted">
-                  {featuredState.eventCount} events · {featuredState.dungeonCount} spaces
+        <ul className="mt-4 grid grid-cols-1 gap-1 sm:grid-cols-2 lg:grid-cols-3">
+          {visibleStates.map((state) => (
+            <li key={state.slug}>
+              <EckeLink
+                href={`/states/${state.slug}`}
+                className="flex min-h-11 items-center justify-between gap-3 rounded-md px-1 py-2.5 text-sm text-sf-body transition-colors hover:bg-white/5 hover:text-sf-strong"
+              >
+                <span>
+                  <span className="font-semibold text-sf-strong">{state.name}</span>
+                  <span className="ml-2 text-sf-muted">{state.abbr}</span>
                 </span>
-              </span>
-            </EckeLink>
-          ) : null}
-          {gridStates.map((state) => (
-            <EckeLink
-              key={state.slug}
-              href={`/states/${state.slug}`}
-              className="sf-card-lift rounded-lg border border-white/10 bg-sf-card px-3 py-2.5 transition-colors hover:border-sf-violet/25"
-            >
-              <span className="text-sm font-bold tabular-nums text-sf-blue">{state.abbr}</span>
-              <span className="ml-2 text-sm text-sf-body">{state.name}</span>
-            </EckeLink>
+                <span className="tabular-nums text-xs text-sf-muted">
+                  {state.eventCount} events
+                </span>
+              </EckeLink>
+            </li>
           ))}
-        </div>
+        </ul>
       </div>
     </section>
   )

@@ -12,9 +12,11 @@ export default function EducatorPreviewSection({ educators }: Props) {
     <section className="edu-section" aria-labelledby="edu-educators">
       <div className="edu-section-head">
         <h2 id="edu-educators" className="edu-section-title">
-          Educators and presenters
+          Learn from community educators
         </h2>
-        <p className="edu-section-note">Public educator profiles from published articles</p>
+        <p className="edu-section-note">
+          Teachers and presenters offering classes, workshops, and resources
+        </p>
       </div>
 
       {educators.length > 0 ? (

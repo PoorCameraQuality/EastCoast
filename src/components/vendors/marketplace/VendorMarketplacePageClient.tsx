@@ -4,7 +4,6 @@ import { useEffect, useMemo, useState } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
 import type { VendorTag, VendorTagGroup } from '@/data/vendorTaxonomy'
 import Breadcrumb from '@/components/Breadcrumb'
-import VendorFilters from '@/components/vendors/VendorFilters'
 import AdaptiveVendorCard, { VendorPlatformCta } from '@/components/vendors/marketplace/AdaptiveVendorCard'
 import {
   attachVendorEvents,
@@ -21,12 +20,15 @@ import { VENDOR_CATEGORY_CHIPS } from '@/types/publicVendorListing'
 import type { PublicVendorListing } from '@/types/publicVendorListing'
 import type { UnifiedEvent } from '@/lib/unifiedEvents'
 
-function splitPinnedHeadAndTail(list: PublicVendorListing[]): { head: PublicVendorListing[]; tail: PublicVendorListing[] } {
+function splitPinnedHeadAndTail(list: PublicVendorListing[]): {
+  head: PublicVendorListing[]
+  tail: PublicVendorListing[]
+} {
   const head: PublicVendorListing[] = []
   const used = new Set<string>()
 
   if (SITE_SPONSOR_VENDOR_SLUG) {
-    const sponsor = list.find((v) => v.slug === SITE_SPONSOR_VENDOR_SLUG)
+    const sponsor = list.find((vendor) => vendor.slug === SITE_SPONSOR_VENDOR_SLUG)
     if (sponsor) {
       head.push(sponsor)
       used.add(sponsor.slug)
@@ -34,14 +36,23 @@ function splitPinnedHeadAndTail(list: PublicVendorListing[]): { head: PublicVend
   }
 
   const paid = list
-    .filter((v) => v.supporterTier === 'supporter' && !used.has(v.slug))
+    .filter((vendor) => vendor.supporterTier === 'supporter' && !used.has(vendor.slug))
     .sort((a, b) => a.slug.localeCompare(b.slug))
-  for (const v of paid) {
-    head.push(v)
-    used.add(v.slug)
+  for (const vendor of paid) {
+    head.push(vendor)
+    used.add(vendor.slug)
   }
 
-  return { head, tail: list.filter((v) => !used.has(v.slug)) }
+  return { head, tail: list.filter((vendor) => !used.has(vendor.slug)) }
+}
+
+function matchesVendorSearch(vendor: PublicVendorListing, query: string): boolean {
+  if (!query) return true
+  if (vendor.name.toLowerCase().includes(query)) return true
+  if (vendor.craftTags?.some((tag) => tag.toLowerCase().includes(query))) return true
+  if (vendor.tagSlugs.some((slug) => slug.toLowerCase().includes(query))) return true
+  if (vendor.productCategories?.some((category) => category.toLowerCase().includes(query))) return true
+  return false
 }
 
 type Props = {
@@ -57,8 +68,6 @@ type Props = {
 export default function VendorMarketplacePageClient({
   vendors,
   unifiedEvents,
-  tagGroups,
-  tags,
   tagsBySlug,
   tagGroupsById,
   selectedTagSlugs,
@@ -66,7 +75,7 @@ export default function VendorMarketplacePageClient({
   const router = useRouter()
   const pathname = usePathname()
   const [categoryFilter, setCategoryFilter] = useState<string | null>(null)
-  const [filtersOpen, setFiltersOpen] = useState(false)
+  const [searchQuery, setSearchQuery] = useState('')
 
   const indexItems = useMemo(
     () => attachVendorEvents(buildVendorIndex(vendors, tagsBySlug), unifiedEvents),
@@ -74,6 +83,11 @@ export default function VendorMarketplacePageClient({
   )
 
   const categoryCounts = useMemo(() => categoryChipCounts(indexItems), [indexItems])
+
+  const visibleCategoryChips = useMemo(
+    () => VENDOR_CATEGORY_CHIPS.filter((chip) => (categoryCounts[chip.id] ?? 0) > 0),
+    [categoryCounts]
+  )
 
   const tagFiltered = useMemo(() => {
     return filterVendorsBySelectedTags({
@@ -85,19 +99,24 @@ export default function VendorMarketplacePageClient({
     })
   }, [vendors, selectedTagSlugs, tagsBySlug, tagGroupsById])
 
-  const tagFilteredSlugs = useMemo(() => new Set(tagFiltered.map((v) => v.slug)), [tagFiltered])
+  const tagFilteredSlugs = useMemo(() => new Set(tagFiltered.map((vendor) => vendor.slug)), [tagFiltered])
+
+  const normalizedQuery = searchQuery.trim().toLowerCase()
 
   const filtered = useMemo(() => {
-    let items = indexItems.filter((v) => tagFilteredSlugs.has(v.slug))
+    let items = indexItems.filter((vendor) => tagFilteredSlugs.has(vendor.slug))
     items = filterByCategoryChip(items, categoryFilter)
+    if (normalizedQuery) {
+      items = items.filter((vendor) => matchesVendorSearch(vendor, normalizedQuery))
+    }
     return items
-  }, [indexItems, tagFilteredSlugs, categoryFilter])
+  }, [indexItems, tagFilteredSlugs, categoryFilter, normalizedQuery])
 
   const filteredStableKey = useMemo(() => {
-    const t = [...selectedTagSlugs].sort().join('\0')
-    const slugs = filtered.map((v) => v.slug).sort().join('\0')
-    return `${categoryFilter ?? ''}::${t}::${slugs}`
-  }, [selectedTagSlugs, filtered, categoryFilter])
+    const tagsKey = [...selectedTagSlugs].sort().join('\0')
+    const slugs = filtered.map((vendor) => vendor.slug).sort().join('\0')
+    return `${categoryFilter ?? ''}::${tagsKey}::${normalizedQuery}::${slugs}`
+  }, [selectedTagSlugs, filtered, categoryFilter, normalizedQuery])
 
   const sortedForHydration = useMemo(() => {
     const { head, tail } = splitPinnedHeadAndTail([...filtered])
@@ -115,43 +134,36 @@ export default function VendorMarketplacePageClient({
   const displayVendors = displayList ?? sortedForHydration
 
   const featured = useMemo(() => {
-    if (selectedTagSlugs.length > 0 || categoryFilter) return []
+    if (selectedTagSlugs.length > 0 || categoryFilter || normalizedQuery) return []
     return pickFeaturedVendors(indexItems, 4)
-  }, [indexItems, selectedTagSlugs, categoryFilter])
+  }, [indexItems, selectedTagSlugs, categoryFilter, normalizedQuery])
 
-  const featuredSlugs = useMemo(() => new Set(featured.map((f) => f.slug)), [featured])
+  const featuredSlugs = useMemo(() => new Set(featured.map((vendor) => vendor.slug)), [featured])
 
   const listing = useMemo(
-    () => displayVendors.filter((v) => !featuredSlugs.has(v.slug)),
+    () => displayVendors.filter((vendor) => !featuredSlugs.has(vendor.slug)),
     [displayVendors, featuredSlugs]
   )
 
-  const availableTagSlugs = useMemo(() => {
-    const set = new Set<string>()
-    for (const v of vendors) {
-      for (const slug of v.tagSlugs || []) set.add(slug)
-    }
-    return Array.from(set).sort()
-  }, [vendors])
-
-  const setParams = (nextSelected: string[]) => {
-    const next = new URLSearchParams()
-    for (const t of nextSelected) next.append('tag', t)
-    const qs = next.toString()
-    router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false })
-  }
-
-  const toggleTag = (tagSlug: string) => {
-    const has = selectedTagSlugs.includes(tagSlug)
-    const next = has ? selectedTagSlugs.filter((t) => t !== tagSlug) : [...selectedTagSlugs, tagSlug]
-    setParams(next)
-  }
-
-  const removeTag = (tagSlug: string) => setParams(selectedTagSlugs.filter((t) => t !== tagSlug))
   const clearAll = () => {
-    setParams([])
     setCategoryFilter(null)
+    setSearchQuery('')
+    if (selectedTagSlugs.length > 0) {
+      router.replace(pathname, { scroll: false })
+    }
   }
+
+  const categoryLabel =
+    VENDOR_CATEGORY_CHIPS.find((chip) => chip.id === categoryFilter)?.label ?? 'All vendors'
+
+  const resultCountLabel = (() => {
+    const count = filtered.length
+    const noun = count === 1 ? 'vendor' : 'vendors'
+    let label = `Showing ${count} ${noun}`
+    if (normalizedQuery) label += ` for “${searchQuery.trim()}”`
+    if (categoryFilter) label += ` in ${categoryLabel}`
+    return label
+  })()
 
   const breadcrumbItems = [
     { label: 'Home', href: '/' },
@@ -167,83 +179,102 @@ export default function VendorMarketplacePageClient({
           <p className="vendor-marketplace-kicker">Maker marketplace</p>
           <h1 className="vendor-marketplace-title">Vendors &amp; makers</h1>
           <p className="vendor-marketplace-subhead">
-            Gear, leather, rope, art, books, jewelry, clothing, furniture, services, and custom work from the kink
-            event ecosystem.
+            Browse {indexItems.length} kink gear makers — leather, rope, impact gear, jewelry, art, and custom
+            commissions.
           </p>
-          <div className="vendor-marketplace-actions">
-            <a href="#all-vendors" className="vendor-btn vendor-btn-view">
-              Browse vendors
-            </a>
-            <button
-              type="button"
-              className="vendor-btn vendor-btn-neutral"
-              onClick={() => setFiltersOpen(true)}
-            >
-              Shop by category
-            </button>
+
+          <div className="vendor-filter-controls">
+            <label className="sr-only" htmlFor="vendors-list-search">
+              Search vendors by name or product
+            </label>
+            <input
+              id="vendors-list-search"
+              type="search"
+              value={searchQuery}
+              onChange={(event) => setSearchQuery(event.target.value)}
+              placeholder="Search vendors by name or product…"
+              className="vendor-list-search-input"
+              aria-label="Search vendors by name or product"
+            />
+
+            <div className="vendor-category-rail hidden md:flex" role="toolbar" aria-label="Product categories">
+              <button
+                type="button"
+                className={
+                  !categoryFilter
+                    ? 'vendor-category-tab vendor-category-tab-active'
+                    : 'vendor-category-tab'
+                }
+                aria-current={!categoryFilter ? 'true' : undefined}
+                onClick={() => setCategoryFilter(null)}
+              >
+                All
+                <span className="vendor-category-count">{indexItems.length}</span>
+              </button>
+              {visibleCategoryChips.map((chip) => {
+                const isActive = categoryFilter === chip.id
+                return (
+                  <button
+                    key={chip.id}
+                    type="button"
+                    className={
+                      isActive ? 'vendor-category-tab vendor-category-tab-active' : 'vendor-category-tab'
+                    }
+                    aria-current={isActive ? 'true' : undefined}
+                    onClick={() => setCategoryFilter(isActive ? null : chip.id)}
+                  >
+                    {chip.label}
+                    <span className="vendor-category-count">{categoryCounts[chip.id]}</span>
+                  </button>
+                )
+              })}
+            </div>
+
+            <div className="md:hidden">
+              <label className="sr-only" htmlFor="vendors-category-select">
+                Filter by category
+              </label>
+              <select
+                id="vendors-category-select"
+                className="vendor-filter-select"
+                value={categoryFilter ?? ''}
+                onChange={(event) => setCategoryFilter(event.target.value || null)}
+              >
+                <option value="">All vendors ({indexItems.length})</option>
+                {visibleCategoryChips.map((chip) => (
+                  <option key={chip.id} value={chip.id}>
+                    {chip.label} ({categoryCounts[chip.id]})
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="vendor-marketplace-toolbar">
+              <p className="vendor-marketplace-count" aria-live="polite">
+                {resultCountLabel}
+              </p>
+              {selectedTagSlugs.length > 0 || categoryFilter || normalizedQuery ? (
+                <button type="button" className="vendor-toolbar-link min-h-11" onClick={clearAll}>
+                  Clear filters
+                </button>
+              ) : null}
+            </div>
           </div>
         </header>
-
-        <div className="vendor-category-rail" role="toolbar" aria-label="Product categories">
-          <button
-            type="button"
-            className={!categoryFilter ? 'vendor-category-chip vendor-category-chip-active' : 'vendor-category-chip'}
-            onClick={() => setCategoryFilter(null)}
-          >
-            All
-          </button>
-          {VENDOR_CATEGORY_CHIPS.filter((c) => (categoryCounts[c.id] ?? 0) > 0).map((chip) => (
-            <button
-              key={chip.id}
-              type="button"
-              className={
-                categoryFilter === chip.id ? 'vendor-category-chip vendor-category-chip-active' : 'vendor-category-chip'
-              }
-              onClick={() => setCategoryFilter(categoryFilter === chip.id ? null : chip.id)}
-            >
-              {chip.label}
-              <span className="vendor-category-count">{categoryCounts[chip.id]}</span>
-            </button>
-          ))}
-        </div>
-
-        <div className="vendor-marketplace-toolbar">
-          <p className="vendor-marketplace-count">
-            <strong>{displayVendors.length}</strong> makers
-          </p>
-          <div className="vendor-marketplace-toolbar-actions">
-            {selectedTagSlugs.length > 0 || categoryFilter ? (
-              <button type="button" className="vendor-toolbar-link" onClick={clearAll}>
-                Clear filters
-              </button>
-            ) : null}
-            <button type="button" className="vendor-toolbar-link" onClick={() => setFiltersOpen((o) => !o)}>
-              {filtersOpen ? 'Hide filters' : 'More filters'}
-            </button>
-          </div>
-        </div>
-
-        {filtersOpen ? (
-          <div className="vendor-filter-drawer">
-            <VendorFilters
-              tagGroups={tagGroups}
-              tags={tags}
-              selectedTagSlugs={selectedTagSlugs}
-              availableTagSlugs={availableTagSlugs}
-              onToggleTag={toggleTag}
-              onRemoveTag={removeTag}
-              onClearAll={clearAll}
-            />
-          </div>
-        ) : null}
 
         <div className="vendor-marketplace-layout">
           <div className="vendor-marketplace-main">
             {featured.length > 0 ? (
-              <section className="vendor-section" aria-label="Featured makers">
-                <h2 className="vendor-section-heading">Featured makers</h2>
+              <section className="vendor-section" aria-labelledby="featured-makers-title">
+                <h2 id="featured-makers-title" className="vendor-section-heading">
+                  Featured makers
+                </h2>
                 <p className="vendor-section-sub">
-                  Independent shops, artists, and craftspeople from the community.
+                  Community-verified vendors &amp; shop recommendations
+                </p>
+                <p className="vendor-section-note">
+                  Featured status recognizes vendors with strong community engagement, consistent quality, and
+                  active event presence.
                 </p>
                 <div className="vendor-grid vendor-grid-featured">
                   {featured.map((vendor) => (
@@ -258,7 +289,7 @@ export default function VendorMarketplacePageClient({
               {listing.length === 0 ? (
                 <div className="vendor-empty">
                   <p>No vendors match this view.</p>
-                  <button type="button" className="vendor-btn vendor-btn-view" onClick={clearAll}>
+                  <button type="button" className="vendor-btn vendor-btn-view min-h-11" onClick={clearAll}>
                     Show all vendors
                   </button>
                 </div>
@@ -271,19 +302,18 @@ export default function VendorMarketplacePageClient({
               )}
             </section>
 
-            <div className="vendor-mobile-cta lg:hidden">
+            <div className="vendor-bottom-cta">
               <VendorPlatformCta compact />
             </div>
           </div>
 
           <aside className="vendor-marketplace-rail" aria-label="Vendor sidebar">
             <div className="vendor-rail-card">
-              <h3 className="vendor-rail-title">{indexItems.length} makers</h3>
+              <h3 className="vendor-rail-title">{filtered.length} makers</h3>
               <p className="vendor-rail-body">
                 Curated indie kink market — ECKE sends shoppers to vendor shops. Checkout stays off-platform.
               </p>
             </div>
-            <VendorPlatformCta compact />
           </aside>
         </div>
       </div>

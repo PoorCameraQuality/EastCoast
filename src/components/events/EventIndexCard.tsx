@@ -1,12 +1,10 @@
 'use client'
 
 import EckeLink from '@/components/EckeLink'
-import KinkSocialCtaLink from '@/components/kink-social/KinkSocialCtaLink'
 import AdaptiveEventMedia from '@/components/storefront/AdaptiveEventMedia'
 import { trackSelectItemEntity } from '@/lib/analyticsEntities'
-import { buildKinkSocialUrl, KINK_SOCIAL_PATHS } from '@/lib/kinkSocialMarketing'
 import { eventBrandStyle } from '@/lib/eventBrandTheme'
-import { sourceLabel, type EventIndexCardModel } from '@/lib/publicEventIndex'
+import { type EventIndexCardModel } from '@/lib/publicEventIndex'
 
 type Props = {
   item: EventIndexCardModel
@@ -33,12 +31,13 @@ export default function EventIndexCard({
 }: Props) {
   const isPast = variant === 'past'
   const isFeatured = variant === 'featured'
+  const isCompact = !isFeatured
   const href = `/events/${item.slug}`
-  const srcLabel = sourceLabel(item)
-  const saveHref = buildKinkSocialUrl(KINK_SOCIAL_PATHS.join, 'events_index', {
-    ref: 'ecke_save',
-    ecke_event: item.slug,
-  })
+  const viewLabel = isPast
+    ? 'View archive'
+    : item.listingKind === 'convention'
+      ? 'View convention'
+      : 'View event'
 
   const trackClick = () =>
     trackSelectItemEntity({
@@ -50,9 +49,9 @@ export default function EventIndexCard({
 
   return (
     <article
-      className={`event-index-card sf-card-lift ${isFeatured ? 'event-index-card-featured' : ''} ${
-        isPast ? 'event-index-card-past' : ''
-      }`}
+      className={`event-index-card sf-card-lift ${
+        isFeatured ? 'event-index-card-featured' : 'event-index-card-compact'
+      } ${isPast ? 'event-index-card-past' : ''}`}
       style={eventBrandStyle(item.brand)}
     >
       <EckeLink href={href} className="event-index-card-primary group" onClick={trackClick}>
@@ -63,47 +62,27 @@ export default function EventIndexCard({
           priority={priority}
         />
         <div className="event-index-card-body">
-          <div className="event-index-card-badges">
-            <span className="event-tag">{typeBadge(item)}</span>
-            {item.dancecardEnabled ? <span className="event-tag event-tag-muted">Dancecard</span> : null}
-            {srcLabel ? <span className="event-index-source">{srcLabel}</span> : null}
-          </div>
+          <p className="event-index-card-meta event-index-card-date">{item.dateDisplay}</p>
           <h3 className="event-index-card-title">{item.title}</h3>
-          <p className="event-index-card-meta">{item.dateDisplay}</p>
           <p className="event-index-card-meta">
             {item.city}, {item.state}
           </p>
-          {!isPast && item.summary && (isFeatured || item.listingKind === 'convention') ? (
-            <p className="event-index-card-summary">{item.summary}</p>
-          ) : null}
-          {item.organizerName ? (
-            <p className="event-index-card-organizer">{item.organizerName}</p>
-          ) : null}
+          <div className="event-index-card-badges">
+            <span className="event-tag">{typeBadge(item)}</span>
+            {item.dancecardEnabled ? <span className="event-tag event-tag-muted">Dancecard</span> : null}
+          </div>
         </div>
       </EckeLink>
 
-      {!isPast ? (
-        <div className="event-index-card-actions">
-          <EckeLink href={href} className="sf-btn-primary flex-1 py-2 text-center text-xs sm:text-sm" onClick={trackClick}>
-            {item.listingKind === 'convention' ? 'View convention' : 'View event'}
-          </EckeLink>
-          <KinkSocialCtaLink
-            href={saveHref}
-            label="Save"
-            variant="home"
-            surface={itemListName}
-            entitySlug={item.slug}
-            className="sf-btn-rose flex-1 py-2 text-center text-xs sm:text-sm"
-            external
-          />
-        </div>
-      ) : (
-        <div className="event-index-card-actions">
-          <EckeLink href={href} className="ed-btn-ghost flex-1 py-2 text-center text-xs" onClick={trackClick}>
-            View archive
-          </EckeLink>
-        </div>
-      )}
+      <div className={`event-index-card-actions ${isCompact ? 'event-index-card-actions-compact' : ''}`}>
+        <EckeLink
+          href={href}
+          className={`${isPast ? 'ed-btn-ghost' : 'sf-btn-primary'} min-h-11 flex-1 py-2.5 text-center text-xs sm:text-sm`}
+          onClick={trackClick}
+        >
+          {viewLabel}
+        </EckeLink>
+      </div>
     </article>
   )
 }

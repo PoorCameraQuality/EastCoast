@@ -71,6 +71,8 @@ export type PublicPlaceListing = {
   orientationRequired?: boolean
 
   upcomingEventCount?: number
+  /** Events whose start falls in the current calendar month (used by Events this month filter). */
+  eventsThisMonthCount?: number
   upcomingEvents?: PublicEventIndexItem[]
 
   kinkSocialPlaceUrl?: string

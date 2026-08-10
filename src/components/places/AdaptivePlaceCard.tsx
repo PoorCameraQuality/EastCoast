@@ -30,11 +30,6 @@ export default function AdaptivePlaceCard({
       itemListName,
     })
 
-  const saveHref = buildKinkSocialUrl(KINK_SOCIAL_PATHS.join, 'dungeon_page', {
-    ref: 'ecke_place',
-    ecke_place: place.slug,
-  })
-
   const eventsHref =
     (place.upcomingEventCount ?? 0) > 0
       ? `/events?location=${encodeURIComponent(place.state)}`
@@ -69,22 +64,16 @@ export default function AdaptivePlaceCard({
         ) : null}
 
         <div className="place-index-card-actions">
-          <EckeLink href={place.detailPath} className="place-btn place-btn-view" onClick={trackClick}>
+          <EckeLink
+            href={place.detailPath}
+            className="place-btn place-btn-view min-h-11"
+            onClick={trackClick}
+          >
             View place
           </EckeLink>
-          <EckeLink href={eventsHref} className="place-btn place-btn-events">
+          <EckeLink href={eventsHref} className="place-btn place-btn-events min-h-11">
             Events here
           </EckeLink>
-          {place.followUrl || place.sourceSystem === 'kink_social' ? (
-            <KinkSocialCtaLink
-              href={place.followUrl ?? saveHref}
-              label="Follow on kink.social"
-              variant="dungeon"
-              surface="places_index_card"
-              className="place-btn place-btn-save"
-              external
-            />
-          ) : null}
         </div>
       </div>
     </article>

@@ -122,7 +122,7 @@ export default function Footer() {
 
   return (
     <footer className="border-t border-white/10 bg-sf-bg text-sf-body">
-      {/* Top conversion band */}
+      {/* Top conversion band — keep one join CTA */}
       <div className="border-b border-white/10 bg-sf-surface/50">
         <div className="container-custom flex flex-col gap-4 py-6 md:flex-row md:items-center md:justify-between md:py-7">
           <div className="max-w-xl">
@@ -130,23 +130,19 @@ export default function Footer() {
               Find what is happening next.
             </p>
             <p className="mt-1.5 text-sm leading-relaxed text-sf-muted">
-              Browse public events, places, vendors, education, and local scene hubs. Join
-              kink.social when you are ready to save, follow, publish, or connect.
+              Browse public events, places, vendors, education, and local scene hubs.
             </p>
           </div>
           <div className="flex flex-col gap-2.5 sm:flex-row sm:flex-wrap sm:items-center">
-            <EckeLink href="/events" className="sf-btn-primary whitespace-nowrap text-center">
+            <EckeLink href="/events" className="sf-btn-primary min-h-11 whitespace-nowrap text-center">
               Browse events
-            </EckeLink>
-            <EckeLink href="/states" className="sf-btn-ghost whitespace-nowrap text-center">
-              Explore states
             </EckeLink>
             <KinkSocialCtaLink
               href={getKinkSocialJoinUrl('footer')}
               label="Join kink.social"
               variant="footer"
               surface="footer_cta"
-              className="sf-btn-rose whitespace-nowrap text-center"
+              className="sf-btn-rose min-h-11 whitespace-nowrap text-center"
               external
             />
           </div>
@@ -175,19 +171,11 @@ export default function Footer() {
               platform behind the scenes.
             </p>
             <div className="mt-4 flex flex-wrap gap-2">
-              <KinkSocialCtaLink
-                href={getKinkSocialJoinUrl('footer')}
-                label="Join kink.social"
-                variant="footer"
-                surface="footer_brand"
-                className="sf-btn-rose px-3 py-2 text-xs"
-                external
-              />
               <a
                 href={DISCORD_INVITE_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="sf-btn-ghost px-3 py-2 text-xs"
+                className="sf-btn-ghost min-h-11 px-3 py-2 text-xs"
                 aria-label="Join Discord (opens in a new tab)"
               >
                 Join Discord

@@ -1,12 +1,10 @@
 'use client'
 
 import EckeLink from '@/components/EckeLink'
-import KinkSocialCtaLink from '@/components/kink-social/KinkSocialCtaLink'
 import AdaptiveEventMedia from '@/components/storefront/AdaptiveEventMedia'
 import EventDatePill from '@/components/storefront/EventDatePill'
 import { categoryBadges } from '@/components/storefront/eventDateBlock'
 import { trackSelectItemEntity } from '@/lib/analyticsEntities'
-import { buildKinkSocialUrl, KINK_SOCIAL_PATHS } from '@/lib/kinkSocialMarketing'
 import type { StorefrontEvent } from '@/lib/homepageStorefrontData'
 import { eventBrandStyle } from '@/lib/eventBrandTheme'
 
@@ -24,10 +22,6 @@ export default function AdaptiveEventCard({
   priority = false,
 }: Props) {
   const badges = categoryBadges(event.category, event.tagSlugs)
-  const saveHref = buildKinkSocialUrl(KINK_SOCIAL_PATHS.join, 'home_platform', {
-    ref: 'ecke_save',
-    ecke_event: event.slug,
-  })
   const isShowcase = size === 'showcase'
   const isFeatured = size === 'featured'
   const eventHref = `/events/${event.slug}`
@@ -80,20 +74,11 @@ export default function AdaptiveEventCard({
       <div className="event-product-actions">
         <EckeLink
           href={eventHref}
-          className="sf-btn-primary flex-1 py-2 text-center text-xs sm:text-sm"
+          className="sf-btn-primary min-h-11 flex-1 py-2.5 text-center text-xs sm:text-sm"
           onClick={trackEventClick}
         >
           View event
         </EckeLink>
-        <KinkSocialCtaLink
-          href={saveHref}
-          label="Save on kink.social"
-          variant="home"
-          surface={itemListName}
-          entitySlug={event.slug}
-          className="sf-btn-rose flex-1 py-2 text-center text-xs sm:text-sm"
-          external
-        />
       </div>
     </article>
   )

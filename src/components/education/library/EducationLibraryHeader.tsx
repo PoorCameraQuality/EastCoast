@@ -1,13 +1,19 @@
+'use client'
+
 import EckeLink from '@/components/EckeLink'
 import type { PublicEducationItem } from '@/types/publicEducationItem'
 import { TOPIC_LABELS } from '@/lib/educationVisual'
 import { levelDisplay } from '@/lib/educationVisual'
+
+export type EducationContentView = 'all' | 'guides' | 'links' | 'paths' | 'educators'
 
 type Props = {
   libraryCount: number
   resourceCount: number
   pathCount: number
   educatorCount: number
+  activeView: EducationContentView
+  onSelectView: (view: EducationContentView) => void
 }
 
 export default function EducationLibraryHeader({
@@ -15,34 +21,56 @@ export default function EducationLibraryHeader({
   resourceCount,
   pathCount,
   educatorCount,
+  activeView,
+  onSelectView,
 }: Props) {
   return (
     <header className="edu-index-hero">
       <p className="edu-kicker">Public learning library</p>
-      <h1 className="edu-title">Learn</h1>
+      <h1 className="edu-title">Kink Education Library</h1>
       <p className="edu-subhead">
-        Guides, resources, and learning paths for showing up prepared, connecting safely, and understanding the scene.
+        Guides, resources, and learning paths for showing up prepared, connecting safely, and understanding
+        the scene.
       </p>
       <p className="edu-support">
-        Pair reading with the{' '}
-        <EckeLink href="/calendar">calendar</EckeLink>,{' '}
-        <EckeLink href="/events">events</EckeLink>, and{' '}
-        <EckeLink href="/states">state hubs</EckeLink> when you are ready to go out.
+        Pair reading with the <EckeLink href="/calendar">calendar</EckeLink>,{' '}
+        <EckeLink href="/events">events</EckeLink>, and <EckeLink href="/states">state hubs</EckeLink> when
+        you are ready to go out.
       </p>
-      <div className="edu-stats">
-        <span className="edu-stat-pill">
-          <strong>{libraryCount}</strong> guides
-        </span>
-        <span className="edu-stat-pill">
+      <div className="edu-stats" role="toolbar" aria-label="Library stats">
+        <button
+          type="button"
+          className={
+            activeView === 'guides' ? 'edu-stat-pill edu-stat-pill-active' : 'edu-stat-pill'
+          }
+          onClick={() => onSelectView('guides')}
+        >
+          <strong>{libraryCount}</strong> on-site guides
+        </button>
+        <button
+          type="button"
+          className={activeView === 'links' ? 'edu-stat-pill edu-stat-pill-active' : 'edu-stat-pill'}
+          onClick={() => onSelectView('links')}
+        >
           <strong>{resourceCount}</strong> curated links
-        </span>
-        <span className="edu-stat-pill">
+        </button>
+        <button
+          type="button"
+          className={activeView === 'paths' ? 'edu-stat-pill edu-stat-pill-active' : 'edu-stat-pill'}
+          onClick={() => onSelectView('paths')}
+        >
           <strong>{pathCount}</strong> learning paths
-        </span>
+        </button>
         {educatorCount > 0 ? (
-          <span className="edu-stat-pill">
+          <button
+            type="button"
+            className={
+              activeView === 'educators' ? 'edu-stat-pill edu-stat-pill-active' : 'edu-stat-pill'
+            }
+            onClick={() => onSelectView('educators')}
+          >
             <strong>{educatorCount}</strong> educators
-          </span>
+          </button>
         ) : null}
       </div>
     </header>

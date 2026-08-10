@@ -12,10 +12,10 @@ export default function FeaturedEventRunway({ events }: Props) {
       <section className="sf-section" aria-labelledby="event-runway-title">
         <div className="container-custom">
           <h2 id="event-runway-title" className="sf-title">
-            The latest
+            Upcoming events
           </h2>
           <p className="sf-subhead">No upcoming events right now.</p>
-          <EckeLink href="/events" className="sf-btn-primary mt-5 inline-flex">
+          <EckeLink href="/events" className="sf-btn-primary mt-5 inline-flex min-h-11">
             Browse events
           </EckeLink>
         </div>
@@ -23,7 +23,7 @@ export default function FeaturedEventRunway({ events }: Props) {
     )
   }
 
-  const railEvents = events.length > 1 ? events.slice(1, 9) : events.slice(0, 8)
+  const gridEvents = events.slice(0, 6)
 
   return (
     <section className="sf-section" aria-labelledby="event-runway-title">
@@ -31,25 +31,24 @@ export default function FeaturedEventRunway({ events }: Props) {
         <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between md:mb-8">
           <div>
             <h2 id="event-runway-title" className="sf-title">
-              The latest
+              Upcoming events
             </h2>
-            <p className="sf-subhead">Upcoming events worth planning around.</p>
+            <p className="sf-subhead">What&apos;s live on the calendar right now.</p>
           </div>
-          <EckeLink href="/events" className="sf-btn-ghost shrink-0 text-sm">
+          <EckeLink href="/events" className="inline-flex min-h-11 items-center text-sm font-medium text-sf-blue hover:text-sf-strong">
             See all events →
           </EckeLink>
         </div>
 
-        <div className="event-rail -mx-4 flex gap-4 overflow-x-auto px-4 pb-2 snap-x snap-mandatory md:mx-0 md:grid md:grid-cols-2 md:overflow-visible md:px-0 lg:grid-cols-4">
-          {railEvents.map((event, i) => (
-            <div key={event.slug} className="flex min-w-[78%] snap-start sm:min-w-[52%] md:min-w-0 md:h-full">
-              <AdaptiveEventCard
-                event={event}
-                size="rail"
-                itemListName="home_event_rail"
-                priority={i < 2}
-              />
-            </div>
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+          {gridEvents.map((event, i) => (
+            <AdaptiveEventCard
+              key={event.slug}
+              event={event}
+              size="rail"
+              itemListName="home_event_rail"
+              priority={i < 2}
+            />
           ))}
         </div>
       </div>

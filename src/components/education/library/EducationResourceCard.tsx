@@ -1,4 +1,3 @@
-import KinkSocialCtaLink from '@/components/kink-social/KinkSocialCtaLink'
 import {
   formatCardMeta,
   topicBadgeClass,
@@ -26,18 +25,9 @@ export default function EducationResourceCard({ item }: Props) {
       {item.summary ? <p className="edu-card-promise">{item.summary}</p> : null}
       <p className="edu-card-meta">{formatCardMeta(item)}</p>
       <div className="edu-card-actions">
-        <a href={href} target="_blank" rel="noopener noreferrer" className="edu-btn-read">
+        <a href={href} target="_blank" rel="noopener noreferrer" className="edu-btn-read min-h-11">
           Visit resource
         </a>
-        {item.saveUrl ? (
-          <KinkSocialCtaLink
-            href={item.saveUrl}
-            label="Save on kink.social"
-            variant="education"
-            surface="education_resource_save"
-            className="edu-btn-save"
-          />
-        ) : null}
       </div>
     </article>
   )

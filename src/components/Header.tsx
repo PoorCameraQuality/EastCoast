@@ -140,17 +140,6 @@ export default function Header() {
             </div>
 
             <div className="flex items-center gap-2 lg:hidden">
-              <EckeLink href="/events" className="sf-btn-ghost px-3 py-2 text-xs">
-                Browse
-              </EckeLink>
-              <KinkSocialCtaLink
-                href={getKinkSocialJoinUrl('header_nav')}
-                label="Join"
-                variant="home"
-                surface="header_nav_mobile"
-                className="sf-btn-rose px-3 py-2 text-xs"
-                external
-              />
               <button
                 ref={mobileMenuButtonRef}
                 type="button"
@@ -158,7 +147,7 @@ export default function Header() {
                 aria-label="Toggle navigation menu"
                 aria-expanded={isMenuOpen}
                 aria-controls="ecke-mobile-nav"
-                className="rounded-lg p-2.5 text-sf-body hover:bg-sf-card/60 hover:text-sf-strong"
+                className="min-h-11 min-w-11 rounded-lg p-2.5 text-sf-body hover:bg-sf-card/60 hover:text-sf-strong"
               >
                 <span className="sr-only">Menu</span>
                 <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
@@ -218,8 +207,26 @@ export default function Header() {
               ))}
             </ul>
 
-            <div className="mt-4 border-t border-white/10 px-4 pt-4">
-              <UserMenu />
+            <div className="mt-4 flex flex-col gap-2 border-t border-white/10 px-4 pt-4">
+              <KinkSocialCtaLink
+                href={getKinkSocialOrgUrl('header_nav')}
+                label={KINK_SOCIAL_LABELS.listEvent}
+                variant="organizer"
+                surface="header_nav_mobile"
+                className="sf-btn-ghost inline-flex min-h-11 w-full items-center justify-center text-sm"
+                external
+              />
+              <KinkSocialCtaLink
+                href={getKinkSocialJoinUrl('header_nav')}
+                label="Join kink.social"
+                variant="home"
+                surface="header_nav_mobile"
+                className="sf-btn-rose inline-flex min-h-11 w-full items-center justify-center text-sm"
+                external
+              />
+              <div className="pt-2">
+                <UserMenu />
+              </div>
             </div>
           </div>
         </div>

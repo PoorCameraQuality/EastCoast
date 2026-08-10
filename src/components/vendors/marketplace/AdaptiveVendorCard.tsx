@@ -37,7 +37,7 @@ export default function AdaptiveVendorCard({
   })
 
   return (
-    <article className={`vendor-index-card sf-card-lift ${isFeatured ? 'vendor-index-card-featured' : ''} ${vendor.supporterTier === 'supporter' ? 'vendor-index-card-supporter' : ''}`}>
+    <article className={`vendor-index-card sf-card-lift ${isFeatured ? 'vendor-index-card-featured' : ''}`}>
       <EckeLink href={`/vendors/${vendor.slug}`} className="vendor-index-card-media" onClick={trackProfile}>
         <VendorMediaStage vendor={vendor} size="card" />
       </EckeLink>
@@ -49,9 +49,6 @@ export default function AdaptiveVendorCard({
               {tag}
             </span>
           ))}
-          {vendor.supporterTier === 'supporter' ? (
-            <span className="vendor-supporter-pill">Supporter</span>
-          ) : null}
         </div>
 
         <EckeLink href={`/vendors/${vendor.slug}`} className="vendor-index-card-title" onClick={trackProfile}>
@@ -70,12 +67,16 @@ export default function AdaptiveVendorCard({
               entityType="vendor"
               entitySlug={vendor.slug}
               entityName={vendor.name}
-              className="vendor-btn vendor-btn-shop"
+              className="vendor-btn vendor-btn-shop min-h-11"
             >
               Visit shop
             </OutboundWebsiteLink>
           ) : null}
-          <EckeLink href={`/vendors/${vendor.slug}`} className="vendor-btn vendor-btn-view" onClick={trackProfile}>
+          <EckeLink
+            href={`/vendors/${vendor.slug}`}
+            className="vendor-btn vendor-btn-view min-h-11"
+            onClick={trackProfile}
+          >
             View profile
           </EckeLink>
           <KinkSocialCtaLink
@@ -83,7 +84,7 @@ export default function AdaptiveVendorCard({
             label="Follow on kink.social"
             variant="vendor"
             surface="vendor_card"
-            className="vendor-btn vendor-btn-save"
+            className="vendor-btn vendor-btn-save min-h-11"
             external
           />
         </div>
