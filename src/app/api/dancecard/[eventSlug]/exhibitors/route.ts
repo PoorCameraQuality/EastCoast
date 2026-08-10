@@ -26,7 +26,13 @@ export async function GET(_request: NextRequest, context: { params: { eventSlug:
       .eq('is_published', true)
       .order('sort_order', { ascending: true })
 
-    if (error?.code === '42P01') {
+    // Missing table/columns in prod → soft empty (migration may not be applied yet).
+    if (
+      error &&
+      (error.code === '42P01' ||
+        error.code === '42703' ||
+        /does not exist|schema cache/i.test(error.message || ''))
+    ) {
       return NextResponse.json({ exhibitors: [], needsMigration: 'dancecard_059_exhibitors.sql' })
     }
     if (error) throw error

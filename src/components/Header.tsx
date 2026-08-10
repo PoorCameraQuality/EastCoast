@@ -166,6 +166,8 @@ export default function Header() {
       <div
         id="ecke-mobile-nav"
         aria-hidden={!isMenuOpen}
+        // Keep collapsed drawer out of keyboard/AT focus (aria-hidden alone is not enough).
+        {...(!isMenuOpen ? ({ inert: '' } as Record<string, string>) : {})}
         className={`lg:hidden overflow-hidden transition-all duration-300 ${
           isMenuOpen ? 'max-h-[min(85vh,36rem)] opacity-100' : 'max-h-0 opacity-0 pointer-events-none'
         }`}

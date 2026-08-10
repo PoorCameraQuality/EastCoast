@@ -11,15 +11,6 @@ export async function POST(request: NextRequest) {
   const limited = await withRateLimit(request, rateLimiters.forms)
   if (limited) return limited
 
-  const apiKey = process.env.BUTTONDOWN_API_KEY
-  if (!apiKey) {
-    console.error('[newsletter] BUTTONDOWN_API_KEY is not set')
-    return NextResponse.json(
-      { ok: false, error: 'Newsletter signup is not configured.' },
-      { status: 503 }
-    )
-  }
-
   let json: unknown
   try {
     json = await request.json()
@@ -30,6 +21,15 @@ export async function POST(request: NextRequest) {
   const parsed = bodySchema.safeParse(json)
   if (!parsed.success) {
     return NextResponse.json({ ok: false, error: 'Enter a valid email address.' }, { status: 400 })
+  }
+
+  const apiKey = process.env.BUTTONDOWN_API_KEY
+  if (!apiKey) {
+    console.error('[newsletter] BUTTONDOWN_API_KEY is not set')
+    return NextResponse.json(
+      { ok: false, error: 'Newsletter signup is not configured.' },
+      { status: 503 }
+    )
   }
 
   const { email } = parsed.data

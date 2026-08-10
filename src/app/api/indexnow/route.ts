@@ -1,9 +1,13 @@
 import { NextRequest, NextResponse } from "next/server"
 import { submitToIndexNow } from "@/lib/indexnow"
+import { requireCronOrAdminSecret } from "@/lib/security/requireCronOrAdminSecret"
 
 export const runtime = "nodejs"
 
 export async function POST(request: NextRequest) {
+  const denied = requireCronOrAdminSecret(request)
+  if (denied) return denied
+
   try {
     const { urlList } = await request.json()
 
@@ -34,6 +38,9 @@ export async function POST(request: NextRequest) {
 }
 
 export async function GET(request: NextRequest) {
+  const denied = requireCronOrAdminSecret(request)
+  if (denied) return denied
+
   const { searchParams } = new URL(request.url)
   const url = searchParams.get("url")
 

@@ -14,6 +14,14 @@ export async function POST(request: NextRequest) {
     if (rateLimitResponse) {
       return rateLimitResponse
     }
+
+    const contentType = request.headers.get('content-type') || ''
+    if (!contentType.includes('multipart/form-data') && !contentType.includes('application/x-www-form-urlencoded')) {
+      return NextResponse.json(
+        { error: 'Expected multipart/form-data or application/x-www-form-urlencoded body.' },
+        { status: 415 },
+      )
+    }
     
     const formData = await request.formData()
     

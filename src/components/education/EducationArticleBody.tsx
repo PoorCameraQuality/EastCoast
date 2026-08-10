@@ -1,6 +1,7 @@
 import Markdown from '@/components/Markdown'
 import { isArticleContentHtml } from '@/lib/articleContentFormat'
 import { normalizeMarkdown } from '@/lib/normalizeMarkdown'
+import { sanitizeArticleHtml } from '@/lib/sanitizeArticleHtml'
 
 type Props = {
   content: string
@@ -11,7 +12,12 @@ const HTML_PROSE_CLASS =
 
 export default function EducationArticleBody({ content }: Props) {
   if (isArticleContentHtml(content)) {
-    return <div className={HTML_PROSE_CLASS} dangerouslySetInnerHTML={{ __html: content }} />
+    return (
+      <div
+        className={HTML_PROSE_CLASS}
+        dangerouslySetInnerHTML={{ __html: sanitizeArticleHtml(content) }}
+      />
+    )
   }
 
   return <Markdown content={normalizeMarkdown(content)} />

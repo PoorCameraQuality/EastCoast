@@ -9,6 +9,7 @@ import TableOfContents from '@/components/TableOfContents'
 import ReadingProgress from '@/components/ReadingProgress'
 import BackToTop from '@/components/BackToTop'
 import { ArticleStructuredData } from '@/components/ArticleStructuredData'
+import { sanitizeArticleHtml } from '@/lib/sanitizeArticleHtml'
 
 interface Article {
   id: string
@@ -492,9 +493,9 @@ export default function ArticlePageClient({ article, breadcrumbItems }: ArticleP
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
             <div className="lg:col-span-3">
               <div className="prose prose-invert prose-lg article-prose max-w-none">
-                <div 
+                <div
                   className="rich-text-content"
-                  dangerouslySetInnerHTML={{ __html: article.content }}
+                  dangerouslySetInnerHTML={{ __html: sanitizeArticleHtml(article.content) }}
                 />
               </div>
             </div>

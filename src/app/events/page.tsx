@@ -31,7 +31,8 @@ export async function generateMetadata({
   const description = `${baseDescription}${filterSuffix}`.slice(0, 160)
   const ogDescription = `${baseDescription}${filterSuffix}`.slice(0, 200)
 
-  const defaultTitle = 'Events & Conventions — Kink Calendar | East Coast Kink Events'
+  // Layout template already appends "| East Coast Kink Events"
+  const defaultTitle = 'Events & Conventions — Kink Calendar'
   const title = filtered ? `${selection} — Events & Conventions`.slice(0, 70) : defaultTitle
 
   return {

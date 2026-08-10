@@ -15,12 +15,16 @@ export function isPublicAttendeeDemoSlug(eventSlug: string): boolean {
 }
 
 /**
- * Production: allow public sandbox demos.
- * Disable with `DANCECARD_PUBLIC_SANDBOX_DEMO=0` on Vercel.
+ * Public unauthenticated sandbox demos (attendee + organizer).
+ * - Opt in with `DANCECARD_PUBLIC_SANDBOX_DEMO=1`
+ * - Opt out with `=0`
+ * - Default: on in local/preview, **off in Vercel Production** (avoids open organizer APIs).
  */
 export function publicSandboxDemoEnabled(): boolean {
-  if (process.env.DANCECARD_PUBLIC_SANDBOX_DEMO === '0') return false
-  return true
+  const flag = process.env.DANCECARD_PUBLIC_SANDBOX_DEMO
+  if (flag === '0') return false
+  if (flag === '1') return true
+  return process.env.VERCEL_ENV !== 'production'
 }
 
 /** @deprecated Use {@link publicSandboxDemoEnabled}. */

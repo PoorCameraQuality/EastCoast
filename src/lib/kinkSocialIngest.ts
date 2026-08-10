@@ -16,6 +16,7 @@ import {
   type UpsertEnvelope,
 } from '@/lib/kinkSocialIngestValidation'
 import { BASE_URL } from '@/lib/seo'
+import { sanitizeArticleHtml } from '@/lib/sanitizeArticleHtml'
 import { getSupabaseAdminClient } from '@/lib/supabaseAdmin'
 import {
   resolveEckePayloadHeroUrl,
@@ -54,7 +55,7 @@ function mapPayloadToArticleRow(
     title: payload.title,
     slug,
     excerpt: payload.excerpt.slice(0, 500),
-    content: payload.bodyHtml,
+    content: sanitizeArticleHtml(payload.bodyHtml),
     author_name: payload.authorDisplayName,
     author_bio: '',
     category: payload.categories[0] || 'Education',

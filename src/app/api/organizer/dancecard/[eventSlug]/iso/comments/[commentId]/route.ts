@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 import { getDancecardAdmin, jsonFromRouteError } from '@/lib/dancecard/routeCommon'
-import { requireOrganizerForSlug } from '@/lib/dancecard/organizerAuth'
+import { assertOrganizerCanMutate, requireOrganizerForSlug } from '@/lib/dancecard/organizerAuth'
 
 export const dynamic = 'force-dynamic'
 
@@ -15,6 +15,7 @@ export async function PATCH(
 ) {
   try {
     const auth = await requireOrganizerForSlug(context.params.eventSlug)
+    assertOrganizerCanMutate(auth)
     const body = bodySchema.parse(await request.json())
     const admin = getDancecardAdmin()
 
