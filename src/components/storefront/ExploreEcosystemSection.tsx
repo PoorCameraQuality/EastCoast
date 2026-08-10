@@ -72,7 +72,12 @@ export default function ExploreEcosystemSection({ vendors, dungeons, guides }: P
                   }
                 >
                   <div className="sf-vendor-shelf-media">
-                    <VendorImage src={v.logo125Url} alt={v.name} size={125} className="sf-vendor-shelf-logo" />
+                    <VendorImage
+                      src={v.logo125Url}
+                      alt={`${v.name} logo`}
+                      size={125}
+                      className="sf-vendor-shelf-logo"
+                    />
                   </div>
                   <div className="sf-vendor-shelf-body">
                     <p className="sf-vendor-shelf-name">{v.name}</p>

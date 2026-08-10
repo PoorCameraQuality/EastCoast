@@ -4,6 +4,7 @@ const nextConfig = {
   trailingSlash: false,
   // Enable Next.js image optimization for remote logos
   images: {
+    formats: ['image/avif', 'image/webp'],
     remotePatterns: [
       { protocol: 'https', hostname: 'images.squarespace-cdn.com' },
       { protocol: 'https', hostname: 'kicevents.com' },
@@ -61,6 +62,12 @@ const nextConfig = {
         destination: 'https://www.eastcoastkinkevents.com/:path*',
         permanent: true,
       },
+
+      // Consolidate legacy index URLs (Ahrefs/GSC: / and /index.html|/index.php as duplicates)
+      { source: '/index.html', destination: '/', permanent: true },
+      { source: '/index.php', destination: '/', permanent: true },
+      { source: '/:path+/index.html', destination: '/:path+', permanent: true },
+      { source: '/:path+/index.php', destination: '/:path+', permanent: true },
 
       // Normalize section roots - remove trailing slashes
       { source: '/events/', destination: '/events', permanent: true },

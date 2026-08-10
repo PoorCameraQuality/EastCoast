@@ -47,7 +47,7 @@ export default function FeaturedEventRunway({ events }: Props) {
               event={event}
               size="rail"
               itemListName="home_event_rail"
-              priority={i < 2}
+              priority={i === 0}
             />
           ))}
         </div>

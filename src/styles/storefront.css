@@ -379,9 +379,7 @@
   opacity: 0.2;
 }
 
-.event-media-aura-image {
-  pointer-events: none;
-}
+/* Blurred photo aura layer removed — brand gradients only (avoids duplicate image downloads). */
 
 .event-media-scrim {
   position: absolute;
@@ -536,18 +534,7 @@
   padding: 1.25rem 1rem;
 }
 
-.event-logo-ghost {
-  position: absolute;
-  max-height: 95%;
-  max-width: 95%;
-  width: auto !important;
-  height: auto !important;
-  object-fit: contain;
-  opacity: 0.22;
-  filter: blur(28px) saturate(1.2);
-  transform: scale(1.15);
-  pointer-events: none;
-}
+/* .event-logo-ghost removed — duplicate logo download hurt LCP */
 
 .event-logo-hero {
   position: relative;

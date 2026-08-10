@@ -1,7 +1,7 @@
 import EckeLink from '@/components/EckeLink'
 import FeaturedGuideCard from '@/components/education/library/FeaturedGuideCard'
 import { getLearningPathBySlug } from '@/lib/educationLearningPaths'
-import { topicLabel } from '@/components/education/library/EducationLibraryHeader'
+import { topicLabel } from '@/lib/educationLibraryMeta'
 import { categoryToTopic } from '@/lib/educationVisual'
 import type { PublicEducationItem } from '@/types/publicEducationItem'
 import type { RelatedArticleSummary } from '@/lib/articleRelated'

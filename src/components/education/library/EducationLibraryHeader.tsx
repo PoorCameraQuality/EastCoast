@@ -1,9 +1,6 @@
 'use client'
 
 import EckeLink from '@/components/EckeLink'
-import type { PublicEducationItem } from '@/types/publicEducationItem'
-import { TOPIC_LABELS } from '@/lib/educationVisual'
-import { levelDisplay } from '@/lib/educationVisual'
 
 export type EducationContentView = 'all' | 'guides' | 'links' | 'paths' | 'educators'
 
@@ -16,6 +13,11 @@ type Props = {
   onSelectView: (view: EducationContentView) => void
 }
 
+/**
+ * Interactive library hero + view stats.
+ * Shared card/article helpers live in `@/lib/educationLibraryMeta` so server
+ * components can import them without crossing the client boundary.
+ */
 export default function EducationLibraryHeader({
   libraryCount,
   resourceCount,
@@ -75,21 +77,4 @@ export default function EducationLibraryHeader({
       </div>
     </header>
   )
-}
-
-export function topicBadgeClass(topic: PublicEducationItem['topic']): string {
-  return `edu-topic-badge edu-topic-badge-${topic}`
-}
-
-export function formatCardMeta(item: PublicEducationItem): string {
-  const parts: string[] = []
-  const level = levelDisplay(item.level)
-  if (level) parts.push(level)
-  if (item.readTimeLabel) parts.push(item.readTimeLabel)
-  else if (item.readTimeMinutes) parts.push(`${item.readTimeMinutes} min read`)
-  return parts.join(' · ')
-}
-
-export function topicLabel(topic: PublicEducationItem['topic']): string {
-  return TOPIC_LABELS[topic] ?? topic
 }

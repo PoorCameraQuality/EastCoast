@@ -26,6 +26,23 @@ function Placeholder({ name, category }: { name: string; category?: string }) {
   )
 }
 
+function logoDims(size: 'showcase' | 'card' | 'rail') {
+  switch (size) {
+    case 'showcase':
+      return { width: 480, height: 315, sizes: '(max-width:768px) 92vw, 480px' }
+    case 'rail':
+      return { width: 360, height: 240, sizes: '(max-width:768px) 100vw, (max-width:1024px) 50vw, 33vw' }
+    default:
+      return { width: 320, height: 210, sizes: '(max-width:768px) 100vw, 320px' }
+  }
+}
+
+function bannerSizes(size: 'showcase' | 'card' | 'rail') {
+  if (size === 'showcase') return '(max-width:768px) 100vw, 50vw'
+  if (size === 'rail') return '(max-width:768px) 100vw, (max-width:1024px) 50vw, 33vw'
+  return '(max-width:768px) 100vw, 320px'
+}
+
 function LogoStage({
   logoUrl,
   alt,
@@ -45,27 +62,18 @@ function LogoStage({
       : size === 'rail'
         ? 'event-logo-rail'
         : 'event-logo-card'
+  const { width, height, sizes } = logoDims(size)
 
   return (
     <div className="event-logo-stage">
       <Image
         src={logoUrl}
-        alt=""
-        aria-hidden
-        width={640}
-        height={420}
-        className="event-logo-ghost"
-        sizes="640px"
-        onError={onError}
-      />
-      <Image
-        src={logoUrl}
         alt={alt}
-        width={640}
-        height={420}
+        width={width}
+        height={height}
         priority={priority}
         className={logoClass}
-        sizes={size === 'showcase' ? '480px' : '280px'}
+        sizes={sizes}
         onError={onError}
       />
     </div>
@@ -91,19 +99,9 @@ export default function AdaptiveEventMedia({
       style={style}
       data-treatment={brand.treatment}
     >
+      {/* Brand glow only — no second remote image download for blur layers */}
       <div className="event-media-aura" aria-hidden />
       <div className="event-media-aura-secondary" aria-hidden />
-      {src && !failed ? (
-        <Image
-          src={src}
-          alt=""
-          aria-hidden
-          fill
-          className="event-media-aura-image object-cover scale-[2] blur-[48px] opacity-40"
-          sizes="400px"
-          onError={() => setFailed(true)}
-        />
-      ) : null}
 
       {showBanner && src ? (
         <>
@@ -113,7 +111,7 @@ export default function AdaptiveEventMedia({
             fill
             priority={priority}
             className="object-cover"
-            sizes={size === 'showcase' ? '(max-width:768px) 100vw, 50vw' : '(max-width:768px) 90vw, 320px'}
+            sizes={bannerSizes(size)}
             onError={() => setFailed(true)}
           />
           <div className="event-media-scrim event-media-scrim-poster" />

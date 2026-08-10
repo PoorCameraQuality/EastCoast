@@ -3,7 +3,7 @@ import {
   formatCardMeta,
   topicBadgeClass,
   topicLabel,
-} from '@/components/education/library/EducationLibraryHeader'
+} from '@/lib/educationLibraryMeta'
 import type { PublicEducationItem } from '@/types/publicEducationItem'
 
 type Props = {
