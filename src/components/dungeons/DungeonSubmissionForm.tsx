@@ -10,6 +10,7 @@ interface DungeonSubmissionFormData {
   dungeonWebsite: string
   ownerName: string
   ownerEmail: string
+  dungeonExcerpt: string
   dungeonDescription: string
   dungeonCategory: string
   dungeonTags: string
@@ -23,6 +24,7 @@ export default function DungeonSubmissionForm() {
     dungeonWebsite: '',
     ownerName: '',
     ownerEmail: '',
+    dungeonExcerpt: '',
     dungeonDescription: '',
     dungeonCategory: '',
     dungeonTags: '',
@@ -178,7 +180,29 @@ export default function DungeonSubmissionForm() {
             </div>
           </div>
           <div className="mt-6">
-            <label htmlFor="dungeon-submission-description" className="block text-white font-medium mb-2">Dungeon Description *</label>
+            <label htmlFor="dungeon-submission-excerpt" className="block text-white font-medium mb-2">
+              Short pitch (cards / summary)
+            </label>
+            <p className="mb-2 text-sm text-gray-400">
+              1–3 sentences for dungeon cards. Keep this short — the full About goes below.
+            </p>
+            <textarea
+              id="dungeon-submission-excerpt"
+              name="dungeonExcerpt"
+              value={formData.dungeonExcerpt}
+              onChange={handleInputChange}
+              className="w-full bg-dark-700 border border-dark-600 rounded-lg px-4 py-3 text-white focus:border-ecke-focus focus-visible:ring-1 focus-visible:ring-ecke-focus transition-colors h-24"
+              placeholder="Example: 12,000 sq ft play space in Baltimore since 1997. Alcohol-free, 19+."
+              maxLength={500}
+            />
+          </div>
+          <div className="mt-6">
+            <label htmlFor="dungeon-submission-description" className="block text-white font-medium mb-2">
+              Full About (long description) *
+            </label>
+            <p className="mb-2 text-sm text-gray-400">
+              Long-form dungeon overview: space, rules, membership, how to visit.
+            </p>
             <textarea
               id="dungeon-submission-description"
               name="dungeonDescription"

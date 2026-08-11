@@ -16,7 +16,9 @@ export default function EventVenueTravel({ event }: { event: EventPageRecord }) 
         <p className="event-venue-primary">
           {event.location.city}, {event.location.state}
         </p>
-        {event.location.region ? (
+        {event.location.region &&
+        event.location.region.trim().toLowerCase() !==
+          `${event.location.city}, ${event.location.state}`.trim().toLowerCase() ? (
           <p className="event-venue-region">{event.location.region}</p>
         ) : null}
         {event.venue ? (

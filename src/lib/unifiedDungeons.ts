@@ -47,6 +47,9 @@ function dbDungeonToUnified(row: DbDungeonVenueRow): UnifiedDungeon {
   const city = row.city?.trim() || ''
   const state = row.state ? String(row.state).toUpperCase().slice(0, 2) : ''
   const description = row.description?.trim() || ''
+  const shortPitch =
+    row.meta_description?.trim() ||
+    (description.length > 320 ? `${description.slice(0, 280).replace(/\s+\S*$/, '')}…` : description)
   const record = {
     name: row.name,
     slug: row.slug,
@@ -56,14 +59,15 @@ function dbDungeonToUnified(row: DbDungeonVenueRow): UnifiedDungeon {
       address: '',
     },
     category: 'BDSM Dungeon',
-    excerpt: description.slice(0, 280),
+    // Short card/hero pitch — never dump the full About body here.
+    excerpt: shortPitch,
     description: { long: description },
     website: row.website_url || undefined,
     logo: undefined,
     seo: row.meta_title
       ? {
           title: row.meta_title,
-          description: (row.meta_description || description).slice(0, 320),
+          description: (row.meta_description || shortPitch || description).slice(0, 320),
           keywords: row.name,
         }
       : undefined,
@@ -170,10 +174,30 @@ export async function resolveDungeonBySlugAsync(slug: string): Promise<UnifiedDu
 
   let resolved: UnifiedDungeon | null = null
   if (dbUnified?.c2kSourceId) {
-    resolved =
+    const merged: UnifiedDungeon =
       staticUnified?.logo && !dbUnified.logo
         ? ({ ...dbUnified, logo: staticUnified.logo } as UnifiedDungeon)
-        : dbUnified
+        : { ...dbUnified }
+    // Prefer curated static short/long when publish collapsed them into one blob.
+    if (staticUnified?.excerpt) {
+      const excerptLooksLikeLong =
+        !merged.excerpt ||
+        merged.excerpt.length > 360 ||
+        (merged.description?.long &&
+          merged.excerpt.startsWith(merged.description.long.slice(0, 80)))
+      if (excerptLooksLikeLong) merged.excerpt = staticUnified.excerpt
+    }
+    if (staticUnified?.description?.long) {
+      const longLooksThin =
+        !merged.description?.long ||
+        merged.description.long === merged.excerpt ||
+        (staticUnified.description.long.length > merged.description.long.length + 80 &&
+          merged.description.long.length < 400)
+      if (longLooksThin) {
+        merged.description = { ...merged.description, long: staticUnified.description.long }
+      }
+    }
+    resolved = merged
   } else if (preferDb && dbUnified) resolved = dbUnified
   else if (staticUnified) resolved = staticUnified
   else resolved = dbUnified

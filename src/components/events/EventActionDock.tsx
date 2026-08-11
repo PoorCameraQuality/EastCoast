@@ -101,7 +101,9 @@ export default function EventActionDock({ event, safeKinkSocialEventUrl, isC2kSo
             <dt>Where</dt>
             <dd>
               {event.location.city}, {event.location.state}
-              {event.location.region ? (
+              {event.location.region &&
+              event.location.region.trim().toLowerCase() !==
+                `${event.location.city}, ${event.location.state}`.trim().toLowerCase() ? (
                 <span className="event-action-dock-fact-sub">{event.location.region}</span>
               ) : null}
             </dd>

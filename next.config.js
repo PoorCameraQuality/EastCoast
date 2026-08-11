@@ -11,6 +11,12 @@ const nextConfig = {
       { protocol: 'https', hostname: 'www.kicevents.com' },
       { protocol: 'https', hostname: 'studio58events.com' },
       { protocol: 'https', hostname: 'www.kinkdownsouth.com' },
+      /**
+       * Absolute self-host logos from C2K publish (legacy). Prefer relative `/images/...`
+       * in DB; keep these so `/_next/image?url=https://www.eastcoastkinkevents.com/...` is not 400.
+       */
+      { protocol: 'https', hostname: 'www.eastcoastkinkevents.com', pathname: '/images/**' },
+      { protocol: 'https', hostname: 'eastcoastkinkevents.com', pathname: '/images/**' },
       /** Supabase Storage (`NEXT_PUBLIC_SUPABASE_URL` host) — logos from DB */
       { protocol: 'https', hostname: '*.supabase.co', pathname: '/storage/v1/object/public/**' },
       /** C2K public media CDN (MinIO via Caddy) — convention/event covers */

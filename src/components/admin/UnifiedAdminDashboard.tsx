@@ -863,14 +863,32 @@ export default function UnifiedAdminDashboard({ user, isAdmin: isAdminProp }: Un
                     </div>
                   </div>
                   <div className="mt-6">
-                    <label className="block text-white font-medium mb-2">Event Description *</label>
+                    <label className="block text-white font-medium mb-2">Short pitch (hero) *</label>
+                    <p className="mb-2 text-sm text-gray-400">
+                      1–3 sentences for the top of the event page and cards. Do not paste the full About body here.
+                    </p>
                     <textarea
                       name="shortDescription"
                       value={eventData.shortDescription}
-                      onChange={(e) => setEventData(prev => ({ ...prev, shortDescription: e.target.value }))}
-                      className="w-full bg-dark-700 border border-dark-600 rounded-lg px-4 py-3 text-white h-32"
-                      placeholder="Describe your event in detail..."
+                      onChange={(e) => setEventData(prev => ({ ...prev, shortDescription: e.target.value.slice(0, 500) }))}
+                      className="w-full bg-dark-700 border border-dark-600 rounded-lg px-4 py-3 text-white h-28"
+                      placeholder="Example: Labor Day week outdoor festival in Northern Maryland — workshops, play spaces, cabins & camping. Confirm dates on the official site."
+                      maxLength={500}
                       required
+                    />
+                    <p className="mt-1 text-xs text-gray-500">{eventData.shortDescription.length}/500</p>
+                  </div>
+                  <div className="mt-6">
+                    <label className="block text-white font-medium mb-2">Full About (long description)</label>
+                    <p className="mb-2 text-sm text-gray-400">
+                      Long-form overview shown under “About this event”. Include highlights, policies, and logistics.
+                    </p>
+                    <textarea
+                      name="longDescription"
+                      value={eventData.longDescription}
+                      onChange={(e) => setEventData(prev => ({ ...prev, longDescription: e.target.value }))}
+                      className="w-full bg-dark-700 border border-dark-600 rounded-lg px-4 py-3 text-white h-48"
+                      placeholder="Full event overview for the About section…"
                     />
                   </div>
                   <div className="mt-6">

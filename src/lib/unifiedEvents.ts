@@ -5,6 +5,14 @@ import { resolveEntityHeroAndGallery, type EntityHeroGalleryItem } from '@/lib/k
 import { KNOWN_TAG_SLUGS } from '@/lib/discoveryTags'
 import { BASE_URL } from '@/lib/seo'
 
+/** Collapse absolute ECKE self-host image URLs to `/images/...` for Next/Image. */
+export function normalizeEckeSelfHostLogo(logo: string | undefined | null): string | undefined {
+  const raw = logo?.trim()
+  if (!raw) return undefined
+  const rewritten = raw.replace(/^https?:\/\/(?:www\.)?eastcoastkinkevents\.com(\/images\/)/i, '$1')
+  return rewritten || undefined
+}
+
 export type UnifiedEvent = {
   name: string
   slug: string
@@ -120,7 +128,9 @@ function dbRowToUnified(row: Record<string, unknown>): UnifiedEvent | null {
     },
     excerpt: (row.short_description as string) || '',
     category: (row.category as string) || 'Event',
-    logo: (row.logo as string) || undefined,
+    // Absolute self-host URLs break Next/Image unless remotePatterns allow them;
+    // prefer site-relative `/images/...` so the optimizer treats them as local.
+    logo: normalizeEckeSelfHostLogo((row.logo as string) || undefined),
     tagSlugs: normalizeDbTags(row.tags),
     source: 'supabase',
     c2kSourceId: (row.c2k_source_id as string | null) ?? null,
@@ -288,7 +298,8 @@ function dbRowToEventPageRecord(row: Record<string, unknown>): EventPageRecord |
     location: {
       city,
       state: stateAbbr,
-      region: city && stateAbbr ? `${city}, ${stateAbbr}` : stateAbbr || '',
+      // Don't invent region as "City, ST" — masthead already shows city/state and that duplicates.
+      region: '',
     },
     category: ((row.category as string) || 'Event').trim(),
     excerpt: excerpt || longDesc.slice(0, 280) || `${title} — kink event in ${city || stateAbbr || 'your area'}.`,
@@ -296,7 +307,7 @@ function dbRowToEventPageRecord(row: Record<string, unknown>): EventPageRecord |
     website,
     organizer,
     venue,
-    logo: (row.logo as string)?.trim() || undefined,
+    logo: normalizeEckeSelfHostLogo((row.logo as string)?.trim() || undefined),
     features: parseDbFeatures(row.features),
     c2kSourceId: (row.c2k_source_id as string | null) ?? null,
     c2kSourceType: (row.c2k_source_type as string | null) ?? null,
@@ -388,8 +399,31 @@ export async function resolveEventForPage(slug: string): Promise<EventPageRecord
   const dbEv = await fetchPublishedSupabaseEventAsPageEvent(slug)
 
   if (dbEv?.c2kSourceId) {
-    if (staticEv?.logo && !dbEv.logo) return { ...dbEv, logo: staticEv.logo }
-    return dbEv
+    // C2K wins the listing, but keep useful static presentation fields when publish left them thin.
+    const merged: EventPageRecord = { ...dbEv }
+    if (staticEv?.logo && !dbEv.logo) merged.logo = staticEv.logo
+    if (staticEv?.location?.region && !dbEv.location.region) {
+      merged.location = { ...merged.location, region: staticEv.location.region }
+    }
+    if (
+      staticEv?.excerpt &&
+      (!dbEv.excerpt ||
+        dbEv.excerpt.length > 320 ||
+        (dbEv.longDescription && dbEv.excerpt.startsWith(dbEv.longDescription.slice(0, 80))))
+    ) {
+      merged.excerpt = staticEv.excerpt
+    }
+    if (
+      staticEv?.longDescription &&
+      (!dbEv.longDescription ||
+        dbEv.longDescription === dbEv.excerpt ||
+        (staticEv.longDescription.length > (dbEv.longDescription?.length ?? 0) + 80 &&
+          (dbEv.longDescription?.length ?? 0) < 400))
+    ) {
+      merged.longDescription = staticEv.longDescription
+    }
+    if (staticEv?.venue && !dbEv.venue) merged.venue = staticEv.venue
+    return merged
   }
   if (preferDb && dbEv) return dbEv
   if (staticEv) return staticEv

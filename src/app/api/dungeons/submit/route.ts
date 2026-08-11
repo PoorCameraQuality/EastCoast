@@ -53,9 +53,9 @@ export async function POST(request: NextRequest) {
           author_name: body.ownerName,
           author_email: body.ownerEmail,
           author_credentials: null, // No phone number needed
-          author_bio: body.dungeonDescription,
+          author_bio: body.dungeonExcerpt || body.dungeonDescription,
           article_title: body.dungeonName,
-          article_excerpt: body.dungeonDescription,
+          article_excerpt: (body.dungeonExcerpt || body.dungeonDescription || '').slice(0, 500),
           article_content: body.dungeonDescription,
           article_category: body.dungeonCategory,
           article_tags: body.dungeonTags || null,

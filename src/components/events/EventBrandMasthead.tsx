@@ -31,7 +31,9 @@ export default function EventBrandMasthead({ event, media, brand }: Props) {
           <span className="event-masthead-pill">
             {event.location.city}, {event.location.state}
           </span>
-          {event.location.region ? (
+          {event.location.region &&
+          event.location.region.trim().toLowerCase() !==
+            `${event.location.city}, ${event.location.state}`.trim().toLowerCase() ? (
             <span className="event-masthead-pill event-masthead-pill-muted">{event.location.region}</span>
           ) : null}
         </div>
