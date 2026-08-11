@@ -1,4 +1,3 @@
-import { getDungeonBySlug } from '@/data/dungeons'
 import { EAST_COAST_STATES, type StateSlug } from '@/lib/eastCoastStates'
 import { isCitySlug } from '@/lib/discoveryCityRegistry'
 import { isDungeonHubTagSlug, type DungeonSeoHubTagSlug } from '@/lib/dungeonHubTagMap'
@@ -31,10 +30,9 @@ export function parseDungeonDiscoverySlug(segments: string[]): ParsedDungeonDisc
     if (isDungeonHubTagSlug(a)) {
       return { kind: 'hub', variant: 'tag', tagSlug: a }
     }
-    if (getDungeonBySlug(a)) {
-      return { kind: 'dungeonDetail', slug: a }
-    }
-    return null
+    // C2K-published / DB-only venues are not in static dungeons.js — accept any
+    // remaining single segment as a detail slug (parity with vendor discovery).
+    return { kind: 'dungeonDetail', slug: a }
   }
 
   if (b && isDungeonHubTagSlug(b)) {
