@@ -128,8 +128,13 @@ export async function getUnifiedDungeonsAsync(): Promise<UnifiedDungeon[]> {
   } else {
     for (const d of staticUnified) bySlug.set(d.slug, d)
     for (const d of remote) {
-      if (d.c2kSourceId) bySlug.set(d.slug, d)
-      else if (!bySlug.has(d.slug)) bySlug.set(d.slug, d)
+      if (d.c2kSourceId) {
+        const prior = bySlug.get(d.slug)
+        // C2K row wins, but keep static logo until hero media is wired.
+        bySlug.set(d.slug, prior?.logo && !d.logo ? { ...d, logo: prior.logo } : d)
+      } else if (!bySlug.has(d.slug)) {
+        bySlug.set(d.slug, d)
+      }
     }
   }
 
@@ -162,8 +167,12 @@ export async function resolveDungeonBySlugAsync(slug: string): Promise<UnifiedDu
   }
 
   let resolved: UnifiedDungeon | null = null
-  if (dbUnified?.c2kSourceId) resolved = dbUnified
-  else if (preferDb && dbUnified) resolved = dbUnified
+  if (dbUnified?.c2kSourceId) {
+    resolved =
+      staticUnified?.logo && !dbUnified.logo
+        ? { ...dbUnified, logo: staticUnified.logo }
+        : dbUnified
+  } else if (preferDb && dbUnified) resolved = dbUnified
   else if (staticUnified) resolved = staticUnified
   else resolved = dbUnified
 

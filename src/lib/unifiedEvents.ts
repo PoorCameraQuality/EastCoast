@@ -186,7 +186,8 @@ export async function getUnifiedEvents(): Promise<UnifiedEvent[]> {
     for (const e of remote) {
       const existing = bySlug.get(e.slug)
       if (e.c2kSourceId) {
-        bySlug.set(e.slug, e)
+        // C2K wins; keep static logo when publish left logo empty (seed URLs are stripped).
+        bySlug.set(e.slug, existing?.logo && !e.logo ? { ...e, logo: existing.logo } : e)
       } else if (!existing) {
         bySlug.set(e.slug, e)
       }
@@ -386,7 +387,10 @@ export async function resolveEventForPage(slug: string): Promise<EventPageRecord
   const staticEv = getEventBySlug(slug) as EventPageRecord | undefined
   const dbEv = await fetchPublishedSupabaseEventAsPageEvent(slug)
 
-  if (dbEv?.c2kSourceId) return dbEv
+  if (dbEv?.c2kSourceId) {
+    if (staticEv?.logo && !dbEv.logo) return { ...dbEv, logo: staticEv.logo }
+    return dbEv
+  }
   if (preferDb && dbEv) return dbEv
   if (staticEv) return staticEv
   return dbEv
