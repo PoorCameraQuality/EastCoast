@@ -15,6 +15,9 @@ export type VendorRecord = {
   productImage125ByTagSlug?: Record<string, string>
   /** When set, links to the matching dungeon directory page (same slug) */
   dungeonListingSlug?: string
+  /** Present when this listing was published from kink.social */
+  c2kSourceId?: string | null
+  c2kSourceType?: string | null
 }
 
 export function getVendorCardPreviewText(args: { vendor: VendorRecord; maxSentences: number }): string {

@@ -15,6 +15,8 @@ export type DungeonRecord = ReturnType<typeof getAllDungeons>[number]
 
 export type UnifiedDungeon = DungeonRecord & {
   discoveryTagSlugs: DungeonSeoHubTagSlug[]
+  c2kSourceId?: string | null
+  c2kSourceType?: string | null
 }
 
 function toUnified(d: DungeonRecord): UnifiedDungeon {
@@ -26,6 +28,75 @@ function toUnified(d: DungeonRecord): UnifiedDungeon {
 
 export function getUnifiedDungeons(): UnifiedDungeon[] {
   return getAllDungeons().map(toUnified)
+}
+
+type DbDungeonVenueRow = {
+  slug: string
+  name: string
+  description: string | null
+  city: string | null
+  state: string | null
+  website_url: string | null
+  meta_title: string | null
+  meta_description: string | null
+  c2k_source_id?: string | null
+  c2k_source_type?: string | null
+}
+
+function dbDungeonToUnified(row: DbDungeonVenueRow): UnifiedDungeon {
+  const city = row.city?.trim() || ''
+  const state = row.state ? String(row.state).toUpperCase().slice(0, 2) : ''
+  const description = row.description?.trim() || ''
+  const record = {
+    name: row.name,
+    slug: row.slug,
+    location: {
+      city,
+      state,
+      address: '',
+    },
+    category: 'BDSM Dungeon',
+    excerpt: description.slice(0, 280),
+    description: { long: description },
+    website: row.website_url || undefined,
+    logo: undefined,
+    seo: row.meta_title
+      ? {
+          title: row.meta_title,
+          description: (row.meta_description || description).slice(0, 320),
+          keywords: row.name,
+        }
+      : undefined,
+  } as DungeonRecord
+
+  return {
+    ...toUnified(record),
+    c2kSourceId: row.c2k_source_id ?? null,
+    c2kSourceType: row.c2k_source_type ?? null,
+  }
+}
+
+async function fetchPublishedSupabaseDungeons(): Promise<UnifiedDungeon[]> {
+  const client = getSupabaseServerClient()
+  if (!client) return []
+  try {
+    const { data, error } = await client
+      .from('dungeon_venues')
+      .select(
+        'slug, name, description, city, state, website_url, meta_title, meta_description, c2k_source_id, c2k_source_type',
+      )
+      // C2K-published rows replace static; orphan rows without source id are ignored for merge.
+      .not('c2k_source_id', 'is', null)
+    if (error) {
+      console.error('[unifiedDungeons] list query failed:', error.message, error.code)
+      return []
+    }
+    if (!data?.length) return []
+    return (data as DbDungeonVenueRow[]).map(dbDungeonToUnified)
+  } catch (err) {
+    console.error('[unifiedDungeons] list unexpected error:', err)
+    return []
+  }
 }
 
 export async function enrichDungeonHeroFromManifest(
@@ -41,21 +112,64 @@ export async function enrichDungeonHeroFromManifest(
   }
 }
 
-/** Static dungeons with ECKE manifest hero dual-read applied (SSR-safe). */
+/**
+ * Static + Supabase dungeon venues.
+ * kink.social rows with `c2k_source_id` win on the same slug (parity with events/vendors).
+ */
 export async function getUnifiedDungeonsAsync(): Promise<UnifiedDungeon[]> {
-  const dungeons = getUnifiedDungeons()
+  const preferDb = process.env.UNIFIED_DUNGEONS_PREFER_DB === 'true'
+  const staticUnified = getUnifiedDungeons()
+  const remote = await fetchPublishedSupabaseDungeons()
+  const bySlug = new Map<string, UnifiedDungeon>()
+
+  if (preferDb) {
+    for (const d of staticUnified) bySlug.set(d.slug, d)
+    for (const d of remote) bySlug.set(d.slug, d)
+  } else {
+    for (const d of staticUnified) bySlug.set(d.slug, d)
+    for (const d of remote) {
+      if (d.c2kSourceId) bySlug.set(d.slug, d)
+      else if (!bySlug.has(d.slug)) bySlug.set(d.slug, d)
+    }
+  }
+
+  const merged = Array.from(bySlug.values())
   const client = getSupabaseServerClient()
-  if (!client) return dungeons
-  return Promise.all(dungeons.map((d) => enrichDungeonHeroFromManifest(d, client)))
+  if (!client) return merged
+  return Promise.all(merged.map((d) => enrichDungeonHeroFromManifest(d, client)))
 }
 
 export async function resolveDungeonBySlugAsync(slug: string): Promise<UnifiedDungeon | null> {
-  const dungeon = getDungeonBySlug(slug)
-  if (!dungeon) return null
-  const unified = toUnified(dungeon)
+  const preferDb = process.env.UNIFIED_DUNGEONS_PREFER_DB === 'true'
+  const staticDungeon = getDungeonBySlug(slug)
+  const staticUnified = staticDungeon ? toUnified(staticDungeon) : null
+
   const client = getSupabaseServerClient()
-  if (!client) return unified
-  return enrichDungeonHeroFromManifest(unified, client)
+  let dbUnified: UnifiedDungeon | null = null
+  if (client) {
+    try {
+      const { data, error } = await client
+        .from('dungeon_venues')
+        .select(
+          'slug, name, description, city, state, website_url, meta_title, meta_description, c2k_source_id, c2k_source_type',
+        )
+        .eq('slug', slug)
+        .maybeSingle()
+      if (!error && data) dbUnified = dbDungeonToUnified(data as DbDungeonVenueRow)
+    } catch (err) {
+      console.error('[unifiedDungeons] detail unexpected error:', err)
+    }
+  }
+
+  let resolved: UnifiedDungeon | null = null
+  if (dbUnified?.c2kSourceId) resolved = dbUnified
+  else if (preferDb && dbUnified) resolved = dbUnified
+  else if (staticUnified) resolved = staticUnified
+  else resolved = dbUnified
+
+  if (!resolved) return null
+  if (!client) return resolved
+  return enrichDungeonHeroFromManifest(resolved, client)
 }
 
 export type DungeonHubFilter = {

@@ -72,6 +72,8 @@ type DbVendorRow = {
   online_only: boolean
   meta_title: string | null
   meta_description: string | null
+  c2k_source_id?: string | null
+  c2k_source_type?: string | null
 }
 
 function dbRowToUnified(row: DbVendorRow, seoTagSlugs: string[]): UnifiedVendor {
@@ -94,6 +96,8 @@ function dbRowToUnified(row: DbVendorRow, seoTagSlugs: string[]): UnifiedVendor 
     tagSlugs,
     logo125Url: undefined,
     isPaid: false,
+    c2kSourceId: row.c2k_source_id ?? null,
+    c2kSourceType: row.c2k_source_type ?? null,
   }
 
   return {
@@ -125,7 +129,11 @@ export async function fetchPublishedSupabaseVendors(): Promise<UnifiedVendor[]> 
   const client = getSupabaseServerClient()
   if (!client) return []
   try {
-    const { data: vrows, error: vErr } = await client.from('vendors').select('*')
+    // No status column on vendors — C2K rows are identified by c2k_source_id; unpublish deletes them.
+    const { data: vrows, error: vErr } = await client
+      .from('vendors')
+      .select('*')
+      .not('c2k_source_id', 'is', null)
     if (vErr || !vrows?.length) return []
 
     const rows = vrows as DbVendorRow[]
@@ -170,8 +178,8 @@ function overlayStaticPaidAssets(remote: UnifiedVendor, staticV: UnifiedVendor |
 
 /**
  * Static + Supabase vendors.
- * Default: static wins on duplicate slug (same as events).
- * Set `UNIFIED_VENDORS_PREFER_DB=true` so DB rows override static for the same slug.
+ * kink.social rows with `c2k_source_id` win on the same slug (same rule as events).
+ * Set `UNIFIED_VENDORS_PREFER_DB=true` so any DB row overrides static.
  * When DB wins, static `isPaid` and local assets still overlay so sponsors keep badges/images.
  */
 export async function getUnifiedVendors(): Promise<UnifiedVendor[]> {
@@ -189,7 +197,12 @@ export async function getUnifiedVendors(): Promise<UnifiedVendor[]> {
   } else {
     for (const v of staticUnified) bySlug.set(v.slug, v)
     for (const v of remote) {
-      if (!bySlug.has(v.slug)) bySlug.set(v.slug, v)
+      const existing = bySlug.get(v.slug)
+      if (v.c2kSourceId) {
+        bySlug.set(v.slug, overlayStaticPaidAssets(v, staticBySlug.get(v.slug)))
+      } else if (!existing) {
+        bySlug.set(v.slug, v)
+      }
     }
   }
 

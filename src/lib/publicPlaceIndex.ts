@@ -30,6 +30,8 @@ type EckePlaceRecord = {
   byob?: string
   membership?: string
   socialMedia?: Record<string, string | undefined>
+  /** When set, this row was published from kink.social and should win merge over static. */
+  c2kSourceId?: string | null
 }
 
 function inferPlaceType(category: string | undefined, routeKind: PublicPlaceRouteKind): PublicPlaceType {
@@ -151,7 +153,7 @@ export function dungeonToPlaceListing(record: EckePlaceRecord): PublicPlaceListi
     newFriendly: inferNewFriendly(body),
     membershipRequired: inferMembership(body),
     ...policies,
-    sourceSystem: 'ecke',
+    sourceSystem: record.c2kSourceId ? 'kink_social' : 'ecke',
     status: 'published',
   }
 }
@@ -201,13 +203,24 @@ export function kinkSocialVenueToPlaceListing(record: KinkSocialListingRecord): 
   }
 }
 
-/** kink.social wins on slug collision when fresher */
+/**
+ * kink.social wins on slug collision.
+ * Prefer /dungeons detail paths over thin /venues listings when both exist.
+ */
 export function mergePlaceListings(items: PublicPlaceListing[]): PublicPlaceListing[] {
   const bySlug = new Map<string, PublicPlaceListing>()
   for (const item of items) {
     const existing = bySlug.get(item.slug)
     if (!existing) {
       bySlug.set(item.slug, item)
+      continue
+    }
+    // Always prefer Places (/dungeons) over thin venue_listings (/venues) for the same slug.
+    if (existing.detailPath.startsWith('/dungeons/') && item.detailPath.startsWith('/venues/')) {
+      continue
+    }
+    if (existing.detailPath.startsWith('/venues/') && item.detailPath.startsWith('/dungeons/')) {
+      bySlug.set(item.slug, { ...existing, ...item, detailPath: item.detailPath, routeKind: item.routeKind })
       continue
     }
     if (existing.sourceSystem === 'ecke' && item.sourceSystem === 'kink_social') {
