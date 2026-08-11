@@ -10,7 +10,18 @@ export type ParsedEventDescription = {
   sections: EventDescriptionSection[]
 }
 
-const SECTION_HEADER = /\*\*([^*]+?)\*\*/g
+/**
+ * Only treat **…** as overview section headers when they look like structured
+ * catalog headers — not inline emphasis mid-sentence.
+ *
+ * Matches:
+ * - Standalone header lines: `**Event Highlights:**\n`
+ * - Feature rows: `**VendorMart** - detail…`
+ *
+ * Does not match: `Dark Odyssey **Summer Camp** is the **Maryland** …`
+ */
+const SECTION_HEADER =
+  /(?:^|\n)([ \t]*)\*\*([^*\n]{2,80}?)\*\*(?:\s*:)?(?:[ \t]*-[ \t]+|[ \t]*(?=\n|$))/g
 
 /** Split organizer long copy into scannable modules. */
 export function parseEventDescription(longDescription: string): ParsedEventDescription {
@@ -22,11 +33,16 @@ export function parseEventDescription(longDescription: string): ParsedEventDescr
   const re = new RegExp(SECTION_HEADER.source, 'g')
 
   while ((match = re.exec(trimmed)) !== null) {
+    const indent = match[1] ?? ''
+    const title = match[2]!.replace(/:$/, '').trim()
+    const starOffset = match[0].indexOf('**')
+    const start = match.index + starOffset
     parts.push({
-      title: match[1].replace(/:$/, '').trim(),
-      start: match.index,
+      title,
+      start,
       end: match.index + match[0].length,
     })
+    void indent
   }
 
   if (parts.length === 0) {
