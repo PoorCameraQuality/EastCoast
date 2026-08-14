@@ -117,6 +117,7 @@ const nextConfig = {
       { source: '/events/mid-atlantic-leather-weekend-2026', destination: '/events/mid-atlantic-leather-weekend', permanent: true },
       { source: '/events/elevation-rope-2026', destination: '/events/elevation-rope', permanent: true },
       { source: '/events/cure-2026', destination: '/events/cure', permanent: true },
+      { source: '/events/kink-down-south-weekend-2026', destination: '/events/kink-down-south-weekend', permanent: true },
 
       // Strip AMP format parameter
       {

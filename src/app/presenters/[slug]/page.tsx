@@ -27,6 +27,7 @@ export default async function PresenterListingPage({ params }: PageProps) {
       indexHref="/presenters"
       indexLabel="Presenters"
       listing={row}
+      analyticsEntityType="presenter"
     />
   )
 }

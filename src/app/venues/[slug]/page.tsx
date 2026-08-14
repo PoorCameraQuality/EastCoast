@@ -64,6 +64,7 @@ export default async function VenueListingPage({ params }: PageProps) {
         indexHref="/venues"
         indexLabel="Venues"
         listing={row}
+        analyticsEntityType="venue"
       />
     </>
   )

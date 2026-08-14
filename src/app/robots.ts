@@ -11,7 +11,7 @@ const SENSITIVE_DISALLOW = [
   '/debug-simple',
   '/test-article',
   '/admin-test',
-  '/_next/static/',
+  // Do not Disallow /_next/static/ — Google needs CSS/JS to render pages.
   '/education/submit',
 ] as const
 

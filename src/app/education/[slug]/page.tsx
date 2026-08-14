@@ -19,6 +19,7 @@ import {
   getPublishedEducationSlugs,
 } from '@/lib/educationArticles'
 import { ArticleStructuredData } from '@/components/ArticleStructuredData'
+import EntityPageViewTracker from '@/components/analytics/EntityPageViewTracker'
 import { getArticleSerpOverride } from '@/lib/articleSerpOverrides'
 import {
   attachLearningPath,
@@ -150,6 +151,14 @@ export default async function ArticlePage({ params }: { params: { slug: string }
 
     return (
       <div className="edu-article-page">
+        <EntityPageViewTracker
+          entityType="article"
+          slug={article.slug}
+          name={article.title}
+          organizerName={publicItem.authorName || publicItem.authorSlug}
+          organizerSlug={publicItem.authorSlug}
+          pagePath={`/education/${article.slug}`}
+        />
         <ArticleStructuredData article={article} />
 
         <div className="container-custom">

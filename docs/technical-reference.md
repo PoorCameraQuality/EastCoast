@@ -101,14 +101,17 @@ Defined in `package.json`:
 
 ### Analytics
 
-If `NEXT_PUBLIC_GA_MEASUREMENT_ID` is present, `src/app/layout.tsx` enables GA via `src/components/GoogleAnalytics.tsx` and wraps pages in `src/contexts/GA4Provider.tsx`. After age verification, `window.gaConsent` is set so SPA route changes update `page_path` in GA and optional scroll/device helpers in `src/hooks/useSafeTracking.ts` run.
+If `NEXT_PUBLIC_GA_MEASUREMENT_ID` is present, `src/app/layout.tsx` enables GA via `src/components/GoogleAnalytics.tsx` and wraps pages in `src/contexts/GA4Provider.tsx`. On load, `window.gaConsent` is set so SPA route changes update `page_path` / `page_title` and detail trackers can fire.
 
-Listing and outbound engagement:
+Listing and detail engagement (`src/lib/analyticsEntities.ts`):
 
-- `src/lib/analyticsEntities.ts` — `select_item` (params include `item_list_name` and an `items` array with `item_id`, `item_name`, `item_category`) and `outbound_click` (`entity_type`, `entity_slug`, `entity_name`, `link_url`, `link_domain`).
-- `src/components/analytics/TrackedEntityLink.tsx` and `OutboundWebsiteLink.tsx` for wrapped links.
+- `select_item` — card clicks (`item_list_name`, `entity_*`, optional `organizer_*`)
+- `entity_page_view` + `view_item` — detail pages via `EntityPageViewTracker` (`content_group`, `entity_type`, `entity_slug`, `entity_name`, `organizer_name`, `organizer_slug`); standard `page_view` remains path/title from `GoogleAnalytics.tsx`
+- `outbound_click` — official website CTAs
 
-**GA4 Admin (client reporting):** Register event-scoped custom dimensions as needed, for example `item_list_name`, `item_category`, and for `outbound_click` events `entity_name`, `entity_slug`, `entity_type`, `link_domain`. Use Explorations (free form) with event name `select_item` or `outbound_click` and break down by `item_name` or `entity_name` for per-entity counts. Looker Studio can connect to the same GA4 property for shareable dashboards.
+**Operator docs:** [GA4_ORGANIZER_REPORTING.md](./GA4_ORGANIZER_REPORTING.md) — register custom dimensions, landing-page explores, monthly organizer reports.
+
+**GA4 Admin:** Register event-scoped custom dimensions for the parameters above. Looker Studio can connect to the same property for shareable monthly organizer tables.
 
 ## Technical Reference
 

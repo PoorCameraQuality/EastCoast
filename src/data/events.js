@@ -3379,7 +3379,8 @@ export const generateEventSEO = (event) => {
 
   const clampMeta = (s, max) => {
     if (!s || typeof s !== 'string') return '';
-    const t = s.trim();
+    // Collapse whitespace/newlines so SERP snippets stay one clean line.
+    const t = s.replace(/\s+/g, ' ').trim();
     if (t.length <= max) return t;
     return `${t.slice(0, max - 1).trimEnd()}…`;
   };

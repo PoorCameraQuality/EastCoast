@@ -8,6 +8,8 @@ type Props = {
   entityType: AnalyticsEntityType
   entitySlug: string
   entityName: string
+  organizerName?: string | null
+  organizerSlug?: string | null
   className?: string
   children: React.ReactNode
   'aria-label'?: string
@@ -18,6 +20,8 @@ export default function OutboundWebsiteLink({
   entityType,
   entitySlug,
   entityName,
+  organizerName,
+  organizerSlug,
   className,
   children,
   'aria-label': ariaLabel,
@@ -35,6 +39,8 @@ export default function OutboundWebsiteLink({
           slug: entitySlug,
           name: entityName,
           url: href,
+          organizerName,
+          organizerSlug,
         })
       }
     >

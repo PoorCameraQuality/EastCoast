@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import Breadcrumb from '@/components/Breadcrumb'
 import KinkSocialAcquisitionCard from '@/components/kink-social/KinkSocialAcquisitionCard'
+import EntityPageViewTracker from '@/components/analytics/EntityPageViewTracker'
 import type { GroupListingRecord } from '@/lib/unifiedGroupListings'
 
 type Props = {
@@ -15,6 +16,14 @@ export default function GroupListingDetailView({ group }: Props) {
 
   return (
     <section className="section-padding bg-gradient-to-br from-black via-dark-950 to-black">
+      <EntityPageViewTracker
+        entityType="group"
+        slug={group.slug}
+        name={group.name}
+        organizerName={group.orgDisplayName || group.name}
+        organizerSlug={group.orgSlug || group.slug}
+        pagePath={`/groups/${group.slug}`}
+      />
       <div className="container-custom">
         <div className="max-w-3xl mx-auto">
           <div className="mb-6">

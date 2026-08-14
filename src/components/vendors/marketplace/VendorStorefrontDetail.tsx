@@ -6,6 +6,7 @@ import VendorActionDock from '@/components/vendors/marketplace/VendorActionDock'
 import { VendorPlatformCta } from '@/components/vendors/marketplace/AdaptiveVendorCard'
 import VendorMasthead from '@/components/vendors/marketplace/VendorMasthead'
 import VendorProductShelf, { VendorAppearances } from '@/components/vendors/marketplace/VendorProductShelf'
+import EntityPageViewTracker from '@/components/analytics/EntityPageViewTracker'
 import type { PublicVendorListing } from '@/types/publicVendorListing'
 
 type Props = {
@@ -25,6 +26,12 @@ export default function VendorStorefrontDetail({
 
   return (
     <main className="vendor-storefront-page">
+      <EntityPageViewTracker
+        entityType="vendor"
+        slug={vendor.slug}
+        name={vendor.name}
+        pagePath={`/vendors/${vendor.slug}`}
+      />
       {structuredData}
       <div className="container-custom section-padding">
         <Breadcrumb items={breadcrumbItems} />

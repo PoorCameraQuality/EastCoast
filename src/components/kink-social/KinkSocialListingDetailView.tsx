@@ -2,6 +2,8 @@ import Link from 'next/link'
 import Breadcrumb from '@/components/Breadcrumb'
 import KinkSocialAcquisitionCard from '@/components/kink-social/KinkSocialAcquisitionCard'
 import KinkSocialEntityGallerySection from '@/components/kink-social/KinkSocialEntityGallerySection'
+import EntityPageViewTracker from '@/components/analytics/EntityPageViewTracker'
+import type { AnalyticsEntityType } from '@/lib/analyticsEntities'
 import type { KinkSocialListingRecord } from '@/lib/unifiedExtendedListings'
 
 type Props = {
@@ -9,9 +11,16 @@ type Props = {
   indexHref: string
   indexLabel: string
   listing: KinkSocialListingRecord
+  analyticsEntityType?: AnalyticsEntityType
 }
 
-export default function KinkSocialListingDetailView({ entityLabel, indexHref, indexLabel, listing }: Props) {
+export default function KinkSocialListingDetailView({
+  entityLabel,
+  indexHref,
+  indexLabel,
+  listing,
+  analyticsEntityType = 'organization',
+}: Props) {
   const breadcrumbItems = [
     { label: 'Home', href: '/' },
     { label: indexLabel, href: indexHref },
@@ -22,6 +31,14 @@ export default function KinkSocialListingDetailView({ entityLabel, indexHref, in
 
   return (
     <section className="section-padding bg-gradient-to-br from-black via-dark-950 to-black">
+      <EntityPageViewTracker
+        entityType={analyticsEntityType}
+        slug={listing.slug}
+        name={listing.name}
+        organizerName={listing.orgDisplayName || listing.name}
+        organizerSlug={listing.orgSlug || listing.slug}
+        pagePath={`${indexHref}/${listing.slug}`}
+      />
       <div className="container-custom">
         <div className="max-w-3xl mx-auto">
           <div className="mb-6">

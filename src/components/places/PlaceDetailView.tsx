@@ -13,6 +13,7 @@ import PlaceMasthead from '@/components/places/PlaceMasthead'
 import KinkSocialCtaLink from '@/components/kink-social/KinkSocialCtaLink'
 import MarkdownSimple from '@/components/MarkdownSimple'
 import DiscoveryPageShell from '@/components/discovery/DiscoveryPageShell'
+import EntityPageViewTracker from '@/components/analytics/EntityPageViewTracker'
 import { buildKinkSocialUrl, KINK_SOCIAL_PATHS } from '@/lib/kinkSocialMarketing'
 import type { PublicEventIndexItem } from '@/types/publicEventIndexItem'
 import type { PublicPlaceListing } from '@/types/publicPlaceListing'
@@ -41,9 +42,18 @@ export default function PlaceDetailView({
 }: Props) {
   const longBody = place.description ?? ''
   const hasLongBody = longBody.length > 120
+  const analyticsType =
+    place.routeKind === 'swing_club' ? 'swingClub' : place.routeKind === 'venue' ? 'venue' : 'dungeon'
 
   return (
     <DiscoveryPageShell accent="violet">
+      <EntityPageViewTracker
+        entityType={analyticsType}
+        slug={place.slug}
+        name={place.name}
+        organizerName={place.organizerName}
+        pagePath={place.detailPath}
+      />
       {structuredData}
 
       <section className="places-detail-page section-padding pt-4 md:pt-6">

@@ -25,9 +25,8 @@ export default function EventActionDock({ event, safeKinkSocialEventUrl, isC2kSo
     safeKinkSocialEventUrl,
   })
 
-  const saveHref = buildKinkSocialUrl(KINK_SOCIAL_PATHS.join, 'event_detail', {
+  const saveHref = buildKinkSocialUrl(`/events/${event.slug}`, 'event_detail', {
     ref: 'ecke_event_save',
-    ecke_event: event.slug,
   })
 
   const share = useCallback(async () => {
@@ -59,6 +58,7 @@ export default function EventActionDock({ event, safeKinkSocialEventUrl, isC2kSo
               entityType="event"
               entitySlug={event.slug}
               entityName={event.name}
+              organizerName={event.organizer}
               className="ed-btn-official w-full"
             >
               Visit official site

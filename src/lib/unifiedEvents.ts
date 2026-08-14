@@ -395,39 +395,46 @@ export async function fetchPublishedSupabaseEventAsPageEvent(
  */
 export async function resolveEventForPage(slug: string): Promise<EventPageRecord | null> {
   const preferDb = process.env.UNIFIED_EVENTS_PREFER_DB === 'true'
-  const staticEv = getEventBySlug(slug) as EventPageRecord | undefined
-  const dbEv = await fetchPublishedSupabaseEventAsPageEvent(slug)
+  const trySlugs = [slug]
+  // Shared/year-suffixed URLs (e.g. …-weekend-2026) → canonical without trailing year.
+  const withoutYear = slug.replace(/-20\d{2}$/, '')
+  if (withoutYear && withoutYear !== slug) trySlugs.push(withoutYear)
 
-  if (dbEv?.c2kSourceId) {
-    // C2K wins the listing, but keep useful static presentation fields when publish left them thin.
-    const merged: EventPageRecord = { ...dbEv }
-    if (staticEv?.logo && !dbEv.logo) merged.logo = staticEv.logo
-    if (staticEv?.location?.region && !dbEv.location.region) {
-      merged.location = { ...merged.location, region: staticEv.location.region }
+  for (const candidate of trySlugs) {
+    const staticEv = getEventBySlug(candidate) as EventPageRecord | undefined
+    const dbEv = await fetchPublishedSupabaseEventAsPageEvent(candidate)
+
+    if (dbEv?.c2kSourceId) {
+      const merged: EventPageRecord = { ...dbEv }
+      if (staticEv?.logo && !dbEv.logo) merged.logo = staticEv.logo
+      if (staticEv?.location?.region && !dbEv.location.region) {
+        merged.location = { ...merged.location, region: staticEv.location.region }
+      }
+      if (
+        staticEv?.excerpt &&
+        (!dbEv.excerpt ||
+          dbEv.excerpt.length > 320 ||
+          (dbEv.longDescription && dbEv.excerpt.startsWith(dbEv.longDescription.slice(0, 80))))
+      ) {
+        merged.excerpt = staticEv.excerpt
+      }
+      if (
+        staticEv?.longDescription &&
+        (!dbEv.longDescription ||
+          dbEv.longDescription === dbEv.excerpt ||
+          (staticEv.longDescription.length > (dbEv.longDescription?.length ?? 0) + 80 &&
+            (dbEv.longDescription?.length ?? 0) < 400))
+      ) {
+        merged.longDescription = staticEv.longDescription
+      }
+      if (staticEv?.venue && !dbEv.venue) merged.venue = staticEv.venue
+      return merged
     }
-    if (
-      staticEv?.excerpt &&
-      (!dbEv.excerpt ||
-        dbEv.excerpt.length > 320 ||
-        (dbEv.longDescription && dbEv.excerpt.startsWith(dbEv.longDescription.slice(0, 80))))
-    ) {
-      merged.excerpt = staticEv.excerpt
-    }
-    if (
-      staticEv?.longDescription &&
-      (!dbEv.longDescription ||
-        dbEv.longDescription === dbEv.excerpt ||
-        (staticEv.longDescription.length > (dbEv.longDescription?.length ?? 0) + 80 &&
-          (dbEv.longDescription?.length ?? 0) < 400))
-    ) {
-      merged.longDescription = staticEv.longDescription
-    }
-    if (staticEv?.venue && !dbEv.venue) merged.venue = staticEv.venue
-    return merged
+    if (preferDb && dbEv) return dbEv
+    if (staticEv) return staticEv
+    if (dbEv) return dbEv
   }
-  if (preferDb && dbEv) return dbEv
-  if (staticEv) return staticEv
-  return dbEv
+  return null
 }
 
 /**

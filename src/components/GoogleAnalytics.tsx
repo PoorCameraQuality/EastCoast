@@ -29,6 +29,8 @@ function GoogleAnalyticsInner({ GA_MEASUREMENT_ID }: GoogleAnalyticsProps) {
     if ((window as any).gtag) {
       ;(window as any).gtag('config', GA_ID, {
         page_path: url,
+        page_title: document.title,
+        page_location: window.location.origin + url,
       })
     }
     initWebVitals()
@@ -55,6 +57,8 @@ function GoogleAnalyticsInner({ GA_MEASUREMENT_ID }: GoogleAnalyticsProps) {
             gtag('config', '${GA_ID}', {
               page_title: document.title,
               page_location: window.location.href,
+              page_path: window.location.pathname + window.location.search,
+              send_page_view: true,
             });
           `,
               }}

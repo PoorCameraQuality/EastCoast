@@ -13,6 +13,7 @@ import EventFeatureTiles from '@/components/events/EventFeatureTiles'
 import EventVenueTravel from '@/components/events/EventVenueTravel'
 import EventListingStatus from '@/components/events/EventListingStatus'
 import KinkSocialEntityGallerySection from '@/components/kink-social/KinkSocialEntityGallerySection'
+import EntityPageViewTracker from '@/components/analytics/EntityPageViewTracker'
 import { stateAbbrToSlug } from '@/lib/discoveryCrossLinks'
 import { EAST_COAST_STATES } from '@/lib/eastCoastStates'
 import type { EventPageRecord } from '@/lib/unifiedEvents'
@@ -51,6 +52,13 @@ export default function EventDetailView({ event, media, brand }: Props) {
 
   return (
     <div className="event-detail-page discovery-page" style={eventBrandStyle(brand)}>
+      <EntityPageViewTracker
+        entityType="event"
+        slug={event.slug}
+        name={event.name}
+        organizerName={event.organizer}
+        pagePath={`/events/${event.slug}`}
+      />
       <EventStructuredData event={event} />
 
       <section className="section-padding pt-4 md:pt-6 event-detail-main">

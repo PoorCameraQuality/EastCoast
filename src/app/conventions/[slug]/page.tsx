@@ -27,6 +27,7 @@ export default async function ConventionListingPage({ params }: PageProps) {
       indexHref="/conventions"
       indexLabel="Conventions"
       listing={row}
+      analyticsEntityType="convention"
     />
   )
 }
