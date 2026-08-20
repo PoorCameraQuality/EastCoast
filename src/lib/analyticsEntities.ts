@@ -127,16 +127,15 @@ export function trackEntityPageView(args: EntityAnalyticsPayload): void {
       : `/${args.entityType}/${args.slug}`)
   const page_title = typeof document !== 'undefined' ? document.title : args.name
 
-  // Attach dimensions to the hit stream without creating an extra page_view.
-  window.gtag!('set', dims)
-
-  window.gtag!('event', 'entity_page_view', {
+  // Dims are attached on these events (not via gtag('set', object) — that conflicts with
+  // the project Window.gtag typing which expects a string targetId as arg 2).
+  window.gtag('event', 'entity_page_view', {
     page_path,
     page_title,
     ...dims,
   })
 
-  window.gtag!('event', 'view_item', {
+  window.gtag('event', 'view_item', {
     page_path,
     page_title,
     ...dims,
