@@ -6,9 +6,8 @@ Property in use: `NEXT_PUBLIC_GA_MEASUREMENT_ID` (production: `G-YRXEJ4E72Y`).
 
 On public detail pages, `EntityPageViewTracker` fires (without double-counting `page_view`):
 
-1. **`gtag('set', …)`** — attaches `content_group`, `entity_*`, `organizer_*` to the session hit stream  
-2. **`entity_page_view`** — dedicated event with `page_path`, `page_title`, and the same dimensions  
-3. **`view_item`** — ecommerce-style item view with the same dimensions + `items[]`
+1. **`entity_page_view`** — dedicated event with `page_path`, `page_title`, `content_group`, `entity_*`, `organizer_*`
+2. **`view_item`** — ecommerce-style item view with the same dimensions + `items[]`
 
 The standard SPA **`page_view`** still comes from `GoogleAnalytics.tsx` (path + title). Landing page reports use that path (e.g. `/events/dark-odyssey-winter-fire`).
 
