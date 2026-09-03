@@ -112,6 +112,19 @@ function asStringList(value: unknown): string[] {
   return asUnknownList(value).filter((item): item is string => typeof item === 'string' && Boolean(item.trim()))
 }
 
+/** Dedupes without spreading a Set — tsconfig target is ES5 (TS2802). */
+function uniqueStrings(values: string[]): string[] {
+  const seen: Record<string, true> = {}
+  const unique: string[] = []
+  for (let index = 0; index < values.length; index += 1) {
+    const value = values[index]
+    if (!value || seen[value]) continue
+    seen[value] = true
+    unique.push(value)
+  }
+  return unique
+}
+
 function parseDbListings(raw: DbVendorListing[] | string | null | undefined): VendorRecord['listings'] {
   const items = asUnknownList(raw) as DbVendorListing[]
   if (items.length === 0) return undefined
@@ -149,7 +162,7 @@ export function dbRowToUnified(row: DbVendorRow, seoTagSlugs: string[]): Unified
   const hubTags = publishedHubTags.length ? publishedHubTags : seoTagSlugs
   const fromHubs = taxonomySlugsFromSeoHubTags(hubTags)
   const extras = asStringList(row.tag_slugs)
-  const tagSlugs = [...new Set([...fromHubs, ...extras])]
+  const tagSlugs = uniqueStrings(fromHubs.concat(extras))
 
   const record: VendorRecord = {
     slug: row.slug,
