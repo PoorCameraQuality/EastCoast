@@ -32,27 +32,35 @@ function inferVendorType(tagSlugs: string[]): PublicVendorType {
   return 'other'
 }
 
+function toMirroredProductSource(
+  value: string | null | undefined,
+): NonNullable<PublicVendorProduct['sourceSystem']> {
+  switch (value) {
+    case 'native':
+    case 'etsy':
+    case 'shopify':
+    case 'woo':
+    case 'manual':
+      return value
+    default:
+      return 'manual'
+  }
+}
+
 function productsFromMirroredListings(vendor: VendorRecord): PublicVendorProduct[] {
   const mirrored = vendor.listings
   if (!mirrored?.length) return []
-  return mirrored
-    .map((listing, index) => ({
-      id: listing.id || `${vendor.slug}-listing-${index}`,
-      title: listing.title,
-      imageUrl: listing.imageUrl || undefined,
-      priceLabel: listing.priceLabel || undefined,
-      externalUrl: listing.externalUrl || undefined,
-      sourceSystem:
-        listing.sourceSystem === 'native' ||
-        listing.sourceSystem === 'etsy' ||
-        listing.sourceSystem === 'shopify' ||
-        listing.sourceSystem === 'woo'
-          ? listing.sourceSystem
-          : 'manual',
-      publicSafe: true,
-      sortOrder: listing.sortOrder ?? index,
-    }))
-    .sort((a, b) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0))
+  const products: PublicVendorProduct[] = mirrored.map((listing, index) => ({
+    id: listing.id || `${vendor.slug}-listing-${index}`,
+    title: listing.title,
+    imageUrl: listing.imageUrl || undefined,
+    priceLabel: listing.priceLabel || undefined,
+    externalUrl: listing.externalUrl || undefined,
+    sourceSystem: toMirroredProductSource(listing.sourceSystem),
+    publicSafe: true,
+    sortOrder: listing.sortOrder ?? index,
+  }))
+  return products.sort((a, b) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0))
 }
 
 function productsFromVendor(vendor: VendorRecord, tagsBySlug: Record<string, VendorTag>): PublicVendorProduct[] {
