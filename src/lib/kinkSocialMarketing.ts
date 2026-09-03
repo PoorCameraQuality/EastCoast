@@ -46,9 +46,15 @@ export const KINK_SOCIAL_PATHS = {
   join: '/',
   orgNew: '/orgs/new',
   vendorOnboarding: '/vendors/onboarding',
+  vendorSettings: '/settings/vendor',
   eventsBrowse: '/events',
   educationBrowse: '/education',
 } as const
+
+export function kinkSocialVendorShopPath(slug: string): string {
+  const trimmed = slug.trim().replace(/^\/+/, '')
+  return `/vendors/${trimmed}`
+}
 
 export const KINK_SOCIAL_LABELS = {
   joinFree: 'Join kink.social free',
@@ -130,6 +136,17 @@ export function getKinkSocialOrgUrl(campaign: KinkSocialCampaign): string {
 
 export function getKinkSocialVendorOnboardingUrl(campaign: KinkSocialCampaign): string {
   return buildKinkSocialUrl(KINK_SOCIAL_PATHS.vendorOnboarding, campaign)
+}
+
+export function getKinkSocialVendorShopUrl(slug: string, campaign: KinkSocialCampaign = 'vendor_page'): string {
+  return buildKinkSocialUrl(kinkSocialVendorShopPath(slug), campaign, {
+    ref: 'ecke_vendor',
+    ecke_vendor: slug,
+  })
+}
+
+export function getKinkSocialVendorManageUrl(campaign: KinkSocialCampaign = 'vendor_page'): string {
+  return buildKinkSocialUrl(KINK_SOCIAL_PATHS.vendorSettings, campaign, { ref: 'ecke_vendor_manage' })
 }
 
 export type AcquisitionCopy = {

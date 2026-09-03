@@ -16,18 +16,32 @@ export default function VendorImage({ src, alt, size, className = '' }: VendorIm
   const [error, setError] = useState(false)
   const resolvedSrc = !src || error ? FALLBACK_SRC : src
   const imageAlt = alt.trim() || 'Vendor or maker listing logo'
+  const isRemote = resolvedSrc.startsWith('http://') || resolvedSrc.startsWith('https://')
 
   return (
     <div className={`relative overflow-hidden rounded-xl border border-white/10 bg-white/5 ${className}`} style={{ width: size, height: size }}>
-      <Image
-        src={resolvedSrc}
-        alt={imageAlt}
-        width={size}
-        height={size}
-        className="h-full w-full object-contain"
-        loading="lazy"
-        onError={() => setError(true)}
-      />
+      {isRemote ? (
+        // eslint-disable-next-line @next/next/no-img-element -- C2K/CDN hosts are not all in next/image allowlist
+        <img
+          src={resolvedSrc}
+          alt={imageAlt}
+          width={size}
+          height={size}
+          className="h-full w-full object-contain"
+          loading="lazy"
+          onError={() => setError(true)}
+        />
+      ) : (
+        <Image
+          src={resolvedSrc}
+          alt={imageAlt}
+          width={size}
+          height={size}
+          className="h-full w-full object-contain"
+          loading="lazy"
+          onError={() => setError(true)}
+        />
+      )}
     </div>
   )
 }

@@ -1,8 +1,6 @@
 'use client'
 
-import Image from 'next/image'
 import { useState } from 'react'
-import VendorImage from '@/components/vendors/VendorImage'
 import type { PublicVendorListing } from '@/types/publicVendorListing'
 
 type Props = {
@@ -32,13 +30,12 @@ function VendorLogoStage({
 
   return (
     <div className="vendor-logo-stage">
-      <Image
+      {/* eslint-disable-next-line @next/next/no-img-element -- remote C2K/CDN hosts are not all in next/image allowlist */}
+      <img
         src={logoUrl}
         alt={`${name} logo`}
-        width={640}
-        height={360}
         className={isMasthead ? 'vendor-logo-hero' : 'vendor-logo-card'}
-        sizes={isMasthead ? '640px' : '400px'}
+        loading={isMasthead ? 'eager' : 'lazy'}
         onError={() => setError(true)}
       />
     </div>
@@ -65,7 +62,8 @@ export default function VendorMediaStage({ vendor, size = 'card' }: Props) {
         ) : null}
         {vendor.logoUrl ? (
           <div className="vendor-media-logo-badge">
-            <VendorImage src={vendor.logoUrl} alt="" size={48} />
+            {/* eslint-disable-next-line @next/next/no-img-element -- same remote-host rule as covers */}
+            <img src={vendor.logoUrl} alt="" width={48} height={48} loading="lazy" />
           </div>
         ) : null}
       </div>

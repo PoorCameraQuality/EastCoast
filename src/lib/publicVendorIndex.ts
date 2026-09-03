@@ -4,6 +4,7 @@ import type { UnifiedEvent } from '@/lib/unifiedEvents'
 import type { VendorRecord } from '@/lib/vendorFiltering'
 import { getVendorPaidImage125Url, getVendorCardPreviewText } from '@/lib/vendorFiltering'
 import { parseVendorLocation, type UnifiedVendor } from '@/lib/unifiedVendors'
+import { buildKinkSocialUrl, kinkSocialVendorShopPath } from '@/lib/kinkSocialMarketing'
 import type { PublicEventIndexItem } from '@/types/publicEventIndexItem'
 import type { PublicVendorListing, PublicVendorType, VendorCategoryChip } from '@/types/publicVendorListing'
 import { VENDOR_CATEGORY_CHIPS } from '@/types/publicVendorListing'
@@ -29,6 +30,29 @@ function inferVendorType(tagSlugs: string[]): PublicVendorType {
     return 'maker'
   }
   return 'other'
+}
+
+function productsFromMirroredListings(vendor: VendorRecord): PublicVendorProduct[] {
+  const mirrored = vendor.listings
+  if (!mirrored?.length) return []
+  return mirrored
+    .map((listing, index) => ({
+      id: listing.id || `${vendor.slug}-listing-${index}`,
+      title: listing.title,
+      imageUrl: listing.imageUrl || undefined,
+      priceLabel: listing.priceLabel || undefined,
+      externalUrl: listing.externalUrl || undefined,
+      sourceSystem:
+        listing.sourceSystem === 'native' ||
+        listing.sourceSystem === 'etsy' ||
+        listing.sourceSystem === 'shopify' ||
+        listing.sourceSystem === 'woo'
+          ? listing.sourceSystem
+          : 'manual',
+      publicSafe: true,
+      sortOrder: listing.sortOrder ?? index,
+    }))
+    .sort((a, b) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0))
 }
 
 function productsFromVendor(vendor: VendorRecord, tagsBySlug: Record<string, VendorTag>): PublicVendorProduct[] {
@@ -79,13 +103,37 @@ function galleryFromProducts(products: PublicVendorProduct[]): PublicVendorMedia
     }))
 }
 
+/** Path-only `/vendors/{slug}` from C2K publish. Reject hosts, query strings, and extra segments. */
+function safeKinkSocialVendorPath(path: string | null | undefined): string | null {
+  const trimmed = path?.trim()
+  if (!trimmed || !trimmed.startsWith('/vendors/')) return null
+  if (trimmed.includes('://') || trimmed.includes('?') || trimmed.includes('\\')) return null
+  const slug = trimmed.slice('/vendors/'.length)
+  if (!slug || slug.includes('/') || slug.includes('..')) return null
+  return `/vendors/${slug}`
+}
+
+function kinkSocialVendorUrlFor(vendor: UnifiedVendor): string | undefined {
+  const path = safeKinkSocialVendorPath(vendor.kinkSocialCanonicalPath) ?? (
+    vendor.c2kSourceId ? kinkSocialVendorShopPath(vendor.slug) : null
+  )
+  if (!path) return undefined
+  return buildKinkSocialUrl(path, 'vendor_page', {
+    ref: 'ecke_vendor',
+    ecke_vendor: vendor.slug,
+  })
+}
+
 export function vendorToListing(
   vendor: UnifiedVendor,
   tagsBySlug: Record<string, VendorTag>
 ): PublicVendorListing {
   const { stateAbbr, city, onlineOnly } = parseVendorLocation(vendor.location)
-  const featuredProducts = productsFromVendor(vendor, tagsBySlug)
+  const mirroredProducts = productsFromMirroredListings(vendor)
+  const featuredProducts =
+    mirroredProducts.length > 0 ? mirroredProducts : productsFromVendor(vendor, tagsBySlug)
   const coverImageUrl =
+    vendor.coverUrl ??
     featuredProducts[0]?.imageUrl ??
     getVendorPaidImage125Url({ vendor, selectedTagSlugs: vendor.tagSlugs }) ??
     undefined
@@ -96,11 +144,15 @@ export function vendorToListing(
     .slice(0, 4) as string[]
 
   const acceptsCommissions =
+    Boolean(vendor.acceptsCommissions) ||
     vendor.tagSlugs.includes('custom-commission-vendor') ||
     vendor.tagSlugs.includes('custom-orders-available')
 
   const shortSummary =
     getVendorCardPreviewText({ vendor, maxSentences: 2 }) || undefined
+
+  const fromKinkSocial = Boolean(vendor.c2kSourceId)
+  const kinkSocialVendorUrl = kinkSocialVendorUrlFor(vendor)
 
   return {
     id: vendor.slug,
@@ -121,13 +173,16 @@ export function vendorToListing(
     coverImageUrl,
     gallery: galleryFromProducts(featuredProducts),
     featuredProducts,
-    shopUrl: vendor.websiteUrl,
+    shopUrl: kinkSocialVendorUrl ?? vendor.websiteUrl,
     websiteUrl: vendor.websiteUrl,
     acceptsCommissions,
     commissionInfo: acceptsCommissions ? 'Custom commissions available — confirm details on the vendor site.' : undefined,
     supporterTier: vendor.isPaid ? 'supporter' : 'none',
     dungeonListingSlug: vendor.dungeonListingSlug,
-    sourceSystem: 'ecke',
+    kinkSocialVendorUrl,
+    followUrl: kinkSocialVendorUrl,
+    sourceSystem: fromKinkSocial ? 'kink_social' : 'ecke',
+    lastSyncedAt: vendor.lastSyncedAt,
     status: 'published',
   }
 }

@@ -56,7 +56,17 @@ export default function AdaptiveVendorCard({
         {vendor.shortSummary ? <p className="vendor-index-card-summary">{vendor.shortSummary}</p> : null}
 
         <div className="vendor-index-card-actions">
-          {shopUrl ? (
+          {shopUrl && vendor.sourceSystem === 'kink_social' ? (
+            <KinkSocialCtaLink
+              href={shopUrl}
+              label="Visit shop"
+              variant="vendor"
+              surface="vendor_index_card"
+              entitySlug={vendor.slug}
+              className="vendor-btn vendor-btn-shop min-h-11"
+              external
+            />
+          ) : shopUrl ? (
             <OutboundWebsiteLink
               href={shopUrl}
               entityType="vendor"

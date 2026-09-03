@@ -4,6 +4,8 @@ import {
   campaignForVariant,
   getKinkSocialJoinUrl,
   getKinkSocialOrgUrl,
+  getKinkSocialVendorShopUrl,
+  kinkSocialVendorShopPath,
   KINK_SOCIAL_UTM,
 } from './kinkSocialMarketing'
 
@@ -33,8 +35,16 @@ function testJoinAndOrgUrls() {
   assert.equal(org.searchParams.get('utm_content'), 'organizer')
 }
 
+function testVendorShopUrl() {
+  assert.equal(kinkSocialVendorShopPath('rope-co'), '/vendors/rope-co')
+  const url = new URL(getKinkSocialVendorShopUrl('rope-co'))
+  assert.equal(url.pathname, '/vendors/rope-co')
+  assert.equal(url.searchParams.get('ecke_vendor'), 'rope-co')
+}
+
 testBuildKinkSocialUrl()
 testCampaignForVariant()
 testJoinAndOrgUrls()
+testVendorShopUrl()
 
 console.log('kinkSocialMarketing.test.ts: ok')

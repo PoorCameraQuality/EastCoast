@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react'
 import EckeLink from '@/components/EckeLink'
+import KinkSocialCtaLink from '@/components/kink-social/KinkSocialCtaLink'
 import Breadcrumb from '@/components/Breadcrumb'
 import DiscoveryEngineStrip from '@/components/discovery/DiscoveryEngineStrip'
 import VendorActionDock from '@/components/vendors/marketplace/VendorActionDock'
@@ -8,6 +9,7 @@ import VendorMasthead from '@/components/vendors/marketplace/VendorMasthead'
 import VendorProductShelf, { VendorAppearances } from '@/components/vendors/marketplace/VendorProductShelf'
 import EntityPageViewTracker from '@/components/analytics/EntityPageViewTracker'
 import type { PublicVendorListing } from '@/types/publicVendorListing'
+import { getKinkSocialVendorManageUrl, getKinkSocialVendorShopUrl } from '@/lib/kinkSocialMarketing'
 
 type Props = {
   vendor: PublicVendorListing
@@ -82,15 +84,44 @@ export default function VendorStorefrontDetail({
             <VendorAppearances vendor={vendor} />
 
             <section className="vendor-claim" aria-labelledby="vendor-claim-heading">
-              <h2 id="vendor-claim-heading" className="vendor-section-title">
-                Own this shop?
-              </h2>
-              <p className="vendor-claim-copy">
-                Publish product previews, connect to events, and manage your public storefront from kink.social.
-              </p>
-              <EckeLink href="/contact?subject=Vendor%20Listing" className="vendor-btn vendor-btn-view">
-                Suggest an edit
-              </EckeLink>
+              {vendor.sourceSystem === 'kink_social' ? (
+                <>
+                  <h2 id="vendor-claim-heading" className="vendor-section-title">
+                    Manage this shop
+                  </h2>
+                  <p className="vendor-claim-copy">
+                    This storefront is published from kink.social. Update listings, photos, and visibility there.
+                  </p>
+                  <KinkSocialCtaLink
+                    href={vendor.kinkSocialVendorUrl ?? getKinkSocialVendorShopUrl(vendor.slug)}
+                    label="Open shop on kink.social"
+                    variant="vendor"
+                    surface="vendor_claim"
+                    className="vendor-btn vendor-btn-view"
+                    external
+                  />
+                  <KinkSocialCtaLink
+                    href={getKinkSocialVendorManageUrl()}
+                    label="Manage on kink.social"
+                    variant="vendor"
+                    surface="vendor_claim"
+                    className="vendor-btn vendor-btn-save"
+                    external
+                  />
+                </>
+              ) : (
+                <>
+                  <h2 id="vendor-claim-heading" className="vendor-section-title">
+                    Own this shop?
+                  </h2>
+                  <p className="vendor-claim-copy">
+                    Publish product previews, connect to events, and manage your public storefront from kink.social.
+                  </p>
+                  <EckeLink href="/contact?subject=Vendor%20Listing" className="vendor-btn vendor-btn-view">
+                    Suggest an edit
+                  </EckeLink>
+                </>
+              )}
             </section>
           </div>
 

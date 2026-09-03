@@ -5,7 +5,7 @@ export type PublicVendorProduct = {
   priceLabel?: string
   category?: string
   externalUrl?: string
-  sourceSystem?: 'manual' | 'etsy' | 'shopify' | 'woo'
+  sourceSystem?: 'manual' | 'native' | 'etsy' | 'shopify' | 'woo'
   publicSafe: boolean
   sortOrder?: number
 }

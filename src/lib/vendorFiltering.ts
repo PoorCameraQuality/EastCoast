@@ -2,6 +2,16 @@ import type { VendorTag, VendorTagGroup } from '@/data/vendorTaxonomy'
 
 export type VendorFilterMode = 'or' | 'and'
 
+export type VendorMirroredListing = {
+  id: string
+  title: string
+  imageUrl?: string | null
+  priceLabel?: string | null
+  externalUrl?: string | null
+  sourceSystem?: 'native' | 'etsy' | 'shopify' | 'woo' | 'manual'
+  sortOrder?: number
+}
+
 export type VendorRecord = {
   slug: string
   name: string
@@ -9,10 +19,14 @@ export type VendorRecord = {
   story?: string
   websiteUrl?: string
   logo125Url?: string
+  coverUrl?: string
   location?: string
   tagSlugs: string[]
   isPaid?: boolean
   productImage125ByTagSlug?: Record<string, string>
+  listings?: VendorMirroredListing[]
+  acceptsCommissions?: boolean
+  kinkSocialCanonicalPath?: string | null
   /** When set, links to the matching dungeon directory page (same slug) */
   dungeonListingSlug?: string
   /** Present when this listing was published from kink.social */

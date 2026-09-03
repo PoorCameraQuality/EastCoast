@@ -12,6 +12,7 @@ export type UnifiedVendor = VendorRecord & {
   stateAbbr: string | null
   city: string | null
   onlineOnly: boolean
+  lastSyncedAt?: string
 }
 
 /**
@@ -61,6 +62,16 @@ export function getStaticUnifiedVendors(): UnifiedVendor[] {
   return getAllVendors().map(toUnified)
 }
 
+type DbVendorListing = {
+  id?: string
+  title?: string
+  imageUrl?: string | null
+  priceLabel?: string | null
+  externalUrl?: string | null
+  sourceSystem?: string | null
+  sortOrder?: number
+}
+
 type DbVendorRow = {
   id: string
   slug: string
@@ -70,13 +81,63 @@ type DbVendorRow = {
   city: string | null
   state: string | null
   online_only: boolean
+  logo_url?: string | null
+  cover_url?: string | null
+  listings?: DbVendorListing[] | null
+  seo_hub_tags?: string[] | null
+  tag_slugs?: string[] | null
+  kink_social_canonical_path?: string | null
+  accepts_commissions?: boolean | null
+  last_synced_at?: string | null
   meta_title: string | null
   meta_description: string | null
   c2k_source_id?: string | null
   c2k_source_type?: string | null
 }
 
-function dbRowToUnified(row: DbVendorRow, seoTagSlugs: string[]): UnifiedVendor {
+function asUnknownList(value: unknown): unknown[] {
+  if (Array.isArray(value)) return value
+  if (typeof value === 'string' && value.trim().startsWith('[')) {
+    try {
+      const parsed = JSON.parse(value) as unknown
+      return Array.isArray(parsed) ? parsed : []
+    } catch {
+      return []
+    }
+  }
+  return []
+}
+
+function asStringList(value: unknown): string[] {
+  return asUnknownList(value).filter((item): item is string => typeof item === 'string' && Boolean(item.trim()))
+}
+
+function parseDbListings(raw: DbVendorListing[] | string | null | undefined): VendorRecord['listings'] {
+  const items = asUnknownList(raw) as DbVendorListing[]
+  if (items.length === 0) return undefined
+  const listings: NonNullable<VendorRecord['listings']> = []
+  for (const item of items) {
+    const title = item.title?.trim()
+    if (!title) continue
+    const source = item.sourceSystem
+    const sourceSystem =
+      source === 'native' || source === 'etsy' || source === 'shopify' || source === 'woo' || source === 'manual'
+        ? source
+        : 'manual'
+    listings.push({
+      id: item.id?.trim() || `${title}-${listings.length}`,
+      title,
+      imageUrl: item.imageUrl ?? null,
+      priceLabel: item.priceLabel ?? null,
+      externalUrl: item.externalUrl ?? null,
+      sourceSystem,
+      sortOrder: item.sortOrder ?? listings.length,
+    })
+  }
+  return listings.length ? listings : undefined
+}
+
+export function dbRowToUnified(row: DbVendorRow, seoTagSlugs: string[]): UnifiedVendor {
   const stateAbbr = row.state ? String(row.state).toUpperCase().slice(0, 2) : null
   const city = row.city ? String(row.city) : null
   const onlineOnly = Boolean(row.online_only)
@@ -84,7 +145,11 @@ function dbRowToUnified(row: DbVendorRow, seoTagSlugs: string[]): UnifiedVendor 
     ? 'Online'
     : [city, stateAbbr].filter(Boolean).join(', ') || 'Online'
 
-  const tagSlugs = taxonomySlugsFromSeoHubTags(seoTagSlugs)
+  const publishedHubTags = asStringList(row.seo_hub_tags)
+  const hubTags = publishedHubTags.length ? publishedHubTags : seoTagSlugs
+  const fromHubs = taxonomySlugsFromSeoHubTags(hubTags)
+  const extras = asStringList(row.tag_slugs)
+  const tagSlugs = [...new Set([...fromHubs, ...extras])]
 
   const record: VendorRecord = {
     slug: row.slug,
@@ -94,7 +159,11 @@ function dbRowToUnified(row: DbVendorRow, seoTagSlugs: string[]): UnifiedVendor 
     websiteUrl: row.website_url || undefined,
     location,
     tagSlugs,
-    logo125Url: undefined,
+    logo125Url: row.logo_url || undefined,
+    coverUrl: row.cover_url || undefined,
+    listings: parseDbListings(row.listings),
+    acceptsCommissions: Boolean(row.accepts_commissions),
+    kinkSocialCanonicalPath: row.kink_social_canonical_path ?? null,
     isPaid: false,
     c2kSourceId: row.c2k_source_id ?? null,
     c2kSourceType: row.c2k_source_type ?? null,
@@ -105,6 +174,7 @@ function dbRowToUnified(row: DbVendorRow, seoTagSlugs: string[]): UnifiedVendor 
     stateAbbr,
     city,
     onlineOnly,
+    lastSyncedAt: row.last_synced_at ? String(row.last_synced_at).slice(0, 10) || undefined : undefined,
   }
 }
 
@@ -132,7 +202,9 @@ export async function fetchPublishedSupabaseVendors(): Promise<UnifiedVendor[]> 
     // No status column on vendors — C2K rows are identified by c2k_source_id; unpublish deletes them.
     const { data: vrows, error: vErr } = await client
       .from('vendors')
-      .select('*')
+      .select(
+        'id, slug, name, description, website_url, city, state, online_only, logo_url, cover_url, listings, seo_hub_tags, tag_slugs, kink_social_canonical_path, accepts_commissions, last_synced_at, meta_title, meta_description, c2k_source_id, c2k_source_type',
+      )
       .not('c2k_source_id', 'is', null)
     if (vErr || !vrows?.length) return []
 
@@ -169,10 +241,15 @@ function overlayStaticPaidAssets(remote: UnifiedVendor, staticV: UnifiedVendor |
     ...remote,
     isPaid: Boolean(staticV.isPaid) || Boolean(remote.isPaid),
     logo125Url: remote.logo125Url ?? staticV.logo125Url,
+    coverUrl: remote.coverUrl ?? staticV.coverUrl,
     productImage125ByTagSlug:
       remote.productImage125ByTagSlug ?? staticV.productImage125ByTagSlug,
+    listings: remote.listings?.length ? remote.listings : staticV.listings,
+    tagSlugs: remote.tagSlugs.length ? remote.tagSlugs : staticV.tagSlugs,
     story: remote.story || staticV.story,
     description: remote.description || staticV.description,
+    websiteUrl: remote.websiteUrl || staticV.websiteUrl,
+    dungeonListingSlug: remote.dungeonListingSlug ?? staticV.dungeonListingSlug,
   }
 }
 
