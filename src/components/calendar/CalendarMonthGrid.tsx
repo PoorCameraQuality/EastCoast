@@ -15,6 +15,7 @@ type Props = {
   days: Date[]
   currentMonth: number
   items: PublicEventIndexItem[]
+  weekdayLabels?: 'full' | 'short'
 }
 
 function isPastDay(date: Date, currentMonth: number): boolean {
@@ -25,7 +26,17 @@ function isPastDay(date: Date, currentMonth: number): boolean {
   return d < today && date.getMonth() === currentMonth
 }
 
-export default function CalendarMonthGrid({ days, currentMonth, items }: Props) {
+const WEEKDAY_LABELS = {
+  full: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+  short: ['S', 'M', 'T', 'W', 'T', 'F', 'S'],
+} as const
+
+export default function CalendarMonthGrid({
+  days,
+  currentMonth,
+  items,
+  weekdayLabels = 'full',
+}: Props) {
   const getEventsForDate = (date: Date) =>
     items
       .filter((item) => eventOnDate(item, date))
@@ -38,8 +49,8 @@ export default function CalendarMonthGrid({ days, currentMonth, items }: Props) 
   return (
     <div className="cal-month-grid-wrap">
       <div className="cal-month-grid">
-        {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => (
-          <div key={day} className="cal-month-grid-head">
+        {WEEKDAY_LABELS[weekdayLabels].map((day, index) => (
+          <div key={`${day}-${index}`} className="cal-month-grid-head">
             {day}
           </div>
         ))}
@@ -80,7 +91,7 @@ export default function CalendarMonthGrid({ days, currentMonth, items }: Props) 
                         <span className="cal-pill-dancecard" aria-label="Dancecard enabled" />
                       ) : null}
                       {item.sourceSystem === 'kink_social' ? (
-                        <span className="cal-pill-sync" aria-label="Published from kink.social" />
+                        <span className="cal-pill-sync" aria-label="Directory listing" />
                       ) : null}
                     </EckeLink>
                   )
@@ -107,7 +118,7 @@ export function CalendarLegend() {
         <li><span className="cal-legend-swatch cal-tone-vendor" /> Vendor market</li>
         <li><span className="cal-legend-swatch cal-tone-past" /> Past</li>
         <li><span className="cal-legend-dot cal-pill-dancecard" /> Dancecard</li>
-        <li><span className="cal-legend-dot cal-pill-sync" /> From kink.social</li>
+        <li><span className="cal-legend-dot cal-pill-sync" /> Directory listing</li>
       </ul>
     </div>
   )

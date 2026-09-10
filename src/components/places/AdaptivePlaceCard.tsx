@@ -1,10 +1,8 @@
 'use client'
 
 import EckeLink from '@/components/EckeLink'
-import KinkSocialCtaLink from '@/components/kink-social/KinkSocialCtaLink'
 import PlaceMediaStage, { PlaceCardSignals, PlaceTypeBadge } from '@/components/places/PlaceMediaStage'
 import { trackSelectItemEntity } from '@/lib/analyticsEntities'
-import { buildKinkSocialUrl, getKinkSocialJoinUrl, KINK_SOCIAL_PATHS } from '@/lib/kinkSocialMarketing'
 import type { PublicPlaceListing } from '@/types/publicPlaceListing'
 
 type Props = {
@@ -45,7 +43,7 @@ export default function AdaptivePlaceCard({
         <div className="place-index-card-head">
           <PlaceTypeBadge place={place} />
           {place.sourceSystem === 'kink_social' ? (
-            <span className="place-source-pill">kink.social</span>
+            <span className="place-source-pill">Directory listing</span>
           ) : null}
         </div>
 
@@ -85,26 +83,15 @@ export function PlaceOwnerCta({ compact }: { compact?: boolean }) {
     <aside className={`place-owner-cta ${compact ? 'place-owner-cta-compact' : ''}`} aria-label="Venue owners">
       <h2 className="place-owner-cta-title">Help people follow what happens here.</h2>
       <p className="place-owner-cta-body">
-        Create a free kink.social organization page to manage your public presence, publish events to ECKE, and keep
-        community updates connected in one place.
+        Create a free ECKE organization to manage this place, publish events, and keep the public listing current.
       </p>
       <div className="place-owner-cta-actions">
-        <KinkSocialCtaLink
-          href={getKinkSocialJoinUrl('dungeon_page')}
-          label="Join kink.social free"
-          variant="dungeon"
-          surface="places_owner_cta"
-          className="sf-btn-rose place-owner-btn"
-          external
-        />
-        <KinkSocialCtaLink
-          href={buildKinkSocialUrl(KINK_SOCIAL_PATHS.orgNew, 'organizer')}
-          label="Create a free organization"
-          variant="organizer"
-          surface="places_owner_cta"
-          className="sf-btn-primary place-owner-btn"
-          external
-        />
+        <EckeLink href="/auth/org/signup" className="sf-btn-primary place-owner-btn">
+          Create an organization
+        </EckeLink>
+        <EckeLink href="/auth/org/login" className="sf-btn-rose place-owner-btn">
+          Organizer login
+        </EckeLink>
       </div>
     </aside>
   )

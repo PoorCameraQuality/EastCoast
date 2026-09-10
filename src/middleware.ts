@@ -1,13 +1,14 @@
 import { createServerClient, type CookieOptions } from '@supabase/ssr'
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
-import type { PostgrestError } from '@supabase/supabase-js'
 import { getLegacyKinkEducationBlogRedirect } from '@/lib/legacyKinkEducationToBlog'
-
-interface Profile {
-  id: string;
-  role: 'admin' | 'user' | 'moderator';
-}
+import {
+  ORG_SESSION_STARTED_COOKIE,
+  isOrgManagedPath,
+  isOrgSessionExpired,
+  orgSessionCookieOptions,
+  parseOrgSessionStartedAt,
+} from '@/lib/eckeOrgSessionLimit'
 
 export async function middleware(req: NextRequest) {
   const url = req.nextUrl.clone()
@@ -92,11 +93,31 @@ export async function middleware(req: NextRequest) {
 
   // Strip unwanted query parameters (keep functional filters + attribution for GA/ads).
   // Organizer/dancecard consoles use many internal params (tab, peopleTab, slot, guide, etc.).
+  const isOrgEventTool =
+    pathLower === '/events/create' ||
+    pathLower === '/events/my-events' ||
+    /^\/events\/[^/]+\/(edit|manage|posts|media|settings)$/.test(pathLower)
+
   const skipQueryStrip =
-    pathLower.startsWith('/organizer') || pathLower.startsWith('/dancecard')
+    pathLower.startsWith('/organizer') ||
+    pathLower.startsWith('/dancecard') ||
+    pathLower.startsWith('/auth') ||
+    pathLower.startsWith('/dashboard') ||
+    isOrgEventTool
 
   if (!skipQueryStrip) {
-    const allowedParams = new Set(['page', 'q', 'tag', 'view', 'track', 'day', 'room'])
+    const allowedParams = new Set([
+      'page',
+      'q',
+      'tag',
+      'view',
+      'track',
+      'day',
+      'room',
+      'created',
+      'intent',
+      'location',
+    ])
     const marketingParams = new Set([
       'gclid',
       'gbraid',
@@ -141,74 +162,106 @@ export async function middleware(req: NextRequest) {
     return NextResponse.next()
   }
 
-  // Set crawl-friendly headers for public pages
-  if (
-    !pathname.startsWith('/admin') &&
-    !pathname.startsWith('/organizer') &&
-    !pathname.startsWith('/api') &&
-    !pathname.startsWith('/login')
-  ) {
-    const response = NextResponse.next()
-    response.headers.set('X-Robots-Tag', 'index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1')
-    return response
+  const requestHeaders = new Headers(req.headers)
+  if (pathname.startsWith('/auth')) {
+    requestHeaders.set('x-ecke-bare-shell', '1')
   }
 
-  if (pathname.startsWith('/organizer')) {
-    const response = NextResponse.next()
+  let response = NextResponse.next({ request: { headers: requestHeaders } })
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+    {
+      cookies: {
+        getAll() {
+          return req.cookies.getAll()
+        },
+        setAll(cookiesToSet: { name: string; value: string; options: CookieOptions }[]) {
+          cookiesToSet.forEach(({ name, value }) => req.cookies.set(name, value))
+          response = NextResponse.next({ request: { headers: requestHeaders } })
+          cookiesToSet.forEach(({ name, value, options }) => {
+            response.cookies.set(name, value, options)
+          })
+        },
+      },
+    },
+  )
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+
+  let activeUser = user
+  if (user) {
+    const startedAt = parseOrgSessionStartedAt(req.cookies.get(ORG_SESSION_STARTED_COOKIE)?.value)
+    if (!startedAt) {
+      response.cookies.set(ORG_SESSION_STARTED_COOKIE, String(Date.now()), orgSessionCookieOptions())
+    } else if (isOrgSessionExpired(startedAt)) {
+      await supabase.auth.signOut()
+      activeUser = null
+      response.cookies.set(ORG_SESSION_STARTED_COOKIE, '', { ...orgSessionCookieOptions(0), maxAge: 0 })
+    }
+  }
+
+  const noIndex =
+    pathname.startsWith('/admin') ||
+    pathname.startsWith('/organizer') ||
+    pathname.startsWith('/auth') ||
+    pathname.startsWith('/dashboard') ||
+    pathname.startsWith('/login') ||
+    pathname === '/events/create' ||
+    pathname === '/events/my-events' ||
+    /^\/events\/[^/]+\/(edit|manage|posts|media|settings)$/.test(pathname) ||
+    pathname === '/vendors/login' ||
+    pathname === '/vendors/my-shop' ||
+    pathname.startsWith('/vendors/my-shop/') ||
+    pathname === '/dungeons/my-place' ||
+    pathname.startsWith('/dungeons/my-place/')
+
+  if (noIndex) {
     response.headers.set('X-Robots-Tag', 'noindex, nofollow')
-    return response
+  } else {
+    response.headers.set(
+      'X-Robots-Tag',
+      'index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1',
+    )
   }
 
-  // Only protect admin routes
+  if (isOrgManagedPath(pathname) && !activeUser) {
+    const redirectResponse = NextResponse.redirect(new URL('/auth/org/login', req.url))
+    response.cookies.getAll().forEach((cookie) => redirectResponse.cookies.set(cookie))
+    redirectResponse.headers.set('X-Robots-Tag', 'noindex, nofollow')
+    return redirectResponse
+  }
+
   if (pathname.startsWith('/admin') && pathname !== '/admin/test-auth') {
-    console.log('🔒 MIDDLEWARE: Protecting admin route:', pathname)
-    
     try {
-      // Create Supabase client
-      const supabase = createServerClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL,
-        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
-        {
-          cookies: {
-            get(name: string) {
-              return req.cookies.get(name)?.value
-            },
-            set(name: string, value: string, options: CookieOptions) {
-              // Don't set cookies in middleware to avoid conflicts
-            },
-            remove(name: string, options: CookieOptions) {
-              // Don't remove cookies in middleware to avoid conflicts
-            },
-          },
-        }
-      )
-
-      const { data: { user }, error } = await supabase.auth.getUser()
-
-      if (error || !user) {
-        return NextResponse.redirect(new URL('/login', req.url))
+      if (!activeUser) {
+        const redirectResponse = NextResponse.redirect(new URL('/login', req.url))
+        response.cookies.getAll().forEach((cookie) => redirectResponse.cookies.set(cookie))
+        return redirectResponse
       }
 
       const { data: profile, error: profileError } = await supabase
         .from('profiles')
         .select('id, role')
-        .eq('id', user.id)
+        .eq('id', activeUser.id)
         .single()
 
       if (profileError || !profile || profile.role !== 'admin') {
-        console.log('❌ MIDDLEWARE: User is not admin, redirecting to unauthorized')
-        return NextResponse.redirect(new URL('/unauthorized', req.url))
+        const redirectResponse = NextResponse.redirect(new URL('/unauthorized', req.url))
+        response.cookies.getAll().forEach((cookie) => redirectResponse.cookies.set(cookie))
+        return redirectResponse
       }
-
-      console.log('✅ MIDDLEWARE: Valid admin session for:', user.email)
     } catch (error) {
-      console.error('❌ MIDDLEWARE: Error checking admin access:', error)
-      // On error, redirect to login to be safe
-      return NextResponse.redirect(new URL('/login', req.url))
+      console.error('MIDDLEWARE: Error checking admin access:', error)
+      const redirectResponse = NextResponse.redirect(new URL('/login', req.url))
+      response.cookies.getAll().forEach((cookie) => redirectResponse.cookies.set(cookie))
+      return redirectResponse
     }
   }
 
-  return NextResponse.next()
+  return response
 }
 
 export const config = {

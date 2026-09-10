@@ -1,9 +1,16 @@
 'use client'
 
 import EckeLink from '@/components/EckeLink'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { buildEventsListUrl } from '@/lib/eventsListSearchParams'
+import {
+  EVENT_REGION_CLUSTERS,
+  EVENT_REGION_STORAGE_KEY,
+  eventMatchesRegion,
+  timezoneToEventRegionCluster,
+} from '@/lib/eventDiscoveryRegions'
+import { US_STATE_ABBR_OPTIONS, CANADA_STATE_ABBR_OPTIONS } from '@/lib/eckeOrgEventShared'
 import Breadcrumb from '@/components/Breadcrumb'
 import EventIndexCard from '@/components/events/EventIndexCard'
 import {
@@ -73,7 +80,7 @@ export default function EventsPageClient({
   const visibleIntentOptions = useMemo(
     () =>
       EVENT_INTENT_OPTIONS.filter((opt) => {
-        if (opt.id === 'all') return true
+        if (opt.id === 'all' || opt.id === 'conventions' || opt.id === 'local') return true
         return (counts[opt.id] ?? 0) > 0
       }),
     [counts]
@@ -81,13 +88,15 @@ export default function EventsPageClient({
 
   const filteredUpcoming = useMemo(() => {
     let items = allUpcoming.filter((item) => matchesIntent(item, selectedIntent))
+    if (selectedIntent === 'local' && !locationFilter && !normalizedQuery) {
+      return []
+    }
     if (locationFilter) {
-      const locationQuery = locationFilter.toLowerCase()
       items = items.filter(
         (item) =>
-          item.city.toLowerCase().includes(locationQuery) ||
-          item.state.toLowerCase().includes(locationQuery) ||
-          (item.regionLabel?.toLowerCase().includes(locationQuery) ?? false)
+          eventMatchesRegion(item.state, locationFilter) ||
+          item.city.toLowerCase().includes(locationFilter.toLowerCase()) ||
+          (item.regionLabel?.toLowerCase().includes(locationFilter.toLowerCase()) ?? false)
       )
     }
     if (normalizedQuery) {
@@ -98,13 +107,15 @@ export default function EventsPageClient({
 
   const filteredPast = useMemo(() => {
     let items = allPast.filter((item) => matchesIntent(item, selectedIntent))
+    if (selectedIntent === 'local' && !locationFilter && !normalizedQuery) {
+      return []
+    }
     if (locationFilter) {
-      const locationQuery = locationFilter.toLowerCase()
       items = items.filter(
         (item) =>
-          item.city.toLowerCase().includes(locationQuery) ||
-          item.state.toLowerCase().includes(locationQuery) ||
-          (item.regionLabel?.toLowerCase().includes(locationQuery) ?? false)
+          eventMatchesRegion(item.state, locationFilter) ||
+          item.city.toLowerCase().includes(locationFilter.toLowerCase()) ||
+          (item.regionLabel?.toLowerCase().includes(locationFilter.toLowerCase()) ?? false)
       )
     }
     if (normalizedQuery) {
@@ -114,7 +125,7 @@ export default function EventsPageClient({
   }, [allPast, selectedIntent, locationFilter, normalizedQuery])
 
   const featured = useMemo(() => {
-    if (selectedIntent !== 'all' || locationFilter || normalizedQuery) return []
+    if ((selectedIntent !== 'conventions' && selectedIntent !== 'all') || locationFilter || normalizedQuery) return []
     return pickFeatured(filteredUpcoming, 4).map(toIndexCardModel)
   }, [filteredUpcoming, selectedIntent, locationFilter, normalizedQuery])
 
@@ -131,8 +142,34 @@ export default function EventsPageClient({
   const pastCards = useMemo(() => filteredPast.map(toIndexCardModel), [filteredPast])
 
   const applyIntent = (intent: EventsListIntent) => {
-    router.replace(buildEventsListUrl(intent, locationFilter))
+    router.replace(buildEventsListUrl(intent, intent === 'local' ? locationFilter : undefined))
   }
+
+  const applyLocation = (location?: string) => {
+    if (location) {
+      try {
+        window.localStorage.setItem(EVENT_REGION_STORAGE_KEY, location)
+      } catch {
+        /* ignore */
+      }
+    }
+    router.replace(buildEventsListUrl(selectedIntent, location || undefined))
+  }
+
+  useEffect(() => {
+    if (selectedIntent !== 'local' || locationFilter) return
+    let next = ''
+    try {
+      next = window.localStorage.getItem(EVENT_REGION_STORAGE_KEY) || ''
+    } catch {
+      next = ''
+    }
+    if (!next) {
+      next = timezoneToEventRegionCluster(Intl.DateTimeFormat().resolvedOptions().timeZone)
+    }
+    if (next) applyLocation(next)
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- one-shot region hydrate
+  }, [selectedIntent, locationFilter])
 
   const intentLabel =
     EVENT_INTENT_OPTIONS.find((option) => option.id === selectedIntent)?.label ?? 'All'
@@ -179,12 +216,12 @@ export default function EventsPageClient({
             >
               {visibleIntentOptions.map((option) => (
                 <option key={option.id} value={option.id}>
-                  {option.label}
-                  {option.id !== 'all' && counts[option.id] ? ` (${counts[option.id]})` : ''}
-                </option>
-              ))}
-            </select>
-            <label className="sr-only" htmlFor="events-list-search-sticky">
+                      {option.label}
+                      {counts[option.id] ? ` (${counts[option.id]})` : ''}
+                    </option>
+                  ))}
+                </select>
+                <label className="sr-only" htmlFor="events-list-search-sticky">
               Search events
             </label>
             <input
@@ -208,8 +245,8 @@ export default function EventsPageClient({
             <p className="events-index-kicker">Public event marketplace</p>
             <h1 className="events-index-title">Events &amp; conventions</h1>
             <p className="events-index-subhead">
-              Find what is happening next: hotel weekends, classes, parties, vendor markets, outdoor
-              events, and community gatherings.
+              Conventions stay on the national calendar. Local nights — munches, play parties, classes —
+              filter to your area so a dungeon calendar does not flood the whole country.
             </p>
 
             <div className="events-filter-controls">
@@ -225,10 +262,8 @@ export default function EventsPageClient({
                       aria-current={isActive ? 'true' : undefined}
                     >
                       {option.label}
-                      {option.id !== 'all' && counts[option.id] ? (
+                      {counts[option.id] ? (
                         <span className="events-intent-count">{counts[option.id]}</span>
-                      ) : option.id === 'all' ? (
-                        <span className="events-intent-count">{allUpcoming.length}</span>
                       ) : null}
                     </button>
                   )
@@ -248,7 +283,7 @@ export default function EventsPageClient({
                   {visibleIntentOptions.map((option) => (
                     <option key={option.id} value={option.id}>
                       {option.label}
-                      {option.id !== 'all' && counts[option.id] ? ` (${counts[option.id]})` : ''}
+                      {counts[option.id] ? ` (${counts[option.id]})` : ''}
                     </option>
                   ))}
                 </select>
@@ -271,6 +306,49 @@ export default function EventsPageClient({
                 {resultCountLabel}
               </p>
             </div>
+
+            {selectedIntent === 'local' ? (
+              <div className="mt-4 flex flex-wrap items-end gap-3">
+                <div className="flex flex-wrap gap-2" role="group" aria-label="Choose a region">
+                  {(Object.entries(EVENT_REGION_CLUSTERS) as Array<[string, { label: string }]>).map(
+                    ([id, cluster]) => (
+                      <button
+                        key={id}
+                        type="button"
+                        className={`events-intent-tab ${locationFilter === id ? 'events-intent-tab-active' : ''}`}
+                        onClick={() => applyLocation(id)}
+                      >
+                        {cluster.label}
+                      </button>
+                    )
+                  )}
+                </div>
+                <label className="block text-sm text-sf-body">
+                  State
+                  <select
+                    className="events-intent-select mt-1.5"
+                    value={locationFilter && locationFilter.length === 2 ? locationFilter : ''}
+                    onChange={(event) => applyLocation(event.target.value || undefined)}
+                  >
+                    <option value="">All in region</option>
+                    <optgroup label="United States">
+                      {US_STATE_ABBR_OPTIONS.map((state) => (
+                        <option key={state.abbr} value={state.abbr}>
+                          {state.name}
+                        </option>
+                      ))}
+                    </optgroup>
+                    <optgroup label="Canada">
+                      {CANADA_STATE_ABBR_OPTIONS.map((state) => (
+                        <option key={state.abbr} value={state.abbr}>
+                          {state.name}
+                        </option>
+                      ))}
+                    </optgroup>
+                  </select>
+                </label>
+              </div>
+            ) : null}
           </header>
 
           {featured.length > 0 ? (
@@ -304,7 +382,7 @@ export default function EventsPageClient({
               <div className="events-section-header">
                 <div>
                   <h2 id="events-upcoming-title" className="events-section-title">
-                    Upcoming
+                    {selectedIntent === 'conventions' ? 'Upcoming conventions' : 'Upcoming'}
                   </h2>
                   <p className="events-section-meta">
                     {filterLabel} · {listing.length} listing{listing.length === 1 ? '' : 's'}
@@ -330,21 +408,23 @@ export default function EventsPageClient({
             <div className="events-empty-panel">
               <h3 className="events-empty-title">Nothing in this view</h3>
               <p className="events-empty-body">
-                Try a different filter or clear your search.
+                {selectedIntent === 'local' && !locationFilter
+                  ? 'Pick a region or open a state hub to see munches, parties, and dungeon nights. Those listings stay off the national convention feed.'
+                  : 'Try a different filter or clear your search.'}
               </p>
               <div className="events-empty-actions">
                 <button
                   type="button"
                   onClick={() => {
                     setSearchQuery('')
-                    applyIntent('all')
+                    applyIntent('conventions')
                   }}
                   className="sf-btn-primary min-h-11"
                 >
-                  Browse all events
+                  Browse conventions
                 </button>
-                <EckeLink href="/calendar" className="sf-btn-ghost min-h-11">
-                  Open calendar
+                <EckeLink href="/states" className="sf-btn-ghost min-h-11">
+                  Browse by state
                 </EckeLink>
               </div>
             </div>

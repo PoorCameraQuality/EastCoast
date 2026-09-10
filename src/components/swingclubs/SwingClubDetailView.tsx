@@ -1,6 +1,6 @@
 import { SwingClubStructuredData } from '@/components/StructuredData'
 import PlaceDetailView from '@/components/places/PlaceDetailView'
-import { findEventsForPlaceListing, swingClubToPlaceListing } from '@/lib/publicPlaceIndex'
+import { eventsMatchingPlace, swingClubToPlaceListing } from '@/lib/publicPlaceIndex'
 import { getUnifiedEvents } from '@/lib/unifiedEvents'
 
 export type SwingFactSource = 'website' | 'directory' | 'mixed'
@@ -46,7 +46,7 @@ function factSourceLabel(source: string): string {
 export default async function SwingClubDetailView({ club }: { club: Club }) {
   const place = swingClubToPlaceListing(club)
   const unifiedEvents = await getUnifiedEvents()
-  const upcomingEvents = findEventsForPlaceListing(place, unifiedEvents)
+  const upcomingEvents = eventsMatchingPlace(place, unifiedEvents)
 
   const extraModules = (
     <>

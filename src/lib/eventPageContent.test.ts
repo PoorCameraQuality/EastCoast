@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import { describe, it } from 'node:test'
-import { parseEventDescription } from './eventPageContent'
+import { buildWhyGoPoints, parseEventDescription } from './eventPageContent'
 
 describe('parseEventDescription', () => {
   it('keeps Dark Odyssey inline bold as one overview, not fragment cards', () => {
@@ -43,5 +43,22 @@ describe('parseEventDescription', () => {
     const parsed = parseEventDescription(long)
     assert.equal(parsed.sections.length, 0)
     assert.match(parsed.intro, /What to Expect/)
+  })
+})
+
+describe('buildWhyGoPoints', () => {
+  it('prefers organizer Why go lines over features', () => {
+    const points = buildWhyGoPoints({
+      name: 'Test',
+      slug: 'test',
+      date: { start: '2027-05-05', end: '2027-05-09', display: 'May 5-9, 2027' },
+      location: { city: 'Darlington', state: 'MD', region: '' },
+      category: 'Convention',
+      excerpt: 'Fallback sentence one. Fallback sentence two.',
+      website: 'https://example.com',
+      features: ['Old highlight that should not win'],
+      whyGo: ['Fire and ritual', 'Maryland campground'],
+    })
+    assert.deepEqual(points, ['Fire and ritual', 'Maryland campground'])
   })
 })

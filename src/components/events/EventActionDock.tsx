@@ -1,33 +1,26 @@
 'use client'
 
 import { useCallback, useState } from 'react'
-import KinkSocialCtaLink from '@/components/kink-social/KinkSocialCtaLink'
 import EventCalendarExport from '@/components/EventCalendarExport'
 import OutboundWebsiteLink from '@/components/analytics/OutboundWebsiteLink'
-import {
-  buildKinkSocialUrl,
-  getAcquisitionCopy,
-  KINK_SOCIAL_PATHS,
-} from '@/lib/kinkSocialMarketing'
 import { eventListingSourceLabel } from '@/lib/eventPageContent'
+import { ECKE_DISCORD_INVITE_URL, ECKE_DISCORD_LABEL } from '@/lib/eckeCommunity'
 import type { EventPageRecord } from '@/lib/unifiedEvents'
+import {
+  currentTicketTier,
+  formatTierDates,
+  ticketSalesClosed,
+} from '@/lib/eckeOrgEventShared'
 
 type Props = {
   event: EventPageRecord
-  safeKinkSocialEventUrl: string | null
-  isC2kSourced: boolean
 }
 
-export default function EventActionDock({ event, safeKinkSocialEventUrl, isC2kSourced }: Props) {
+export default function EventActionDock({ event }: Props) {
   const [shared, setShared] = useState(false)
-  const copy = getAcquisitionCopy(isC2kSourced ? 'c2kEventDetail' : 'eventDetail', {
-    eventSlug: event.slug,
-    safeKinkSocialEventUrl,
-  })
-
-  const saveHref = buildKinkSocialUrl(`/events/${event.slug}`, 'event_detail', {
-    ref: 'ecke_event_save',
-  })
+  const salesClosed = ticketSalesClosed(event.registrationDeadline)
+  const liveTier = currentTicketTier(event.ticketTiers || [])
+  const tiers = event.ticketTiers || []
 
   const share = useCallback(async () => {
     const url = typeof window !== 'undefined' ? window.location.href : ''
@@ -47,9 +40,11 @@ export default function EventActionDock({ event, safeKinkSocialEventUrl, isC2kSo
   return (
     <aside className="event-action-dock" aria-label="Event actions">
       <div className="event-action-dock-panel">
-        <p className="event-action-dock-eyebrow">{copy.eyebrow}</p>
-        <h2 className="event-action-dock-heading">{copy.heading}</h2>
-        <p className="event-action-dock-body">{copy.body}</p>
+        <p className="event-action-dock-eyebrow">Public listing</p>
+        <h2 className="event-action-dock-heading">Attend this event</h2>
+        <p className="event-action-dock-body">
+          Confirm times, tickets, and house rules with the organizer before you go.
+        </p>
 
         <div className="event-action-dock-actions">
           {event.website ? (
@@ -65,31 +60,31 @@ export default function EventActionDock({ event, safeKinkSocialEventUrl, isC2kSo
             </OutboundWebsiteLink>
           ) : null}
 
-          <KinkSocialCtaLink
-            href={safeKinkSocialEventUrl ?? saveHref}
-            label="Save on kink.social"
-            variant="home"
-            surface="event_action_dock"
-            entitySlug={event.slug}
-            className="ed-btn-rose w-full"
-            external
-          />
-
-          {safeKinkSocialEventUrl ? (
-            <KinkSocialCtaLink
-              href={safeKinkSocialEventUrl}
-              label="View on kink.social"
-              variant="home"
-              surface="event_action_dock_follow"
+          {!salesClosed && event.ticketUrl && event.ticketUrl !== event.website ? (
+            <OutboundWebsiteLink
+              href={event.ticketUrl}
+              entityType="event"
               entitySlug={event.slug}
+              entityName={event.name}
+              organizerName={event.organizer}
               className="ed-btn-ghost w-full"
-              external
-            />
+            >
+              Tickets / registration
+            </OutboundWebsiteLink>
           ) : null}
 
           <button type="button" onClick={share} className="ed-btn-ghost w-full">
             {shared ? 'Link copied' : 'Share event'}
           </button>
+
+          <a
+            href={ECKE_DISCORD_INVITE_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="ed-btn-ghost w-full"
+          >
+            {ECKE_DISCORD_LABEL}
+          </a>
         </div>
 
         <dl className="event-action-dock-facts">
@@ -118,7 +113,42 @@ export default function EventActionDock({ event, safeKinkSocialEventUrl, isC2kSo
               <dd>{event.organizer}</dd>
             </div>
           ) : null}
+          {salesClosed ? (
+            <div>
+              <dt>Tickets</dt>
+              <dd>Sales closed</dd>
+            </div>
+          ) : liveTier ? (
+            <div>
+              <dt>Tickets now</dt>
+              <dd>
+                {liveTier.price}
+                {liveTier.label ? ` · ${liveTier.label}` : ''}
+              </dd>
+            </div>
+          ) : event.ticketPrice ? (
+            <div>
+              <dt>Tickets</dt>
+              <dd>{event.ticketPrice}</dd>
+            </div>
+          ) : null}
+          {event.registrationDeadline && !salesClosed ? (
+            <div>
+              <dt>Sales close</dt>
+              <dd>{new Date(`${event.registrationDeadline}T00:00:00`).toLocaleDateString()}</dd>
+            </div>
+          ) : null}
         </dl>
+        {tiers.length > 1 ? (
+          <ol className="mt-3 space-y-1 text-xs text-sf-muted">
+            {tiers.map((tier, index) => (
+              <li key={`${tier.startsOn}-${index}`}>
+                {tier.label ? `${tier.label}: ` : ''}
+                {tier.price} · {formatTierDates(tier)}
+              </li>
+            ))}
+          </ol>
+        ) : null}
 
         <p className="event-action-dock-source">{eventListingSourceLabel(event)}</p>
       </div>

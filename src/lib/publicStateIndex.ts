@@ -209,7 +209,7 @@ function vendorToRegional(vendor: PublicVendorListing): PublicRegionalListing {
     sourceSystem: vendor.sourceSystem,
     sourceId: vendor.sourceId,
     lastSyncedAt: vendor.lastSyncedAt,
-    status: vendor.status,
+    status: vendor.status === 'archived' ? 'archived' : 'published',
   }
 }
 

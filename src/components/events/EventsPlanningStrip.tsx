@@ -1,33 +1,22 @@
-import KinkSocialCtaLink from '@/components/kink-social/KinkSocialCtaLink'
-import { getKinkSocialJoinUrl, getKinkSocialOrgUrl, KINK_SOCIAL_LABELS } from '@/lib/kinkSocialMarketing'
+import EckeLink from '@/components/EckeLink'
 
 export default function EventsPlanningStrip() {
   return (
-    <aside className="events-planning-strip" aria-label="Plan on kink.social">
+    <aside className="events-planning-strip" aria-label="Plan your weekend">
       <div className="events-planning-strip-inner">
         <div>
           <h2 className="events-planning-title">Make this calendar yours.</h2>
           <p className="events-planning-body">
-            Save events, follow organizers, and build your Dancecard on kink.social.
+            Browse by date, city, or interest — then add what you need to your own calendar.
           </p>
         </div>
         <div className="events-planning-actions">
-          <KinkSocialCtaLink
-            href={getKinkSocialJoinUrl('events_index')}
-            label={KINK_SOCIAL_LABELS.joinFree}
-            variant="home"
-            surface="events_planning_strip"
-            className="sf-btn-rose"
-            external
-          />
-          <KinkSocialCtaLink
-            href={getKinkSocialOrgUrl('organizer')}
-            label={KINK_SOCIAL_LABELS.createOrg}
-            variant="organizer"
-            surface="events_planning_strip"
-            className="sf-btn-primary"
-            external
-          />
+          <EckeLink href="/calendar" className="sf-btn-rose">
+            Open calendar
+          </EckeLink>
+          <EckeLink href="/contact" className="sf-btn-primary">
+            List an event
+          </EckeLink>
         </div>
       </div>
     </aside>

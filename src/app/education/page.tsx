@@ -10,7 +10,7 @@ export const revalidate = 1800
 export const metadata: Metadata = {
   title: 'Kink Education Library — Guides, Paths & Resources',
   description:
-    'Public learning library for kink education: curated paths, safety and consent guides, external resources, and educator discovery — powered by kink.social publishing.',
+    'Public learning library for kink education: curated paths, safety and consent guides, external resources, and educator discovery.',
   alternates: {
     canonical: `${BASE_URL}/education`,
   },

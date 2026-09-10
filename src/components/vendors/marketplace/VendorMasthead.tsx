@@ -1,9 +1,8 @@
 import EckeLink from '@/components/EckeLink'
-import KinkSocialCtaLink from '@/components/kink-social/KinkSocialCtaLink'
+import VendorContactLink from '@/components/vendors/marketplace/VendorContactLink'
 import OutboundWebsiteLink from '@/components/analytics/OutboundWebsiteLink'
 import VendorMediaStage from '@/components/vendors/marketplace/VendorMediaStage'
 import { locationDisplay } from '@/lib/publicVendorIndex'
-import { buildKinkSocialUrl, KINK_SOCIAL_PATHS } from '@/lib/kinkSocialMarketing'
 import type { PublicVendorListing } from '@/types/publicVendorListing'
 
 type Props = {
@@ -46,23 +45,7 @@ export default function VendorMasthead({ vendor }: Props) {
               Visit shop
             </OutboundWebsiteLink>
           ) : null}
-          <EckeLink href="/contact?subject=Vendor%20Inquiry" className="vendor-btn vendor-btn-neutral">
-            Contact vendor
-          </EckeLink>
-          <KinkSocialCtaLink
-            href={
-              vendor.followUrl ??
-              buildKinkSocialUrl(KINK_SOCIAL_PATHS.join, 'vendor_page', {
-                ref: 'ecke_vendor_follow',
-                ecke_vendor: vendor.slug,
-              })
-            }
-            label="Follow on kink.social"
-            variant="vendor"
-            surface="vendor_masthead"
-            className="vendor-btn vendor-btn-save"
-            external
-          />
+          <VendorContactLink vendor={vendor} className="vendor-btn vendor-btn-neutral" />
           <EckeLink href="#vendor-events" className="vendor-btn vendor-btn-view">
             See events they vend
           </EckeLink>

@@ -41,9 +41,6 @@ importers:
       '@tiptap/starter-kit':
         specifier: ^2.2.4
         version: 2.26.1
-      '@types/bcryptjs':
-        specifier: ^2.4.6
-        version: 2.4.6
       '@upstash/ratelimit':
         specifier: ^2.0.8
         version: 2.0.8(@upstash/redis@1.38.0)
@@ -83,6 +80,9 @@ importers:
       googleapis:
         specifier: ^144.0.0
         version: 144.0.0
+      jose:
+        specifier: ^6.2.12
+        version: 6.2.12
       nanoid:
         specifier: ^5.1.9
         version: 5.1.9
@@ -144,6 +144,9 @@ importers:
       '@types/archiver':
         specifier: ^6.0.3
         version: 6.0.4
+      '@types/bcryptjs':
+        specifier: ^2.4.6
+        version: 2.4.6
       '@types/node':
         specifier: ^20.19.17
         version: 20.19.17
@@ -2126,6 +2129,9 @@ packages:
   jiti@1.21.7:
     resolution: {integrity: sha512-/imKNG4EbWNrVjoNC/1H5/9GFy+tqjGBHCaSsN+P2RnPqjsLmv6UD3Ej+Kj8nBWaRAwyk7kK5ZUc+OEatnTR3A==}
     hasBin: true
+
+  jose@6.2.12:
+    resolution: {integrity: sha512-9NiFmJEex0sy2Dk58j2UGBSHgUs2ypF9eZSu4L6vjOX3Dp96Sw1F3uL+H+D1sx02jZZdzUT0HgvCy59CuvXcWw==}
 
   js-tokens@4.0.0:
     resolution: {integrity: sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==}
@@ -5511,6 +5517,8 @@ snapshots:
       '@pkgjs/parseargs': 0.11.0
 
   jiti@1.21.7: {}
+
+  jose@6.2.12: {}
 
   js-tokens@4.0.0: {}
 

@@ -20,6 +20,8 @@ export type KinkSocialListingRecord = {
   sourceAttribution: string
   lastSyncedAt: string | null
   gallery: EntityHeroGalleryItem[]
+  relatedHref?: string | null
+  relatedLabel?: string | null
 }
 
 type DbRow = {

@@ -29,7 +29,7 @@ export default function RecentlyUpdatedFromKinkSocial({ items }: Props) {
     <section className="st-section" aria-labelledby="st-recent-ks">
       <div className="st-section-head">
         <h2 id="st-recent-ks" className="st-section-title">
-          Recently updated from kink.social
+          Recently updated listings
         </h2>
         <p className="st-section-note">Organizer-managed public listings</p>
       </div>
@@ -49,7 +49,7 @@ export default function RecentlyUpdatedFromKinkSocial({ items }: Props) {
                   {item.listingType}
                 </span>
                 {item.sourceSystem === 'kink_social' ? (
-                  <span className="st-listing-badge st-badge-ks">kink.social</span>
+                  <span className="st-listing-badge st-badge-ks">Directory</span>
                 ) : null}
               </div>
             </EckeLink>

@@ -1,6 +1,4 @@
 import EckeLink from '@/components/EckeLink'
-import KinkSocialCtaLink from '@/components/kink-social/KinkSocialCtaLink'
-import { getKinkSocialJoinUrl } from '@/lib/kinkSocialMarketing'
 import type { StateHubDetail } from '@/lib/publicStateIndex'
 
 type Props = {
@@ -63,13 +61,9 @@ export default function StateMasthead({ hub }: Props) {
         <EckeLink href={`/vendors`} className="st-btn-violet">
           Browse vendors
         </EckeLink>
-        <KinkSocialCtaLink
-          href={getKinkSocialJoinUrl('state_page')}
-          label="Save on kink.social"
-          variant="state"
-          surface="state_masthead"
-          className="st-btn-rose"
-        />
+        <EckeLink href="/auth/org/signup" className="st-btn-rose">
+          List an event
+        </EckeLink>
       </div>
     </header>
   )

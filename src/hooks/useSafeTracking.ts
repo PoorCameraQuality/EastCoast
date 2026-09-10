@@ -1,12 +1,12 @@
 'use client'
 
 import { useEffect, useState, useCallback } from 'react'
-import { usePathname } from 'next/navigation'
+import { useWindowPathname } from '@/hooks/useWindowPathname'
 import { useGA4 } from '@/contexts/GA4Provider'
 import { GA_CONSENT_EVENT } from '@/lib/analyticsEntities'
 
 export default function useSafeTracking() {
-  const pathname = usePathname()
+  const pathname = useWindowPathname()
   const ga4 = useGA4()
   
   // Only track essential metrics without heavy initialization

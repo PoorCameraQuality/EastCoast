@@ -113,5 +113,5 @@ export const PLACE_INTENT_OPTIONS: { id: PlaceListIntent; label: string }[] = [
   { id: 'new-friendly', label: 'New-friendly' },
   { id: 'public-address', label: 'Public address' },
   { id: 'events-this-month', label: 'Events this month' },
-  { id: 'kink-social', label: 'From kink.social' },
+  { id: 'kink-social', label: 'Directory listings' },
 ]

@@ -8,6 +8,7 @@
 @import '../styles/education-library.css';
 @import '../styles/states.css';
 @import '../styles/mdx-prose.css';
+@import '../styles/org-dashboard.css';
 
 @tailwind base;
 @tailwind components;

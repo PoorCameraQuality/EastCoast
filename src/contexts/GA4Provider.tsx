@@ -1,7 +1,7 @@
 'use client'
 
 import { createContext, useContext, useEffect, useState } from 'react'
-import { usePathname } from 'next/navigation'
+import { useWindowPathname } from '@/hooks/useWindowPathname'
 import useEnhancedGA4 from '@/hooks/useEnhancedGA4'
 
 interface GA4ContextType {
@@ -29,7 +29,7 @@ const GA4Context = createContext<GA4ContextType | null>(null)
 
 export function GA4Provider({ children }: { children: React.ReactNode }) {
   const ga4 = useEnhancedGA4()
-  const pathname = usePathname()
+  const pathname = useWindowPathname()
   const [sessionStart, setSessionStart] = useState<number>(Date.now())
   const [pageViews, setPageViews] = useState<number>(0)
   const [interactions, setInteractions] = useState<number>(0)

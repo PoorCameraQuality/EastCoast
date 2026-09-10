@@ -1,44 +1,32 @@
-import KinkSocialCtaLink from '@/components/kink-social/KinkSocialCtaLink'
-import { getKinkSocialJoinUrl, KINK_SOCIAL_LABELS, KINK_SOCIAL_PATHS } from '@/lib/kinkSocialMarketing'
-import { buildKinkSocialUrl } from '@/lib/kinkSocialMarketing'
+import EckeLink from '@/components/EckeLink'
+import { ECKE_DISCORD_INVITE_URL, ECKE_DISCORD_LABEL } from '@/lib/eckeCommunity'
 
 type Props = {
   compact?: boolean
 }
 
 export default function EducationKinkSocialCta({ compact = false }: Props) {
-  const joinUrl = getKinkSocialJoinUrl('education_article')
-  const educationUrl = buildKinkSocialUrl(KINK_SOCIAL_PATHS.educationBrowse, 'education_article')
-
   return (
-    <section className={`edu-platform-cta ${compact ? 'edu-platform-cta-compact' : ''}`} aria-labelledby="edu-ks-cta">
-      <h2 id="edu-ks-cta" className="edu-platform-cta-title">
-        Keep learning on kink.social
+    <section className={`edu-platform-cta ${compact ? 'edu-platform-cta-compact' : ''}`} aria-labelledby="edu-ecke-cta">
+      <h2 id="edu-ecke-cta" className="edu-platform-cta-title">
+        Keep learning on ECKE
       </h2>
       <p className="edu-platform-cta-body">
-        Save articles, follow educators, publish your own writing, and connect education to presenter profiles,
-        events, and community work.
+        Browse public guides here. Questions or a guide to contribute? Reach the community on Discord or send a listing
+        through an organization account.
       </p>
-      <ul className="edu-platform-cta-list">
-        <li>Save articles for later reading</li>
-        <li>Follow educators and presenters</li>
-        <li>Publish public education with moderation</li>
-      </ul>
       <div className="edu-platform-cta-actions">
-        <KinkSocialCtaLink
-          href={joinUrl}
-          label={KINK_SOCIAL_LABELS.joinFree}
-          variant="education"
-          surface="education_platform_cta"
+        <EckeLink href="/education" className="edu-btn-read">
+          Browse education
+        </EckeLink>
+        <a
+          href={ECKE_DISCORD_INVITE_URL}
+          target="_blank"
+          rel="noopener noreferrer"
           className="edu-btn-save"
-        />
-        <KinkSocialCtaLink
-          href={educationUrl}
-          label={KINK_SOCIAL_LABELS.exploreEducation}
-          variant="education"
-          surface="education_platform_cta"
-          className="edu-btn-read"
-        />
+        >
+          {ECKE_DISCORD_LABEL}
+        </a>
       </div>
     </section>
   )

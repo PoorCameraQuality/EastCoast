@@ -1,12 +1,10 @@
 'use client'
 
 import EckeLink from '@/components/EckeLink'
-import KinkSocialCtaLink from '@/components/kink-social/KinkSocialCtaLink'
 import OutboundWebsiteLink from '@/components/analytics/OutboundWebsiteLink'
 import VendorMediaStage from '@/components/vendors/marketplace/VendorMediaStage'
 import { trackSelectItemEntity } from '@/lib/analyticsEntities'
 import { locationDisplay } from '@/lib/publicVendorIndex'
-import { getKinkSocialJoinUrl, getKinkSocialVendorOnboardingUrl } from '@/lib/kinkSocialMarketing'
 import type { PublicVendorListing } from '@/types/publicVendorListing'
 
 type Props = {
@@ -56,17 +54,7 @@ export default function AdaptiveVendorCard({
         {vendor.shortSummary ? <p className="vendor-index-card-summary">{vendor.shortSummary}</p> : null}
 
         <div className="vendor-index-card-actions">
-          {shopUrl && vendor.sourceSystem === 'kink_social' ? (
-            <KinkSocialCtaLink
-              href={shopUrl}
-              label="Visit shop"
-              variant="vendor"
-              surface="vendor_index_card"
-              entitySlug={vendor.slug}
-              className="vendor-btn vendor-btn-shop min-h-11"
-              external
-            />
-          ) : shopUrl ? (
+          {shopUrl ? (
             <OutboundWebsiteLink
               href={shopUrl}
               entityType="vendor"
@@ -95,8 +83,8 @@ export function VendorPlatformCta({ compact }: { compact?: boolean }) {
     <aside className={`vendor-platform-cta ${compact ? 'vendor-platform-cta-compact' : ''}`} aria-label="Vendor platform">
       <h2 className="vendor-platform-cta-title">Get found where kink events happen.</h2>
       <p className="vendor-platform-cta-body">
-        Create a kink.social vendor profile so organizers and attendees can discover your work across events,
-        conventions, and public ECKE listings.
+        Create a free ECKE organization shop so organizers and attendees can discover your work across events and
+        conventions.
       </p>
       <ul className="vendor-platform-cta-list">
         <li>Show up where organizers plan events</li>
@@ -106,22 +94,12 @@ export function VendorPlatformCta({ compact }: { compact?: boolean }) {
       </ul>
       <p className="vendor-platform-cta-disclaimer">ECKE links to public shops. Checkout stays with the vendor.</p>
       <div className="vendor-platform-cta-actions">
-        <KinkSocialCtaLink
-          href={getKinkSocialJoinUrl('vendor_page')}
-          label="Join kink.social free"
-          variant="vendor"
-          surface="vendor_platform_cta"
-          className="sf-btn-rose vendor-platform-btn"
-          external
-        />
-        <KinkSocialCtaLink
-          href={getKinkSocialVendorOnboardingUrl('vendor_page')}
-          label="Create vendor profile"
-          variant="vendor"
-          surface="vendor_platform_cta"
-          className="sf-btn-primary vendor-platform-btn"
-          external
-        />
+        <EckeLink href="/auth/org/signup" className="sf-btn-primary vendor-platform-btn">
+          Create an organization
+        </EckeLink>
+        <EckeLink href="/vendors/my-shop" className="sf-btn-rose vendor-platform-btn">
+          Manage your shop
+        </EckeLink>
       </div>
     </aside>
   )

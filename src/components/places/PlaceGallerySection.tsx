@@ -1,9 +1,7 @@
 'use client'
 
-import { useState } from 'react'
-import KinkSocialCtaLink from '@/components/kink-social/KinkSocialCtaLink'
+import { useEffect, useState } from 'react'
 import { galleryHeroImage, galleryKindLabel, publicSafeGallery } from '@/lib/placeGallery'
-import { buildKinkSocialUrl, KINK_SOCIAL_PATHS } from '@/lib/kinkSocialMarketing'
 import type { PublicPlaceListing } from '@/types/publicPlaceListing'
 
 type Props = {
@@ -12,65 +10,71 @@ type Props = {
 
 export default function PlaceGallerySection({ place }: Props) {
   const safe = publicSafeGallery(place.gallery)
-  const hero = galleryHeroImage(place.gallery) ?? (safe[0] ?? null)
+  const hero = galleryHeroImage(place.gallery) ?? safe[0] ?? null
   const [activeId, setActiveId] = useState(hero?.id ?? '')
-  const active = safe.find((m) => m.id === activeId) ?? hero
+  const [previewTiny, setPreviewTiny] = useState(false)
+  const active = safe.find((item) => item.id === activeId) ?? hero ?? null
+
+  useEffect(() => {
+    if (!active?.url) {
+      setPreviewTiny(false)
+      return undefined
+    }
+    let cancelled = false
+    const image = new Image()
+    image.onload = () => {
+      if (!cancelled) setPreviewTiny(image.naturalWidth < 64 || image.naturalHeight < 64)
+    }
+    image.src = active.url
+    return () => {
+      cancelled = true
+    }
+  }, [active?.url])
 
   if (!safe.length) {
     return (
-      <section className="place-gallery-empty" aria-labelledby="place-gallery-heading">
+      <section id="place-gallery" className="place-gallery-empty" aria-labelledby="place-gallery-heading">
         <h2 id="place-gallery-heading" className="place-section-title">
-          Inside the space
+          Gallery
         </h2>
-        <p className="place-gallery-empty-copy">
-          No public gallery yet. Venue owners can publish approved photos from kink.social.
-        </p>
-        <KinkSocialCtaLink
-          href={buildKinkSocialUrl(KINK_SOCIAL_PATHS.orgNew, 'organizer', {
-            ref: 'ecke_place_gallery',
-            ecke_place: place.slug,
-          })}
-          label="Create or claim this venue on kink.social"
-          variant="organizer"
-          surface="place_gallery_empty"
-          className="place-btn place-btn-save"
-          external
-        />
+        <p className="place-gallery-empty-copy">No public photos yet.</p>
       </section>
     )
   }
 
+  if (safe.length === 1) {
+    return null
+  }
+
   return (
-    <section className="place-gallery" aria-labelledby="place-gallery-heading">
+    <section id="place-gallery" className="place-gallery" aria-labelledby="place-gallery-heading">
       <div className="place-gallery-head">
         <h2 id="place-gallery-heading" className="place-section-title">
-          Inside the space
+          Gallery
         </h2>
-        {safe.length > 4 ? <span className="place-gallery-count">{safe.length} photos</span> : null}
+        <span className="place-gallery-count">{safe.length} photos</span>
       </div>
 
-      {active ? (
+      {active && !previewTiny ? (
         <figure className="place-gallery-hero">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={active.url} alt={active.alt} className="place-gallery-hero-img" />
-          <figcaption className="place-gallery-caption">
-            {active.caption ?? galleryKindLabel(active.mediaKind)}
-          </figcaption>
+          {active.caption ? <figcaption className="place-gallery-caption">{active.caption}</figcaption> : null}
         </figure>
       ) : null}
 
-      <div className="place-gallery-thumbs">
-        {safe.slice(0, 5).map((m) => (
+      <div className="place-gallery-thumbs" role="list">
+        {safe.map((item) => (
           <button
-            key={m.id}
+            key={item.id}
             type="button"
-            className={`place-gallery-thumb ${active?.id === m.id ? 'place-gallery-thumb-active' : ''}`}
-            onClick={() => setActiveId(m.id)}
-            aria-label={m.alt}
+            className={`place-gallery-thumb ${active?.id === item.id ? 'place-gallery-thumb-active' : ''}`}
+            onClick={() => setActiveId(item.id)}
+            aria-label={item.alt || galleryKindLabel(item.mediaKind)}
+            aria-pressed={active?.id === item.id}
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={m.url} alt="" />
-            <span className="place-gallery-thumb-label">{galleryKindLabel(m.mediaKind)}</span>
+            <img src={item.url} alt="" />
           </button>
         ))}
       </div>

@@ -4,7 +4,9 @@ import '@/styles/dancecard-appearance.css'
 import '@/styles/dancecard-motion.css'
 import './globals.css'
 import type { Metadata } from "next";
+import { headers } from 'next/headers'
 import { Inter, Playfair_Display } from 'next/font/google'
+import { requireOrgSession } from '@/lib/eckeOrgAuth'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import BackToTop from '@/components/BackToTop'
@@ -102,11 +104,26 @@ export const viewport = {
   userScalable: true,
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const bareShell = headers().get('x-ecke-bare-shell') === '1'
+  const orgSession = bareShell ? null : await requireOrgSession()
+
+  if (bareShell) {
+    return (
+      <html lang="en" className={`bg-brand-void text-white ${inter.variable} ${playfair.variable}`}>
+        <body className="antialiased font-sans">
+          <main id="main-content" role="main" className="outline-none">
+            {children}
+          </main>
+        </body>
+      </html>
+    )
+  }
+
   return (
     <html lang="en" className={`bg-brand-void text-white ${inter.variable} ${playfair.variable}`}>
       <head>
@@ -133,7 +150,7 @@ export default function RootLayout({
             {/* ErrorTracker still disabled - had problematic click listeners */}
             {/* <ErrorTracker /> */}
             <SafeTrackingWrapper>
-              <Header />
+              <Header orgSignedIn={Boolean(orgSession)} />
               <SupportBanner />
               <main
                 id="main-content"

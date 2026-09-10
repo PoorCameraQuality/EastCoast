@@ -7,7 +7,7 @@ export const revalidate = 1800
 
 export const metadata: Metadata = {
   title: 'Venues',
-  description: 'Kink venues and play spaces published from kink.social.',
+  description: 'Kink venues and play spaces listed on East Coast Kink Events.',
   alternates: { canonical: `${BASE_URL}/venues` },
 }
 
@@ -17,7 +17,7 @@ export default async function VenuesIndexPage() {
   return (
     <KinkSocialListingIndexView
       title="Venues"
-      description="Public venue listings synced from kink.social."
+      description="Public venue listings on East Coast Kink Events."
       indexHref="/venues"
       listings={rows}
     />

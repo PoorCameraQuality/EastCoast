@@ -1,5 +1,3 @@
-import KinkSocialCtaLink from '@/components/kink-social/KinkSocialCtaLink'
-import { buildKinkSocialUrl, KINK_SOCIAL_PATHS } from '@/lib/kinkSocialMarketing'
 import type { PublicPlaceListing } from '@/types/publicPlaceListing'
 
 type Props = {
@@ -27,24 +25,7 @@ export default function PlaceHowToAttend({ place }: Props) {
             <>Register or contact the venue through their official site.</>
           )}
         </li>
-        <li>
-          Save and follow on{' '}
-          <KinkSocialCtaLink
-            href={
-              place.followUrl ??
-              buildKinkSocialUrl(KINK_SOCIAL_PATHS.join, 'dungeon_page', {
-                ref: 'ecke_place_howto',
-                ecke_place: place.slug,
-              })
-            }
-            label="kink.social"
-            variant="dungeon"
-            surface="place_how_to_attend"
-            className="place-inline-cta"
-            external
-          />{' '}
-          for updates.
-        </li>
+        <li>Confirm hours, access, and house rules with the venue before you visit.</li>
       </ol>
       {place.firstTimerInfo ? (
         <p className="place-how-note">{place.firstTimerInfo}</p>

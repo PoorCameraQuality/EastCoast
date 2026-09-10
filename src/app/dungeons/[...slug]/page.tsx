@@ -17,6 +17,8 @@ import { dungeonDiscoveryRobotsMeta } from '@/lib/dungeonDiscoveryRobots'
 import { BASE_URL } from '@/lib/seo'
 import DungeonDetailView from '@/components/dungeons/DungeonDetailView'
 import DungeonDiscoveryHubLayout from '@/components/dungeons/DungeonDiscoveryHubLayout'
+import { requireOrgSession } from '@/lib/eckeOrgAuth'
+import { fetchOwnedPlaceAsUnified } from '@/lib/eckeOrgDungeons'
 
 export const revalidate = 1800
 
@@ -34,7 +36,11 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
 
   if (parsed.kind === 'dungeonDetail') {
-    const dungeon = await resolveDungeonBySlugAsync(parsed.slug)
+    let dungeon = await resolveDungeonBySlugAsync(parsed.slug)
+    if (!dungeon) {
+      const session = await requireOrgSession()
+      if (session) dungeon = await fetchOwnedPlaceAsUnified(parsed.slug, session.organization.id)
+    }
     if (!dungeon) {
       return {
         title: 'Dungeon Not Found',
@@ -42,10 +48,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       }
     }
     const seo = generateDungeonSEO(dungeon)
+    const isPublic = dungeon.status !== 'draft'
     return {
       title: seo.title,
       description: seo.description,
       keywords: seo.keywords,
+      robots: isPublic ? undefined : { index: false, follow: false },
       openGraph: {
         title: seo.title,
         description: seo.description,
@@ -110,7 +118,11 @@ export default async function DungeonsCatchAllPage({ params }: PageProps) {
   }
 
   if (parsed.kind === 'dungeonDetail') {
-    const dungeon = await resolveDungeonBySlugAsync(parsed.slug)
+    let dungeon = await resolveDungeonBySlugAsync(parsed.slug)
+    if (!dungeon) {
+      const session = await requireOrgSession()
+      if (session) dungeon = await fetchOwnedPlaceAsUnified(parsed.slug, session.organization.id)
+    }
     if (!dungeon) {
       notFound()
     }

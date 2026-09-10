@@ -1,11 +1,9 @@
 'use client'
 
 import EckeLink from '@/components/EckeLink'
-import KinkSocialCtaLink from '@/components/kink-social/KinkSocialCtaLink'
 import { exportSingleEvent } from '@/lib/calendarExport'
 import { calendarPillTone, isPastItem, parseLocalDate, typeBadgeLabel } from '@/lib/calendarVisual'
 import { sourceLabel } from '@/lib/publicEventIndex'
-import { getKinkSocialJoinUrl, getKinkSocialOrgUrl, KINK_SOCIAL_LABELS } from '@/lib/kinkSocialMarketing'
 import type { PublicEventIndexItem } from '@/types/publicEventIndexItem'
 
 type Props = {
@@ -45,7 +43,7 @@ export default function CalendarEventRow({ item }: Props) {
           {src ? (
             <span className="cal-badge cal-badge-source" title={src}>
               <span className="cal-source-dot" aria-hidden />
-              kink.social
+              {src}
             </span>
           ) : null}
         </div>
@@ -83,39 +81,21 @@ export default function CalendarEventRow({ item }: Props) {
 
 export function CalendarPlanningCtaCompact({ showDancecardNote }: { showDancecardNote?: boolean }) {
   return (
-    <aside className="cal-planning-cta" aria-label="Plan on kink.social">
+    <aside className="cal-planning-cta" aria-label="Plan your weekend">
       <h2 className="cal-planning-cta-title">Make this calendar yours.</h2>
       <p className="cal-planning-cta-body">
-        Save events, follow organizers, and build your weekend plans on kink.social.
+        Browse by month, filter by type or region, and export dates to your own calendar.
       </p>
       {showDancecardNote ? (
         <p className="cal-planning-cta-note">Dancecard available for supported events.</p>
       ) : null}
       <div className="cal-planning-cta-actions">
-        <KinkSocialCtaLink
-          href={getKinkSocialJoinUrl('calendar')}
-          label={KINK_SOCIAL_LABELS.joinFree}
-          variant="calendar"
-          surface="calendar_planning"
-          className="sf-btn-rose cal-planning-btn"
-          external
-        />
-        <KinkSocialCtaLink
-          href={getKinkSocialOrgUrl('calendar')}
-          label={KINK_SOCIAL_LABELS.createOrg}
-          variant="organizer"
-          surface="calendar_planning"
-          className="sf-btn-primary cal-planning-btn"
-          external
-        />
-        <KinkSocialCtaLink
-          href={getKinkSocialOrgUrl('calendar')}
-          label="Publish your event"
-          variant="organizer"
-          surface="calendar_planning"
-          className="cal-planning-btn cal-planning-btn-ghost"
-          external
-        />
+        <EckeLink href="/events" className="sf-btn-rose cal-planning-btn">
+          Browse events
+        </EckeLink>
+        <EckeLink href="/contact" className="sf-btn-primary cal-planning-btn">
+          List an event
+        </EckeLink>
       </div>
     </aside>
   )

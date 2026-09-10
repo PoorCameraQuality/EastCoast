@@ -11,17 +11,9 @@ type Props = {
 }
 
 function ProductCard({ product, vendor }: { product: PublicVendorProduct; vendor: PublicVendorListing }) {
-  const href = product.externalUrl ?? vendor.shopUrl ?? vendor.websiteUrl
-  if (!href) return null
-
-  return (
-    <OutboundWebsiteLink
-      href={href}
-      entityType="vendor"
-      entitySlug={vendor.slug}
-      entityName={vendor.name}
-      className="vendor-product-card"
-    >
+  const href = product.externalUrl ?? (vendor.sourceSystem === 'kink_social' ? vendor.shopUrl : vendor.websiteUrl)
+  const body = (
+    <>
       {product.imageUrl ? (
         // eslint-disable-next-line @next/next/no-img-element
         <img src={product.imageUrl} alt={product.title} className="vendor-product-image" loading="lazy" />
@@ -32,32 +24,56 @@ function ProductCard({ product, vendor }: { product: PublicVendorProduct; vendor
         <span className="vendor-product-title">{product.title}</span>
         {product.category ? <span className="vendor-product-category">{product.category}</span> : null}
         {product.priceLabel ? <span className="vendor-product-price">{product.priceLabel}</span> : null}
-        <span className="vendor-product-cta">View item</span>
+        {href ? <span className="vendor-product-cta">{vendor.organizationId || product.externalUrl ? 'Buy' : 'View item'}</span> : null}
       </div>
+    </>
+  )
+
+  if (!href) {
+    return <div className="vendor-product-card">{body}</div>
+  }
+
+  return (
+    <OutboundWebsiteLink
+      href={href}
+      entityType="vendor"
+      entitySlug={vendor.slug}
+      entityName={vendor.name}
+      className="vendor-product-card"
+    >
+      {body}
     </OutboundWebsiteLink>
   )
 }
 
 export default function VendorProductShelf({ vendor }: Props) {
   const products = vendor.featuredProducts?.filter((p) => p.publicSafe) ?? []
+  const eckeOwned = Boolean(vendor.organizationId)
+  const heading = eckeOwned ? 'Shop' : 'Featured work'
 
   if (!products.length) {
     return (
       <section className="vendor-shelf-empty" aria-labelledby="vendor-shelf-heading">
         <h2 id="vendor-shelf-heading" className="vendor-section-title">
-          Featured work
+          {heading}
         </h2>
-        <p className="vendor-shelf-empty-copy">
-          No public product gallery yet. Vendors can publish product previews from kink.social.
-        </p>
-        <KinkSocialCtaLink
-          href={getKinkSocialVendorOnboardingUrl('vendor_page')}
-          label="Create or claim vendor profile"
-          variant="vendor"
-          surface="vendor_shelf_empty"
-          className="vendor-btn vendor-btn-save"
-          external
-        />
+        {eckeOwned ? (
+          <p className="vendor-shelf-empty-copy">No public products listed yet.</p>
+        ) : (
+          <>
+            <p className="vendor-shelf-empty-copy">
+              No public product gallery yet. Vendors can publish product previews from kink.social.
+            </p>
+            <KinkSocialCtaLink
+              href={getKinkSocialVendorOnboardingUrl('vendor_page')}
+              label="Create or claim vendor profile"
+              variant="vendor"
+              surface="vendor_shelf_empty"
+              className="vendor-btn vendor-btn-save"
+              external
+            />
+          </>
+        )}
       </section>
     )
   }
@@ -65,8 +81,11 @@ export default function VendorProductShelf({ vendor }: Props) {
   return (
     <section className="vendor-shelf" aria-labelledby="vendor-shelf-heading">
       <h2 id="vendor-shelf-heading" className="vendor-section-title">
-        Featured work
+        {heading}
       </h2>
+      {eckeOwned ? (
+        <p className="vendor-shelf-empty-copy">Buy opens this vendor's checkout. ECKE does not take payment.</p>
+      ) : null}
       <div className="vendor-product-grid">
         {products.slice(0, 8).map((product) => (
           <ProductCard key={product.id} product={product} vendor={vendor} />

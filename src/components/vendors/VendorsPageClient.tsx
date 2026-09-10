@@ -11,7 +11,7 @@ import DirectoryCompactStats from '@/components/discovery/DirectoryCompactStats'
 import { CONTACT_US_LABEL } from '@/lib/submissionContact'
 import Breadcrumb from '@/components/Breadcrumb'
 import DiscoveryPageShell from '@/components/discovery/DiscoveryPageShell'
-import KinkSocialAcquisitionCard from '@/components/kink-social/KinkSocialAcquisitionCard'
+import { VendorPlatformCta } from '@/components/vendors/marketplace/AdaptiveVendorCard'
 import {
   filterVendorsBySelectedTags,
   type VendorRecord,
@@ -287,7 +287,7 @@ export default function VendorsPageClient({
           </div>
 
           <div className="mt-10 md:mt-12">
-            <KinkSocialAcquisitionCard variant="vendor" className="mx-auto max-w-3xl lg:max-w-none" />
+            <VendorPlatformCta />
           </div>
 
           <div className="stack-ecke-md mt-10 border-t border-white/[0.06] pt-8 md:mt-12">

@@ -5,6 +5,7 @@ import type { EventMedia } from '@/lib/eventMedia'
 import type { EventBrandTheme } from '@/lib/eventBrandTheme'
 import { eventBrandStyle } from '@/lib/eventBrandTheme'
 import type { EventPageRecord } from '@/lib/unifiedEvents'
+import { openEventApplications } from '@/lib/eckeOrgEventAssets'
 
 type Props = {
   event: EventPageRecord
@@ -14,6 +15,7 @@ type Props = {
 
 export default function EventBrandMasthead({ event, media, brand }: Props) {
   const style = eventBrandStyle(brand)
+  const applications = openEventApplications(event)
 
   return (
     <div className="event-masthead" style={style} data-treatment={brand.treatment}>
@@ -23,6 +25,16 @@ export default function EventBrandMasthead({ event, media, brand }: Props) {
       </div>
 
       <div className="event-masthead-content">
+        {applications.length ? (
+          <div className="event-application-pips" aria-label="Open applications">
+            {applications.map((item) => (
+              <a key={item.id} href={item.url} target="_blank" rel="noopener noreferrer" className="event-application-pip">
+                <span className="event-application-pip-dot" aria-hidden />
+                {item.label} applications open
+              </a>
+            ))}
+          </div>
+        ) : null}
         <p className="event-masthead-type">{event.category}</p>
         <h1 className="event-masthead-title">{event.name}</h1>
         {event.excerpt ? <p className="event-masthead-pitch">{event.excerpt}</p> : null}

@@ -181,17 +181,19 @@ export function vendorToListing(
     coverImageUrl,
     gallery: galleryFromProducts(featuredProducts),
     featuredProducts,
-    shopUrl: kinkSocialVendorUrl ?? vendor.websiteUrl,
+    shopUrl: fromKinkSocial ? kinkSocialVendorUrl : vendor.websiteUrl,
     websiteUrl: vendor.websiteUrl,
+    contactEmail: vendor.contactEmail,
     acceptsCommissions,
     commissionInfo: acceptsCommissions ? 'Custom commissions available — confirm details on the vendor site.' : undefined,
     supporterTier: vendor.isPaid ? 'supporter' : 'none',
     dungeonListingSlug: vendor.dungeonListingSlug,
     kinkSocialVendorUrl,
-    followUrl: kinkSocialVendorUrl,
+    followUrl: fromKinkSocial ? kinkSocialVendorUrl : undefined,
     sourceSystem: fromKinkSocial ? 'kink_social' : 'ecke',
+    organizationId: vendor.organizationId || undefined,
     lastSyncedAt: vendor.lastSyncedAt,
-    status: 'published',
+    status: vendor.status === 'draft' ? 'draft' : 'published',
   }
 }
 

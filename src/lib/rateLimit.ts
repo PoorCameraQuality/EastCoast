@@ -170,6 +170,12 @@ export const rateLimiters = {
     message: 'Too many file uploads. Please try again later.'
   }),
 
+  orgMedia: new RateLimiter({
+    windowMs: 60 * 60 * 1000,
+    maxRequests: 40,
+    message: 'Too many media uploads. Please try again later.',
+  }),
+
   /** Dancecard login, register, entry code, staff unlock */
   dancecardAuth: new RateLimiter({
     windowMs: 15 * 60 * 1000,

@@ -1,0 +1,540 @@
+# ECKE Platform - Cursor Rules v2
+## Self-Contained Event Listing (Org Self-Signup + Auto-Publish Events)
+
+You are helping build ECKE, an independent event listing platform where organizations self-signup, create/manage events, and events appear immediately on the public site.
+
+## PLATFORM SCOPE
+
+**What you're building:**
+- Org self-signup with username/password login
+- Org dashboard for creating/editing/deleting events
+- Public discovery pages (browse, search, filter events)
+- Password recovery via email
+- SEO-optimized event detail pages
+
+**What you're NOT building:**
+- Event approval workflows
+- Ticketing or registration system
+- Multi-staff org logins
+- Syncing with kink.social or other platforms
+
+## TECHNOLOGY STACK
+
+- **Framework:** Next.js 14 with App Router
+- **Language:** TypeScript
+- **Database:** Supabase (PostgreSQL)
+- **Auth:** JWT tokens (stateless)
+- **Password:** bcrypt for hashing
+- **Styling:** Tailwind CSS
+- **Editor:** Tiptap for rich text (optional)
+- **Deployment:** Vercel
+
+## DATABASE SCHEMA
+
+Three tables (see ECKE_SUPABASE_SCHEMA.sql):
+
+### organizations
+```
+id (UUID PK)
+name (VARCHAR, UNIQUE)
+slug (VARCHAR, UNIQUE) → /organizations/[slug]
+email (VARCHAR, UNIQUE) → contact email
+website (VARCHAR, optional)
+description (TEXT, optional)
+logo_url (VARCHAR, optional)
+verified (BOOLEAN, default false)
+created_at, updated_at
+```
+
+### org_credentials
+```
+id (UUID PK)
+organization_id (UUID FK)
+username (VARCHAR, UNIQUE)
+password_hash (VARCHAR) → bcrypt hash
+email (VARCHAR) → for password recovery
+last_login (TIMESTAMP, optional)
+active (BOOLEAN, default true)
+created_at, updated_at
+```
+
+### events
+```
+id (UUID PK)
+organization_id (UUID FK) → org that created this event
+title (VARCHAR)
+slug (VARCHAR, UNIQUE) → /events/[slug]
+event_type (VARCHAR) → Convention, Workshop, Dungeon, Social, Class, etc.
+description (TEXT)
+rich_description (JSONB, optional) → Tiptap editor content
+cover_image_url (VARCHAR)
+gallery_urls (TEXT[], optional)
+
+location_name (VARCHAR, optional)
+address (VARCHAR, optional)
+city (VARCHAR)
+state (VARCHAR, 2 chars)
+zip_code (VARCHAR, optional)
+region (VARCHAR, optional) → "Southeastern United States"
+latitude, longitude (DECIMAL, optional)
+
+start_date (DATE, required)
+start_time (TIME, optional)
+end_date (DATE, optional)
+end_time (TIME, optional)
+date_status (VARCHAR) → 'confirmed', 'tba', 'tentative'
+recurring (BOOLEAN, default false)
+recurrence_rule (VARCHAR, optional) → RFC 5545
+
+age_restriction (VARCHAR) → '18+', '21+', 'none'
+expected_attendance (INTEGER, optional)
+dress_code (TEXT, optional)
+entry_fee (DECIMAL, optional)
+
+contact_email (VARCHAR)
+contact_phone (VARCHAR, optional)
+official_website (VARCHAR, optional)
+
+tags (TEXT[]) → array of tags
+status (VARCHAR) → 'draft', 'published', 'archived'
+published_at (TIMESTAMP, optional)
+featured (BOOLEAN, default false)
+views (INTEGER, default 0)
+
+created_at, updated_at
+```
+
+## AUTHENTICATION FLOW
+
+### Org Signup
+```
+User visits /auth/org/signup
+Fills form: org name, email, website (optional), username, password
+POST /api/auth/org/signup
+  1. Validate input (Zod schema)
+  2. Check username not taken
+  3. Check email not taken
+  4. Hash password with bcrypt
+  5. Create organizations row
+  6. Create org_credentials row
+  7. Generate JWT token (24h expiry)
+  8. Return token + org info
+Browser stores token in localStorage
+Redirect to /dashboard
+```
+
+### Org Login
+```
+User visits /auth/org/login
+Fills form: username, password
+POST /api/auth/org/login
+  1. Look up org_credentials by username
+  2. Compare password with bcrypt
+  3. Update last_login timestamp
+  4. Generate JWT token
+  5. Return token + org info
+Browser stores token in localStorage
+Redirect to /dashboard
+```
+
+### Password Recovery
+```
+User visits /auth/org/recover-password
+Enters email → POST /api/auth/org/recover-password
+  1. Find org_credentials by email
+  2. Generate reset token (JWT, 1h expiry)
+  3. Send email with reset link
+  4. Return success message
+User clicks link in email → /auth/org/reset-password?token=...
+Form submits new password → POST /api/auth/org/reset-password
+  1. Verify reset token
+  2. Hash new password
+  3. Update org_credentials.password_hash
+  4. Return success
+User can now login with new password
+```
+
+### JWT Token Structure
+```typescript
+{
+  orgId: string,
+  iat: number,
+  exp: number
+}
+```
+Stored in localStorage as `ecke_token`. Sent in Authorization header for protected APIs.
+
+## PROTECTED ROUTES
+
+These pages require valid JWT token:
+- `/dashboard` - org dashboard
+- `/dashboard/events/create` - create event form
+- `/dashboard/events/[eventId]` - edit event form
+
+Check token on page load:
+1. Retrieve from localStorage
+2. Verify signature + expiration
+3. If invalid, redirect to `/auth/org/login`
+
+## EVENT CREATION FLOW
+
+Org must be logged in to create events.
+
+### Form (single page or multi-step):
+
+**1. Basics**
+- title (required, 5-500 chars)
+- type (select: Convention, Workshop, Dungeon, Social, Class)
+- slug (auto-generate from title, allow edit, check for duplicates)
+
+**2. Description**
+- description (plain text, 20-5000 chars)
+- rich_description (optional, Tiptap editor output as JSONB)
+
+**3. Location**
+- location_name (optional)
+- address (optional)
+- city (required)
+- state (required, 2 chars)
+- zip_code (optional)
+- region (required, e.g., "Southeastern United States")
+- latitude, longitude (optional or auto-geocoded)
+
+**4. Timing**
+- start_date (required)
+- start_time (optional)
+- end_date (optional)
+- end_time (optional)
+- date_status (select: confirmed, tba, tentative)
+- recurring toggle (optional)
+- recurrence_rule (optional, if recurring)
+
+**5. Details**
+- age_restriction (select: 18+, 21+, none)
+- dress_code (optional)
+- expected_attendance (optional, integer)
+- entry_fee (optional, decimal $0.00)
+
+**6. Media**
+- cover_image_url (required, upload to Supabase Storage)
+- gallery_urls (optional, max 5 images)
+
+**7. Contact**
+- contact_email (pre-fill org email, can edit)
+- contact_phone (optional, e164 format)
+- official_website (optional, valid URL)
+
+**8. Tags**
+- tags (array of strings, max 10)
+- pre-defined options: BDSM, Rope, Impact, Furniture, Bondage, Submission, Dominance, Social, Education, Dungeon, Convention, Workshop, Beginner-Friendly, etc.
+- allow custom tags (not just pre-defined)
+
+**9. Publish**
+- Save as Draft button → status='draft'
+- Publish button → status='published', published_at=now()
+- Preview button → shows /events/[slug] as it will appear
+- Delete button (if editing existing event)
+
+### Form Validation (Zod)
+```typescript
+const EventFormSchema = z.object({
+  title: z.string().min(5).max(500),
+  slug: z.string().regex(/^[a-z0-9-]+$/),
+  eventType: z.enum(['convention', 'workshop', 'dungeon', 'social', 'class']),
+  description: z.string().min(20).max(5000),
+  richDescription: z.any().optional(),
+  location: z.object({
+    name: z.string().optional(),
+    address: z.string().optional(),
+    city: z.string().min(1),
+    state: z.string().length(2),
+    zipCode: z.string().optional(),
+    region: z.string().min(1),
+  }),
+  timing: z.object({
+    startDate: z.date(),
+    startTime: z.string().optional(),
+    endDate: z.date().optional(),
+    endTime: z.string().optional(),
+    dateStatus: z.enum(['confirmed', 'tba', 'tentative']),
+  }),
+  details: z.object({
+    ageRestriction: z.enum(['18+', '21+', 'none']),
+    dresCode: z.string().optional(),
+    expectedAttendance: z.number().int().positive().optional(),
+    entryFee: z.number().nonnegative().optional(),
+  }),
+  contact: z.object({
+    email: z.string().email(),
+    phone: z.string().optional(),
+    website: z.string().url().optional(),
+  }),
+  tags: z.array(z.string()).max(10),
+});
+```
+
+### Event Publishing
+When org clicks "Publish":
+- POST /api/events (create) or PUT /api/events/[eventId] (update)
+- Include `status: 'published'` and `published_at: new Date()`
+- Event appears immediately on public site at `/events/[slug]`
+- Org can see it in their dashboard
+
+### Event Editing
+Org can edit published or draft events:
+- Click event in dashboard → /dashboard/events/[eventId]
+- Form pre-populated with existing data
+- Can change any field
+- Can change status (published → draft, vice versa)
+- Can delete entirely
+
+### Event Deletion
+Org can soft-delete or hard-delete:
+- Option 1: Set status='archived' (soft delete, can restore)
+- Option 2: DELETE from database (hard delete, permanent)
+Recommendation: Soft delete for safety, hard delete on user request.
+
+## PUBLIC PAGES
+
+### Event Detail Page
+**Route:** `/events/[slug]`
+- Public, no auth required
+- Fetch event by slug (only if status='published')
+- Display all event data with nice formatting
+- Show org name + link to org profile
+- Show contact info, official website link
+- Images gallery
+- Tags as clickable chips
+- Increment views counter
+- SEO: meta tags (title, description, OG image), JSON-LD Event schema
+- Related events (same org or similar tags)
+- Breadcrumb: Home > Events > [Event Title]
+
+### Organization Profile Page
+**Route:** `/organizations/[slug]`
+- Public, no auth required
+- Fetch org by slug
+- Display: logo, name, description, website, contact email
+- List all their published events
+- Show event count
+- Link to their official website (if provided)
+- Breadcrumb: Home > Organizations > [Org Name]
+
+### All Events Page
+**Route:** `/events`
+- Public, no auth required
+- Display all published events (grid or list)
+- Filters (left sidebar or top bar):
+  - Search by title, description, tags
+  - Date range: upcoming, this month, custom
+  - Event type multi-select
+  - City/region select
+  - Age restriction filter
+  - Tags multi-select
+- Sort options: Upcoming, Featured, Alphabetical, Recently Updated
+- Pagination (20 events per page)
+- Show total event count
+- "Create an event" CTA (links to /auth/org/signup)
+
+### City Browse Page (Optional)
+**Route:** `/events/city/[city]`
+- Dynamically generated for each unique city
+- List all events in that city
+- Filter by date, type, etc.
+- Sort by upcoming
+
+### Tag Browse Page (Optional)
+**Route:** `/events/tag/[tag]`
+- Dynamically generated for each unique tag
+- List all events with that tag
+- Show related tags (other tags on these events)
+- Sort by upcoming
+
+### Homepage
+**Route:** `/` (or `/home`)
+- Featured events section
+- Upcoming events (this weekend, next week)
+- Featured orgs
+- "Browse all events" CTA
+- "Create an event" CTA
+- Quick stats (total events, total orgs)
+- SEO: optimized title, description, keywords
+
+### Sitemap
+**Route:** `/sitemap.xml`
+- List all published events
+- List all orgs
+- List root pages
+- Update frequency: events daily, orgs weekly
+
+## FILE STRUCTURE
+
+Create these files/folders:
+
+```
+src/
+├── app/
+│   ├── page.tsx (homepage)
+│   ├── layout.tsx (root layout)
+│   ├── auth/
+│   │   └── org/
+│   │       ├── signup/page.tsx
+│   │       ├── login/page.tsx
+│   │       └── reset-password/page.tsx
+│   ├── dashboard/
+│   │   ├── page.tsx (org dashboard - protected)
+│   │   └── events/
+│   │       ├── create/page.tsx (protected)
+│   │       └── [eventId]/page.tsx (protected)
+│   ├── events/
+│   │   ├── page.tsx (all events)
+│   │   ├── [slug]/page.tsx (event detail)
+│   │   ├── city/[city]/page.tsx (optional)
+│   │   └── tag/[tag]/page.tsx (optional)
+│   ├── organizations/
+│   │   └── [slug]/page.tsx (org profile)
+│   ├── api/
+│   │   ├── auth/
+│   │   │   └── org/
+│   │   │       ├── signup/route.ts
+│   │   │       ├── login/route.ts
+│   │   │       ├── recover-password/route.ts
+│   │   │       └── reset-password/route.ts
+│   │   └── events/
+│   │       ├── route.ts (GET all, POST create)
+│   │       └── [eventId]/route.ts (GET, PUT, DELETE)
+│   └── sitemap.xml/route.ts (optional)
+├── components/
+│   ├── auth/
+│   │   ├── OrgSignupForm.tsx
+│   │   ├── OrgLoginForm.tsx
+│   │   ├── PasswordRecoveryForm.tsx
+│   │   └── PasswordResetForm.tsx
+│   ├── events/
+│   │   ├── EventForm.tsx (main form)
+│   │   ├── EventCard.tsx (event summary card)
+│   │   ├── EventDetail.tsx (event detail display)
+│   │   └── RichTextEditor.tsx (Tiptap wrapper)
+│   ├── dashboard/
+│   │   ├── OrgDashboard.tsx
+│   │   └── EventsTable.tsx
+│   └── layout/
+│       ├── Header.tsx
+│       ├── Footer.tsx
+│       └── Sidebar.tsx (dashboard sidebar)
+├── lib/
+│   ├── authUtils.ts (JWT, bcrypt functions)
+│   ├── authMiddleware.ts (protected route guard)
+│   ├── supabase.ts (Supabase client)
+│   └── validation.ts (Zod schemas)
+├── hooks/
+│   └── useOrgAuth.ts (auth context/hook)
+├── types/
+│   ├── auth.ts (auth interfaces)
+│   ├── event.ts (event interfaces)
+│   └── organization.ts (org interfaces)
+└── styles/
+    └── globals.css
+```
+
+## CODE QUALITY STANDARDS
+
+### TypeScript
+- Strict mode enabled
+- No `any` types without justification
+- Use interfaces for data models
+- Type all function parameters and returns
+
+### Components
+- Functional components only (no class components)
+- React hooks for state management
+- Proper error boundaries and error states
+- Loading states for async operations
+- Accessible (ARIA labels, semantic HTML)
+
+### API Routes
+- Input validation before processing (Zod)
+- Proper error responses (400, 401, 404, 500)
+- CORS if needed
+- Rate limiting for sensitive endpoints (signup, login)
+- Never expose internal error details to client
+
+### Database Queries
+- Always use Supabase parameterized queries
+- Never concatenate user input
+- Include necessary JOINs in RLS policies
+- Index frequently queried columns
+
+## IMPLEMENTATION ORDER
+
+1. **Phase 1** (already done): Brand removal ✅
+2. **Phase 2** (next): Database schema + auth
+   - Create Supabase tables
+   - Implement org signup
+   - Implement org login
+   - Implement password recovery
+3. **Phase 3**: Org dashboard + event form
+   - Dashboard page
+   - Event form component
+   - Event CRUD APIs
+4. **Phase 4**: Public pages
+   - Event detail pages
+   - Org profile pages
+   - All events browse page
+5. **Phase 5**: Polish + deploy
+   - Test everything
+   - SEO optimization
+   - Deploy to Vercel
+
+## WHEN IMPLEMENTING
+
+### For Auth
+- Use bcrypt for password hashing (npm install bcrypt)
+- Generate JWT with secret from .env
+- Store JWT in localStorage (clear on logout)
+- Verify JWT on protected page load
+- Handle token expiration gracefully
+
+### For Events
+- Slug must be unique (enforce in database unique constraint)
+- Pre-fill org_id from logged-in session
+- Allow image uploads to Supabase Storage bucket
+- Show preview before publishing
+- Support draft/published states
+
+### For Forms
+- Use React Hook Form for form state
+- Use Zod for validation (client + server)
+- Show validation errors inline
+- Disable submit button while submitting
+- Show success/error toasts after submit
+
+### For Pages
+- Add generateMetadata for SEO (all public pages)
+- Add JSON-LD schema for events
+- Use next/image for responsive images
+- Implement ISR (revalidate after publishing event)
+- Handle 404 gracefully (event not found, org not found)
+
+## DEBUGGING CHECKLIST
+
+If something breaks:
+1. Check API response in browser DevTools
+2. Verify JWT token is valid (check exp timestamp)
+3. Check Supabase Row Level Security policies
+4. Check environment variables in .env.local
+5. Look for console errors (browser + server)
+6. Test with fresh data (create test org + event)
+
+## FINAL REMINDERS
+
+✅ All events auto-publish (no approval needed)
+✅ Org login only (no public user accounts)
+✅ Single login per org (no multi-staff roles yet)
+✅ Email recovery for password reset
+✅ Fully self-contained (no kink.social sync)
+✅ All event types supported
+✅ Tags and filtering available
+✅ SEO optimized (meta tags, JSON-LD, sitemap)
+
+Good luck! 🚀

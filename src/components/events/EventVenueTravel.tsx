@@ -30,6 +30,28 @@ export default function EventVenueTravel({ event }: { event: EventPageRecord }) 
             Venue details may be shared on the official site or after registration.
           </p>
         )}
+        {event.showAddressPublicly && event.address ? (
+          <p className="event-venue-name">
+            <span className="event-venue-label">Address</span> {event.address}
+          </p>
+        ) : event.address ? (
+          <p className="event-venue-privacy">Exact address is shared after registration.</p>
+        ) : null}
+        {event.hotelInformation ? (
+          <p className="event-venue-name">
+            <span className="event-venue-label">Stay</span> {event.hotelInformation}
+          </p>
+        ) : null}
+        {event.parking ? (
+          <p className="event-venue-name">
+            <span className="event-venue-label">Parking</span> {event.parking}
+          </p>
+        ) : null}
+        {event.foodDrink ? (
+          <p className="event-venue-name">
+            <span className="event-venue-label">Food / drink</span> {event.foodDrink}
+          </p>
+        ) : null}
         <div className="event-venue-links">
           {stateSlug ? (
             <EckeLink href={`/states/${stateSlug}`} className="event-venue-link">

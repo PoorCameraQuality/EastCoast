@@ -18,6 +18,7 @@ export type VendorRecord = {
   description?: string
   story?: string
   websiteUrl?: string
+  contactEmail?: string
   logo125Url?: string
   coverUrl?: string
   location?: string
@@ -32,6 +33,10 @@ export type VendorRecord = {
   /** Present when this listing was published from kink.social */
   c2kSourceId?: string | null
   c2kSourceType?: string | null
+  /** Present when an ECKE organization owns this shop */
+  organizationId?: string | null
+  status?: 'draft' | 'published'
+  checkoutMode?: 'offsite' | 'stripe'
 }
 
 export function getVendorCardPreviewText(args: { vendor: VendorRecord; maxSentences: number }): string {

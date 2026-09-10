@@ -69,3 +69,6 @@ public/images/dungeons/galleria-domain-2.png
 
 .vercel
 .env*
+
+# Scrape reports and org handoff passwords (never commit)
+scripts/out/

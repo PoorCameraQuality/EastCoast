@@ -1,5 +1,4 @@
 import EckeLink from '@/components/EckeLink'
-import KinkSocialCtaLink from '@/components/kink-social/KinkSocialCtaLink'
 import { TOPIC_LABELS } from '@/lib/educationVisual'
 import type { PublicEducatorPreview } from '@/types/publicEducationItem'
 
@@ -48,28 +47,18 @@ export default function EducatorPreviewSection({ educators }: Props) {
                 <p className="edu-educator-meta">
                   {educator.articleCount} article{educator.articleCount === 1 ? '' : 's'}
                 </p>
-                {educator.followUrl ? (
-                  <div className="mt-2">
-                    <KinkSocialCtaLink
-                      href={educator.followUrl}
-                      label="Follow on kink.social"
-                      variant="education"
-                      surface="education_follow_educator"
-                      className="edu-btn-save"
-                    />
-                  </div>
-                ) : null}
               </div>
             </article>
           ))}
         </div>
       ) : (
         <div className="edu-placeholder-cta">
-          Educators can publish public articles from{' '}
-          <EckeLink href="https://kink.social" className="text-violet-300 underline">
-            kink.social
+          Educators can publish public guides on ECKE. Presenter profiles and learning paths appear here as they are
+          listed.{' '}
+          <EckeLink href="/auth/org/signup" className="text-violet-300 underline">
+            Create an organization
           </EckeLink>
-          . Presenter profiles and learning paths will appear here as they are published.
+          .
         </div>
       )}
     </section>

@@ -72,7 +72,7 @@ export default function StateIndexPageClient({
           <p className="st-kicker">Local scene hubs</p>
           <h1 className="st-title">Explore by state</h1>
           <p className="st-subhead">
-            Find events, conventions, venues, vendors, education, and public kink.social listings near
+            Find events, conventions, venues, vendors, education, and public listings near
             where you live or travel.
           </p>
           <div className="st-stats">

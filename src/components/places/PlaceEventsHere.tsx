@@ -1,6 +1,6 @@
-import EckeLink from '@/components/EckeLink'
-import KinkSocialCtaLink from '@/components/kink-social/KinkSocialCtaLink'
-import { buildKinkSocialUrl, KINK_SOCIAL_PATHS } from '@/lib/kinkSocialMarketing'
+import PlaceEventCalendar from '@/components/places/PlaceEventCalendar'
+import PlaceUpcomingNights from '@/components/places/PlaceUpcomingNights'
+import { startOfToday, parseLocalDate } from '@/lib/calendarVisual'
 import type { PublicEventIndexItem } from '@/types/publicEventIndexItem'
 import type { PublicPlaceListing } from '@/types/publicPlaceListing'
 
@@ -10,42 +10,32 @@ type Props = {
 }
 
 export default function PlaceEventsHere({ place, events }: Props) {
+  const today = startOfToday()
+  const upcoming = events
+    .filter((event) => parseLocalDate(event.endsAt) >= today)
+    .sort((a, b) => parseLocalDate(a.startsAt).getTime() - parseLocalDate(b.startsAt).getTime())
+
   return (
     <section id="events-here" className="place-events-here" aria-labelledby="place-events-heading">
-      <h2 id="place-events-heading" className="place-section-title">
-        Upcoming at {place.name}
-      </h2>
+      <div className="place-events-intro">
+        <h2 id="place-events-heading" className="place-section-title">
+          {`Upcoming at ${place.name}`}
+        </h2>
+        <p className="place-events-lede">
+          {upcoming.length
+            ? `${upcoming.length} public night${upcoming.length === 1 ? '' : 's'} on the calendar.`
+            : "What's happening at this location."}
+        </p>
+      </div>
 
-      {events.length === 0 ? (
-        <div className="place-events-empty">
-          <p>No public events listed here yet.</p>
-          <KinkSocialCtaLink
-            href={buildKinkSocialUrl(KINK_SOCIAL_PATHS.orgNew, 'organizer', {
-              ref: 'ecke_place_publish',
-              ecke_place: place.slug,
-            })}
-            label="Publish events from kink.social"
-            variant="organizer"
-            surface="place_events_empty"
-            className="place-btn place-btn-save"
-            external
-          />
-        </div>
-      ) : (
-        <ul className="place-events-list">
-          {events.map((event) => (
-            <li key={event.slug}>
-              <EckeLink href={`/events/${event.slug}`} className="place-event-row">
-                <span className="place-event-date">{event.dateDisplay}</span>
-                <span className="place-event-title">{event.title}</span>
-                <span className="place-event-location">
-                  {event.city}, {event.state}
-                </span>
-              </EckeLink>
-            </li>
-          ))}
-        </ul>
-      )}
+      <div className="place-events-body">
+        <PlaceEventCalendar placeName={place.name} events={events} />
+        {upcoming.length > 0 ? (
+          <PlaceUpcomingNights events={upcoming} />
+        ) : (
+          <p className="place-events-empty">No public nights listed yet.</p>
+        )}
+      </div>
     </section>
   )
 }

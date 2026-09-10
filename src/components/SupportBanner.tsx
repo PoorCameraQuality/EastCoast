@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { useWindowPathname } from '@/hooks/useWindowPathname'
 import { suppressSupportBanner } from '@/lib/dancecard/shellRoutes'
 
 /**
@@ -28,7 +28,7 @@ function parseIntSafe(v: string | null) {
 }
 
 export default function SupportBanner() {
-  const pathname = usePathname()
+  const pathname = useWindowPathname()
   const [visible, setVisible] = useState(false)
   const [ready, setReady] = useState(false)
 

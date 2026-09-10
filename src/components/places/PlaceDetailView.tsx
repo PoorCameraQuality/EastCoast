@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import { orgCopyLooksLikeHtml, sanitizeOrgHtml } from '@/lib/eckeOrgRichText'
 import Breadcrumb from '@/components/Breadcrumb'
 import RelatedContent from '@/components/RelatedContent'
 import DiscoveryEngineStrip from '@/components/discovery/DiscoveryEngineStrip'
@@ -7,14 +8,12 @@ import PlaceActionDock from '@/components/places/PlaceActionDock'
 import PlaceAmenitiesGrid from '@/components/places/PlaceAmenitiesGrid'
 import { PlaceOwnerCta } from '@/components/places/AdaptivePlaceCard'
 import PlaceEventsHere from '@/components/places/PlaceEventsHere'
-import PlaceGallerySection from '@/components/places/PlaceGallerySection'
+import PlaceEventsSticky from '@/components/places/PlaceEventsSticky'
 import PlaceHowToAttend from '@/components/places/PlaceHowToAttend'
 import PlaceMasthead from '@/components/places/PlaceMasthead'
-import KinkSocialCtaLink from '@/components/kink-social/KinkSocialCtaLink'
 import MarkdownSimple from '@/components/MarkdownSimple'
 import DiscoveryPageShell from '@/components/discovery/DiscoveryPageShell'
 import EntityPageViewTracker from '@/components/analytics/EntityPageViewTracker'
-import { buildKinkSocialUrl, KINK_SOCIAL_PATHS } from '@/lib/kinkSocialMarketing'
 import type { PublicEventIndexItem } from '@/types/publicEventIndexItem'
 import type { PublicPlaceListing } from '@/types/publicPlaceListing'
 
@@ -26,6 +25,7 @@ type Props = {
   socialMedia?: Record<string, string | undefined>
   /** Swing club practical details, etc. */
   extraModules?: ReactNode
+  leadNotice?: ReactNode
   relatedDungeon?: { slug: string; name: string; location: { city: string; state: string } }
   relatedSwingClub?: { slug: string; name: string; location: { city: string; state: string } }
 }
@@ -37,6 +37,7 @@ export default function PlaceDetailView({
   structuredData,
   socialMedia,
   extraModules,
+  leadNotice,
   relatedDungeon,
   relatedSwingClub,
 }: Props) {
@@ -56,33 +57,39 @@ export default function PlaceDetailView({
       />
       {structuredData}
 
-      <section className="places-detail-page section-padding pt-4 md:pt-6">
+      <section className="places-detail-page place-profile-page section-padding pt-4 md:pt-6">
         <div className="container-custom">
-          <Breadcrumb items={breadcrumbItems} />
+          <div className="place-profile-crumb">
+            <Breadcrumb items={breadcrumbItems} />
+          </div>
+
+          {leadNotice}
 
           <PlaceMasthead place={place} />
 
-          <div className="place-detail-layout">
-            <div className="place-detail-main">
-              <PlaceGallerySection place={place} />
+          <PlaceEventsHere place={place} events={upcomingEvents} />
 
+          <div className="place-profile-split">
+            <div className="place-profile-copy">
               <section className="place-about" aria-labelledby="place-about-heading">
                 <h2 id="place-about-heading" className="place-section-title">
                   About this space
                 </h2>
                 {hasLongBody ? (
                   <div className="place-about-prose">
-                    <MarkdownSimple content={longBody} />
+                    {orgCopyLooksLikeHtml(longBody) ? (
+                      <div dangerouslySetInnerHTML={{ __html: sanitizeOrgHtml(longBody) }} />
+                    ) : (
+                      <MarkdownSimple content={longBody} />
+                    )}
                   </div>
+                ) : place.shortSummary ? (
+                  <p className="place-about-prose">{place.shortSummary}</p>
                 ) : (
                   <p className="place-about-fallback">
                     Details coming soon — check the venue website when available.
                   </p>
                 )}
-                <p className="place-about-disclaimer">
-                  Public listing for discovery — not an endorsement. Confirm hours, access, and house rules with the
-                  venue before you visit.
-                </p>
               </section>
 
               <PlaceHowToAttend place={place} />
@@ -109,80 +116,57 @@ export default function PlaceDetailView({
               {extraModules}
 
               <PlaceAmenitiesGrid place={place} />
-
-              <PlaceEventsHere place={place} events={upcomingEvents} />
-
-              {place.sourceSystem === 'kink_social' || place.organizerName ? (
-                <section className="place-org-card" aria-labelledby="place-org-heading">
-                  <h2 id="place-org-heading" className="place-section-title">
-                    {place.sourceSystem === 'kink_social' ? 'Managed on kink.social' : 'Organizer'}
-                  </h2>
-                  {place.organizerName ? (
-                    <p className="place-org-name">{place.organizerName}</p>
-                  ) : null}
-                  <KinkSocialCtaLink
-                    href={
-                      place.followUrl ??
-                      buildKinkSocialUrl(KINK_SOCIAL_PATHS.join, 'dungeon_page', {
-                        ref: 'ecke_place_org',
-                        ecke_place: place.slug,
-                      })
-                    }
-                    label="Follow on kink.social"
-                    variant="dungeon"
-                    surface="place_organization"
-                    className="place-btn place-btn-save"
-                    external
-                  />
-                </section>
-              ) : (
-                <section className="place-org-card" aria-labelledby="place-own-heading">
-                  <h2 id="place-own-heading" className="place-section-title">
-                    Own or run this space?
-                  </h2>
-                  <p className="place-org-copy">
-                    Create or claim an organization on kink.social to manage your public profile and publish events to
-                    ECKE.
-                  </p>
-                  <KinkSocialCtaLink
-                    href={buildKinkSocialUrl(KINK_SOCIAL_PATHS.orgNew, 'organizer', {
-                      ref: 'ecke_place_claim',
-                      ecke_place: place.slug,
-                    })}
-                    label="Create or claim on kink.social"
-                    variant="organizer"
-                    surface="place_claim"
-                    className="place-btn place-btn-save"
-                    external
-                  />
-                </section>
-              )}
-
-              <details className="place-more-links">
-                <summary>More links in {place.city} area</summary>
-                <div className="place-more-links-body">
-                  <ListingHubLinks
-                    variant={place.routeKind === 'swing_club' ? 'swing' : 'dungeon'}
-                    stateAbbr={place.state}
-                    city={place.city}
-                  />
-                  <DiscoveryEngineStrip stateAbbr={place.state} />
-                </div>
-              </details>
             </div>
 
             <PlaceActionDock place={place} socialMedia={socialMedia} />
           </div>
+
+          <p className="place-directory-note">
+            Public listing for discovery — not an endorsement. Confirm hours, access, and house rules with the venue
+            before you visit.
+          </p>
+
+          {place.organizerName ? (
+            <section className="place-org-card" aria-labelledby="place-org-heading">
+              <h2 id="place-org-heading" className="place-section-title">
+                Organizer
+              </h2>
+              <p className="place-org-name">{place.organizerName}</p>
+            </section>
+          ) : (
+            <section className="place-org-card" aria-labelledby="place-own-heading">
+              <h2 id="place-own-heading" className="place-section-title">
+                Own or run this space?
+              </h2>
+              <p className="place-org-copy">
+                Create a free ECKE organization to manage this listing and publish events to the public calendar.
+              </p>
+              <a href="/auth/org/signup" className="place-profile-follow">
+                Create an organization
+              </a>
+            </section>
+          )}
+
+          <details className="place-more-links">
+            <summary>More links in {place.city} area</summary>
+            <div className="place-more-links-body">
+              <ListingHubLinks
+                variant={place.routeKind === 'swing_club' ? 'swing' : 'dungeon'}
+                stateAbbr={place.state}
+                city={place.city}
+              />
+              <DiscoveryEngineStrip stateAbbr={place.state} />
+            </div>
+          </details>
         </div>
       </section>
 
       <div className="container-custom pb-12">
         <PlaceOwnerCta compact />
-        <RelatedContent
-          currentDungeon={relatedDungeon}
-          currentSwingClub={relatedSwingClub}
-        />
+        <RelatedContent currentDungeon={relatedDungeon} currentSwingClub={relatedSwingClub} />
       </div>
+
+      <PlaceEventsSticky />
     </DiscoveryPageShell>
   )
 }

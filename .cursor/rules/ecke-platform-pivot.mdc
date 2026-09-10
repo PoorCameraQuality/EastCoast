@@ -1,0 +1,102 @@
+---
+description: ECKE pivot — remove user-facing kink.social branding; extend existing events/org/SEO; do not delete ingest or Dancecard
+alwaysApply: true
+---
+
+# ECKE Platform Pivot
+
+You are helping refactor East Coast Kink Events (ECKE) from a kink.social acquisition surface into a specialized public event listing and organization management platform.
+
+## Stack
+- Next.js 14 App Router, TypeScript, Tailwind, Supabase, Vercel
+
+## Product boundaries
+- **ECKE** (`eastcoastkinkevents.com`): public SEO discovery — events, places, education, states, vendors.
+- **Dancecard**: attendee + organizer event tooling already in this repo. Do not gut it while removing branding.
+- **kink.social ingest (C2K)**: listings, media, vendors, and groups are synced INTO ECKE. That pipeline stays until a replacement publish path exists.
+
+## PRIMARY GOALS (IN ORDER)
+1. Remove user-facing kink.social branding, competitor framing, and acquisition CTAs
+2. Organization login + dashboard for existing organizers (do not invent a second events system)
+3. Rich event creation comparable to FetLife/Facebook event forms
+4. Keep and enhance existing SEO (generateMetadata, JSON-LD, sitemaps, IndexNow)
+
+## CRITICAL: what NOT to delete
+Do **not** blindly search-replace every `kink.social` / `KinkSocial` / `kink-social` / `c2k` string.
+
+KEEP (internal / data):
+- Ingest APIs (`/api/kink-social/*`), validators, projections, media resolvers
+- Unified merge layers (`unifiedEvents`, `unifiedVendors`, `unifiedExtendedListings`, etc.)
+- `c2k_source_id`, `kink_social_canonical_path`, `sourceSystem` fields
+- Dancecard product, routes, migrations, and organizer Supabase auth
+- FetLife fields on venues/attendee profiles when they are **real organizer contact links**, not ECKE competitor copy
+
+REMOVE / REPLACE (user-facing):
+- Header/footer “by kink.social”, Join/List CTAs, conversion panels
+- “FetLife alternative” marketing copy
+- Sitewide “Save on kink.social” / “Publish from kink.social” chrome
+- Acquisition cards on discovery pages
+- Visible source pills that say “kink.social” (neutralize to “Directory listing” / omit)
+
+When a listing was actually published from the ingest pipeline, a quiet “View source listing” link is allowed **without** naming kink.social in chrome.
+
+## Event data source of truth
+The current catalog **is** the event data. Solidify it in existing `public.events`.
+
+- Static catalog: `src/data/events.js` (~80 events)
+- Live table: `public.events` (already published; do not invent a second events table)
+- Unified read layer: `src/lib/unifiedEvents.ts` + `src/lib/publicEventIndex.ts`
+- Existing create path: `POST /api/events` writes this same table
+
+Org signup/login may add `ecke_organizations` and `events.organization_id`. That is ownership, not a new event model.
+
+Do **not**:
+- Create a replacement `events` table or `rich_description` JSONB rewrite
+- Drop `c2k_source_id`, ingest columns, or static fallback until DB-first is verified
+- Install a homemade JWT/bcrypt sidecar for org auth
+
+## Locked product decisions (2026-09-09)
+- Orgs self-signup with username/password via Supabase Auth (`organizations.owner_user_id` + username alias)
+- Routes: `/auth/org/signup`, `/auth/org/login`, `/dashboard`
+- New org-created events auto-publish into existing `public.events` (`organization_id` nullable)
+- No ticketing, no multi-staff, no approval queue
+- Do not run the Downloads schema that `CREATE TABLE events` — that would clobber the live catalog
+
+## Do not rebuild what already exists
+This repo already has:
+- `/events`, `/events/[slug]` with `generateMetadata` + Event JSON-LD
+- `/organizations/[slug]` public pages (ingest-backed listings)
+- `public.events` with slug, city, state, dates, tags[], images[], status
+- Sitemap at `src/app/sitemap.xml/route.ts` and `src/app/robots.ts`
+- Admin login at `/login` (Supabase `profiles.role`)
+- Dancecard organizer login at `/organizer/login` (Supabase + `dancecard_organizers`)
+
+Extend these. Do **not** create a parallel `events` table, a second sitemap, or a custom JWT org-auth stack unless the existing Supabase session model is proven insufficient.
+
+## Database order (when adding org tables)
+1. `organizations` (or extend existing ingest org listings — check first)
+2. `organization_members`
+3. `organization_credentials` (only if username/password is required)
+4. Then alter `events` (add `organization_id` if missing; do not drop ingest columns)
+
+## Branding removal workflow
+1. Chrome first: Header, Footer, homepage, event/calendar CTAs
+2. Discovery surfaces: events, places, vendors, states, education
+3. Neutralize visible source labels
+4. Leave ingest identifiers and file names until a dedicated rename PR
+5. Search again for leftover **visible** copy before calling Phase 1 done
+
+## Code quality
+- TypeScript strict; no `any` without justification
+- Functional components; `'use client'` only when needed
+- Zod on new form/API inputs
+- Server-safe helpers must not live in `'use client'` modules
+- No auto-popups or sitewide takeover CTAs
+- Verify UI in the browser after visual changes
+
+## SEO
+- Every public dynamic page needs `generateMetadata`
+- Event pages need Schema.org Event JSON-LD
+- Keep IndexNow submissions on publish/update
+- Do not block `/events/*` or `/organizations/*` in robots.txt
+- Keep `/admin`, `/api`, `/login`, dashboards disallowed

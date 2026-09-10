@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect } from 'react'
-import Link from 'next/link'
 
 export default function Error({
   error,
@@ -24,9 +23,9 @@ export default function Error({
         <button type="button" onClick={reset} className="btn-primary min-h-touch px-6">
           Try again
         </button>
-        <Link href="/" className="btn-secondary min-h-touch inline-flex items-center justify-center px-6">
+        <a href="/" className="btn-secondary min-h-touch inline-flex items-center justify-center px-6">
           Back to Home
-        </Link>
+        </a>
       </div>
     </div>
   )

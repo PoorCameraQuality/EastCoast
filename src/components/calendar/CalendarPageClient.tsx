@@ -29,7 +29,7 @@ type Props = {
 export default function CalendarPageClient({ indexItems }: Props) {
   const [currentDate, setCurrentDate] = useState(() => new Date())
   const [view, setView] = useState<ViewMode>('list')
-  const [intent, setIntent] = useState<EventsListIntent>('all')
+  const [intent, setIntent] = useState<EventsListIntent>('conventions')
   const [stateFilter, setStateFilter] = useState<string>('')
 
   const currentYear = currentDate.getFullYear()
@@ -67,7 +67,9 @@ export default function CalendarPageClient({ indexItems }: Props) {
 
   const intentOptions = useMemo(() => {
     const counts = intentCounts(upcomingAll)
-    return EVENT_INTENT_OPTIONS.filter((opt) => opt.id === 'all' || (counts[opt.id] ?? 0) > 0)
+    return EVENT_INTENT_OPTIONS.filter(
+      (opt) => opt.id === 'all' || opt.id === 'conventions' || opt.id === 'local' || (counts[opt.id] ?? 0) > 0
+    )
   }, [upcomingAll])
 
   const states = useMemo(() => activeStates(upcomingAll), [upcomingAll])
@@ -125,7 +127,7 @@ export default function CalendarPageClient({ indexItems }: Props) {
     )
 
   const clearFilters = () => {
-    setIntent('all')
+    setIntent('conventions')
     setStateFilter('')
   }
 
@@ -138,7 +140,7 @@ export default function CalendarPageClient({ indexItems }: Props) {
           Plan around upcoming kink events, conventions, classes, vendor markets, and community weekends.
         </p>
         <p className="cal-support">
-          Browse by month, filter by event type or region, and save what matters on kink.social.
+          Browse by month, filter by event type or region, and export what matters to your calendar.
         </p>
       </header>
 

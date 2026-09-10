@@ -69,13 +69,47 @@ export default function PlaceMediaStage({ place, size = 'card' }: Props) {
   const stack = galleryPreviewStack(place.gallery, 2)
   const cover = place.coverImageUrl ?? hero?.url
   const isMasthead = size === 'masthead'
+  const coverAlt = hero?.alt || `${place.name} photo`
+
+  if (isMasthead) {
+    if (cover) {
+      return (
+        <div className="place-media-stage place-media-stage-single place-media-stage-masthead">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={cover}
+            alt={coverAlt}
+            className="place-media-cover-img"
+            loading="eager"
+            ref={(image) => {
+              if (image?.complete && (image.naturalWidth < 64 || image.naturalHeight < 64)) {
+                image.classList.add('place-media-cover-img-tiny')
+              }
+            }}
+            onLoad={(event) => {
+              const image = event.currentTarget
+              if (image.naturalWidth < 64 || image.naturalHeight < 64) {
+                image.classList.add('place-media-cover-img-tiny')
+              }
+            }}
+          />
+        </div>
+      )
+    }
+
+    return (
+      <div className={`place-logo-aura ${placeAuraClass(place.placeType)} place-logo-aura-masthead`}>
+        <PlaceLogoStage logoUrl={place.logoUrl} name={place.name} size={size} />
+      </div>
+    )
+  }
 
   if (cover && safe.length >= 2) {
     return (
-      <div className={`place-media-stage ${isMasthead ? 'place-media-stage-masthead' : ''}`}>
+      <div className="place-media-stage">
         <div className="place-media-cover">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={cover} alt="" className="place-media-cover-img" loading={isMasthead ? 'eager' : 'lazy'} />
+          <img src={cover} alt="" className="place-media-cover-img" loading="lazy" />
         </div>
         <div className="place-media-stack">
           {stack.slice(0, 2).map((m) => (
@@ -94,9 +128,9 @@ export default function PlaceMediaStage({ place, size = 'card' }: Props) {
 
   if (cover) {
     return (
-      <div className={`place-media-stage place-media-stage-single ${isMasthead ? 'place-media-stage-masthead' : ''}`}>
+      <div className="place-media-stage place-media-stage-single">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={cover} alt="" className="place-media-cover-img" loading={isMasthead ? 'eager' : 'lazy'} />
+        <img src={cover} alt="" className="place-media-cover-img" loading="lazy" />
         {place.logoUrl ? (
           <div className="place-media-logo-badge">
             <DungeonImage src={place.logoUrl} alt="" size={48} className="rounded-lg" />

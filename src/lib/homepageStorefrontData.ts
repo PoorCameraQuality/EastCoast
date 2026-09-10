@@ -7,6 +7,7 @@ import type { EventBrandTheme } from '@/lib/eventBrandTheme'
 import { getHubCategoryCounts, type HubCategoryCounts } from '@/lib/homeHubCounts'
 import { normalizeEventMedia, type EventMedia } from '@/lib/eventMedia'
 import { getTopStatesByActivity, type TopStateEntry } from '@/lib/topStatesByActivity'
+import { isNationalConventionListing, unifiedToIndexItem } from '@/lib/publicEventIndex'
 import { getUnifiedEvents, getUpcomingUnified, type UnifiedEvent } from '@/lib/unifiedEvents'
 import { getUnifiedVendors } from '@/lib/unifiedVendors'
 import type { VendorRecord } from '@/lib/vendorFiltering'
@@ -153,7 +154,9 @@ function buildMonthPreviews(events: UnifiedEvent[]): MonthPreview[] {
 export async function getHomepageStorefrontData(): Promise<HomepageStorefrontData> {
   const [vendors, unified] = await Promise.all([getUnifiedVendors(), getUnifiedEvents()])
   const hubCounts = await getHubCategoryCounts({ vendorCount: vendors.length })
-  const upcomingUnified = getUpcomingUnified(unified)
+  const upcomingUnified = getUpcomingUnified(unified).filter((event) =>
+    isNationalConventionListing(unifiedToIndexItem(event)),
+  )
   const upcomingSlice = upcomingUnified.slice(0, 8)
   const upcomingEvents = await Promise.all(upcomingSlice.map(toStorefrontEvent))
   // Enough rows that pinned homepage states (PA, CA, TX, …) resolve even if not top-12 by activity.

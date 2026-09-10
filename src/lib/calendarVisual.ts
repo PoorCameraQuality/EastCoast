@@ -100,6 +100,20 @@ export function groupByWeek(
   return Array.from(groups.values())
 }
 
+export function monthGridDays(year: number, month: number): Date[] {
+  const firstDay = new Date(year, month, 1)
+  const lastDay = new Date(year, month + 1, 0)
+  const startDate = new Date(firstDay)
+  startDate.setDate(firstDay.getDate() - firstDay.getDay())
+  const days: Date[] = []
+  const cursor = new Date(startDate)
+  while (cursor <= lastDay || cursor.getDay() !== 0) {
+    days.push(new Date(cursor))
+    cursor.setDate(cursor.getDate() + 1)
+  }
+  return days
+}
+
 /** Unique states sorted by event count desc */
 export function activeStates(items: PublicEventIndexItem[]): string[] {
   const counts = new Map<string, number>()

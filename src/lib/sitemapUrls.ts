@@ -6,9 +6,14 @@ import { buildAllowlistedDungeonDiscoveryPaths } from '@/lib/dungeonDiscoveryTie
 import { buildAllowlistedSwingDiscoveryPaths } from '@/lib/swingDiscoveryTier'
 import { buildAllowlistedBlogPaths } from '@/lib/blogDiscoveryTier'
 import { BASE_URL } from '@/lib/seo'
-import { fetchPublishedC2kEventSlugsForSitemap } from '@/lib/unifiedEvents'
+import { fetchPublishedEventSlugsForSitemap } from '@/lib/unifiedEvents'
 import { fetchPublishedGroupSlugsForSitemap } from '@/lib/unifiedGroupListings'
 import { fetchPublishedListingSlugsForSitemap } from '@/lib/unifiedExtendedListings'
+import {
+  catalogSlugsForSitemap,
+  getConventionCatalog,
+  getOrganizationCatalog,
+} from '@/lib/eckeOrgCatalog'
 
 export type SitemapUrlEntry = {
   loc: string
@@ -51,10 +56,10 @@ async function loadSitemapEntities() {
         updated: e.date?.start?.slice?.(0, 10),
       }))
 
-    const c2kEvents = await fetchPublishedC2kEventSlugsForSitemap()
-    if (c2kEvents.length) {
+    const publishedEvents = await fetchPublishedEventSlugsForSitemap()
+    if (publishedEvents.length) {
       const bySlug = new Map(events.map((e) => [e.slug, e]))
-      for (const row of c2kEvents) {
+      for (const row of publishedEvents) {
         bySlug.set(row.slug, row)
       }
       events = Array.from(bySlug.values())
@@ -69,6 +74,15 @@ async function loadSitemapEntities() {
             today
         ),
       }))
+    const { fetchPublishedDungeonSlugsForSitemap } = await import('@/lib/unifiedDungeons')
+    const publishedDungeons = await fetchPublishedDungeonSlugsForSitemap()
+    if (publishedDungeons.length) {
+      const bySlug = new Map(dungeons.map((d) => [d.slug, d]))
+      for (const row of publishedDungeons) {
+        bySlug.set(row.slug, row)
+      }
+      dungeons = Array.from(bySlug.values())
+    }
     swingClubs = allSwingClubs
       .filter((c: { slug?: string }) => c?.slug)
       .map((c: Record<string, unknown>) => ({
@@ -82,8 +96,8 @@ async function loadSitemapEntities() {
     groups = await fetchPublishedGroupSlugsForSitemap()
 
     const [orgRows, convRows, presRows, venueRows] = await Promise.all([
-      fetchPublishedListingSlugsForSitemap('organization'),
-      fetchPublishedListingSlugsForSitemap('convention'),
+      getOrganizationCatalog().then(catalogSlugsForSitemap),
+      getConventionCatalog().then(catalogSlugsForSitemap),
       fetchPublishedListingSlugsForSitemap('presenter'),
       fetchPublishedListingSlugsForSitemap('venue'),
     ])

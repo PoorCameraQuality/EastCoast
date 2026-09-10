@@ -1,3 +1,20 @@
+const fs = require('fs')
+const path = require('path')
+
+function nativeAppRoot() {
+  try {
+    return fs.realpathSync.native(__dirname)
+  } catch {
+    return __dirname
+  }
+}
+
+function foldProjectCasing(filePath) {
+  if (typeof filePath !== 'string' || !filePath) return filePath
+  const nativeParent = path.basename(path.dirname(nativeAppRoot()))
+  return filePath.replace(/([\\/])Desktop\1eastcoast\1/gi, (_, sep) => `${sep}Desktop${sep}${nativeParent}${sep}`)
+}
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   // Use a single trailing slash policy to avoid redirect chains
@@ -26,6 +43,10 @@ const nextConfig = {
       { protocol: 'https', hostname: 'modernlifestyle-prod.nyc3.cdn.digitaloceanspaces.com' },
       { protocol: 'https', hostname: 'cdn.prod.website-files.com' },
       { protocol: 'https', hostname: 'lirp.cdn-website.com' },
+      { protocol: 'https', hostname: 'thekorral.com', pathname: '/events/**' },
+      { protocol: 'https', hostname: 'www.thekorral.com', pathname: '/events/**' },
+      { protocol: 'https', hostname: 'thekorral.com', pathname: '/events/**' },
+      { protocol: 'https', hostname: 'www.thekorral.com', pathname: '/events/**' },
     ],
   },
 
@@ -344,15 +365,32 @@ const nextConfig = {
     ]
   },
 
-  webpack: (config, { isServer }) => {
+  webpack: (config) => {
+    const appRoot = nativeAppRoot()
+    config.context = appRoot
+    config.resolve = config.resolve || {}
+    config.resolve.symlinks = false
+    config.plugins = config.plugins || []
+    config.plugins.push({
+      apply(compiler) {
+        compiler.hooks.normalModuleFactory.tap('EckeNormalizeCasing', (nmf) => {
+          nmf.hooks.afterResolve.tap('EckeNormalizeCasing', (resolveData) => {
+            if (!resolveData?.createData) return
+            const data = resolveData.createData
+            if (data.resource) data.resource = foldProjectCasing(data.resource)
+            if (data.context) data.context = foldProjectCasing(data.context)
+          })
+        })
+      },
+    })
     // Ignore critical dependency warnings for @supabase/realtime-js
     config.ignoreWarnings = [
       {
         module: /node_modules\/@supabase\/realtime-js\/dist\/module\/lib\/websocket-factory\.js/,
         message: /Critical dependency: the request of a dependency is an expression/,
       },
-    ];
-    return config;
+    ]
+    return config
   },
   async headers() {
     return [
@@ -397,15 +435,20 @@ const nextConfig = {
           },
           {
             key: 'Content-Security-Policy',
-            value:
-              "default-src 'self'; " +
-              "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://va.vercel-scripts.com https://vercel.live; " +
-              "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; " +
-              "font-src 'self' https://fonts.gstatic.com; " +
-              "img-src 'self' data: https:; " +
-              "connect-src 'self' https://*.supabase.co https://www.google-analytics.com https://www.googletagmanager.com https://vercel.live wss://*.vercel.live; " +
-              "frame-src 'self' https://vercel.live; " +
-              "object-src 'none'; base-uri 'self'; form-action 'self';"
+            value: [
+              "default-src 'self'",
+              process.env.NODE_ENV === 'production'
+                ? "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://va.vercel-scripts.com https://vercel.live"
+                : "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://va.vercel-scripts.com https://vercel.live",
+              "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+              "font-src 'self' https://fonts.gstatic.com",
+              "img-src 'self' data: https:",
+              process.env.NODE_ENV === 'production'
+                ? "connect-src 'self' https://*.supabase.co https://www.google-analytics.com https://www.googletagmanager.com https://vercel.live wss://*.vercel.live"
+                : "connect-src 'self' http://localhost:* ws://localhost:* wss://localhost:* https://*.supabase.co https://www.google-analytics.com https://www.googletagmanager.com https://vercel.live wss://*.vercel.live",
+              "frame-src 'self' https://vercel.live",
+              "object-src 'none'; base-uri 'self'; form-action 'self'",
+            ].join('; '),
           }
         ]
       }

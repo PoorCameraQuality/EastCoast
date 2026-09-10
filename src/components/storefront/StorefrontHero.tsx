@@ -6,10 +6,10 @@ import Search from '@/components/Search'
 import { buildEventsListUrl } from '@/lib/eventsListSearchParams'
 
 const QUICK_FILTERS = [
-  { label: 'Upcoming', href: buildEventsListUrl('all') },
+  { label: 'Upcoming', href: '/events' },
   { label: 'This weekend', href: buildEventsListUrl('this-weekend') },
   { label: 'Pennsylvania', href: '/states/pennsylvania' },
-  { label: 'Conventions', href: '/events?tag=convention' },
+  { label: 'Conventions', href: '/events' },
   { label: 'Dungeons', href: '/dungeons' },
 ] as const
 

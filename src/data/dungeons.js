@@ -407,6 +407,7 @@ export const dungeons = [
   {
     "name": "The Korral",
     "slug": "the-korral",
+    "venueId": "54c4bb53-3058-4a01-b909-e73fcb4eba79",
     "location": {
       "city": "Spring Grove",
       "state": "PA",
@@ -424,7 +425,14 @@ export const dungeons = [
     "website": "https://thekorral.com/",
     "logo": "/images/korral.png",
     "hours": "Fr 19:00-02:00, Sa 19:00-02:00",
-    "images": [],
+    "coverUrl": "https://thekorral.com/events/ANNIVERSARY%20Oct%202.jpg",
+    "images": [
+      "https://thekorral.com/events/ANNIVERSARY%20Oct%202.jpg",
+      "https://thekorral.com/events/Friday%20Pool%20Party.jpg",
+      "https://thekorral.com/events/Fresh%20Meat%20Friday.jpg",
+      "https://thekorral.com/events/WEEKEND%20POOL%20PARTIES.jpg",
+      "https://thekorral.com/events/Halloween%20Bash%20Idea%202.jpg"
+    ],
     "seo": {
       "title": "The Korral - Spring Grove PA Private Members Club | East Coast Kink Events",
       "description": "The Korral is a private members-only, sex-positive club in Spring Grove, PA. Fri/Sat 7pm–2am. Membership $50/year. Monthly Kink Nights, pool, 18 themed rooms, BDSM hallway.",

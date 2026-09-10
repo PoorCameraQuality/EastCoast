@@ -36,6 +36,8 @@ export type PublicEventIndexItem = {
   category: string
 
   organizerName?: string
+  dungeonSlug?: string
+  dungeonVenueId?: string
 
   presenterCount?: number
   vendorCount?: number

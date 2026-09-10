@@ -1,9 +1,14 @@
 import Link from 'next/link'
 import Breadcrumb from '@/components/Breadcrumb'
-import KinkSocialAcquisitionCard from '@/components/kink-social/KinkSocialAcquisitionCard'
 import KinkSocialEntityGallerySection from '@/components/kink-social/KinkSocialEntityGallerySection'
 import EntityPageViewTracker from '@/components/analytics/EntityPageViewTracker'
 import type { AnalyticsEntityType } from '@/lib/analyticsEntities'
+import {
+  isRedundantOrgDisplayName,
+  listingImageAlt,
+  usableListingImageUrl,
+} from '@/lib/eckeOrgCatalog'
+import { listingCopyToSafeHtml } from '@/lib/eckeOrgRichText'
 import type { KinkSocialListingRecord } from '@/lib/unifiedExtendedListings'
 
 type Props = {
@@ -28,6 +33,11 @@ export default function KinkSocialListingDetailView({
   ]
 
   const locationParts = [listing.publicLocationSummary, listing.city, listing.state].filter(Boolean)
+  const logoUrl = usableListingImageUrl(listing.logoUrl)
+  const descriptionHtml = listingCopyToSafeHtml(listing.description)
+  const showPartOf =
+    Boolean(listing.orgDisplayName) &&
+    !isRedundantOrgDisplayName(listing.orgDisplayName, listing.name)
 
   return (
     <section className="section-padding bg-gradient-to-br from-black via-dark-950 to-black">
@@ -53,19 +63,19 @@ export default function KinkSocialListingDetailView({
 
           <header className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl p-5 sm:p-8 shadow-dark">
             <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-teal-300/90 sm:text-xs">
-              {entityLabel} · Published from kink.social
+              {entityLabel}
             </p>
             <div className="mt-3 flex flex-wrap items-start gap-4 sm:gap-6">
-              {listing.logoUrl ?
+              {logoUrl ?
                 <img
-                  src={listing.logoUrl}
-                  alt={`${listing.name} image`}
+                  src={logoUrl}
+                  alt={listingImageAlt(listing.name, 'logo')}
                   className="h-16 w-16 shrink-0 rounded-xl border border-white/10 bg-white/5 object-cover sm:h-20 sm:w-20"
                 />
               : null}
               <div className="min-w-0 flex-1">
                 <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-white">{listing.name}</h1>
-                {listing.orgDisplayName ?
+                {showPartOf ?
                   <p className="mt-2 text-sm text-gray-400">Part of {listing.orgDisplayName}</p>
                 : null}
               </div>
@@ -73,12 +83,23 @@ export default function KinkSocialListingDetailView({
             {locationParts.length ?
               <p className="mt-4 text-gray-300">{locationParts.join(' · ')}</p>
             : null}
-            {listing.description ?
-              <p className="mt-6 text-gray-300 leading-relaxed whitespace-pre-wrap">{listing.description}</p>
+            {descriptionHtml ?
+              <div
+                className="prose prose-invert mt-6 max-w-none text-gray-300"
+                dangerouslySetInnerHTML={{ __html: descriptionHtml }}
+              />
             : null}
-            {listing.websiteUrl ?
+            {listing.relatedHref ?
+              <Link
+                href={listing.relatedHref}
+                className="mt-4 inline-flex text-sm text-teal-200 hover:text-teal-100 underline"
+              >
+                {listing.relatedLabel || 'View listing'}
+              </Link>
+            : null}
+            {listing.websiteUrl || listing.ctaUrl ?
               <a
-                href={listing.websiteUrl}
+                href={listing.websiteUrl || listing.ctaUrl || undefined}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="mt-4 inline-flex text-sm text-teal-200 hover:text-teal-100 underline"
@@ -94,27 +115,23 @@ export default function KinkSocialListingDetailView({
 
           {listing.kinkSocialCanonicalUrl ?
             <aside
-              className="mt-8 rounded-xl border border-teal-500/25 bg-teal-950/20 p-5 sm:p-6"
-              aria-label="kink.social source attribution"
+              className="mt-8 rounded-xl border border-white/10 bg-white/5 p-5 sm:p-6"
+              aria-label="Source listing"
             >
-              <p className="text-sm font-medium text-teal-200/90">Published from kink.social.</p>
+              <p className="text-sm font-medium text-gray-200">Directory listing</p>
               <p className="mt-2 text-sm text-gray-300 leading-relaxed">
-                Manage or update this listing on kink.social.
+                Confirm details with the organizer. A source listing is available when you need the original page.
               </p>
               <a
                 href={listing.kinkSocialCanonicalUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-4 inline-flex min-h-touch items-center rounded-lg border border-teal-500/40 px-4 text-sm font-medium text-teal-200 hover:bg-teal-500/10 transition"
+                className="mt-4 inline-flex min-h-touch items-center rounded-lg border border-white/20 px-4 text-sm font-medium text-gray-200 hover:bg-white/10 transition"
               >
-                View on kink.social
+                View source listing
               </a>
             </aside>
           : null}
-
-          <div className="mt-10">
-            <KinkSocialAcquisitionCard variant="eventsIndex" compact />
-          </div>
         </div>
       </div>
     </section>

@@ -5,7 +5,14 @@ import Breadcrumb from '@/components/Breadcrumb'
 import DiscoveryPageShell from '@/components/discovery/DiscoveryPageShell'
 import DiscoverySectionHeading from '@/components/discovery/DiscoverySectionHeading'
 import { BASE_URL } from '@/lib/seo'
+import { isNationalConventionListing, unifiedToIndexItem } from '@/lib/publicEventIndex'
 import { getUnifiedEvents, getUpcomingUnified, unifiedEventToEventsPageShape } from '@/lib/unifiedEvents'
+
+function upcomingNationalConventions(merged: Awaited<ReturnType<typeof getUnifiedEvents>>) {
+  return getUpcomingUnified(merged).filter((event) =>
+    isNationalConventionListing(unifiedToIndexItem(event)),
+  )
+}
 
 const EVENTS_PER_PAGE = 20
 
@@ -18,7 +25,7 @@ interface PageProps {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const pageNum = Math.max(1, parseInt(params.page) || 1)
   const merged = await getUnifiedEvents()
-  const upcomingEvents = getUpcomingUnified(merged)
+  const upcomingEvents = upcomingNationalConventions(merged)
   const totalPages = Math.max(1, Math.ceil(upcomingEvents.length / EVENTS_PER_PAGE))
   const description = `Upcoming kink events — page ${pageNum} of ${totalPages}. Browse BDSM conferences and workshops across the East Coast.`
 
@@ -53,7 +60,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 // Generate static paths for the first few pages
 export async function generateStaticParams() {
   const merged = await getUnifiedEvents()
-  const upcomingEvents = getUpcomingUnified(merged)
+  const upcomingEvents = upcomingNationalConventions(merged)
   const totalPages = Math.ceil(upcomingEvents.length / EVENTS_PER_PAGE)
   
   // Pre-generate first 5 pages at build time
@@ -66,7 +73,7 @@ export default async function EventsPageNumber({ params }: PageProps) {
   const pageNum = Math.max(1, parseInt(params.page) || 1)
 
   const merged = await getUnifiedEvents()
-  const upcomingEvents = getUpcomingUnified(merged).map(unifiedEventToEventsPageShape)
+  const upcomingEvents = upcomingNationalConventions(merged).map(unifiedEventToEventsPageShape)
   
   // Calculate pagination
   const totalEvents = upcomingEvents.length

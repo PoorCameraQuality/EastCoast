@@ -1,0 +1,37 @@
+---
+description: Org listings shipped 2026-09-10 — events, one shop, one dungeon/club; test org; venue-calendar gap
+alwaysApply: true
+---
+
+# Org listings (session memory 2026-09-10)
+
+Companion to `ecke-platform-pivot.mdc`. Same org login owns **events + one shop + one dungeon/club**. Do not invent parallel tables.
+
+## Tables (extend, don’t replace)
+- Events → `public.events` (`organization_id`)
+- Shop → `public.vendors` (`organization_id`; unique one-shop-per-org)
+- Place → `public.dungeon_venues` (`organization_id`; unique one-place-per-org). C2K rows keep `c2k_source_id`. Migration: `supabase/migrations/20260910140000_ecke_org_place_profile.sql`
+
+## Routes
+- Dashboard `/dashboard` — three cards: Events / conventions, Vendor shop, Dungeon / club
+- `/events/create`, `/events/manage/[slug]`, `/vendors/my-shop`, `/dungeons/my-place`
+- Public: `/events/{slug}`, `/vendors/{slug}`, `/dungeons/{slug}`. Drafts noindex; published → sitemap + IndexNow
+
+## Test orgs (live Auth)
+- Harbor: username `localauth20260910002759` / password `TestPass123!`
+  - Org `3731c9c0-6bc8-4ac2-b5f0-9585c1d613d9` — Harbor Munch Test, Harbor Leather Test, Harbor Dungeon Test (`harbor-dungeon-test`)
+- Calendar Forge (second org, for two-dungeon calendar tests): username `calendarforge28167637` / password `TestPass123!`
+  - Org `ec2a5940-a113-4d52-a0cc-a01a96992f94` — Calendar Forge Playhouse (`calendar-forge-playhouse`)
+
+## Patterns
+- Client-safe types: `eckeOrgEventShared` / `eckeOrgVendorShared` / `eckeOrgDungeonShared` (never import `cookies()`)
+- Dev server: `C:\Users\shkin\Desktop\eastcoast\EastCoast-master` on **port 3000 only** (path casing; two Next copies → `Missing ActionQueueContext`)
+- Place POST/PATCH: defer `notifyPlaceIndex` with `setImmediate` so create does not hang on `revalidatePath`
+- Org form kinds (`play_event`, `educational`, …) map onto `events_event_type_check` (`play_party`, `class`, `munch`, `convention`, `social`) via `orgKindToDbEventType`
+
+## Venue calendar (shipped 2026-09-10)
+- `events.dungeon_venue_id` FK → `dungeon_venues.id` (ON DELETE SET NULL). Also writes `dungeon_slug`.
+- Org event form: “Happens at {place}”. `/events/create?at=place` pre-fills the owned dungeon.
+- Public `/dungeons/{slug}` shows a month calendar of **only** that location’s linked nights (plus name-heuristic for unlinked C2K rows).
+- `/events` defaults to **Conventions**. **Local nights** require a region/state so dungeon calendars do not flood the national feed.
+- Still one `public.events` table. Do not invent a venue-events table.

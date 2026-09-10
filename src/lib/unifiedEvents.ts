@@ -1,9 +1,11 @@
 import { getAllEvents, getEventBySlug } from '@/data/events'
 import { getSupabaseClient } from '@/lib/supabase'
+import { getSupabaseAdminClient } from '@/lib/supabaseAdmin'
 import { getSupabaseServerClient } from '@/lib/supabaseServer'
 import { resolveEntityHeroAndGallery, type EntityHeroGalleryItem } from '@/lib/kinkSocialEntityMedia'
 import { KNOWN_TAG_SLUGS } from '@/lib/discoveryTags'
 import { BASE_URL } from '@/lib/seo'
+import { normalizeTicketTiers, type EventTicketTier } from '@/lib/eckeOrgEventShared'
 
 /** Collapse absolute ECKE self-host image URLs to `/images/...` for Next/Image. */
 export function normalizeEckeSelfHostLogo(logo: string | undefined | null): string | undefined {
@@ -29,6 +31,9 @@ export type UnifiedEvent = {
   dancecardEnabled?: boolean
   organizer?: string
   lastSyncedAt?: string
+  eventKind?: string | null
+  dungeonSlug?: string | null
+  dungeonVenueId?: string | null
 }
 
 function slugifyTag(raw: string): string {
@@ -137,6 +142,10 @@ function dbRowToUnified(row: Record<string, unknown>): UnifiedEvent | null {
     c2kSourceType: (row.c2k_source_type as string | null) ?? null,
     // `events` has last_synced_at (C2K ingest); no updated_at column in live schema.
     lastSyncedAt: String(row.last_synced_at || '').slice(0, 10) || undefined,
+    organizer: ((row.organizer_name as string) || (row.organizer as string))?.trim() || undefined,
+    eventKind: (row.event_type as string | null) ?? null,
+    dungeonSlug: (row.dungeon_slug as string | null) ?? null,
+    dungeonVenueId: (row.dungeon_venue_id as string | null) ?? null,
   }
 }
 
@@ -154,7 +163,7 @@ export async function fetchPublishedSupabaseEvents(): Promise<UnifiedEvent[]> {
     const { data, error } = await client
       .from('events')
       .select(
-        'title, slug, start_date, end_date, display_date, city, state, short_description, category, logo, tags, status, c2k_source_id, c2k_source_type, last_synced_at'
+        'title, slug, start_date, end_date, display_date, city, state, short_description, category, logo, tags, status, c2k_source_id, c2k_source_type, last_synced_at, organizer, organizer_name, event_type, dungeon_slug, dungeon_venue_id'
       )
       .eq('status', 'published')
 
@@ -239,10 +248,36 @@ export type EventPageRecord = {
   venue?: string
   logo?: string
   features?: string[]
+  whyGo?: string[]
   seo?: { title: string; description: string; keywords: string }
   c2kSourceId?: string | null
   c2kSourceType?: string | null
   gallery?: EntityHeroGalleryItem[]
+  organizationId?: string | null
+  isOnline?: boolean
+  address?: string | null
+  showAddressPublicly?: boolean
+  ticketUrl?: string | null
+  ageRestriction?: string | null
+  status?: string | null
+  heroImage?: string | null
+  programUrl?: string | null
+  mapUrl?: string | null
+  staffApplicationUrl?: string | null
+  vendorApplicationUrl?: string | null
+  presenterApplicationUrl?: string | null
+  photographerApplicationUrl?: string | null
+  staffApplicationsOpen?: boolean | null
+  vendorApplicationsOpen?: boolean | null
+  presenterApplicationsOpen?: boolean | null
+  photographerApplicationsOpen?: boolean | null
+  ticketTiers?: EventTicketTier[]
+  registrationDeadline?: string | null
+  ticketPrice?: string | null
+  priceRange?: string | null
+  hotelInformation?: string | null
+  parking?: string | null
+  foodDrink?: string | null
 }
 
 function parseDbFeatures(raw: unknown): string[] {
@@ -309,17 +344,103 @@ function dbRowToEventPageRecord(row: Record<string, unknown>): EventPageRecord |
     venue,
     logo: normalizeEckeSelfHostLogo((row.logo as string)?.trim() || undefined),
     features: parseDbFeatures(row.features),
+    whyGo: parseDbFeatures(row.includes),
+    hotelInformation: (row.hotel_information as string | null) ?? null,
+    parking: (row.parking as string | null) ?? null,
+    foodDrink: (row.food_drink as string | null) ?? null,
     c2kSourceId: (row.c2k_source_id as string | null) ?? null,
     c2kSourceType: (row.c2k_source_type as string | null) ?? null,
-    seo: metaTitle
-      ? {
-          title: metaTitle,
-          description: (metaDesc || excerpt || longDesc).slice(0, 320),
-          keywords: kw || title,
-        }
+    organizationId: (row.organization_id as string | null) ?? null,
+    heroImage: (row.hero_image as string | null) ?? null,
+    programUrl: (row.program_url as string | null) ?? null,
+    mapUrl: (row.map_url as string | null) ?? null,
+    staffApplicationUrl: (row.staff_application_url as string | null) ?? null,
+    vendorApplicationUrl: (row.vendor_application_url as string | null) ?? null,
+    presenterApplicationUrl: (row.presenter_application_url as string | null) ?? null,
+    photographerApplicationUrl: (row.photographer_application_url as string | null) ?? null,
+    staffApplicationsOpen: Boolean(row.staff_applications_open),
+    vendorApplicationsOpen: Boolean(row.vendor_applications_open),
+    presenterApplicationsOpen: Boolean(row.presenter_applications_open),
+    photographerApplicationsOpen: Boolean(row.photographer_applications_open),
+    ticketTiers: normalizeTicketTiers(row.ticket_tiers),
+    registrationDeadline: (row.registration_deadline as string | null) ?? null,
+    ticketPrice: (row.ticket_price as string | null) ?? null,
+    priceRange: (row.price_range as string | null) ?? null,
+    isOnline: Boolean(row.is_online),
+    address: (row.address as string | null) ?? null,
+    showAddressPublicly: Boolean(row.show_address_publicly),
+    ticketUrl: (row.ticket_url as string | null) ?? null,
+    ageRestriction: (row.age_restriction as string | null) ?? null,
+    status: (row.status as string | null) ?? null,
+    gallery: Array.isArray(row.images)
+      ? (row.images as unknown[])
+          .map((item, index) => ({
+            publicUrl: String(item || '').trim(),
+            ordinal: index,
+            altText: title,
+          }))
+          .filter((item) => item.publicUrl)
       : undefined,
+    seo: {
+      title: metaTitle || title,
+      description: (metaDesc || excerpt || longDesc).slice(0, 320),
+      keywords: kw || [title, city, stateAbbr, 'kink events', 'BDSM'].filter(Boolean).join(', '),
+    },
   }
 }
+
+const EVENT_PAGE_COLUMNS = [
+  'title',
+  'slug',
+  'start_date',
+  'end_date',
+  'display_date',
+  'city',
+  'state',
+  'short_description',
+  'long_description',
+  'category',
+  'logo',
+  'status',
+  'website',
+  'features',
+  'includes',
+  'venue',
+  'organizer',
+  'organizer_name',
+  'seo_title',
+  'seo_description',
+  'seo_keywords',
+  'meta_title',
+  'meta_description',
+  'c2k_source_id',
+  'c2k_source_type',
+  'organization_id',
+  'is_online',
+  'address',
+  'show_address_publicly',
+  'ticket_url',
+  'age_restriction',
+  'images',
+  'hero_image',
+  'program_url',
+  'map_url',
+  'staff_application_url',
+  'vendor_application_url',
+  'presenter_application_url',
+  'photographer_application_url',
+  'staff_applications_open',
+  'vendor_applications_open',
+  'presenter_applications_open',
+  'photographer_applications_open',
+  'ticket_tiers',
+  'registration_deadline',
+  'ticket_price',
+  'price_range',
+  'hotel_information',
+  'parking',
+  'food_drink',
+].join(', ')
 
 /**
  * Published event from Supabase as a full page record (for `/events/[slug]` when not in static data).
@@ -336,35 +457,8 @@ export async function fetchPublishedSupabaseEventAsPageEvent(
   try {
     const { data, error } = await client
       .from('events')
-      .select(
-        [
-          'title',
-          'slug',
-          'start_date',
-          'end_date',
-          'display_date',
-          'city',
-          'state',
-          'short_description',
-          'long_description',
-          'category',
-          'logo',
-          'status',
-          'website',
-          'features',
-          'venue',
-          'organizer',
-          'organizer_name',
-          'seo_title',
-          'seo_description',
-          'seo_keywords',
-          'meta_title',
-          'meta_description',
-          'c2k_source_id',
-          'c2k_source_type',
-        ].join(', ')
-      )
-      .eq('status', 'published')
+      .select(EVENT_PAGE_COLUMNS)
+      .in('status', ['published', 'archived'])
       .eq('slug', slug)
       .maybeSingle()
 
@@ -438,42 +532,62 @@ export async function resolveEventForPage(slug: string): Promise<EventPageRecord
 }
 
 /**
- * Published kink.social event rows for sitemap (status=published, c2k_source_id set).
+ * Published event rows for sitemap (organizer-created and C2K ingest).
  */
-export async function fetchPublishedC2kEventSlugsForSitemap(): Promise<
+export async function fetchPublishedEventSlugsForSitemap(): Promise<
   Array<{ slug: string; updated?: string }>
 > {
-  // Sitemap runs on the server — browser client is always null in Node.
   const client = getSupabaseServerClient() ?? getSupabaseClient()
   if (!client) {
-    console.error('[sitemap] C2K events: Supabase server client unavailable (check NEXT_PUBLIC_SUPABASE_URL/ANON_KEY)')
+    console.error('[sitemap] events: Supabase server client unavailable (check NEXT_PUBLIC_SUPABASE_URL/ANON_KEY)')
     return []
   }
   try {
     const { data, error } = await client
       .from('events')
-      .select('slug, start_date, last_synced_at, c2k_source_id, status')
+      .select('slug, start_date, last_synced_at, published_at, status')
       .eq('status', 'published')
-      .not('c2k_source_id', 'is', null)
 
     if (error) {
-      console.error('[sitemap] C2K events query failed:', error.message, error.code, error.details)
+      console.error('[sitemap] events query failed:', error.message, error.code, error.details)
       return []
     }
     if (!data?.length) {
-      console.warn('[sitemap] C2K events query returned 0 rows (published + c2k_source_id)')
+      console.warn('[sitemap] events query returned 0 published rows')
       return []
     }
     return (data as Record<string, unknown>[])
       .filter((row) => row.slug)
       .map((row) => ({
         slug: String(row.slug),
-        updated: String(row.last_synced_at || row.start_date || '').slice(0, 10),
+        updated: String(row.last_synced_at || row.published_at || row.start_date || '').slice(0, 10),
       }))
   } catch (err) {
-    console.error('[sitemap] C2K events unexpected error:', err)
+    console.error('[sitemap] events unexpected error:', err)
     return []
   }
+}
+
+/** @deprecated Use fetchPublishedEventSlugsForSitemap — includes organizer events, not only C2K. */
+export async function fetchPublishedC2kEventSlugsForSitemap() {
+  return fetchPublishedEventSlugsForSitemap()
+}
+
+/** Draft/archived owner preview — never use this for anonymous public reads. */
+export async function fetchOwnedEventAsPageEvent(
+  slug: string,
+  organizationId: string,
+): Promise<EventPageRecord | null> {
+  const admin = getSupabaseAdminClient()
+  if (!admin) return null
+  const { data, error } = await admin
+    .from('events')
+    .select(EVENT_PAGE_COLUMNS)
+    .eq('slug', slug)
+    .eq('organization_id', organizationId)
+    .maybeSingle()
+  if (error || !data) return null
+  return dbRowToEventPageRecord(data as unknown as Record<string, unknown>)
 }
 
 /** Shape for `/events` client list and paginated `EventCard` grids (static + Supabase). */

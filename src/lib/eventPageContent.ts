@@ -94,6 +94,12 @@ export function eventFeatureTiles(features: string[]): EventFeatureTile[] {
 }
 
 export function buildWhyGoPoints(event: EventPageRecord): string[] {
+  const owned = (event.whyGo ?? [])
+    .map((s) => s.replace(/^[-*•]\s*/, '').trim())
+    .filter((s) => s.length > 0 && s.length < 160)
+    .slice(0, 4)
+  if (owned.length > 0) return owned
+
   const fromFeatures = (event.features ?? [])
     .slice(0, 5)
     .map((f) => {
@@ -101,9 +107,9 @@ export function buildWhyGoPoints(event: EventPageRecord): string[] {
       if (dash > 0) return f.slice(dash + 3).trim()
       return f.replace(/^[-*•]\s*/, '').trim()
     })
-    .filter((s) => s.length > 12 && s.length < 140)
+    .filter((s) => s.length > 8 && s.length < 160)
 
-  if (fromFeatures.length >= 3) return fromFeatures.slice(0, 4)
+  if (fromFeatures.length >= 2) return fromFeatures.slice(0, 4)
 
   if (event.excerpt) {
     const sentences = event.excerpt
@@ -118,6 +124,6 @@ export function buildWhyGoPoints(event: EventPageRecord): string[] {
 }
 
 export function eventListingSourceLabel(event: EventPageRecord): string {
-  if (event.c2kSourceId) return 'Synced from kink.social'
+  if (event.c2kSourceId) return 'Directory listing'
   return 'Organizer-provided listing'
 }

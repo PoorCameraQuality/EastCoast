@@ -1536,14 +1536,12 @@ export const events = [
     }
   },
   {
-    "name": "Primal Arts Festival",
+    "name": "Primal Arts Fest",
     "slug": "primal-arts-festival",
-    "dancecardSlug": "paf26",
-    "dancecardEnabled": true,
     "date": {
-      "start": "2026-05-07",
-      "end": "2026-05-11",
-      "display": "May 7-11, 2026"
+      "start": "2027-05-05",
+      "end": "2027-05-09",
+      "display": "May 5-9, 2027"
     },
     "location": {
       "city": "Darlington",
@@ -1551,8 +1549,8 @@ export const events = [
       "region": "North Eastern, Maryland"
     },
     "category": "Outdoor Event",
-    "excerpt": "Primal Arts Fest returns to Darlington, Maryland May 7th through 11th, 2026 connecting body and spirit, provoking spiritual evolution, and embracing the sacred and the profane.",
-    "longDescription": "Primal Arts Fest returns to Darlington, Maryland May 7th through 11th, 2026 connecting body and spirit, provoking spiritual evolution, and embracing the sacred and the profane.\n\nWe want to offer you an unforgettable experience where you can explore your deepest desires, indulge in your wildest curiosities, and showcase your primal self. Primal Arts Fest provides a venue to celebrate some of the most ancient and revered forms of art and expression. We offer a safe and conscientious community space where individuals can learn from and engage with one another in activities such as fire performance, music, tattoo, scarification, suspension, ordeal work, sacred sexuality, kink, and more.\n\nAcross history and different cultures, there has been a universal human curiosity to gain a deeper comprehension of life and the world we share. This pursuit has led people from all walks of life to explore the nature of their relationships – with themselves, their bodies, others, and their most intimate longings.\n\nThis is a 21+ clothing optional, sex and kink positive event. Registration is now open. Standard rates end April 15, 2026. Join the mailing list for pre-sale pricing and limited All-Inclusive packages.\n\n**Venue:** 200-acre private campground in Darlington, MD (address shared with registered attendees).",
+    "excerpt": "PAF27 returns May 5–9, 2027. Primal Arts Fest is a four-day, 21+ clothing-optional gathering in Darlington, Maryland that blends fire, ritual, art, education, and primal expression.",
+    "longDescription": "PAF27 returns May 5–9, 2027. Primal Arts Fest is a four-day, 21+ clothing-optional gathering that blends fire, ritual, art, education, and primal expression.\n\nBy connecting body and spirit, provoking spiritual evolution, and embracing the sacred and the profane, it invites participants to explore workshops, performances, sacred sexuality, kink, and body modification. Built on consent, inclusivity, and risk-aware practices, the festival offers rituals, workshops, play-spaces, music, artisanal markets, and more — all with the backdrop of a 200-acre campground.\n\nFor as long as humans have circled firelight and followed the drum, we have sought what lies beyond the everyday. Here, the arts of fire, ink, and ordeal are not spectacle but offering. Music becomes invocation, skin becomes canvas, and the body becomes a temple of both the sacred and the profane.\n\n**Venue:** Private 200-acre campground in Darlington, Maryland. Address is shared with registered attendees.\n\n**Registration:** Join the mailing list on the official site for PAF27 updates, pre-sale access, and rates. Ticket sales are announced there.\n\n**Get involved:** Staff, volunteer, presenter, and performer roles are listed on the official site. Vendor and body-modification artist applications open late summer 2026.",
     "website": "https://www.primalartsfest.com/",
     "venue": "200-acre private campground",
     "hotel": "200-acre private campground, Darlington, MD (address shared with registrants)",
@@ -1561,52 +1559,24 @@ export const events = [
     },
     "ageRequirement": "21+ only",
     "clothingPolicy": "Clothing optional",
-    "registrationStatus": "Registration is now open. Standard rates end April 15, 2026.",
+    "registrationStatus": "Join the mailing list on primalartsfest.com for PAF27 registration updates.",
     "logo": "/images/primalarts.png",
     "features": [
-      "Darlington, Maryland Location",
-      "Connecting Body and Spirit",
-      "Provoking Spiritual Evolution",
-      "Embracing the Sacred and the Profane",
-      "Ancient Arts Celebration",
-      "Fire Performance",
-      "Music & Entertainment",
-      "Tattooing & Scarification",
-      "Suspension & Ordeal Work",
-      "Sacred Sexuality & Kink",
-      "Nightly Ritual Fires",
-      "Drumming, Dancing & Connection",
-      "Daily Workshops & Special Events",
-      "Respected Educators & Performers",
-      "Three Dedicated Play Spaces",
-      "Indoor Play-Space by Studio 58",
-      "Covered Pavilion with Furniture",
-      "Fireside Moonlight Den",
-      "Natural Landscapes Access",
-      "The Primal Hunt Activity",
-      "Fire Play Demonstrations",
-      "Vendors Market",
-      "Vendor Workshops",
-      "Attendee-Run Embers Events",
-      "Midnight Snack by Primal Chefs",
-      "Camping with Hot Showers",
-      "Private Room & Cabin Upgrades",
-      "Dining Hall Meal Plan Available",
-      "21+ Clothing Optional Event",
-      "Sex & Kink Positive Environment",
-      "Explicit Consent Required",
-      "Inclusive Community",
-      "No Discrimination Policy",
-      "Pagan & Spiritual Focus",
-      "Drum Circles Welcome",
-      "Elemental Retreat",
-      "RiTL Recovery Meetings",
-      "Pool"
+      "PAF27 · May 5–9, 2027",
+      "Darlington, Maryland campground",
+      "21+ clothing-optional gathering",
+      "Fire, ritual, art, and education",
+      "Workshops and performances",
+      "Sacred sexuality and kink",
+      "Body modification arts",
+      "Play-spaces and music",
+      "Artisanal vendor market",
+      "Consent, inclusivity, and risk-aware practice"
     ],
     "seo": {
-      "title": "Primal Arts Festival 2026: Maryland Kink Retreat",
-      "description": "Primal Arts Festival runs May 7-11, 2026 in Darlington, MD with sacred sexuality, kink education, ritual fires, play spaces, vendors, and camping.",
-      "keywords": "Primal Arts Festival 2026, Darlington, Maryland, ancient arts, fire performance, tattooing, scarification, suspension, sacred sexuality, kink, spiritual evolution"
+      "title": "Primal Arts Fest 2027 (PAF27): Maryland Campground Gathering",
+      "description": "PAF27 returns May 5–9, 2027 in Darlington, MD. A four-day, 21+ clothing-optional gathering of fire, ritual, art, education, and primal expression.",
+      "keywords": "Primal Arts Fest 2027, PAF27, Darlington, Maryland, fire performance, ritual, sacred sexuality, kink, body modification, camping festival"
     }
   },
   {
@@ -1924,38 +1894,57 @@ export const events = [
     }
   },
   {
-    "name": "Charmed",
+    "name": "Charmed!",
     "slug": "charmed",
     "date": {
-      "start": "2026-01-15",
-      "end": "2026-01-18",
-      "display": "Jan 15-18, 2026"
+      "start": "2027-01-14",
+      "end": "2027-01-17",
+      "display": "Jan 14-17, 2027"
     },
     "location": {
-      "city": "Philadelphia",
-      "state": "PA",
-      "region": "Southeast, Pennsylvania"
+      "city": "Maryland",
+      "state": "MD",
+      "region": "Mid-Atlantic, Maryland"
     },
-    "category": "Indoor Event",
-    "excerpt": "Charmed! has carved out a niche as the East Coast's premier erotic and recreational hypnosis convention. Held in Philadelphia each January, it draws international attendees for classes, demos, and hands-on experiences in a safe, welcoming environment—ideal for beginners and seasoned practitioners alike.",
-    "longDescription": "Charmed! has carved out a niche as the East Coast's premier erotic and recreational hypnosis convention. Held in Philadelphia each January, it draws international attendees for classes, demos, and hands-on experiences in a safe, welcoming environment—ideal for beginners and seasoned practitioners alike.\n\nThe multifaceted schedule includes basic education, recreational demonstrations, and erotic experiences. World-renowned experts share techniques and insights in an atmosphere of mutual respect. Hands-on demonstrations, interactive workshops, and engaging presentations span the science and art of hypnosis, from induction to sensual applications. Network with like-minded individuals from around the globe and build lasting connections within the community.",
+    "category": "Convention",
+    "excerpt": "Charmed! 2027 is January 14–17, 2027 (MLK weekend). Mid-Atlantic erotic, recreational, and educational hypnosis — hybrid in-person and online. Hotel name is shared at registration.",
+    "longDescription": "Charmed! 2027 runs January 14–17, 2027 (MLK weekend) in Maryland. Join the Mid-Atlantic erotic, recreational, and educational hypnosis event.\n\nCharmed! has been setting the standard for in-person erotic and recreational hypnosis conventions since 2016. Attendees visit from around the world for a schedule that includes basic education, recreational demonstrations, and erotic experiences in a welcoming environment.\n\n**Hybrid convention.** Since 2023, Charmed! broadcasts classes from the physical convention space to the online platform so remote attendees can hear the class, interact with presenters, and follow questions from the room. A class streaming catalog is part of recent years’ programming.\n\n**Location.** Charmed! 2027 is held in Maryland. The hotel name is shared when you register. If you have been to Charmed in the last five years, it is the same hotel. Offsite parking at the hotel is free.\n\n**Registration.** Registration is through Black Rose: https://br.app.neoncrm.com/event.jsp?event=162. Registration opens July 5, 2026 and ends December 31, 2026 for both hybrid and online-only tickets. If the Black Rose page is not accessible, email charmedreg@br.org.\n\n**In-person health rule (from the official site).** The vaccination deadline to attend Charmed! 2027 in person is December 31, 2026.\n\n**Get involved.** Volunteer applications and presenter class proposals open July 5, 2026. Regular class proposals close October 31, 2026. See the official site for volunteer details, Discord, Substack, and event rules.",
     "website": "https://charmedhypno.org/",
+    "organizer": "Charmed",
+    "venue": "Hotel announced at registration",
+    "hotel": "Hotel name is shared when you register. If you have been to Charmed in the last five years, it is the same hotel.",
+    "hotelInformation": "Hotel name is shared when you register. If you have been to Charmed in the last five years, it is the same hotel.",
+    "parking": "Free parking at the hotel for attendees not staying onsite.",
+    "ticketUrl": "https://br.app.neoncrm.com/event.jsp?event=162",
+    "registrationDeadline": "2026-12-31",
+    "staffApplicationUrl": "https://charmedhypno.org/volunteer/",
+    "presenterApplicationUrl": "https://charmedhypno.org/",
+    "contact": {
+      "email": "charmedreg@br.org"
+    },
     "logo": "/images/charmed.png",
+    "whyGo": [
+      "Hybrid in-person and online attendance",
+      "Education, recreational demos, and erotic hypnosis programming",
+      "Official Discord and monthly Substack",
+      "Volunteer and presenter calls"
+    ],
     "features": [
-      "Erotic Hypnosis Convention",
-      "Recreational Hypnosis",
-      "Basic Education Classes",
-      "Recreational Demonstrations",
-      "Erotic Experiences",
-      "Safe and Welcoming Environment",
-      "International Attendees",
-      "Community Connections",
-      "Multifaceted Schedule"
+      "Charmed! 2027 · Jan 14–17, 2027 (MLK weekend)",
+      "Mid-Atlantic erotic, recreational, and educational hypnosis",
+      "Hybrid in-person + online",
+      "Maryland hotel (name shared at registration)",
+      "Registration via Black Rose",
+      "Registration July 5–Dec 31, 2026",
+      "In-person vaccination deadline Dec 31, 2026",
+      "Classes, recreational demonstrations, and erotic experiences",
+      "Class streaming catalog",
+      "Volunteer and presenter calls"
     ],
     "seo": {
-      "title": "Charmed 2026: Erotic Hypnosis Convention",
-      "description": "Charmed runs Jan 15-18, 2026 in Philadelphia with erotic and recreational hypnosis classes, demos, consent rules, social events, and dungeon space.",
-      "keywords": "Charmed, Philadelphia, erotic hypnosis, recreational hypnosis, hypnosis convention, Pennsylvania, hypnosis education"
+      "title": "Charmed! 2027: Mid-Atlantic Hypnosis Convention",
+      "description": "Charmed! 2027 runs Jan 14–17, 2027 in Maryland (MLK weekend). Hybrid erotic, recreational, and educational hypnosis. Register via Black Rose.",
+      "keywords": "Charmed 2027, Charmed hypnosis, Maryland hypnosis convention, erotic hypnosis, recreational hypnosis, hybrid convention, MLK weekend, Black Rose"
     }
   },
   {
@@ -2376,11 +2365,10 @@ export const events = [
   {
     "name": "DC Fetish Ball",
     "slug": "dc-fetish-ball",
-    "status": "tba",
     "date": {
-      "start": "2026-10-01",
-      "end": "2026-10-31",
-      "display": "Oct 2026 (exact date TBA—see dcfetishball.com)"
+      "start": "2026-10-11",
+      "end": "2026-10-11",
+      "display": "Oct 11, 2026"
     },
     "location": {
       "city": "Washington",
@@ -2388,14 +2376,18 @@ export const events = [
       "region": "Mid-Atlantic"
     },
     "category": "Indoor Event",
-    "excerpt": "DC’s flagship annual fetish ball—Richard A.D & Metro Underground at UltraBar (911 F St NW): three levels of DJs, fetish fashion, dungeon and play spaces, national talent, and a fundraiser for Metro Underground. 21+, strict dress code.",
+    "excerpt": "DC Fetish Ball returns Sunday, October 11, 2026 at UltraBar. Richard A.D and Metro Underground’s 18th-year fetish ball: DJs, fashion, play space, 21+, strict dress code. Presale through the official tickets page.",
     "longDescription": "The **DC Fetish Ball** is presented as one of the region’s largest recurring fetish nights—a **fundraiser** benefiting **The Metro Underground** (see dcfetishball.com and themetrounderground.com). Recent official copy positions the ball as a **national-caliber** evening with high production value across **three levels** at **UltraBar — 911 F Street NW, Washington, DC**.\n\n**Typical format (from the public site):**\n\n- **Doors** — often **9pm**; **21+** only.\n- **Dress code** — fetish-forward looks (leather, latex, PVC, corsetry, formal goth/steampunk/club chic, etc.); **no** jeans, T-shirts, hoodies, or sportswear. “Dress to impress.”\n- **Main ballroom** — DJs, go-go dancers, featured fetish performance, regional **fetish fashion show**, and large-scale stage entertainment.\n- **Mezzanine** — lounge with bottle service overlooking the main floor.\n- **Second level** — social lounge and **play space** with dungeon equipment (Metro Events), variety/medical-style scene offerings, and dance areas (specific talent rotates annually).\n- **Third level (“Penthouse”)** — additional play-forward zones (rope/fire/edge-style offerings have appeared on schedules), DJs, and dance energy late night.\n- **Tickets** — presale via the official **Tickets** page; limited door tickets may be available; presales can guarantee entry if the venue hits capacity.\n- **Policies** — consent, photography, and FetLife disclaimer pages are linked from the site.\n\n**Dates move yearly** (recent editions have landed on **October** weekends, including references to Indigenous Peoples’ Day weekend). **Do not rely on placeholder calendar dates**—always confirm the next ball date on **dcfetishball.com**. Contact **RichardAD2000@gmail.com** for organizer inquiries listed on the site.",
     "website": "https://www.dcfetishball.com/",
+    "ticketUrl": "https://www.dcfetishball.com/tickets",
     "organizer": "Metro Underground",
     "venue": "UltraBar, 911 F St NW, Washington, DC",
+    "contact": {
+      "email": "richardad2000@gmail.com"
+    },
     "logo": "/images/events/brand-event-dc-fetish-ball.svg",
     "features": [
-      "Annual flagship DC fetish ball (date varies—verify site)",
+      "Sun Oct 11, 2026 · 18th year",
       "21+ · 9pm doors · coat check",
       "3-level UltraBar takeover (ballroom / mezzanine / play levels)",
       "National & regional DJs and fetish stage acts",
@@ -2406,8 +2398,8 @@ export const events = [
       "Presale & door tickets (capacity limits)"
     ],
     "seo": {
-      "title": "DC Fetish Ball - Washington DC | East Coast Kink Events",
-      "description": "DC Fetish Ball at UltraBar, Washington DC — Metro Underground’s major annual fetish ball: DJs, three levels, fashion and stage acts, play spaces. 21+. Confirm date on dcfetishball.com.",
+      "title": "DC Fetish Ball 2026 - Washington DC | East Coast Kink Events",
+      "description": "DC Fetish Ball is Sunday, October 11, 2026 at UltraBar. Metro Underground’s 18th-year fetish ball: DJs, fashion, play space, 21+.",
       "keywords": "DC Fetish Ball, Washington DC, UltraBar, Metro Underground, fetish ball, dungeon party, 21 plus"
     }
   },

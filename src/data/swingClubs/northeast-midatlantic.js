@@ -611,8 +611,8 @@ export const swingClubsNortheastMidatlantic = [
       long:
         'Shadows Private Club — Hyattsville, MD (Prince George’s County, DC metro). 501(c)(7) social and recreational club. On-premise lifestyle venue: large dance floor, stripper poles, private playrooms. BYOB with bartenders pouring your labeled alcohol with mixers. Open Wed–Fri, Sat, Sun per listings. shadowslove.com\n\nLimited single men on Saturdays per public materials.',
     },
-    contact: { phone: '(240) 825-3928', email: 'sexyshadows@live.com' },
-    website: 'http://shadowslove.com/',
+    contact: { phone: '(202) 798-2843', email: 'shadowsprivateclub@gmail.com' },
+    website: 'https://www.shadowslove.com/',
     logo: '/images/placeholder-logo.svg',
     images: [],
     socialMedia: {},
@@ -625,23 +625,31 @@ export const swingClubsNortheastMidatlantic = [
   {
     name: 'Tabu Social Club',
     slug: 'tabu-social-club-catonsville-md',
-    location: { city: 'Catonsville', state: 'MD', address: '1115 N Rolling Rd, Catonsville, MD 21228' },
+    location: { city: 'Catonsville', state: 'MD', address: '1115 N. Rolling Road, Catonsville, MD 21228' },
     category: 'Swing / lifestyle club',
     excerpt:
-      'Baltimore-area premier on-premise club since 2004—raised dance floor, VIP suites, BYOB setups.',
+      'Catonsville on-premise lifestyle club. Friday 9pm–2am, Saturday 9pm–3am. Membership plus visit fees on tabulife.com.',
     description: {
       long:
-        'Tabu Social Club — Catonsville / Baltimore metro, MD. Established 2004. BYOB with free setups (sodas, energy drinks, juices, mixers). Raised dance floor with two poles, dance cage, ladies-only stage, quiet lounge, VIP suites, playrooms, showers, towels, lockers. Fri/Sat nights. tabulife.com\n\nAnnual membership plus event fees per site.',
+        'Tabu Social Club is an on-premise lifestyle club at 1115 N. Rolling Road, Catonsville, MD 21228 (Baltimore metro). Official house hours are Friday 9pm–2am and Saturday 9pm–3am. Contact (410) 869-0001 or tabulife@tabulife.com. Calendar and membership are on tabulife.com.\n\nECKE lists dated club nights from the official calendar. Confirm current fees, dress, and membership rules with Tabu before you go. This listing is a swing / lifestyle club, not a dungeon.',
     },
     contact: { phone: '(410) 869-0001', email: 'tabulife@tabulife.com' },
+    hours: 'Friday 9pm–2am, Saturday 9pm–3am',
+    lastReviewed: '2026-09-10',
+    facts: [
+      { text: '1115 N. Rolling Road, Catonsville, MD 21228', source: 'website' },
+      { text: 'Friday 9pm–2am; Saturday 9pm–3am', source: 'website' },
+      { text: 'Phone (410) 869-0001 · tabulife@tabulife.com', source: 'website' },
+    ],
     website: 'https://www.tabulife.com/',
     logo: '/images/placeholder-logo.svg',
     images: [],
     socialMedia: {},
     seo: {
       title: 'Tabu Social Club - Catonsville MD | East Coast Kink Events',
-      description: 'Tabu Social Club — Baltimore metro on-premise lifestyle club.',
-      keywords: 'Tabu Social Club, Baltimore, Maryland, swingers',
+      description:
+        'Tabu Social Club in Catonsville, MD. Friday 9pm–2am, Saturday 9pm–3am. Official calendar on tabulife.com.',
+      keywords: 'Tabu Social Club, Catonsville, Baltimore, Maryland, swingers',
     },
   },
   {

@@ -1,4 +1,3 @@
-import KinkSocialCtaLink from '@/components/kink-social/KinkSocialCtaLink'
 import {
   formatCardMeta,
   topicBadgeClass,
@@ -41,28 +40,6 @@ export default function ArticleMasthead({ item, heroTitle, heroLead }: Props) {
           </>
         ) : null}
       </div>
-      {(item.saveUrl || item.followAuthorUrl) && (
-        <div className="edu-masthead-actions">
-          {item.saveUrl ? (
-            <KinkSocialCtaLink
-              href={item.saveUrl}
-              label="Save on kink.social"
-              variant="education"
-              surface="education_article_save"
-              className="edu-btn-save"
-            />
-          ) : null}
-          {item.followAuthorUrl ? (
-            <KinkSocialCtaLink
-              href={item.followAuthorUrl}
-              label="Follow educator"
-              variant="education"
-              surface="education_follow_author"
-              className="edu-btn-read"
-            />
-          ) : null}
-        </div>
-      )}
       {item.heroImageUrl ? (
         <div className="edu-hero-media edu-hero-media-adaptive">
           <img src={item.heroImageUrl} alt="" />

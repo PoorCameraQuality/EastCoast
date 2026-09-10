@@ -2,7 +2,7 @@
 import Script from 'next/script'
 import { useEffect, useState, Suspense } from 'react'
 import { initWebVitals } from '@/lib/web-vitals'
-import { usePathname, useSearchParams } from 'next/navigation'
+import { useWindowPathname, useWindowSearch } from '@/hooks/useWindowPathname'
 import { markGaConsentGranted } from '@/lib/analyticsEntities'
 
 interface GoogleAnalyticsProps {
@@ -10,8 +10,8 @@ interface GoogleAnalyticsProps {
 }
 
 function GoogleAnalyticsInner({ GA_MEASUREMENT_ID }: GoogleAnalyticsProps) {
-  const pathname = usePathname()
-  const searchParams = useSearchParams()
+  const pathname = useWindowPathname()
+  const search = useWindowSearch()
   const GA_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || GA_MEASUREMENT_ID
   const [loadScripts, setLoadScripts] = useState(false)
   const [gtagJsLoaded, setGtagJsLoaded] = useState(false)
@@ -25,7 +25,7 @@ function GoogleAnalyticsInner({ GA_MEASUREMENT_ID }: GoogleAnalyticsProps) {
   useEffect(() => {
     if (typeof window === 'undefined' || !loadScripts || !gtagJsLoaded) return
     if (!(window as any).gaConsent) return
-    const url = pathname + (searchParams?.toString() ? `?${searchParams.toString()}` : '')
+    const url = pathname + (search ? `?${search}` : '')
     if ((window as any).gtag) {
       ;(window as any).gtag('config', GA_ID, {
         page_path: url,
@@ -34,7 +34,7 @@ function GoogleAnalyticsInner({ GA_MEASUREMENT_ID }: GoogleAnalyticsProps) {
       })
     }
     initWebVitals()
-  }, [pathname, searchParams, GA_ID, loadScripts, gtagJsLoaded])
+  }, [pathname, search, GA_ID, loadScripts, gtagJsLoaded])
 
   return (
     <>

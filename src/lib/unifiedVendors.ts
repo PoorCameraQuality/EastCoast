@@ -78,6 +78,7 @@ type DbVendorRow = {
   name: string
   description: string | null
   website_url: string | null
+  contact_email?: string | null
   city: string | null
   state: string | null
   online_only: boolean
@@ -91,8 +92,12 @@ type DbVendorRow = {
   last_synced_at?: string | null
   meta_title: string | null
   meta_description: string | null
+  short_description?: string | null
   c2k_source_id?: string | null
   c2k_source_type?: string | null
+  organization_id?: string | null
+  status?: string | null
+  checkout_mode?: string | null
 }
 
 function asUnknownList(value: unknown): unknown[] {
@@ -167,9 +172,10 @@ export function dbRowToUnified(row: DbVendorRow, seoTagSlugs: string[]): Unified
   const record: VendorRecord = {
     slug: row.slug,
     name: row.name,
-    description: row.description || row.meta_description || undefined,
+    description: row.short_description || row.description || row.meta_description || undefined,
     story: row.description || undefined,
     websiteUrl: row.website_url || undefined,
+    contactEmail: row.contact_email || undefined,
     location,
     tagSlugs,
     logo125Url: row.logo_url || undefined,
@@ -180,6 +186,9 @@ export function dbRowToUnified(row: DbVendorRow, seoTagSlugs: string[]): Unified
     isPaid: false,
     c2kSourceId: row.c2k_source_id ?? null,
     c2kSourceType: row.c2k_source_type ?? null,
+    organizationId: row.organization_id ?? null,
+    status: row.status === 'draft' ? 'draft' : 'published',
+    checkoutMode: row.checkout_mode === 'stripe' ? 'stripe' : 'offsite',
   }
 
   return {
@@ -212,17 +221,63 @@ export async function fetchPublishedSupabaseVendors(): Promise<UnifiedVendor[]> 
   const client = getSupabaseServerClient()
   if (!client) return []
   try {
-    // No status column on vendors — C2K rows are identified by c2k_source_id; unpublish deletes them.
-    const { data: vrows, error: vErr } = await client
+    // C2K rows and org-owned published shops. Drafts stay out of the public catalog.
+    let { data: vrows, error: vErr } = await client
       .from('vendors')
       .select(
-        'id, slug, name, description, website_url, city, state, online_only, logo_url, cover_url, listings, seo_hub_tags, tag_slugs, kink_social_canonical_path, accepts_commissions, last_synced_at, meta_title, meta_description, c2k_source_id, c2k_source_type',
+        'id, slug, name, description, short_description, website_url, contact_email, city, state, online_only, logo_url, cover_url, listings, seo_hub_tags, tag_slugs, kink_social_canonical_path, accepts_commissions, last_synced_at, meta_title, meta_description, c2k_source_id, c2k_source_type, organization_id, status, checkout_mode',
       )
-      .not('c2k_source_id', 'is', null)
+      .eq('status', 'published')
+      .or('c2k_source_id.not.is.null,organization_id.not.is.null')
+    if (vErr) {
+      const fallback = await client
+        .from('vendors')
+        .select(
+          'id, slug, name, description, website_url, city, state, online_only, logo_url, cover_url, listings, seo_hub_tags, tag_slugs, kink_social_canonical_path, accepts_commissions, last_synced_at, meta_title, meta_description, c2k_source_id, c2k_source_type',
+        )
+        .not('c2k_source_id', 'is', null)
+      vrows = fallback.data as typeof vrows
+      vErr = fallback.error
+    }
     if (vErr || !vrows?.length) return []
 
     const rows = vrows as DbVendorRow[]
     const ids = rows.map((r) => r.id)
+
+    const { data: productRows, error: productErr } = await client
+      .from('vendor_products')
+      .select('id, vendor_id, title, image_url, price_label, external_url, sort_order')
+      .eq('status', 'published')
+      .eq('public_safe', true)
+      .in('vendor_id', ids)
+    if (productErr) {
+      console.error('[vendors] vendor_products query failed', productErr.message)
+    }
+
+    const listingsByVendor = new Map<string, NonNullable<VendorRecord['listings']>>()
+    for (const item of productRows || []) {
+      const row = item as {
+        id: string
+        vendor_id: string
+        title: string
+        image_url: string | null
+        price_label: string | null
+        external_url: string | null
+        sort_order: number | null
+      }
+      if (!row.title?.trim()) continue
+      const list = listingsByVendor.get(row.vendor_id) || []
+      list.push({
+        id: row.id,
+        title: row.title.trim(),
+        imageUrl: row.image_url,
+        priceLabel: row.price_label,
+        externalUrl: row.external_url,
+        sourceSystem: 'manual',
+        sortOrder: row.sort_order ?? list.length,
+      })
+      listingsByVendor.set(row.vendor_id, list)
+    }
 
     const { data: linkRows } = await client
       .from('vendor_seo_tag_links')
@@ -242,7 +297,12 @@ export async function fetchPublishedSupabaseVendors(): Promise<UnifiedVendor[]> 
       seoTagsByVendor.set(row.vendor_id, arr)
     }
 
-    return rows.map((row) => dbRowToUnified(row, seoTagsByVendor.get(row.id) || []))
+    return rows.map((row) => {
+      const unified = dbRowToUnified(row, seoTagsByVendor.get(row.id) || [])
+      const fromProducts = listingsByVendor.get(row.id)
+      if (!fromProducts?.length) return unified
+      return { ...unified, listings: fromProducts }
+    })
   } catch {
     return []
   }

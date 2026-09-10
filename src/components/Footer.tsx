@@ -1,20 +1,11 @@
 'use client'
 
 import EckeLink from '@/components/EckeLink'
-import KinkSocialCtaLink from '@/components/kink-social/KinkSocialCtaLink'
-import { usePathname } from 'next/navigation'
+import { useWindowPathname } from '@/hooks/useWindowPathname'
 import { CONTACT_US_LABEL } from '@/lib/submissionContact'
 import { suppressEckeFooter } from '@/lib/dancecard/shellRoutes'
 import { buildEventsListUrl } from '@/lib/eventsListSearchParams'
-import {
-  buildKinkSocialUrl,
-  getKinkSocialJoinUrl,
-  getKinkSocialOrgUrl,
-  getKinkSocialVendorOnboardingUrl,
-  KINK_SOCIAL_PATHS,
-} from '@/lib/kinkSocialMarketing'
-
-const DISCORD_INVITE_URL = 'https://discord.gg/xcnGGyGsmT'
+import { ECKE_DISCORD_INVITE_URL } from '@/lib/eckeCommunity'
 
 type FooterLink = { href: string; label: string; external?: boolean }
 
@@ -62,31 +53,8 @@ function FooterSectionBlock({ title, links }: FooterSection) {
   )
 }
 
-function KinkSocialFooterLink({
-  href,
-  label,
-  surface,
-}: {
-  href: string
-  label: string
-  surface: string
-}) {
-  return (
-    <li>
-      <KinkSocialCtaLink
-        href={href}
-        label={label}
-        variant="footer"
-        surface={surface}
-        className="inline-flex min-h-touch items-center rounded-md py-0.5 text-sm text-sf-body hover:text-sf-strong"
-        external
-      />
-    </li>
-  )
-}
-
 export default function Footer() {
-  const pathname = usePathname()
+  const pathname = useWindowPathname()
   if (suppressEckeFooter(pathname)) {
     return null
   }
@@ -137,14 +105,9 @@ export default function Footer() {
             <EckeLink href="/events" className="sf-btn-primary min-h-11 whitespace-nowrap text-center">
               Browse events
             </EckeLink>
-            <KinkSocialCtaLink
-              href={getKinkSocialJoinUrl('footer')}
-              label="Join kink.social"
-              variant="footer"
-              surface="footer_cta"
-              className="sf-btn-rose min-h-11 whitespace-nowrap text-center"
-              external
-            />
+            <EckeLink href="/auth/org/signup" className="sf-btn-ghost min-h-11 whitespace-nowrap text-center">
+              List an event
+            </EckeLink>
           </div>
         </div>
       </div>
@@ -162,17 +125,16 @@ export default function Footer() {
               </div>
               <div>
                 <p className="font-semibold text-sf-strong">East Coast Kink Events</p>
-                <p className="text-xs text-sf-muted">by kink.social</p>
+                <p className="text-xs text-sf-muted">Public event listings</p>
               </div>
             </div>
             <p className="mt-3 max-w-sm text-sm leading-relaxed text-sf-muted">
-              East Coast Kink Events is the public discovery surface for kink events, places,
-              vendors, education, and local scene hubs. kink.social is the community and publishing
-              platform behind the scenes.
+              East Coast Kink Events is a public directory for kink events, places, vendors,
+              education, and local scene hubs across the East Coast.
             </p>
             <div className="mt-4 flex flex-wrap gap-2">
               <a
-                href={DISCORD_INVITE_URL}
+                href={ECKE_DISCORD_INVITE_URL}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="sf-btn-ghost min-h-11 px-3 py-2 text-xs"
@@ -192,46 +154,16 @@ export default function Footer() {
 
             <FooterSectionBlock title="Plan" links={planLinks} />
 
-            <section aria-labelledby="footer-publish">
-              <h3
-                id="footer-publish"
-                className="mb-2.5 text-xs font-semibold uppercase tracking-wider text-sf-muted md:mb-3"
-              >
-                Publish on kink.social
-              </h3>
-              <ul className="space-y-1.5">
-                <KinkSocialFooterLink
-                  href={getKinkSocialOrgUrl('footer')}
-                  label="Publish an event"
-                  surface="footer_publish_event"
-                />
-                <KinkSocialFooterLink
-                  href={getKinkSocialOrgUrl('footer')}
-                  label="Create an organization"
-                  surface="footer_publish_org"
-                />
-                <KinkSocialFooterLink
-                  href={getKinkSocialVendorOnboardingUrl('footer')}
-                  label="Create a vendor profile"
-                  surface="footer_publish_vendor"
-                />
-                <KinkSocialFooterLink
-                  href={buildKinkSocialUrl(KINK_SOCIAL_PATHS.educationBrowse, 'footer')}
-                  label="Publish education"
-                  surface="footer_publish_education"
-                />
-                <KinkSocialFooterLink
-                  href={buildKinkSocialUrl(KINK_SOCIAL_PATHS.orgNew, 'footer', {
-                    ref: 'ecke_footer_place',
-                  })}
-                  label="Publish a place listing"
-                  surface="footer_publish_place"
-                />
-              </ul>
-              <p className="mt-3 text-xs leading-relaxed text-sf-muted">
-                Publish events, places, vendors, and education to ECKE from kink.social.
-              </p>
-            </section>
+            <FooterSectionBlock
+              title="For organizers"
+              links={[
+                { href: '/auth/org/signup', label: 'List an event' },
+                { href: '/organizations', label: 'Organizations' },
+                { href: '/vendors', label: 'Vendors' },
+                { href: '/education', label: 'Education' },
+                { href: '/dungeons', label: 'Places' },
+              ]}
+            />
 
             <FooterSectionBlock title="Help & legal" links={helpLinks} />
           </nav>

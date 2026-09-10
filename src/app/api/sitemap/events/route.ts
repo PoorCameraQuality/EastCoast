@@ -1,21 +1,30 @@
-import { NextResponse } from "next/server"
+import { NextResponse } from 'next/server'
+import { fetchPublishedEventSlugsForSitemap } from '@/lib/unifiedEvents'
 
-export const runtime = "nodejs"
+export const runtime = 'nodejs'
 
 export async function GET() {
   try {
-    // Import events from local data file
-    const { events } = await import("@/data/events")
-    
-    // Map to sitemap format using date.start for lastmod
-    const rows = (events || [])
-      .filter(event => event.slug) // Only include events with valid slugs
-      .map(event => ({
+    const { events } = await import('@/data/events')
+    const bySlug = new Map<string, { slug: string; updated: string | null }>()
+
+    for (const event of events || []) {
+      if (!event?.slug) continue
+      bySlug.set(event.slug, {
         slug: event.slug,
-        updated: event.date?.start || null
-      }))
-    
-    return NextResponse.json(rows, { status: 200 })
+        updated: event.date?.start || null,
+      })
+    }
+
+    const published = await fetchPublishedEventSlugsForSitemap()
+    for (const row of published) {
+      bySlug.set(row.slug, {
+        slug: row.slug,
+        updated: row.updated || null,
+      })
+    }
+
+    return NextResponse.json(Array.from(bySlug.values()), { status: 200 })
   } catch (error) {
     console.error('[Sitemap API] Error importing events:', error)
     return NextResponse.json([], { status: 200 })

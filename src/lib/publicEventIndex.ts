@@ -13,19 +13,50 @@ export type EventIndexCardModel = PublicEventIndexItem & {
   brand: EventBrandTheme
 }
 
+const LOCAL_EVENT_KINDS = new Set([
+  'play_party',
+  'party',
+  'play_event',
+  'munch',
+  'class',
+  'educational',
+  'social',
+])
+
+export function eventSpanDays(startIso: string, endIso: string): number {
+  const start = new Date(startIso).getTime()
+  const end = new Date(endIso || startIso).getTime()
+  if (!Number.isFinite(start) || !Number.isFinite(end)) return 1
+  return Math.max(1, Math.round((end - start) / 86400000) + 1)
+}
+
+export function isVenueLinkedNight(e: {
+  dungeonSlug?: string | null
+  dungeonVenueId?: string | null
+}): boolean {
+  return Boolean(e.dungeonSlug || e.dungeonVenueId)
+}
+
 function inferListingKind(e: UnifiedEvent): PublicEventListingKind {
-  const text = `${e.category} ${e.name} ${e.excerpt}`.toLowerCase()
+  const kind = (e.eventKind || '').toLowerCase()
+  if (isVenueLinkedNight(e) || LOCAL_EVENT_KINDS.has(kind)) return 'event'
+  if (kind === 'convention' || kind === 'retreat') return 'convention'
+  if (eventSpanDays(e.date.start, e.date.end) >= 2) return 'convention'
+  const category = (e.category || '').toLowerCase()
   if (
     e.tagSlugs.includes('convention') ||
-    /convention|conference|weekend event|hotel weekend/i.test(e.category)
+    /convention|conference|weekend event|hotel weekend|contest weekend/i.test(category)
   ) {
     return 'convention'
   }
-  if (/convention|conference|weekend|fest\b|leather weekend/i.test(text)) return 'convention'
   return 'event'
 }
 
 function inferEventType(e: UnifiedEvent): PublicEventType {
+  if (e.eventKind === 'educational' || e.eventKind === 'class') return 'class'
+  if (e.eventKind === 'munch') return 'munch'
+  if (e.eventKind === 'party' || e.eventKind === 'play_event' || e.eventKind === 'play_party') return 'party'
+  if (e.eventKind === 'retreat') return 'campout'
   const text = `${e.category} ${e.excerpt} ${e.name}`.toLowerCase()
   if (e.tagSlugs.includes('classes') || /workshop|class|education/i.test(e.category)) return 'class'
   if (e.tagSlugs.includes('play-party') || /play party|party/i.test(e.category)) return 'party'
@@ -59,9 +90,14 @@ function isThisWeekend(startIso: string): boolean {
 }
 
 function eventDurationDays(e: PublicEventIndexItem): number {
-  const start = new Date(e.startsAt).getTime()
-  const end = new Date(e.endsAt).getTime()
-  return Math.max(1, Math.round((end - start) / (86400000)) + 1)
+  return eventSpanDays(e.startsAt, e.endsAt)
+}
+
+/** National /events + homepage rail: multi-day conventions only, never dungeon nights. */
+export function isNationalConventionListing(item: PublicEventIndexItem): boolean {
+  if (isVenueLinkedNight(item)) return false
+  if (item.listingKind !== 'convention') return false
+  return eventDurationDays(item) >= 2
 }
 
 export function unifiedToIndexItem(e: UnifiedEvent): PublicEventIndexItem {
@@ -82,6 +118,8 @@ export function unifiedToIndexItem(e: UnifiedEvent): PublicEventIndexItem {
     tags: e.tagSlugs,
     category: e.category,
     organizerName: e.organizer,
+    dungeonSlug: e.dungeonSlug || undefined,
+    dungeonVenueId: e.dungeonVenueId || undefined,
     dancecardEnabled: e.dancecardEnabled,
     newFriendly: e.tagSlugs.includes('beginner-friendly'),
     sourceSystem: e.c2kSourceId ? 'kink_social' : 'ecke',
@@ -145,6 +183,7 @@ export type EventsListIntent =
   | 'all'
   | 'this-weekend'
   | 'conventions'
+  | 'local'
   | 'classes'
   | 'parties'
   | 'vendor-markets'
@@ -156,22 +195,22 @@ export type EventsListIntent =
   | 'indoor-events'
 
 export const EVENT_INTENT_OPTIONS: { id: EventsListIntent; label: string }[] = [
-  { id: 'all', label: 'All' },
-  { id: 'this-weekend', label: 'This weekend' },
   { id: 'conventions', label: 'Conventions' },
+  { id: 'local', label: 'Local nights' },
+  { id: 'this-weekend', label: 'This weekend' },
   { id: 'classes', label: 'Classes' },
   { id: 'parties', label: 'Parties' },
   { id: 'vendor-markets', label: 'Vendor markets' },
   { id: 'outdoor', label: 'Outdoor' },
   { id: 'new-friendly', label: 'New-friendly' },
-  { id: 'dancecard', label: 'Dancecard' },
-  { id: 'kink-social', label: 'From kink.social' },
+  { id: 'all', label: 'All' },
 ]
 
 export function matchesIntent(item: PublicEventIndexItem, intent: EventsListIntent): boolean {
-  if (intent === 'all') return true
+  if (intent === 'all') return isNationalConventionListing(item)
   if (intent === 'this-weekend') return isThisWeekend(item.startsAt)
-  if (intent === 'conventions') return item.listingKind === 'convention'
+  if (intent === 'conventions') return isNationalConventionListing(item)
+  if (intent === 'local') return !isNationalConventionListing(item)
   if (intent === 'classes') return item.eventType === 'class' || item.tags.includes('classes')
   if (intent === 'parties')
     return item.eventType === 'party' || /party|social/i.test(item.category)
@@ -188,7 +227,6 @@ export function matchesIntent(item: PublicEventIndexItem, intent: EventsListInte
 export function intentCounts(items: PublicEventIndexItem[]): Partial<Record<EventsListIntent, number>> {
   const counts: Partial<Record<EventsListIntent, number>> = {}
   for (const opt of EVENT_INTENT_OPTIONS) {
-    if (opt.id === 'all') continue
     const n = items.filter((i) => matchesIntent(i, opt.id)).length
     if (n > 0) counts[opt.id] = n
   }
@@ -196,6 +234,6 @@ export function intentCounts(items: PublicEventIndexItem[]): Partial<Record<Even
 }
 
 export function sourceLabel(item: PublicEventIndexItem): string | null {
-  if (item.sourceSystem === 'kink_social') return 'Published from kink.social'
+  if (item.sourceSystem === 'kink_social') return 'Directory listing'
   return null
 }

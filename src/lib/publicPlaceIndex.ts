@@ -30,8 +30,20 @@ type EckePlaceRecord = {
   byob?: string
   membership?: string
   socialMedia?: Record<string, string | undefined>
+  venueId?: string
   /** When set, this row was published from kink.social and should win merge over static. */
   c2kSourceId?: string | null
+  coverUrl?: string
+  ageRestriction?: string
+  accessibility?: string
+  dressCode?: string
+  photographyPolicy?: string
+  parking?: string
+  houseRules?: string
+  alcoholPolicy?: string
+  membershipInfo?: string
+  firstTimerInfo?: string
+  status?: 'draft' | 'published'
 }
 
 function inferPlaceType(category: string | undefined, routeKind: PublicPlaceRouteKind): PublicPlaceType {
@@ -123,11 +135,12 @@ function buildAmenities(record: EckePlaceRecord, placeType: PublicPlaceType): st
 export function dungeonToPlaceListing(record: EckePlaceRecord): PublicPlaceListing {
   const body = record.description?.long ?? record.excerpt ?? ''
   const placeType = inferPlaceType(record.category, 'dungeon')
-  const policies = extractPoliciesFromText(body)
+  const inferred = extractPoliciesFromText(body)
   const gallery = eckeImagesToGallery(record)
+  const cover = record.coverUrl || gallery[0]?.url || record.logo || undefined
 
   return {
-    id: record.slug,
+    id: record.venueId || record.slug,
     slug: record.slug,
     name: record.name,
     routeKind: 'dungeon',
@@ -144,15 +157,22 @@ export function dungeonToPlaceListing(record: EckePlaceRecord): PublicPlaceListi
     contactEmail: record.contact?.email,
     contactPhone: record.contact?.phone,
     logoUrl: record.logo ?? undefined,
-    coverImageUrl: gallery[0]?.url,
+    coverImageUrl: cover,
     gallery: gallery.length ? gallery : undefined,
     amenities: buildAmenities(record, placeType),
-    membershipInfo: record.membership,
+    membershipInfo: record.membershipInfo || record.membership,
     hours: record.hours,
     categoryLabel: record.category,
     newFriendly: inferNewFriendly(body),
     membershipRequired: inferMembership(body),
-    ...policies,
+    agePolicy: record.ageRestriction || inferred.agePolicy,
+    accessibilityNotes: record.accessibility || inferred.accessibilityNotes,
+    dressCode: record.dressCode || inferred.dressCode,
+    photographyPolicy: record.photographyPolicy || inferred.photographyPolicy,
+    parkingInfo: record.parking || inferred.parkingInfo,
+    consentPolicySummary: record.houseRules || inferred.consentPolicySummary,
+    alcoholPolicy: record.alcoholPolicy || inferred.alcoholPolicy,
+    firstTimerInfo: record.firstTimerInfo,
     sourceSystem: record.c2kSourceId ? 'kink_social' : 'ecke',
     status: 'published',
   }
@@ -260,7 +280,10 @@ function normalizeName(s: string): string {
 }
 
 export function eventMatchesPlace(place: PublicPlaceListing, event: PublicEventIndexItem): boolean {
+  if (event.dungeonVenueId) return event.dungeonVenueId === place.id
+  if (event.dungeonSlug) return event.dungeonSlug === place.slug
   const placeNorm = normalizeName(place.name)
+  if (!placeNorm) return false
   const titleNorm = normalizeName(event.title)
   if (titleNorm.includes(placeNorm) || placeNorm.includes(titleNorm)) return true
   if (event.organizerName && normalizeName(event.organizerName).includes(placeNorm)) return true
@@ -353,6 +376,21 @@ export function privacyModeLabel(mode: VenuePrivacyMode): string {
   }
 }
 
+export function placeLocationDisplay(place: PublicPlaceListing): string {
+  switch (place.venuePrivacyMode) {
+    case 'public_address':
+      return place.publicAddress ?? `${place.city}, ${place.state}`
+    case 'hidden_until_registered':
+      return 'Location shared after registration'
+    case 'contact_for_location':
+      return 'Contact venue for location'
+    case 'approximate_area':
+      return place.regionLabel ?? `${place.city}, ${place.state} area`
+    default:
+      return `${place.city}, ${place.state}`
+  }
+}
+
 export function featuredPlaceScore(item: PublicPlaceListing): number {
   let score = 0
   if (item.coverImageUrl || item.gallery?.length) score += 30
@@ -371,15 +409,21 @@ export function pickFeaturedPlaces(items: PublicPlaceListing[], limit = 3): Publ
     .slice(0, limit)
 }
 
+export function eventsMatchingPlace(
+  place: PublicPlaceListing,
+  events: UnifiedEvent[]
+): PublicEventIndexItem[] {
+  return events
+    .map(unifiedToIndexItem)
+    .filter((e) => eventMatchesPlace(place, e))
+    .sort((a, b) => new Date(a.startsAt).getTime() - new Date(b.startsAt).getTime())
+}
+
 export function findEventsForPlaceListing(
   place: PublicPlaceListing,
   events: UnifiedEvent[]
 ): PublicEventIndexItem[] {
-  const items = events.map(unifiedToIndexItem)
   const today = new Date()
   today.setHours(0, 0, 0, 0)
-  return items
-    .filter((e) => new Date(e.endsAt) >= today && eventMatchesPlace(place, e))
-    .sort((a, b) => new Date(a.startsAt).getTime() - new Date(b.startsAt).getTime())
-    .slice(0, 6)
+  return eventsMatchingPlace(place, events).filter((e) => new Date(e.endsAt) >= today)
 }

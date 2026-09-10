@@ -1,6 +1,5 @@
 import type { ReactNode } from 'react'
 import EckeLink from '@/components/EckeLink'
-import KinkSocialCtaLink from '@/components/kink-social/KinkSocialCtaLink'
 import Breadcrumb from '@/components/Breadcrumb'
 import DiscoveryEngineStrip from '@/components/discovery/DiscoveryEngineStrip'
 import VendorActionDock from '@/components/vendors/marketplace/VendorActionDock'
@@ -9,7 +8,6 @@ import VendorMasthead from '@/components/vendors/marketplace/VendorMasthead'
 import VendorProductShelf, { VendorAppearances } from '@/components/vendors/marketplace/VendorProductShelf'
 import EntityPageViewTracker from '@/components/analytics/EntityPageViewTracker'
 import type { PublicVendorListing } from '@/types/publicVendorListing'
-import { getKinkSocialVendorManageUrl, getKinkSocialVendorShopUrl } from '@/lib/kinkSocialMarketing'
 
 type Props = {
   vendor: PublicVendorListing
@@ -40,6 +38,12 @@ export default function VendorStorefrontDetail({
         {stateAbbr ? <DiscoveryEngineStrip stateAbbr={stateAbbr} /> : null}
 
         <VendorMasthead vendor={vendor} />
+
+        {vendor.status === 'draft' ? (
+          <p className="vendor-shelf-empty-copy" role="status">
+            This shop is a draft. Visitors will not see it until you publish.
+          </p>
+        ) : null}
 
         <div className="vendor-storefront-layout">
           <div className="vendor-storefront-main">
@@ -83,31 +87,22 @@ export default function VendorStorefrontDetail({
 
             <VendorAppearances vendor={vendor} />
 
+            {vendor.organizationId ? null : (
             <section className="vendor-claim" aria-labelledby="vendor-claim-heading">
               {vendor.sourceSystem === 'kink_social' ? (
                 <>
                   <h2 id="vendor-claim-heading" className="vendor-section-title">
-                    Manage this shop
+                    Own this shop?
                   </h2>
                   <p className="vendor-claim-copy">
-                    This storefront is published from kink.social. Update listings, photos, and visibility there.
+                    Create a free ECKE organization to manage this storefront, photos, and public listing.
                   </p>
-                  <KinkSocialCtaLink
-                    href={vendor.kinkSocialVendorUrl ?? getKinkSocialVendorShopUrl(vendor.slug)}
-                    label="Open shop on kink.social"
-                    variant="vendor"
-                    surface="vendor_claim"
-                    className="vendor-btn vendor-btn-view"
-                    external
-                  />
-                  <KinkSocialCtaLink
-                    href={getKinkSocialVendorManageUrl()}
-                    label="Manage on kink.social"
-                    variant="vendor"
-                    surface="vendor_claim"
-                    className="vendor-btn vendor-btn-save"
-                    external
-                  />
+                  <EckeLink href="/auth/org/signup" className="vendor-btn vendor-btn-view">
+                    Create an organization
+                  </EckeLink>
+                  <EckeLink href="/vendors/my-shop" className="vendor-btn vendor-btn-save">
+                    Manage your shop
+                  </EckeLink>
                 </>
               ) : (
                 <>
@@ -115,7 +110,7 @@ export default function VendorStorefrontDetail({
                     Own this shop?
                   </h2>
                   <p className="vendor-claim-copy">
-                    Publish product previews, connect to events, and manage your public storefront from kink.social.
+                    Suggest a correction if this listing needs an update.
                   </p>
                   <EckeLink href="/contact?subject=Vendor%20Listing" className="vendor-btn vendor-btn-view">
                     Suggest an edit
@@ -123,14 +118,17 @@ export default function VendorStorefrontDetail({
                 </>
               )}
             </section>
+            )}
           </div>
 
           <VendorActionDock vendor={vendor} />
         </div>
 
-        <div className="vendor-storefront-footer">
-          <VendorPlatformCta compact />
-        </div>
+        {vendor.organizationId ? null : (
+          <div className="vendor-storefront-footer">
+            <VendorPlatformCta compact />
+          </div>
+        )}
       </div>
     </main>
   )

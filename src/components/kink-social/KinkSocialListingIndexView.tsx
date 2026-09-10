@@ -1,8 +1,13 @@
 import Link from 'next/link'
+import {
+  listingImageAlt,
+  usableListingImageUrl,
+} from '@/lib/eckeOrgCatalog'
+import { listingCopyToPlainText } from '@/lib/eckeOrgRichText'
 import type { KinkSocialListingRecord } from '@/lib/unifiedExtendedListings'
 
 const EMPTY_STATE =
-  'No public listings have been published here yet. Listings appear here when organizers publish them from kink.social.'
+  'No public listings have been published here yet. They appear when organizers publish them from an ECKE organization account.'
 
 type Props = {
   title: string
@@ -14,6 +19,28 @@ type Props = {
 function listingLocation(listing: KinkSocialListingRecord): string | null {
   const parts = [listing.publicLocationSummary, listing.city, listing.state].filter(Boolean)
   return parts.length ? parts.join(' · ') : null
+}
+
+function ListingCardMedia({ listing }: { listing: KinkSocialListingRecord }) {
+  const imageUrl = usableListingImageUrl(listing.logoUrl) ?? usableListingImageUrl(listing.gallery?.[0]?.publicUrl)
+  if (imageUrl) {
+    const kind = usableListingImageUrl(listing.logoUrl) ? 'logo' : 'image'
+    return (
+      <img
+        src={imageUrl}
+        alt={listingImageAlt(listing.name, kind)}
+        className="h-12 w-12 shrink-0 rounded-lg border border-white/10 bg-white/5 object-cover sm:h-14 sm:w-14"
+      />
+    )
+  }
+  return (
+    <span
+      aria-hidden
+      className="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-sm font-semibold uppercase tracking-wide text-gray-500 sm:h-14 sm:w-14"
+    >
+      {(listing.name.trim()[0] || '·')}
+    </span>
+  )
 }
 
 export default function KinkSocialListingIndexView({ title, description, indexHref, listings }: Props) {
@@ -30,6 +57,7 @@ export default function KinkSocialListingIndexView({ title, description, indexHr
             {listings.map((listing) => {
               const href = `${indexHref}/${listing.slug}`
               const location = listingLocation(listing)
+              const blurb = listingCopyToPlainText(listing.description)
               return (
                 <li key={listing.slug}>
                   <Link
@@ -37,19 +65,13 @@ export default function KinkSocialListingIndexView({ title, description, indexHr
                     className="group block rounded-xl border border-white/10 bg-white/5 p-4 sm:p-5 hover:border-teal-500/40 transition"
                   >
                     <div className="flex flex-wrap items-start gap-3 sm:gap-4">
-                      {listing.logoUrl ?
-                        <img
-                          src={listing.logoUrl}
-                          alt=""
-                          className="h-12 w-12 shrink-0 rounded-lg border border-white/10 bg-white/5 object-cover sm:h-14 sm:w-14"
-                        />
-                      : null}
+                      <ListingCardMedia listing={listing} />
                       <div className="min-w-0 flex-1">
                         <h2 className="font-medium text-white group-hover:text-teal-100 transition-colors">
                           {listing.name}
                         </h2>
-                        {listing.description ?
-                          <p className="mt-2 line-clamp-2 text-sm text-gray-400">{listing.description}</p>
+                        {blurb ?
+                          <p className="mt-2 line-clamp-2 text-sm text-gray-400">{blurb}</p>
                         : null}
                         {location ?
                           <p className="mt-2 text-sm text-gray-500">{location}</p>

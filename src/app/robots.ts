@@ -5,6 +5,9 @@ import { BASE_URL } from '@/lib/seo'
 const SENSITIVE_DISALLOW = [
   '/admin/',
   '/api/',
+  '/auth/',
+  '/dashboard',
+  '/dashboard/',
   '/login',
   '/unauthorized',
   '/debug',
@@ -13,6 +16,12 @@ const SENSITIVE_DISALLOW = [
   '/admin-test',
   // Do not Disallow /_next/static/ — Google needs CSS/JS to render pages.
   '/education/submit',
+  '/dungeons/my-place',
+  '/dungeons/my-place/',
+  '/vendors/my-shop',
+  '/vendors/my-shop/',
+  '/events/my-events',
+  '/events/create',
 ] as const
 
 /** Explicitly welcome common AI / LLM crawlers with the same visibility rules as default bots. */

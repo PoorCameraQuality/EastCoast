@@ -12,37 +12,44 @@ import EventOverviewModules from '@/components/events/EventOverviewModules'
 import EventFeatureTiles from '@/components/events/EventFeatureTiles'
 import EventVenueTravel from '@/components/events/EventVenueTravel'
 import EventListingStatus from '@/components/events/EventListingStatus'
+import OrgOrganizerBar from '@/components/org/OrgOrganizerBar'
+import { openEventApplications } from '@/lib/eckeOrgEventAssets'
 import KinkSocialEntityGallerySection from '@/components/kink-social/KinkSocialEntityGallerySection'
 import EntityPageViewTracker from '@/components/analytics/EntityPageViewTracker'
 import { stateAbbrToSlug } from '@/lib/discoveryCrossLinks'
 import { EAST_COAST_STATES } from '@/lib/eastCoastStates'
 import type { EventPageRecord } from '@/lib/unifiedEvents'
-import { resolveKinkSocialEventCtaUrl } from '@/lib/kinkSocialIngestValidation'
 import { parseEventDescription } from '@/lib/eventPageContent'
+import { orgCopyLooksLikeHtml, sanitizeOrgHtml } from '@/lib/eckeOrgRichText'
+import { ECKE_DISCORD_INVITE_URL, ECKE_DISCORD_LABEL } from '@/lib/eckeCommunity'
 import type { EventMedia } from '@/lib/eventMedia'
 import type { EventBrandTheme } from '@/lib/eventBrandTheme'
 import { eventBrandStyle } from '@/lib/eventBrandTheme'
+
+type EventUpdate = {
+  id: string
+  title: string
+  body: string
+  image_url?: string | null
+  published_at?: string | null
+  created_at?: string
+}
 
 type Props = {
   event: EventPageRecord
   media: EventMedia
   brand: EventBrandTheme
+  canManage?: boolean
+  posts?: EventUpdate[]
 }
 
-export default function EventDetailView({ event, media, brand }: Props) {
+export default function EventDetailView({ event, media, brand, canManage, posts = [] }: Props) {
   const stateSlug = stateAbbrToSlug(event.location.state)
   const stateName = stateSlug ? EAST_COAST_STATES[stateSlug].name : event.location.state
   const hasFeatures = Boolean(event.features?.length)
   const hasLongCopy = Boolean(event.longDescription?.trim())
   const parsed = hasLongCopy ? parseEventDescription(event.longDescription!) : { intro: '', sections: [] }
-  const isC2kSourced = Boolean(event.c2kSourceId)
-  const safeKinkSocialEventUrl = isC2kSourced
-    ? resolveKinkSocialEventCtaUrl({
-        c2kSourceId: event.c2kSourceId,
-        c2kSourceType: event.c2kSourceType,
-        eckeSlug: event.slug,
-      })
-    : null
+  const applications = openEventApplications(event)
 
   const breadcrumbItems = [
     { label: 'Home', href: '/' },
@@ -72,6 +79,23 @@ export default function EventDetailView({ event, media, brand }: Props) {
             ← All events
           </Link>
 
+          {canManage ? <OrgOrganizerBar slug={event.slug} /> : null}
+
+          {event.status === 'draft' ? (
+            <p className="mb-4 rounded-lg border border-amber-400/30 bg-amber-950/30 px-4 py-3 text-sm text-sf-body">
+              This listing is a draft. Visitors will not see it until you publish.
+            </p>
+          ) : null}
+
+          {event.status === 'archived' || (event.date.end && new Date(`${event.date.end}T23:59:59`) < new Date()) ? (
+            <p className="mb-4 rounded-lg border border-white/10 bg-white/5 px-4 py-3 text-sm text-sf-body">
+              This event has ended. Looking for upcoming events?{' '}
+              <Link href="/events" className="underline">
+                Explore ECKE
+              </Link>
+            </p>
+          ) : null}
+
           <EventBrandMasthead event={event} media={media} brand={brand} />
 
           <nav className="event-hub-nav" aria-label="Event discovery links">
@@ -88,15 +112,98 @@ export default function EventDetailView({ event, media, brand }: Props) {
             <Link href="/events" className="event-hub-link">
               Browse all events
             </Link>
+            <a
+              href={ECKE_DISCORD_INVITE_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="event-hub-link"
+            >
+              {ECKE_DISCORD_LABEL}
+            </a>
           </nav>
 
           <div className="event-detail-layout">
             <div>
               <EventWhyGoSection event={event} />
-
-              {(hasLongCopy || event.excerpt) && (
+              {hasLongCopy && orgCopyLooksLikeHtml(event.longDescription) ? (
+                <section className="event-overview" aria-labelledby="event-overview-title">
+                  <h2 id="event-overview-title" className="event-section-title">
+                    Overview
+                  </h2>
+                  <div
+                    className="prose prose-invert prose-event mt-4 max-w-none"
+                    dangerouslySetInnerHTML={{ __html: sanitizeOrgHtml(event.longDescription || '') }}
+                  />
+                </section>
+              ) : (hasLongCopy || event.excerpt) ? (
                 <EventOverviewModules parsed={parsed} fallbackExcerpt={event.excerpt} />
-              )}
+              ) : null}
+
+              {applications.length ? (
+                <section className="mt-8">
+                  <h2 className="text-xl font-semibold text-sf-strong">Applications</h2>
+                  <ul className="mt-3 grid gap-2 sm:grid-cols-2">
+                    {applications.map((item) => (
+                      <li key={item.id}>
+                        <a
+                          href={item.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex min-h-11 items-center justify-between rounded-xl border border-white/10 px-4 py-3 text-sm text-sf-strong"
+                        >
+                          <span>{item.label} applications</span>
+                          <span className="text-sf-muted">Apply →</span>
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </section>
+              ) : null}
+
+              {event.programUrl || event.mapUrl ? (
+                <section className="mt-8">
+                  <h2 className="text-xl font-semibold text-sf-strong">Program &amp; map</h2>
+                  <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                    {event.programUrl ? (
+                      <a
+                        href={event.programUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex min-h-11 items-center rounded-xl border border-white/10 px-4 py-3 text-sm text-sf-strong"
+                      >
+                        View program
+                      </a>
+                    ) : null}
+                    {event.mapUrl ? (
+                      <a href={event.mapUrl} target="_blank" rel="noopener noreferrer" className="block rounded-xl border border-white/10 p-3">
+                        <img src={event.mapUrl} alt={`${event.name} event map`} className="max-h-64 w-full rounded-lg object-contain" />
+                        <p className="mt-2 text-sm text-sf-strong">Event map</p>
+                      </a>
+                    ) : null}
+                  </div>
+                </section>
+              ) : null}
+
+              {posts.length > 0 ? (
+                <section className="mt-8">
+                  <h2 className="text-xl font-semibold text-sf-strong">Latest updates</h2>
+                  <ol className="mt-4 space-y-4">
+                    {posts.map((post) => (
+                      <li key={post.id} className="rounded-xl border border-white/10 p-4">
+                        <p className="text-xs text-sf-muted">
+                          {post.published_at
+                            ? new Date(post.published_at).toLocaleDateString()
+                            : post.created_at
+                              ? new Date(post.created_at).toLocaleDateString()
+                              : ''}
+                        </p>
+                        <h3 className="mt-1 text-lg font-semibold text-sf-strong">{post.title}</h3>
+                        <p className="mt-2 whitespace-pre-wrap text-sm text-sf-body">{post.body}</p>
+                      </li>
+                    ))}
+                  </ol>
+                </section>
+              ) : null}
 
               {hasFeatures ? <EventFeatureTiles features={event.features!} /> : null}
 
@@ -120,25 +227,21 @@ export default function EventDetailView({ event, media, brand }: Props) {
                     Questions about this event? Check the organizer&apos;s site first. For general community chat,
                     join our Discord.
                   </p>
-                  <Link
-                    href="https://discord.gg/xcnGGyGsmT"
+                  <a
+                    href={ECKE_DISCORD_INVITE_URL}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="event-hub-link inline-flex"
                   >
-                    Join Discord
-                  </Link>
+                    {ECKE_DISCORD_LABEL}
+                  </a>
                   <ListingHubLinks variant="event" stateAbbr={event.location.state} city={event.location.city} />
                   <DiscoveryEngineStrip stateAbbr={event.location.state} />
                 </div>
               </details>
             </div>
 
-            <EventActionDock
-              event={event}
-              safeKinkSocialEventUrl={safeKinkSocialEventUrl}
-              isC2kSourced={isC2kSourced}
-            />
+            <EventActionDock event={event} />
           </div>
         </div>
       </section>
@@ -147,7 +250,7 @@ export default function EventDetailView({ event, media, brand }: Props) {
         <RelatedContent currentEvent={event} />
       </div>
 
-      <EventMobileActionBar event={event} safeKinkSocialEventUrl={safeKinkSocialEventUrl} />
+      <EventMobileActionBar event={event} />
     </div>
   )
 }

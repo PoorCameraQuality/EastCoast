@@ -2,15 +2,9 @@
 
 import { useState, useEffect, useRef } from 'react'
 import EckeLink from '@/components/EckeLink'
-import { usePathname } from 'next/navigation'
+import OrgHeaderAuth from './auth/OrgHeaderAuth'
 import UserMenu from './auth/UserMenu'
-import KinkSocialCtaLink from '@/components/kink-social/KinkSocialCtaLink'
 import { suppressEckeHeader } from '@/lib/dancecard/shellRoutes'
-import {
-  getKinkSocialJoinUrl,
-  getKinkSocialOrgUrl,
-  KINK_SOCIAL_LABELS,
-} from '@/lib/kinkSocialMarketing'
 
 const PRIMARY_NAV = [
   { href: '/events', label: 'Events' },
@@ -40,11 +34,15 @@ function isNavCurrent(pathname: string, href: string) {
   return pathname === href || pathname.startsWith(`${href}/`)
 }
 
-export default function Header() {
+export default function Header({ orgSignedIn = false }: { orgSignedIn?: boolean }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
-  const pathname = usePathname()
+  const [pathname, setPathname] = useState('')
   const mobileMenuButtonRef = useRef<HTMLButtonElement>(null)
+
+  useEffect(() => {
+    setPathname(window.location.pathname)
+  }, [])
 
   useEffect(() => {
     setIsMenuOpen(false)
@@ -96,7 +94,7 @@ export default function Header() {
                 <span className="block truncate font-sans text-sm font-semibold text-sf-strong sm:text-base">
                   East Coast Kink Events
                 </span>
-                <span className="hidden text-[11px] text-sf-muted sm:block">by kink.social</span>
+                <span className="hidden text-[11px] text-sf-muted sm:block">Public event listings</span>
               </div>
             </EckeLink>
 
@@ -120,22 +118,7 @@ export default function Header() {
             </nav>
 
             <div className="hidden items-center gap-2 lg:flex">
-              <KinkSocialCtaLink
-                href={getKinkSocialOrgUrl('header_nav')}
-                label={KINK_SOCIAL_LABELS.listEvent}
-                variant="organizer"
-                surface="header_nav"
-                className="sf-btn-ghost whitespace-nowrap px-4 py-2 text-sm"
-                external
-              />
-              <KinkSocialCtaLink
-                href={getKinkSocialJoinUrl('header_nav')}
-                label="Join kink.social"
-                variant="home"
-                surface="header_nav"
-                className="sf-btn-rose whitespace-nowrap px-4 py-2 text-sm"
-                external
-              />
+              <OrgHeaderAuth signedIn={orgSignedIn} />
               <UserMenu />
             </div>
 
@@ -210,22 +193,7 @@ export default function Header() {
             </ul>
 
             <div className="mt-4 flex flex-col gap-2 border-t border-white/10 px-4 pt-4">
-              <KinkSocialCtaLink
-                href={getKinkSocialOrgUrl('header_nav')}
-                label={KINK_SOCIAL_LABELS.listEvent}
-                variant="organizer"
-                surface="header_nav_mobile"
-                className="sf-btn-ghost inline-flex min-h-11 w-full items-center justify-center text-sm"
-                external
-              />
-              <KinkSocialCtaLink
-                href={getKinkSocialJoinUrl('header_nav')}
-                label="Join kink.social"
-                variant="home"
-                surface="header_nav_mobile"
-                className="sf-btn-rose inline-flex min-h-11 w-full items-center justify-center text-sm"
-                external
-              />
+              <OrgHeaderAuth signedIn={orgSignedIn} variant="mobile" />
               <div className="pt-2">
                 <UserMenu />
               </div>

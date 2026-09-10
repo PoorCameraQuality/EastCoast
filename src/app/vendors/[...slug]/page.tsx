@@ -20,6 +20,8 @@ import {
 } from '@/lib/vendorMetadata'
 import { openGraphListingImageUrl } from '@/lib/ogListingImage'
 import { getTagSlugsFromPageSearchParams } from '@/lib/vendorFiltering'
+import { requireOrgSession } from '@/lib/eckeOrgAuth'
+import { fetchOwnedShopAsUnified } from '@/lib/eckeOrgVendors'
 
 export const revalidate = 1800
 
@@ -38,7 +40,11 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
 
   if (parsed.kind === 'vendorDetail') {
-    const vendor = await resolveVendorBySlug(parsed.slug)
+    let vendor = await resolveVendorBySlug(parsed.slug)
+    if (!vendor) {
+      const session = await requireOrgSession()
+      if (session) vendor = await fetchOwnedShopAsUnified(parsed.slug, session.organization.id)
+    }
     if (!vendor) {
       return {
         title: 'Vendor Not Found',
@@ -50,11 +56,13 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     const description = buildVendorMetaDescription(vendor)
     const ogDescription = buildVendorOgDescription(vendor)
     const keywords = buildVendorKeywords(vendor)
+    const isPublic = vendor.status !== 'draft'
 
     return {
       title: vendor.name,
       description,
       keywords,
+      robots: isPublic ? undefined : { index: false, follow: false },
       openGraph: {
         title: vendor.name,
         description: ogDescription,
@@ -119,7 +127,11 @@ export default async function VendorSlugPage({ params, searchParams }: PageProps
   }
 
   if (parsed.kind === 'vendorDetail') {
-    const vendor = await resolveVendorBySlug(parsed.slug)
+    let vendor = await resolveVendorBySlug(parsed.slug)
+    if (!vendor) {
+      const session = await requireOrgSession()
+      if (session) vendor = await fetchOwnedShopAsUnified(parsed.slug, session.organization.id)
+    }
     if (!vendor) {
       notFound()
     }

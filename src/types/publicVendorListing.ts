@@ -45,6 +45,7 @@ export type PublicVendorListing = {
   wooUrl?: string
   websiteUrl?: string
   contactUrl?: string
+  contactEmail?: string
 
   acceptsCommissions?: boolean
   commissionInfo?: string
@@ -61,9 +62,10 @@ export type PublicVendorListing = {
 
   sourceSystem: 'ecke' | 'kink_social' | 'external'
   sourceId?: string
+  organizationId?: string
   lastSyncedAt?: string
 
-  status: 'published' | 'archived'
+  status: 'published' | 'archived' | 'draft'
 }
 
 export type VendorCategoryChip = {

@@ -28,9 +28,22 @@ function looksLikeBanner(url: string): boolean {
 /**
  * Normalize event listing media from unified events (logo field may hold posters/banners).
  */
-export function normalizeEventMedia(event: Pick<UnifiedEvent, 'name' | 'logo' | 'source' | 'c2kSourceId'>): EventMedia {
+export function normalizeEventMedia(
+  event: Pick<UnifiedEvent, 'name' | 'logo' | 'source' | 'c2kSourceId'> & { heroImage?: string | null },
+): EventMedia {
   const alt = `${event.name} event branding`
+  const hero = event.heroImage?.trim()
   const raw = event.logo?.trim()
+  if (hero) {
+    return {
+      bannerUrl: hero,
+      imageUrl: hero,
+      logoUrl: raw || hero,
+      alt,
+      source: mediaSource(event as UnifiedEvent),
+      isBanner: true,
+    }
+  }
 
   if (!raw) {
     return { alt, source: 'fallback', isBanner: false }

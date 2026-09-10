@@ -1,7 +1,7 @@
 'use client'
 
 import { useCallback } from 'react'
-import { usePathname } from 'next/navigation'
+import { useWindowPathname } from '@/hooks/useWindowPathname'
 
 // Declare gtag function for TypeScript
 declare global {
@@ -16,7 +16,7 @@ interface GA4Event {
 }
 
 export default function useEnhancedGA4() {
-  const pathname = usePathname()
+  const pathname = useWindowPathname()
 
   // Track page views with enhanced parameters
   const trackPageView = useCallback((page_path?: string, page_title?: string, additionalParams?: Record<string, any>) => {

@@ -1,64 +1,53 @@
 import EckeLink from '@/components/EckeLink'
-import KinkSocialCtaLink from '@/components/kink-social/KinkSocialCtaLink'
-import OutboundWebsiteLink from '@/components/analytics/OutboundWebsiteLink'
-import PlaceMediaStage, { PlaceTypeBadge } from '@/components/places/PlaceMediaStage'
+import PlaceHeroMedia from '@/components/places/PlaceHeroMedia'
+import { PlaceTypeBadge } from '@/components/places/PlaceMediaStage'
 import { privacyModeLabel } from '@/lib/publicPlaceIndex'
-import { buildKinkSocialUrl, KINK_SOCIAL_PATHS } from '@/lib/kinkSocialMarketing'
+import { ECKE_DISCORD_INVITE_URL, ECKE_DISCORD_LABEL } from '@/lib/eckeCommunity'
 import type { PublicPlaceListing } from '@/types/publicPlaceListing'
 
 type Props = {
   place: PublicPlaceListing
 }
 
+function listingStatusLabel(place: PublicPlaceListing) {
+  if (place.status === 'temporarily_closed') return 'Temporarily closed'
+  if (place.status === 'archived') return 'Archived listing'
+  return 'Public listing'
+}
+
 export default function PlaceMasthead({ place }: Props) {
   return (
-    <header className="place-masthead">
-      <div className="place-masthead-media">
-        <PlaceMediaStage place={place} size="masthead" />
-      </div>
-      <div className="place-masthead-body">
-        <PlaceTypeBadge place={place} />
-        <h1 className="place-masthead-title">{place.name}</h1>
-        <p className="place-masthead-location">
+    <header className="place-profile-hero" id="place-profile-hero">
+      <PlaceHeroMedia place={place} />
+
+      <div className="place-profile-hero-body">
+        <div className="place-profile-eyebrows">
+          <PlaceTypeBadge place={place} />
+          <span className="place-listing-status">{listingStatusLabel(place)}</span>
+        </div>
+        <h1 className="place-profile-title">{place.name}</h1>
+        <p className="place-profile-location">
           {place.city}, {place.state}
         </p>
-        <p className="place-masthead-type-line">
-          {place.categoryLabel ?? ''}
-          {place.categoryLabel ? ' · ' : ''}
+        <p className="place-profile-access">
+          {place.categoryLabel ? `${place.categoryLabel} · ` : ''}
           {privacyModeLabel(place.venuePrivacyMode)}
         </p>
-        {place.shortSummary ? <p className="place-masthead-summary">{place.shortSummary}</p> : null}
+        {place.shortSummary ? <p className="place-profile-summary">{place.shortSummary}</p> : null}
 
-        <div className="place-masthead-actions">
-          {place.websiteUrl ? (
-            <OutboundWebsiteLink
-              href={place.websiteUrl}
-              entityType={place.routeKind === 'swing_club' ? 'swingClub' : 'dungeon'}
-              entitySlug={place.slug}
-              entityName={place.name}
-              className="place-btn place-btn-neutral"
-            >
-              Visit website
-            </OutboundWebsiteLink>
-          ) : null}
-          <EckeLink href="#events-here" className="place-btn place-btn-view">
+        <div className="place-profile-actions">
+          <EckeLink href="#events-here" className="place-profile-primary">
             View upcoming events
           </EckeLink>
-          <KinkSocialCtaLink
-            href={
-              place.followUrl ??
-              buildKinkSocialUrl(KINK_SOCIAL_PATHS.join, 'dungeon_page', {
-                ref: 'ecke_place_follow',
-                ecke_place: place.slug,
-              })
-            }
-            label="Follow on kink.social"
-            variant="dungeon"
-            surface="place_masthead"
-            className="place-btn place-btn-save"
-            external
-          />
-          <EckeLink href="/contact" className="place-btn place-btn-ghost">
+          <a
+            href={ECKE_DISCORD_INVITE_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="place-profile-secondary"
+          >
+            {ECKE_DISCORD_LABEL}
+          </a>
+          <EckeLink href="/contact" className="place-profile-tertiary">
             Suggest an edit
           </EckeLink>
         </div>
