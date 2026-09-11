@@ -21,7 +21,7 @@ import { stateAbbrToSlug } from '@/lib/discoveryCrossLinks'
 import { EAST_COAST_STATES } from '@/lib/eastCoastStates'
 import type { EventPageRecord } from '@/lib/unifiedEvents'
 import { parseEventDescription } from '@/lib/eventPageContent'
-import { orgCopyLooksLikeHtml, sanitizeOrgHtml } from '@/lib/eckeOrgRichText'
+import { listingCopyToSafeHtml, orgCopyLooksLikeHtml } from '@/lib/eckeOrgRichText'
 import { ECKE_DISCORD_INVITE_URL, ECKE_DISCORD_LABEL } from '@/lib/eckeCommunity'
 import type { EventMedia } from '@/lib/eventMedia'
 import type { EventBrandTheme } from '@/lib/eventBrandTheme'
@@ -134,7 +134,7 @@ export default function EventDetailView({ event, media, brand, canManage, posts 
                   </h2>
                   <div
                     className="prose prose-invert prose-event mt-4 max-w-none"
-                    dangerouslySetInnerHTML={{ __html: sanitizeOrgHtml(event.longDescription || '') }}
+                    dangerouslySetInnerHTML={{ __html: listingCopyToSafeHtml(event.longDescription || '') }}
                   />
                 </section>
               ) : (hasLongCopy || event.excerpt) ? (

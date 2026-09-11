@@ -12,7 +12,7 @@ const LINKS = [
 
 export default function OrgManageNav({ slug, current }: { slug: string; current: string }) {
   return (
-    <nav className="flex flex-wrap gap-2 border-b border-white/10 pb-3" aria-label="Organizer tools">
+    <nav className="org-manage-nav" aria-label="Organizer tools">
       {LINKS.map((link) => {
         const href = link.href ? `/events/${slug}/${link.href}` : `/events/${slug}`
         const active = current === link.href || (current === 'page' && !link.href)
@@ -20,9 +20,8 @@ export default function OrgManageNav({ slug, current }: { slug: string; current:
           <EckeLink
             key={link.label}
             href={href}
-            className={`rounded-md px-3 py-2 text-sm ${
-              active ? 'bg-white/10 text-sf-strong' : 'text-sf-muted hover:text-sf-strong'
-            }`}
+            className={active ? 'org-manage-nav-tab is-active' : 'org-manage-nav-tab'}
+            aria-current={active ? 'page' : undefined}
           >
             {link.label}
           </EckeLink>

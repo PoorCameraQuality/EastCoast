@@ -36,8 +36,40 @@ export type CatalogConventionInput = {
   location?: { city?: string; state?: string }
   logo?: string
   organizer?: string
+  orgSlug?: string | null
   c2kSourceId?: string | null
   lastSyncedAt?: string
+}
+
+const TRAILING_YEAR_RE = /-\d{4}$/
+
+/** `grand-strand-affair-2026` → `grand-strand-affair`. */
+export function stripCatalogYearSuffix(slug: string): string {
+  return slug.trim().toLowerCase().replace(TRAILING_YEAR_RE, '')
+}
+
+export function catalogRowMatchesSlug(
+  row: Pick<CatalogListingRecord, 'slug' | 'orgSlug'>,
+  slug: string,
+): boolean {
+  const normalized = slug.trim().toLowerCase()
+  if (!normalized) return false
+  if (row.slug === normalized) return true
+  const org = row.orgSlug?.trim().toLowerCase()
+  if (org && org === normalized) return true
+  return stripCatalogYearSuffix(row.slug) === normalized
+}
+
+function findCatalogRowBySlug(
+  rows: CatalogListingRecord[],
+  slug: string,
+): CatalogListingRecord | null {
+  const normalized = slug.trim().toLowerCase()
+  return (
+    rows.find((row) => row.slug === normalized) ??
+    rows.find((row) => catalogRowMatchesSlug(row, normalized)) ??
+    null
+  )
 }
 
 export function isSkippedCatalogSlug(slug: string): boolean {
@@ -156,11 +188,14 @@ export function dungeonToOrgListing(dungeon: CatalogDungeonInput): CatalogListin
 
 export function conventionToListing(event: CatalogConventionInput): CatalogListingRecord {
   const slug = event.slug.trim().toLowerCase()
+  const yearless = stripCatalogYearSuffix(slug)
+  const orgSlug = event.orgSlug?.trim().toLowerCase() || (yearless !== slug ? yearless : null)
   return {
     ...emptyListing(slug, event.name, event.c2kSourceId || `ecke-catalog-convention:${slug}`),
     description: event.excerpt?.trim() || null,
     publicLocationSummary: locationSummary(event.location?.city, event.location?.state),
     logoUrl: pickLogo(event.logo),
+    orgSlug,
     orgDisplayName: event.organizer?.trim() || null,
     city: event.location?.city?.trim() || null,
     state: event.location?.state?.trim() || null,
@@ -331,7 +366,7 @@ export async function getOrganizationCatalogBySlug(
   const normalized = slug.trim().toLowerCase()
   if (isSkippedCatalogSlug(normalized)) return null
   const catalog = await getOrganizationCatalog()
-  return catalog.find((row) => row.slug === normalized) ?? null
+  return findCatalogRowBySlug(catalog, normalized)
 }
 
 export async function getConventionCatalog(): Promise<CatalogListingRecord[]> {
@@ -357,17 +392,21 @@ export async function getConventionCatalogBySlug(
 ): Promise<CatalogListingRecord | null> {
   const normalized = slug.trim().toLowerCase()
   if (isSkippedCatalogSlug(normalized)) return null
-  const { fetchPublishedListingBySlug } = await import('./unifiedExtendedListings')
-  const db = await fetchPublishedListingBySlug('convention', normalized)
+  const { fetchPublishedListingBySlug, fetchPublishedListingByOrgSlug } = await import(
+    './unifiedExtendedListings'
+  )
+  const db =
+    (await fetchPublishedListingBySlug('convention', normalized)) ??
+    (await fetchPublishedListingByOrgSlug('convention', normalized))
   if (db) {
     return {
       ...withDbMedia(db),
-      relatedHref: `/events/${normalized}`,
+      relatedHref: `/events/${db.slug}`,
       relatedLabel: 'View event',
     }
   }
   const catalog = await getConventionCatalog()
-  return catalog.find((row) => row.slug === normalized) ?? null
+  return findCatalogRowBySlug(catalog, normalized)
 }
 
 export function catalogSlugsForSitemap(

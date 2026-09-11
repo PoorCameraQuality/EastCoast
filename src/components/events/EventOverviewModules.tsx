@@ -1,4 +1,4 @@
-import MarkdownSimple from '@/components/MarkdownSimple'
+import { listingCopyToSafeHtml } from '@/lib/eckeOrgRichText'
 import type { ParsedEventDescription } from '@/lib/eventPageContent'
 
 type Props = {
@@ -9,6 +9,7 @@ type Props = {
 export default function EventOverviewModules({ parsed, fallbackExcerpt }: Props) {
   const hasIntro = Boolean(parsed.intro?.trim())
   const hasSections = parsed.sections.length > 0
+  const introHtml = hasIntro ? listingCopyToSafeHtml(parsed.intro) : ''
 
   if (!hasIntro && !hasSections) {
     if (!fallbackExcerpt) return null
@@ -17,7 +18,10 @@ export default function EventOverviewModules({ parsed, fallbackExcerpt }: Props)
         <h2 id="event-overview-title" className="event-section-title">
           Overview
         </h2>
-        <p className="event-overview-fallback">{fallbackExcerpt}</p>
+        <div
+          className="event-overview-fallback prose-event"
+          dangerouslySetInnerHTML={{ __html: listingCopyToSafeHtml(fallbackExcerpt) }}
+        />
       </section>
     )
   }
@@ -31,10 +35,11 @@ export default function EventOverviewModules({ parsed, fallbackExcerpt }: Props)
         Organizer-provided listing — confirm dates, registration, and policies on the official site.
       </p>
 
-      {hasIntro ? (
-        <div className="event-overview-intro prose-event">
-          <MarkdownSimple content={parsed.intro} />
-        </div>
+      {introHtml ? (
+        <div
+          className="event-overview-intro prose-event"
+          dangerouslySetInnerHTML={{ __html: introHtml }}
+        />
       ) : null}
 
       {hasSections ? (
@@ -42,9 +47,10 @@ export default function EventOverviewModules({ parsed, fallbackExcerpt }: Props)
           {parsed.sections.map((section) => (
             <article key={section.title} className="event-overview-module">
               <h3 className="event-overview-module-title">{section.title}</h3>
-              <div className="prose-event event-overview-module-body">
-                <MarkdownSimple content={section.body} />
-              </div>
+              <div
+                className="prose-event event-overview-module-body"
+                dangerouslySetInnerHTML={{ __html: listingCopyToSafeHtml(section.body) }}
+              />
             </article>
           ))}
         </div>

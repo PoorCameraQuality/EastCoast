@@ -681,6 +681,11 @@
   color: var(--sf-text-muted);
 }
 
+.place-about-prose a {
+  color: var(--sf-violet);
+  text-decoration: underline;
+}
+
 .place-about-fallback,
 .place-about-disclaimer {
   font-size: 0.8125rem;

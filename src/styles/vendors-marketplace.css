@@ -715,7 +715,15 @@
   font-size: 0.9375rem;
   line-height: 1.65;
   color: var(--sf-text-muted);
-  white-space: pre-wrap;
+}
+
+.vendor-about-prose a {
+  color: var(--sf-violet);
+  text-decoration: underline;
+}
+
+.vendor-about-prose p + p {
+  margin-top: 0.75rem;
 }
 
 .vendor-category-grid {

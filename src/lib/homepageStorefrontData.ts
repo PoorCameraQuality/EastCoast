@@ -15,7 +15,13 @@ import {
   pickRotatedBySlug,
 } from '@/lib/homepageRotation'
 import { getTopStatesByActivity, type TopStateEntry } from '@/lib/topStatesByActivity'
-import { isNationalConventionListing, unifiedToIndexItem } from '@/lib/publicEventIndex'
+import { getSiteSponsorPromo } from '@/data/siteSponsor'
+import {
+  eventSlugFromInternalHref,
+  isNationalConventionListing,
+  pickUpcomingConventionRail,
+  unifiedToIndexItem,
+} from '@/lib/publicEventIndex'
 import { getUnifiedDungeonsAsync } from '@/lib/unifiedDungeons'
 import { getUnifiedEvents, getUpcomingUnified, type UnifiedEvent } from '@/lib/unifiedEvents'
 import { getUnifiedVendors } from '@/lib/unifiedVendors'
@@ -224,9 +230,8 @@ export async function getHomepageStorefrontData(options?: {
   const upcomingUnified = getUpcomingUnified(unified).filter((event) =>
     isNationalConventionListing(unifiedToIndexItem(event)),
   )
-  const pinnedFeatured = upcomingUnified.filter((event) => event.featured)
-  const remainingUpcoming = upcomingUnified.filter((event) => !event.featured)
-  const upcomingSlice = [...pinnedFeatured, ...remainingUpcoming].slice(0, 8)
+  const sponsorSlug = eventSlugFromInternalHref(getSiteSponsorPromo()?.href)
+  const upcomingSlice = pickUpcomingConventionRail(upcomingUnified, { sponsorSlug, limit: 8 })
   const upcomingEvents = await Promise.all(upcomingSlice.map(toStorefrontEvent))
   const allStates = getTopStatesByActivity(Number.MAX_SAFE_INTEGER)
   const topStates = rotateStatesWithEvents(allStates, seed)

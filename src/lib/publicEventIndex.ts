@@ -181,6 +181,23 @@ export function pickFeatured(items: PublicEventIndexItem[], limit = 4): PublicEv
     .slice(0, limit)
 }
 
+export function eventSlugFromInternalHref(href: string | null | undefined): string | null {
+  const match = (href || '').trim().match(/^\/events\/([a-z0-9-]+)\/?$/i)
+  return match ? match[1].toLowerCase() : null
+}
+
+/** Homepage Upcoming: featured / sponsor pins first, then soonest national conventions. */
+export function pickUpcomingConventionRail<T extends { slug: string; featured?: boolean }>(
+  items: T[],
+  options?: { sponsorSlug?: string | null; limit?: number },
+): T[] {
+  const limit = options?.limit ?? 8
+  const sponsor = (options?.sponsorSlug || '').trim().toLowerCase()
+  const pinned = items.filter((item) => item.featured || (sponsor && item.slug === sponsor))
+  const rest = items.filter((item) => !item.featured && item.slug !== sponsor)
+  return [...pinned, ...rest].slice(0, limit)
+}
+
 export type EventsListIntent =
   | 'all'
   | 'this-weekend'

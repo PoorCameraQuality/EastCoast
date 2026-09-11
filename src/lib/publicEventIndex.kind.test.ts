@@ -2,9 +2,11 @@ import assert from 'node:assert/strict'
 import { describe, it } from 'node:test'
 import type { UnifiedEvent } from '@/lib/unifiedEvents'
 import {
+  eventSlugFromInternalHref,
   featuredScore,
   isNationalConventionListing,
   matchesIntent,
+  pickUpcomingConventionRail,
   unifiedToIndexItem,
 } from './publicEventIndex'
 
@@ -111,6 +113,19 @@ describe('national convention vs local nights', () => {
       }),
     )
     assert.equal(featured.featured, true)
+    assert.equal(featured.listingKind, 'convention')
+    assert.equal(isNationalConventionListing(featured), true)
     assert.equal(featuredScore(featured) > featuredScore(other), true)
+    assert.equal(eventSlugFromInternalHref('/events/grand-strand-affair-2026'), 'grand-strand-affair-2026')
+    const rail = pickUpcomingConventionRail(
+      [
+        { slug: 'earlier-con', featured: false },
+        { slug: 'another-con', featured: false },
+        { slug: 'grand-strand-affair-2026', featured: true },
+      ],
+      { sponsorSlug: 'grand-strand-affair-2026', limit: 2 },
+    )
+    assert.equal(rail[0]?.slug, 'grand-strand-affair-2026')
+    assert.equal(rail.length, 2)
   })
 })

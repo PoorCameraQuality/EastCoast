@@ -53,4 +53,35 @@ describe('eckeOrgRichText', () => {
     assert.equal(html.includes('**'), false)
     assert.equal(listingCopyToPlainText('**Hybrid convention.**'), 'Hybrid convention.')
   })
+
+  it('turns bare http(s) URLs into anchors', () => {
+    const html = listingCopyToSafeHtml(
+      'Registration is through Black Rose: https://br.app.neoncrm.com/event.jsp?event=162.',
+    )
+    assert.match(
+      html,
+      /<a href="https:\/\/br\.app\.neoncrm\.com\/event\.jsp\?event=162" rel="noopener noreferrer" target="_blank">https:\/\/br\.app\.neoncrm\.com\/event\.jsp\?event=162<\/a>/,
+    )
+    assert.match(html, /<\/a>\./)
+  })
+
+  it('keeps markdown links and bold while adding a nearby bare URL', () => {
+    const html = listingCopyToSafeHtml(
+      'Buy on [Zeffy](https://www.zeffy.com/en-US/ticketing/grand-strand-affair). Policies: https://grandstrandaffair.com/ticket-policies',
+    )
+    assert.match(html, /<strong>|<p>/)
+    assert.match(html, /<a href="https:\/\/www\.zeffy\.com\/en-US\/ticketing\/grand-strand-affair"/)
+    assert.match(html, />Zeffy<\/a>/)
+    assert.match(html, /<a href="https:\/\/grandstrandaffair\.com\/ticket-policies"/)
+  })
+
+  it('strips javascript: hrefs from stored HTML', () => {
+    const clean = listingCopyToSafeHtml(
+      '<p>Click <a href="javascript:alert(1)">here</a> or https://grandstrandaffair.com/</p>',
+    )
+    assert.equal(clean.toLowerCase().includes('javascript:'), false)
+    assert.equal(clean.includes('alert(1)'), false)
+    assert.match(clean, /<a href="https:\/\/grandstrandaffair\.com\/"/)
+    assert.match(clean, />here</)
+  })
 })

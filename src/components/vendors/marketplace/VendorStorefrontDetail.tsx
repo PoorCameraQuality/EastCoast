@@ -6,6 +6,7 @@ import VendorActionDock from '@/components/vendors/marketplace/VendorActionDock'
 import VendorMasthead from '@/components/vendors/marketplace/VendorMasthead'
 import VendorProductShelf, { VendorAppearances } from '@/components/vendors/marketplace/VendorProductShelf'
 import EntityPageViewTracker from '@/components/analytics/EntityPageViewTracker'
+import { listingCopyToSafeHtml } from '@/lib/eckeOrgRichText'
 import type { PublicVendorListing } from '@/types/publicVendorListing'
 
 type Props = {
@@ -53,7 +54,10 @@ export default function VendorStorefrontDetail({
                 <h2 id="vendor-about-heading" className="vendor-section-title">
                   About the maker
                 </h2>
-                <div className="vendor-about-prose">{description}</div>
+                <div
+                  className="vendor-about-prose"
+                  dangerouslySetInnerHTML={{ __html: listingCopyToSafeHtml(description) }}
+                />
               </section>
             ) : null}
 

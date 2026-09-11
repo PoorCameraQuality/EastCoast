@@ -138,9 +138,54 @@
 .org-dashboard-text-link:focus-visible,
 .org-dashboard-row-action:focus-visible,
 .org-dashboard-more summary:focus-visible,
-.org-listing-status:focus-visible {
+.org-listing-status:focus-visible,
+.org-manage-nav-tab:focus-visible {
   outline: 2px solid var(--ecke-focus, #0f766e);
   outline-offset: 3px;
+}
+
+/* Event manage/edit section tabs — must read as controls, not muted copy */
+.org-manage-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.15rem;
+  margin: 0;
+  padding: 0;
+  border-bottom: 1px solid var(--sf-border, rgba(255, 255, 255, 0.12));
+}
+
+.org-manage-nav-tab {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.75rem;
+  padding: 0.5rem 0.9rem;
+  margin-bottom: -1px;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  border-radius: 0.4rem 0.4rem 0 0;
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--sf-text-body, #d8d3cb);
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.2;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.org-manage-nav-tab:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--sf-text-strong, #f7f4ef);
+}
+
+.org-manage-nav-tab:active {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.org-manage-nav-tab.is-active {
+  background: rgba(255, 255, 255, 0.12);
+  border-bottom-color: var(--sf-violet, #8b5cf6);
+  color: var(--sf-text-strong, #f7f4ef);
 }
 
 .org-event-cols {

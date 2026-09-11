@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react'
-import { orgCopyLooksLikeHtml, sanitizeOrgHtml } from '@/lib/eckeOrgRichText'
+import { listingCopyToSafeHtml } from '@/lib/eckeOrgRichText'
 import Breadcrumb from '@/components/Breadcrumb'
 import RelatedContent from '@/components/RelatedContent'
 import DiscoveryEngineStrip from '@/components/discovery/DiscoveryEngineStrip'
@@ -11,7 +11,6 @@ import PlaceEventsHere from '@/components/places/PlaceEventsHere'
 import PlaceEventsSticky from '@/components/places/PlaceEventsSticky'
 import PlaceHowToAttend from '@/components/places/PlaceHowToAttend'
 import PlaceMasthead from '@/components/places/PlaceMasthead'
-import MarkdownSimple from '@/components/MarkdownSimple'
 import DiscoveryPageShell from '@/components/discovery/DiscoveryPageShell'
 import EntityPageViewTracker from '@/components/analytics/EntityPageViewTracker'
 import type { PublicEventIndexItem } from '@/types/publicEventIndexItem'
@@ -77,11 +76,7 @@ export default function PlaceDetailView({
                 </h2>
                 {hasLongBody ? (
                   <div className="place-about-prose">
-                    {orgCopyLooksLikeHtml(longBody) ? (
-                      <div dangerouslySetInnerHTML={{ __html: sanitizeOrgHtml(longBody) }} />
-                    ) : (
-                      <MarkdownSimple content={longBody} />
-                    )}
+                    <div dangerouslySetInnerHTML={{ __html: listingCopyToSafeHtml(longBody) }} />
                   </div>
                 ) : place.shortSummary ? (
                   <p className="place-about-prose">{place.shortSummary}</p>

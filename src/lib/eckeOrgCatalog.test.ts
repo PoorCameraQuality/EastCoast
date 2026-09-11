@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict'
 import { describe, it } from 'node:test'
 import {
+  catalogRowMatchesSlug,
   conventionToListing,
   dungeonToOrgListing,
   isRedundantOrgDisplayName,
@@ -9,6 +10,7 @@ import {
   mergeConventionCatalog,
   mergeOrganizationCatalog,
   shouldIncludeCatalogListing,
+  stripCatalogYearSuffix,
   usableListingImageUrl,
 } from './eckeOrgCatalog'
 import type { KinkSocialListingRecord } from './unifiedExtendedListings'
@@ -98,5 +100,48 @@ describe('eckeOrgCatalog merge', () => {
     assert.equal(isRedundantOrgDisplayName('Charmed', 'Charmed'), true)
     assert.equal(isRedundantOrgDisplayName('Charmed Productions', 'Charmed'), false)
     assert.equal(conventionToListing({ slug: 'paf', name: 'PAF', excerpt: 'Camp.' }).relatedHref, '/events/paf')
+  })
+
+  it('resolves year-suffixed convention slugs and org slugs as aliases', () => {
+    assert.equal(stripCatalogYearSuffix('grand-strand-affair-2026'), 'grand-strand-affair')
+    const listing = conventionToListing({
+      slug: 'grand-strand-affair-2026',
+      name: 'Grand Strand Affair 2026',
+      excerpt: 'Myrtle Beach, Nov 19–22, 2026.',
+      organizer: 'Grand Strand Affair Ltd',
+    })
+    assert.equal(listing.orgSlug, 'grand-strand-affair')
+    assert.equal(catalogRowMatchesSlug(listing, 'grand-strand-affair-2026'), true)
+    assert.equal(catalogRowMatchesSlug(listing, 'grand-strand-affair'), true)
+
+    const conventions = mergeConventionCatalog(
+      [
+        dbOrg({
+          slug: 'grand-strand-affair-2026',
+          name: 'Grand Strand Affair 2026',
+          description: 'First-year Myrtle Beach weekend.',
+          logoUrl: '/images/events/brand-grand-strand-affair.png',
+          orgSlug: 'grand-strand-affair',
+        }),
+      ],
+      [],
+    )
+    const byBrand = conventions.find((row) => catalogRowMatchesSlug(row, 'grand-strand-affair'))
+    assert.equal(byBrand?.slug, 'grand-strand-affair-2026')
+
+    const orgs = mergeOrganizationCatalog(
+      [dbOrg({ slug: 'grand-strand-affair', name: 'Grand Strand Affair', description: 'Produces the weekend.', logoUrl: '/images/gsa.png' })],
+      [],
+      [{ slug: 'grand-strand-affair-2026', name: 'Grand Strand Affair 2026', excerpt: 'Nov 19–22, 2026.' }],
+    )
+    assert.equal(orgs.some((row) => row.slug === 'grand-strand-affair'), true)
+    assert.equal(orgs.some((row) => row.slug === 'grand-strand-affair-2026'), true)
+    const yearlessOnly = mergeOrganizationCatalog(
+      [],
+      [],
+      [{ slug: 'grand-strand-affair-2026', name: 'Grand Strand Affair 2026', excerpt: 'Nov 19–22, 2026.' }],
+    )
+    const aliased = yearlessOnly.find((row) => catalogRowMatchesSlug(row, 'grand-strand-affair'))
+    assert.equal(aliased?.slug, 'grand-strand-affair-2026')
   })
 })

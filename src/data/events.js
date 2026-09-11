@@ -3605,6 +3605,7 @@ export const events = [
   {
     "name": "Grand Strand Affair 2026",
     "slug": "grand-strand-affair-2026",
+    "eventKind": "convention",
     "isFeatured": true,
     "date": {
       "start": "2026-11-19",
@@ -3617,13 +3618,13 @@ export const events = [
       "region": "Southeastern, South Carolina"
     },
     "category": "Convention",
-    "excerpt": "First-year educational weekend in Myrtle Beach, Nov 19–22, 2026. 19+ convention with 40+ classes, play spaces, and a vendor hall. Tickets on Zeffy. Official vendors include The Dungeon Store, Soaring Eagle Creations, Bound By Jay, Steel Bones, Chromaknotz, Canes4Pain, Blush Industries, TheBeav Woodcrafting, Unique Kink, Kinky Creative Studio, Regal Raiment, Dorie's Designs, Heritage and Vine, Awkward Artist Studio, Sire Don Leather, Ink and Kiln, and Leatherwick.",
-    "longDescription": "Grand Strand Affair 2026 is a first-year, four-day educational kink convention in Myrtle Beach, South Carolina, November 19–22, 2026. East Coast Kink Events is listing it as a featured sponsor convention. Tickets stay on the organizer’s Zeffy page — ECKE is not the box office.\n\nThe official site frames the weekend as an immersive BDSM gathering for adults 19 and over, from first-timers to experienced players. Published programming includes four floors of convention space, a main dungeon, a rope dungeon, a concierge dungeon (booked as a timed add-on), 40+ classes, a vendor hall, socials, a fashion show, and specialty rooms.\n\n**Tickets.** Buy on [Zeffy](https://www.zeffy.com/en-US/ticketing/grand-strand-affair). Published 2026 prices on that page include Believer VIP at $150 (first 50 buyers: priority class seating, presenter meet-and-greet, limited shirt and pin), a full-weekend ticket at $175, a Friday day pass at $100 (November 20), and a Saturday day pass at $125 (good through Sunday morning, November 22). Add-ons live on a separate [Zeffy shop](https://www.zeffy.com/en-US/ticketing/grand-strand-affair-add-ons): event pin $10 (listed through October 15, 2026), shirt $19.99 (listed through November 1), 90-minute private dungeon $50 daytime / $75 evening. A 1950s high-protocol tea and a Kinky Paint and Sip materials fee are each listed at $25. Confirm live prices there before you pay.\n\n**Hotel.** The official hotel page does not print a property name in the body copy. It says rooms booked through their link walk into convention space and have an ocean view, and that this is not a hotel takeover. Official tickets link a Hilton room block. An official hotel-page photo filename is labeled Ellie Beach Resort. Confirm the current property and rate on the official hotel page and ticket page before you book. No street address is published.\n\n**House rules (facts only).** Official policy pages say 19+ with government ID; play stays in the named dungeons or a private room; photography and recording are barred except designated staff photography; fire play is prohibited under local rules; cannabis is treated as illegal in South Carolina. Tickets are non-transferable and must be bought in the attendee’s legal name. Unused 2026 tickets may roll to 2027 if you email grandstrandaffair@gmail.com before the event starts on November 19, 2026; a canceled 2026 event rolls tickets to 2027. COVID copy recommends vaccination two weeks ahead and asks anyone who tests positive within seven days of start to stay home — those tickets also roll forward. Read [ticket policies](https://grandstrandaffair.com/ticket-policies) and [event policies](https://grandstrandaffair.com/general-event-policies).\n\n**Program.** Class titles below come from the organizers’ public class list dated June 1, 2026. Times were not published in that document. The official [class list](https://grandstrandaffair.com/class-list) and [schedule](https://grandstrandaffair.com/general-event-schedule) pages are the live sources. Zeffy also lists a fashion show on Thursday, November 19 at 8:30 PM.\n\n- Advanced Violet Wand Techniques — Traveling Fool\n- Artistic Alchemy — Cynthia\n- Autism and Kink — John Pendal\n- Cigars 101 — Trikki Nikki\n- Creative Breast Play (with bondage) — Mistress Natalya\n- Dungeon Essentials, Communication, Negotiations, Scene Building — Lady Leigh\n- Dynamic Ending and Self-Care Moving Forward as a Little — Little B\n- Edge Play: Pushing Limits — John Pendal\n- Electronic Cage: Remote Control & Invisible Restraint — 705\n- EMS and Electrical Stimulation Toys — Traveling Fool\n- Erotic Bootblacking — Little B\n- Flowing Through the Toons — Sir Tokin\n- Follow Your Heart Rope Edition — Skyla\n- Foot Weaving and Leg Ties — hookedonknots\n- The Freedom of Slavehood and Serenity of Service — slave sunflower\n- Gentle Humiliation — Mistress Natalya\n- Getting Into Headspace — John Pendal\n- Heal Hurting: Masochistic With a History of Self Harm — AJ Renard\n- Hey Wanna Play — Lady Leigh\n- High Protocol: 420 Play, Service & Risk Management — Reed\n- Incorporating Power Exchange Dynamics into Everyday Life — AJ Renard\n- Introduction to Needle Play — Frankie\n- Kink for One: Playing Solo — Dear Caroline\n- Kinky Paint and Sip — Kinky Painter (materials fee listed separately)\n- Lacing Skin: Sharps Corsetry — Dear Caroline\n- Leather Care 101 — Little B\n- Mermaid Bondage — Skyla\n- Mosaic Tea: Tea Service as Living Art — Cynthia\n- Multiple Day Scenes — Cookie_Doe_ and CreamCheeseFrosting\n- Mummification: Pallet Wrap, Duct Tape, and More — Mel_Ann and BlueFluke\n- “No” Is A Sexy Word — Reed\n- Poke & the Pull: Playing with Porcupine Quills — Dear Caroline\n- Physics of Impact — Shroder\n- Rope 101 — hookedonknots\n- Scalpel Art: Crafting Designs on Skin — Cookie_Doe_ and CreamCheeseFrosting\n- Sensation to Subspace Without Impact — Lady Leigh\n- Sensory Caning Techniques — Kinky Painter\n- Sensual Whipping — Mistress Natalya\n- Sexy Cigar Play — Trikki Nikki\n- Struggle Snuggle and Bang — Sir Tokin\n- Torture Ties — Cookie_Doe_ and CreamCheeseFrosting\n- Violet Wands — Traveling Fool\n\n**Vendors.** The official [vendors](https://grandstrandaffair.com/vendors) page lists Kinky Creative Studio, The Dungeon Store, Soaring Eagle Creations, Regal Raiment, Bound By Jay, Dorie's Designs, Steel Bones, Chromaknotz, Canes 4 Pain, Blush Industries, The Beav Woodworking, Heritage and Vine, Awkward Artist Studio, Sire Don Leather, Ink and Kiln, Unique Kink, and Leatherwick. Directory pages are linked from those names where ECKE has a listing.\n\n**Contact.** Published email: grandstrandaffair@gmail.com. Volunteer questions on Zeffy also list vol.grandstrandaffair@gmail.com. Presenter form: https://forms.gle/hEqc3tixv47WKVMe9. Volunteer form: https://forms.gle/QCSBnaYSUFAhjMJ57.",
+    "excerpt": "First-year 19+ educational weekend in Myrtle Beach, Nov 19–22, 2026. Classes, play spaces, and a vendor hall. Tickets on Zeffy.",
+    "longDescription": "Grand Strand Affair 2026 is a first-year educational kink convention in Myrtle Beach, South Carolina. The weekend is November 19–22, 2026, and it is 19+. East Coast Kink Events lists it as a featured sponsor convention. Tickets stay on the organizer’s Zeffy page — ECKE is not the box office.\n\n**Tickets.** Buy on [Zeffy](https://www.zeffy.com/en-US/ticketing/grand-strand-affair). Add-ons are on a separate [Zeffy shop](https://www.zeffy.com/en-US/ticketing/grand-strand-affair-add-ons). Confirm live prices there before you pay.\n\n**Hotel.** Book rooms through the [official hotel page](https://grandstrandaffair.com/hotel). Rooms reserved through that page are described as ocean-view and walkable to convention space.\n\n**Policies.** Official rules include 19+ with government ID. Read the [ticket policies](https://grandstrandaffair.com/ticket-policies) and [general event policies](https://grandstrandaffair.com/general-event-policies).\n\n**Program.** See the live [class list](https://grandstrandaffair.com/class-list) and [schedule](https://grandstrandaffair.com/general-event-schedule) on the official site. Programming includes education, dungeon and rope spaces, socials, a fashion show, and specialty rooms.\n\n**Vendors.** Makers are listed on the official [vendors page](https://grandstrandaffair.com/vendors). Appearances also show on ECKE [vendor listings](/vendors).\n\n**Contact.** Published email: grandstrandaffair@gmail.com.",
     "website": "https://grandstrandaffair.com/",
     "organizer": "Grand Strand Affair Ltd",
-    "venue": "Myrtle Beach host hotel (name not printed on the official hotel page)",
-    "hotel": "Official hotel page does not print a property name. Official tickets link a Hilton room block; an official hotel-page photo filename is labeled Ellie Beach Resort. Confirm on the official hotel and ticket pages.",
-    "hotelInformation": "Official hotel page does not print a property name. Rooms booked through their link are described as ocean-view and walkable to convention space. Official tickets link a Hilton room block (https://www.hilton.com/en/attend-my-event/ccff-2026-ellie-tapestry/). An official hotel-page photo filename is labeled Ellie Beach Resort. This is not a hotel takeover.",
+    "venue": "Myrtle Beach host hotel",
+    "hotel": "Book rooms through the official hotel page on grandstrandaffair.com/hotel. Rooms reserved through that page are described as ocean-view and walkable to convention space.",
+    "hotelInformation": "Book rooms through the official hotel page on grandstrandaffair.com/hotel. Rooms reserved through that page are described as ocean-view and walkable to convention space.",
     "ticketUrl": "https://www.zeffy.com/en-US/ticketing/grand-strand-affair",
     "programUrl": "https://grandstrandaffair.com/class-list",
     "ageRequirement": "19+ with government-issued photo ID — official event policies.",
@@ -3631,24 +3632,24 @@ export const events = [
     "presenterApplicationUrl": "https://forms.gle/hEqc3tixv47WKVMe9",
     "logo": "/images/events/brand-grand-strand-affair.png",
     "images": [
-      "/images/events/brand-grand-strand-affair.png",
-      "/images/events/grand-strand-affair-hero.png"
+    
+      "/images/events/brand-grand-strand-affair.png"
     ],
     "whyGo": [
+    
       "First-year Myrtle Beach educational weekend, Nov 19–22, 2026",
-      "40+ published classes plus play spaces and a vendor hall",
-      "19+ with government ID; tickets stay on official Zeffy",
+      "19+ convention with classes, play spaces, and a vendor hall",
+      "Tickets stay on official Zeffy — ECKE is not the box office",
       "Featured sponsor listing on East Coast Kink Events"
     ],
     "features": [
+    
       "Nov 19–22, 2026 · Myrtle Beach, SC",
       "First-year featured sponsor convention",
       "19+ with government photo ID",
-      "40+ classes from the official June 1, 2026 class list",
-      "Main, rope, and concierge dungeon spaces",
-      "Official vendor hall on grandstrandaffair.com/vendors",
+      "40+ classes, play spaces, and a vendor hall",
       "Tickets on Zeffy — ECKE is not the merchant of record",
-      "Hotel name not printed on the official hotel page"
+      "Rooms via the official hotel page"
     ],
     "seo": {
       "title": "Grand Strand Affair 2026 - Myrtle Beach",

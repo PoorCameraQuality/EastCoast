@@ -28,10 +28,18 @@ function looksLikeBanner(url: string): boolean {
 /**
  * Normalize event listing media from unified events (logo field may hold posters/banners).
  */
+function mediaAlt(name: string, kind: 'logo' | 'branding'): string {
+  const trimmed = (name || '').trim()
+  if (kind === 'logo') {
+    const brand = trimmed.replace(/\s+20\d{2}$/, '').trim() || trimmed
+    return `${brand || 'Event'} logo`
+  }
+  return `${trimmed || 'Event'} event branding`
+}
+
 export function normalizeEventMedia(
   event: Pick<UnifiedEvent, 'name' | 'logo' | 'source' | 'c2kSourceId'> & { heroImage?: string | null },
 ): EventMedia {
-  const alt = `${event.name} event branding`
   const hero = event.heroImage?.trim()
   const raw = event.logo?.trim()
   if (hero) {
@@ -39,14 +47,14 @@ export function normalizeEventMedia(
       bannerUrl: hero,
       imageUrl: hero,
       logoUrl: raw || hero,
-      alt,
+      alt: mediaAlt(event.name, 'branding'),
       source: mediaSource(event as UnifiedEvent),
       isBanner: true,
     }
   }
 
   if (!raw) {
-    return { alt, source: 'fallback', isBanner: false }
+    return { alt: mediaAlt(event.name, 'logo'), source: 'fallback', isBanner: false }
   }
 
   const source = mediaSource(event as UnifiedEvent)
@@ -57,7 +65,7 @@ export function normalizeEventMedia(
       bannerUrl: raw,
       imageUrl: raw,
       logoUrl: raw,
-      alt,
+      alt: mediaAlt(event.name, 'branding'),
       source,
       isBanner: true,
     }
@@ -66,7 +74,7 @@ export function normalizeEventMedia(
   return {
     logoUrl: raw,
     imageUrl: raw,
-    alt,
+    alt: mediaAlt(event.name, 'logo'),
     source,
     isBanner: false,
   }

@@ -27,6 +27,11 @@ const ORG_HTML_TAGS = [
 const orgHtmlSchema = {
   ...defaultSchema,
   tagNames: ORG_HTML_TAGS,
+  protocols: {
+    ...defaultSchema.protocols,
+    href: ['http', 'https', 'mailto'],
+    src: ['http', 'https'],
+  },
   attributes: {
     ...defaultSchema.attributes,
     a: [...(defaultSchema.attributes?.a || []), ['href'], ['target'], ['rel']],
@@ -40,6 +45,64 @@ const orgHtmlSchema = {
     ],
   },
 } as typeof defaultSchema
+
+const BARE_URL_RE = /(?:https?:\/\/|mailto:)[^\s<]+/gi
+
+/** http(s) and mailto only. Relative `/path` links are kept; javascript: is never safe. */
+export function isSafeListingHref(href: string): boolean {
+  const trimmed = (href || '').trim()
+  if (!trimmed) return false
+  if (/^(javascript|data|vbscript):/i.test(trimmed)) return false
+  if (/^https?:\/\//i.test(trimmed) || /^mailto:/i.test(trimmed)) return true
+  return trimmed.startsWith('/') && !trimmed.startsWith('//')
+}
+
+function splitUrlTrailer(raw: string): { href: string; trail: string } {
+  let href = raw
+  let trail = ''
+  while (href.length > 8 && /[),.;:!?]$/.test(href)) {
+    if (href.endsWith(')')) {
+      const open = (href.match(/\(/g) || []).length
+      const close = (href.match(/\)/g) || []).length
+      if (open >= close) break
+    }
+    trail = href.slice(-1) + trail
+    href = href.slice(0, -1)
+  }
+  return { href, trail }
+}
+
+function listingAnchor(href: string, label?: string): string {
+  const external = /^https?:\/\//i.test(href)
+  const attrs = external
+    ? ' rel="noopener noreferrer" target="_blank"'
+    : ' rel="noopener noreferrer"'
+  const text = label ?? href.replace(/^mailto:/i, '')
+  return `<a href="${href}"${attrs}>${text}</a>`
+}
+
+function linkifyPlainUrls(escapedText: string): string {
+  return escapedText.replace(BARE_URL_RE, (raw) => {
+    const { href, trail } = splitUrlTrailer(raw)
+    const decoded = href.replace(/&amp;/g, '&')
+    if (!isSafeListingHref(decoded)) return raw
+    return `${listingAnchor(decoded)}${trail}`
+  })
+}
+
+/** Turn bare http(s)/mailto URLs in text nodes into anchors. Leaves existing `<a>` alone. */
+export function linkifyBareUrlsInHtml(html: string): string {
+  if (!html) return ''
+  return html
+    .split(/(<a\b[^>]*>[\s\S]*?<\/a>)/gi)
+    .map((part) => {
+      if (/^<a\b/i.test(part)) return part
+      return part.replace(/(^|>)([^<]*)/g, (_full, prefix: string, text: string) => {
+        return `${prefix}${linkifyPlainUrls(text)}`
+      })
+    })
+    .join('')
+}
 
 export function orgCopyLooksLikeHtml(value: string | null | undefined): boolean {
   return /<(p|h[1-6]|ul|ol|li|blockquote|div|br|strong|em|a|img)\b/i.test(value || '')
@@ -61,10 +124,18 @@ function escapeHtml(value: string): string {
 
 function inlineMarkdown(value: string): string {
   const escaped = escapeHtml(value)
-  return escaped
-    .replace(/\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)/g, '<a href="$2" rel="noopener noreferrer" target="_blank">$1</a>')
+  const withMarkup = escaped
+    .replace(
+      /\[([^\]]+)\]\(((?:https?:\/\/|mailto:|\/)[^)\s]+)\)/g,
+      (_full, label: string, href: string) => {
+        const decoded = href.replace(/&amp;/g, '&')
+        if (!isSafeListingHref(decoded)) return label
+        return listingAnchor(decoded, label)
+      },
+    )
     .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
     .replace(/(^|[^*])\*([^*\n]+)\*/g, '$1<em>$2</em>')
+  return linkifyBareUrlsInHtml(withMarkup)
 }
 
 function listHtml(lines: string[]): string {
@@ -164,7 +235,7 @@ export function sanitizeOrgHtml(html: string): string {
 
 /** Stored markdown or HTML → sanitized HTML for public listing pages. */
 export function listingCopyToSafeHtml(input: string | null | undefined): string {
-  return sanitizeOrgHtml(orgCopyToEditorHtml(input))
+  return sanitizeOrgHtml(linkifyBareUrlsInHtml(orgCopyToEditorHtml(input)))
 }
 
 /** Card/meta copy: no tags, no leftover markdown asterisks. */

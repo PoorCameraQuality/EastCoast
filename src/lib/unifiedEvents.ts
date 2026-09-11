@@ -85,6 +85,8 @@ function staticToUnified(e: ReturnType<typeof getAllEvents>[number]): UnifiedEve
     organizer?: string
     isFeatured?: boolean
     featured?: boolean
+    eventKind?: string | null
+    event_type?: string | null
   }
   return {
     name: e.name,
@@ -103,6 +105,7 @@ function staticToUnified(e: ReturnType<typeof getAllEvents>[number]): UnifiedEve
     source: 'static',
     dancecardEnabled: Boolean(raw.dancecardEnabled || raw.dancecardSlug),
     organizer: raw.organizer,
+    eventKind: raw.eventKind || raw.event_type || undefined,
     featured: Boolean(raw.isFeatured || raw.featured),
   }
 }

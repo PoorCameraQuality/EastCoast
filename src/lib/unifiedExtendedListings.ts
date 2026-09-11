@@ -108,6 +108,29 @@ async function enrichListingHeroFromManifest(
   }
 }
 
+export async function fetchPublishedListingByOrgSlug(
+  entityType: ListingEntityType,
+  orgSlug: string,
+): Promise<KinkSocialListingRecord | null> {
+  if (entityType !== 'convention' && entityType !== 'group') return null
+  const config = LISTING_PROJECTIONS[entityType]
+  const client = getSupabaseServerClient()
+  if (!client) return null
+  try {
+    const { data, error } = await client
+      .from(config.table)
+      .select(selectColumns(entityType))
+      .eq('status', 'published')
+      .eq('org_slug', orgSlug.toLowerCase())
+      .order('name', { ascending: true })
+      .limit(1)
+    if (error || !data?.length) return null
+    return enrichListingHeroFromManifest(entityType, dbRowToRecord(data[0] as unknown as DbRow))
+  } catch {
+    return null
+  }
+}
+
 export async function fetchPublishedListingBySlug(
   entityType: ListingEntityType,
   slug: string,
