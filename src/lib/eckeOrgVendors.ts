@@ -6,6 +6,7 @@ import {
   buildShopSeoDescription,
   buildShopSeoKeywords,
   buildShopSeoTitle,
+  normalizeAppearanceEventSlugs,
   normalizeShopHubTags,
   slugifyShopSlug,
   type ManagedShopProduct,
@@ -38,6 +39,8 @@ export const MANAGED_SHOP_SELECT = [
   'seo_hub_tags',
   'tag_slugs',
   'accepts_commissions',
+  'commission_info',
+  'appearance_event_slugs',
   'status',
   'checkout_mode',
   'organization_id',
@@ -81,6 +84,8 @@ export const orgShopSchema = z
     city: z.string().max(80).optional().or(z.literal('')),
     state: z.string().max(2).optional().or(z.literal('')),
     acceptsCommissions: z.boolean().optional(),
+    commissionInfo: z.string().max(500).optional().or(z.literal('')),
+    appearanceEventSlugs: z.array(z.string().max(80)).max(24).optional(),
     hubTags: z.array(z.string().max(40)).max(7).optional(),
     checkoutMode: z.enum(['offsite', 'stripe']).optional(),
     status: z.enum(['draft', 'published']).optional(),
@@ -147,6 +152,7 @@ export function shopWritePayload(input: OrgShopInput, orgId: string, slug: strin
   const online = Boolean(input.isOnline)
   const status = input.status === 'draft' ? 'draft' : 'published'
   const hubTags = normalizeShopHubTags(input.hubTags)
+  const appearanceEventSlugs = normalizeAppearanceEventSlugs(input.appearanceEventSlugs)
   const seoTitle = buildShopSeoTitle({
     name: input.name.trim(),
     city: input.city,
@@ -167,6 +173,10 @@ export function shopWritePayload(input: OrgShopInput, orgId: string, slug: strin
     seo_hub_tags: hubTags,
     tag_slugs: taxonomySlugsFromSeoHubTags(hubTags),
     accepts_commissions: Boolean(input.acceptsCommissions),
+    commission_info: Boolean(input.acceptsCommissions)
+      ? (input.commissionInfo || '').trim() || null
+      : null,
+    appearance_event_slugs: appearanceEventSlugs,
     checkout_mode: 'offsite' as const,
     organization_id: orgId,
     status,
@@ -265,6 +275,8 @@ export function shopToUnified(shop: ManagedShopRow, products: ManagedShopProduct
       sortOrder: product.sort_order ?? index,
     })),
     acceptsCommissions: Boolean(shop.accepts_commissions),
+    commissionInfo: shop.commission_info?.trim() || undefined,
+    appearanceEventSlugs: shop.appearance_event_slugs || [],
     organizationId: shop.organization_id,
     status: shop.status,
     checkoutMode: shop.checkout_mode,

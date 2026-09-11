@@ -157,12 +157,19 @@ export function vendorToListing(
     vendor.tagSlugs.includes('custom-commission-vendor') ||
     vendor.tagSlugs.includes('custom-orders-available')
 
+  // Prefer the editable short description; fall back to a truncated story.
   const shortSummary =
-    getVendorCardPreviewText({ vendor, maxSentences: 2 }) || undefined
+    (vendor.description || '').trim() ||
+    getVendorCardPreviewText({ vendor, maxSentences: 2 }) ||
+    undefined
 
   const fromKinkSocial = Boolean(vendor.c2kSourceId)
   const kinkSocialVendorUrl = kinkSocialVendorUrlFor(vendor)
   const offsiteShopUrl = vendorOffsiteShopUrl(vendor.websiteUrl)
+  const commissionInfo = acceptsCommissions
+    ? (vendor.commissionInfo || '').trim() ||
+      'Custom commissions available — confirm details on the vendor site.'
+    : undefined
 
   return {
     id: vendor.slug,
@@ -187,7 +194,10 @@ export function vendorToListing(
     websiteUrl: offsiteShopUrl,
     contactEmail: vendor.contactEmail,
     acceptsCommissions,
-    commissionInfo: acceptsCommissions ? 'Custom commissions available — confirm details on the vendor site.' : undefined,
+    commissionInfo,
+    appearanceEventSlugs: vendor.appearanceEventSlugs?.length
+      ? [...vendor.appearanceEventSlugs]
+      : undefined,
     supporterTier: vendor.isPaid ? 'supporter' : 'none',
     dungeonListingSlug: vendor.dungeonListingSlug,
     kinkSocialVendorUrl,
@@ -249,32 +259,54 @@ export function filterByCategoryChip(
 }
 
 function normalizeName(s: string): string {
-  return s.toLowerCase().replace(/[^a-z0-9]+/g, ' ')
+  return s.toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim()
 }
 
+/**
+ * Legacy curated listings only: require the full vendor name in the event title.
+ * Do not match on generic tokens like "leather" — that falsely attached HOLO Leather
+ * to every leather-titled night.
+ */
 export function eventMatchesVendor(vendor: PublicVendorListing, event: PublicEventIndexItem): boolean {
   const vendorNorm = normalizeName(vendor.name)
-  const titleNorm = normalizeName(event.title)
-  const text = `${event.summary ?? ''} ${event.category} ${event.title}`.toLowerCase()
-  if (text.includes(vendorNorm)) return true
-  if (vendorNorm.split(' ').filter((w) => w.length > 3).some((w) => text.includes(w))) return true
-  return false
+  if (vendorNorm.length < 4) return false
+  return normalizeName(event.title).includes(vendorNorm)
+}
+
+export function eventIsVendorAppearance(
+  vendor: PublicVendorListing,
+  event: PublicEventIndexItem & { organizationId?: string | null },
+  eventOrganizationId?: string | null
+): boolean {
+  const orgId = eventOrganizationId ?? event.organizationId ?? null
+  if (vendor.organizationId && orgId && vendor.organizationId === orgId) return true
+  const linked = vendor.appearanceEventSlugs
+  if (linked?.length && linked.includes(event.slug)) return true
+  // Org-managed shops only show owned + explicitly linked appearances.
+  if (vendor.organizationId) return false
+  return eventMatchesVendor(vendor, event)
 }
 
 export function attachVendorEvents(
   vendors: PublicVendorListing[],
   unifiedEvents: UnifiedEvent[]
 ): PublicVendorListing[] {
-  const items = unifiedEvents.map(unifiedToIndexItem)
   const today = new Date()
   today.setHours(0, 0, 0, 0)
-  const upcoming = items.filter((e) => new Date(e.endsAt) >= today)
+  const upcoming = unifiedEvents
+    .filter((e) => new Date(e.date.end) >= today)
+    .sort((a, b) => new Date(a.date.start).getTime() - new Date(b.date.start).getTime())
 
   return vendors.map((vendor) => {
-    const matched = upcoming.filter((e) => eventMatchesVendor(vendor, e))
+    const matched = upcoming
+      .filter((e) =>
+        eventIsVendorAppearance(vendor, unifiedToIndexItem(e), e.organizationId ?? null)
+      )
+      .map(unifiedToIndexItem)
+      .slice(0, 12)
     return {
       ...vendor,
-      upcomingVendorEvents: matched.slice(0, 6),
+      upcomingVendorEvents: matched,
     }
   })
 }

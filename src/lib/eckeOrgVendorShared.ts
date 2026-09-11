@@ -1,6 +1,10 @@
 import { EAST_COAST_STATES } from '@/lib/eastCoastStates'
 import { slugifyEventSlug } from '@/lib/eckeOrgEventShared'
-import { VENDOR_SEO_HUB_TAG_SLUGS, type VendorSeoHubTagSlug } from '@/lib/vendorHubTagMap'
+import {
+  VENDOR_SEO_HUB_LABELS,
+  VENDOR_SEO_HUB_TAG_SLUGS,
+  type VendorSeoHubTagSlug,
+} from '@/lib/vendorHubTagMap'
 
 export { slugifyEventSlug as slugifyShopSlug }
 export { US_STATE_ABBR_OPTIONS, CANADA_STATE_ABBR_OPTIONS } from '@/lib/eckeOrgEventShared'
@@ -9,6 +13,7 @@ export { VENDOR_SEO_HUB_TAG_SLUGS, VENDOR_SEO_HUB_LABELS } from '@/lib/vendorHub
 export const SHOP_HUB_TAG_OPTIONS = VENDOR_SEO_HUB_TAG_SLUGS.map((slug) => ({
   slug,
   label: slug.charAt(0).toUpperCase() + slug.slice(1),
+  hint: VENDOR_SEO_HUB_LABELS[slug],
 }))
 
 export const RESERVED_VENDOR_SLUGS = new Set<string>([
@@ -36,6 +41,8 @@ export type OrgShopInput = {
   city?: string
   state?: string
   acceptsCommissions?: boolean
+  commissionInfo?: string
+  appearanceEventSlugs?: string[]
   hubTags?: string[]
   checkoutMode?: ShopCheckoutMode
   status?: ShopStatus
@@ -86,6 +93,8 @@ export type ManagedShopRow = {
   seo_hub_tags: string[] | null
   tag_slugs: string[] | null
   accepts_commissions: boolean
+  commission_info: string | null
+  appearance_event_slugs: string[] | null
   status: ShopStatus
   checkout_mode: ShopCheckoutMode
   organization_id: string | null
@@ -158,6 +167,19 @@ export function vendorContactMailto(email: string, shopName: string): string {
   return `mailto:${email}?subject=${subject}`
 }
 
+export function normalizeAppearanceEventSlugs(values: string[] | undefined): string[] {
+  const seen = new Set<string>()
+  const out: string[] = []
+  for (const raw of values || []) {
+    const slug = slugifyEventSlug(String(raw || ''))
+    if (slug.length < 3 || seen.has(slug)) continue
+    seen.add(slug)
+    out.push(slug)
+    if (out.length >= 24) break
+  }
+  return out
+}
+
 export function managedShopToFormValues(shop: ManagedShopRow): OrgShopInput {
   return {
     name: shop.name,
@@ -170,6 +192,8 @@ export function managedShopToFormValues(shop: ManagedShopRow): OrgShopInput {
     city: shop.online_only ? '' : shop.city || '',
     state: shop.online_only ? '' : shop.state || '',
     acceptsCommissions: shop.accepts_commissions,
+    commissionInfo: shop.commission_info || '',
+    appearanceEventSlugs: normalizeAppearanceEventSlugs(shop.appearance_event_slugs || []),
     hubTags: normalizeShopHubTags(shop.seo_hub_tags || []),
     checkoutMode: 'offsite',
     status: shop.status === 'draft' ? 'draft' : 'published',

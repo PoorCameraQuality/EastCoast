@@ -1,10 +1,12 @@
 'use client'
 
 import { useRef, useState } from 'react'
+import EckeLink from '@/components/EckeLink'
 import {
   CANADA_STATE_ABBR_OPTIONS,
   SHOP_HUB_TAG_OPTIONS,
   US_STATE_ABBR_OPTIONS,
+  normalizeAppearanceEventSlugs,
   slugifyShopSlug,
   type OrgShopInput,
 } from '@/lib/eckeOrgVendorShared'
@@ -14,14 +16,22 @@ const fieldClass =
 
 const sectionClass = 'rounded-xl border border-white/10 bg-sf-card/40 p-5 space-y-4'
 
+type OwnedEventOption = {
+  slug: string
+  title: string
+  status: string
+  startDate?: string | null
+}
+
 type Props = {
   mode: 'create' | 'edit'
   initial?: Partial<OrgShopInput>
   logoUrl?: string | null
   coverUrl?: string | null
+  ownedEvents?: OwnedEventOption[]
 }
 
-export default function OrgShopForm({ mode, initial, logoUrl, coverUrl }: Props) {
+export default function OrgShopForm({ mode, initial, logoUrl, coverUrl, ownedEvents = [] }: Props) {
   const slugEdited = useRef(mode === 'edit')
   const [values, setValues] = useState<OrgShopInput>({
     name: initial?.name || '',
@@ -34,10 +44,13 @@ export default function OrgShopForm({ mode, initial, logoUrl, coverUrl }: Props)
     city: initial?.city || '',
     state: initial?.state || '',
     acceptsCommissions: initial?.acceptsCommissions || false,
+    commissionInfo: initial?.commissionInfo || '',
+    appearanceEventSlugs: initial?.appearanceEventSlugs || [],
     hubTags: initial?.hubTags || [],
     checkoutMode: 'offsite',
     status: initial?.status || 'published',
   })
+  const [appearanceDraft, setAppearanceDraft] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const [logoPreview, setLogoPreview] = useState(logoUrl || '')
@@ -56,6 +69,23 @@ export default function OrgShopForm({ mode, initial, logoUrl, coverUrl }: Props)
         hubTags: tags.includes(slug) ? tags.filter((item) => item !== slug) : [...tags, slug],
       }
     })
+  }
+
+  function addAppearanceSlug(raw: string) {
+    const slug = slugifyShopSlug(raw)
+    if (slug.length < 3) return
+    setValues((current) => ({
+      ...current,
+      appearanceEventSlugs: normalizeAppearanceEventSlugs([...(current.appearanceEventSlugs || []), slug]),
+    }))
+    setAppearanceDraft('')
+  }
+
+  function removeAppearanceSlug(slug: string) {
+    setValues((current) => ({
+      ...current,
+      appearanceEventSlugs: (current.appearanceEventSlugs || []).filter((item) => item !== slug),
+    }))
   }
 
   async function onSubmit(e: React.FormEvent) {
@@ -99,6 +129,8 @@ export default function OrgShopForm({ mode, initial, logoUrl, coverUrl }: Props)
   }
 
   const previewSlug = slugifyShopSlug(values.slug || values.name || '')
+  const ownedPublished = ownedEvents.filter((event) => event.status === 'published')
+  const linkedSlugs = values.appearanceEventSlugs || []
 
   return (
     <form onSubmit={onSubmit} className="space-y-6">
@@ -110,6 +142,10 @@ export default function OrgShopForm({ mode, initial, logoUrl, coverUrl }: Props)
 
       <section className={sectionClass}>
         <h2 className="text-lg font-semibold text-sf-strong">Shop profile</h2>
+        <p className="text-xs text-sf-muted">
+          These fields map 1:1 to your public storefront. Save to update eastcoastkinkevents.com/vendors/
+          {previewSlug || 'your-shop'}.
+        </p>
         <label className="block text-sm text-sf-body">
           Shop name
           <input
@@ -148,6 +184,7 @@ export default function OrgShopForm({ mode, initial, logoUrl, coverUrl }: Props)
         </div>
         <label className="block text-sm text-sf-body">
           Short description
+          <span className="mt-0.5 block text-xs text-sf-muted">Shows under your name on the public page.</span>
           <textarea
             className={fieldClass}
             rows={3}
@@ -159,6 +196,7 @@ export default function OrgShopForm({ mode, initial, logoUrl, coverUrl }: Props)
         </label>
         <label className="block text-sm text-sf-body">
           Story
+          <span className="mt-0.5 block text-xs text-sf-muted">Shows in “About the maker”.</span>
           <textarea
             className={fieldClass}
             rows={8}
@@ -169,6 +207,7 @@ export default function OrgShopForm({ mode, initial, logoUrl, coverUrl }: Props)
         </label>
         <label className="block text-sm text-sf-body">
           Offsite shop / website
+          <span className="mt-0.5 block text-xs text-sf-muted">Powers Visit shop.</span>
           <input
             className={fieldClass}
             value={values.website || ''}
@@ -178,6 +217,7 @@ export default function OrgShopForm({ mode, initial, logoUrl, coverUrl }: Props)
         </label>
         <label className="block text-sm text-sf-body">
           Contact email
+          <span className="mt-0.5 block text-xs text-sf-muted">Powers Contact vendor (mailto).</span>
           <input
             className={fieldClass}
             type="email"
@@ -188,9 +228,6 @@ export default function OrgShopForm({ mode, initial, logoUrl, coverUrl }: Props)
             autoComplete="email"
           />
         </label>
-        <p className="text-xs text-sf-muted">
-          Contact vendor on your public page opens this address. Buy buttons still go to your offsite checkout.
-        </p>
       </section>
 
       <section className={sectionClass}>
@@ -235,6 +272,7 @@ export default function OrgShopForm({ mode, initial, logoUrl, coverUrl }: Props)
 
       <section className={sectionClass}>
         <h2 className="text-lg font-semibold text-sf-strong">What you make</h2>
+        <p className="text-xs text-sf-muted">These become the public craft pills and “What they make” tiles.</p>
         <div className="flex flex-wrap gap-2">
           {SHOP_HUB_TAG_OPTIONS.map((tag) => {
             const on = (values.hubTags || []).includes(tag.slug)
@@ -242,6 +280,7 @@ export default function OrgShopForm({ mode, initial, logoUrl, coverUrl }: Props)
               <button
                 key={tag.slug}
                 type="button"
+                title={tag.hint}
                 onClick={() => toggleHub(tag.slug)}
                 className={
                   on
@@ -262,7 +301,102 @@ export default function OrgShopForm({ mode, initial, logoUrl, coverUrl }: Props)
           />
           Accepts custom commissions
         </label>
+        {values.acceptsCommissions ? (
+          <label className="block text-sm text-sf-body">
+            Commission details
+            <span className="mt-0.5 block text-xs text-sf-muted">Shows in the Custom commissions section.</span>
+            <textarea
+              className={fieldClass}
+              rows={3}
+              value={values.commissionInfo || ''}
+              onChange={(e) => setField('commissionInfo', e.target.value)}
+              maxLength={500}
+              placeholder="Lead times, custom options, how to inquire…"
+            />
+          </label>
+        ) : null}
       </section>
+
+      {mode === 'edit' ? (
+        <section className={sectionClass}>
+          <h2 className="text-lg font-semibold text-sf-strong">Upcoming vending appearances</h2>
+          <p className="text-xs text-sf-muted">
+            Your public page lists published events you manage under{' '}
+            <EckeLink href="/events/my-events" className="underline">
+              My events
+            </EckeLink>
+            , plus any extra event URLs you add below. It no longer guesses from words like “leather”.
+          </p>
+          {ownedPublished.length ? (
+            <ul className="space-y-2 text-sm text-sf-body">
+              {ownedPublished.map((event) => (
+                <li
+                  key={event.slug}
+                  className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-white/10 px-3 py-2"
+                >
+                  <span>
+                    {event.title}
+                    <span className="ml-2 text-xs text-sf-muted">/{event.slug}</span>
+                  </span>
+                  <EckeLink href={`/events/${event.slug}/edit`} className="text-xs underline text-sf-muted">
+                    Edit event
+                  </EckeLink>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="text-sm text-sf-muted">
+              No published events in My events yet.{' '}
+              <EckeLink href="/events/create" className="underline">
+                Create one
+              </EckeLink>{' '}
+              or link an existing ECKE event slug below.
+            </p>
+          )}
+          <div>
+            <p className="text-sm text-sf-body">Also appearing at</p>
+            {linkedSlugs.length ? (
+              <ul className="mt-2 space-y-2">
+                {linkedSlugs.map((slug) => (
+                  <li
+                    key={slug}
+                    className="flex items-center justify-between gap-2 rounded-lg border border-white/10 px-3 py-2 text-sm"
+                  >
+                    <EckeLink href={`/events/${slug}`} className="underline text-sf-body">
+                      /events/{slug}
+                    </EckeLink>
+                    <button
+                      type="button"
+                      className="text-xs text-rose-200 underline"
+                      onClick={() => removeAppearanceSlug(slug)}
+                    >
+                      Remove
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="mt-1 text-xs text-sf-muted">No extra appearances linked.</p>
+            )}
+            <div className="mt-3 flex flex-wrap gap-2">
+              <input
+                className={`${fieldClass} mt-0 flex-1 min-w-[12rem]`}
+                value={appearanceDraft}
+                onChange={(e) => setAppearanceDraft(e.target.value)}
+                placeholder="event-slug or /events/event-slug"
+                aria-label="Event slug to add as an appearance"
+              />
+              <button
+                type="button"
+                className="sf-btn-secondary min-h-11 px-4"
+                onClick={() => addAppearanceSlug(appearanceDraft.replace(/^\/events\//i, ''))}
+              >
+                Add appearance
+              </button>
+            </div>
+          </div>
+        </section>
+      ) : null}
 
       {mode === 'edit' ? (
         <section className={sectionClass}>

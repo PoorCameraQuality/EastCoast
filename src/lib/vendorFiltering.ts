@@ -27,6 +27,10 @@ export type VendorRecord = {
   productImage125ByTagSlug?: Record<string, string>
   listings?: VendorMirroredListing[]
   acceptsCommissions?: boolean
+  /** Optional public commission blurb (org shops). */
+  commissionInfo?: string
+  /** Explicit upcoming appearance event slugs (org shops). */
+  appearanceEventSlugs?: string[]
   kinkSocialCanonicalPath?: string | null
   /** When set, links to the matching dungeon directory page (same slug) */
   dungeonListingSlug?: string

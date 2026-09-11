@@ -38,6 +38,8 @@ export type UnifiedEvent = {
   venue?: string | null
   /** Sticky featured / sponsor pin from events.js `isFeatured` or events.featured. */
   featured?: boolean
+  /** Owning ECKE organization when this is an org-managed listing. */
+  organizationId?: string | null
 }
 
 function slugifyTag(raw: string): string {
@@ -163,6 +165,7 @@ function dbRowToUnified(row: Record<string, unknown>): UnifiedEvent | null {
     dungeonVenueId: (row.dungeon_venue_id as string | null) ?? null,
     venue: ((row.venue as string) || '').trim() || null,
     featured: Boolean(row.featured),
+    organizationId: (row.organization_id as string | null) ?? null,
   }
 }
 
@@ -180,7 +183,7 @@ export async function fetchPublishedSupabaseEvents(): Promise<UnifiedEvent[]> {
     const { data, error } = await client
       .from('events')
       .select(
-        'title, slug, start_date, end_date, display_date, city, state, short_description, category, logo, tags, status, c2k_source_id, c2k_source_type, last_synced_at, organizer, organizer_name, event_type, dungeon_slug, dungeon_venue_id, venue, featured'
+        'title, slug, start_date, end_date, display_date, city, state, short_description, category, logo, tags, status, c2k_source_id, c2k_source_type, last_synced_at, organizer, organizer_name, event_type, dungeon_slug, dungeon_venue_id, venue, featured, organization_id'
       )
       .eq('status', 'published')
 

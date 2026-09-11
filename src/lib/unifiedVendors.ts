@@ -90,6 +90,8 @@ type DbVendorRow = {
   tag_slugs?: string[] | null
   kink_social_canonical_path?: string | null
   accepts_commissions?: boolean | null
+  commission_info?: string | null
+  appearance_event_slugs?: string[] | null
   last_synced_at?: string | null
   meta_title: string | null
   meta_description: string | null
@@ -183,6 +185,8 @@ export function dbRowToUnified(row: DbVendorRow, seoTagSlugs: string[]): Unified
     coverUrl: row.cover_url || undefined,
     listings: parseDbListings(row.listings),
     acceptsCommissions: Boolean(row.accepts_commissions),
+    commissionInfo: row.commission_info?.trim() || undefined,
+    appearanceEventSlugs: uniqueStrings(asStringList(row.appearance_event_slugs)),
     kinkSocialCanonicalPath: row.kink_social_canonical_path ?? null,
     isPaid: false,
     c2kSourceId: row.c2k_source_id ?? null,
@@ -226,7 +230,7 @@ export async function fetchPublishedSupabaseVendors(): Promise<UnifiedVendor[]> 
     let { data: vrows, error: vErr } = await client
       .from('vendors')
       .select(
-        'id, slug, name, description, short_description, website_url, contact_email, city, state, online_only, logo_url, cover_url, listings, seo_hub_tags, tag_slugs, kink_social_canonical_path, accepts_commissions, last_synced_at, meta_title, meta_description, c2k_source_id, c2k_source_type, organization_id, status, checkout_mode',
+        'id, slug, name, description, short_description, website_url, contact_email, city, state, online_only, logo_url, cover_url, listings, seo_hub_tags, tag_slugs, kink_social_canonical_path, accepts_commissions, commission_info, appearance_event_slugs, last_synced_at, meta_title, meta_description, c2k_source_id, c2k_source_type, organization_id, status, checkout_mode',
       )
       .eq('status', 'published')
       .or('c2k_source_id.not.is.null,organization_id.not.is.null')

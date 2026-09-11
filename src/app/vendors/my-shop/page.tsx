@@ -4,6 +4,7 @@ import EckeLink from '@/components/EckeLink'
 import OrgShopForm from '@/components/org/OrgShopForm'
 import OrgShopProducts from '@/components/org/OrgShopProducts'
 import { requireOrgSession } from '@/lib/eckeOrgAuth'
+import { listManagedEvents } from '@/lib/eckeOrgEvents'
 import { listShopProducts, requireOwnedShop } from '@/lib/eckeOrgVendors'
 import { managedShopToFormValues } from '@/lib/eckeOrgVendorShared'
 
@@ -19,6 +20,7 @@ export default async function MyShopPage() {
   const gated = await requireOwnedShop()
   const shop = gated.shop
   const products = shop ? await listShopProducts(shop.id) : []
+  const ownedEvents = shop ? await listManagedEvents(session.organization.id) : []
 
   return (
     <main className="container-custom py-12 md:py-16">
@@ -52,6 +54,12 @@ export default async function MyShopPage() {
             }
             logoUrl={shop?.logo_url}
             coverUrl={shop?.cover_url}
+            ownedEvents={ownedEvents.map((event) => ({
+              slug: event.slug,
+              title: event.title,
+              status: event.status || 'draft',
+              startDate: event.start_date,
+            }))}
           />
         </div>
 

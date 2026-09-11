@@ -50,6 +50,8 @@ export type PublicVendorListing = {
   acceptsCommissions?: boolean
   commissionInfo?: string
 
+  /** Explicit event slugs for upcoming vending appearances (org shops). */
+  appearanceEventSlugs?: string[]
   tabledAtEvents?: PublicEventIndexItem[]
   upcomingVendorEvents?: PublicEventIndexItem[]
 
