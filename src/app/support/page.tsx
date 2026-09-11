@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import Breadcrumb from '@/components/Breadcrumb'
 import VendorImage from '@/components/vendors/VendorImage'
-import KinkSocialAlphaSponsorCard from '@/components/KinkSocialAlphaSponsorCard'
+import SiteSponsorPromoCard from '@/components/SiteSponsorPromoCard'
 import { getSiteSponsorPromo } from '@/data/siteSponsor'
 import { getSiteSponsorVendor } from '@/data/vendors'
 import { BASE_URL } from '@/lib/seo'
@@ -68,7 +68,7 @@ export default function SupportPage() {
 
           {sponsorPromo ? (
             <section className="mb-8">
-              <KinkSocialAlphaSponsorCard promo={sponsorPromo} variant="wide" />
+              <SiteSponsorPromoCard promo={sponsorPromo} variant="wide" />
             </section>
           ) : sponsorVendor ? (
             <section className="mb-8">

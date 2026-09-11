@@ -5,6 +5,7 @@ import AdaptiveEventMedia from '@/components/storefront/AdaptiveEventMedia'
 import { trackSelectItemEntity } from '@/lib/analyticsEntities'
 import { eventBrandStyle } from '@/lib/eventBrandTheme'
 import { type EventIndexCardModel } from '@/lib/publicEventIndex'
+import { isSiteSponsorEventSlug } from '@/data/siteSponsor'
 
 type Props = {
   item: EventIndexCardModel
@@ -32,6 +33,7 @@ export default function EventIndexCard({
   const isPast = variant === 'past'
   const isFeatured = variant === 'featured'
   const isCompact = !isFeatured
+  const isSiteSponsor = isSiteSponsorEventSlug(item.slug)
   const href = `/events/${item.slug}`
   const viewLabel = isPast
     ? 'View archive'
@@ -68,6 +70,7 @@ export default function EventIndexCard({
             {item.city}, {item.state}
           </p>
           <div className="event-index-card-badges">
+            {isSiteSponsor ? <span className="event-tag event-tag-sponsor">Site sponsor</span> : null}
             <span className="event-tag">{typeBadge(item)}</span>
             {item.dancecardEnabled ? <span className="event-tag event-tag-muted">Dancecard</span> : null}
           </div>

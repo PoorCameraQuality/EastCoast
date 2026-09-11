@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import VendorImage from '@/components/vendors/VendorImage'
-import KinkSocialAlphaSponsorCard from '@/components/KinkSocialAlphaSponsorCard'
+import SiteSponsorPromoCard from '@/components/SiteSponsorPromoCard'
 import { getSiteSponsorPromo } from '@/data/siteSponsor'
 import { getSiteSponsorVendor } from '@/data/vendors'
 
@@ -35,7 +35,7 @@ export default function SupportCTAInline({ contextLabel, variant = 'stack' }: Pr
     >
       <div className={`flex flex-col ${isAside ? 'gap-3' : 'gap-4'}`}>
         {sponsorPromo ? (
-          <KinkSocialAlphaSponsorCard promo={sponsorPromo} variant="compact" />
+          <SiteSponsorPromoCard promo={sponsorPromo} variant="compact" />
         ) : sponsorVendor ? (
           <div
             className={`relative overflow-visible rounded-xl border border-amber-300/40 bg-black/70 vendor-sponsor-glitter ${

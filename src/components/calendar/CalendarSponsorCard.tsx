@@ -1,5 +1,5 @@
 import EckeLink from '@/components/EckeLink'
-import KinkSocialAlphaSponsorCard from '@/components/KinkSocialAlphaSponsorCard'
+import SiteSponsorPromoCard from '@/components/SiteSponsorPromoCard'
 import VendorImage from '@/components/vendors/VendorImage'
 import { getSiteSponsorPromo } from '@/data/siteSponsor'
 import { getSiteSponsorVendor } from '@/data/vendors'
@@ -10,8 +10,8 @@ export default function CalendarSponsorCard() {
 
   if (sponsorPromo) {
     return (
-      <aside className="cal-sponsor-card" aria-label="Sponsor spotlight">
-        <KinkSocialAlphaSponsorCard promo={sponsorPromo} variant="compact" />
+      <aside className="cal-sponsor-card" aria-label="Site sponsor">
+        <SiteSponsorPromoCard promo={sponsorPromo} variant="compact" />
       </aside>
     )
   }

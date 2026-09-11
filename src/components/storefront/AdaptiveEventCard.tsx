@@ -7,6 +7,7 @@ import { categoryBadges } from '@/components/storefront/eventDateBlock'
 import { trackSelectItemEntity } from '@/lib/analyticsEntities'
 import type { StorefrontEvent } from '@/lib/homepageStorefrontData'
 import { eventBrandStyle } from '@/lib/eventBrandTheme'
+import { isSiteSponsorEventSlug } from '@/data/siteSponsor'
 
 type Props = {
   event: StorefrontEvent
@@ -24,6 +25,7 @@ export default function AdaptiveEventCard({
   const badges = categoryBadges(event.category, event.tagSlugs)
   const isShowcase = size === 'showcase'
   const isFeatured = size === 'featured'
+  const isSiteSponsor = isSiteSponsorEventSlug(event.slug)
   const eventHref = `/events/${event.slug}`
 
   const trackEventClick = () =>
@@ -52,7 +54,8 @@ export default function AdaptiveEventCard({
         <div className="event-product-body">
           <div className="flex flex-wrap items-center gap-2">
             <EventDatePill start={event.date.start} end={event.date.end} display={event.date.display} />
-            {badges.slice(0, 2).map((b, i) => (
+            {isSiteSponsor ? <span className="event-tag event-tag-sponsor">Site sponsor</span> : null}
+            {badges.slice(0, isSiteSponsor ? 1 : 2).map((b, i) => (
               <span key={b} className={i === 1 ? 'event-tag event-tag-muted' : 'event-tag'}>
                 {b}
               </span>

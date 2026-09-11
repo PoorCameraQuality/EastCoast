@@ -6,6 +6,7 @@ import type { EventBrandTheme } from '@/lib/eventBrandTheme'
 import { eventBrandStyle } from '@/lib/eventBrandTheme'
 import type { EventPageRecord } from '@/lib/unifiedEvents'
 import { openEventApplications } from '@/lib/eckeOrgEventAssets'
+import { isSiteSponsorEventSlug } from '@/data/siteSponsor'
 
 type Props = {
   event: EventPageRecord
@@ -16,6 +17,7 @@ type Props = {
 export default function EventBrandMasthead({ event, media, brand }: Props) {
   const style = eventBrandStyle(brand)
   const applications = openEventApplications(event)
+  const isSiteSponsor = isSiteSponsorEventSlug(event.slug)
 
   return (
     <div className="event-masthead" style={style} data-treatment={brand.treatment}>
@@ -34,6 +36,12 @@ export default function EventBrandMasthead({ event, media, brand }: Props) {
               </a>
             ))}
           </div>
+        ) : null}
+        {isSiteSponsor ? (
+          <p className="event-masthead-sponsor">
+            <span className="event-masthead-sponsor-badge">Site sponsor</span>
+            <span className="event-masthead-sponsor-note">Supporting East Coast Kink Events</span>
+          </p>
         ) : null}
         <p className="event-masthead-type">{event.category}</p>
         <h1 className="event-masthead-title">{event.name}</h1>

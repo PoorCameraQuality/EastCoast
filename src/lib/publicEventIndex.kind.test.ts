@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict'
 import { describe, it } from 'node:test'
 import type { UnifiedEvent } from '@/lib/unifiedEvents'
+import { isSiteSponsorEventSlug, SITE_SPONSOR_PROMO } from '@/data/siteSponsor'
 import {
   eventSlugFromInternalHref,
   featuredScore,
@@ -127,5 +128,8 @@ describe('national convention vs local nights', () => {
     )
     assert.equal(rail[0]?.slug, 'grand-strand-affair-2026')
     assert.equal(rail.length, 2)
+    assert.equal(SITE_SPONSOR_PROMO?.href, '/events/grand-strand-affair-2026')
+    assert.equal(isSiteSponsorEventSlug('grand-strand-affair-2026'), true)
+    assert.equal(isSiteSponsorEventSlug('florida-fetish-weekend-2026'), false)
   })
 })
