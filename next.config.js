@@ -175,10 +175,25 @@ const nextConfig = {
       // Temporary redirect for Add Event until form is built
       { source: '/events/add', destination: '/contact?subject=Event%20Submission', permanent: false },
       
-      // Fix typo: costal -> coastal (must come before generic kinkeventcalendar redirect)
+      // Coastal Carolina Fetish Fair ended — Grand Strand Affair is the Myrtle Beach replacement
       {
         source: '/kinkeventcalendar/costal-carolina-fetish-fair',
-        destination: '/events/coastal-carolina-fetish-fair',
+        destination: '/events/grand-strand-affair-2026',
+        permanent: true,
+      },
+      {
+        source: '/kinkeventcalendar/coastal-carolina-fetish-fair',
+        destination: '/events/grand-strand-affair-2026',
+        permanent: true,
+      },
+      {
+        source: '/events/coastal-carolina-fetish-fair',
+        destination: '/events/grand-strand-affair-2026',
+        permanent: true,
+      },
+      {
+        source: '/events/coastal-carolina-fetish-fair/:path*',
+        destination: '/events/grand-strand-affair-2026',
         permanent: true,
       },
       // Redirect old kinkeventcalendar URLs to new events structure (catch-all for nested paths)
@@ -318,10 +333,15 @@ const nextConfig = {
         destination: '/dungeons/the-woodshed-orlando-florida',
         permanent: true,
       },
-      // Fix event URL typo (typo correction only - trailing slashes handled automatically)
+      // Typo + retired Coastal Carolina Fetish Fair → Grand Strand Affair
+      {
+        source: '/events/costal-carolina-fetish-fair',
+        destination: '/events/grand-strand-affair-2026',
+        permanent: true,
+      },
       {
         source: '/events/costal-carolina-fetish-fair/:path*',
-        destination: '/events/coastal-carolina-fetish-fair',
+        destination: '/events/grand-strand-affair-2026',
         permanent: true,
       },
       // Handle removed education articles

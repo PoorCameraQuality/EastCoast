@@ -68,9 +68,9 @@ function testTitleOptimization() {
       slug: "naughty-noel"
     },
     {
-      name: "Coastal Carolina Fetish Fair",
-      date: { start: "2025-06-15" },
-      slug: "coastal-carolina-fetish-fair"
+      name: "Grand Strand Affair 2026",
+      date: { start: "2026-11-19" },
+      slug: "grand-strand-affair-2026"
     }
   ]
 

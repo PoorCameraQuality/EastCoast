@@ -1050,46 +1050,6 @@ export const events = [
     }
   },
   {
-    "name": "Coastal Carolina Fetish Fair 2026",
-    "slug": "coastal-carolina-fetish-fair",
-    "date": {
-      "start": "2026-11-01",
-      "end": "2026-11-30",
-      "display": "Dates TBA - November 2026 (check organizer site)"
-    },
-    "status": "tba",
-    "location": {
-      "city": "Myrtle Beach",
-      "state": "SC",
-      "region": "North Eastern, South Carolina"
-    },
-    "category": "Indoor Event",
-    "excerpt": "ECKE recommends Coastal Carolina Fetish Fair for Myrtle Beach–bound kinksters who want to shop top toymakers, meet BDSM vendors, and attend workshops in one weekend. Confirm 2026 dates with organizers—coastalcarolinafetishfair.com was unreachable in June 2026.",
-    "longDescription": "Have a blast with other kinksters while exploring a curated vendor fair with the best toymakers, BDSM vendors, and specialty service providers. Enjoy education, friends, and fun across a weekend designed for discovering lifestyle products and meeting favorite craftsmen and presenters.\n\n**IMPORTANT: 2026 dates have not been officially published on the public site as of our last review (June 2026). The organizer website was unreachable during our audit—contact organizers directly before booking. Placeholder month window only.**",
-    "website": "https://coastalcarolinafetishfair.com/",
-    "hotel": "Typically The Ellie Beach Resort Myrtle Beach, Tapestry by Hilton (confirm year with organizer)",
-    "logo": "/images/CoastalCarolina.PNG",
-    "features": [
-      "Vendor-Focused Weekend",
-      "Top Toymakers",
-      "BDSM Vendors",
-      "Specialty Service Providers",
-      "Educational Opportunities",
-      "Shopping Experience",
-      "Community Connection",
-      "Lifestyle Products",
-      "Craftsmen & Presenters",
-      "Hotel Room Block Available",
-      "Group Preferred Rates",
-      "Myrtle Beach Location"
-    ],
-    "seo": {
-      "title": "Coastal Carolina Fetish Fair 2026: Myrtle Beach",
-      "description": "Coastal Carolina Fetish Fair is a Myrtle Beach BDSM vendor weekend with toy makers, workshops, community, and hotel details. Confirm 2026 dates with the organizer.",
-      "keywords": "Coastal Carolina Fetish Fair, Myrtle Beach, South Carolina, BDSM vendors, kink fair, education, hotel"
-    }
-  },
-  {
     "name": "Naughty Noel 2026",
     "slug": "naughty-noel",
     "date": {

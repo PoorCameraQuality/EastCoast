@@ -38,6 +38,8 @@ const soft404Urls = [
   '/events/dungeons-and-geekdoms/',
   '/events/costal-carolina-fetish-fair',
   '/events/costal-carolina-fetish-fair/',
+  '/events/coastal-carolina-fetish-fair',
+  '/events/coastal-carolina-fetish-fair/',
 ];
 
 // Expected redirect destinations
@@ -62,8 +64,10 @@ const expectedRedirects = {
   '/kinkeventcalendar/dungeons-and-geekdoms': '/events/dungeons-geekdoms',
   '/events/kinkycon-summer-co-op/': '/events/kinkycon-summer-co-op',
   '/events/dungeons-and-geekdoms/': '/events/dungeons-geekdoms',
-  '/events/costal-carolina-fetish-fair': '/events/coastal-carolina-fetish-fair',
-  '/events/costal-carolina-fetish-fair/': '/events/coastal-carolina-fetish-fair',
+  '/events/costal-carolina-fetish-fair': '/events/grand-strand-affair-2026',
+  '/events/costal-carolina-fetish-fair/': '/events/grand-strand-affair-2026',
+  '/events/coastal-carolina-fetish-fair': '/events/grand-strand-affair-2026',
+  '/events/coastal-carolina-fetish-fair/': '/events/grand-strand-affair-2026',
 };
 
 async function testUrl(url) {

@@ -28,7 +28,8 @@ export async function middleware(req: NextRequest) {
   const pathLower = pathname.toLowerCase()
   if (pathLower === '/kinkeventcalendar' || pathLower.startsWith('/kinkeventcalendar/')) {
     const legacyEventRedirects: Record<string, string> = {
-      'costal-carolina-fetish-fair': 'coastal-carolina-fetish-fair',
+      'costal-carolina-fetish-fair': 'grand-strand-affair-2026',
+      'coastal-carolina-fetish-fair': 'grand-strand-affair-2026',
       campcrucible2024: 'camp-crucible',
       summercamp: 'dark-odyssey-summer-camp',
       'dungeons-and-geekdoms': 'dungeons-geekdoms',
