@@ -27,6 +27,8 @@ export type PublicEventIndexItem = {
   city: string
   state: string
   regionLabel?: string
+  /** Venue / dungeon name when known (e.g. The Korral). */
+  venueName?: string
 
   logoUrl?: string
   bannerUrl?: string

@@ -34,6 +34,8 @@ export type UnifiedEvent = {
   eventKind?: string | null
   dungeonSlug?: string | null
   dungeonVenueId?: string | null
+  /** Host venue name when published (e.g. The Korral). */
+  venue?: string | null
   /** Sticky featured / sponsor pin from events.js `isFeatured` or events.featured. */
   featured?: boolean
 }
@@ -87,6 +89,9 @@ function staticToUnified(e: ReturnType<typeof getAllEvents>[number]): UnifiedEve
     featured?: boolean
     eventKind?: string | null
     event_type?: string | null
+    dungeonSlug?: string | null
+    dungeon_slug?: string | null
+    venue?: string | null
   }
   return {
     name: e.name,
@@ -106,6 +111,8 @@ function staticToUnified(e: ReturnType<typeof getAllEvents>[number]): UnifiedEve
     dancecardEnabled: Boolean(raw.dancecardEnabled || raw.dancecardSlug),
     organizer: raw.organizer,
     eventKind: raw.eventKind || raw.event_type || undefined,
+    dungeonSlug: raw.dungeonSlug || raw.dungeon_slug || undefined,
+    venue: raw.venue || (e as { venue?: string }).venue || undefined,
     featured: Boolean(raw.isFeatured || raw.featured),
   }
 }
@@ -154,6 +161,7 @@ function dbRowToUnified(row: Record<string, unknown>): UnifiedEvent | null {
     eventKind: (row.event_type as string | null) ?? null,
     dungeonSlug: (row.dungeon_slug as string | null) ?? null,
     dungeonVenueId: (row.dungeon_venue_id as string | null) ?? null,
+    venue: ((row.venue as string) || '').trim() || null,
     featured: Boolean(row.featured),
   }
 }
@@ -172,7 +180,7 @@ export async function fetchPublishedSupabaseEvents(): Promise<UnifiedEvent[]> {
     const { data, error } = await client
       .from('events')
       .select(
-        'title, slug, start_date, end_date, display_date, city, state, short_description, category, logo, tags, status, c2k_source_id, c2k_source_type, last_synced_at, organizer, organizer_name, event_type, dungeon_slug, dungeon_venue_id, featured'
+        'title, slug, start_date, end_date, display_date, city, state, short_description, category, logo, tags, status, c2k_source_id, c2k_source_type, last_synced_at, organizer, organizer_name, event_type, dungeon_slug, dungeon_venue_id, venue, featured'
       )
       .eq('status', 'published')
 

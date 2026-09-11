@@ -756,6 +756,38 @@
   gap: 0.45rem;
 }
 
+.st-event-runway-pager {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.65rem 0.85rem;
+  margin-top: 0.85rem;
+}
+
+.st-event-runway-count {
+  font-size: 0.75rem;
+  color: #94a3b8;
+}
+
+.st-event-runway-more {
+  min-height: 2.5rem;
+}
+
+.st-event-runway-reset {
+  font-size: 0.75rem;
+  color: #a78bfa;
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+  background: transparent;
+  border: 0;
+  padding: 0.25rem 0;
+  cursor: pointer;
+}
+
+.st-event-runway-reset:hover {
+  color: #ddd6fe;
+}
+
 .st-featured-event {
   border-radius: 0.875rem;
   border: 1px solid rgba(167, 139, 250, 0.25);

@@ -7,6 +7,7 @@ import type {
 import { normalizeEventMedia, type EventMedia } from '@/lib/eventMedia'
 import { fallbackTheme, type EventBrandTheme } from '@/lib/eventBrandTheme'
 import { getEventThemeOverride } from '@/lib/eventThemeOverrides'
+import { getDungeonBySlug } from '@/data/dungeons'
 
 export type EventIndexCardModel = PublicEventIndexItem & {
   media: EventMedia
@@ -100,6 +101,35 @@ export function isNationalConventionListing(item: PublicEventIndexItem): boolean
   return eventDurationDays(item) >= 2
 }
 
+/** Prefer published venue string; fall back to linked dungeon display name. */
+export function resolveEventVenueName(e: {
+  venue?: string | null
+  dungeonSlug?: string | null
+  location?: { city?: string }
+}): string | undefined {
+  const venue = (e.venue || '').trim()
+  if (venue) return venue
+  const slug = (e.dungeonSlug || '').trim()
+  if (!slug) return undefined
+  const dungeon = getDungeonBySlug(slug) as { name?: string } | undefined
+  const name = dungeon?.name?.trim()
+  if (!name) return undefined
+  const city = (e.location?.city || '').trim().toLowerCase()
+  if (city && name.toLowerCase() === city) return undefined
+  return name
+}
+
+export function eventLocationLine(item: {
+  city: string
+  state: string
+  venueName?: string
+}): string {
+  const place = [item.city, item.state].filter(Boolean).join(', ')
+  if (!item.venueName) return place
+  if (item.venueName.toLowerCase() === (item.city || '').toLowerCase()) return place
+  return place ? `${item.venueName} · ${place}` : item.venueName
+}
+
 export function unifiedToIndexItem(e: UnifiedEvent): PublicEventIndexItem {
   return {
     id: e.c2kSourceId ?? e.slug,
@@ -113,6 +143,7 @@ export function unifiedToIndexItem(e: UnifiedEvent): PublicEventIndexItem {
     city: e.location.city,
     state: e.location.state,
     regionLabel: e.location.region || undefined,
+    venueName: resolveEventVenueName(e),
     logoUrl: e.logo,
     summary: e.excerpt || undefined,
     tags: e.tagSlugs,

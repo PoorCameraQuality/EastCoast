@@ -3,6 +3,7 @@ import { describe, it } from 'node:test'
 import type { UnifiedEvent } from '@/lib/unifiedEvents'
 import { isSiteSponsorEventSlug, SITE_SPONSOR_PROMO } from '@/data/siteSponsor'
 import {
+  eventLocationLine,
   eventSlugFromInternalHref,
   featuredScore,
   isNationalConventionListing,
@@ -24,6 +25,7 @@ function event(partial: Partial<UnifiedEvent> & Pick<UnifiedEvent, 'slug' | 'nam
     eventKind: partial.eventKind,
     dungeonSlug: partial.dungeonSlug,
     dungeonVenueId: partial.dungeonVenueId,
+    venue: partial.venue,
     featured: partial.featured,
   }
 }
@@ -131,5 +133,19 @@ describe('national convention vs local nights', () => {
     assert.equal(SITE_SPONSOR_PROMO?.href, '/events/grand-strand-affair-2026')
     assert.equal(isSiteSponsorEventSlug('grand-strand-affair-2026'), true)
     assert.equal(isSiteSponsorEventSlug('florida-fetish-weekend-2026'), false)
+  })
+
+  it('surfaces linked dungeon venue names on index items', () => {
+    const item = unifiedToIndexItem(
+      event({
+        slug: 'korral-1185-fresh-meat-friday',
+        name: 'Fresh Meat Friday',
+        eventKind: 'play_party',
+        dungeonSlug: 'the-korral',
+        venue: 'The Korral',
+      }),
+    )
+    assert.equal(item.venueName, 'The Korral')
+    assert.equal(eventLocationLine(item), 'The Korral · Spring Grove, PA')
   })
 })

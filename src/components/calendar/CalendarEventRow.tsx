@@ -3,7 +3,7 @@
 import EckeLink from '@/components/EckeLink'
 import { exportSingleEvent } from '@/lib/calendarExport'
 import { calendarPillTone, isPastItem, parseLocalDate, typeBadgeLabel } from '@/lib/calendarVisual'
-import { sourceLabel } from '@/lib/publicEventIndex'
+import { eventLocationLine, sourceLabel } from '@/lib/publicEventIndex'
 import type { PublicEventIndexItem } from '@/types/publicEventIndexItem'
 
 type Props = {
@@ -53,7 +53,7 @@ export default function CalendarEventRow({ item }: Props) {
         <p className="cal-event-row-meta">
           {item.dateDisplay}
           <span className="cal-event-row-sep"> · </span>
-          {item.city}, {item.state}
+          {eventLocationLine(item)}
         </p>
         <div className="cal-event-row-actions">
           <EckeLink href={`/events/${item.slug}`} className="cal-btn cal-btn-view">
