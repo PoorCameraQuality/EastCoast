@@ -515,3 +515,21 @@
   line-height: 1.45;
   color: var(--sf-text-muted, #9ca3af);
 }
+
+.org-account-security-grid {
+  display: grid;
+  gap: 1rem;
+}
+
+@media (min-width: 900px) {
+  .org-account-security-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.org-account-security-card {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 1rem;
+  background: rgba(0, 0, 0, 0.25);
+  padding: 1rem 1.1rem 1.15rem;
+}

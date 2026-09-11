@@ -15,6 +15,11 @@ export default function OrgDashboardHeader({ organizationName, signedInAs }: Pro
           Signed in as <strong>{signedInAs}</strong>
         </p>
         <p className="org-dashboard-lede">Manage your ECKE listings and public pages.</p>
+        <p className="org-dashboard-lede">
+          <a href="#org-account-security-title" className="org-dashboard-text-link">
+            Account &amp; password
+          </a>
+        </p>
       </div>
       <EckeLink href="/events/create" className="sf-btn-primary org-dashboard-primary">
         Create event

@@ -1,10 +1,11 @@
 import { NextResponse } from 'next/server'
 import { createSupabaseServerClientForOrganizer } from '@/lib/dancecard/organizerAuth'
+import { resolveOrgLoginEmail } from '@/lib/eckeOrgAuth'
 import { orgRecoverSchema } from '@/lib/eckeOrgValidation'
 import { withRateLimit, rateLimiters } from '@/lib/rateLimit'
 import { BASE_URL } from '@/lib/seo'
 
-const GENERIC = 'If that email is registered, you will receive reset instructions.'
+const GENERIC = 'If that account exists, reset instructions were sent to its email.'
 
 export async function POST(request: Request) {
   const limited = await withRateLimit(request, rateLimiters.auth)
@@ -22,13 +23,20 @@ export async function POST(request: Request) {
     return NextResponse.json({ message: GENERIC })
   }
 
-  const email = parsed.data.email.trim().toLowerCase()
+  const email = await resolveOrgLoginEmail(parsed.data.identifier)
+  if (!email) {
+    return NextResponse.json({ message: GENERIC })
+  }
+
   try {
     const supabase = createSupabaseServerClientForOrganizer()
     const origin = request.headers.get('origin') || BASE_URL
-    await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${origin.replace(/\/$/, '')}/auth/org/login`,
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${origin.replace(/\/$/, '')}/auth/org/login?mode=new-password`,
     })
+    if (error) {
+      console.error('ORG RECOVER: resetPasswordForEmail failed', error.message)
+    }
   } catch (error) {
     console.error('ORG RECOVER: resetPasswordForEmail failed', error)
   }

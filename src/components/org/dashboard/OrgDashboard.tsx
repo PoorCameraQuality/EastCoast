@@ -1,3 +1,4 @@
+import OrgAccountSecurity from '@/components/org/dashboard/OrgAccountSecurity'
 import OrgDashboardEvents from '@/components/org/dashboard/OrgDashboardEvents'
 import OrgDashboardHeader from '@/components/org/dashboard/OrgDashboardHeader'
 import OrgDashboardOverview from '@/components/org/dashboard/OrgDashboardOverview'
@@ -10,6 +11,8 @@ import type { ManagedShopRow } from '@/lib/eckeOrgVendorShared'
 type Props = {
   organizationName: string
   signedInAs: string
+  username: string | null
+  contactEmail: string
   events: ManagedEventRow[]
   place: ManagedPlaceRow | null
   shop: ManagedShopRow | null
@@ -19,6 +22,8 @@ type Props = {
 export default function OrgDashboard({
   organizationName,
   signedInAs,
+  username,
+  contactEmail,
   events,
   place,
   shop,
@@ -41,6 +46,7 @@ export default function OrgDashboard({
         />
         <OrgDashboardEvents events={events} placeName={place?.name} />
         <OrgDashboardPresence place={place} shop={shop} productCount={productCount} />
+        <OrgAccountSecurity currentEmail={contactEmail} username={username} />
       </div>
     </main>
   )

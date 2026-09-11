@@ -32,6 +32,8 @@ export default async function OrgDashboardPage() {
     <OrgDashboard
       organizationName={organization.name}
       signedInAs={organization.username || organization.email}
+      username={organization.username}
+      contactEmail={organization.email}
       events={events}
       place={place}
       shop={shop}

@@ -32,5 +32,15 @@ export const orgLoginSchema = z.object({
 })
 
 export const orgRecoverSchema = z.object({
-  email: z.string().email(),
+  /** Username or email — resolved server-side to the auth email. */
+  identifier: z.string().min(1).max(255),
+})
+
+export const orgChangePasswordSchema = z.object({
+  currentPassword: z.string().min(1).max(128),
+  newPassword: z.string().min(8, 'Password must be at least 8 characters').max(128),
+})
+
+export const orgUpdateContactEmailSchema = z.object({
+  email: z.string().email('Enter a valid email').max(255),
 })
