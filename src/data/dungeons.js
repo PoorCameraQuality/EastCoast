@@ -640,31 +640,6 @@ export const dungeons = [
     }
   },
   {
-    "name": "The Academy of Fetish Arts",
-    "slug": "academy-of-fetish-arts-cleveland",
-    "location": {
-      "city": "Cleveland",
-      "state": "OH",
-      "address": "2615 Lakeside Avenue, Building C, Cleveland, OH 44114"
-    },
-    "category": "BDSM Dungeon",
-    "excerpt": "The Academy of Fetish Arts is a large members-only playspace in Cleveland—6,500 sq ft with a main dungeon, themed rooms, social lounge, monitored parking, and regular Saturday parties and education for ages 19+.",
-    "description": {
-      "long": "The Academy of Fetish Arts — Cleveland, Ohio\n\nThe Academy of Fetish Arts operates one of Northeast Ohio’s largest inclusive BDSM and kink facilities as a private members-only social organization (19+). The building includes a main dungeon, multiple specialized playrooms, social lounge, and monitored parking.\n\nMembership and party dues are described on cle-afa.com, along with new-member orientation, event calendar, and FAQs. The venue hosts regular Saturday events, classes, and themed gatherings for diverse groups within the kink community.\n\nContact: info@cle-afa.com (as listed on the official site)."
-    },
-    "contact": {
-      "email": "info@cle-afa.com"
-    },
-    "website": "https://cle-afa.com/",
-    "logo": "/images/dungeons/brand-academy-fetish-arts-cleveland.svg",
-    "images": [],
-    "seo": {
-      "title": "The Academy of Fetish Arts - Cleveland BDSM Playspace | East Coast Kink Events",
-      "description": "The Academy of Fetish Arts — Cleveland members-only kink facility with 6,500 sq ft, main dungeon, themed rooms, and regular events. cle-afa.com.",
-      "keywords": "Academy of Fetish Arts, Cleveland, Ohio, BDSM dungeon, members only, Lakeside Avenue, Northeast Ohio kink"
-    }
-  },
-  {
     "name": "The Emporium (Kink Haven)",
     "slug": "the-emporium-kink-haven-connecticut",
     "location": {
