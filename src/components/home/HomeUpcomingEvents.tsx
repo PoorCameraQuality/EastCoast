@@ -1,7 +1,7 @@
-import { getUnifiedEvents, getUpcomingUnified } from '@/lib/unifiedEvents'
+import { getUnifiedNationalEvents, getUpcomingUnified } from '@/lib/unifiedEvents'
 import HomeUpcomingEventsGrid, { type HomeEventRow } from '@/components/home/HomeUpcomingEventsGrid'
 
-function toHomeEventRow(e: Awaited<ReturnType<typeof getUnifiedEvents>>[number]): HomeEventRow {
+function toHomeEventRow(e: Awaited<ReturnType<typeof getUnifiedNationalEvents>>[number]): HomeEventRow {
   return {
     name: e.name,
     slug: e.slug,
@@ -18,7 +18,7 @@ function toHomeEventRow(e: Awaited<ReturnType<typeof getUnifiedEvents>>[number])
 }
 
 export default async function HomeUpcomingEvents() {
-  const unified = await getUnifiedEvents()
+  const unified = await getUnifiedNationalEvents()
   const upcoming = getUpcomingUnified(unified).slice(0, 16).map(toHomeEventRow)
 
   if (upcoming.length === 0) {

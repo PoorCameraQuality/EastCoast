@@ -339,7 +339,7 @@ function dungeonInputs(dungeons: UnifiedDungeon[]): CatalogDungeonInput[] {
 }
 
 export async function getOrganizationCatalog(): Promise<CatalogListingRecord[]> {
-  const [{ fetchPublishedListingsIndex }, { getUnifiedDungeonsAsync }, { getUnifiedEvents }] =
+  const [{ fetchPublishedListingsIndex }, { getUnifiedDungeonsAsync }, { getUnifiedNationalEvents }] =
     await Promise.all([
       import('./unifiedExtendedListings'),
       import('./unifiedDungeons'),
@@ -349,7 +349,7 @@ export async function getOrganizationCatalog(): Promise<CatalogListingRecord[]> 
   const [dbOrgs, dungeons, events] = await Promise.all([
     fetchPublishedListingsIndex('organization'),
     getUnifiedDungeonsAsync(),
-    getUnifiedEvents(),
+    getUnifiedNationalEvents(),
   ])
   return mergeOrganizationCatalog(
     dbOrgs,
@@ -370,14 +370,14 @@ export async function getOrganizationCatalogBySlug(
 }
 
 export async function getConventionCatalog(): Promise<CatalogListingRecord[]> {
-  const [{ fetchPublishedListingsIndex }, { getUnifiedEvents }] = await Promise.all([
+  const [{ fetchPublishedListingsIndex }, { getUnifiedNationalEvents }] = await Promise.all([
     import('./unifiedExtendedListings'),
     import('./unifiedEvents'),
   ])
   const { isNationalConventionListing, unifiedToIndexItem } = await import('./publicEventIndex')
   const [dbConventions, events] = await Promise.all([
     fetchPublishedListingsIndex('convention'),
-    getUnifiedEvents(),
+    getUnifiedNationalEvents(),
   ])
   return mergeConventionCatalog(
     dbConventions,

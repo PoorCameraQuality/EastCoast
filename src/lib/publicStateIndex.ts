@@ -1,3 +1,4 @@
+import { cache } from 'react'
 import { getAllDungeons } from '@/data/dungeons'
 import { getAllSwingClubs } from '@/data/swingClubs'
 import { tagsBySlug } from '@/data/vendorTaxonomy'
@@ -7,7 +8,12 @@ import { buildEducationIndex, splitByLane } from '@/lib/publicEducationIndex'
 import { buildIndexFromUnified, splitUpcomingPast } from '@/lib/publicEventIndex'
 import { buildPlaceIndex, mergePlaceListings } from '@/lib/publicPlaceIndex'
 import { buildVendorIndex } from '@/lib/publicVendorIndex'
-import { getUnifiedEvents } from '@/lib/unifiedEvents'
+import {
+  getUnifiedEvents,
+  getUnifiedEventsForState,
+  getUnifiedNationalEvents,
+  type UnifiedEvent,
+} from '@/lib/unifiedEvents'
 import { getUnifiedVendors } from '@/lib/unifiedVendors'
 import { fetchPublishedListingsIndex } from '@/lib/unifiedExtendedListings'
 import type { PublicEducationItem } from '@/types/publicEducationItem'
@@ -303,9 +309,29 @@ export function buildStateSummaries(
 }
 
 export async function loadStateHubContext(): Promise<StateHubContext> {
+  return loadStateHubContextCached()
+}
+
+const loadStateHubContextCached = cache(async (): Promise<StateHubContext> => {
+  return buildStateHubContextFromEvents(await getUnifiedEvents())
+})
+
+/** Single-state hub — state events + national catalog only (skips ~1.3k other venue nights). */
+export async function loadStateHubContextForState(stateSlug: StateSlug): Promise<StateHubContext> {
+  const info = EAST_COAST_STATES[stateSlug]
+  const [stateEvents, nationalEvents] = await Promise.all([
+    getUnifiedEventsForState(info.abbr),
+    getUnifiedNationalEvents(),
+  ])
+  const bySlug = new Map<string, UnifiedEvent>()
+  for (const e of nationalEvents) bySlug.set(e.slug, e)
+  for (const e of stateEvents) bySlug.set(e.slug, e)
+  return buildStateHubContextFromEvents(Array.from(bySlug.values()))
+}
+
+async function buildStateHubContextFromEvents(unifiedEvents: UnifiedEvent[]): Promise<StateHubContext> {
   const allDungeons = dedupeBySlug(getAllDungeons())
   const allSwingClubs = dedupeBySlug(getAllSwingClubs())
-  const unifiedEvents = await getUnifiedEvents()
   const kinkSocialVenues = await fetchPublishedListingsIndex('venue')
   const unifiedVendors = await getUnifiedVendors()
   const articles = await getPublishedEducationArticles()

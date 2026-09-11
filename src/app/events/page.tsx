@@ -2,16 +2,21 @@ import { Metadata } from 'next'
 import EventsPageClient from './EventsPageClient'
 import { getAllDungeons } from '@/data/dungeons'
 import { getAllSwingClubs } from '@/data/swingClubs'
-import { getUnifiedEvents, unifiedEventToEventsPageShape } from '@/lib/unifiedEvents'
 import { EventListStructuredData } from '@/components/StructuredData'
 import {
   eventsListHasActiveFilter,
+  eventsListIntentNeedsVenueCatalog,
   parseEventsListIntent,
   parseEventsListLocation,
   parseEventsListSearchParams,
 } from '@/lib/eventsListSearchParams'
 import { buildIndexFromUnified } from '@/lib/publicEventIndex'
 import { BASE_URL } from '@/lib/seo'
+import {
+  getUnifiedEvents,
+  getUnifiedNationalEvents,
+  unifiedEventToEventsPageShape,
+} from '@/lib/unifiedEvents'
 
 export const revalidate = 1800
 
@@ -19,10 +24,21 @@ type EventsIndexProps = {
   searchParams: Record<string, string | string[] | undefined>
 }
 
+async function loadEventsCatalog(
+  searchParams: Record<string, string | string[] | undefined>,
+) {
+  const selectedIntent = parseEventsListIntent(searchParams)
+  const unified = eventsListIntentNeedsVenueCatalog(selectedIntent)
+    ? await getUnifiedEvents()
+    : await getUnifiedNationalEvents()
+  return { unified, selectedIntent }
+}
+
 export async function generateMetadata({
   searchParams,
 }: EventsIndexProps): Promise<Metadata> {
-  const count = (await getUnifiedEvents()).length
+  const { unified } = await loadEventsCatalog(searchParams)
+  const count = unified.length
   const filtered = eventsListHasActiveFilter(searchParams)
   const selection = parseEventsListSearchParams(searchParams)
 
@@ -74,12 +90,11 @@ export default async function EventsPage({
 }: {
   searchParams: Record<string, string | string[] | undefined>
 }) {
-  const unified = await getUnifiedEvents()
+  const { unified, selectedIntent } = await loadEventsCatalog(searchParams)
   const indexItems = buildIndexFromUnified(unified)
   const searchEvents = unified.map(unifiedEventToEventsPageShape)
   const allDungeons = getAllDungeons()
   const allSwingClubs = getAllSwingClubs()
-  const selectedIntent = parseEventsListIntent(searchParams)
   const locationFilter = parseEventsListLocation(searchParams)
 
   return (

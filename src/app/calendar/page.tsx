@@ -6,7 +6,7 @@ import Breadcrumb from '@/components/Breadcrumb'
 
 import CalendarPageClient from '@/components/calendar/CalendarPageClient'
 
-import { getUnifiedEvents } from '@/lib/unifiedEvents'
+import { getUnifiedNationalEvents } from '@/lib/unifiedEvents'
 
 import { buildIndexFromUnified } from '@/lib/publicEventIndex'
 
@@ -102,7 +102,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function CalendarPage() {
 
-  const unified = await getUnifiedEvents()
+  const unified = await getUnifiedNationalEvents()
 
   const indexItems = buildIndexFromUnified(unified)
 

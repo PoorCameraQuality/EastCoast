@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { TAG_GROUPS, TAGS, tagGroupsById, tagsBySlug } from '@/data/vendorTaxonomy'
 import { getUnifiedVendors } from '@/lib/unifiedVendors'
-import { getUnifiedEvents } from '@/lib/unifiedEvents'
+import { getUnifiedNationalEvents } from '@/lib/unifiedEvents'
 import VendorMarketplacePageClient from '@/components/vendors/marketplace/VendorMarketplacePageClient'
 import { VendorsIndexStructuredData } from '@/components/StructuredData'
 import { getTagSlugsFromPageSearchParams } from '@/lib/vendorFiltering'
@@ -48,7 +48,7 @@ export default async function VendorsIndexPage({
   searchParams: Record<string, string | string[] | undefined>
 }) {
   const vendors = await getUnifiedVendors()
-  const unifiedEvents = await getUnifiedEvents()
+  const unifiedEvents = await getUnifiedNationalEvents()
   const selectedTagSlugs = getTagSlugsFromPageSearchParams(searchParams)
 
   return (

@@ -1,3 +1,4 @@
+import { cache } from 'react'
 import { getAllEvents, getEventBySlug } from '@/data/events'
 import { getSupabaseClient } from '@/lib/supabase'
 import { getSupabaseAdminClient } from '@/lib/supabaseAdmin'
@@ -6,6 +7,53 @@ import { resolveEntityHeroAndGallery, type EntityHeroGalleryItem } from '@/lib/k
 import { KNOWN_TAG_SLUGS } from '@/lib/discoveryTags'
 import { BASE_URL } from '@/lib/seo'
 import { normalizeTicketTiers, type EventTicketTier } from '@/lib/eckeOrgEventShared'
+
+const LIST_TIMEOUT_MS = 8_000
+const DETAIL_TIMEOUT_MS = 5_000
+const LIST_PAGE_SIZE = 1000
+const LIST_MAX_PAGES = 5
+
+const LIST_SELECT_COLS =
+  'title, slug, start_date, end_date, display_date, city, state, short_description, category, logo, tags, status, c2k_source_id, c2k_source_type, last_synced_at, organizer, organizer_name, event_type, dungeon_slug, dungeon_venue_id, venue, featured, organization_id'
+
+export type FetchPublishedEventsScope = {
+  /** Exclude venue-linked nights (dungeon_slug / dungeon_venue_id). ~50 rows vs ~1.3k. */
+  nationalOnly?: boolean
+  /** Exact dungeon/swing place calendar slug. */
+  dungeonSlug?: string
+  /** Org-owned published events. */
+  organizationId?: string
+  /** Explicit appearance / lookup slugs. */
+  slugs?: string[]
+  /** US state abbreviation (e.g. PA). */
+  state?: string
+  /** Cap rows after filters (still paginates under the hood). */
+  limit?: number
+}
+
+function todayIsoDate(): string {
+  return new Date().toISOString().slice(0, 10)
+}
+
+function abortSignalFor(ms: number): AbortSignal {
+  if (typeof AbortSignal !== 'undefined' && typeof AbortSignal.timeout === 'function') {
+    return AbortSignal.timeout(ms)
+  }
+  const controller = new AbortController()
+  setTimeout(() => controller.abort(), ms)
+  return controller.signal
+}
+
+function isAbortError(err: unknown): boolean {
+  if (!err || typeof err !== 'object') return false
+  const e = err as { name?: string; message?: string; code?: string }
+  return (
+    e.name === 'AbortError' ||
+    e.name === 'TimeoutError' ||
+    e.code === 'TIMEOUT' ||
+    /aborted|timeout|Gateway Timeout/i.test(String(e.message || ''))
+  )
+}
 
 /** Collapse absolute ECKE self-host image URLs to `/images/...` for Next/Image. */
 export function normalizeEckeSelfHostLogo(logo: string | undefined | null): string | undefined {
@@ -171,97 +219,125 @@ function dbRowToUnified(row: Record<string, unknown>): UnifiedEvent | null {
 
 /**
  * Published upcoming events from Supabase (submissions pipeline). Fails soft if DB unavailable.
- * Paginated + date-bounded — full-table reads were Gateway Timing out under crawl load
- * (Vercel logs: `[unifiedEvents] list query failed: Gateway Timeout`).
+ * Uses AbortSignal so timed-out PostgREST calls are cancelled (Promise.race alone left fetches running).
+ * Prefer scoped options — full upcoming catalog is ~1.3k venue nights under crawl load.
  */
-export async function fetchPublishedSupabaseEvents(): Promise<UnifiedEvent[]> {
-  // Server Components / route handlers — browser client is always null in Node.
+export async function fetchPublishedSupabaseEvents(
+  scope: FetchPublishedEventsScope = {},
+): Promise<UnifiedEvent[]> {
   const client = getSupabaseServerClient() ?? getSupabaseClient()
   if (!client) {
     console.error('[unifiedEvents] list: Supabase server client unavailable')
     return []
   }
 
-  const today = new Date().toISOString().slice(0, 10)
-  const pageSize = 1000
-  const maxPages = 5
-  const pageTimeoutMs = 8_000
-  const selectCols =
-    'title, slug, start_date, end_date, display_date, city, state, short_description, category, logo, tags, status, c2k_source_id, c2k_source_type, last_synced_at, organizer, organizer_name, event_type, dungeon_slug, dungeon_venue_id, venue, featured, organization_id'
-
+  const today = todayIsoDate()
+  const hardLimit = scope.limit && scope.limit > 0 ? scope.limit : LIST_PAGE_SIZE * LIST_MAX_PAGES
   const rows: Record<string, unknown>[] = []
+  const slugs = Array.from(
+    new Set((scope.slugs || []).map((s) => s.trim()).filter(Boolean)),
+  )
 
   try {
-    for (let page = 0; page < maxPages; page += 1) {
-      const from = page * pageSize
-      const to = from + pageSize - 1
-      const query = client
+    for (let page = 0; page < LIST_MAX_PAGES && rows.length < hardLimit; page += 1) {
+      const from = page * LIST_PAGE_SIZE
+      const remaining = hardLimit - rows.length
+      const pageLen = Math.min(LIST_PAGE_SIZE, remaining)
+      const to = from + pageLen - 1
+      const signal = abortSignalFor(LIST_TIMEOUT_MS)
+
+      let query = client
         .from('events')
-        .select(selectCols)
+        .select(LIST_SELECT_COLS)
         .eq('status', 'published')
-        .or(`end_date.gte.${today},and(end_date.is.null,start_date.gte.${today})`)
+        .gte('end_date', today)
         .order('start_date', { ascending: true })
         .range(from, to)
+        .abortSignal(signal)
 
-      const raced = await Promise.race([
-        query,
-        new Promise<{ data: null; error: { message: string; code?: string } }>((resolve) => {
-          setTimeout(
-            () => resolve({ data: null, error: { message: 'Gateway Timeout', code: 'TIMEOUT' } }),
-            pageTimeoutMs,
-          )
-        }),
-      ])
+      if (scope.nationalOnly) {
+        query = query.is('dungeon_slug', null).is('dungeon_venue_id', null)
+      }
+      if (scope.dungeonSlug) {
+        query = query.eq('dungeon_slug', scope.dungeonSlug)
+      }
+      if (scope.organizationId) {
+        query = query.eq('organization_id', scope.organizationId)
+      }
+      if (slugs.length > 0 && !scope.organizationId && !scope.dungeonSlug) {
+        query = query.in('slug', slugs)
+      }
+      if (scope.state) {
+        query = query.eq('state', scope.state.toUpperCase().slice(0, 2))
+      }
 
-      const { data, error } = raced
+      const { data, error } = await query
       if (error) {
-        console.error('[unifiedEvents] list query failed:', error.message, error.code)
+        if (isAbortError(error)) {
+          console.error('[unifiedEvents] list query aborted/timeout:', error.message, error.code)
+        } else {
+          console.error('[unifiedEvents] list query failed:', error.message, error.code)
+        }
         break
       }
       if (!data?.length) break
       rows.push(...(data as Record<string, unknown>[]))
-      if (data.length < pageSize) break
+      if (data.length < pageLen) break
+    }
+
+    // Org shop appearances: owned events + explicit slugs may need a second slug fetch
+    // when organizationId is set (slug filter would AND incorrectly).
+    if (scope.organizationId && slugs.length > 0) {
+      const have = new Set(rows.map((r) => String(r.slug || '')))
+      const missing = slugs.filter((s) => !have.has(s))
+      if (missing.length > 0) {
+        const signal = abortSignalFor(LIST_TIMEOUT_MS)
+        const { data, error } = await client
+          .from('events')
+          .select(LIST_SELECT_COLS)
+          .eq('status', 'published')
+          .gte('end_date', today)
+          .in('slug', missing)
+          .order('start_date', { ascending: true })
+          .abortSignal(signal)
+        if (error) {
+          console.error('[unifiedEvents] appearance slug query failed:', error.message, error.code)
+        } else if (data?.length) {
+          rows.push(...(data as Record<string, unknown>[]))
+        }
+      }
     }
 
     return rows.map(dbRowToUnified).filter((e): e is UnifiedEvent => e !== null)
   } catch (err) {
-    console.error('[unifiedEvents] list unexpected error:', err)
+    if (isAbortError(err)) {
+      console.error('[unifiedEvents] list aborted/timeout:', err)
+    } else {
+      console.error('[unifiedEvents] list unexpected error:', err)
+    }
     return []
   }
 }
 
-/**
- * Static + published DB events.
- * Default: static wins on duplicate slug (same event in both places uses `events.js`).
- * Set `UNIFIED_EVENTS_PREFER_DB=true` after migrating static data to Supabase so DB rows win.
- */
-export async function getUnifiedEvents(): Promise<UnifiedEvent[]> {
+function mergeStaticAndRemote(remote: UnifiedEvent[], staticFilter?: (e: UnifiedEvent) => boolean): UnifiedEvent[] {
   const preferDb = process.env.UNIFIED_EVENTS_PREFER_DB === 'true'
-  const staticUnified = getAllEvents().map(staticToUnified)
+  let staticUnified = getAllEvents().map(staticToUnified)
+  if (staticFilter) staticUnified = staticUnified.filter(staticFilter)
   const bySlug = new Map<string, UnifiedEvent>()
-  const remote = await fetchPublishedSupabaseEvents()
 
   if (preferDb) {
-    for (const e of staticUnified) {
-      bySlug.set(e.slug, e)
-    }
-    for (const e of remote) {
-      bySlug.set(e.slug, e)
-    }
+    for (const e of staticUnified) bySlug.set(e.slug, e)
+    for (const e of remote) bySlug.set(e.slug, e)
   } else {
-    for (const e of staticUnified) {
-      bySlug.set(e.slug, e)
-    }
+    for (const e of staticUnified) bySlug.set(e.slug, e)
     for (const e of remote) {
       const existing = bySlug.get(e.slug)
       if (e.c2kSourceId) {
-        // C2K wins; keep static logo when publish left logo empty (seed URLs are stripped).
         bySlug.set(e.slug, existing?.logo && !e.logo ? { ...e, logo: existing.logo } : e)
       } else if (!existing) {
         bySlug.set(e.slug, e)
       }
     }
-    // kink.social rows with source ID win over static when slug differs but same source ID
     for (const e of remote) {
       if (!e.c2kSourceId) continue
       for (const [slug, existing] of Array.from(bySlug.entries())) {
@@ -271,9 +347,71 @@ export async function getUnifiedEvents(): Promise<UnifiedEvent[]> {
       }
     }
   }
+
   return Array.from(bySlug.values()).sort(
-    (a, b) => new Date(a.date.start).getTime() - new Date(b.date.start).getTime()
+    (a, b) => new Date(a.date.start).getTime() - new Date(b.date.start).getTime(),
   )
+}
+
+const getUnifiedEventsCached = cache(async (): Promise<UnifiedEvent[]> => {
+  const remote = await fetchPublishedSupabaseEvents()
+  return mergeStaticAndRemote(remote)
+})
+
+const getUnifiedNationalEventsCached = cache(async (): Promise<UnifiedEvent[]> => {
+  const remote = await fetchPublishedSupabaseEvents({ nationalOnly: true })
+  return mergeStaticAndRemote(remote, (e) => !e.dungeonSlug && !e.dungeonVenueId)
+})
+
+/**
+ * Static + published DB events (full upcoming catalog, including venue nights).
+ * Request-deduped via React cache. Prefer getUnifiedNationalEvents / scoped helpers on hot pages.
+ */
+export async function getUnifiedEvents(): Promise<UnifiedEvent[]> {
+  return getUnifiedEventsCached()
+}
+
+/** National / convention surfaces: excludes dungeon_slug / dungeon_venue_id venue nights. */
+export async function getUnifiedNationalEvents(): Promise<UnifiedEvent[]> {
+  return getUnifiedNationalEventsCached()
+}
+
+/** Place calendars — only events tagged to this dungeon/swing slug (+ matching static). */
+export async function getUnifiedEventsForPlace(dungeonSlug: string): Promise<UnifiedEvent[]> {
+  const slug = dungeonSlug.trim()
+  if (!slug) return []
+  const remote = await fetchPublishedSupabaseEvents({ dungeonSlug: slug })
+  return mergeStaticAndRemote(remote, (e) => e.dungeonSlug === slug)
+}
+
+/** Vendor appearances — org-owned events and/or explicit appearance slugs. */
+export async function getUnifiedEventsForVendorAppearances(options: {
+  organizationId?: string | null
+  appearanceEventSlugs?: string[] | null
+}): Promise<UnifiedEvent[]> {
+  const organizationId = options.organizationId?.trim() || undefined
+  const appearanceEventSlugs = options.appearanceEventSlugs || []
+  if (!organizationId && appearanceEventSlugs.length === 0) {
+    // Curated (non-org) shops still fuzzy-match titles against the national catalog.
+    return getUnifiedNationalEvents()
+  }
+  const remote = await fetchPublishedSupabaseEvents({
+    organizationId,
+    slugs: appearanceEventSlugs,
+  })
+  return mergeStaticAndRemote(remote, (e) => {
+    if (organizationId && e.organizationId === organizationId) return true
+    if (appearanceEventSlugs.includes(e.slug)) return true
+    return false
+  })
+}
+
+/** State hub detail — events in one state (plus static for that state). */
+export async function getUnifiedEventsForState(stateAbbr: string): Promise<UnifiedEvent[]> {
+  const state = stateAbbr.toUpperCase().slice(0, 2)
+  if (!state) return []
+  const remote = await fetchPublishedSupabaseEvents({ state })
+  return mergeStaticAndRemote(remote, (e) => e.location.state === state)
 }
 
 export function getUpcomingUnified(events: UnifiedEvent[]): UnifiedEvent[] {
@@ -510,10 +648,15 @@ export async function fetchPublishedSupabaseEventAsPageEvent(
       .select(EVENT_PAGE_COLUMNS)
       .in('status', ['published', 'archived'])
       .eq('slug', slug)
+      .abortSignal(abortSignalFor(DETAIL_TIMEOUT_MS))
       .maybeSingle()
 
     if (error) {
-      console.error('[unifiedEvents] detail query failed:', slug, error.message, error.code)
+      if (isAbortError(error)) {
+        console.error('[unifiedEvents] detail query aborted/timeout:', slug, error.message, error.code)
+      } else {
+        console.error('[unifiedEvents] detail query failed:', slug, error.message, error.code)
+      }
       return null
     }
     if (!data) return null
@@ -529,7 +672,11 @@ export async function fetchPublishedSupabaseEventAsPageEvent(
       ...(hasGallery ? { gallery } : {}),
     }
   } catch (err) {
-    console.error('[unifiedEvents] detail unexpected error:', slug, err)
+    if (isAbortError(err)) {
+      console.error('[unifiedEvents] detail aborted/timeout:', slug, err)
+    } else {
+      console.error('[unifiedEvents] detail unexpected error:', slug, err)
+    }
     return null
   }
 }

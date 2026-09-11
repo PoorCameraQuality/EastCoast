@@ -23,7 +23,7 @@ import {
   unifiedToIndexItem,
 } from '@/lib/publicEventIndex'
 import { getUnifiedDungeonsAsync } from '@/lib/unifiedDungeons'
-import { getUnifiedEvents, getUpcomingUnified, type UnifiedEvent } from '@/lib/unifiedEvents'
+import { getUnifiedNationalEvents, getUpcomingUnified, type UnifiedEvent } from '@/lib/unifiedEvents'
 import { getUnifiedVendors } from '@/lib/unifiedVendors'
 import type { VendorRecord } from '@/lib/vendorFiltering'
 
@@ -223,7 +223,7 @@ export async function getHomepageStorefrontData(options?: {
   const seed = options?.rotationSeed ?? homepageRotationSeed(options?.now)
   const [vendors, unified, unifiedDungeons] = await Promise.all([
     getUnifiedVendors(),
-    getUnifiedEvents(),
+    getUnifiedNationalEvents(),
     getUnifiedDungeonsAsync(),
   ])
   const hubCounts = await getHubCategoryCounts({ vendorCount: vendors.length })

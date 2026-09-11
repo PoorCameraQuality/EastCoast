@@ -8,7 +8,7 @@ import { EAST_COAST_STATES, type StateSlug } from '@/lib/eastCoastStates'
 import {
   buildStateHubDetail,
   getStateHubListingTotalFromStats,
-  loadStateHubContext,
+  loadStateHubContextForState,
 } from '@/lib/publicStateIndex'
 import { buildStateHubFaqs } from '@/lib/seo/stateHubFaqs'
 import { BASE_URL } from '@/lib/seo'
@@ -27,7 +27,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     }
   }
 
-  const ctx = await loadStateHubContext()
+  const ctx = await loadStateHubContextForState(params.state as StateSlug)
   const hub = buildStateHubDetail(params.state as StateSlug, ctx)
   const totalListings = getStateHubListingTotalFromStats(hub.stats)
   const isThinPage = totalListings < 2
@@ -80,7 +80,7 @@ export default async function StatePage({ params }: PageProps) {
     notFound()
   }
 
-  const ctx = await loadStateHubContext()
+  const ctx = await loadStateHubContextForState(params.state as StateSlug)
   const hub = buildStateHubDetail(params.state as StateSlug, ctx)
   const hubFaqs = buildStateHubFaqs(stateInfo.name, stateInfo.region)
 

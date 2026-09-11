@@ -1,7 +1,7 @@
 import { DungeonStructuredData } from '@/components/StructuredData'
 import PlaceDetailView from '@/components/places/PlaceDetailView'
 import { dungeonToPlaceListing, eventsMatchingPlace } from '@/lib/publicPlaceIndex'
-import { getUnifiedEvents } from '@/lib/unifiedEvents'
+import { getUnifiedEventsForPlace } from '@/lib/unifiedEvents'
 
 type Dungeon = {
   name: string
@@ -24,7 +24,7 @@ type Dungeon = {
 
 export default async function DungeonDetailView({ dungeon }: { dungeon: Dungeon }) {
   const place = dungeonToPlaceListing(dungeon)
-  const unifiedEvents = await getUnifiedEvents()
+  const unifiedEvents = await getUnifiedEventsForPlace(dungeon.slug)
   const upcomingEvents = eventsMatchingPlace(place, unifiedEvents)
 
   const breadcrumbItems = [

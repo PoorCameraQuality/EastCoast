@@ -3,7 +3,7 @@ import VendorStorefrontDetail from '@/components/vendors/marketplace/VendorStore
 import { tagsBySlug } from '@/data/vendorTaxonomy'
 import { attachVendorEvents, vendorToListing } from '@/lib/publicVendorIndex'
 import { getVendorPaidImage125Url } from '@/lib/vendorFiltering'
-import { getUnifiedEvents } from '@/lib/unifiedEvents'
+import { getUnifiedEventsForVendorAppearances } from '@/lib/unifiedEvents'
 import { parseVendorLocation, type UnifiedVendor } from '@/lib/unifiedVendors'
 import type { VendorRecord } from '@/lib/vendorFiltering'
 
@@ -19,7 +19,10 @@ export default async function VendorDetailView({ vendor, selectedTagSlugs }: Pro
   if (paidImg) {
     listing = { ...listing, coverImageUrl: paidImg }
   }
-  const unifiedEvents = await getUnifiedEvents()
+  const unifiedEvents = await getUnifiedEventsForVendorAppearances({
+    organizationId: listing.organizationId,
+    appearanceEventSlugs: listing.appearanceEventSlugs,
+  })
   const withEvents = attachVendorEvents([listing], unifiedEvents)[0]!
   const { stateAbbr } = parseVendorLocation(vendor.location)
 

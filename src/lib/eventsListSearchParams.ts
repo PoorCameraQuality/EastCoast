@@ -70,6 +70,11 @@ export function parseEventsListLocation(
   return rawLoc ? decodeURIComponent(rawLoc) : undefined
 }
 
+/** Conventions (default) only need the national catalog; local/class/party intents need venue nights. */
+export function eventsListIntentNeedsVenueCatalog(intent: EventsListIntent): boolean {
+  return intent !== 'conventions' && intent !== 'all'
+}
+
 export function eventsListHasActiveFilter(
   searchParams: Record<string, string | string[] | undefined>
 ): boolean {
