@@ -34,6 +34,8 @@ export type UnifiedEvent = {
   eventKind?: string | null
   dungeonSlug?: string | null
   dungeonVenueId?: string | null
+  /** Sticky featured / sponsor pin from events.js `isFeatured` or events.featured. */
+  featured?: boolean
 }
 
 function slugifyTag(raw: string): string {
@@ -81,6 +83,8 @@ function staticToUnified(e: ReturnType<typeof getAllEvents>[number]): UnifiedEve
     dancecardEnabled?: boolean
     dancecardSlug?: string
     organizer?: string
+    isFeatured?: boolean
+    featured?: boolean
   }
   return {
     name: e.name,
@@ -99,6 +103,7 @@ function staticToUnified(e: ReturnType<typeof getAllEvents>[number]): UnifiedEve
     source: 'static',
     dancecardEnabled: Boolean(raw.dancecardEnabled || raw.dancecardSlug),
     organizer: raw.organizer,
+    featured: Boolean(raw.isFeatured || raw.featured),
   }
 }
 
@@ -146,6 +151,7 @@ function dbRowToUnified(row: Record<string, unknown>): UnifiedEvent | null {
     eventKind: (row.event_type as string | null) ?? null,
     dungeonSlug: (row.dungeon_slug as string | null) ?? null,
     dungeonVenueId: (row.dungeon_venue_id as string | null) ?? null,
+    featured: Boolean(row.featured),
   }
 }
 
@@ -163,7 +169,7 @@ export async function fetchPublishedSupabaseEvents(): Promise<UnifiedEvent[]> {
     const { data, error } = await client
       .from('events')
       .select(
-        'title, slug, start_date, end_date, display_date, city, state, short_description, category, logo, tags, status, c2k_source_id, c2k_source_type, last_synced_at, organizer, organizer_name, event_type, dungeon_slug, dungeon_venue_id'
+        'title, slug, start_date, end_date, display_date, city, state, short_description, category, logo, tags, status, c2k_source_id, c2k_source_type, last_synced_at, organizer, organizer_name, event_type, dungeon_slug, dungeon_venue_id, featured'
       )
       .eq('status', 'published')
 

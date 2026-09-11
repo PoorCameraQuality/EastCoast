@@ -365,12 +365,22 @@ const nextConfig = {
     ]
   },
 
-  webpack: (config) => {
+  webpack: (config, { nextRuntime, webpack }) => {
     const appRoot = nativeAppRoot()
     config.context = appRoot
     config.resolve = config.resolve || {}
     config.resolve.symlinks = false
     config.plugins = config.plugins || []
+    if (nextRuntime === 'edge') {
+      // supabase-js feature-detects Node via process.version(s). Edge is not Node;
+      // replace those reads so the Edge compiler does not warn.
+      config.plugins.push(
+        new webpack.DefinePlugin({
+          'process.version': JSON.stringify(''),
+          'process.versions': JSON.stringify({}),
+        }),
+      )
+    }
     config.plugins.push({
       apply(compiler) {
         compiler.hooks.normalModuleFactory.tap('EckeNormalizeCasing', (nmf) => {

@@ -31,31 +31,32 @@ export const dungeons = [
   {
     "name": "The Crucible",
     "slug": "the-crucible-washington-dc",
+    "venueId": "701d6df8-3ffe-4ca9-907d-c24a1e6b15f2",
     "location": {
       "city": "Washington DC",
       "state": "DC",
       "address": "412 V Street NE, Washington, DC 20002"
     },
     "category": "BDSM Dungeon",
-    "excerpt": "The Crucible is a 501(c)7 members-only, non-profit private social club at 412 V Street NE, Washington DC. Membership $40/year. Monthly Dungeon 101 outreach (first Friday)—no membership required. 6,000 sq ft play space.",
+    "excerpt": "The Crucible is a members-only 501(c)7 private club at 412 V Street NE, Washington, DC. Membership is $50/year. Dungeon 101 is the usual first-Friday outreach night. Local play nights and classes — not a convention.",
     "description": {
-      "long": "The Crucible: Washington DC's Premier BDSM Dungeon & Kink Community\n\nA 501(c)7 Members Only, non-profit, Private Social Club\n\n412 V Street NE, Washington, DC 20002. The Crucible does not have a phone—contact info@the-crucible.com.\n\nMembership & Access\nMembership $40/year. Must apply online before attending; memberships cannot be purchased on premises. Dungeon 101 is the monthly outreach event (first Friday)—no membership required. Doors 7:30pm, presentation 8pm. $25 members, $35 non-members, $10 with Gateway card. 18+; no alcohol at Dungeon 101, no sex during the event.\n\nFacility\n6,000 sq ft play space with dance floor, seating, lounge, 2 private rooms, semi-private space, and dungeon. Typical event admission $25 members, $35 guests.\n\nSafety and Membership Policy at The Crucible\nThe Crucible is committed to providing a safe gathering space for all members and their guests. Starting March 1, 2018, we are enhancing our safety measures for new memberships, renewals, and guest admissions.\n\nNew Membership and Renewal Process:\n\nID Search: All new memberships and renewals will include a search of the public US Department of Justice and the DC Metropolitan Police Department registered sex offenders databases.\n\nValid ID Required: You must present a valid government-issued photo ID with your date of birth. Without it, access will be denied. No exceptions.\n\nDatabase Check: Anyone registered on these databases will be denied membership and/or entry.\n\nGuest Admission Policy:\n\nID Requirement: All non-member guests must present a valid government-issued photo ID with date of birth.\n\nDatabase Check: Guest entries will also be checked against the sex offenders databases.\n\nThese measures ensure that The Crucible remains a safe and welcoming space for everyone. We appreciate your understanding and cooperation.\n\nCheck our website for more information!"
+      "long": "The Crucible is a Washington, DC dungeon and private social club at 412 V Street NE. Official materials describe a members-only 501(c)7 organization. There is no published phone number; write info@the-crucible.com.\n\nMembership is $50 per person per year as of July 1, 2026. Apply online before you visit. New memberships are not sold as a walk-up at the door. Each member may bring one guest to an event. Guests fill out a waiver, show government photo ID, and are screened against public sex-offender databases, the same as applicants. Guests may visit twice in a calendar year before the club asks them to join.\n\nMost nights require Crucible membership or a member host. The usual exception is Dungeon 101, the monthly outreach night, typically the first Friday. Official hours for that night start at 7:30pm with a presentation at 8pm. It is 18+, alcohol-free, and sex is not allowed during the event. Confirm the date on the calendar — holidays sometimes move it.\n\nThe published space is about 6,000 square feet, with a dance floor, lounge, private and semi-private rooms, and a dungeon. Door fees vary by night; many play parties list $25 for members and $35 for guests. Classes and skill shares often list $10 / $15. ECKE is not the box office — confirm the current night on the-crucible.com/upcoming-events/.\n\nGovernment photo ID is required. Official policy is that people listed on public sex-offender registries are denied membership and entry."
     },
     "contact": {
       "email": "info@the-crucible.com"
     },
     "website": "https://the-crucible.com/",
-    "logo": "/images/crucible.PNG",
+    "logo": "/images/the-crucible-logo.png",
     "socialMedia": {
       "twitter": "https://twitter.com/thecrucibledc",
       "facebook": "https://www.facebook.com/the.Crucible.DC/",
       "instagram": "https://www.instagram.com/thecrucibledc/"
     },
-    "images": [],
+    "images": ["/images/the-crucible-logo.png"],
     "seo": {
-      "title": "The Crucible - Washington DC Premier BDSM Dungeon & Kink Community | East Coast Kink Events",
-      "description": "The Crucible is a 501(c)7 members-only, non-profit private social club at 412 V Street NE, Washington DC. Membership $40/year. Monthly Dungeon 101 outreach.",
-      "keywords": "The Crucible, Washington DC, BDSM dungeon, kink community, 501(c)7, members only, Dungeon 101, DC dungeon, BDSM Washington"
+      "title": "The Crucible - Washington DC BDSM Dungeon | East Coast Kink Events",
+      "description": "The Crucible is a members-only DC dungeon at 412 V Street NE. Membership $50/year. Local play nights, classes, and Dungeon 101 outreach.",
+      "keywords": "The Crucible, Washington DC, BDSM dungeon, Dungeon 101, DC dungeon, members only"
     }
   },
   {
@@ -494,17 +495,19 @@ export const dungeons = [
       "address": "Washington, DC metro"
     },
     "category": "Community Organization",
-    "excerpt": "Large DC-area BDSM education and social nonprofit—classes, munches, and play parties since 1988.",
+    "excerpt": "Washington, D.C. BDSM education and social organization. Official calendar on br.org. Many in-person nights are at The Crucible.",
     "description": {
-      "long": "Black Rose is a volunteer-run organization offering education, discussion, and social events for the Washington, DC kink community. Membership and event listings are published on br.org."
+      "long": "Black Rose is a Washington, D.C. BDSM education and social organization. The official calendar on br.org lists Tuesday munches and classes, Gateway and Dungeon 101 newcomer nights, socials, and special-interest gatherings.\n\nThis listing is the organization, not a separate dungeon address. Many in-person nights are published at The Crucible, 412 V Street NE. Some discussion nights are listed as Zoom.\n\nMembership is sold on br.org/membership. The official page lists Standard membership at $30/year and VIP at $250/year — confirm current rates there. Write info@br.org.\n\nBlack Rose also produces Charmed, a hybrid Mid-Atlantic hypnosis convention with its own ECKE listing. ECKE is not the box office; register on official Black Rose or Charmed pages."
     },
-    "contact": {},
-    "website": "https://www.br.org/",
+    "contact": {
+      "email": "info@br.org"
+    },
+    "website": "https://br.org/",
     "logo": "/images/dungeons/brand-black-rose-dc.svg",
     "images": [],
     "seo": {
       "title": "Black Rose - Washington DC BDSM Education | East Coast Kink Events",
-      "description": "Black Rose — DC-area BDSM education and social organization with classes and community events since 1988.",
+      "description": "Black Rose is a Washington, D.C. BDSM education and social organization. Classes, munches, and socials are listed on br.org.",
       "keywords": "Black Rose, Washington DC, BDSM education, munches, DC kink"
     }
   },
@@ -537,14 +540,17 @@ export const dungeons = [
     "location": {
       "city": "Fort Lauderdale",
       "state": "FL",
-      "address": "Fort Lauderdale, FL"
+      "address": "855 East Oakland Park Blvd, Ft. Lauderdale, FL 33334"
     },
     "category": "Event Producer",
-    "excerpt": "South Florida fetish event producer—parties and the annual anniversary weekend serving the Florida kink and fetish scene.",
+    "excerpt": "Fort Lauderdale fetish showroom and event producer—monthly dress-code nights plus Florida Fetish Weekend. Shop hours and tickets on fetishfactory.com.",
     "description": {
-      "long": "Fetish Factory has produced fetish-forward nightlife and annual gatherings in South Florida for decades. Shop and event schedules are listed on fetishfactory.com."
+      "long": "Fetish Factory runs a public showroom at 855 East Oakland Park Blvd, Ft. Lauderdale, FL 33334, and produces South Florida fetish nightlife. Official materials list a monthly second-weekend party series (dated nights vary) and the Memorial Day Florida Fetish Weekend hotel circuit. Halloween Fetish Ball is a separate single-night listing. Contact store@fetishfactory.com or (954) 563-5777. Confirm hours on fetishfactory.com."
     },
-    "contact": {},
+    "contact": {
+      "email": "store@fetishfactory.com",
+      "phone": "(954) 563-5777"
+    },
     "website": "https://fetishfactory.com/",
     "logo": "/images/dungeons/brand-fetish-factory-ftl.svg",
     "images": [],

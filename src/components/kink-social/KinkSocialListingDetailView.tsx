@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import Link from 'next/link'
 import Breadcrumb from '@/components/Breadcrumb'
 import KinkSocialEntityGallerySection from '@/components/kink-social/KinkSocialEntityGallerySection'
@@ -6,6 +7,7 @@ import type { AnalyticsEntityType } from '@/lib/analyticsEntities'
 import {
   isRedundantOrgDisplayName,
   listingImageAlt,
+  listingImageUnoptimized,
   usableListingImageUrl,
 } from '@/lib/eckeOrgCatalog'
 import { listingCopyToSafeHtml } from '@/lib/eckeOrgRichText'
@@ -67,10 +69,13 @@ export default function KinkSocialListingDetailView({
             </p>
             <div className="mt-3 flex flex-wrap items-start gap-4 sm:gap-6">
               {logoUrl ?
-                <img
+                <Image
                   src={logoUrl}
                   alt={listingImageAlt(listing.name, 'logo')}
+                  width={80}
+                  height={80}
                   className="h-16 w-16 shrink-0 rounded-xl border border-white/10 bg-white/5 object-cover sm:h-20 sm:w-20"
+                  unoptimized={listingImageUnoptimized(logoUrl)}
                 />
               : null}
               <div className="min-w-0 flex-1">

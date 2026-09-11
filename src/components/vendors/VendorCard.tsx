@@ -9,6 +9,7 @@ import {
   getVendorPaidImage125Url,
   type VendorRecord,
 } from '@/lib/vendorFiltering'
+import { vendorOffsiteShopUrl } from '@/lib/vendorOutboundUrls'
 import type { VendorTag } from '@/data/vendorTaxonomy'
 
 type VendorCardProps = {
@@ -29,6 +30,7 @@ export default function VendorCard({
 }: VendorCardProps) {
   const paidImageUrl = getVendorPaidImage125Url({ vendor, selectedTagSlugs })
   const preview = getVendorCardPreviewText({ vendor, maxSentences: 2 })
+  const shopUrl = vendorOffsiteShopUrl(vendor.websiteUrl)
 
   const trackProfile = () =>
     trackSelectItemEntity({
@@ -104,9 +106,9 @@ export default function VendorCard({
           ) : null}
 
           <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:gap-3">
-            {vendor.websiteUrl ? (
+            {shopUrl ? (
               <OutboundWebsiteLink
-                href={vendor.websiteUrl}
+                href={shopUrl}
                 entityType="vendor"
                 entitySlug={vendor.slug}
                 entityName={vendor.name}
@@ -124,7 +126,6 @@ export default function VendorCard({
                 View listing
               </Link>
             )}
-
             <Link
               href={`/vendors/${vendor.slug}`}
               className="btn-outline inline-flex min-h-touch w-full items-center justify-center px-4 py-2 text-sm sm:w-auto"

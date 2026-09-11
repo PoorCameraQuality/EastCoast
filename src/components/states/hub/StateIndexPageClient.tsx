@@ -7,6 +7,7 @@ import Breadcrumb from '@/components/Breadcrumb'
 import ActiveLocalHubCard from '@/components/states/hub/ActiveLocalHubCard'
 import NationwideOnlineShelf from '@/components/states/hub/NationwideOnlineShelf'
 import RegionGroupGrid from '@/components/states/hub/RegionGroupGrid'
+import StateIndexMap from '@/components/states/hub/StateIndexMap'
 import type { StateHubContext } from '@/lib/publicStateIndex'
 
 type Props = Pick<
@@ -135,6 +136,8 @@ export default function StateIndexPageClient({
 
         <div className="st-layout st-layout-full">
           <div className="st-main">
+            <StateIndexMap summaries={summaries} />
+
             <section className="st-section" aria-labelledby="st-chips">
               <h2 id="st-chips" className="st-section-title mb-3">
                 Quick state picker

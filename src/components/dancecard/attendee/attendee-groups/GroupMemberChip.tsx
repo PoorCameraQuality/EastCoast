@@ -1,6 +1,8 @@
 'use client'
 
+import Image from 'next/image'
 import { cn } from '@/lib/cn'
+import { listingImageUnoptimized } from '@/lib/nextImageSrc'
 
 export type GroupMemberChipPerson = {
   accountId: string
@@ -36,7 +38,19 @@ export function GroupMemberChip({
       title={label}
     >
       {person.avatarUrl ? (
-        <img src={person.avatarUrl} alt="" className={cn('shrink-0 rounded-full object-cover ring-1 ring-dc-border', dim)} />
+        person.avatarUrl.startsWith('blob:') || person.avatarUrl.startsWith('data:') ? (
+          // eslint-disable-next-line @next/next/no-img-element -- blob/object-URL avatar preview; next/image cannot accept blob src
+          <img src={person.avatarUrl} alt="" className={cn('shrink-0 rounded-full object-cover ring-1 ring-dc-border', dim)} />
+        ) : (
+          <Image
+            src={person.avatarUrl}
+            alt=""
+            width={size === 'xs' ? 24 : 28}
+            height={size === 'xs' ? 24 : 28}
+            className={cn('shrink-0 rounded-full object-cover ring-1 ring-dc-border', dim)}
+            unoptimized={listingImageUnoptimized(person.avatarUrl)}
+          />
+        )
       ) : (
         <span
           className={cn(

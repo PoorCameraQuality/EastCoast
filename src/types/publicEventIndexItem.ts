@@ -46,6 +46,8 @@ export type PublicEventIndexItem = {
   dancecardEnabled?: boolean
   newFriendly?: boolean
   registrationOpen?: boolean
+  /** Sticky featured / sponsor pin from the events catalog. */
+  featured?: boolean
 
   sourceSystem: 'ecke' | 'kink_social'
   sourceId?: string

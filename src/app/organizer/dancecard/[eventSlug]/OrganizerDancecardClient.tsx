@@ -248,10 +248,10 @@ export function OrganizerDancecardClient({ eventSlug }: { eventSlug: string }) {
     }
   }, [router, searchParams, slug, tab])
 
-  const previewRole = (role: 'attendee' | 'staff' | 'safety' | 'public') => {
+  const previewRole = useCallback((role: 'attendee' | 'staff' | 'safety' | 'public') => {
     const url = `/dancecard/${slug}?previewRole=${role}`
     window.open(url, '_blank', 'noopener,noreferrer')
-  }
+  }, [slug])
 
   useEffect(() => {
     if (!searchParams.get('tab')) {
@@ -298,7 +298,7 @@ export function OrganizerDancecardClient({ eventSlug }: { eventSlug: string }) {
       },
       previewRole,
     }),
-    [slug, switchTab],
+    [slug, switchTab, previewRole],
   )
 
   return (

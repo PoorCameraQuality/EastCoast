@@ -19,9 +19,10 @@
   }
 }
 
-/* Masthead */
+/* Masthead — media/logo is a background layer; title/chips always paint on top */
 .event-masthead {
   position: relative;
+  isolation: isolate;
   overflow: hidden;
   border-radius: 1rem;
   border: 1px solid color-mix(in srgb, var(--event-primary) 22%, rgba(255, 255, 255, 0.08));
@@ -30,28 +31,52 @@
 
 .event-masthead-media {
   position: relative;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.event-masthead-media .event-media-frame,
+.event-masthead-media .event-logo-stage,
+.event-masthead-media .event-logo-hero {
+  z-index: 0;
 }
 
 .event-masthead-media .event-media-frame-showcase {
   min-height: 14rem;
+  height: 16rem;
   flex: none;
 }
 
 @media (min-width: 640px) {
   .event-masthead-media .event-media-frame-showcase {
     min-height: 18rem;
+    height: 18rem;
   }
 }
 
 @media (min-width: 1024px) {
   .event-masthead-media .event-media-frame-showcase {
     min-height: 20rem;
+    height: 20rem;
   }
+}
+
+/* Keep the mark in the upper well so a flyer cannot sit on the H1 */
+.event-masthead-media .event-logo-stage {
+  align-items: flex-start;
+  padding-top: 1rem;
+  padding-bottom: 5.5rem;
+}
+
+.event-masthead-media .event-logo-hero {
+  max-height: 68%;
 }
 
 .event-masthead-scrim {
   position: absolute;
   inset: 0;
+  z-index: 1;
   background: linear-gradient(
     to top,
     color-mix(in srgb, var(--event-surface) 95%, #07080d) 0%,
@@ -121,6 +146,7 @@
   line-height: 1.12;
   letter-spacing: -0.03em;
   color: var(--sf-text-strong, #fff);
+  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.72);
 }
 
 @media (min-width: 640px) {

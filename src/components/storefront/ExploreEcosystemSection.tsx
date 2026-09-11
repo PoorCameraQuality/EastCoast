@@ -94,11 +94,11 @@ export default function ExploreEcosystemSection({ vendors, dungeons, guides }: P
             {dungeons.slice(0, 3).map((d, i) => (
               <li key={d.slug}>
                 <EckeLink
-                  href={`/dungeons/${d.slug}`}
+                  href={d.href}
                   className="sf-space-shelf-card sf-card-lift"
                   onClick={() =>
                     trackSelectItemEntity({
-                      entityType: 'dungeon',
+                      entityType: d.entityType,
                       slug: d.slug,
                       name: d.name,
                       itemListName: 'home_ecosystem_spaces',
@@ -130,7 +130,7 @@ export default function ExploreEcosystemSection({ vendors, dungeons, guides }: P
 
           <Shelf title="Before you go" href="/education" cta="All guides" accentClass="text-sf-fresh">
             {guides.slice(0, 3).map((g, i) => (
-              <li key={g.title}>
+              <li key={g.href}>
                 <EckeLink href={g.href} className="sf-guide-shelf-card sf-card-lift">
                   <div className={`sf-guide-cover bg-gradient-to-br ${GUIDE_GRADIENTS[i % 3]}`}>
                     <span className="sf-guide-spine" aria-hidden />

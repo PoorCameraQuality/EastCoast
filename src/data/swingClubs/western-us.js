@@ -87,16 +87,33 @@ export const swingClubsWesternUs = [
   {
     name: 'Power Exchange',
     slug: 'power-exchange-san-francisco-ca',
-    location: { city: 'San Francisco', state: 'CA', address: '220 Jones St, San Francisco, CA 94102' },
+    location: { city: 'San Francisco', state: 'CA', address: '220 Jones Street, San Francisco, CA 94102' },
     category: 'Swing / lifestyle club',
-    excerpt: 'SF institution since 1996—multi-floor pansexual club, drug and alcohol free.',
-    description: { long: 'Power Exchange — San Francisco. Walk-in welcome 18+. powerexchange.com' },
-    contact: { phone: '(415) 487-9944' },
+    excerpt:
+      'San Francisco adult nightclub at 220 Jones Street since 1996. Open Wednesday–Sunday. 18+. Membership optional. Official calendar on powerexchange.com.',
+    description: {
+      long:
+        'Power Exchange is a private 18+ adult nightclub at 220 Jones Street (between Eddy and Turk), San Francisco, CA 94102. Official materials date the venue to 1996. Walk-in entry is allowed; membership is optional and discounts door prices.\n\nPublished house hours are Wednesday through Sunday. Typical doors are 9pm; closing time depends on the night (often 3am midweek/Sunday, 4am Friday, 5am Saturday). The main floor and downstairs are open to everyone; the third floor is usually couples and/or singles in female attire unless a night lists all three floors open.\n\nContact: 415-487-9944, text 415-651-3392, info@powerexchange.com. Tickets: Eventbrite (card) or cash at the door; ATM in the lobby. Membership: joinit.org/o/powerexchange.\n\nPublished weekday/Sunday door prices (confirm per event): non-members $60 single male attire / $50 couple / $20 single female attire; members $50 / $40 / $10. Friday–Saturday list is higher. Active-duty and veteran military 50% off admission.\n\nHouse rules on powerexchange.com include no phones/cameras/recording, no alcohol or drugs, consent required, and condoms required for penetration (not oral). Parking listed: California Parking Garage, 175 Turk Street; also 833 Mission Street and 333 Post Street.\n\nECKE lists dated club nights from the official calendar. This is a local venue, not a convention. Confirm the night, dress, and fees on powerexchange.com before you go.',
+    },
+    contact: { phone: '(415) 487-9944', email: 'info@powerexchange.com' },
+    hours: 'Wednesday–Sunday from 9pm; close time varies by night (often 3am–5am)',
+    lastReviewed: '2026-09-10',
+    facts: [
+      { text: '220 Jones Street, San Francisco, CA 94102', source: 'website' },
+      { text: 'Open Wednesday through Sunday; typical doors 9pm', source: 'website' },
+      { text: '18+; government-issued ID required; membership optional', source: 'website' },
+      { text: 'Phone 415-487-9944 · text 415-651-3392 · info@powerexchange.com', source: 'website' },
+    ],
     website: 'https://powerexchange.com/',
-    logo: '/images/placeholder-logo.svg',
-    images: [],
+    logo: '/images/power-exchange.jpg',
+    images: ['/images/power-exchange.jpg'],
     socialMedia: {},
-    seo: { title: 'Power Exchange - San Francisco CA | East Coast Kink Events', description: 'Power Exchange — San Francisco adult club.', keywords: 'Power Exchange, San Francisco' },
+    seo: {
+      title: 'Power Exchange - San Francisco CA Adult Nightclub | East Coast Kink Events',
+      description:
+        'Power Exchange, 220 Jones Street, San Francisco. 18+ adult nightclub since 1996. Wednesday–Sunday. Official nights on powerexchange.com.',
+      keywords: 'Power Exchange, San Francisco, Jones Street, adult nightclub, lifestyle club',
+    },
   },
   {
     name: 'Twist SF',

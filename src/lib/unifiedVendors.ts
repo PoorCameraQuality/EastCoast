@@ -7,6 +7,7 @@ import { taxonomySlugsFromSeoHubTags, vendorMatchesHubTag } from '@/lib/vendorHu
 import { EAST_COAST_STATES, type StateSlug } from '@/lib/eastCoastStates'
 import { resolveEntityHeroUrl } from '@/lib/kinkSocialEntityMedia'
 import { getSupabaseServerClient } from '@/lib/supabaseServer'
+import { vendorOffsiteShopUrl } from '@/lib/vendorOutboundUrls'
 
 export type UnifiedVendor = VendorRecord & {
   stateAbbr: string | null
@@ -147,7 +148,7 @@ function parseDbListings(raw: DbVendorListing[] | string | null | undefined): Ve
       title,
       imageUrl: item.imageUrl ?? null,
       priceLabel: item.priceLabel ?? null,
-      externalUrl: item.externalUrl ?? null,
+      externalUrl: vendorOffsiteShopUrl(item.externalUrl) ?? null,
       sourceSystem,
       sortOrder: item.sortOrder ?? listings.length,
     })
@@ -174,7 +175,7 @@ export function dbRowToUnified(row: DbVendorRow, seoTagSlugs: string[]): Unified
     name: row.name,
     description: row.short_description || row.description || row.meta_description || undefined,
     story: row.description || undefined,
-    websiteUrl: row.website_url || undefined,
+    websiteUrl: vendorOffsiteShopUrl(row.website_url),
     contactEmail: row.contact_email || undefined,
     location,
     tagSlugs,
@@ -321,7 +322,7 @@ function overlayStaticPaidAssets(remote: UnifiedVendor, staticV: UnifiedVendor |
     tagSlugs: remote.tagSlugs.length ? remote.tagSlugs : staticV.tagSlugs,
     story: remote.story || staticV.story,
     description: remote.description || staticV.description,
-    websiteUrl: remote.websiteUrl || staticV.websiteUrl,
+    websiteUrl: vendorOffsiteShopUrl(remote.websiteUrl, staticV.websiteUrl),
     dungeonListingSlug: remote.dungeonListingSlug ?? staticV.dungeonListingSlug,
   }
 }

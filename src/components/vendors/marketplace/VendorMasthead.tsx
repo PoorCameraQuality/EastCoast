@@ -3,6 +3,7 @@ import VendorContactLink from '@/components/vendors/marketplace/VendorContactLin
 import OutboundWebsiteLink from '@/components/analytics/OutboundWebsiteLink'
 import VendorMediaStage from '@/components/vendors/marketplace/VendorMediaStage'
 import { locationDisplay } from '@/lib/publicVendorIndex'
+import { vendorOffsiteShopUrl } from '@/lib/vendorOutboundUrls'
 import type { PublicVendorListing } from '@/types/publicVendorListing'
 
 type Props = {
@@ -10,7 +11,7 @@ type Props = {
 }
 
 export default function VendorMasthead({ vendor }: Props) {
-  const shopUrl = vendor.shopUrl ?? vendor.websiteUrl
+  const shopUrl = vendorOffsiteShopUrl(vendor.shopUrl, vendor.websiteUrl)
 
   return (
     <header className="vendor-masthead">
@@ -46,9 +47,11 @@ export default function VendorMasthead({ vendor }: Props) {
             </OutboundWebsiteLink>
           ) : null}
           <VendorContactLink vendor={vendor} className="vendor-btn vendor-btn-neutral" />
-          <EckeLink href="#vendor-events" className="vendor-btn vendor-btn-view">
-            See events they vend
-          </EckeLink>
+          {(vendor.upcomingVendorEvents?.length ?? 0) > 0 ? (
+            <EckeLink href="#vendor-events" className="vendor-btn vendor-btn-view">
+              See events they vend
+            </EckeLink>
+          ) : null}
         </div>
       </div>
     </header>

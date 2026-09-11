@@ -60,6 +60,8 @@ export function listingImageAlt(name: string, kind: 'logo' | 'image' = 'logo'): 
   return kind === 'image' ? `${label} image` : `${label} logo`
 }
 
+export { listingImageUnoptimized } from '@/lib/nextImageSrc'
+
 export function isRedundantOrgDisplayName(
   orgDisplayName: string | null | undefined,
   listingName: string,

@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import Link from 'next/link'
 import { EventStructuredData } from '@/components/StructuredData'
 import Breadcrumb from '@/components/Breadcrumb'
@@ -25,6 +26,7 @@ import { ECKE_DISCORD_INVITE_URL, ECKE_DISCORD_LABEL } from '@/lib/eckeCommunity
 import type { EventMedia } from '@/lib/eventMedia'
 import type { EventBrandTheme } from '@/lib/eventBrandTheme'
 import { eventBrandStyle } from '@/lib/eventBrandTheme'
+import { listingImageUnoptimized } from '@/lib/nextImageSrc'
 
 type EventUpdate = {
   id: string
@@ -176,7 +178,19 @@ export default function EventDetailView({ event, media, brand, canManage, posts 
                     ) : null}
                     {event.mapUrl ? (
                       <a href={event.mapUrl} target="_blank" rel="noopener noreferrer" className="block rounded-xl border border-white/10 p-3">
-                        <img src={event.mapUrl} alt={`${event.name} event map`} className="max-h-64 w-full rounded-lg object-contain" />
+                        {event.mapUrl.startsWith('blob:') || event.mapUrl.startsWith('data:') ? (
+                          // eslint-disable-next-line @next/next/no-img-element -- blob/object-URL map preview; next/image cannot accept blob src
+                          <img src={event.mapUrl} alt={`${event.name} event map`} className="max-h-64 w-full rounded-lg object-contain" />
+                        ) : (
+                          <Image
+                            src={event.mapUrl}
+                            alt={`${event.name} event map`}
+                            width={640}
+                            height={256}
+                            className="max-h-64 w-full rounded-lg object-contain"
+                            unoptimized={listingImageUnoptimized(event.mapUrl)}
+                          />
+                        )}
                         <p className="mt-2 text-sm text-sf-strong">Event map</p>
                       </a>
                     ) : null}

@@ -522,10 +522,10 @@
   margin-top: auto;
 }
 
-/* Logo-as-product composition */
+/* Logo-as-product composition — stay above auras only, never above page text */
 .event-logo-stage {
   position: relative;
-  z-index: 10;
+  z-index: 1;
   display: flex;
   align-items: center;
   justify-content: center;

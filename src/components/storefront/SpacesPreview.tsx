@@ -39,11 +39,11 @@ export default function SpacesPreview({ dungeons }: Props) {
           {dungeons.map((d) => (
             <li key={d.slug}>
               <Link
-                href={`/dungeons/${d.slug}`}
+                href={d.href}
                 className="sf-card-lift group flex h-full flex-col rounded-2xl border border-sf-oxblood/25 bg-sf-card/70 p-5"
                 onClick={() =>
                   trackSelectItemEntity({
-                    entityType: 'dungeon',
+                    entityType: d.entityType,
                     slug: d.slug,
                     name: d.name,
                     itemListName: 'home_spaces_preview',

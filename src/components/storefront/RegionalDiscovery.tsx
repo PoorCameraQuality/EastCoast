@@ -1,35 +1,12 @@
 import EckeLink from '@/components/EckeLink'
 import type { TopStateEntry } from '@/lib/topStatesByActivity'
 
-/** Pinned homepage states (handoff top performers). */
-const PINNED_STATE_SLUGS = [
-  'pennsylvania',
-  'california',
-  'texas',
-  'florida',
-  'maryland',
-  'illinois',
-  'washington-dc',
-  'new-york',
-] as const
-
 type Props = {
   states: TopStateEntry[]
 }
 
-function pickPinnedStates(states: TopStateEntry[]): TopStateEntry[] {
-  const bySlug = new Map(states.map((state) => [state.slug, state]))
-  const pinned = PINNED_STATE_SLUGS.map((slug) => bySlug.get(slug)).filter(
-    (state): state is TopStateEntry => Boolean(state),
-  )
-  if (pinned.length >= 6) return pinned.slice(0, 8)
-  const pinnedSet = new Set<string>(PINNED_STATE_SLUGS)
-  const extras = states.filter((state) => !pinnedSet.has(state.slug))
-  return [...pinned, ...extras].slice(0, 8)
-}
-
 export default function RegionalDiscovery({ states }: Props) {
-  const visibleStates = pickPinnedStates(states)
+  const visibleStates = states.filter((state) => state.eventCount > 0).slice(0, 8)
 
   return (
     <section className="sf-section-tight" aria-labelledby="regional-discovery-title">

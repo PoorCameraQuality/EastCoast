@@ -57,6 +57,7 @@ export function ProfilePhotoField({ eventSlug, displayName, photoUrl, previewUrl
       <div className="flex flex-wrap items-center gap-4">
         <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-full border-2 border-dc-accent-border/50 bg-dc-elevated-muted shadow-inner">
           {shownUrl ? (
+            // eslint-disable-next-line @next/next/no-img-element -- blob/object-URL upload preview; next/image cannot accept blob src
             <img src={shownUrl} alt="" className="h-full w-full object-cover" />
           ) : (
             <span className="flex h-full w-full items-center justify-center text-lg font-bold text-dc-accent">

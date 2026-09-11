@@ -2497,7 +2497,7 @@ export const events = [
     "organizer": "Fetish Factory",
     "venue": "Sheraton Suites Fort Lauderdale at Cypress Creek",
     "hotel": "Sheraton Suites Fort Lauderdale at Cypress Creek, 555 NW 62nd St, Fort Lauderdale, FL 33309",
-    "logo": "/images/events/logo-fetish-factory-white.png",
+    "logo": "/images/dungeons/brand-fetish-factory-ftl.svg",
     "features": [
       "Memorial Day weekend hotel takeover",
       "Seven parties / four days",
@@ -3313,6 +3313,347 @@ export const events = [
       "title": "goBOUNDLESS Full Access Camp 2026 - Massachusetts | East Coast Kink Events",
       "description": "goBOUNDLESS weekend BDSM education camp Aug 20–23, 2026 near I-90 in central Massachusetts. 200 spots. Full Access vetted members. goboundless.us/events.",
       "keywords": "goBOUNDLESS, Massachusetts kink camp, BDSM education camp New England, vetted kink camping, central MA, I-90, Full Access camp, outdoor kink education"
+    }
+  },
+  {
+    "name": "Montreal Fetish Weekend 2026",
+    "slug": "montreal-fetish-weekend-2026",
+    "date": {
+      "start": "2026-09-02",
+      "end": "2026-09-07",
+      "display": "Sep 2–7, 2026"
+    },
+    "location": {
+      "city": "Montreal",
+      "state": "QC",
+      "region": "Canada, Quebec"
+    },
+    "category": "Convention",
+    "excerpt": "Multi-day fetish weekend in Montreal’s Gay Village, September 2–7, 2026. Workshops, expo, fashion, and night events across partner venues. Tickets on the official site — ECKE is not the box office.",
+    "longDescription": "Montreal Fetish Weekend is a destination fetish weekend in downtown Montreal, Quebec. The official 2026 schedule runs September 2–7, from a Wednesday early-bird cocktail through a Monday farewell dinner.\n\nProgramming is spread across Village partner venues. The public calendar lists workshops, Expo Kink, fashion happenings, and night events including Taste of Kink, Pervercity, the Kink♦Xtacy Fetish Fantasy Ball at Bain Mathieu, and Publique Disgrace.\n\nVIP passes and individual tickets are sold on montrealfetishweekend.com. Write mtlfetishweekend@gmail.com for group questions. No single host hotel name is published. ECKE is not the merchant of record.",
+    "website": "https://montrealfetishweekend.com/events/",
+    "organizer": "Montreal Fetish Weekend",
+    "venue": "Montreal Gay Village (multi-venue weekend)",
+    "logo": "/images/events/brand-montreal-fetish-weekend.svg",
+    "features": [
+      "Sep 2–7, 2026 multi-day weekend",
+      "Montreal Gay Village partner venues",
+      "Workshops, Expo Kink, fashion, night events",
+      "Tickets on montrealfetishweekend.com"
+    ],
+    "seo": {
+      "title": "Montreal Fetish Weekend 2026 - Montreal QC | East Coast Kink Events",
+      "description": "Montreal Fetish Weekend 2026 (Sep 2–7) — multi-day fetish destination weekend in Montreal’s Gay Village. Official tickets and schedule.",
+      "keywords": "Montreal Fetish Weekend, Montreal, Quebec, fetish weekend, Gay Village"
+    }
+  },
+  {
+    "name": "Prague Fetish Weekend 2026",
+    "slug": "prague-fetish-weekend-2026",
+    "date": {
+      "start": "2026-10-01",
+      "end": "2026-10-04",
+      "display": "Oct 1–4, 2026"
+    },
+    "location": {
+      "city": "Prague",
+      "state": "CZ",
+      "region": "Czechia"
+    },
+    "category": "Convention",
+    "excerpt": "Four-day fetish and BDSM festival in central Prague, October 1–4, 2026: Entrée, Market, Night, and afterparty. Tickets on tickets.fetishweekend.cz. International destination weekend — not an East Coast local night.",
+    "longDescription": "Prague Fetish Weekend 2026 is the thirteenth edition of this multi-day festival in Prague, Czechia (October 1–4, 2026).\n\nThursday Entrée at Tresor Club (Vinohradská 25); Friday Market and Saturday Night at Gabriel Loci (Holečkova 106/10); Sunday close at Klub Kotelna (Služeb 3). 18+. Tickets at tickets.fetishweekend.cz or Hell.cz studio reception. Saturday Night is not sold as a single-day ticket. Write produkce@hellevents.cz.\n\nECKE is not the box office. This is an international destination weekend, not a U.S. local club night.",
+    "website": "https://fetishweekend.cz/en/",
+    "organizer": "Prague Fetish Weekend",
+    "venue": "Tresor Club, Gabriel Loci, and Klub Kotelna",
+    "logo": "/images/events/brand-prague-fetish-weekend.svg",
+    "features": [
+      "Oct 1–4, 2026 four-day festival",
+      "Prague multi-venue program",
+      "18+ only",
+      "Tickets on tickets.fetishweekend.cz"
+    ],
+    "seo": {
+      "title": "Prague Fetish Weekend 2026 - Prague | East Coast Kink Events",
+      "description": "Prague Fetish Weekend 2026 (Oct 1–4) — four-day fetish festival in central Prague. Official tickets at tickets.fetishweekend.cz.",
+      "keywords": "Prague Fetish Weekend, Prague, Czechia, fetish festival"
+    }
+  },
+  {
+    "name": "Passion Messe 2026",
+    "slug": "passion-messe-2026",
+    "date": {
+      "start": "2026-11-06",
+      "end": "2026-11-08",
+      "display": "Nov 6–8, 2026"
+    },
+    "location": {
+      "city": "Hamburg",
+      "state": "",
+      "region": "Germany"
+    },
+    "category": "Convention",
+    "excerpt": "Three-day European BDSM and fetish fair in Hamburg, November 6–8, 2026 at MesseHalle Hamburg-Schnelsen. Vendors, workshops, stage shows, and evening events. Tickets on passion-messe.com. Not an East Coast local night.",
+    "longDescription": "Passion 2026 is the European BDSM and fetish fair in Hamburg, Germany, November 6–8, 2026 at MesseHalle Hamburg-Schnelsen, Modering 1a, 22457 Hamburg.\n\nPublished hall hours: Friday 15:00–22:00, Saturday 11:00–22:00, Sunday 11:00–16:00. Vendor floor, workshops, stage shows, and Saturday evening events (Kinky Burlesque, Passion Night). Tickets on passion-messe.com/en/tickets. Organizer: M&A Messemanagement. Contacts published on the site: michael@messemanagement.org and anne@messemanagement.org.\n\nECKE is not the merchant of record. International multi-day fair — not a U.S. local night.",
+    "website": "https://www.passion-messe.com/en/",
+    "organizer": "Passion Messe",
+    "venue": "MesseHalle Hamburg-Schnelsen",
+    "logo": "/images/events/brand-passion-messe.svg",
+    "features": [
+      "Nov 6–8, 2026 three-day fair",
+      "MesseHalle Hamburg-Schnelsen",
+      "Vendor floor, workshops, evening events",
+      "Tickets on passion-messe.com"
+    ],
+    "seo": {
+      "title": "Passion Messe 2026 - Hamburg | East Coast Kink Events",
+      "description": "Passion Messe 2026 (Nov 6–8) — European BDSM and fetish fair in Hamburg. Official tickets on passion-messe.com.",
+      "keywords": "Passion Messe, Hamburg, BDSM fair, fetish fair"
+    }
+  },
+  {
+    "name": "Halloween Fetish Ball 2026",
+    "slug": "halloween-fetish-ball-2026",
+    "date": {
+      "start": "2026-10-23",
+      "end": "2026-10-23",
+      "display": "Oct 23, 2026 · Friday (Wilton Manors)"
+    },
+    "location": {
+      "city": "Wilton Manors",
+      "state": "FL",
+      "region": "Southeastern, Florida"
+    },
+    "category": "Play party",
+    "excerpt": "Friday Halloween Fetish Ball by Fetish Factory, October 23, 2026 at Manor LIVE in Wilton Manors. One local dress-code night — not a convention. Tickets on fetishfactory.com/halloween/.",
+    "longDescription": "Fetish Factory’s Halloween Fetish Ball is listed for Friday, October 23, 2026 at Manor LIVE in Wilton Manors. Single-night local party with a strict fetish / costume dress code. Tickets in-store, online, and at the door. Showroom: 855 East Oakland Park Blvd, Ft. Lauderdale. store@fetishfactory.com / (954) 563-5777.\n\nECKE is not the box office. This night stays off the national convention rail.",
+    "website": "https://fetishfactory.com/halloween/",
+    "organizer": "Fetish Factory",
+    "venue": "Manor LIVE",
+    "logo": "/images/dungeons/brand-fetish-factory-ftl.svg",
+    "features": [
+      "Friday Oct 23, 2026 local night",
+      "Manor LIVE, Wilton Manors",
+      "Strict dress code",
+      "Not a multi-day convention"
+    ],
+    "seo": {
+      "title": "Halloween Fetish Ball 2026 - Wilton Manors | East Coast Kink Events",
+      "description": "Fetish Factory Halloween Fetish Ball, Friday Oct 23, 2026 at Manor LIVE in Wilton Manors. Local night — tickets on fetishfactory.com.",
+      "keywords": "Halloween Fetish Ball, Fetish Factory, Wilton Manors, Fort Lauderdale"
+    }
+  },
+  {
+    "name": "TG Glasgow",
+    "slug": "torture-garden-glasgow-2026",
+    "date": {
+      "start": "2026-10-03",
+      "end": "2026-10-03",
+      "display": "Oct 3, 2026 · 9:00 PM – 3:00 AM"
+    },
+    "location": {
+      "city": "Glasgow",
+      "state": "",
+      "region": "Scotland, UK"
+    },
+    "category": "Play party",
+    "excerpt": "Torture Garden Glasgow, Saturday October 3, 2026, 9pm–3am at The Vic & Assembly, 20 Scott St. Touring club night — not a U.S. convention. Tickets on torturegarden.com.",
+    "longDescription": "TG Glasgow is listed for Saturday, October 3, 2026, 9pm–3am at The Vic & Assembly, 20 Scott St, Glasgow G3 6PE. Strict dress code. Tickets via torturegarden.com and the Dice app. Outfit-check contact published on the official page: yasmin@torturegarden.com.\n\nSingle-night destination club date — not a multi-day convention and not an East Coast local night.",
+    "website": "https://torturegarden.com/tg-glasgow-2/",
+    "organizer": "Torture Garden",
+    "venue": "The Vic & Assembly",
+    "logo": "/images/events/brand-torture-garden.svg",
+    "features": [
+      "Oct 3, 2026 Glasgow tour night",
+      "The Vic & Assembly",
+      "Not a U.S. convention"
+    ],
+    "seo": {
+      "title": "TG Glasgow 2026 - Torture Garden | East Coast Kink Events",
+      "description": "Torture Garden Glasgow, Oct 3, 2026 at The Vic & Assembly. Touring club night — official tickets on torturegarden.com.",
+      "keywords": "Torture Garden, TG Glasgow, Vic & Assembly"
+    }
+  },
+  {
+    "name": "EXXXOTICA Chicago 2026",
+    "slug": "exxxotica-chicago-2026",
+    "date": {
+      "start": "2026-04-10",
+      "end": "2026-04-12",
+      "display": "Apr 10–12, 2026"
+    },
+    "location": {
+      "city": "Rosemont",
+      "state": "IL",
+      "region": "Midwest, Illinois"
+    },
+    "category": "Convention",
+    "excerpt": "EXXXOTICA Expo in Rosemont / Chicago, April 10–12, 2026 at Donald E. Stephens Convention Center. Three-day adult convention. Tickets on exxxoticaexpo.com.",
+    "longDescription": "EXXXOTICA Chicago 2026 ran April 10–12 at Donald E. Stephens Convention Center, 5555 North River Road, Rosemont, IL 60018. Official hours: Friday 5pm–11pm (Ladies Free Friday), Saturday 1pm–10pm, Sunday 1pm–6pm. Official hotels: Embassy Suites Chicago O’Hare Rosemont and DoubleTree Chicago O’Hare Airport – Rosemont. Tickets at exxxoticaexpo.com/tickets. 18+ / 21+ for VIP.",
+    "website": "https://www.exxxoticaexpo.com/locations/chicago-il/",
+    "organizer": "EXXXOTICA Expo",
+    "venue": "Donald E. Stephens Convention Center",
+    "hotel": "Embassy Suites by Hilton Chicago O’Hare Rosemont, 5555 North River Road, Rosemont",
+    "logo": "/images/events/brand-exxxotica-expo.svg",
+    "features": [
+      "Apr 10–12, 2026 three-day expo",
+      "Donald E. Stephens Convention Center",
+      "18+ adult expo"
+    ],
+    "seo": {
+      "title": "EXXXOTICA Chicago 2026 - Rosemont IL | East Coast Kink Events",
+      "description": "EXXXOTICA Chicago 2026 (Apr 10–12) at Donald E. Stephens Convention Center, Rosemont. Official tickets on exxxoticaexpo.com.",
+      "keywords": "EXXXOTICA Chicago, Rosemont, adult expo, Donald E. Stephens"
+    }
+  },
+  {
+    "name": "EXXXOTICA Minneapolis 2026",
+    "slug": "exxxotica-minneapolis-2026",
+    "date": {
+      "start": "2026-06-26",
+      "end": "2026-06-28",
+      "display": "Jun 26–28, 2026"
+    },
+    "location": {
+      "city": "Minneapolis",
+      "state": "MN",
+      "region": "Midwest, Minnesota"
+    },
+    "category": "Convention",
+    "excerpt": "EXXXOTICA Expo in Minneapolis, June 26–28, 2026 at Minneapolis Convention Center. Three-day adult convention. Tickets on exxxoticaexpo.com.",
+    "longDescription": "EXXXOTICA Minneapolis 2026 ran June 26–28 at Minneapolis Convention Center, 1301 2nd Ave South, Minneapolis, MN 55404. Official Friday 5pm–11pm (Ladies Free Friday) and Saturday 2pm–10pm. Official hotel: Hilton Minneapolis, 1001 S Marquette Ave. Tickets at exxxoticaexpo.com/tickets. 18+ / 21+ for VIP.",
+    "website": "https://www.exxxoticaexpo.com/locations/minneapolis-mn/",
+    "organizer": "EXXXOTICA Expo",
+    "venue": "Minneapolis Convention Center",
+    "hotel": "Hilton Minneapolis, 1001 S Marquette Ave, Minneapolis, MN 55403",
+    "logo": "/images/events/brand-exxxotica-expo.svg",
+    "features": [
+      "Jun 26–28, 2026 three-day expo",
+      "Minneapolis Convention Center",
+      "18+ adult expo"
+    ],
+    "seo": {
+      "title": "EXXXOTICA Minneapolis 2026 | East Coast Kink Events",
+      "description": "EXXXOTICA Minneapolis 2026 (Jun 26–28) at Minneapolis Convention Center. Official tickets on exxxoticaexpo.com.",
+      "keywords": "EXXXOTICA Minneapolis, Minneapolis Convention Center, adult expo"
+    }
+  },
+  {
+    "name": "EXXXOTICA Edison 2026",
+    "slug": "exxxotica-edison-2026",
+    "date": {
+      "start": "2026-10-23",
+      "end": "2026-10-25",
+      "display": "Oct 23–25, 2026"
+    },
+    "location": {
+      "city": "Edison",
+      "state": "NJ",
+      "region": "Mid-Atlantic, New Jersey"
+    },
+    "category": "Convention",
+    "excerpt": "EXXXOTICA Expo in Edison, NJ, October 23–25, 2026 at the New Jersey Convention & Exposition Center. Three-day adult convention. Tickets on exxxoticaexpo.com.",
+    "longDescription": "EXXXOTICA Edison 2026 is October 23–25 at the New Jersey Convention & Exposition Center, 97 Sunfield Avenue, Edison, NJ 08837. Official Friday 5pm–11pm (Ladies Free Friday) and Saturday 1pm–10pm. Official hotel: Courtyard by Marriott Edison Woodbridge, 3105 Woodbridge Ave. Tickets at exxxoticaexpo.com/tickets. Published Edison online prices include 1-day general admission $49.99 and VIP tiers; door is cash-only and higher. 18+ / 21+ for VIP.",
+    "website": "https://www.exxxoticaexpo.com/locations/edison-nj/",
+    "organizer": "EXXXOTICA Expo",
+    "venue": "New Jersey Convention & Exposition Center",
+    "hotel": "Courtyard by Marriott Edison Woodbridge, 3105 Woodbridge Ave, Edison, NJ 08837",
+    "logo": "/images/events/brand-exxxotica-expo.svg",
+    "features": [
+      "Oct 23–25, 2026 three-day expo",
+      "New Jersey Convention & Exposition Center",
+      "18+ adult expo"
+    ],
+    "seo": {
+      "title": "EXXXOTICA Edison 2026 - New Jersey | East Coast Kink Events",
+      "description": "EXXXOTICA Edison 2026 (Oct 23–25) at the New Jersey Convention & Exposition Center. Official tickets on exxxoticaexpo.com.",
+      "keywords": "EXXXOTICA Edison, New Jersey, adult expo, Edison NJ"
+    }
+  },
+  {
+    "name": "EXXXOTICA Miami 2026",
+    "slug": "exxxotica-miami-2026",
+    "date": {
+      "start": "2026-12-04",
+      "end": "2026-12-06",
+      "display": "Dec 4–6, 2026"
+    },
+    "location": {
+      "city": "Miami",
+      "state": "FL",
+      "region": "Southeastern, Florida"
+    },
+    "category": "Convention",
+    "excerpt": "EXXXOTICA Expo in Miami, December 4–6, 2026 at Miami Airport Convention Center. Three-day adult convention. Tickets on exxxoticaexpo.com.",
+    "longDescription": "EXXXOTICA Miami 2026 is December 4–6 at Miami Airport Convention Center (MACC), 711 NW 72nd Avenue, Miami, FL 33126. Official Friday 5pm–11pm (Ladies Free Friday) and Saturday 2pm–10pm. Official hotel: DoubleTree by Hilton Miami Airport & Convention Center at the same address. Tickets at exxxoticaexpo.com/tickets. 18+ / 21+ for VIP.",
+    "website": "https://www.exxxoticaexpo.com/locations/miami-fl/",
+    "organizer": "EXXXOTICA Expo",
+    "venue": "Miami Airport Convention Center (MACC)",
+    "hotel": "DoubleTree by Hilton Hotel Miami Airport & Convention Center, 711 NW 72nd Avenue, Miami, FL 33126",
+    "logo": "/images/events/brand-exxxotica-expo.svg",
+    "features": [
+      "Dec 4–6, 2026 three-day expo",
+      "Miami Airport Convention Center",
+      "18+ adult expo"
+    ],
+    "seo": {
+      "title": "EXXXOTICA Miami 2026 | East Coast Kink Events",
+      "description": "EXXXOTICA Miami 2026 (Dec 4–6) at Miami Airport Convention Center. Official tickets on exxxoticaexpo.com.",
+      "keywords": "EXXXOTICA Miami, MACC, adult expo, Miami"
+    }
+  },
+  {
+    "name": "Grand Strand Affair 2026",
+    "slug": "grand-strand-affair-2026",
+    "isFeatured": true,
+    "date": {
+      "start": "2026-11-19",
+      "end": "2026-11-22",
+      "display": "Nov 19–22, 2026"
+    },
+    "location": {
+      "city": "Myrtle Beach",
+      "state": "SC",
+      "region": "Southeastern, South Carolina"
+    },
+    "category": "Convention",
+    "excerpt": "First-year educational weekend in Myrtle Beach, Nov 19–22, 2026. 19+ convention with 40+ classes, play spaces, and a vendor hall. Tickets on Zeffy. Official vendors include The Dungeon Store, Soaring Eagle Creations, Bound By Jay, Steel Bones, Chromaknotz, Canes4Pain, Blush Industries, TheBeav Woodcrafting, Unique Kink, Kinky Creative Studio, Regal Raiment, Dorie's Designs, Heritage and Vine, Awkward Artist Studio, Sire Don Leather, Ink and Kiln, and Leatherwick.",
+    "longDescription": "Grand Strand Affair 2026 is a first-year, four-day educational kink convention in Myrtle Beach, South Carolina, November 19–22, 2026. East Coast Kink Events is listing it as a featured sponsor convention. Tickets stay on the organizer’s Zeffy page — ECKE is not the box office.\n\nThe official site frames the weekend as an immersive BDSM gathering for adults 19 and over, from first-timers to experienced players. Published programming includes four floors of convention space, a main dungeon, a rope dungeon, a concierge dungeon (booked as a timed add-on), 40+ classes, a vendor hall, socials, a fashion show, and specialty rooms.\n\n**Tickets.** Buy on [Zeffy](https://www.zeffy.com/en-US/ticketing/grand-strand-affair). Published 2026 prices on that page include Believer VIP at $150 (first 50 buyers: priority class seating, presenter meet-and-greet, limited shirt and pin), a full-weekend ticket at $175, a Friday day pass at $100 (November 20), and a Saturday day pass at $125 (good through Sunday morning, November 22). Add-ons live on a separate [Zeffy shop](https://www.zeffy.com/en-US/ticketing/grand-strand-affair-add-ons): event pin $10 (listed through October 15, 2026), shirt $19.99 (listed through November 1), 90-minute private dungeon $50 daytime / $75 evening. A 1950s high-protocol tea and a Kinky Paint and Sip materials fee are each listed at $25. Confirm live prices there before you pay.\n\n**Hotel.** The official hotel page does not print a property name in the body copy. It says rooms booked through their link walk into convention space and have an ocean view, and that this is not a hotel takeover. Official tickets link a Hilton room block. An official hotel-page photo filename is labeled Ellie Beach Resort. Confirm the current property and rate on the official hotel page and ticket page before you book. No street address is published.\n\n**House rules (facts only).** Official policy pages say 19+ with government ID; play stays in the named dungeons or a private room; photography and recording are barred except designated staff photography; fire play is prohibited under local rules; cannabis is treated as illegal in South Carolina. Tickets are non-transferable and must be bought in the attendee’s legal name. Unused 2026 tickets may roll to 2027 if you email grandstrandaffair@gmail.com before the event starts on November 19, 2026; a canceled 2026 event rolls tickets to 2027. COVID copy recommends vaccination two weeks ahead and asks anyone who tests positive within seven days of start to stay home — those tickets also roll forward. Read [ticket policies](https://grandstrandaffair.com/ticket-policies) and [event policies](https://grandstrandaffair.com/general-event-policies).\n\n**Program.** Class titles below come from the organizers’ public class list dated June 1, 2026. Times were not published in that document. The official [class list](https://grandstrandaffair.com/class-list) and [schedule](https://grandstrandaffair.com/general-event-schedule) pages are the live sources. Zeffy also lists a fashion show on Thursday, November 19 at 8:30 PM.\n\n- Advanced Violet Wand Techniques — Traveling Fool\n- Artistic Alchemy — Cynthia\n- Autism and Kink — John Pendal\n- Cigars 101 — Trikki Nikki\n- Creative Breast Play (with bondage) — Mistress Natalya\n- Dungeon Essentials, Communication, Negotiations, Scene Building — Lady Leigh\n- Dynamic Ending and Self-Care Moving Forward as a Little — Little B\n- Edge Play: Pushing Limits — John Pendal\n- Electronic Cage: Remote Control & Invisible Restraint — 705\n- EMS and Electrical Stimulation Toys — Traveling Fool\n- Erotic Bootblacking — Little B\n- Flowing Through the Toons — Sir Tokin\n- Follow Your Heart Rope Edition — Skyla\n- Foot Weaving and Leg Ties — hookedonknots\n- The Freedom of Slavehood and Serenity of Service — slave sunflower\n- Gentle Humiliation — Mistress Natalya\n- Getting Into Headspace — John Pendal\n- Heal Hurting: Masochistic With a History of Self Harm — AJ Renard\n- Hey Wanna Play — Lady Leigh\n- High Protocol: 420 Play, Service & Risk Management — Reed\n- Incorporating Power Exchange Dynamics into Everyday Life — AJ Renard\n- Introduction to Needle Play — Frankie\n- Kink for One: Playing Solo — Dear Caroline\n- Kinky Paint and Sip — Kinky Painter (materials fee listed separately)\n- Lacing Skin: Sharps Corsetry — Dear Caroline\n- Leather Care 101 — Little B\n- Mermaid Bondage — Skyla\n- Mosaic Tea: Tea Service as Living Art — Cynthia\n- Multiple Day Scenes — Cookie_Doe_ and CreamCheeseFrosting\n- Mummification: Pallet Wrap, Duct Tape, and More — Mel_Ann and BlueFluke\n- “No” Is A Sexy Word — Reed\n- Poke & the Pull: Playing with Porcupine Quills — Dear Caroline\n- Physics of Impact — Shroder\n- Rope 101 — hookedonknots\n- Scalpel Art: Crafting Designs on Skin — Cookie_Doe_ and CreamCheeseFrosting\n- Sensation to Subspace Without Impact — Lady Leigh\n- Sensory Caning Techniques — Kinky Painter\n- Sensual Whipping — Mistress Natalya\n- Sexy Cigar Play — Trikki Nikki\n- Struggle Snuggle and Bang — Sir Tokin\n- Torture Ties — Cookie_Doe_ and CreamCheeseFrosting\n- Violet Wands — Traveling Fool\n\n**Vendors.** The official [vendors](https://grandstrandaffair.com/vendors) page lists Kinky Creative Studio, The Dungeon Store, Soaring Eagle Creations, Regal Raiment, Bound By Jay, Dorie's Designs, Steel Bones, Chromaknotz, Canes 4 Pain, Blush Industries, The Beav Woodworking, Heritage and Vine, Awkward Artist Studio, Sire Don Leather, Ink and Kiln, Unique Kink, and Leatherwick. Directory pages are linked from those names where ECKE has a listing.\n\n**Contact.** Published email: grandstrandaffair@gmail.com. Volunteer questions on Zeffy also list vol.grandstrandaffair@gmail.com. Presenter form: https://forms.gle/hEqc3tixv47WKVMe9. Volunteer form: https://forms.gle/QCSBnaYSUFAhjMJ57.",
+    "website": "https://grandstrandaffair.com/",
+    "organizer": "Grand Strand Affair Ltd",
+    "venue": "Myrtle Beach host hotel (name not printed on the official hotel page)",
+    "hotel": "Official hotel page does not print a property name. Official tickets link a Hilton room block; an official hotel-page photo filename is labeled Ellie Beach Resort. Confirm on the official hotel and ticket pages.",
+    "hotelInformation": "Official hotel page does not print a property name. Rooms booked through their link are described as ocean-view and walkable to convention space. Official tickets link a Hilton room block (https://www.hilton.com/en/attend-my-event/ccff-2026-ellie-tapestry/). An official hotel-page photo filename is labeled Ellie Beach Resort. This is not a hotel takeover.",
+    "ticketUrl": "https://www.zeffy.com/en-US/ticketing/grand-strand-affair",
+    "programUrl": "https://grandstrandaffair.com/class-list",
+    "ageRequirement": "19+ with government-issued photo ID — official event policies.",
+    "staffApplicationUrl": "https://forms.gle/QCSBnaYSUFAhjMJ57",
+    "presenterApplicationUrl": "https://forms.gle/hEqc3tixv47WKVMe9",
+    "logo": "/images/events/brand-grand-strand-affair.png",
+    "images": [
+      "/images/events/brand-grand-strand-affair.png",
+      "/images/events/grand-strand-affair-hero.png"
+    ],
+    "whyGo": [
+      "First-year Myrtle Beach educational weekend, Nov 19–22, 2026",
+      "40+ published classes plus play spaces and a vendor hall",
+      "19+ with government ID; tickets stay on official Zeffy",
+      "Featured sponsor listing on East Coast Kink Events"
+    ],
+    "features": [
+      "Nov 19–22, 2026 · Myrtle Beach, SC",
+      "First-year featured sponsor convention",
+      "19+ with government photo ID",
+      "40+ classes from the official June 1, 2026 class list",
+      "Main, rope, and concierge dungeon spaces",
+      "Official vendor hall on grandstrandaffair.com/vendors",
+      "Tickets on Zeffy — ECKE is not the merchant of record",
+      "Hotel name not printed on the official hotel page"
+    ],
+    "seo": {
+      "title": "Grand Strand Affair 2026 - Myrtle Beach",
+      "description": "Grand Strand Affair 2026 is Nov 19–22 in Myrtle Beach. First-year 19+ educational kink convention. Tickets on Zeffy.",
+      "keywords": "Grand Strand Affair, Myrtle Beach, South Carolina, kink convention, BDSM education, 2026"
     }
   }
 ];

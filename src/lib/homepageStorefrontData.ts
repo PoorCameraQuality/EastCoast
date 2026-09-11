@@ -1,13 +1,22 @@
 import { getAllDungeons } from '@/data/dungeons'
 import { getAllEvents } from '@/data/events'
 import { getAllArticles } from '@/data/education'
+import { getAllSwingClubs } from '@/data/swingClubs'
 import { EAST_COAST_STATES } from '@/lib/eastCoastStates'
 import { deriveEventBrandTheme } from '@/lib/eventBrandTheme.server'
 import type { EventBrandTheme } from '@/lib/eventBrandTheme'
 import { getHubCategoryCounts, type HubCategoryCounts } from '@/lib/homeHubCounts'
 import { normalizeEventMedia, type EventMedia } from '@/lib/eventMedia'
+import {
+  HOMEPAGE_RAIL_COUNTS,
+  catalogItemEligible,
+  channelSeed,
+  homepageRotationSeed,
+  pickRotatedBySlug,
+} from '@/lib/homepageRotation'
 import { getTopStatesByActivity, type TopStateEntry } from '@/lib/topStatesByActivity'
 import { isNationalConventionListing, unifiedToIndexItem } from '@/lib/publicEventIndex'
+import { getUnifiedDungeonsAsync } from '@/lib/unifiedDungeons'
 import { getUnifiedEvents, getUpcomingUnified, type UnifiedEvent } from '@/lib/unifiedEvents'
 import { getUnifiedVendors } from '@/lib/unifiedVendors'
 import type { VendorRecord } from '@/lib/vendorFiltering'
@@ -31,6 +40,8 @@ export type StorefrontDungeon = {
   excerpt: string
   logo?: string
   location: { city: string; state: string }
+  href: string
+  entityType: 'dungeon' | 'swingClub'
 }
 
 export type StorefrontEducationGuide = {
@@ -82,46 +93,94 @@ async function toStorefrontEvent(e: UnifiedEvent): Promise<StorefrontEvent> {
   }
 }
 
-const EDUCATION_GUIDE_SPECS: { title: string; topic: string; slugHints: string[] }[] = [
-  {
-    title: 'What to expect at a kink event',
-    topic: 'Events',
-    slugHints: ['kink-event', 'first-event', 'convention'],
-  },
-  {
-    title: 'How to find local community',
-    topic: 'Community',
-    slugHints: ['local-community', 'find-community', 'munch'],
-  },
-  {
-    title: 'Consent and negotiation basics',
-    topic: 'Safety',
-    slugHints: ['consent', 'negotiation', 'ssc-vs-rack'],
-  },
-  {
-    title: 'Packing for a convention weekend',
-    topic: 'Travel',
-    slugHints: ['packing', 'convention', 'weekend'],
-  },
-  {
-    title: 'Using Dancecard at supported events',
-    topic: 'Dancecard',
-    slugHints: ['dancecard'],
-  },
-]
-
-function resolveEducationGuides(): StorefrontEducationGuide[] {
+function resolveEducationGuides(seed: number): StorefrontEducationGuide[] {
   const articles = getAllArticles()
-  return EDUCATION_GUIDE_SPECS.map((spec) => {
-    const match =
-      articles.find((a) => spec.slugHints.some((h) => a.slug.includes(h))) ??
-      articles.find((a) => a.title.toLowerCase().includes(spec.title.split(' ')[0].toLowerCase()))
-    return {
-      title: match?.title ?? spec.title,
-      href: match ? `/education/${match.slug}` : '/education',
-      topic: spec.topic,
-    }
-  })
+    .filter((article) => catalogItemEligible(article.slug, article.title))
+    .map((article) => ({
+      slug: article.slug,
+      title: article.title.trim(),
+      href: `/education/${article.slug}`,
+      topic: (article.category || 'Guide').trim(),
+    }))
+  return pickRotatedBySlug(articles, HOMEPAGE_RAIL_COUNTS.education, channelSeed(seed, 'education')).map(
+    ({ title, href, topic }) => ({ title, href, topic }),
+  )
+}
+
+function rotateStatesWithEvents(states: TopStateEntry[], seed: number): TopStateEntry[] {
+  const withEvents = states.filter((state) => state.eventCount > 0)
+  return pickRotatedBySlug(withEvents, HOMEPAGE_RAIL_COUNTS.states, channelSeed(seed, 'states'))
+}
+
+function rotateVendors(vendors: VendorRecord[], seed: number): VendorRecord[] {
+  const pool = vendors.filter(
+    (vendor) => vendor.status !== 'draft' && catalogItemEligible(vendor.slug, vendor.name),
+  )
+  return pickRotatedBySlug(pool, HOMEPAGE_RAIL_COUNTS.vendors, channelSeed(seed, 'vendors'))
+}
+
+function toStorefrontSpace(input: {
+  name?: string
+  slug?: string
+  excerpt?: string
+  logo?: string
+  location?: { city?: string; state?: string }
+  href: string
+  entityType: 'dungeon' | 'swingClub'
+  status?: 'draft' | 'published'
+}): StorefrontDungeon | null {
+  if (input.status === 'draft') return null
+  if (!catalogItemEligible(input.slug, input.name)) return null
+  return {
+    name: input.name!.trim(),
+    slug: input.slug!.trim(),
+    excerpt: (input.excerpt || '').trim(),
+    logo: input.logo,
+    location: {
+      city: (input.location?.city || '').trim(),
+      state: (input.location?.state || '').trim(),
+    },
+    href: input.href,
+    entityType: input.entityType,
+  }
+}
+
+function rotateSpaces(
+  dungeons: Array<{
+    name?: string
+    slug?: string
+    excerpt?: string
+    logo?: string
+    location?: { city?: string; state?: string }
+    status?: 'draft' | 'published'
+  }>,
+  seed: number,
+): StorefrontDungeon[] {
+  const dungeonSpaces = dungeons
+    .map((dungeon) =>
+      toStorefrontSpace({
+        ...dungeon,
+        href: `/dungeons/${(dungeon.slug || '').trim()}`,
+        entityType: 'dungeon',
+      }),
+    )
+    .filter((row): row is StorefrontDungeon => Boolean(row))
+
+  const swingSpaces = getAllSwingClubs()
+    .map((club: { name?: string; slug?: string; excerpt?: string; logo?: string; location?: { city?: string; state?: string } }) =>
+      toStorefrontSpace({
+        ...club,
+        href: `/swing-clubs/${(club.slug || '').trim()}`,
+        entityType: 'swingClub',
+      }),
+    )
+    .filter((row): row is StorefrontDungeon => Boolean(row))
+
+  return pickRotatedBySlug(
+    [...dungeonSpaces, ...swingSpaces],
+    HOMEPAGE_RAIL_COUNTS.spaces,
+    channelSeed(seed, 'spaces'),
+  )
 }
 
 function buildMonthPreviews(events: UnifiedEvent[]): MonthPreview[] {
@@ -151,35 +210,32 @@ function buildMonthPreviews(events: UnifiedEvent[]): MonthPreview[] {
   return months
 }
 
-export async function getHomepageStorefrontData(): Promise<HomepageStorefrontData> {
-  const [vendors, unified] = await Promise.all([getUnifiedVendors(), getUnifiedEvents()])
+export async function getHomepageStorefrontData(options?: {
+  rotationSeed?: number
+  now?: Date
+}): Promise<HomepageStorefrontData> {
+  const seed = options?.rotationSeed ?? homepageRotationSeed(options?.now)
+  const [vendors, unified, unifiedDungeons] = await Promise.all([
+    getUnifiedVendors(),
+    getUnifiedEvents(),
+    getUnifiedDungeonsAsync(),
+  ])
   const hubCounts = await getHubCategoryCounts({ vendorCount: vendors.length })
   const upcomingUnified = getUpcomingUnified(unified).filter((event) =>
     isNationalConventionListing(unifiedToIndexItem(event)),
   )
-  const upcomingSlice = upcomingUnified.slice(0, 8)
+  const pinnedFeatured = upcomingUnified.filter((event) => event.featured)
+  const remainingUpcoming = upcomingUnified.filter((event) => !event.featured)
+  const upcomingSlice = [...pinnedFeatured, ...remainingUpcoming].slice(0, 8)
   const upcomingEvents = await Promise.all(upcomingSlice.map(toStorefrontEvent))
-  // Enough rows that pinned homepage states (PA, CA, TX, …) resolve even if not top-12 by activity.
-  const topStates = getTopStatesByActivity(40)
-  const featuredState = topStates.find((s) => s.slug === 'pennsylvania') ?? topStates[0] ?? null
+  const allStates = getTopStatesByActivity(Number.MAX_SAFE_INTEGER)
+  const topStates = rotateStatesWithEvents(allStates, seed)
+  const featuredState = allStates.find((s) => s.slug === 'pennsylvania') ?? allStates[0] ?? null
 
-  const supporters = vendors.filter((v) => v.isPaid)
-  const others = vendors.filter((v) => !v.isPaid).sort((a, b) => a.slug.localeCompare(b.slug))
-  const featuredVendor = supporters[0] ?? others[0] ?? null
-  const vendorPreview = [
-    ...(featuredVendor ? [featuredVendor] : []),
-    ...others.filter((v) => v.slug !== featuredVendor?.slug).slice(0, 4),
-  ].slice(0, 5)
-
-  const dungeons = getAllDungeons()
-    .slice(0, 4)
-    .map((d) => ({
-      name: d.name,
-      slug: d.slug,
-      excerpt: d.excerpt,
-      logo: d.logo,
-      location: d.location,
-    }))
+  const supporters = vendors.filter((v) => v.isPaid && catalogItemEligible(v.slug, v.name))
+  const vendorPreview = rotateVendors(vendors, seed)
+  const featuredVendor = supporters[0] ?? vendorPreview[0] ?? null
+  const dungeons = rotateSpaces(unifiedDungeons, seed)
 
   return {
     hubCounts,
@@ -193,7 +249,7 @@ export async function getHomepageStorefrontData(): Promise<HomepageStorefrontDat
     featuredVendor,
     vendorPreview,
     dungeons,
-    educationGuides: resolveEducationGuides(),
+    educationGuides: resolveEducationGuides(seed),
     monthPreviews: buildMonthPreviews(upcomingUnified),
     searchEvents: getAllEvents(),
     searchDungeons: getAllDungeons(),

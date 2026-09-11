@@ -1,6 +1,8 @@
+import Image from 'next/image'
 import Link from 'next/link'
 import {
   listingImageAlt,
+  listingImageUnoptimized,
   usableListingImageUrl,
 } from '@/lib/eckeOrgCatalog'
 import { listingCopyToPlainText } from '@/lib/eckeOrgRichText'
@@ -26,10 +28,13 @@ function ListingCardMedia({ listing }: { listing: KinkSocialListingRecord }) {
   if (imageUrl) {
     const kind = usableListingImageUrl(listing.logoUrl) ? 'logo' : 'image'
     return (
-      <img
+      <Image
         src={imageUrl}
         alt={listingImageAlt(listing.name, kind)}
+        width={56}
+        height={56}
         className="h-12 w-12 shrink-0 rounded-lg border border-white/10 bg-white/5 object-cover sm:h-14 sm:w-14"
+        unoptimized={listingImageUnoptimized(imageUrl)}
       />
     )
   }

@@ -144,7 +144,7 @@ export default function useEnhancedGA4() {
   }
 
   // Track session events
-  const trackSessionEvent = (sessionData: {
+  const trackSessionEvent = useCallback((sessionData: {
     session_event: 'session_start' | 'session_end' | 'page_focus' | 'page_blur' | 'idle_timeout'
     session_duration?: number
     page_views?: number
@@ -159,7 +159,7 @@ export default function useEnhancedGA4() {
         timestamp: Date.now()
       })
     }
-  }
+  }, [])
 
   // Track time on page with reading speed analysis
   const trackTimeOnPage = (timeData: {

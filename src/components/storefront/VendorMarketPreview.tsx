@@ -2,8 +2,10 @@
 
 import Link from 'next/link'
 import VendorImage from '@/components/vendors/VendorImage'
+import OutboundWebsiteLink from '@/components/analytics/OutboundWebsiteLink'
 import { trackSelectItemEntity } from '@/lib/analyticsEntities'
 import { getVendorCardPreviewText, type VendorRecord } from '@/lib/vendorFiltering'
+import { vendorOffsiteShopUrl } from '@/lib/vendorOutboundUrls'
 
 type Props = {
   featured: VendorRecord | null
@@ -49,7 +51,7 @@ export default function VendorMarketPreview({ featured, vendors }: Props) {
 function VendorCard({ vendor, size = 'compact' }: { vendor: VendorRecord; size?: 'featured' | 'compact' }) {
   const isFeatured = size === 'featured'
   const preview = getVendorCardPreviewText({ vendor, maxSentences: isFeatured ? 4 : 2 })
-  const shopUrl = vendor.websiteUrl
+  const shopUrl = vendorOffsiteShopUrl(vendor.websiteUrl)
 
   return (
     <article
@@ -93,14 +95,15 @@ function VendorCard({ vendor, size = 'compact' }: { vendor: VendorRecord; size?:
 
       <div className="mt-4 flex flex-wrap gap-2">
         {shopUrl ? (
-          <a
+          <OutboundWebsiteLink
             href={shopUrl}
-            target="_blank"
-            rel="noopener noreferrer"
+            entityType="vendor"
+            entitySlug={vendor.slug}
+            entityName={vendor.name}
             className="sf-btn-gold text-xs"
           >
             Visit shop
-          </a>
+          </OutboundWebsiteLink>
         ) : null}
         <Link
           href={`/vendors/${vendor.slug}`}

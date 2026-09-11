@@ -2,6 +2,7 @@ import EckeLink from '@/components/EckeLink'
 import VendorContactLink from '@/components/vendors/marketplace/VendorContactLink'
 import OutboundWebsiteLink from '@/components/analytics/OutboundWebsiteLink'
 import { locationDisplay } from '@/lib/publicVendorIndex'
+import { vendorOffsiteShopUrl } from '@/lib/vendorOutboundUrls'
 import type { PublicVendorListing } from '@/types/publicVendorListing'
 
 type Props = {
@@ -9,8 +10,10 @@ type Props = {
 }
 
 export default function VendorActionDock({ vendor }: Props) {
-  const shopUrl = vendor.shopUrl ?? vendor.websiteUrl
-  const officialWebsite = vendor.websiteUrl && vendor.websiteUrl !== shopUrl ? vendor.websiteUrl : null
+  const shopUrl = vendorOffsiteShopUrl(vendor.shopUrl, vendor.websiteUrl)
+  const officialWebsite = vendorOffsiteShopUrl(vendor.websiteUrl) && vendor.websiteUrl !== shopUrl
+    ? vendorOffsiteShopUrl(vendor.websiteUrl)
+    : null
 
   return (
     <aside className="vendor-action-dock" aria-label="Shop actions">

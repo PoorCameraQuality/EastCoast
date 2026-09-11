@@ -5,6 +5,7 @@ import OutboundWebsiteLink from '@/components/analytics/OutboundWebsiteLink'
 import VendorMediaStage from '@/components/vendors/marketplace/VendorMediaStage'
 import { trackSelectItemEntity } from '@/lib/analyticsEntities'
 import { locationDisplay } from '@/lib/publicVendorIndex'
+import { vendorOffsiteShopUrl } from '@/lib/vendorOutboundUrls'
 import type { PublicVendorListing } from '@/types/publicVendorListing'
 
 type Props = {
@@ -19,7 +20,7 @@ export default function AdaptiveVendorCard({
   variant = 'default',
 }: Props) {
   const isFeatured = variant === 'featured'
-  const shopUrl = vendor.shopUrl ?? vendor.websiteUrl
+  const shopUrl = vendorOffsiteShopUrl(vendor.shopUrl, vendor.websiteUrl)
 
   const trackProfile = () =>
     trackSelectItemEntity({

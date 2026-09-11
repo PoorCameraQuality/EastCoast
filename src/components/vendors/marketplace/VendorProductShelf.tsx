@@ -1,8 +1,7 @@
 'use client'
 
-import KinkSocialCtaLink from '@/components/kink-social/KinkSocialCtaLink'
 import OutboundWebsiteLink from '@/components/analytics/OutboundWebsiteLink'
-import { getKinkSocialVendorOnboardingUrl } from '@/lib/kinkSocialMarketing'
+import { vendorOffsiteShopUrl } from '@/lib/vendorOutboundUrls'
 import type { PublicVendorListing } from '@/types/publicVendorListing'
 import type { PublicVendorProduct } from '@/types/publicVendorProduct'
 
@@ -11,7 +10,7 @@ type Props = {
 }
 
 function ProductCard({ product, vendor }: { product: PublicVendorProduct; vendor: PublicVendorListing }) {
-  const href = product.externalUrl ?? (vendor.sourceSystem === 'kink_social' ? vendor.shopUrl : vendor.websiteUrl)
+  const href = vendorOffsiteShopUrl(product.externalUrl, vendor.shopUrl, vendor.websiteUrl)
   const body = (
     <>
       {product.imageUrl ? (
@@ -57,23 +56,9 @@ export default function VendorProductShelf({ vendor }: Props) {
         <h2 id="vendor-shelf-heading" className="vendor-section-title">
           {heading}
         </h2>
-        {eckeOwned ? (
-          <p className="vendor-shelf-empty-copy">No public products listed yet.</p>
-        ) : (
-          <>
-            <p className="vendor-shelf-empty-copy">
-              No public product gallery yet. Vendors can publish product previews from kink.social.
-            </p>
-            <KinkSocialCtaLink
-              href={getKinkSocialVendorOnboardingUrl('vendor_page')}
-              label="Create or claim vendor profile"
-              variant="vendor"
-              surface="vendor_shelf_empty"
-              className="vendor-btn vendor-btn-save"
-              external
-            />
-          </>
-        )}
+        <p className="vendor-shelf-empty-copy">
+          {eckeOwned ? 'No public products listed yet.' : 'No public product gallery yet.'}
+        </p>
       </section>
     )
   }
@@ -97,35 +82,27 @@ export default function VendorProductShelf({ vendor }: Props) {
 
 export function VendorAppearances({ vendor }: Props) {
   const upcoming = vendor.upcomingVendorEvents ?? []
+  if (upcoming.length === 0) return null
 
   return (
     <section id="vendor-events" className="vendor-appearances" aria-labelledby="vendor-appearances-heading">
       <h2 id="vendor-appearances-heading" className="vendor-section-title">
         Where to find {vendor.name}
       </h2>
-
-      {upcoming.length === 0 ? (
-        <p className="vendor-appearances-empty">
-          No public vending appearances listed yet. When kink.social connects vendors to events, they will show here.
-        </p>
-      ) : (
-        <>
-          <h3 className="vendor-appearances-subtitle">Upcoming vending appearances</h3>
-          <ul className="vendor-appearances-list">
-            {upcoming.map((event) => (
-              <li key={event.slug}>
-                <a href={`/events/${event.slug}`} className="vendor-appearance-row">
-                  <span className="vendor-appearance-date">{event.dateDisplay}</span>
-                  <span className="vendor-appearance-title">{event.title}</span>
-                  <span className="vendor-appearance-loc">
-                    {event.city}, {event.state}
-                  </span>
-                </a>
-              </li>
-            ))}
-          </ul>
-        </>
-      )}
+      <h3 className="vendor-appearances-subtitle">Upcoming vending appearances</h3>
+      <ul className="vendor-appearances-list">
+        {upcoming.map((event) => (
+          <li key={event.slug}>
+            <a href={`/events/${event.slug}`} className="vendor-appearance-row">
+              <span className="vendor-appearance-date">{event.dateDisplay}</span>
+              <span className="vendor-appearance-title">{event.title}</span>
+              <span className="vendor-appearance-loc">
+                {event.city}, {event.state}
+              </span>
+            </a>
+          </li>
+        ))}
+      </ul>
     </section>
   )
 }

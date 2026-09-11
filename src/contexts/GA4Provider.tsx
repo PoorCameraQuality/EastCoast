@@ -34,15 +34,17 @@ export function GA4Provider({ children }: { children: React.ReactNode }) {
   const [pageViews, setPageViews] = useState<number>(0)
   const [interactions, setInteractions] = useState<number>(0)
 
+  const trackSessionEvent = ga4.trackSessionEvent
+
   // Track session start
   useEffect(() => {
-    ga4.trackSessionEvent({
+    trackSessionEvent({
       session_event: 'session_start',
       session_duration: 0,
       page_views: 0,
       interactions_count: 0
     })
-  }, [])
+  }, [trackSessionEvent])
 
   // Temporarily disabled focus/blur/beforeunload event listeners for gradual re-implementation
   // These were causing navigation interference - will add back carefully

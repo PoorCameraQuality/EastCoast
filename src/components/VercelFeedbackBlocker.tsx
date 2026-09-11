@@ -2,9 +2,9 @@
 
 import { useEffect } from 'react'
 
-export default function VercelFeedbackBlocker() {
-  const DEBUG = process.env.NODE_ENV === 'development'
+const DEBUG = process.env.NODE_ENV === 'development'
 
+export default function VercelFeedbackBlocker() {
   useEffect(() => {
     if (typeof window === 'undefined') return
 

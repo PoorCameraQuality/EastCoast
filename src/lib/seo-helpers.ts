@@ -140,57 +140,6 @@ export function generateArticleTitle(article: any): string {
 }
 
 /**
- * Test all titles from data files
- */
-export function testAllTitles(): { events: any[], dungeons: any[], articles: any[] } {
-  const results = { events: [], dungeons: [], articles: [] }
-  
-  // Test events
-  try {
-    const path = require('path')
-    const eventsPath = path.join(__dirname, '../data/events.js')
-    const { events } = require(eventsPath)
-    results.events = events.map((event: any) => {
-      const title = generateEventTitle(event)
-      const validation = validateTitleLength(title)
-      return {
-        slug: event.slug,
-        name: event.name,
-        title,
-        length: validation.length,
-        valid: validation.valid,
-        warning: validation.warning
-      }
-    })
-  } catch (error) {
-    console.error('Error testing event titles:', error)
-  }
-  
-  // Test dungeons
-  try {
-    const path = require('path')
-    const dungeonsPath = path.join(__dirname, '../data/dungeons.js')
-    const { dungeons } = require(dungeonsPath)
-    results.dungeons = dungeons.map((dungeon: any) => {
-      const title = generateDungeonTitle(dungeon)
-      const validation = validateTitleLength(title)
-      return {
-        slug: dungeon.slug,
-        name: dungeon.name,
-        title,
-        length: validation.length,
-        valid: validation.valid,
-        warning: validation.warning
-      }
-    })
-  } catch (error) {
-    console.error('Error testing dungeon titles:', error)
-  }
-  
-  return results
-}
-
-/**
  * Get statistics about title lengths
  */
 export function getTitleStats(results: any): {

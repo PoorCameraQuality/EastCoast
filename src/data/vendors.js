@@ -189,7 +189,7 @@ export const vendors = [
     description:
       'A corsetiere bringing original designs to dynamic individuals of all genders.',
     story:
-      'Steel Bones describes themselves as a sophisticated corsetiere with original designs and weekend shows around the USA, offering fittings for local Houston customers and video appointments. This listing is sourced from their public website.',
+      'Steel Bones describes themselves as a sophisticated corsetiere with original designs and weekend shows around the USA, offering fittings for local Houston customers and video appointments. Listed on the official Grand Strand Affair 2026 vendor page. This listing is sourced from their public website.',
     websiteUrl: 'https://steelbones.com/',
     logo125Url: '/images/vendors/steel-bones/logo-125.png',
     tagSlugs: [
@@ -206,7 +206,7 @@ export const vendors = [
     description:
       'Curated BDSM and fetish products including bondage gear, impact toys, and dungeon furniture.',
     story:
-      'The Dungeon Store presents a curated collection of BDSM and fetish products, including bondage items, impact toys, and dungeon furniture. Their public storefront includes product categories spanning gear and accessories. This listing is sourced from their public website.',
+      'The Dungeon Store presents a curated collection of BDSM and fetish products, including bondage items, impact toys, and dungeon furniture. Their public storefront includes product categories spanning gear and accessories. Listed on the official Grand Strand Affair 2026 vendor page. This listing is sourced from their public website.',
     websiteUrl: 'https://thedungeonstore.com/',
     logo125Url: '/images/vendors/the-dungeon-store/logo-125.jpg',
     tagSlugs: [
@@ -224,7 +224,7 @@ export const vendors = [
     description:
       'Queer-owned leather company crafting veg-tan leather gear, dyed and finished by hand.',
     story:
-      'Bound By Jay is a queer-owned leather company based in Richmond, Virginia. Their gear is made from veg-tan leather that is processed and hand dyed in-house. For commissions, they invite customers to reach out directly via email.',
+      'Bound By Jay is a queer-owned leather company based in Richmond, Virginia. Their gear is made from veg-tan leather that is processed and hand dyed in-house. For commissions, they invite customers to reach out directly via email. Listed on the official Grand Strand Affair 2026 vendor page.',
     websiteUrl: 'https://www.boundbyjay.com/',
     logo125Url: '/images/vendors/bound-by-jay/logo-125.webp',
     tagSlugs: [
@@ -242,7 +242,7 @@ export const vendors = [
     description:
       'Things to make you blush — toys and jewelry.',
     story:
-      'Blush Industries offers toys and jewelry with a playful, cheeky vibe. Explore their catalog and shop by category as the marketplace expands. This listing is sourced from their public website.',
+      'Blush Industries offers toys and jewelry with a playful, cheeky vibe. Explore their catalog and shop by category as the marketplace expands. Listed on the official Grand Strand Affair 2026 vendor page. This listing is sourced from their public website.',
     websiteUrl: 'https://www.blushindustries.com/',
     logo125Url: '/images/vendors/blush-industries/logo-125.png',
     tagSlugs: [
@@ -389,7 +389,7 @@ export const vendors = [
     location: 'Online',
     description: 'Square Online storefront.',
     story:
-      'Chromaknotz is a Square Online storefront. If you share what they specialize in (rope, apparel, accessories, etc.), we can tag it more precisely. This listing is sourced from their public website.',
+      'Chromaknotz is a Square Online storefront. If you share what they specialize in (rope, apparel, accessories, etc.), we can tag it more precisely. Listed on the official Grand Strand Affair 2026 vendor page. This listing is sourced from their public website.',
     websiteUrl: 'https://chromaknotz.square.site/',
     logo125Url: '/images/vendors/chromaknotz/logo-125.png',
     tagSlugs: [],
@@ -469,7 +469,7 @@ export const vendors = [
     description:
       'Handmade premium rattan disciplinary canes and classic school canes for spanking, discipline, and BDSM.',
     story:
-      'Canes4Pain is a long-running shop focused on rattan disciplinary canes and classic school-style canes, describing handmade finishing, testing, and a lifetime guarantee on their products. This listing is sourced from their public website.',
+      'Canes4Pain is a long-running shop focused on rattan disciplinary canes and classic school-style canes, describing handmade finishing, testing, and a lifetime guarantee on their products. Listed on the official Grand Strand Affair 2026 vendor page. This listing is sourced from their public website.',
     websiteUrl: 'https://canes4pain.com/index.htm',
     logo125Url: '/images/vendors/canes4pain/logo-125.jpg',
     tagSlugs: [
@@ -575,7 +575,7 @@ export const vendors = [
     description:
       'Handcrafted hardwoods and woodcraft pieces.',
     story:
-      'TheBeav Woodcrafting describes handcrafted hardwoods and woodcraft. If you share the kink-relevant product lines (impact, furniture, accessories), we can tag it more precisely. This listing is sourced from their public website.',
+      'TheBeav Woodcrafting describes handcrafted hardwoods and woodcraft. If you share the kink-relevant product lines (impact, furniture, accessories), we can tag it more precisely. Listed on the official Grand Strand Affair 2026 vendor page. This listing is sourced from their public website.',
     websiteUrl: 'https://thebeavwoodcrafting.com/',
     logo125Url: '/images/vendors/thebeav-woodcrafting/logo-125.jpg',
     tagSlugs: [
@@ -590,7 +590,7 @@ export const vendors = [
     description:
       'Online shop for kink and fetish gear across multiple categories.',
     story:
-      'Unique Kink is an online storefront with a broad catalog and category navigation (including a “Leather 101” section), suggesting a curated multi-category shop. This listing is sourced from their public website.',
+      'Unique Kink is an online storefront with a broad catalog and category navigation (including a “Leather 101” section), suggesting a curated multi-category shop. Listed on the official Grand Strand Affair 2026 vendor page. This listing is sourced from their public website.',
     websiteUrl: 'https://uniquekink.com/',
     logo125Url: '/images/vendors/unique-kink/logo-125.jpg',
     tagSlugs: [
@@ -806,7 +806,7 @@ export const vendors = [
     description:
       'Quality leather dragontails, floggers, restraints, and custom orders—co-owned by Mark “MSquared” and Kelly “Lady Leigh.”',
     story:
-      'Soaring Eagle Creations offers leather dragontails, floggers, restraints, cuffs, and custom work through https://soaringeaglecreations.com/. They list Shop Locally @ The LoftNC, Gastonia, NC on the public site, with contact phones Leigh: 704.964.1923 and Mark: 704.661.5566, and email soaringeaglecreations@gmail.com. Logo resized from the public WordPress cropped site icon. This listing is sourced from their public website.',
+      'Soaring Eagle Creations offers leather dragontails, floggers, restraints, cuffs, and custom work through https://soaringeaglecreations.com/. They list Shop Locally @ The LoftNC, Gastonia, NC on the public site, with contact phones Leigh: 704.964.1923 and Mark: 704.661.5566, and email soaringeaglecreations@gmail.com. Logo resized from the public WordPress cropped site icon. Listed on the official Grand Strand Affair 2026 vendor page. This listing is sourced from their public website.',
     websiteUrl: 'https://soaringeaglecreations.com/',
     logo125Url: '/images/vendors/soaring-eagle-creations/logo-125.jpg',
     tagSlugs: [
@@ -859,6 +859,105 @@ export const vendors = [
       'clothing-fetish-wear',
       'reseller-curated-shop',
     ],
+    isPaid: false,
+  },
+  {
+    name: 'Kinky Creative Studio',
+    slug: 'kinky-creative-studio',
+    location: 'Online',
+    description:
+      'Etsy shop listed on the official Grand Strand Affair 2026 vendor page.',
+    story:
+      'Kinky Creative Studio is listed on grandstrandaffair.com/vendors with an Etsy shop at etsy.com/shop/KinkyCreationsStudio. The Etsy page returned 403 at ingest, so city and catalog details were not copied. No email or phone is published here.',
+    websiteUrl: 'https://www.etsy.com/shop/KinkyCreationsStudio',
+    tagSlugs: ['mixed-media-maker', 'custom-commission-vendor'],
+    isPaid: false,
+  },
+  {
+    name: 'Regal Raiment',
+    slug: 'regal-raiment',
+    location: 'Online',
+    description:
+      'Kilts, clothing, and accessories — official site regalraiment.net.',
+    story:
+      'Regal Raiment’s public site sells kilts, clothing, and accessories. Listed on the official Grand Strand Affair 2026 vendor page. This listing is sourced from their public website.',
+    websiteUrl: 'https://www.regalraiment.net/',
+    tagSlugs: ['clothing-fetish-wear', 'textile-clothing-maker', 'roleplay-costume'],
+    isPaid: false,
+  },
+  {
+    name: "Dorie's Designs",
+    slug: 'dories-design',
+    location: 'Online',
+    description:
+      'Jewelry and chain-maille pieces — earrings, necklaces, pendants, bracelets.',
+    story:
+      'Dorie’s Designs lists earrings, necklaces, pendants, bracelets, and chain-maille care on the public site. The shop page was on a coming-soon screen at ingest. Listed on the official Grand Strand Affair 2026 vendor page.',
+    websiteUrl: 'https://doriesdesign.net/',
+    tagSlugs: ['jewelry-collars', 'metalwork-chain-jewelry'],
+    isPaid: false,
+  },
+  {
+    name: 'Heritage and Vine',
+    slug: 'heritage-and-vine',
+    location: 'Online',
+    description:
+      'Herbal and spiritual goods and programs from Heritage + Vine.',
+    story:
+      'Heritage + Vine’s public site describes herbal and spiritual goods and programs, and identifies the shop as Black-owned and trans-owned. Listed on the official Grand Strand Affair 2026 vendor page. This listing is sourced from their public website.',
+    websiteUrl: 'https://www.heritageandvine.com/',
+    tagSlugs: ['decor-lifestyle-aftercare'],
+    isPaid: false,
+  },
+  {
+    name: 'Awkward Artist Studio',
+    slug: 'awkward-artist-studio',
+    location: 'Atlanta, GA • USA',
+    description:
+      'Atlanta studio with a public shop and vending page.',
+    story:
+      'The Awkward Artist Studio is listed in Atlanta, GA on the public Squarespace site, with shop, vending, and gallery pages. Contact published there: TheAwkward_ArtistStudio@outlook.com. Listed on the official Grand Strand Affair 2026 vendor page.',
+    websiteUrl: 'https://www.awkwardartiststudio.com/',
+    logo125Url: '/images/vendors/awkward-artist-studio/logo-125.png',
+    contactEmail: 'TheAwkward_ArtistStudio@outlook.com',
+    tagSlugs: ['mixed-media-maker', 'event-pickup-available'],
+    isPaid: false,
+  },
+  {
+    name: 'Sire Don Leather',
+    slug: 'sire-don-leather',
+    location: 'Online',
+    description:
+      'Leather shop listed on the official Grand Strand Affair 2026 vendor page.',
+    story:
+      'Sire Don Leather is listed on grandstrandaffair.com/vendors with an Etsy shop URL (Sdleather). The Etsy page returned 403 at ingest, so city and catalog details were not copied.',
+    websiteUrl: 'https://www.etsy.com/shop/Sdleather',
+    tagSlugs: ['handmade-leather'],
+    isPaid: false,
+  },
+  {
+    name: 'Ink and Kiln',
+    slug: 'ink-and-kiln',
+    location: 'South Carolina • USA',
+    description:
+      'Handcrafted pottery and writing instruments from a South Carolina studio.',
+    story:
+      'Ink & Kiln’s public site sells handcrafted pottery and writing instruments made in a South Carolina studio, including an After Dark shop section. Listed on the official Grand Strand Affair 2026 vendor page. This listing is sourced from their public website.',
+    websiteUrl: 'https://www.inkandkiln.com/',
+    tagSlugs: ['ceramics-pottery', 'mixed-media-maker'],
+    isPaid: false,
+  },
+  {
+    name: 'Leatherwick',
+    slug: 'leatherwick',
+    location: 'Online',
+    description:
+      'Leather goods and houseware; public site mentions vending events.',
+    story:
+      'Leatherwick’s public site sells leather goods and houseware, and mentions vending events. Listed on the official Grand Strand Affair 2026 vendor page. This listing is sourced from their public website.',
+    websiteUrl: 'https://leatherwick.com/',
+    logo125Url: '/images/vendors/leatherwick/logo-125.jpg',
+    tagSlugs: ['handmade-leather', 'decor-lifestyle-aftercare'],
     isPaid: false,
   },
   ...onboardedVendors,

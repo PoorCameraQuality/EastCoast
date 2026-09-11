@@ -126,6 +126,7 @@ export function unifiedToIndexItem(e: UnifiedEvent): PublicEventIndexItem {
     sourceId: e.c2kSourceId ?? undefined,
     lastSyncedAt: e.lastSyncedAt,
     status: 'published',
+    featured: Boolean(e.featured),
   }
 }
 
@@ -164,6 +165,7 @@ export function splitUpcomingPast(items: PublicEventIndexItem[]) {
 
 export function featuredScore(item: PublicEventIndexItem): number {
   let score = 0
+  if (item.featured) score += 200
   if (item.listingKind === 'convention') score += 40
   if (item.eventType === 'hotel_weekend') score += 25
   if (eventDurationDays(item) >= 3) score += 20

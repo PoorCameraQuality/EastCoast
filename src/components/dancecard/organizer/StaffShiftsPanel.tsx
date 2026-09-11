@@ -22,6 +22,13 @@ const SHIFT_STATUS_LABELS: Record<(typeof SHIFT_STATUSES)[number], string> = {
 
 type ShiftListFilter = 'all' | 'open' | 'unstaffed' | 'needs_vetting'
 
+const DEMO_EXPECTED_HOURS: Record<string, number> = {
+  'Casey Host': 8,
+  'Drew Volunteer': 16,
+  'Emery DM': 12,
+  'Finley Safety': 10,
+}
+
 function shiftMatchesFilter(s: OrganizerStaffShiftDto, filter: ShiftListFilter): boolean {
   if (filter === 'all') return true
   if (filter === 'open') return s.shiftStatus === 'open'
@@ -168,13 +175,6 @@ export function StaffShiftsPanel({
     }
     return map
   }, [shifts])
-
-  const DEMO_EXPECTED_HOURS: Record<string, number> = {
-    'Casey Host': 8,
-    'Drew Volunteer': 16,
-    'Emery DM': 12,
-    'Finley Safety': 10,
-  }
 
   const hoursSummary = useMemo(() => {
     const names = Array.from(hoursByPerson.keys()).sort()

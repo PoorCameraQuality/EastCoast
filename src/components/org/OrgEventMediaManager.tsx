@@ -1,6 +1,8 @@
 'use client'
 
+import Image from 'next/image'
 import { useState } from 'react'
+import { listingImageUnoptimized } from '@/lib/nextImageSrc'
 import { EVENT_ASSET_GUIDES, type EventAssetKind } from '@/lib/eckeOrgEventAssets'
 
 type Props = {
@@ -21,7 +23,16 @@ function Preview({ url }: { url: string }) {
       </a>
     )
   }
-  return <img src={url} alt="" className="mt-2 max-h-40 w-full rounded-lg object-cover" />
+  return (
+    <Image
+      src={url}
+      alt=""
+      width={640}
+      height={160}
+      className="mt-2 max-h-40 w-full rounded-lg object-cover"
+      unoptimized={listingImageUnoptimized(url)}
+    />
+  )
 }
 
 function AssetSlot({
@@ -142,7 +153,14 @@ export default function OrgEventMediaManager({ slug, heroImage, logo, gallery, p
         <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3">
           {photos.map((url) => (
             <div key={url} className="overflow-hidden rounded-lg border border-white/10">
-              <img src={url} alt="" className="h-28 w-full object-cover" />
+              <Image
+                src={url}
+                alt=""
+                width={280}
+                height={112}
+                className="h-28 w-full object-cover"
+                unoptimized={listingImageUnoptimized(url)}
+              />
               <button type="button" className="w-full py-2 text-xs underline" onClick={() => void removeGallery(url)}>
                 Remove
               </button>

@@ -90,7 +90,10 @@ function FileSlot({
     <div className="rounded-lg border border-white/10 p-3">
       <p className="text-sm font-medium text-sf-strong">{guide.title}</p>
       <p className="mt-1 text-xs text-sf-muted">{guide.hint}</p>
-      {preview ? <img src={preview} alt="" className="mt-2 max-h-36 w-full rounded-md object-cover" /> : null}
+      {preview ? (
+        // eslint-disable-next-line @next/next/no-img-element -- blob/object-URL file preview; next/image cannot accept blob src
+        <img src={preview} alt="" className="mt-2 max-h-36 w-full rounded-md object-cover" />
+      ) : null}
       {file && !preview ? <p className="mt-2 text-sm text-sf-body">{file.name}</p> : null}
       {error ? <p className="mt-2 text-sm text-rose-200">{error}</p> : null}
       <div className="mt-3 flex flex-wrap items-center gap-2">
@@ -170,6 +173,7 @@ export default function OrgEventPendingMedia({
           <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3">
             {galleryPreviews.map((item, index) => (
               <div key={`${item.file.name}-${index}`} className="overflow-hidden rounded-lg border border-white/10">
+                {/* eslint-disable-next-line @next/next/no-img-element -- blob/object-URL gallery preview; next/image cannot accept blob src */}
                 <img src={item.url} alt="" className="h-28 w-full object-cover" />
                 <button
                   type="button"

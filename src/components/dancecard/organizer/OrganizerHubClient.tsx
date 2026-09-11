@@ -1,7 +1,7 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { Panel } from '@/components/dancecard/ui/Panel'
 import { ORGANIZER_PUBLISHED_AS_HINT, ORGANIZER_PUBLISHED_AS_LABEL } from '@/lib/dancecard/organizerCopy'
 import { cn } from '@/lib/cn'
@@ -21,10 +21,13 @@ export function OrganizerHubClient({ open: openProp, defaultOpen = false, onOpen
   const router = useRouter()
   const [openUncontrolled, setOpenUncontrolled] = useState(defaultOpen)
   const open = openProp ?? openUncontrolled
-  const setOpen = (next: boolean) => {
-    onOpenChange?.(next)
-    if (openProp === undefined) setOpenUncontrolled(next)
-  }
+  const setOpen = useCallback(
+    (next: boolean) => {
+      onOpenChange?.(next)
+      if (openProp === undefined) setOpenUncontrolled(next)
+    },
+    [onOpenChange, openProp],
+  )
 
   const [mode, setMode] = useState<'create' | 'clone'>('create')
   const [busy, setBusy] = useState(false)

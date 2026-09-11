@@ -3,7 +3,6 @@ import EckeLink from '@/components/EckeLink'
 import Breadcrumb from '@/components/Breadcrumb'
 import DiscoveryEngineStrip from '@/components/discovery/DiscoveryEngineStrip'
 import VendorActionDock from '@/components/vendors/marketplace/VendorActionDock'
-import { VendorPlatformCta } from '@/components/vendors/marketplace/AdaptiveVendorCard'
 import VendorMasthead from '@/components/vendors/marketplace/VendorMasthead'
 import VendorProductShelf, { VendorAppearances } from '@/components/vendors/marketplace/VendorProductShelf'
 import EntityPageViewTracker from '@/components/analytics/EntityPageViewTracker'
@@ -88,47 +87,25 @@ export default function VendorStorefrontDetail({
             <VendorAppearances vendor={vendor} />
 
             {vendor.organizationId ? null : (
-            <section className="vendor-claim" aria-labelledby="vendor-claim-heading">
-              {vendor.sourceSystem === 'kink_social' ? (
-                <>
-                  <h2 id="vendor-claim-heading" className="vendor-section-title">
-                    Own this shop?
-                  </h2>
-                  <p className="vendor-claim-copy">
-                    Create a free ECKE organization to manage this storefront, photos, and public listing.
-                  </p>
-                  <EckeLink href="/auth/org/signup" className="vendor-btn vendor-btn-view">
-                    Create an organization
-                  </EckeLink>
-                  <EckeLink href="/vendors/my-shop" className="vendor-btn vendor-btn-save">
-                    Manage your shop
-                  </EckeLink>
-                </>
-              ) : (
-                <>
-                  <h2 id="vendor-claim-heading" className="vendor-section-title">
-                    Own this shop?
-                  </h2>
-                  <p className="vendor-claim-copy">
-                    Suggest a correction if this listing needs an update.
-                  </p>
-                  <EckeLink href="/contact?subject=Vendor%20Listing" className="vendor-btn vendor-btn-view">
-                    Suggest an edit
-                  </EckeLink>
-                </>
-              )}
-            </section>
+              <section className="vendor-claim" aria-labelledby="vendor-claim-heading">
+                <h2 id="vendor-claim-heading" className="vendor-section-title">
+                  Own this shop?
+                </h2>
+                <p className="vendor-claim-copy">
+                  Create a free ECKE organization to manage this storefront, photos, and public listing.
+                </p>
+                <EckeLink href="/auth/org/signup" className="vendor-btn vendor-btn-view">
+                  Create an organization
+                </EckeLink>
+                <EckeLink href="/vendors/my-shop" className="vendor-btn vendor-btn-save">
+                  Manage your shop
+                </EckeLink>
+              </section>
             )}
           </div>
 
           <VendorActionDock vendor={vendor} />
         </div>
-
-        {vendor.organizationId ? null : (
-          <div className="vendor-storefront-footer">
-            <VendorPlatformCta compact />
-          </div>
-        )}
       </div>
     </main>
   )

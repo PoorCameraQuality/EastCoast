@@ -1,4 +1,3 @@
-import { createServerClient, type CookieOptions } from '@supabase/ssr'
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 import { getLegacyKinkEducationBlogRedirect } from '@/lib/legacyKinkEducationToBlog'
@@ -9,6 +8,7 @@ import {
   orgSessionCookieOptions,
   parseOrgSessionStartedAt,
 } from '@/lib/eckeOrgSessionLimit'
+import { createMiddlewareSupabaseClient } from '@/lib/supabase/middlewareClient'
 
 export async function middleware(req: NextRequest) {
   const url = req.nextUrl.clone()
@@ -167,25 +167,7 @@ export async function middleware(req: NextRequest) {
     requestHeaders.set('x-ecke-bare-shell', '1')
   }
 
-  let response = NextResponse.next({ request: { headers: requestHeaders } })
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
-    {
-      cookies: {
-        getAll() {
-          return req.cookies.getAll()
-        },
-        setAll(cookiesToSet: { name: string; value: string; options: CookieOptions }[]) {
-          cookiesToSet.forEach(({ name, value }) => req.cookies.set(name, value))
-          response = NextResponse.next({ request: { headers: requestHeaders } })
-          cookiesToSet.forEach(({ name, value, options }) => {
-            response.cookies.set(name, value, options)
-          })
-        },
-      },
-    },
-  )
+  const { supabase, getResponse } = createMiddlewareSupabaseClient(req, requestHeaders)
 
   const {
     data: { user },
@@ -195,13 +177,15 @@ export async function middleware(req: NextRequest) {
   if (user) {
     const startedAt = parseOrgSessionStartedAt(req.cookies.get(ORG_SESSION_STARTED_COOKIE)?.value)
     if (!startedAt) {
-      response.cookies.set(ORG_SESSION_STARTED_COOKIE, String(Date.now()), orgSessionCookieOptions())
+      getResponse().cookies.set(ORG_SESSION_STARTED_COOKIE, String(Date.now()), orgSessionCookieOptions())
     } else if (isOrgSessionExpired(startedAt)) {
       await supabase.auth.signOut()
       activeUser = null
-      response.cookies.set(ORG_SESSION_STARTED_COOKIE, '', { ...orgSessionCookieOptions(0), maxAge: 0 })
+      getResponse().cookies.set(ORG_SESSION_STARTED_COOKIE, '', { ...orgSessionCookieOptions(0), maxAge: 0 })
     }
   }
+
+  const response = getResponse()
 
   const noIndex =
     pathname.startsWith('/admin') ||

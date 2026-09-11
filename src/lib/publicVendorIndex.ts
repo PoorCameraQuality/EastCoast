@@ -5,6 +5,7 @@ import type { VendorRecord } from '@/lib/vendorFiltering'
 import { getVendorPaidImage125Url, getVendorCardPreviewText } from '@/lib/vendorFiltering'
 import { parseVendorLocation, type UnifiedVendor } from '@/lib/unifiedVendors'
 import { buildKinkSocialUrl, kinkSocialVendorShopPath } from '@/lib/kinkSocialMarketing'
+import { vendorOffsiteShopUrl } from '@/lib/vendorOutboundUrls'
 import type { PublicEventIndexItem } from '@/types/publicEventIndexItem'
 import type { PublicVendorListing, PublicVendorType, VendorCategoryChip } from '@/types/publicVendorListing'
 import { VENDOR_CATEGORY_CHIPS } from '@/types/publicVendorListing'
@@ -55,7 +56,7 @@ function productsFromMirroredListings(vendor: VendorRecord): PublicVendorProduct
     title: listing.title,
     imageUrl: listing.imageUrl || undefined,
     priceLabel: listing.priceLabel || undefined,
-    externalUrl: listing.externalUrl || undefined,
+    externalUrl: vendorOffsiteShopUrl(listing.externalUrl),
     sourceSystem: toMirroredProductSource(listing.sourceSystem),
     publicSafe: true,
     sortOrder: listing.sortOrder ?? index,
@@ -76,7 +77,7 @@ function productsFromVendor(vendor: VendorRecord, tagsBySlug: Record<string, Ven
       title: tag?.name ?? key.replace(/-/g, ' '),
       imageUrl: url,
       category: tag?.name,
-      externalUrl: vendor.websiteUrl,
+      externalUrl: vendorOffsiteShopUrl(vendor.websiteUrl),
       sourceSystem: 'manual',
       publicSafe: true,
       sortOrder: i++,
@@ -87,7 +88,7 @@ function productsFromVendor(vendor: VendorRecord, tagsBySlug: Record<string, Ven
       id: `${vendor.slug}-featured`,
       title: 'Featured work',
       imageUrl: map.default,
-      externalUrl: vendor.websiteUrl,
+      externalUrl: vendorOffsiteShopUrl(vendor.websiteUrl),
       sourceSystem: 'manual',
       publicSafe: true,
       sortOrder: -1,
@@ -161,6 +162,7 @@ export function vendorToListing(
 
   const fromKinkSocial = Boolean(vendor.c2kSourceId)
   const kinkSocialVendorUrl = kinkSocialVendorUrlFor(vendor)
+  const offsiteShopUrl = vendorOffsiteShopUrl(vendor.websiteUrl)
 
   return {
     id: vendor.slug,
@@ -181,8 +183,8 @@ export function vendorToListing(
     coverImageUrl,
     gallery: galleryFromProducts(featuredProducts),
     featuredProducts,
-    shopUrl: fromKinkSocial ? kinkSocialVendorUrl : vendor.websiteUrl,
-    websiteUrl: vendor.websiteUrl,
+    shopUrl: offsiteShopUrl,
+    websiteUrl: offsiteShopUrl,
     contactEmail: vendor.contactEmail,
     acceptsCommissions,
     commissionInfo: acceptsCommissions ? 'Custom commissions available — confirm details on the vendor site.' : undefined,

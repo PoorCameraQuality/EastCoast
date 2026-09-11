@@ -4,7 +4,41 @@
  */
 
 const path = require('path')
-const { testAllTitles, getTitleStats } = require(path.join(__dirname, '../src/lib/seo-helpers'))
+const { generateEventTitle, generateDungeonTitle, validateTitleLength, getTitleStats } = require(
+  path.join(__dirname, '../src/lib/seo-helpers'),
+)
+const { events } = require(path.join(__dirname, '../src/data/events'))
+const { dungeons } = require(path.join(__dirname, '../src/data/dungeons'))
+
+function testAllTitles() {
+  return {
+    events: (events || []).map((event) => {
+      const title = generateEventTitle(event)
+      const validation = validateTitleLength(title)
+      return {
+        slug: event.slug,
+        name: event.name,
+        title,
+        length: validation.length,
+        valid: validation.valid,
+        warning: validation.warning,
+      }
+    }),
+    dungeons: (dungeons || []).map((dungeon) => {
+      const title = generateDungeonTitle(dungeon)
+      const validation = validateTitleLength(title)
+      return {
+        slug: dungeon.slug,
+        name: dungeon.name,
+        title,
+        length: validation.length,
+        valid: validation.valid,
+        warning: validation.warning,
+      }
+    }),
+    articles: [],
+  }
+}
 
 async function validateTitles() {
   console.log("🔍 Validating all page titles...\n")

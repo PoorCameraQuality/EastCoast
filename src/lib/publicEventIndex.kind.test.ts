@@ -2,6 +2,7 @@ import assert from 'node:assert/strict'
 import { describe, it } from 'node:test'
 import type { UnifiedEvent } from '@/lib/unifiedEvents'
 import {
+  featuredScore,
   isNationalConventionListing,
   matchesIntent,
   unifiedToIndexItem,
@@ -20,6 +21,7 @@ function event(partial: Partial<UnifiedEvent> & Pick<UnifiedEvent, 'slug' | 'nam
     eventKind: partial.eventKind,
     dungeonSlug: partial.dungeonSlug,
     dungeonVenueId: partial.dungeonVenueId,
+    featured: partial.featured,
   }
 }
 
@@ -87,5 +89,28 @@ describe('national convention vs local nights', () => {
     assert.equal(isNationalConventionListing(item), false)
     assert.equal(matchesIntent(item, 'all'), false)
     assert.equal(matchesIntent(item, 'local'), true)
+  })
+
+  it('pins catalog featured flags above other convention scoring', () => {
+    const featured = unifiedToIndexItem(
+      event({
+        slug: 'grand-strand-affair-2026',
+        name: 'Grand Strand Affair 2026',
+        category: 'Convention',
+        featured: true,
+        date: { start: '2026-11-19', end: '2026-11-22', display: 'Nov 19–22, 2026' },
+        location: { city: 'Myrtle Beach', state: 'SC', region: 'South Carolina' },
+      }),
+    )
+    const other = unifiedToIndexItem(
+      event({
+        slug: 'other-con',
+        name: 'Other Con',
+        category: 'Convention',
+        date: { start: '2026-10-01', end: '2026-10-04', display: 'Oct 1–4, 2026' },
+      }),
+    )
+    assert.equal(featured.featured, true)
+    assert.equal(featuredScore(featured) > featuredScore(other), true)
   })
 })
