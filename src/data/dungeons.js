@@ -441,29 +441,6 @@ export const dungeons = [
     }
   },
   {
-    "name": "Paddles",
-    "slug": "paddles-nyc",
-    "location": {
-      "city": "New York",
-      "state": "NY",
-      "address": "Chelsea, Manhattan, NY"
-    },
-    "category": "BDSM Dungeon",
-    "excerpt": "Long-running public BDSM play space in Manhattan with coed and men-only nights, equipment, and a street-accessible Chelsea location. Verify hours and policies on the venue website before visiting.",
-    "description": {
-      "long": "Paddles is one of New York City’s longest-running public BDSM venues. The club hosts themed nights and welcomes newcomers on select evenings. Dress codes, membership requirements, and photography rules apply—always read the latest information on paddlesnyc.com before you go."
-    },
-    "contact": {},
-    "website": "https://paddlesnyc.com/",
-    "logo": "/images/dungeons/brand-paddles-nyc.svg",
-    "images": [],
-    "seo": {
-      "title": "Paddles - NYC Chelsea BDSM Club | East Coast Kink Events",
-      "description": "Paddles — long-running Manhattan BDSM club in Chelsea. Check the official site for nights, pricing, and rules.",
-      "keywords": "Paddles, NYC, Chelsea, Manhattan dungeon, BDSM club New York"
-    }
-  },
-  {
     "name": "The Eulenspiegel Society (TES)",
     "slug": "tes-nyc",
     "location": {
@@ -543,9 +520,9 @@ export const dungeons = [
       "address": "855 East Oakland Park Blvd, Ft. Lauderdale, FL 33334"
     },
     "category": "Event Producer",
-    "excerpt": "Fort Lauderdale fetish showroom and event producer—monthly dress-code nights plus Florida Fetish Weekend. Shop hours and tickets on fetishfactory.com.",
+    "excerpt": "Fort Lauderdale fetish showroom and event producer—monthly Alter Ego dress-code nights plus Florida Fetish Weekend. Party calendar and tickets on fetishfactory.com / alteregoparty.com.",
     "description": {
-      "long": "Fetish Factory runs a public showroom at 855 East Oakland Park Blvd, Ft. Lauderdale, FL 33334, and produces South Florida fetish nightlife. Official materials list a monthly second-weekend party series (dated nights vary) and the Memorial Day Florida Fetish Weekend hotel circuit. Halloween Fetish Ball is a separate single-night listing. Contact store@fetishfactory.com or (954) 563-5777. Confirm hours on fetishfactory.com."
+      "long": "Fetish Factory runs a public showroom at 855 East Oakland Park Blvd, Ft. Lauderdale, FL 33334, and produces South Florida fetish nightlife. Monthly Alter Ego nights are dated separately from the Memorial Day Florida Fetish Weekend hotel circuit — see fetishfactory.com/#partycalendar and alteregoparty.com / TicketSpice for current ticket pages. Halloween Fetish Ball and other single-night listings stay on local discovery, not the national convention rail. Contact store@fetishfactory.com or (954) 563-5777. Confirm hours on fetishfactory.com."
     },
     "contact": {
       "email": "store@fetishfactory.com",
@@ -558,29 +535,6 @@ export const dungeons = [
       "title": "Fetish Factory - Fort Lauderdale Fetish Events | East Coast Kink Events",
       "description": "Fetish Factory — South Florida fetish party producer and shop. See site for anniversary weekend and club nights.",
       "keywords": "Fetish Factory, Fort Lauderdale, South Florida fetish, kink events Florida"
-    }
-  },
-  {
-    "name": "New England Leather Alliance (NELA)",
-    "slug": "nela-new-england",
-    "location": {
-      "city": "Boston",
-      "state": "MA",
-      "address": "New England region (events across MA, NH, VT, RI, CT, ME)"
-    },
-    "category": "Community Organization",
-    "excerpt": "Regional leather and kink nonprofit serving New England—education, contests, and community gatherings. Not a brick-and-mortar dungeon; a hub for leather culture across the Northeast.",
-    "description": {
-      "long": "The New England Leather Alliance (NELA) supports leather, BDSM, and fetish communities across six states through contests, education, and social programming. Check nela.org for munches, weekend events, and how to get involved."
-    },
-    "contact": {},
-    "website": "https://nela.org/",
-    "logo": "/images/dungeons/brand-nela-new-england.svg",
-    "images": [],
-    "seo": {
-      "title": "NELA - New England Leather Alliance | East Coast Kink Events",
-      "description": "NELA — New England leather and kink nonprofit. Education, contests, and regional community across MA, NH, VT, RI, CT, ME.",
-      "keywords": "NELA, New England Leather Alliance, Boston leather, New England kink"
     }
   },
   {
