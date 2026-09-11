@@ -46,6 +46,9 @@ export type PublicVendorListing = {
   websiteUrl?: string
   contactUrl?: string
   contactEmail?: string
+  /** Org-shop public contact link (FetLife, form, IG, etc.) */
+  publicContactUrl?: string
+  publicContactLabel?: string
 
   acceptsCommissions?: boolean
   commissionInfo?: string

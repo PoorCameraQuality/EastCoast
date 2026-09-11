@@ -657,11 +657,17 @@
 .vendor-product-card {
   display: flex;
   flex-direction: column;
+  width: 100%;
   border-radius: 0.625rem;
   border: 1px solid var(--sf-border);
   background: rgba(255, 255, 255, 0.03);
   overflow: hidden;
   text-decoration: none;
+  text-align: left;
+  font: inherit;
+  color: inherit;
+  appearance: none;
+  cursor: pointer;
   transition: border-color 0.15s;
 }
 
@@ -709,6 +715,203 @@
   font-size: 0.6875rem;
   font-weight: 600;
   color: var(--sf-violet);
+}
+
+.vendor-product-dialog {
+  width: min(56rem, calc(100vw - 1.5rem));
+  max-width: 56rem;
+  max-height: calc(100vh - 2rem);
+  margin: auto;
+  padding: 0;
+  border: 1px solid var(--sf-border);
+  border-radius: 0.75rem;
+  background: #12141c;
+  color: var(--sf-text-strong);
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.55);
+}
+
+.vendor-product-dialog::backdrop {
+  background: rgba(4, 6, 12, 0.72);
+}
+
+.vendor-product-dialog-inner {
+  position: relative;
+  display: grid;
+  gap: 1rem;
+  padding: 1rem 1rem 1.25rem;
+}
+
+@media (min-width: 768px) {
+  .vendor-product-dialog-inner {
+    grid-template-columns: minmax(0, 1.35fr) minmax(14rem, 0.9fr);
+    gap: 1.25rem;
+    padding: 1.25rem;
+  }
+}
+
+.vendor-product-dialog-close {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.65rem;
+  z-index: 2;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 999px;
+  border: 1px solid var(--sf-border);
+  background: rgba(0, 0, 0, 0.45);
+  color: var(--sf-text-strong);
+  font-size: 1.25rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.vendor-product-dialog-gallery {
+  display: grid;
+  gap: 0.65rem;
+}
+
+@media (min-width: 640px) {
+  .vendor-product-dialog-gallery {
+    grid-template-columns: 4.25rem minmax(0, 1fr);
+    align-items: start;
+  }
+}
+
+.vendor-product-thumbs {
+  display: flex;
+  gap: 0.4rem;
+  overflow-x: auto;
+}
+
+@media (min-width: 640px) {
+  .vendor-product-thumbs {
+    flex-direction: column;
+    overflow: visible;
+  }
+}
+
+.vendor-product-thumb {
+  flex: 0 0 auto;
+  width: 3.5rem;
+  height: 3.5rem;
+  padding: 0;
+  border-radius: 0.4rem;
+  border: 1px solid var(--sf-border);
+  background: rgba(255, 255, 255, 0.04);
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.vendor-product-thumb.is-active {
+  border-color: rgba(196, 181, 253, 0.7);
+}
+
+.vendor-product-thumb-media,
+.vendor-product-stage-media {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.vendor-product-stage {
+  position: relative;
+  border-radius: 0.625rem;
+  border: 1px solid var(--sf-border);
+  background: rgba(255, 255, 255, 0.03);
+  overflow: hidden;
+  min-height: 16rem;
+  aspect-ratio: 1;
+}
+
+.vendor-product-stage-media {
+  object-fit: contain;
+  background: #0b0d14;
+}
+
+.vendor-product-stage-nav {
+  position: absolute;
+  inset: auto 0.5rem 0.5rem;
+  display: flex;
+  justify-content: space-between;
+  pointer-events: none;
+}
+
+.vendor-product-nav-btn {
+  pointer-events: auto;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 999px;
+  border: 1px solid var(--sf-border);
+  background: rgba(0, 0, 0, 0.55);
+  color: var(--sf-text-strong);
+  font-size: 1.25rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.vendor-product-dialog-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  padding-top: 0.25rem;
+}
+
+.vendor-product-dialog-title {
+  font-size: 1.25rem;
+  font-weight: 650;
+  line-height: 1.25;
+  padding-right: 2rem;
+}
+
+.vendor-product-dialog-price {
+  font-size: 1.05rem;
+  color: #c4b5fd;
+  font-weight: 600;
+}
+
+.vendor-product-dialog-category {
+  font-size: 0.8125rem;
+  color: var(--sf-text-muted);
+}
+
+.vendor-product-dialog-description,
+.vendor-dock-rich,
+.vendor-commissions-copy {
+  font-size: 0.875rem;
+  line-height: 1.55;
+  color: var(--sf-text-muted);
+}
+
+.vendor-product-dialog-description a,
+.vendor-dock-rich a,
+.vendor-commissions-copy a {
+  color: var(--sf-violet);
+  text-decoration: underline;
+  word-break: break-word;
+}
+
+.vendor-product-dialog-buy {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.75rem;
+  margin-top: 0.35rem;
+  padding: 0.65rem 1rem;
+  border-radius: 0.55rem;
+  background: var(--sf-violet);
+  color: #fff;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.vendor-product-dialog-buy:hover {
+  filter: brightness(1.05);
+}
+
+.vendor-product-dialog-note {
+  font-size: 0.75rem;
+  color: var(--sf-text-muted);
 }
 
 .vendor-about-prose {

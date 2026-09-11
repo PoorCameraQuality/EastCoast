@@ -8,6 +8,7 @@ import { EAST_COAST_STATES, type StateSlug } from '@/lib/eastCoastStates'
 import { resolveEntityHeroUrl } from '@/lib/kinkSocialEntityMedia'
 import { getSupabaseServerClient } from '@/lib/supabaseServer'
 import { vendorOffsiteShopUrl } from '@/lib/vendorOutboundUrls'
+import { normalizeShopProductMedia } from '@/lib/eckeOrgVendorShared'
 
 export type UnifiedVendor = VendorRecord & {
   stateAbbr: string | null
@@ -66,8 +67,11 @@ export function getStaticUnifiedVendors(): UnifiedVendor[] {
 type DbVendorListing = {
   id?: string
   title?: string
+  description?: string | null
   imageUrl?: string | null
+  media?: Array<{ id?: string; url?: string; kind?: string; sortOrder?: number }> | null
   priceLabel?: string | null
+  category?: string | null
   externalUrl?: string | null
   sourceSystem?: string | null
   sortOrder?: number
@@ -80,6 +84,8 @@ type DbVendorRow = {
   description: string | null
   website_url: string | null
   contact_email?: string | null
+  public_contact_url?: string | null
+  public_contact_label?: string | null
   city: string | null
   state: string | null
   online_only: boolean
@@ -148,8 +154,11 @@ function parseDbListings(raw: DbVendorListing[] | string | null | undefined): Ve
     listings.push({
       id: item.id?.trim() || `${title}-${listings.length}`,
       title,
+      description: item.description?.trim() || null,
       imageUrl: item.imageUrl ?? null,
+      media: normalizeShopProductMedia(item.media, item.imageUrl),
       priceLabel: item.priceLabel ?? null,
+      category: item.category?.trim() || null,
       externalUrl: vendorOffsiteShopUrl(item.externalUrl) ?? null,
       sourceSystem,
       sortOrder: item.sortOrder ?? listings.length,
@@ -179,6 +188,8 @@ export function dbRowToUnified(row: DbVendorRow, seoTagSlugs: string[]): Unified
     story: row.description || undefined,
     websiteUrl: vendorOffsiteShopUrl(row.website_url),
     contactEmail: row.contact_email || undefined,
+    publicContactUrl: row.public_contact_url || undefined,
+    publicContactLabel: row.public_contact_label || undefined,
     location,
     tagSlugs,
     logo125Url: row.logo_url || undefined,
@@ -230,7 +241,7 @@ export async function fetchPublishedSupabaseVendors(): Promise<UnifiedVendor[]> 
     let { data: vrows, error: vErr } = await client
       .from('vendors')
       .select(
-        'id, slug, name, description, short_description, website_url, contact_email, city, state, online_only, logo_url, cover_url, listings, seo_hub_tags, tag_slugs, kink_social_canonical_path, accepts_commissions, commission_info, appearance_event_slugs, last_synced_at, meta_title, meta_description, c2k_source_id, c2k_source_type, organization_id, status, checkout_mode',
+        'id, slug, name, description, short_description, website_url, contact_email, public_contact_url, public_contact_label, city, state, online_only, logo_url, cover_url, listings, seo_hub_tags, tag_slugs, kink_social_canonical_path, accepts_commissions, commission_info, appearance_event_slugs, last_synced_at, meta_title, meta_description, c2k_source_id, c2k_source_type, organization_id, status, checkout_mode',
       )
       .eq('status', 'published')
       .or('c2k_source_id.not.is.null,organization_id.not.is.null')
@@ -251,7 +262,7 @@ export async function fetchPublishedSupabaseVendors(): Promise<UnifiedVendor[]> 
 
     const { data: productRows, error: productErr } = await client
       .from('vendor_products')
-      .select('id, vendor_id, title, image_url, price_label, external_url, sort_order')
+      .select('id, vendor_id, title, description, image_url, media, price_label, category, external_url, sort_order')
       .eq('status', 'published')
       .eq('public_safe', true)
       .in('vendor_id', ids)
@@ -265,18 +276,25 @@ export async function fetchPublishedSupabaseVendors(): Promise<UnifiedVendor[]> 
         id: string
         vendor_id: string
         title: string
+        description: string | null
         image_url: string | null
+        media: unknown
         price_label: string | null
+        category: string | null
         external_url: string | null
         sort_order: number | null
       }
       if (!row.title?.trim()) continue
+      const media = normalizeShopProductMedia(row.media, row.image_url)
       const list = listingsByVendor.get(row.vendor_id) || []
       list.push({
         id: row.id,
         title: row.title.trim(),
-        imageUrl: row.image_url,
+        description: row.description,
+        imageUrl: media.find((m) => m.kind === 'image')?.url || row.image_url,
+        media,
         priceLabel: row.price_label,
+        category: row.category,
         externalUrl: row.external_url,
         sourceSystem: 'manual',
         sortOrder: row.sort_order ?? list.length,

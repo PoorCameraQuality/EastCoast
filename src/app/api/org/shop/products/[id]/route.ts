@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+import { coverImageFromMedia, normalizeShopProductMedia } from '@/lib/eckeOrgVendorShared'
 import {
   notifyShopIndex,
   orgShopProductSchema,
@@ -19,6 +20,43 @@ export async function PATCH(request: Request, { params }: { params: { id: string
   } catch {
     return NextResponse.json({ error: 'Invalid JSON' }, { status: 400 })
   }
+
+  const removeMediaId =
+    typeof json === 'object' && json && 'removeMediaId' in json
+      ? String((json as { removeMediaId?: string }).removeMediaId || '').trim()
+      : ''
+
+  if (removeMediaId) {
+    const { data: existing } = await gated.admin
+      .from('vendor_products')
+      .select('id, image_url, media')
+      .eq('id', params.id)
+      .eq('vendor_id', gated.shop.id)
+      .maybeSingle()
+    if (!existing) return NextResponse.json({ error: 'Product not found' }, { status: 404 })
+
+    const media = normalizeShopProductMedia(existing.media, existing.image_url).filter(
+      (item) => item.id !== removeMediaId,
+    )
+    const cover = coverImageFromMedia(media, null)
+    const { error } = await gated.admin
+      .from('vendor_products')
+      .update({
+        media,
+        image_url: cover,
+        updated_at: new Date().toISOString(),
+      })
+      .eq('id', params.id)
+    if (error) {
+      console.error('ORG SHOP PRODUCT MEDIA REMOVE', error)
+      return NextResponse.json({ error: 'Could not remove media' }, { status: 500 })
+    }
+
+    await syncVendorListingsMirror(gated.shop.id)
+    if (gated.shop.status === 'published') notifyShopIndex(gated.shop, 'update')
+    return NextResponse.json({ ok: true, media })
+  }
+
   const parsed = orgShopProductSchema.safeParse(json)
   if (!parsed.success) {
     return NextResponse.json({ error: parsed.error.issues[0]?.message || 'Validation failed' }, { status: 400 })

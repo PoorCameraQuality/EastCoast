@@ -1,6 +1,7 @@
 import EckeLink from '@/components/EckeLink'
 import VendorContactLink from '@/components/vendors/marketplace/VendorContactLink'
 import OutboundWebsiteLink from '@/components/analytics/OutboundWebsiteLink'
+import { listingCopyToSafeHtml } from '@/lib/eckeOrgRichText'
 import { locationDisplay } from '@/lib/publicVendorIndex'
 import { vendorOffsiteShopUrl } from '@/lib/vendorOutboundUrls'
 import type { PublicVendorListing } from '@/types/publicVendorListing'
@@ -14,6 +15,9 @@ export default function VendorActionDock({ vendor }: Props) {
   const officialWebsite = vendorOffsiteShopUrl(vendor.websiteUrl) && vendor.websiteUrl !== shopUrl
     ? vendorOffsiteShopUrl(vendor.websiteUrl)
     : null
+  const commissionHtml = listingCopyToSafeHtml(
+    vendor.commissionInfo?.trim() || (vendor.acceptsCommissions ? 'Custom work available' : ''),
+  )
 
   return (
     <aside className="vendor-action-dock" aria-label="Shop actions">
@@ -64,7 +68,14 @@ export default function VendorActionDock({ vendor }: Props) {
         {vendor.acceptsCommissions ? (
           <>
             <h3 className="vendor-dock-title">Commissions</h3>
-            <p className="vendor-dock-muted">{vendor.commissionInfo ?? 'Custom work available'}</p>
+            {commissionHtml ? (
+              <div
+                className="vendor-dock-muted vendor-dock-rich"
+                dangerouslySetInnerHTML={{ __html: commissionHtml }}
+              />
+            ) : (
+              <p className="vendor-dock-muted">Custom work available</p>
+            )}
           </>
         ) : null}
 

@@ -29,6 +29,16 @@ export const RESERVED_VENDOR_SLUGS = new Set<string>([
 export type ShopCheckoutMode = 'offsite' | 'stripe'
 export type ShopStatus = 'draft' | 'published'
 export type ShopProductStatus = 'published' | 'hidden'
+export type ShopProductMediaKind = 'image' | 'video'
+
+export const MAX_PRODUCT_MEDIA = 12
+
+export type ShopProductMediaItem = {
+  id: string
+  url: string
+  kind: ShopProductMediaKind
+  sortOrder: number
+}
 
 export type OrgShopInput = {
   name: string
@@ -37,6 +47,8 @@ export type OrgShopInput = {
   story: string
   website?: string
   contactEmail?: string
+  publicContactUrl?: string
+  publicContactLabel?: string
   isOnline?: boolean
   city?: string
   state?: string
@@ -66,6 +78,7 @@ export type ManagedShopProduct = {
   title: string
   description: string | null
   image_url: string | null
+  media: ShopProductMediaItem[] | null
   price_label: string | null
   category: string | null
   checkout_mode: ShopCheckoutMode
@@ -85,6 +98,8 @@ export type ManagedShopRow = {
   short_description: string | null
   website_url: string | null
   contact_email: string | null
+  public_contact_url: string | null
+  public_contact_label: string | null
   city: string | null
   state: string | null
   online_only: boolean
@@ -100,6 +115,37 @@ export type ManagedShopRow = {
   organization_id: string | null
   published_at: string | null
   updated_at: string | null
+}
+
+export function normalizeShopProductMedia(
+  raw: unknown,
+  coverImageUrl?: string | null,
+): ShopProductMediaItem[] {
+  const items: ShopProductMediaItem[] = []
+  if (Array.isArray(raw)) {
+    for (let i = 0; i < raw.length; i += 1) {
+      const row = raw[i] as Partial<ShopProductMediaItem> | null
+      const url = typeof row?.url === 'string' ? row.url.trim() : ''
+      if (!url) continue
+      const kind = row?.kind === 'video' ? 'video' : 'image'
+      items.push({
+        id: typeof row?.id === 'string' && row.id ? row.id : `media-${i}`,
+        url,
+        kind,
+        sortOrder: typeof row?.sortOrder === 'number' ? row.sortOrder : i,
+      })
+    }
+  }
+  items.sort((a, b) => a.sortOrder - b.sortOrder)
+  if (items.length === 0 && coverImageUrl?.trim()) {
+    return [{ id: 'cover', url: coverImageUrl.trim(), kind: 'image', sortOrder: 0 }]
+  }
+  return items.slice(0, MAX_PRODUCT_MEDIA).map((item, index) => ({ ...item, sortOrder: index }))
+}
+
+export function coverImageFromMedia(media: ShopProductMediaItem[], fallback?: string | null): string | null {
+  const firstImage = media.find((item) => item.kind === 'image')
+  return firstImage?.url || fallback || null
 }
 
 export function isShopHubTag(value: string): value is VendorSeoHubTagSlug {
@@ -188,6 +234,8 @@ export function managedShopToFormValues(shop: ManagedShopRow): OrgShopInput {
     story: shop.description || '',
     website: shop.website_url || '',
     contactEmail: shop.contact_email || '',
+    publicContactUrl: shop.public_contact_url || '',
+    publicContactLabel: shop.public_contact_label || '',
     isOnline: shop.online_only,
     city: shop.online_only ? '' : shop.city || '',
     state: shop.online_only ? '' : shop.state || '',

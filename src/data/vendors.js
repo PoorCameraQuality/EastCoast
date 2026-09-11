@@ -11,14 +11,14 @@ import { onboardedVendors } from './onboardedVendors.data.js'
 export const vendors = [
   {
     name: 'Flogging Farmers',
-    slug: 'floggin-farmers',
+    slug: 'flogging-farmers',
     location: 'Online • Etsy',
     description:
       'Handcrafted birch wood floggers and other impact implements. Custom options available.',
     story:
       'We’re Flogging Farmers—making handcrafted birch wood floggers and impact implements with an eye for balance, finish, and durability. We love building pieces that feel great in hand and hold up to real play. Custom options are available, and we’re happy to work with you on style, color, and handle preferences.',
     websiteUrl: 'https://www.etsy.com/shop/FlogginFarmers',
-    logo125Url: '/images/vendors/floggin-farmers/logo-125.jpg',
+    logo125Url: '/images/vendors/flogging-farmers/logo-125.jpg',
     tagSlugs: [
       'impact-implements',
       'woodworking',
@@ -26,10 +26,10 @@ export const vendors = [
     ],
     isPaid: true,
     productImage125ByTagSlug: {
-      default: '/images/vendors/floggin-farmers/impact-implements-125.jpg',
-      'impact-implements': '/images/vendors/floggin-farmers/impact-implements-125.jpg',
-      woodworking: '/images/vendors/floggin-farmers/woodworking-125.jpg',
-      'custom-commission-vendor': '/images/vendors/floggin-farmers/woodworking-125.jpg',
+      default: '/images/vendors/flogging-farmers/impact-implements-125.jpg',
+      'impact-implements': '/images/vendors/flogging-farmers/impact-implements-125.jpg',
+      woodworking: '/images/vendors/flogging-farmers/woodworking-125.jpg',
+      'custom-commission-vendor': '/images/vendors/flogging-farmers/woodworking-125.jpg',
     },
   },
   {

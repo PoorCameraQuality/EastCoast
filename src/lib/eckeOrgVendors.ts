@@ -6,13 +6,16 @@ import {
   buildShopSeoDescription,
   buildShopSeoKeywords,
   buildShopSeoTitle,
+  coverImageFromMedia,
   normalizeAppearanceEventSlugs,
   normalizeShopHubTags,
+  normalizeShopProductMedia,
   slugifyShopSlug,
   type ManagedShopProduct,
   type ManagedShopRow,
   type OrgShopInput,
   type OrgShopProductInput,
+  type ShopProductMediaItem,
 } from '@/lib/eckeOrgVendorShared'
 import { notifyVendorDiscovery } from '@/lib/eckeVendorDiscovery'
 import { taxonomySlugsFromSeoHubTags } from '@/lib/vendorHubTagMap'
@@ -31,6 +34,8 @@ export const MANAGED_SHOP_SELECT = [
   'short_description',
   'website_url',
   'contact_email',
+  'public_contact_url',
+  'public_contact_label',
   'city',
   'state',
   'online_only',
@@ -55,6 +60,7 @@ export const MANAGED_PRODUCT_SELECT = [
   'title',
   'description',
   'image_url',
+  'media',
   'price_label',
   'category',
   'checkout_mode',
@@ -72,6 +78,11 @@ function optionalUrl(value: string | undefined): string | undefined {
   return /^https?:\/\//i.test(raw) ? raw : `https://${raw}`
 }
 
+function optionalEmail(value: string | undefined): string | undefined {
+  const raw = (value ?? '').trim().toLowerCase()
+  return raw || undefined
+}
+
 export const orgShopSchema = z
   .object({
     name: z.string().min(3).max(120),
@@ -79,7 +90,9 @@ export const orgShopSchema = z
     shortDescription: z.string().min(10).max(280),
     story: z.string().min(10).max(20000),
     website: z.string().max(500).optional().or(z.literal('')),
-    contactEmail: z.string().email('Enter a contact email shoppers can write to'),
+    contactEmail: z.string().max(200).optional().or(z.literal('')),
+    publicContactUrl: z.string().max(500).optional().or(z.literal('')),
+    publicContactLabel: z.string().max(80).optional().or(z.literal('')),
     isOnline: z.boolean().optional(),
     city: z.string().max(80).optional().or(z.literal('')),
     state: z.string().max(2).optional().or(z.literal('')),
@@ -96,6 +109,18 @@ export const orgShopSchema = z
       if (!value.state?.trim() || value.state.trim().length !== 2) {
         ctx.addIssue({ code: 'custom', path: ['state'], message: 'State is required' })
       }
+    }
+    const email = value.contactEmail?.trim() || ''
+    const contactUrl = value.publicContactUrl?.trim() || ''
+    if (!email && !contactUrl) {
+      ctx.addIssue({
+        code: 'custom',
+        path: ['contactEmail'],
+        message: 'Add a contact email or a public contact link (FetLife, form, etc.)',
+      })
+    }
+    if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      ctx.addIssue({ code: 'custom', path: ['contactEmail'], message: 'Enter a valid contact email' })
     }
   })
 
@@ -166,7 +191,9 @@ export function shopWritePayload(input: OrgShopInput, orgId: string, slug: strin
     description: input.story.trim(),
     short_description: input.shortDescription.trim(),
     website_url: optionalUrl(input.website) ?? null,
-    contact_email: (input.contactEmail || '').trim().toLowerCase(),
+    contact_email: optionalEmail(input.contactEmail) ?? null,
+    public_contact_url: optionalUrl(input.publicContactUrl) ?? null,
+    public_contact_label: (input.publicContactLabel || '').trim() || null,
     online_only: online,
     city: online ? null : input.city!.trim(),
     state: online ? null : input.state!.trim().toUpperCase(),
@@ -214,7 +241,15 @@ export async function listShopProducts(vendorId: string): Promise<ManagedShopPro
     .eq('vendor_id', vendorId)
     .order('sort_order', { ascending: true })
     .order('created_at', { ascending: true })
-  return (data as unknown as ManagedShopProduct[] | null) || []
+  const rows = (data as unknown as ManagedShopProduct[] | null) || []
+  return rows.map((product) => ({
+    ...product,
+    media: normalizeShopProductMedia(product.media, product.image_url),
+  }))
+}
+
+export function productMediaForMirror(product: ManagedShopProduct): ShopProductMediaItem[] {
+  return normalizeShopProductMedia(product.media, product.image_url)
 }
 
 export async function syncVendorListingsMirror(vendorId: string) {
@@ -223,15 +258,21 @@ export async function syncVendorListingsMirror(vendorId: string) {
   const products = await listShopProducts(vendorId)
   const listings = products
     .filter((product) => product.status === 'published' && product.public_safe)
-    .map((product, index) => ({
-      id: product.id,
-      title: product.title,
-      imageUrl: product.image_url,
-      priceLabel: product.price_label,
-      externalUrl: product.external_url,
-      sourceSystem: 'manual',
-      sortOrder: product.sort_order ?? index,
-    }))
+    .map((product, index) => {
+      const media = productMediaForMirror(product)
+      return {
+        id: product.id,
+        title: product.title,
+        description: product.description,
+        imageUrl: coverImageFromMedia(media, product.image_url),
+        media,
+        priceLabel: product.price_label,
+        category: product.category,
+        externalUrl: product.external_url,
+        sourceSystem: 'manual',
+        sortOrder: product.sort_order ?? index,
+      }
+    })
   await admin.from('vendors').update({ listings }).eq('id', vendorId)
 }
 
@@ -261,19 +302,27 @@ export function shopToUnified(shop: ManagedShopRow, products: ManagedShopProduct
     story: shop.description || undefined,
     websiteUrl: shop.website_url || undefined,
     contactEmail: shop.contact_email || undefined,
+    publicContactUrl: shop.public_contact_url || undefined,
+    publicContactLabel: shop.public_contact_label || undefined,
     location,
     tagSlugs: shop.tag_slugs || taxonomySlugsFromSeoHubTags(shop.seo_hub_tags || []),
     logo125Url: shop.logo_url || undefined,
     coverUrl: shop.cover_url || undefined,
-    listings: published.map((product, index) => ({
-      id: product.id,
-      title: product.title,
-      imageUrl: product.image_url,
-      priceLabel: product.price_label,
-      externalUrl: product.external_url,
-      sourceSystem: 'manual',
-      sortOrder: product.sort_order ?? index,
-    })),
+    listings: published.map((product, index) => {
+      const media = productMediaForMirror(product)
+      return {
+        id: product.id,
+        title: product.title,
+        description: product.description,
+        imageUrl: coverImageFromMedia(media, product.image_url),
+        media,
+        priceLabel: product.price_label,
+        category: product.category,
+        externalUrl: product.external_url,
+        sourceSystem: 'manual' as const,
+        sortOrder: product.sort_order ?? index,
+      }
+    }),
     acceptsCommissions: Boolean(shop.accepts_commissions),
     commissionInfo: shop.commission_info?.trim() || undefined,
     appearanceEventSlugs: shop.appearance_event_slugs || [],

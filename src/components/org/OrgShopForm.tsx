@@ -40,6 +40,8 @@ export default function OrgShopForm({ mode, initial, logoUrl, coverUrl, ownedEve
     story: initial?.story || '',
     website: initial?.website || '',
     contactEmail: initial?.contactEmail || '',
+    publicContactUrl: initial?.publicContactUrl || '',
+    publicContactLabel: initial?.publicContactLabel || '',
     isOnline: initial?.isOnline || false,
     city: initial?.city || '',
     state: initial?.state || '',
@@ -217,15 +219,39 @@ export default function OrgShopForm({ mode, initial, logoUrl, coverUrl, ownedEve
         </label>
         <label className="block text-sm text-sf-body">
           Contact email
-          <span className="mt-0.5 block text-xs text-sf-muted">Powers Contact vendor (mailto).</span>
+          <span className="mt-0.5 block text-xs text-sf-muted">
+            Optional if you add a public contact link below. Powers mailto Contact.
+          </span>
           <input
             className={fieldClass}
             type="email"
             value={values.contactEmail || ''}
             onChange={(e) => setField('contactEmail', e.target.value)}
             placeholder="shop@example.com"
-            required
             autoComplete="email"
+          />
+        </label>
+        <label className="block text-sm text-sf-body">
+          Public contact link
+          <span className="mt-0.5 block text-xs text-sf-muted">
+            FetLife, contact form, Instagram, etc. Required if you skip email.
+          </span>
+          <input
+            className={fieldClass}
+            value={values.publicContactUrl || ''}
+            onChange={(e) => setField('publicContactUrl', e.target.value)}
+            placeholder="https://fetlife.com/…"
+          />
+        </label>
+        <label className="block text-sm text-sf-body">
+          Contact button label
+          <span className="mt-0.5 block text-xs text-sf-muted">Optional. Defaults to Contact.</span>
+          <input
+            className={fieldClass}
+            value={values.publicContactLabel || ''}
+            onChange={(e) => setField('publicContactLabel', e.target.value)}
+            placeholder="Message on FetLife"
+            maxLength={80}
           />
         </label>
       </section>
@@ -304,14 +330,16 @@ export default function OrgShopForm({ mode, initial, logoUrl, coverUrl, ownedEve
         {values.acceptsCommissions ? (
           <label className="block text-sm text-sf-body">
             Commission details
-            <span className="mt-0.5 block text-xs text-sf-muted">Shows in the Custom commissions section.</span>
+            <span className="mt-0.5 block text-xs text-sf-muted">
+              Shows in Custom commissions. URLs become clickable on your public page.
+            </span>
             <textarea
               className={fieldClass}
               rows={3}
               value={values.commissionInfo || ''}
               onChange={(e) => setField('commissionInfo', e.target.value)}
               maxLength={500}
-              placeholder="Lead times, custom options, how to inquire…"
+              placeholder="Lead times, custom options, https://fetlife.com/…"
             />
           </label>
         ) : null}

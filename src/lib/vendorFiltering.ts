@@ -2,11 +2,21 @@ import type { VendorTag, VendorTagGroup } from '@/data/vendorTaxonomy'
 
 export type VendorFilterMode = 'or' | 'and'
 
+export type VendorMirroredListingMedia = {
+  id: string
+  url: string
+  kind: 'image' | 'video'
+  sortOrder?: number
+}
+
 export type VendorMirroredListing = {
   id: string
   title: string
+  description?: string | null
   imageUrl?: string | null
+  media?: VendorMirroredListingMedia[] | null
   priceLabel?: string | null
+  category?: string | null
   externalUrl?: string | null
   sourceSystem?: 'native' | 'etsy' | 'shopify' | 'woo' | 'manual'
   sortOrder?: number
@@ -19,6 +29,8 @@ export type VendorRecord = {
   story?: string
   websiteUrl?: string
   contactEmail?: string
+  publicContactUrl?: string
+  publicContactLabel?: string
   logo125Url?: string
   coverUrl?: string
   location?: string

@@ -40,7 +40,7 @@ Sort alphabetically by brand. **Verify** each site and overlap with existing `sr
 | Fantasy Grove Toys | https://fantasygrove.com/ | Tempest. |
 | Faire Treasures | https://www.fairetreasures.com/ | Shrine vendor. |
 | FFäusten | https://ffausten.com/ | PNWLC sponsor; proprietary gear / shop. |
-| Flogging Farmers | https://www.etsy.com/shop/FlogginFarmers | DO Fusion; **already in vendors** (slug `floggin-farmers`; Etsy URL keeps shop handle). |
+| Flogging Farmers | https://www.etsy.com/shop/FlogginFarmers | DO Fusion; **already in vendors** (slug `flogging-farmers`; Etsy URL keeps shop handle). |
 | Fontina + Co | https://www.fontinaco.com/ | Shrine vendor. |
 | Forge and Fleece | https://www.etsy.com/shop/ForgeAndFleece | Tempest / Etsy. |
 | From the Hoard | https://www.fromthehoard.com/ | Shrine vendor. |

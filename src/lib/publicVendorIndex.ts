@@ -51,16 +51,31 @@ function toMirroredProductSource(
 function productsFromMirroredListings(vendor: VendorRecord): PublicVendorProduct[] {
   const mirrored = vendor.listings
   if (!mirrored?.length) return []
-  const products: PublicVendorProduct[] = mirrored.map((listing, index) => ({
-    id: listing.id || `${vendor.slug}-listing-${index}`,
-    title: listing.title,
-    imageUrl: listing.imageUrl || undefined,
-    priceLabel: listing.priceLabel || undefined,
-    externalUrl: vendorOffsiteShopUrl(listing.externalUrl),
-    sourceSystem: toMirroredProductSource(listing.sourceSystem),
-    publicSafe: true,
-    sortOrder: listing.sortOrder ?? index,
-  }))
+  const products: PublicVendorProduct[] = mirrored.map((listing, index) => {
+    const media =
+      listing.media?.map((item, mediaIndex) => ({
+        id: item.id || `${listing.id}-media-${mediaIndex}`,
+        url: item.url,
+        kind: (item.kind === 'video' ? 'video' : 'image') as 'image' | 'video',
+        sortOrder: item.sortOrder ?? mediaIndex,
+      })) ||
+      (listing.imageUrl
+        ? [{ id: `${listing.id}-cover`, url: listing.imageUrl, kind: 'image' as const, sortOrder: 0 }]
+        : [])
+    return {
+      id: listing.id || `${vendor.slug}-listing-${index}`,
+      title: listing.title,
+      description: listing.description || undefined,
+      imageUrl: listing.imageUrl || media.find((m) => m.kind === 'image')?.url || undefined,
+      media: media.length ? media : undefined,
+      priceLabel: listing.priceLabel || undefined,
+      category: listing.category || undefined,
+      externalUrl: vendorOffsiteShopUrl(listing.externalUrl),
+      sourceSystem: toMirroredProductSource(listing.sourceSystem),
+      publicSafe: true,
+      sortOrder: listing.sortOrder ?? index,
+    }
+  })
   return products.sort((a, b) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0))
 }
 
@@ -193,6 +208,9 @@ export function vendorToListing(
     shopUrl: offsiteShopUrl,
     websiteUrl: offsiteShopUrl,
     contactEmail: vendor.contactEmail,
+    publicContactUrl: vendor.publicContactUrl || undefined,
+    publicContactLabel: vendor.publicContactLabel || undefined,
+    contactUrl: vendor.publicContactUrl || undefined,
     acceptsCommissions,
     commissionInfo,
     appearanceEventSlugs: vendor.appearanceEventSlugs?.length

@@ -81,10 +81,15 @@ export default function VendorStorefrontDetail({
                 <h2 id="vendor-commissions-heading" className="vendor-section-title">
                   Custom commissions
                 </h2>
-                <p className="vendor-commissions-copy">
-                  {vendor.commissionInfo ??
-                    'This maker accepts custom work — confirm scope, pricing, and lead times on their official shop.'}
-                </p>
+                <div
+                  className="vendor-commissions-copy"
+                  dangerouslySetInnerHTML={{
+                    __html: listingCopyToSafeHtml(
+                      vendor.commissionInfo ??
+                        'This maker accepts custom work — confirm scope, pricing, and lead times on their official shop.',
+                    ),
+                  }}
+                />
               </section>
             ) : null}
 

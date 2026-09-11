@@ -1,7 +1,16 @@
+export type PublicProductMedia = {
+  id: string
+  url: string
+  kind: 'image' | 'video'
+  sortOrder?: number
+}
+
 export type PublicVendorProduct = {
   id: string
   title: string
+  description?: string
   imageUrl?: string
+  media?: PublicProductMedia[]
   priceLabel?: string
   category?: string
   externalUrl?: string

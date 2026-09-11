@@ -174,6 +174,10 @@ const nextConfig = {
       
       // Temporary redirect for Add Event until form is built
       { source: '/events/add', destination: '/contact?subject=Event%20Submission', permanent: false },
+
+      // Flogging Farmers: correct spelling in public URLs (Etsy shop handle stays FlogginFarmers)
+      { source: '/vendors/floggin-farmers', destination: '/vendors/flogging-farmers', permanent: true },
+      { source: '/organizations/floggin-farmers', destination: '/organizations/flogging-farmers', permanent: true },
       
       // Coastal Carolina Fetish Fair ended — Grand Strand Affair is the Myrtle Beach replacement
       {
