@@ -170,7 +170,9 @@ function dbRowToUnified(row: Record<string, unknown>): UnifiedEvent | null {
 }
 
 /**
- * Published events from Supabase (submissions pipeline). Fails soft if DB unavailable.
+ * Published upcoming events from Supabase (submissions pipeline). Fails soft if DB unavailable.
+ * Paginated + date-bounded — full-table reads were Gateway Timing out under crawl load
+ * (Vercel logs: `[unifiedEvents] list query failed: Gateway Timeout`).
  */
 export async function fetchPublishedSupabaseEvents(): Promise<UnifiedEvent[]> {
   // Server Components / route handlers — browser client is always null in Node.
@@ -179,20 +181,48 @@ export async function fetchPublishedSupabaseEvents(): Promise<UnifiedEvent[]> {
     console.error('[unifiedEvents] list: Supabase server client unavailable')
     return []
   }
-  try {
-    const { data, error } = await client
-      .from('events')
-      .select(
-        'title, slug, start_date, end_date, display_date, city, state, short_description, category, logo, tags, status, c2k_source_id, c2k_source_type, last_synced_at, organizer, organizer_name, event_type, dungeon_slug, dungeon_venue_id, venue, featured, organization_id'
-      )
-      .eq('status', 'published')
 
-    if (error) {
-      console.error('[unifiedEvents] list query failed:', error.message, error.code)
-      return []
+  const today = new Date().toISOString().slice(0, 10)
+  const pageSize = 1000
+  const maxPages = 5
+  const pageTimeoutMs = 8_000
+  const selectCols =
+    'title, slug, start_date, end_date, display_date, city, state, short_description, category, logo, tags, status, c2k_source_id, c2k_source_type, last_synced_at, organizer, organizer_name, event_type, dungeon_slug, dungeon_venue_id, venue, featured, organization_id'
+
+  const rows: Record<string, unknown>[] = []
+
+  try {
+    for (let page = 0; page < maxPages; page += 1) {
+      const from = page * pageSize
+      const to = from + pageSize - 1
+      const query = client
+        .from('events')
+        .select(selectCols)
+        .eq('status', 'published')
+        .or(`end_date.gte.${today},and(end_date.is.null,start_date.gte.${today})`)
+        .order('start_date', { ascending: true })
+        .range(from, to)
+
+      const raced = await Promise.race([
+        query,
+        new Promise<{ data: null; error: { message: string; code?: string } }>((resolve) => {
+          setTimeout(
+            () => resolve({ data: null, error: { message: 'Gateway Timeout', code: 'TIMEOUT' } }),
+            pageTimeoutMs,
+          )
+        }),
+      ])
+
+      const { data, error } = raced
+      if (error) {
+        console.error('[unifiedEvents] list query failed:', error.message, error.code)
+        break
+      }
+      if (!data?.length) break
+      rows.push(...(data as Record<string, unknown>[]))
+      if (data.length < pageSize) break
     }
-    if (!data?.length) return []
-    const rows = data as Record<string, unknown>[]
+
     return rows.map(dbRowToUnified).filter((e): e is UnifiedEvent => e !== null)
   } catch (err) {
     console.error('[unifiedEvents] list unexpected error:', err)
