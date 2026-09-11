@@ -839,7 +839,7 @@ export const dungeons = [
     "location": {
       "city": "DFW / Euless area",
       "state": "TX",
-      "address": "Dallas–Fort Worth area (street address not published on homepage; events list “Infliction Hall DFW, TX”—confirm on inflictionhall.com)"
+      "address": "11050 South Pipeline, Euless, TX 76040 (published on Infliction Hall event pages; confirm on inflictionhall.com)"
     },
     "category": "BDSM Dungeon",
     "excerpt": "DFW member-based kink club on the Modern Lifestyle platform—VIP and Platinum tiers, RSVPs and ticketing for themed dungeon nights (rope, impact, littles, and more). The public calendar also lists lifestyle travel and resort promotions; read event copy before booking.",
@@ -1159,29 +1159,6 @@ export const dungeons = [
       "title": "Sanctuary - Portland OR BDSM Club | East Coast Kink Events",
       "description": "Sanctuary — Portland private membership dungeon and kink social club. pdxsanctuary.com.",
       "keywords": "Sanctuary Portland, PDX BDSM, Portland dungeon, pdxsanctuary"
-    }
-  },
-  {
-    "name": "STL3 (Gateway Alternative Lifestyle Center)",
-    "slug": "stl3-st-louis",
-    "location": {
-      "city": "St. Louis",
-      "state": "MO",
-      "address": "St. Louis, MO (see stl3.com for membership, events, and facility contact)"
-    },
-    "category": "Community Organization",
-    "excerpt": "St. Louis 501(c)(3) Gateway Alternative Lifestyle Center—nonprofit framing for education and community support with membership and program links on stl3.com.",
-    "description": {
-      "long": "STL3 — St. Louis, Missouri\n\n**STL Cubed, Inc.**, doing business as **STL3** / **The Gateway Alternative Lifestyle Center**, publicly identifies as a **501(c)(3)** organization supporting **alternative lifestyle** education and **community** in **St. Louis**. The **stl3.com** site hosts **membership** storefront links, **event** information, and **contact** paths.\n\n**Join in:** Use the official site’s **registration** and **email/contact** forms for **programs** and **volunteer** opportunities.\n\nThe homepage has noted periodic **renovation**—confirm **active offerings** on **stl3.com** before travel."
-    },
-    "contact": {},
-    "website": "https://stl3.com/",
-    "logo": "/images/dungeons/logo-stl3-st-louis.png",
-    "images": [],
-    "seo": {
-      "title": "STL3 - St. Louis Gateway Alternative Lifestyle Center | East Coast Kink Events",
-      "description": "STL3 — St. Louis 501(c)(3) Gateway Alternative Lifestyle Center for education and community. stl3.com.",
-      "keywords": "STL3, St Louis kink, Gateway Alternative Lifestyle Center, Missouri BDSM community"
     }
   },
   {
