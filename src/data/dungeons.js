@@ -872,7 +872,7 @@ export const dungeons = [
       "phone": "281-857-6040"
     },
     "website": "https://pendulum.club/",
-    "logo": "/images/placeholder-logo.svg",
+    "logo": "/images/dungeons/logo-pendulum-club-houston.png",
     "images": [],
     "seo": {
       "title": "The Pendulum Club - Houston Lifestyle Clubs | East Coast Kink Events",
@@ -1458,6 +1458,7 @@ export const dungeons = [
     "website": "https://thevulgarians.com/",
     "shopUrl": "https://thevulgarians.square.site/",
     "vendorListingSlug": "the-vulgarians",
+    "logo": "/images/dungeons/logo-vulgarians.png",
     "images": [],
     "socialMedia": {
       "fetlife": "https://fetlife.com/groups/237552"
