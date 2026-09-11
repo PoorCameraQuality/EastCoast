@@ -10,6 +10,56 @@ import {
 } from '@/lib/eckeOrgSessionLimit'
 import { createMiddlewareSupabaseClient } from '@/lib/supabase/middlewareClient'
 
+/** Keep Edge under Vercel middleware limits — never await Supabase on public pages. */
+const AUTH_USER_TIMEOUT_MS = 2_500
+
+function needsSupabaseAuth(pathname: string): boolean {
+  return isOrgManagedPath(pathname) || pathname.startsWith('/admin')
+}
+
+function applyRobotsTag(response: NextResponse, pathname: string) {
+  const noIndex =
+    pathname.startsWith('/admin') ||
+    pathname.startsWith('/organizer') ||
+    pathname.startsWith('/auth') ||
+    pathname.startsWith('/dashboard') ||
+    pathname.startsWith('/login') ||
+    pathname === '/events/create' ||
+    pathname === '/events/my-events' ||
+    /^\/events\/[^/]+\/(edit|manage|posts|media|settings)$/.test(pathname) ||
+    pathname === '/vendors/login' ||
+    pathname === '/vendors/my-shop' ||
+    pathname.startsWith('/vendors/my-shop/') ||
+    pathname === '/dungeons/my-place' ||
+    pathname.startsWith('/dungeons/my-place/')
+
+  response.headers.set(
+    'X-Robots-Tag',
+    noIndex
+      ? 'noindex, nofollow'
+      : 'index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1',
+  )
+  return response
+}
+
+async function getUserWithTimeout(
+  supabase: ReturnType<typeof createMiddlewareSupabaseClient>['supabase'],
+) {
+  try {
+    const result = await Promise.race([
+      supabase.auth.getUser(),
+      new Promise<null>((resolve) => {
+        setTimeout(() => resolve(null), AUTH_USER_TIMEOUT_MS)
+      }),
+    ])
+    if (!result) return null
+    return result.data.user ?? null
+  } catch (error) {
+    console.error('MIDDLEWARE: getUser failed:', error)
+    return null
+  }
+}
+
 export async function middleware(req: NextRequest) {
   const url = req.nextUrl.clone()
   const pathname = url.pathname
@@ -141,12 +191,12 @@ export async function middleware(req: NextRequest) {
 
     let paramsChanged = false
     const keysToDelete: string[] = []
-    url.searchParams.forEach((value, key) => {
+    url.searchParams.forEach((_value, key) => {
       if (!isAllowedQueryKey(key)) {
         keysToDelete.push(key)
       }
     })
-    keysToDelete.forEach(key => {
+    keysToDelete.forEach((key) => {
       url.searchParams.delete(key)
       paramsChanged = true
     })
@@ -155,62 +205,49 @@ export async function middleware(req: NextRequest) {
     }
   }
 
-  // Check for required environment variables
-  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
-    if (pathname.startsWith('/admin')) {
-      return NextResponse.redirect(new URL('/login', req.url))
-    }
-    return NextResponse.next()
-  }
-
   const requestHeaders = new Headers(req.headers)
   if (pathname.startsWith('/auth')) {
     requestHeaders.set('x-ecke-bare-shell', '1')
   }
 
+  // Public pages: no Supabase round-trip (was causing MIDDLEWARE_INVOCATION_TIMEOUT / 504).
+  if (!needsSupabaseAuth(pathname)) {
+    const response = NextResponse.next({ request: { headers: requestHeaders } })
+    return applyRobotsTag(response, pathname)
+  }
+
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+    if (pathname.startsWith('/admin') || isOrgManagedPath(pathname)) {
+      return NextResponse.redirect(
+        new URL(pathname.startsWith('/admin') ? '/login' : '/auth/org/login', req.url),
+      )
+    }
+    const response = NextResponse.next({ request: { headers: requestHeaders } })
+    return applyRobotsTag(response, pathname)
+  }
+
   const { supabase, getResponse } = createMiddlewareSupabaseClient(req, requestHeaders)
+  let activeUser = await getUserWithTimeout(supabase)
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
-
-  let activeUser = user
-  if (user) {
+  if (activeUser) {
     const startedAt = parseOrgSessionStartedAt(req.cookies.get(ORG_SESSION_STARTED_COOKIE)?.value)
     if (!startedAt) {
       getResponse().cookies.set(ORG_SESSION_STARTED_COOKIE, String(Date.now()), orgSessionCookieOptions())
     } else if (isOrgSessionExpired(startedAt)) {
-      await supabase.auth.signOut()
+      try {
+        await Promise.race([
+          supabase.auth.signOut(),
+          new Promise((resolve) => setTimeout(resolve, 1_000)),
+        ])
+      } catch (error) {
+        console.error('MIDDLEWARE: signOut failed:', error)
+      }
       activeUser = null
       getResponse().cookies.set(ORG_SESSION_STARTED_COOKIE, '', { ...orgSessionCookieOptions(0), maxAge: 0 })
     }
   }
 
-  const response = getResponse()
-
-  const noIndex =
-    pathname.startsWith('/admin') ||
-    pathname.startsWith('/organizer') ||
-    pathname.startsWith('/auth') ||
-    pathname.startsWith('/dashboard') ||
-    pathname.startsWith('/login') ||
-    pathname === '/events/create' ||
-    pathname === '/events/my-events' ||
-    /^\/events\/[^/]+\/(edit|manage|posts|media|settings)$/.test(pathname) ||
-    pathname === '/vendors/login' ||
-    pathname === '/vendors/my-shop' ||
-    pathname.startsWith('/vendors/my-shop/') ||
-    pathname === '/dungeons/my-place' ||
-    pathname.startsWith('/dungeons/my-place/')
-
-  if (noIndex) {
-    response.headers.set('X-Robots-Tag', 'noindex, nofollow')
-  } else {
-    response.headers.set(
-      'X-Robots-Tag',
-      'index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1',
-    )
-  }
+  const response = applyRobotsTag(getResponse(), pathname)
 
   if (isOrgManagedPath(pathname) && !activeUser) {
     const redirectResponse = NextResponse.redirect(new URL('/auth/org/login', req.url))
@@ -227,12 +264,17 @@ export async function middleware(req: NextRequest) {
         return redirectResponse
       }
 
-      const { data: profile, error: profileError } = await supabase
-        .from('profiles')
-        .select('id, role')
-        .eq('id', activeUser.id)
-        .single()
-
+      const profileQuery = supabase.from('profiles').select('id, role').eq('id', activeUser.id).single()
+      const profileResult = await Promise.race([
+        profileQuery,
+        new Promise<null>((resolve) => setTimeout(() => resolve(null), AUTH_USER_TIMEOUT_MS)),
+      ])
+      if (!profileResult) {
+        const redirectResponse = NextResponse.redirect(new URL('/login', req.url))
+        response.cookies.getAll().forEach((cookie) => redirectResponse.cookies.set(cookie))
+        return redirectResponse
+      }
+      const { data: profile, error: profileError } = profileResult
       if (profileError || !profile || profile.role !== 'admin') {
         const redirectResponse = NextResponse.redirect(new URL('/unauthorized', req.url))
         response.cookies.getAll().forEach((cookie) => redirectResponse.cookies.set(cookie))
@@ -252,4 +294,3 @@ export async function middleware(req: NextRequest) {
 export const config = {
   matcher: ['/((?!_next/static|_next/image|favicon.ico|api/auth|sitemap.xml|robots.txt).*)'],
 }
-
