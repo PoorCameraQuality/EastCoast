@@ -1361,6 +1361,7 @@ export const dungeons = [
     },
     "contact": {},
     "website": "https://www.boink-ed.com/",
+    "logo": "/images/dungeons/logo-boink-holyoke-ma.png",
     "images": [],
     "socialMedia": {
       "instagram": "https://www.instagram.com/boink_ed/"
